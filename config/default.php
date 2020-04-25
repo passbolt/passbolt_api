@@ -38,7 +38,7 @@ return [
      */
     'passbolt' => [
         // Edition.
-        'edition' => 'ce',
+        'edition' => 'pro',
 
         // Authentication & Authorisation.
         'auth' => [

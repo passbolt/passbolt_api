@@ -452,7 +452,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
             ],
         ];
         $group = $this->addGroup($groupData);
-        $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $group->id => Permission::OWNER]);
+        $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$group->id => Permission::OWNER]);
     }
 
     public function testSuccess_ContainPermissionsUserProfile()

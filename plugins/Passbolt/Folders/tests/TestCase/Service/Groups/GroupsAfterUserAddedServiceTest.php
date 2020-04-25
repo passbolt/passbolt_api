@@ -119,8 +119,8 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
         $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
             ['user_id' => $userAId, 'is_admin' => true],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $r2, $g1, $userAId];
     }
@@ -158,8 +158,8 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
         $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
             ['user_id' => $userAId, 'is_admin' => true],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $r2, $g1, $userAId];
     }
@@ -197,8 +197,8 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
         $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
             ['user_id' => $userAId, 'is_admin' => true],
         ]]);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$folderA, $folderB, $g1, $userAId];
     }
@@ -236,8 +236,8 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
         $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
             ['user_id' => $userAId, 'is_admin' => true],
         ]]);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B'], [$userBId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userBId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$folderA, $folderB, $g1, $userAId, $userBId];
     }

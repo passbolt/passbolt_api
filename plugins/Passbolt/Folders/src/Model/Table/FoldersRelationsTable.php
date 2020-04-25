@@ -15,15 +15,21 @@
 
 namespace Passbolt\Folders\Model\Table;
 
+use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
+use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
+use App\Utility\UserAccessControl;
 use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Traits\Folders\FoldersRelationsFindersTrait;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService;
 
 /**
  * FoldersRelations Model
@@ -42,6 +48,7 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersRelationsFindersTrait;
 class FoldersRelationsTable extends Table
 {
     use FoldersRelationsFindersTrait;
+    use TableCleanupTrait;
 
     /**
      * List of allowed item models on which a folder relation can be plugged.
@@ -72,6 +79,10 @@ class FoldersRelationsTable extends Table
         ]);
         $this->belongsTo('Folders', [
             'foreignKey' => 'foreign_id',
+        ]);
+        $this->belongsTo('FoldersParents', [
+            'className' => 'Folders',
+            'foreignKey' => 'folder_parent_id',
         ]);
         $this->belongsTo('Users');
     }
@@ -176,6 +187,187 @@ class FoldersRelationsTable extends Table
         }
 
         return $exist;
+    }
+
+    /**
+     * Delete all records where associated users are soft deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupSoftDeletedUsers(bool $dryRun = false)
+    {
+        return $this->cleanupSoftDeleted('Users', $dryRun);
+    }
+
+    /**
+     * Delete all records where associated users are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedUsers(bool $dryRun = false)
+    {
+        return $this->cleanupHardDeleted('Users', $dryRun);
+    }
+
+    /**
+     * Delete all records where associated resources are soft deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupSoftDeletedResources(bool $dryRun = false)
+    {
+        return $this->cleanupSoftDeletedForeignId('Resources', $dryRun);
+    }
+
+    /**
+     * Delete all association records where associated model entities are soft deleted
+     *
+     * @param string $modelName model
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    private function cleanupSoftDeletedForeignId(string $modelName, $dryRun = false)
+    {
+        $query = $this->query()
+            ->select(['id'])
+            ->leftJoinWith($modelName)
+            ->where([
+                "$modelName.deleted" => true,
+                "FoldersRelations.foreign_model" => ucfirst(Inflector::singularize($modelName)),
+            ]);
+
+        return $this->cleanupHardDeleted($modelName, $dryRun, $query);
+    }
+
+    /**
+     * Delete all records where associated resources are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedResources(bool $dryRun = false)
+    {
+        return $this->cleanupHardDeletedForeignId('Resources', $dryRun);
+    }
+
+    /**
+     * Delete all association records where associated model entities are deleted
+     *
+     * @param string $modelName model
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    private function cleanupHardDeletedForeignId(string $modelName, $dryRun = false)
+    {
+        $query = $this->query()
+            ->select(['id'])
+            ->leftJoinWith($modelName)
+            ->where([
+                "$modelName.id IS NULL",
+                "FoldersRelations.foreign_model" => ucfirst(Inflector::singularize($modelName)),
+            ]);
+
+        return $this->cleanupHardDeleted($modelName, $dryRun, $query);
+    }
+
+    /**
+     * Delete all records where associated folders are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedFolders(bool $dryRun = false)
+    {
+        return $this->cleanupHardDeletedForeignId('Folders', $dryRun);
+    }
+
+    /**
+     * Move to root all folders relations where associated folders parents are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedFoldersParents(bool $dryRun = false)
+    {
+        $query = $this->findByDeletedFolderParent()
+            ->select('id');
+
+        return $this->cleanupHardDeleted('FoldersParents', $dryRun, $query);
+    }
+
+    /**
+     * Add missing folders relations for each resource the users have access to.
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     * @throws \Exception If something unexpected occurred
+     */
+    public function cleanupMissingResourcesFoldersRelations(bool $dryRun = false)
+    {
+        return $this->cleanupMissingFoldersRelations(FoldersRelation::FOREIGN_MODEL_RESOURCE, $dryRun);
+    }
+
+    /**
+     * Add a folder relation for each item users have access but don't have it in their trees.
+     *
+     * @param string $foreignModel The type of item. Can be Folder or Resource
+     * @param bool $dryRun false
+     * @return number of affected records
+     * @throws \Exception If something unexpected occurred
+     */
+    public function cleanupMissingFoldersRelations(string $foreignModel, bool $dryRun = false)
+    {
+        $count = 0;
+        $admin = $this->Users->findFirstAdmin();
+        $uac = new UserAccessControl(Role::ADMIN, $admin->id);
+        $addItemToUserTreeService = new FoldersRelationsAddItemToUserTreeService();
+        $getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
+
+        $modelName = Inflector::pluralize($foreignModel);
+        $items = $this->$modelName->find();
+        foreach ($items as $item) {
+            $usersIdsHavingAccess = $getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($item->id);
+            foreach ($usersIdsHavingAccess as $userId) {
+                $isInUserTree = $this->isItemInUserTree($userId, $item->id);
+                if (!$isInUserTree) {
+                    $count++;
+                    if (!$dryRun) {
+                        $addItemToUserTreeService->addItemToUserTree($uac, $foreignModel, $item->id, $userId);
+                    }
+                }
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * Check if an item is in a user tree.
+     *
+     * @param string $userId The target user
+     * @param string $foreignId The target item id
+     * @return bool
+     */
+    public function isItemInUserTree(string $userId, string $foreignId)
+    {
+        $conditions = ['foreign_id' => $foreignId, 'user_id' => $userId];
+
+        return $this->exists($conditions);
+    }
+
+    /**
+     * Add missing folders relations for each folder the users have access to.
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     * @throws \Exception If something unexpected occurred
+     */
+    public function cleanupMissingFoldersFoldersRelations(bool $dryRun = false)
+    {
+        return $this->cleanupMissingFoldersRelations(FoldersRelation::FOREIGN_MODEL_FOLDER, $dryRun);
     }
 
     /**
@@ -311,20 +503,6 @@ class FoldersRelationsTable extends Table
 
         return $this->findByForeignId($foreignId)
                 ->count() === 1;
-    }
-
-    /**
-     * Check if an item is in a user tree.
-     *
-     * @param string $userId The target user
-     * @param string $foreignId The target item id
-     * @return bool
-     */
-    public function isItemInUserTree(string $userId, string $foreignId)
-    {
-        $conditions = ['foreign_id' => $foreignId, 'user_id' => $userId];
-
-        return $this->exists($conditions);
     }
 
     /**

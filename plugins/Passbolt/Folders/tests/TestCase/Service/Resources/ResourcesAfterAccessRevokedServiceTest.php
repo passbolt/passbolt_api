@@ -127,7 +127,7 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
             ['user_id' => $userBId, 'is_admin' => true],
             ['user_id' => $userCId, 'is_admin' => true],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $userAId, $userBId, $userCId];
     }

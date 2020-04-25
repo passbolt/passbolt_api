@@ -333,7 +333,7 @@ class FoldersShareServiceTest extends FoldersTestCase
             ['user_id' => $userBId, 'is_admin' => true],
             ['user_id' => $userCId, 'is_admin' => true],
         ]]);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$folderA, $g1, $userAId, $userBId, $userCId];
     }
@@ -403,7 +403,7 @@ class FoldersShareServiceTest extends FoldersTestCase
             ['user_id' => $userBId, 'is_admin' => true],
             ['user_id' => $userCId, 'is_admin' => true],
         ]]);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$folderA, $g1, $userAId, $userBId, $userCId];
     }

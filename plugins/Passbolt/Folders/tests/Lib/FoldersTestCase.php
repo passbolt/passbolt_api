@@ -19,6 +19,7 @@ use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\EventListener\AddFolderParentIdBehavior;
+use Passbolt\Folders\EventListener\PermissionsModelInitializeEventListener;
 use Passbolt\Folders\EventListener\ResourcesEventListener;
 use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 
@@ -34,6 +35,7 @@ abstract class FoldersTestCase extends AppTestCase
 
         EventManager::instance()
             ->on(new ResourcesEventListener()) // Add folder relation when resource is created / update
-            ->on(new AddFolderParentIdBehavior()); // Decorate the query to add the "folder_parent_id" property on the entities
+            ->on(new AddFolderParentIdBehavior()) // Decorate the query to add the "folder_parent_id" property on the entities
+            ->on(new PermissionsModelInitializeEventListener()); // Decorate the permissions table class to add cleanup method
     }
 }

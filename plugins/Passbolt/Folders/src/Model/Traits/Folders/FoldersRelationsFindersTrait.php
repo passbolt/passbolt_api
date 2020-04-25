@@ -90,4 +90,19 @@ trait FoldersRelationsFindersTrait
         return $this->findByForeignId($foreignId)
             ->select('user_id');
     }
+
+    /**
+     * Returns a query that retrieves all the relations that have a deleted folder parent.
+     *
+     * @return Query
+     */
+    public function findByDeletedFolderParent()
+    {
+        return $this->find()
+            ->leftJoinWith('FoldersParents')
+            ->where([
+                'FoldersRelations.folder_parent_id IS NOT NULL',
+                'FoldersParents.id IS NULL',
+            ]);
+    }
 }

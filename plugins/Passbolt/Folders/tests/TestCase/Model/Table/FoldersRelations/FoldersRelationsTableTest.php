@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Model\Table;
+namespace Passbolt\Folders\Test\TestCase\Model\Table\FoldersRelations;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
@@ -51,6 +51,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
     public $fixtures = [
         'plugin.Passbolt/Folders.Folders',
         'plugin.Passbolt/Folders.FoldersRelations',
+        'app.Base/Groups',
         'app.Base/Resources',
         'app.Base/Users',
         'app.Base/Permissions',

@@ -254,8 +254,8 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
             ['user_id' => $userBId, 'is_admin' => true],
         ]]);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$folderA, $folderB, $userAId, $userBId];
     }
@@ -932,7 +932,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Resource_SharedWithGroup_MoveFromRoot()
     {
-        list($folderA, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SharedWithGroup_MoveFromRoot();
+        list($folderA, $resource, $g1, $userAId, $userBId) = $this->insertFixture_Resource_SharedWithGroup_MoveFromRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
@@ -962,10 +962,10 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
             ['user_id' => $userBId, 'is_admin' => true],
         ]]);
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
-        $resource = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $resource = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
-        return [$folderA, $resource, $userAId, $userBId];
+        return [$folderA, $resource, $g1, $userAId, $userBId];
     }
 
     public function testMoveItemInUserTreeSuccess_Resource_SharedWithUser_MoveIntoSharedFolder_MoveToRootForUsersNotSeeingDestination()

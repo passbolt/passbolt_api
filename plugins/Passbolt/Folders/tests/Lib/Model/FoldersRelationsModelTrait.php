@@ -17,11 +17,7 @@ namespace Passbolt\Folders\Test\Lib\Model;
 
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
-use Cake\Datasource\EntityInterface;
-use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use PHPUnit\Framework\Assert;
 
 /**
@@ -32,36 +28,13 @@ trait FoldersRelationsModelTrait
     public static function addFolderRelation($data = [], $options = [])
     {
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
-        $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $userId = Hash::get($data, 'user_id', '');
-
         $folderRelation = $foldersRelationsTable->findByForeignIdAndUserId($data['foreign_id'], $data['user_id'])->first();
         if (!empty($folderRelation)) {
             return $folderRelation;
         }
 
-        // If build folders relation for an entire group.
-        if (self::isGroup($userId)) {
-            $grousUsersIds = $groupsUsersTable->findByGroupId($userId)->extract('user_id')->toArray();
-            foreach ($grousUsersIds as $groupUserId) {
-                $data['user_id'] = $groupUserId;
-                if (!$foldersRelationsTable->exists(['foreign_id' => $data['foreign_id'], 'user_id' => $data['user_id']])) {
-                    self::addFolderRelation($data, $options);
-                }
-            }
-        } else {
-            $folderRelation = self::getDummyFolderRelationEntity($data, $options);
-            $foldersRelationsTable->saveOrFail($folderRelation);
-
-            return $folderRelation;
-        }
-    }
-
-    private static function isGroup(string $userId)
-    {
-        $groupsTable = TableRegistry::getTableLocator()->get('Groups');
-
-        return $groupsTable->exists(['id' => $userId]);
+        $folderRelation = self::getDummyFolderRelationEntity($data, $options);
+        $foldersRelationsTable->saveOrFail($folderRelation, ['checkRules' => false]);
     }
 
     public static function getDummyFolderRelationEntity($data = [], $options = [])

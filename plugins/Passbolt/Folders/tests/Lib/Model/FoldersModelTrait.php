@@ -71,17 +71,22 @@ trait FoldersModelTrait
     }
 
     /**
-     * @param array $data
-     * @param array $usersIds
-     * @param array $options
+     * Add a folder for a given list of users and groups. This function creates also the associated data: secrets,
+     * permissions, folders_relations.
+     *
+     * @param array $data The folder meta data
+     * @param array $users List of user to add a resource for. The first element should refer to a user id.
+     * @param array $groups List of groups to add a resource for.
+     * @param array $options The folder entity create options
      * @return Folder
      */
-    public function addFolderFor($data = [], $usersIds = [], $options = [])
+    public function addFolderFor($data = [], array $users = [], array $groups = [], $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
 
-        reset($usersIds);
-        $userId = key($usersIds);
+        reset($users);
+        $userId = key($users);
         if (!isset($data['created_by'])) {
             $data['created_by'] = $userId;
         }
@@ -90,15 +95,33 @@ trait FoldersModelTrait
         }
 
         $folder = $this->getDummyFolderEntity($data, $options);
-
         $foldersTable->saveOrFail($folder);
 
-        foreach ($usersIds as $aroForeignKey => $permissionType) {
-            $this->addPermission('Folder', $folder->id, null, $aroForeignKey, $permissionType);
+        foreach ($users as $userId => $permissionType) {
+            $this->addPermission('Folder', $folder->id, null, $userId, $permissionType);
             $folderParentId = $data['folder_parent_id'] ?? null;
-            $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folder->id,
-                'user_id' => $aroForeignKey, 'folder_parent_id' => $folderParentId];
+            $folderRelationData = [
+                'foreign_model' => PermissionsTable::FOLDER_ACO,
+                'foreign_id' => $folder->id,
+                'user_id' => $userId,
+                'folder_parent_id' => $folderParentId,
+            ];
             $this->addFolderRelation($folderRelationData);
+        }
+
+        foreach ($groups as $groupId => $permissionType) {
+            $this->addPermission('Folder', $folder->id, null, $groupId, $permissionType);
+            $folderParentId = $data['folder_parent_id'] ?? null;
+            $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
+            foreach ($groupUsersIds as $groupUserId) {
+                $folderRelationData = [
+                    'foreign_model' => PermissionsTable::FOLDER_ACO,
+                    'foreign_id' => $folder->id,
+                    'user_id' => $groupUserId,
+                    'folder_parent_id' => $folderParentId,
+                ];
+                $this->addFolderRelation($folderRelationData);
+            }
         }
 
         return $folder;
