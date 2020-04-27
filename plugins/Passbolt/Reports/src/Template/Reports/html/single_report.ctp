@@ -12,5 +12,5 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-json_encode($report);
+echo json_encode($report);
 

@@ -20,18 +20,18 @@ use Cake\Core\Configure;
     <?= $this->Html->charset() ?>
     <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
     <?= $this->element('Header/meta') ?>
-    <?= $this->fetch('css') ?>
+    <?= $this->Html->css('themes/default/api_reports.min.css?v=' . Configure::read('passbolt.version')); ?>
 </head>
 <body class="report report-html">
-<div id="container" class="report report-html <?php echo $this->fetch('page_classes') ?>">
-    <div class="grid">
-<?php echo $this->element('Common/reportHeader', [ 'report' => $report]); ?>
-        <div class="report-content">
-<?php echo $this->element('Common/reportDescription', [ 'report' => $report]); ?>
-<?php echo $this->fetch('content'); ?>
+    <div id="container" class="report report-html <?php echo $this->fetch('page_classes') ?>">
+        <div class="grid">
+    <?php echo $this->element('Common/reportHeader', [ 'report' => $report]); ?>
+            <div class="report-content">
+    <?php echo $this->element('Common/reportDescription', [ 'report' => $report]); ?>
+    <?php echo $this->fetch('content'); ?>
+            </div>
         </div>
     </div>
-</div>
-<?php echo $this->fetch('scriptBottom'); ?>
+    <?php echo $this->fetch('scriptBottom'); ?>
 </body>
 </html>
