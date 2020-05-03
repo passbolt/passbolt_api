@@ -67,7 +67,9 @@ class FoldersShareController extends AppController
         if (array_key_exists('folder_parent_id', $body)) {
             $data['folder_parent_id'] = $body['folder_parent_id'];
         }
-
+        if (array_key_exists('permissions', $body)) {
+            $data['permissions'] = $body['permissions'];
+        }
         return $data;
     }
 }
