@@ -44,7 +44,7 @@ class FoldersCreateService
     /**
      * @var FoldersTable
      */
-    private $foldersTable;
+    public $foldersTable;
 
     /**
      * @var PermissionsCreateService
