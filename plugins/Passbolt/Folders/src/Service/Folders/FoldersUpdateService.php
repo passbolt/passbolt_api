@@ -45,7 +45,7 @@ class FoldersUpdateService
     /**
      * @var FoldersTable
      */
-    private $foldersTable;
+    public $foldersTable;
 
     /**
      * @var FoldersRelationsMoveItemInUserTreeService

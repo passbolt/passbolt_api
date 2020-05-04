@@ -44,6 +44,22 @@ class FoldersUpdateController extends AppController
         /** @var Folder $folder */
         $folder = $foldersUpdateService->update($uac, $id, $data);
 
+        // Retrieve and sanity the query options.
+        $whitelist = [
+            'contain' => [
+                'children_folders',
+                'children_resources',
+                'creator',
+                'modifier',
+                'permission',
+                'permissions',
+                'permissions.group',
+                'permissions.user.profile',
+            ]
+        ];
+        $options = $this->QueryString->get($whitelist);
+        $folder = $foldersUpdateService->foldersTable->findView($this->User->id(), $folder->id, $options)->first();
+
         $this->success(__('The folder `{0}` has been updated successfully.', $folder->name), $folder);
     }
 
