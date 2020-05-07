@@ -15,6 +15,7 @@
 namespace App\Test\Lib\Model;
 
 use App\Model\Entity\Secret;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -63,6 +64,22 @@ trait SecretsModelTrait
         $options = array_merge($defaultOptions, $options);
 
         return $secretsTable->newEntity($data, $options);
+    }
+
+    /**
+     * Encrypt a message for a user.
+     * @param string $userId The user to encrypt for
+     * @return mixed
+     */
+    public static function encryptMessageFor(string $userId, string $message)
+    {
+        $gpg = OpenPGPBackendFactory::get();
+        $gpgkeysTable = TableRegistry::getTableLocator()->get('Gpgkeys');
+        $gpgKey = $gpgkeysTable->find()->where(['user_id' => $userId])->first();
+        $gpg->importKeyIntoKeyring($gpgKey->armored_key);
+        $gpg->setEncryptKeyFromFingerprint($gpgKey->fingerprint);
+
+        return $gpg->encrypt($message);
     }
 
     /**
