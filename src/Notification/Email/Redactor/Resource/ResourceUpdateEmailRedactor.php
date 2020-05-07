@@ -15,7 +15,6 @@
 
 namespace App\Notification\Email\Redactor\Resource;
 
-use App\Controller\Resources\ResourcesUpdateController;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -24,6 +23,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Service\Resources\ResourcesUpdateService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -56,7 +56,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            ResourcesUpdateController::UPDATE_SUCCESS_EVENT_NAME,
+            ResourcesUpdateService::UPDATE_SUCCESS_EVENT_NAME,
         ];
     }
 
