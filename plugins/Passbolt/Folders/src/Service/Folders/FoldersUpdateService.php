@@ -15,24 +15,18 @@
 
 namespace Passbolt\Folders\Service\Folders;
 
-use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\EntityInterface;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
-use Cake\Validation\Validation;
 use Exception;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
-use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsMoveItemInUserTreeService;
 
@@ -84,21 +78,15 @@ class FoldersUpdateService
      */
     public function update(UserAccessControl $uac, string $id, array $data = [])
     {
-        $folder = $this->getFolder($id, $uac);
-        if (empty($data)) {
+        $folder = $this->getFolder($uac, $id);
+        $meta = $this->extractDataFolderMeta($data);
+
+        if (empty($meta)) {
             return $folder;
         }
 
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $data) {
-            if (array_key_exists('name', $data)) {
-                $this->updateFolderMeta($uac, $folder, $data['name']);
-            }
-
-            if (array_key_exists('folder_parent_id', $data)) {
-                $folderParentId = $this->getAndValidateFolderParentId($folder, $data);
-                $this->moveFolder($uac, $folder, $folderParentId);
-                $folder->set('folder_parent_id', $folderParentId);
-            }
+        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $meta) {
+            $this->updateFolderMeta($uac, $folder, $meta);
         });
 
         $this->dispatchEvent(self::FOLDERS_UPDATE_FOLDER_EVENT, [
@@ -112,21 +100,39 @@ class FoldersUpdateService
     /**
      * Retrieve the folder.
      *
-     * @param string $folderId The folder identifier to retrieve.
      * @param UserAccessControl $uac UserAccessControl updating the resource
+     * @param string $folderId The folder identifier to retrieve.
      * @return Folder
      * @throws NotFoundException If the folder does not exist.
      */
-    private function getFolder(string $folderId, UserAccessControl $uac)
+    private function getFolder(UserAccessControl $uac, string $folderId)
     {
-        try {
-            return $this->foldersTable->get($folderId, [
-                'finder' => ContainFolderParentIdBehavior::FINDER_NAME,
-                'user_id' => $uac->userId(),
-            ]);
-        } catch (RecordNotFoundException $e) {
+        $permission = $this->permissionsTable->findHighestByAcoAndAro(PermissionsTable::FOLDER_ACO, $folderId, $uac->userId())
+            ->first();
+
+        if (empty($permission)) {
             throw new NotFoundException(__('The folder does not exist.'));
+        } elseif ($permission->type < Permission::UPDATE) {
+            throw new ForbiddenException(__('You are not allowed to update this folder.'));
         }
+
+        return $this->foldersTable->get($folderId);
+    }
+
+    /**
+     * Extract the resource meta data from the request data
+     * @param array $data The request data
+     * @return array
+     */
+    private function extractDataFolderMeta(array $data)
+    {
+        $meta = [];
+
+        if (array_key_exists('name', $data)) {
+            $meta['name'] = $data['name'];
+        }
+
+        return $meta;
     }
 
     /**
@@ -134,22 +140,11 @@ class FoldersUpdateService
      *
      * @param UserAccessControl $uac The current user
      * @param Folder $folder The folder to update.
-     * @param string $name The folder name
+     * @param array $data The folder meta to updated
      * @return EntityInterface|Folder
      */
-    private function updateFolderMeta(UserAccessControl $uac, Folder $folder, string $name)
+    private function updateFolderMeta(UserAccessControl $uac, Folder $folder, array $data)
     {
-        if ($folder->name === $name) {
-            return $folder;
-        }
-
-        $userId = $uac->userId();
-        $isAllowed = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folder->id, $userId, Permission::UPDATE);
-        if (!$isAllowed) {
-            throw new ForbiddenException(__('You are not allowed to update this folder.'));
-        }
-
-        $data = ['name' => $name];
         $this->patchEntity($folder, $data);
         $this->handleValidationErrors($folder);
         $this->foldersTable->save($folder);
@@ -186,45 +181,6 @@ class FoldersUpdateService
         $errors = $folder->getErrors();
         if (!empty($errors)) {
             throw new ValidationException(__('Could not validate folder data.'), $folder, $this->foldersTable);
-        }
-    }
-
-    /**
-     * Get and validate the folder parent id from the data.
-     *
-     * @param Folder $folder The target folder
-     * @param array $data The data
-     * @return string
-     */
-    private function getAndValidateFolderParentId(Folder $folder, array $data = [])
-    {
-        $folderParentId = Hash::get($data, 'folder_parent_id', null);
-
-        if (!is_null($folderParentId) && !Validation::uuid($folderParentId)) {
-            $errors = ['uuid' => 'The folder parent id is not valid.'];
-            $folder->setError('folder_parent_id', $errors);
-            $this->handleValidationErrors($folder);
-        }
-
-        return $folderParentId;
-    }
-
-    /**
-     * Move the folder.
-     *
-     * @param UserAccessControl $uac The current user
-     * @param Folder $folder The target folder
-     * @param string|null $folderParentId The target destination folder
-     * @return void
-     * @throws Exception
-     */
-    private function moveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId = null)
-    {
-        try {
-            $this->foldersRelationsMoveItemInUserTreeService->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $folderParentId);
-        } catch (CustomValidationException $e) {
-            $folder->setError('folder_parent_id', $e->getErrors());
-            $this->handleValidationErrors($folder);
         }
     }
 }

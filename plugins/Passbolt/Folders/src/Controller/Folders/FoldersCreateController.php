@@ -48,7 +48,7 @@ class FoldersCreateController extends AppController
                 'permissions',
                 'permissions.group',
                 'permissions.user.profile',
-            ]
+            ],
         ];
         $options = $this->QueryString->get($whitelist);
         $folder = $folderCreateService->foldersTable->findView($this->User->id(), $folder->id, $options)->first();

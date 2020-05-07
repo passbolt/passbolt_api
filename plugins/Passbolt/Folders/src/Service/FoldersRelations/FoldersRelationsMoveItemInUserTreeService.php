@@ -20,6 +20,7 @@ use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
@@ -72,14 +73,35 @@ class FoldersRelationsMoveItemInUserTreeService
      * @param string $foreignId The entity id
      * @param string|null $folderParentId The destination folder. Null if root
      * @return void
+     * @throws \Exception If an unexpected error occurred
      */
     public function move(UserAccessControl $uac, string $foreignModel, string $foreignId, string $folderParentId = FoldersRelation::ROOT)
     {
-        $this->assertfolderParent($uac, $folderParentId);
+        $this->assertForeignItem($uac, $foreignModel, $foreignId);
+        $this->assertFolderParent($uac, $folderParentId);
         $originalFolderParentId = $this->foldersRelationsTable->getItemFolderParentIdInUserTree($uac->userId(), $foreignId);
         $this->assertUserCanMoveOutOfFolder($uac, $foreignModel, $foreignId, $originalFolderParentId);
         $this->assertUserCanMoveInFolder($uac, $foreignModel, $foreignId, $folderParentId);
-        $this->performMove($uac, $foreignModel, $foreignId, $originalFolderParentId, $folderParentId);
+
+        $this->foldersRelationsTable->getConnection()->transactional(function () use ($uac, $foreignModel, $foreignId, $originalFolderParentId, $folderParentId) {
+            $this->performMove($uac, $foreignModel, $foreignId, $originalFolderParentId, $folderParentId);
+        });
+    }
+
+    /**
+     * Assert that the foreign item exists in the user tree.
+     *
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param string $foreignModel The target item model
+     * @param string $foreignId The target item id
+     * @return void
+     */
+    private function assertForeignItem(UserAccessControl $uac, string $foreignModel, string $foreignId)
+    {
+        $exists = $this->foldersRelationsTable->isItemInUserTree($uac->userId(), $foreignId, $foreignModel);
+        if (!$exists) {
+            throw new NotFoundException(__("The {0} does not exist.", strtolower($foreignModel)));
+        }
     }
 
     /**
@@ -97,7 +119,7 @@ class FoldersRelationsMoveItemInUserTreeService
 
         $exists = $this->foldersRelationsTable->isItemInUserTree($uac->userId(), $folderParentId);
         if (!$exists) {
-            $errors = ['folder_exists' => 'The folder parent does not exist.'];
+            $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent does not exist.']];
             $this->handleValidationErrors($errors);
         }
     }
@@ -124,12 +146,12 @@ class FoldersRelationsMoveItemInUserTreeService
      *   move and the original parent folder.
      *
      * @param UserAccessControl $uac The user at the origin of the operation
-     * @param string $foreingModel The entity model
+     * @param string $foreignModel The entity model
      * @param string $foreignId The entity id
      * @param string|null $originalFolderParentId The original folder location. Null if root
      * @return void
      */
-    private function assertUserCanMoveOutOfFolder(UserAccessControl $uac, string $foreingModel, string $foreignId, string $originalFolderParentId = FoldersRelation::ROOT)
+    private function assertUserCanMoveOutOfFolder(UserAccessControl $uac, string $foreignModel, string $foreignId, string $originalFolderParentId = FoldersRelation::ROOT)
     {
         // User can always move content from root.
         if ($originalFolderParentId === FoldersRelation::ROOT) {
@@ -147,13 +169,13 @@ class FoldersRelationsMoveItemInUserTreeService
         $userId = $uac->userId();
         $isAllowedToMoveOut = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $originalFolderParentId, $userId, Permission::UPDATE);
         if (!$isAllowedToMoveOut) {
-            $errors = ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.'];
+            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.']];
             $this->handleValidationErrors($errors);
         }
 
-        $isAllowedToMoveContent = $this->userHasPermissionService->check($foreingModel, $foreignId, $userId, Permission::UPDATE);
+        $isAllowedToMoveContent = $this->userHasPermissionService->check($foreignModel, $foreignId, $userId, Permission::UPDATE);
         if (!$isAllowedToMoveContent) {
-            $errors = ['has_access' => 'You are not allowed to move this item.'];
+            $errors = ['folder_parent_id' => ['has_access' => 'You are not allowed to move this item.']];
             $this->handleValidationErrors($errors);
         }
     }
@@ -183,13 +205,13 @@ class FoldersRelationsMoveItemInUserTreeService
 
         $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $uac->userId(), Permission::UPDATE);
         if (!$isAllowedToMoveIn) {
-            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
             $this->handleValidationErrors($errors);
         }
 
         $isAllowedToMove = $this->userHasPermissionService->check($foreignModel, $foreignId, $uac->userId(), Permission::UPDATE);
         if (!$isAllowedToMove) {
-            $errors = ['has_access' => 'You are not allowed to move this item.'];
+            $errors = ['folder_parent_id' => ['has_access' => 'You are not allowed to move an item in read only into the parent folder.']];
             $this->handleValidationErrors($errors);
         }
     }
@@ -239,7 +261,7 @@ class FoldersRelationsMoveItemInUserTreeService
     {
         $sccs = $this->folderRelationsDetectStronglyConnectedComponents->detectInAggregatedUsersTrees([$uac->userId()], true);
         if (!empty($sccs)) {
-            $errors = ['cycle' => 'The folder cannot be moved into one of its descendants.'];
+            $errors = ['folder_parent_id' => ['cycle' => 'The folder cannot be moved into one of its descendants.']];
             $this->handleValidationErrors($errors);
         }
     }

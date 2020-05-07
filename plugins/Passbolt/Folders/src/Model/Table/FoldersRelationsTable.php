@@ -349,11 +349,17 @@ class FoldersRelationsTable extends Table
      *
      * @param string $userId The target user
      * @param string $foreignId The target item id
+     * @param string|null $foreignModel The target item foreign model. If not given, the test won't check the the item
+     * model.
      * @return bool
      */
-    public function isItemInUserTree(string $userId, string $foreignId)
+    public function isItemInUserTree(string $userId, string $foreignId, string $foreignModel = null)
     {
         $conditions = ['foreign_id' => $foreignId, 'user_id' => $userId];
+
+        if (!is_null($foreignModel)) {
+            $conditions['foreign_model'] = $foreignModel;
+        }
 
         return $this->exists($conditions);
     }

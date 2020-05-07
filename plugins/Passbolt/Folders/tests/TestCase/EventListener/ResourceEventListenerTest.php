@@ -117,29 +117,6 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         return [$userId, $folder];
     }
 
-    public function testResourcesEventListenerSuccess_AfterResourceUpdated()
-    {
-        list($userId, $resource) = $this->insertFixture_AfterResourceUpdated();
-        $data = $resource->toArray();
-        $data['folder_parent_id'] = null;
-
-        $this->authenticateAs('ada');
-        $this->putJson("/resources/{$resource->id}.json?api-version=v2", $data);
-        $this->assertSuccess();
-
-        $resource = $this->_responseJsonBody;
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userId, null);
-    }
-
-    public function insertFixture_AfterResourceUpdated()
-    {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folder = $this->addFolderFor([], [$userId => Permission::OWNER]);
-        $resource = $this->addResourceFor(['folder_parent_id' => $folder->id], [$userId => Permission::OWNER]);
-
-        return [$userId, $resource];
-    }
-
     public function testResourcesEventListenerSuccess_AfterResourceSoftDeleted()
     {
         list($userId, $resource) = $this->insertFixture_AfterResourceSoftDeleted();

@@ -29,6 +29,7 @@ class FoldersUpdateController extends AppController
      *
      * @param string $id The identifier of the folder.
      * @return void
+     * @throws \Exception
      */
     public function update(string $id)
     {
@@ -60,10 +61,6 @@ class FoldersUpdateController extends AppController
         $name = Hash::get($body, 'name');
         if (isset($name)) {
             $data['name'] = $name;
-        }
-
-        if (array_key_exists('folder_parent_id', $body)) {
-            $data['folder_parent_id'] = $body['folder_parent_id'];
         }
 
         return $data;

@@ -25,7 +25,6 @@ abstract class FoldersIntegrationTestCase extends AppIntegrationTestCase
     {
         parent::setUp();
 
-        Configure::write('passbolt.plugins.log.enabled', true);
         Configure::write('passbolt.plugins.folders.enabled', true);
 
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
@@ -46,7 +45,6 @@ abstract class FoldersIntegrationTestCase extends AppIntegrationTestCase
     {
         parent::tearDown();
 
-        Configure::write('passbolt.plugins.log.enabled', false);
         Configure::write('passbolt.plugins.folders.enabled', false);
     }
 }

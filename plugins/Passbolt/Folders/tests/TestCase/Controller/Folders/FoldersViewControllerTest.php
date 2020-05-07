@@ -162,7 +162,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->getJson("/folders/$resourceId.json?version=2");
+        $this->getJson("/folders/$resourceId.json?api-version=2");
         $this->assertError(400, 'The folder id is not valid.');
     }
 
