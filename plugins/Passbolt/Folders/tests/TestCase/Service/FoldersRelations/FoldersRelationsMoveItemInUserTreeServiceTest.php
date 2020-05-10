@@ -86,7 +86,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_exists' => 'The folder parent does not exist.'];
+            $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent does not exist.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }
@@ -168,7 +168,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['cycle' => 'The folder cannot be moved into one of its descendants.'];
+            $errors = ['folder_parent_id' => ['cycle' => 'The folder cannot be moved into one of its descendants.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }
@@ -586,7 +586,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId, $userEId];
     }
 
-    public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder()
+    public function testMoveItemInUserTreeSuccess_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder()
     {
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
@@ -596,7 +596,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['has_access' => 'You are not allowed to move this item.'];
+            $errors = ['folder_parent_id' => ['has_access' => 'You are not allowed to move an item in read only into the parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }
@@ -627,7 +627,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }
@@ -658,7 +658,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals("Could not validate move data.", $e->getMessage());
-            $errors = ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.'];
+            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }
@@ -691,7 +691,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals("Could not validate move data.", $e->getMessage());
-            $errors = ['has_access' => 'You are not allowed to move this item.'];
+            $errors = ['folder_parent_id' => ['has_access' => 'You are not allowed to move this item.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }
@@ -788,7 +788,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['cycle' => 'The folder cannot be moved into one of its descendants.'];
+            $errors = ['folder_parent_id' => ['cycle' => 'The folder cannot be moved into one of its descendants.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }
@@ -829,7 +829,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_exists' => 'The folder parent does not exist.'];
+            $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent does not exist.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }
@@ -1165,7 +1165,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }
@@ -1195,7 +1195,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals("Could not validate move data.", $e->getMessage());
-            $errors = ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.'];
+            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }

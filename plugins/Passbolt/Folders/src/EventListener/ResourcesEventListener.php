@@ -39,7 +39,6 @@ class ResourcesEventListener implements EventListenerInterface
     {
         return [
             'ResourcesAddController.addPost.success' => 'handleResourceAfterCreateEvent',
-            'ResourcesUpdateController.update.success' => 'handleResourceAfterUpdateEvent',
             'Model.Resource.afterSoftDelete' => 'handleResourceAfterSoftDeleteEvent',
             'Service.ResourcesShare.afterAccessGranted' => 'handleResourceAfterAccessGrantedEvent',
             'Service.ResourcesShare.afterAccessRevoked' => 'handleResourceAfterAccessRevokedEvent',
@@ -59,21 +58,6 @@ class ResourcesEventListener implements EventListenerInterface
         $data = $event->getData('data');
         $service = new ResourcesAfterCreateService();
         $service->afterCreate($uac, $resource, $data);
-    }
-
-    /**
-     * Handle a resource after update event.
-     * @param Event $event The event.
-     * @return void
-     * @throws \Exception
-     */
-    public function handleResourceAfterUpdateEvent(Event $event)
-    {
-        $resource = $event->getData('resource');
-        $uac = $event->getData('accessControl');
-        $data = $event->getData('data');
-        $service = new ResourcesAfterUpdateService();
-        $service->afterUpdate($uac, $resource, $data);
     }
 
     /**

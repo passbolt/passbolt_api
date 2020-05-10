@@ -112,7 +112,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->putJson("/folders/$resourceId/permissions.json?version=2");
+        $this->putJson("/folders/$resourceId/permissions.json?api-version=2");
         $this->assertError(400, 'The folder id is not valid.');
     }
 

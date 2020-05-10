@@ -16,6 +16,9 @@
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
+/**
+ * Folders prefixed routes
+ */
 Router::plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilder $routes) {
     $routes->setExtensions('json');
 
@@ -46,4 +49,16 @@ Router::plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilde
     /** @uses \Passbolt\Folders\Controller\Folders\FoldersIndexController::index() */
     $routes->connect('/', ['prefix' => 'Folders', 'controller' => 'FoldersIndex', 'action' => 'index'])
         ->setMethods(['GET']);
+});
+
+/**
+ * Move prefixed routes
+ */
+Router::plugin('Passbolt/Folders', ['path' => '/move'], function (RouteBuilder $routes) {
+    $routes->setExtensions('json');
+
+    /** @uses \Passbolt\Folders\Controller\FoldersRelations\FoldersRelationsMoveController::index() */
+    $routes->connect('/:foreignModel/:foreignId', ['prefix' => 'FoldersRelations', 'controller' => 'FoldersRelationsMove', 'action' => 'move'])
+        ->setPass(['foreignModel', 'foreignId'])
+        ->setMethods(['PUT', 'POST']);
 });

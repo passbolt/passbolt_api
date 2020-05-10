@@ -160,7 +160,7 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->deleteJson("/folders/$resourceId.json?version=2");
+        $this->deleteJson("/folders/$resourceId.json?api-version=2");
         $this->assertError(400, 'The folder id is not valid.');
     }
 
