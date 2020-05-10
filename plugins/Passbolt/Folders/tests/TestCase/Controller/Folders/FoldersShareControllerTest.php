@@ -87,7 +87,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $folderId = UuidFactory::uuid();
-        $this->postJson("/folders/{$folderId}/permissions.json?api-version=2");
+        $this->postJson("/share/folder/{$folderId}.json?api-version=2");
         $this->assertError(404, 'The folder does not exist.');
     }
 
@@ -97,7 +97,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $folder = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::READ]);
 
         $this->authenticateAs('ada');
-        $this->postJson("/folders/{$folder->id}/permissions.json?api-version=2");
+        $this->postJson("/share/folder/{$folder->id}.json?api-version=2");
         $this->assertForbiddenError('You are not allowed to update the permissions of this folder.');
     }
 
@@ -112,7 +112,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->putJson("/folders/$resourceId/permissions.json?api-version=2");
+        $this->putJson("/share/folder/$resourceId.json?api-version=2");
         $this->assertError(400, 'The folder id is not valid.');
     }
 
@@ -138,7 +138,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $folder = $this->insertSharedError1Fixture();
 
         $this->authenticateAs('ada');
-        $this->postJson("/folders/{$folder->id}/permissions.json?api-version=2");
+        $this->postJson("/share/folder/{$folder->id}.json?api-version=2");
         $this->assertForbiddenError('You are not allowed to update the permissions of this folder.');
     }
 

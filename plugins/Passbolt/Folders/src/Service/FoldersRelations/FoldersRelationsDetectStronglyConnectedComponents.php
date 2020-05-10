@@ -289,7 +289,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
                 //if (count($point_stack) < $maxlooplength){ // Enable to only collect cycles up to $maxlooplength.
                 $g = $this->php_tarjan($s, $w, $graph, $cycles, $marked, $marked_stack, $point_stack);
                 //}
-                if (!empty($f) or !empty($g)) {
+                if (!empty($f) || !empty($g)) {
                     $f = true;
                 }
             }

@@ -56,7 +56,7 @@ class FoldersUpdateController extends AppController
                 'permissions',
                 'permissions.group',
                 'permissions.user.profile',
-            ]
+            ],
         ];
         $options = $this->QueryString->get($whitelist);
         $folder = $foldersUpdateService->foldersTable->findView($this->User->id(), $folder->id, $options)->first();
