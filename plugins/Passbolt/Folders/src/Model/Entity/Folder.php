@@ -32,6 +32,16 @@ class Folder extends Entity
     const ROOT_ID = false;
 
     /**
+     * List of property names that should **not** be included in JSON or Array
+     * representations of this Entity.
+     *
+     * @var string[]
+     */
+    protected $_hidden = [
+        '_joinData',
+    ];
+
+    /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
      * Note that when '*' is set to true, this allows all unspecified fields to
