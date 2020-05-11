@@ -50,6 +50,11 @@ class ContainFolderParentIdBehavior extends Behavior
     const FOLDER_PARENT_ID_PROPERTY = 'folder_parent_id';
 
     /**
+     * Name of the personal virtual field added to entity.
+     */
+    const PERSONAL_PROPERTY = 'personal';
+
+    /**
      * Default config
      *
      * These are merged with user-provided config when the behavior is used.
@@ -184,11 +189,18 @@ class ContainFolderParentIdBehavior extends Behavior
             throw new InvalidArgumentException('The entity must have an ID.');
         }
 
+        // retrieve and set the entity folder_parent_id field
         /** @var FoldersRelation $folderRelation */
         $folderRelation = $this->foldersRelationsTable->findUserFolderRelation($userId, $entity->id)->first();
 
         $entity->setVirtual([self::FOLDER_PARENT_ID_PROPERTY], true);
         $entity->set(self::FOLDER_PARENT_ID_PROPERTY, $folderRelation ? $folderRelation->folder_parent_id : null);
+
+        // retrieve and set the entity personal field
+        $personal = $this->foldersRelationsTable->isItemPersonal($entity->id);
+
+        $entity->setVirtual([self::PERSONAL_PROPERTY], true);
+        $entity->set(self::PERSONAL_PROPERTY, $personal);
 
         return $entity;
     }
