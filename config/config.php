@@ -51,6 +51,9 @@ return [
                         'PassboltTestData.Pro/AccountSettingsData',
                         'PassboltTestData.Pro/TagsData',
                         'PassboltTestData.Pro/ResourcesTagsData',
+                        'PassboltTestData.Pro/PermissionsData',
+                        'PassboltTestData.Pro/FoldersData',
+                        'PassboltTestData.Pro/FoldersRelationsData',
                     ]
                 ],
                 'fixturize' => [
