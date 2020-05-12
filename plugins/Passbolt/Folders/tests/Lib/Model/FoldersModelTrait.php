@@ -87,6 +87,9 @@ trait FoldersModelTrait
 
         reset($users);
         $userId = key($users);
+        if (!$userId) {
+            $userId = UuidFactory::uuid('user.id.system');
+        }
         if (!isset($data['created_by'])) {
             $data['created_by'] = $userId;
         }
@@ -141,16 +144,12 @@ trait FoldersModelTrait
     /**
      * Assert a user has a folder
      * @param string $folderId The folder to assert
-     * @param string|null $userId
      * @return void
      */
-    protected function assertFolder(string $folderId, string $userId = null)
+    protected function assertFolder(string $folderId)
     {
-        $folderQuery = $this->Folders->find()->where(['id' => $folderId]);
-
-        if (!is_null($userId)) {
-            $folderQuery->where(['user_id' => $userId]);
-        }
+        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        $folderQuery = $foldersTable->find()->where(['id' => $folderId]);
 
         $folder = $folderQuery->first();
         $this->assertNotEmpty($folder);
@@ -163,15 +162,19 @@ trait FoldersModelTrait
      */
     protected function assertFolderNotExist(string $id)
     {
-        $folder = $this->Folders->find()->where(['id' => $id])->count();
+        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+
+        $folder = $foldersTable->find()->where(['id' => $id])->count();
         $this->assertEmpty($folder);
 
-        $foldersRelations = $this->FoldersRelations->find()->where(['foreign_id' => $id])->count();
+        $foldersRelations = $foldersRelationsTable->find()->where(['foreign_id' => $id])->count();
         $this->assertEmpty($foldersRelations);
-        $foldersRelationsParents = $this->FoldersRelations->find()->where(['folder_parent_id' => $id])->count();
+        $foldersRelationsParents = $foldersRelationsTable->find()->where(['folder_parent_id' => $id])->count();
         $this->assertEmpty($foldersRelationsParents);
 
-        $permissions = $this->Permissions->find()->where(['aco_foreign_key' => $id])->count();
+        $permissions = $permissionsTable->find()->where(['aco_foreign_key' => $id])->count();
         $this->assertEmpty($permissions);
     }
 }
