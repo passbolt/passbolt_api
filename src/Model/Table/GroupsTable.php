@@ -158,9 +158,9 @@ class GroupsTable extends Table
         ]);
 
         // Delete rules
-        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedResource', [
+        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedContent', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.'),
+            'message' => __('You need to transfer the ownership for the shared content owned by this user before deleting this user.'),
         ]);
 
         return $rules;

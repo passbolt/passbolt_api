@@ -105,7 +105,7 @@ class SoftDeleteTest extends AppTestCase
         $group = $this->Groups->get($groupId);
         $this->assertFalse($this->Groups->softDelete($group));
         $errors = $group->getErrors();
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedContent']);
         $this->assertGroupIsNotSoftDeleted($groupId);
         $this->assertResourceIsNotSoftDeleted($resourceId);
         $this->assertPermission($resourceId, $groupId, Permission::OWNER);

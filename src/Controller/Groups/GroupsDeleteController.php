@@ -71,7 +71,7 @@ class GroupsDeleteController extends AppController
     {
         $this->GroupsUsers->getConnection()->transactional(function () use ($id) {
             $group = $this->_validateRequestData($id);
-            $this->_transferResourcesOwners($group);
+            $this->_transferContentOwners($group);
             $this->_validateDelete($group);
             if (!$this->Groups->softDelete($group, ['checkRules' => false])) {
                 throw new InternalErrorException(__('Could not delete the group, please try again later.'));
@@ -125,13 +125,16 @@ class GroupsDeleteController extends AppController
             $errors = $group->getErrors();
             $msg = __('The group cannot be deleted.') . ' ';
 
-            if (isset($errors['id']['soleOwnerOfSharedResource'])) {
-                $resourceIds = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
-                $findResourcesOptions = [];
-                $findResourcesOptions['contain']['permissions.user.profile'] = true;
-                $findResourcesOptions['contain']['permissions.group'] = true;
-                $body['errors']['resources']['sole_owner'] = $this->Resources->findAllByIds($group->id, $resourceIds, $findResourcesOptions);
-                $msg .= $errors['id']['soleOwnerOfSharedResource'];
+            if (isset($errors['id']['soleOwnerOfSharedContent'])) {
+                $resourcesIds = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
+                if ($resourcesIds) {
+                    $findResourcesOptions = [];
+                    $findResourcesOptions['contain']['permissions.user.profile'] = true;
+                    $findResourcesOptions['contain']['permissions.group'] = true;
+                    $resources = $this->Resources->findAllByIds($group->id, $resourcesIds, $findResourcesOptions);
+                    $body['errors']['resources']['sole_owner'] = $resources;
+                    $msg .= $errors['id']['soleOwnerOfSharedContent'];
+                }
                 throw new CustomValidationException($msg, $body);
             }
         }
@@ -143,7 +146,7 @@ class GroupsDeleteController extends AppController
      * @throws BadRequestException if the array of manager is
      * @return void
      */
-    protected function _transferResourcesOwners($group)
+    protected function _transferContentOwners($group)
     {
         $owners = $this->request->getData('transfer.owners');
         if (empty($owners)) {
@@ -157,19 +160,19 @@ class GroupsDeleteController extends AppController
             }
         }
 
-        $resourcesIdsToUpdate = Hash::extract($owners, '{n}.aco_foreign_key');
-        sort($resourcesIdsToUpdate);
+        $contentIdsToUpdate = Hash::extract($owners, '{n}.aco_foreign_key');
+        sort($contentIdsToUpdate);
 
-        $resourcesIdsBlockingDelete = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
-        sort($resourcesIdsBlockingDelete);
+        $contentIdBlockingDelete = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
+        sort($contentIdBlockingDelete);
 
         // If all the resources that are requiring a change are not satisfied, throw an exception.
-        if ($resourcesIdsToUpdate != $resourcesIdsBlockingDelete) {
+        if ($contentIdsToUpdate != $contentIdBlockingDelete) {
             throw new BadRequestException('The transfer is not authorized');
         }
 
         // Update all the permissions given as parameter as long as they are relative to a resource which blocked the delete process.
-        $this->Permissions->updateAll(['type' => Permission::OWNER], ['id IN' => $permissionsIdsToUpdate, 'aco_foreign_key IN' => $resourcesIdsBlockingDelete]);
+        $this->Permissions->updateAll(['type' => Permission::OWNER], ['id IN' => $permissionsIdsToUpdate, 'aco_foreign_key IN' => $contentIdBlockingDelete]);
     }
 
     /**

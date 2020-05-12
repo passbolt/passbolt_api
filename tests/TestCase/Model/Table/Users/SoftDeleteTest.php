@@ -73,7 +73,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertUserIsNotSoftDeleted($userKId);
         $this->assertResourceIsNotSoftDeleted(UuidFactory::uuid('resource.id.mocha'));
         $errors = $user->getErrors();
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedContent']);
         $this->assertFalse(isset($errors['id']['soleManagerOfNonEmptyGroup']));
         $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
     }
@@ -114,7 +114,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertUserIsNotSoftDeleted($userMId);
         $this->assertResourceIsNotSoftDeleted($resourceNId);
         $errors = $user->getErrors();
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedContent']);
         $this->assertFalse(isset($errors['id']['soleManagerOfNonEmptyGroup']));
         $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
     }
@@ -307,7 +307,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertFalse($this->Users->softDelete($user));
         $this->assertUserIsNotSoftDeleted($userUId);
         $errors = $user->getErrors();
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedContent']);
         $this->assertFalse(isset($errors['id']['soleManagerOfNonEmptyGroup']));
     }
 
@@ -393,7 +393,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertFalse($this->Users->softDelete($user));
         $errors = $user->getErrors();
         $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedContent']);
     }
 
     public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
