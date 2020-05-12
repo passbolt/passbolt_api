@@ -190,7 +190,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertError(400);
             $this->assertUserIsNotSoftDeleted($userKId);
             $this->assertResourceIsNotSoftDeleted($resourceMId);
-            $this->assertContains('You need to transfer the ownership for the shared passwords', $this->_responseJsonHeader->message);
+            $this->assertContains('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
 
             $errors = $this->_responseJsonBody->errors;
             $this->assertFalse(isset($errors->groups));
