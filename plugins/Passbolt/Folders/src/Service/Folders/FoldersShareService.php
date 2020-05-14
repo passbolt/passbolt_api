@@ -220,12 +220,13 @@ class FoldersShareService
      */
     private function moveSelfOrganizedContentWithInsufficientPermissionToRoot(UserAccessControl $uac, Folder $folder)
     {
-        $userItemsIds = $this->foldersRelationsTable->findByUserIdAndFolderParentId($uac->userId(), $folder->id)
-            ->select('foreign_id')->extract('foreign_id')->toArray();
-        foreach ($userItemsIds as $userItemId) {
-            $canUpdate = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $userItemId, $uac->userId(), Permission::UPDATE);
+        $personalItems = $this->foldersRelationsTable->findByUserIdAndFolderParentId($uac->userId(), $folder->id)
+            ->select(['foreign_id', 'foreign_model'])
+            ->toArray();
+        foreach ($personalItems as $personalItem) {
+            $canUpdate = $this->userHasPermissionService->check($personalItem->foreign_model, $personalItem->foreign_id, $uac->userId(), Permission::UPDATE);
             if (!$canUpdate) {
-                $this->foldersRelationsTable->moveItemFor($userItemId, [$uac->userId()], null);
+                $this->foldersRelationsTable->moveItemFor($personalItem->foreign_id, [$uac->userId()], FoldersRelation::ROOT);
                 continue;
             }
         }
