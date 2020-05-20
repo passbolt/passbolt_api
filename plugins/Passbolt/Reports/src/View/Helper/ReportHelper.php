@@ -15,7 +15,7 @@ class ReportHelper extends Helper
      */
     public static function getSubReport(array $reportData, string $slug)
     {
-        foreach($reportData as $report) {
+        foreach ($reportData as $report) {
             if (isset($report['slug']) && $report['slug'] === $slug) {
                 return $report;
             }

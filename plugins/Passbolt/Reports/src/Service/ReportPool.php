@@ -14,7 +14,6 @@
  */
 namespace Passbolt\Reports\Utility;
 
-
 /**
  * Singleton class.
  * Used to add and list available reports.
@@ -34,7 +33,6 @@ class ReportPool
      * @var array
      */
     private static $reports = [];
-
 
     /**
      * ReportPool constructor.
@@ -60,12 +58,13 @@ class ReportPool
 
     /**
      * Add a report in the report pool.
-     * @param AbstractReport $report
+     * @param AbstractReport $report The report to add
      *
      * @return AbstractReport[] list of reports
      */
-    public function addReport(AbstractReport $report) {
-        $closure = function() use($report) {
+    public function addReport(AbstractReport $report)
+    {
+        $closure = function () use ($report) {
             return $report;
         };
         $closure = $closure->bindTo($report);
@@ -97,7 +96,8 @@ class ReportPool
      *
      * @return Callable[] list of callable reports (AbstractReport)
      */
-    public function addReports(array $reports) {
+    public function addReports(array $reports)
+    {
         self::$reports = array_merge(self::$reports, $reports);
 
         return self::$reports;
@@ -114,7 +114,4 @@ class ReportPool
     {
         return self::$reports;
     }
-
-
-
 }
