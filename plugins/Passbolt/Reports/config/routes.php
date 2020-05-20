@@ -21,9 +21,9 @@ Router::plugin('Passbolt/Reports', ['path' => '/reports'], function (RouteBuilde
     /**
      * Generate and return a report
      *
-     * @uses \Passbolt\Reports\Controller\Reports\AdminReportsViewController::getReport()
+     * @uses \Passbolt\Reports\Controller\Reports\ReportsViewController::getReport()
      */
-    $routes->connect('/:reportSlug', ['prefix' => 'Reports', 'controller' => 'AdminReportsView', 'action' => 'getReport'])
+    $routes->connect('/:reportSlug', ['prefix' => 'Reports', 'controller' => 'ReportsView', 'action' => 'view'])
         ->setMethods(['GET'])
         ->setPass(['reportSlug']);
 });

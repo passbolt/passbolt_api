@@ -27,7 +27,7 @@ use InvalidArgumentException;
 use Passbolt\Reports\Utility\ReportInterface;
 use Passbolt\Reports\Utility\ReportViewService;
 
-class AdminReportsViewController extends AppController
+class ReportsViewController extends AppController
 {
     const DEFAULT_LAYOUT = 'Passbolt/Reports.Reports/ReportsLayout';
 
@@ -58,10 +58,10 @@ class AdminReportsViewController extends AppController
      * @throws BadRequestException If the requested report does not exist
      * @return void
      */
-    public function getReport(string $reportSlug)
+    public function view(string $reportSlug)
     {
         if ($this->User->role() !== Role::ADMIN) {
-            throw new ForbiddenException(__('Only administrators can view admin reports.'));
+            throw new ForbiddenException(__('Only administrators can view reports.'));
         }
 
         try {
