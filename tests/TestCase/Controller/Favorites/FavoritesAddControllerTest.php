@@ -31,7 +31,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
-        'app.Base/Favorites', 'app.Base/Permissions'
+        'app.Base/Favorites', 'app.Base/Permissions',
     ];
 
     public function setUp()
@@ -75,7 +75,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
             'foreign_key' => 'modified_foreign_key',
             'created' => '2019-07-29 10:31:35',
             'modified' => '2019-07-29 10:31:35',
-            'user_id' => 'modified_user_id'
+            'user_id' => 'modified_user_id',
         ];
 
         $this->postJson("/favorites/resource/$resourceId.json", $favoriteData);

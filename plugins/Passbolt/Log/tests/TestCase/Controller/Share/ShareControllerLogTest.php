@@ -17,6 +17,7 @@ namespace Passbolt\Log\Test\TestCase\Controller\Share;
 use App\Model\Entity\Permission;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Model\Table\PermissionsHistoryTable;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
@@ -32,10 +33,10 @@ class ShareControllerLogTest extends LogIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles',
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
-        'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue',
+        'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
         'plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs',
         'plugin.Passbolt/Log.Base/EntitiesHistory', 'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretsHistory'
+        'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
     public function setUp()
@@ -60,7 +61,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         // Users permissions changes.
         // Add an owner permission for the user Edith
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userEId, 'data' => self::getDummySecretData($userEId)];
+        $data['secrets'][] = ['user_id' => $userEId, 'data' => Hash::get(self::getDummySecretData(), 'data')];
         $expectedAddedUsersIds[] = $userEId;
 
         $this->authenticateAs('ada');
@@ -72,7 +73,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 1
+            'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
@@ -105,7 +106,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $data = ['permissions' => []];
         // Delete the permission of the user Betty.
         $data['permissions'][] = [
-            'id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true
+            'id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true,
         ];
 
         $this->authenticateAs('ada');
@@ -117,7 +118,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 1
+            'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
@@ -161,7 +162,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 1
+            'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
@@ -211,7 +212,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.dryRun'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 1
+            'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
@@ -236,7 +237,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         // Users permissions changes.
         // Add an owner permission for the user Edith
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userEId, 'data' => self::getDummySecretData($userEId)];
+        $data['secrets'][] = ['user_id' => $userEId, 'data' => Hash::get(self::getDummySecretData(), 'data')];
         $expectedAddedUsersIds[] = $userEId;
 
         $this->authenticateAs('ada');
@@ -247,7 +248,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 0
+            'status' => 0,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
     }

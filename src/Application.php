@@ -18,6 +18,16 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
+use App\Notification\EmailDigest\DigestMarshallerRegister\Group\GroupUserEmailDigestMarshallerRegister;
+use App\Notification\EmailDigest\DigestMarshallerRegister\Resource\ResourceEmailDigestMarshallerRegister;
+use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Notification\Email\Redactor\CoreEmailRedactorPool;
+use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GeneralNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -50,7 +60,7 @@ class Application extends BaseApplication
             ->add(ContentSecurityPolicyMiddleware::class)
             ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))
             ->add(new AssetMiddleware([
-                'cacheTime' => Configure::read('Asset.cacheTime')
+                'cacheTime' => Configure::read('Asset.cacheTime'),
             ]))
             ->add(new RoutingMiddleware($this))
             ->add(new SessionPreventExtensionMiddleware())
@@ -100,6 +110,34 @@ class Application extends BaseApplication
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
         }
+
+        $this->getEventManager()
+            // Contains all emails redactors for Passbolt Core
+            ->on(new CoreEmailRedactorPool())
+            // Add the different email settings definitions for Passbolt Core
+            ->on(new CommentNotificationSettingsDefinition())
+            ->on(new GroupNotificationSettingsDefinition())
+            ->on(new GeneralNotificationSettingsDefinition())
+            ->on(new ResourceNotificationSettingsDefinition())
+            ->on(new UserNotificationSettingsDefinition())
+            ->on(new AdminNotificationSettingsDefinition())
+            // Register emails digest marshallers
+            ->on(new GroupUserEmailDigestMarshallerRegister())
+            ->on(new ResourceEmailDigestMarshallerRegister());
+    }
+
+    /**
+     * Bootstrap all the loaded plugins
+     * Any which require the application to be fully loaded should be registered here.
+     * @return void
+     */
+    public function pluginBootstrap()
+    {
+        parent::pluginBootstrap();
+
+        // Register the emails redactors which listen on events where emails must be sent
+        // It must happens after the emails redactors have been registered in the system
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
     /**
@@ -164,7 +202,9 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true ]);
+        $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
 
         $mfaEnabled = Configure::read('passbolt.plugins.multiFactorAuthentication.enabled');
         if (!isset($mfaEnabled) || $mfaEnabled) {

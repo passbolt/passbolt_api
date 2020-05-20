@@ -160,7 +160,7 @@ trait FormatValidationTrait
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
                 $formData = array_merge($formData, [$fieldName => $testCaseData]);
                 $formData = $this->_adjustEntityData($formData);
-                $form = new $FormClass();
+                $form = new $FormClass($this->getEventManager());
                 $validate = $form->validate($formData);
 
                 if ($expectedResult == true) {
@@ -370,7 +370,7 @@ trait FormatValidationTrait
             'rule_name' => '_ascii',
             'test_cases' => [
                 self::getStringMask('alphaASCII', $length) => true,
-                self::getStringMask('alphaASCIIUpper', $length) => true
+                self::getStringMask('alphaASCIIUpper', $length) => true,
             ],
         ];
 
@@ -473,7 +473,7 @@ trait FormatValidationTrait
                 $min - 1 => false,
                 $min => true,
                 $max => true,
-                $max + 1 => false
+                $max + 1 => false,
             ],
         ];
 

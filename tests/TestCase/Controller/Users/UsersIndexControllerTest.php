@@ -26,7 +26,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/GroupsUsers', 'app.Base/Avatars'
+        'app.Base/GroupsUsers', 'app.Base/Avatars',
     ];
 
     public function testUsersIndexGetSuccess()

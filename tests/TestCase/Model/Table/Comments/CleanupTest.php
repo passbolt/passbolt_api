@@ -26,7 +26,7 @@ class CleanupTest extends AppTestCase
     public $Comments;
     public $Groups;
     public $fixtures = [
-        'app.Base/Users', 'app.Alt0/Permissions', 'app.Base/Resources', 'app.Base/Comments'
+        'app.Base/Users', 'app.Alt0/Permissions', 'app.Base/Resources', 'app.Base/Comments',
     ];
     public $options;
 
@@ -40,7 +40,7 @@ class CleanupTest extends AppTestCase
             'foreign_key' => true,
             'content' => true,
             'created_by' => true,
-            'modified_by' => true
+            'modified_by' => true,
         ]];
     }
 
@@ -59,7 +59,7 @@ class CleanupTest extends AppTestCase
             'foreign_key' => UuidFactory::uuid('resource.id.april'),
             'content' => 'test comment',
             'created_by' => UuidFactory::uuid('user.id.sofia'),
-            'modified_by' => UuidFactory::uuid('user.id.sofia')
+            'modified_by' => UuidFactory::uuid('user.id.sofia'),
         ], $this->options);
         $this->Comments->save($fav, ['checkRules' => false]);
         $this->runCleanupChecks('Comments', 'cleanupSoftDeletedUsers', $originalCount);
@@ -74,7 +74,7 @@ class CleanupTest extends AppTestCase
             'foreign_key' => UuidFactory::uuid('resource.id.april'),
             'content' => 'test comment',
             'created_by' => UuidFactory::uuid('user.id.nope'),
-            'modified_by' => UuidFactory::uuid('user.id.nope')
+            'modified_by' => UuidFactory::uuid('user.id.nope'),
         ], $this->options);
         $this->Comments->save($fav, ['checkRules' => false]);
         $this->runCleanupChecks('Comments', 'cleanupHardDeletedUsers', $originalCount);
@@ -104,7 +104,7 @@ class CleanupTest extends AppTestCase
             'foreign_key' => UuidFactory::uuid('resource.id.nope'),
             'content' => 'test comment',
             'created_by' => UuidFactory::uuid('user.id.ada'),
-            'modified_by' => UuidFactory::uuid('user.id.ada')
+            'modified_by' => UuidFactory::uuid('user.id.ada'),
         ], $this->options);
         $this->Comments->save($fav, ['checkRules' => false]);
         $this->runCleanupChecks('Comments', 'cleanupHardDeletedResources', $originalCount);

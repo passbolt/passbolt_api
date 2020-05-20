@@ -21,7 +21,7 @@ use App\Utility\UuidFactory;
 class SecretsViewControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Secrets', 'plugin.Passbolt/Log.Base/SecretAccesses'
+        'app.Base/Users', 'app.Base/Secrets', 'plugin.Passbolt/Log.Base/SecretAccesses',
     ];
 
     public function testSecretsViewControllerSuccess()

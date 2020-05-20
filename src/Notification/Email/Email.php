@@ -28,7 +28,7 @@ class Email
     /**
      * @var string
      */
-    private $to;
+    private $recipient;
     /**
      * @var string
      */
@@ -43,14 +43,14 @@ class Email
     private $template;
 
     /**
-     * @param string $to Email recipient
+     * @param string $recipient Email recipient
      * @param string $subject Subject of the email
-     * @param array $data Data to inject in the email template
+     * @param array  $data Data to inject in the email template
      * @param string $template Template to use for the email
      */
-    public function __construct(string $to, string $subject, array $data, string $template)
+    public function __construct(string $recipient, string $subject, array $data, string $template)
     {
-        $this->to = $to;
+        $this->recipient = $recipient;
         $this->subject = $subject;
         $this->data = $data;
         $this->template = $template;
@@ -59,9 +59,9 @@ class Email
     /**
      * @return string
      */
-    public function getTo()
+    public function getRecipient()
     {
-        return $this->to;
+        return $this->recipient;
     }
 
     /**

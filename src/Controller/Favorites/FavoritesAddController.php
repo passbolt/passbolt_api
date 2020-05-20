@@ -70,8 +70,8 @@ class FavoritesAddController extends AppController
                 'accessibleFields' => [
                     'user_id' => true,
                     'foreign_key' => true,
-                    'foreign_model' => true
-                ]
+                    'foreign_model' => true,
+                ],
             ]
         );
 

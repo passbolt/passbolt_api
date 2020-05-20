@@ -52,7 +52,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
         if ($this->checkPluginLicenseExists()) {
             $this->mockLicenseIssuerKey();
             $postData = [
-                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev')
+                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev'),
             ];
             $this->post('/install/license_key', $postData);
             $this->assertResponseCode(302);
@@ -67,7 +67,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
         if ($this->checkPluginLicenseExists()) {
             $this->mockLicenseIssuerKey();
             $postData = [
-                'license_key' => 'invalid-format'
+                'license_key' => 'invalid-format',
             ];
             $this->post('/install/license_key', $postData);
             $data = ($this->_getBodyAsString());
@@ -82,7 +82,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
         if ($this->checkPluginLicenseExists()) {
             $this->mockLicenseIssuerKey();
             $postData = [
-                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_expired')
+                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_expired'),
             ];
             $this->post('/install/license_key', $postData);
             $data = ($this->_getBodyAsString());

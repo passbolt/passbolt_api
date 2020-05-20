@@ -15,7 +15,9 @@
 namespace App\Notification\Email;
 
 use Cake\Event\Event;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
 use Cake\Event\EventManagerInterface;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -35,6 +37,8 @@ use Throwable;
  */
 class EmailSubscriptionDispatcher implements EventListenerInterface
 {
+    use EventDispatcherTrait;
+
     /**
      * @var EventManagerInterface
      */
@@ -56,30 +60,37 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     private $logger;
 
     /**
-     * @param EventManagerInterface $eventManager Event manager
-     * @param EmailSubscriptionManager $emailSubscriptionManager EmailSubscriptionManaer
-     * @param EmailSender $emailSender EmailSender
-     * @param LoggerInterface $logger Logger
+     * @param EventManager $eventManager Event Manager Instance
+     * @param EmailSubscriptionManager $emailSubscriptionManager EmailSubscriptionManager Instance
+     * @param EmailSender $emailSender EmailSender Instance
+     * @param LoggerInterface $logger Logger Instance
      */
     public function __construct(
-        EventManagerInterface $eventManager,
-        EmailSubscriptionManager $emailSubscriptionManager,
-        EmailSender $emailSender,
+        EventManager $eventManager = null,
+        EmailSubscriptionManager $emailSubscriptionManager = null,
+        EmailSender $emailSender = null,
         LoggerInterface $logger = null
     ) {
-        $this->eventManager = $eventManager;
-        $this->emailSubscriptionManager = $emailSubscriptionManager;
-        $this->emailSender = $emailSender;
+        $this->setEventManager($eventManager ?? EventManager::instance());
+        $this->emailSubscriptionManager = $emailSubscriptionManager ?? new EmailSubscriptionManager();
+        $this->emailSender = $emailSender ?? new EmailSender();
         $this->logger = $logger ?? new NullLogger();
     }
 
     /**
+     * The collect method allow the dispatcher to dispatch an event to the subscribed redactors to know which events
+     * they are subscribed to.
+     * Then the dispatcher register itself in the event manager to listen on all the events that redactors are subscribed.
+     * It is required that the EmailSubscriptionDispatcher collects the subscribers before it register, if not, it will not
+     * be subscribed to any events.
      * @return $this
      */
-    public function collect()
+    public function collectSubscribedEmailRedactors()
     {
-        $this->eventManager->dispatch(CollectSubscribedEmailRedactorEvent::create($this->emailSubscriptionManager));
-        $this->eventManager->on($this);
+        $this->getEventManager()->dispatch(
+            CollectSubscribedEmailRedactorEvent::create($this->emailSubscriptionManager)
+        );
+        $this->getEventManager()->on($this);
 
         return $this;
     }
@@ -123,7 +134,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
                             sprintf('EmailSubscriptionDispatcher failed to send email on event `%s`', $event->getName()),
                             [
                                 'emailCollection' => $emailCollection,
-                                'exception' => $t
+                                'exception' => $t,
                             ]
                         );
                     }

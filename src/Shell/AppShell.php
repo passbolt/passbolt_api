@@ -14,7 +14,6 @@
  */
 namespace App\Shell;
 
-use App\Shell\AppShellBootstrap;
 use Cake\Console\Shell;
 
 /**

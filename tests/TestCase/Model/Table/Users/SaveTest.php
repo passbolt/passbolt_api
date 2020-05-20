@@ -32,7 +32,7 @@ class SaveTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions'
+        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
     ];
 
     protected function getEntityDefaultOptions()
@@ -44,16 +44,16 @@ class SaveTest extends AppTestCase
                 'role_id' => true,
                 'deleted' => true,
                 'active' => true,
-                'profile' => true
+                'profile' => true,
             ],
             'associated' => [
                 'Profiles' => [
                     'accessibleFields' => [
                         'first_name' => true,
-                        'last_name' => true
-                    ]
-                ]
-            ]
+                        'last_name' => true,
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -71,7 +71,7 @@ class SaveTest extends AppTestCase
 
         // Fetch the newly created user from DB
         $addedUser = $this->Users->get($testUser->id, [
-            'contain' => ['Profiles']
+            'contain' => ['Profiles'],
         ]);
 
         $this->assertNotEmpty($addedUser);
@@ -100,7 +100,7 @@ class SaveTest extends AppTestCase
 
         // Fetch the updated User from DB.
         $fetchedUser = $this->Users->get($testUser->id, [
-            'contain' => ['Profiles']
+            'contain' => ['Profiles'],
         ]);
 
         $this->assertNotEmpty($fetchedUser);
@@ -118,7 +118,7 @@ class SaveTest extends AppTestCase
         Configure::write('passbolt.email.validate.mx', true);
         $user = self::getDummyUser();
         $testCases = [
-            'email' => self::getEmailTestCases(true)
+            'email' => self::getEmailTestCases(true),
         ];
         $this->assertFieldFormatValidation($this->Users, 'username', $user, self::getEntityDefaultOptions(), $testCases);
     }
@@ -128,7 +128,7 @@ class SaveTest extends AppTestCase
         Configure::write('passbolt.email.validate.mx', false);
         $user = self::getDummyUser();
         $testCases = [
-            'email' => self::getEmailTestCases(false)
+            'email' => self::getEmailTestCases(false),
         ];
         $this->assertFieldFormatValidation($this->Users, 'username', $user, self::getEntityDefaultOptions(), $testCases);
     }
@@ -207,7 +207,7 @@ class SaveTest extends AppTestCase
     {
         $testCases = [
             'uuid' => self::getUuidTestCases(),
-            'requirePresence' => self::getRequirePresenceTestCases()
+            'requirePresence' => self::getRequirePresenceTestCases(),
         ];
 
         $this->assertFieldFormatValidation(
@@ -237,7 +237,7 @@ class SaveTest extends AppTestCase
     public function testValidationProfile()
     {
         $testCases = [
-            'requirePresence' => self::getRequirePresenceTestCases()
+            'requirePresence' => self::getRequirePresenceTestCases(),
         ];
 
         $this->assertFieldFormatValidation(
@@ -281,7 +281,7 @@ class SaveTest extends AppTestCase
     public function testRuleRoleIdExists()
     {
         $data = self::getDummyUser([
-            'role_id' => self::getNonExistingRoleId()
+            'role_id' => self::getNonExistingRoleId(),
         ]);
 
         $options = self::getEntityDefaultOptions();

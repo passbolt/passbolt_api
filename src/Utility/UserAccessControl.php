@@ -110,6 +110,16 @@ class UserAccessControl
     }
 
     /**
+     * Check if the given user is the current user.
+     * @param string $userId the user uuid
+     * @return bool
+     */
+    public function is(string $userId)
+    {
+        return ($this->userId() === $userId);
+    }
+
+    /**
      * Convert the UserAccessControl data in array
      * @return array
      */
@@ -117,7 +127,7 @@ class UserAccessControl
     {
         return [
             'userId' => $this->userId,
-            'rolename' => $this->roleName
+            'rolename' => $this->roleName,
         ];
     }
 }

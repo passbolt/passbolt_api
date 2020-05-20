@@ -17,10 +17,12 @@ namespace Passbolt\WebInstaller\Test\TestCase\Form;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
+use Cake\Event\EventDispatcherTrait;
 use Passbolt\WebInstaller\Form\GpgKeyForm;
 
 class GpgKeyFormTest extends AppTestCase
 {
+    use EventDispatcherTrait;
     use FormatValidationTrait;
     use GpgkeysModelTrait;
 
@@ -59,8 +61,8 @@ class GpgKeyFormTest extends AppTestCase
                 'test_cases' => [
                     '2FC8945833C51946E937F9FED47B0811573EE67E' => false,
                     $this->getDummyGpgkey()['fingerprint'] => true,
-                ]
-            ]
+                ],
+            ],
         ];
         $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'fingerprint', $this->getDummyGpgkey(), $testCases);
     }

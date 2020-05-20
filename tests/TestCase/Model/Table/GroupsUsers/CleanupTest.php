@@ -40,7 +40,7 @@ class CleanupTest extends AppTestCase
             'group_id' => true,
             'user_id' => true,
             'is_admin' => true,
-            'created_by' => true
+            'created_by' => true,
         ]];
     }
 

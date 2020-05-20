@@ -72,18 +72,18 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         // ActionListeners -> model.Initialize, as the callback will not be fired twice
         // and controller actions can be called several times
         $this->Permissions->belongsTo('Passbolt/Log.PermissionsHistory', [
-            'foreignKey' => 'foreign_key'
+            'foreignKey' => 'foreign_key',
         ]);
         $this->Resources->belongsTo('Passbolt/Log.EntitiesHistory', [
-            'foreignKey' => 'foreign_key'
+            'foreignKey' => 'foreign_key',
         ]);
         $this->Secrets->belongsTo('Passbolt/Log.SecretsHistory', [
-            'foreignKey' => 'foreign_key'
+            'foreignKey' => 'foreign_key',
         ]);
         $this->Secrets->hasMany('Passbolt/Log.SecretAccesses');
 
         $this->SecretAccesses->belongsTo('Passbolt/Log.EntitiesHistory', [
-            'foreignKey' => 'foreign_key'
+            'foreignKey' => 'foreign_key',
         ]);
     }
 

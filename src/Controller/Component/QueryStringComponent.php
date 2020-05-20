@@ -256,6 +256,7 @@ class QueryStringComponent extends Component
                     case 'is-favorite':
                     case 'is-owned-by-me':
                     case 'is-shared-with-me':
+                    case 'is-deleted':
                         self::validateFilterBoolean($values, $filterName);
                         break;
                     case 'has-tag':

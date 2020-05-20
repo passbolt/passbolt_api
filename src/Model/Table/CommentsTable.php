@@ -56,7 +56,7 @@ class CommentsTable extends Table
      * List of allowed foreign models on which Comments can be plugged.
      */
     const ALLOWED_FOREIGN_MODELS = [
-        'Resource'
+        'Resource',
     ];
 
     /**
@@ -76,22 +76,22 @@ class CommentsTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Resources', [
-            'foreignKey' => 'foreign_key'
+            'foreignKey' => 'foreign_key',
         ]);
 
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
 
         $this->hasOne('Creator', [
             'className' => 'Users',
             'bindingKey' => 'created_by',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
         $this->hasOne('Modifier', [
             'className' => 'Users',
             'bindingKey' => 'modified_by',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
     }
 
@@ -160,13 +160,13 @@ class CommentsTable extends Table
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_soft_deleted', [
             'table' => 'Resources',
             'errorField' => 'foreign_key',
-            'message' => __('The resource is soft deleted.')
+            'message' => __('The resource is soft deleted.'),
         ]);
         $rules->addCreate($rules->existsIn('user_id', 'Users'), 'user_exists');
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => __('The user is soft deleted.')
+            'message' => __('The user is soft deleted.'),
         ]);
         $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
             'errorField' => 'foreign_key',
@@ -187,13 +187,13 @@ class CommentsTable extends Table
         $rules->addUpdate($rules->existsIn('modified_by', 'Users'), 'modifier_exists');
         $rules->addUpdate([$this, 'ruleIsOwner'], 'is_owner', [
             'errorField' => 'user_id',
-            'message' => __('The user cannot update this comment.')
+            'message' => __('The user cannot update this comment.'),
         ]);
 
         // Delete rules.
         $rules->addDelete([$this, 'ruleIsOwner'], 'is_owner', [
             'errorField' => 'user_id',
-            'message' => __('The user cannot delete this comment.')
+            'message' => __('The user cannot delete this comment.'),
         ]);
 
         return $rules;
@@ -232,23 +232,23 @@ class CommentsTable extends Table
         $query = $this->find('threaded');
         $query->where([
             'Comments.foreign_model' => $foreignModelName,
-            'Comments.foreign_key' => $foreignKey
+            'Comments.foreign_key' => $foreignKey,
         ]);
         $query->order([
-            'Comments.modified' => 'DESC'
+            'Comments.modified' => 'DESC',
         ]);
 
         // If contains creator.
         if (isset($options['contain']['creator'])) {
             $query->contain([
-                'Creator' => ['Profiles' => AvatarsTable::addContainAvatar()]
+                'Creator' => ['Profiles' => AvatarsTable::addContainAvatar()],
             ]);
         }
 
         // If contains modifier.
         if (isset($options['contain']['modifier'])) {
             $query->contain([
-                'Modifier' => ['Profiles' => AvatarsTable::addContainAvatar()]
+                'Modifier' => ['Profiles' => AvatarsTable::addContainAvatar()],
             ]);
         }
 

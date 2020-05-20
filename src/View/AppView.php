@@ -37,7 +37,7 @@ class AppView extends View
     public function initialize()
     {
         $myTemplates = [
-            'error' => '<div class="error message">{{content}}</div>'
+            'error' => '<div class="error message">{{content}}</div>',
         ];
         $this->Form->setTemplates($myTemplates);
     }

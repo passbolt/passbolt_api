@@ -24,6 +24,8 @@
             <directory>./plugins/Passbolt/Log/tests/TestCase</directory>
             <directory>./plugins/Passbolt/AuditLog/tests/TestCase</directory>
             <directory>./plugins/Passbolt/EmailNotificationSettings/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/EmailDigest/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
         </testsuite>
     </testsuites>
 
@@ -50,6 +52,8 @@
             <directory suffix=".php">./plugins/Log/src/</directory>
             <directory suffix=".php">./plugins/AuditLog/src/</directory>
             <directory suffix=".php">./plugins/EmailNotificationSettings/src/</directory>
+            <directory suffix=".php">./plugins/EmailDigest/src/</directory>
+            <directory suffix=".php">./plugins/Reports/src/</directory>
         </whitelist>
     </filter>
 </phpunit>

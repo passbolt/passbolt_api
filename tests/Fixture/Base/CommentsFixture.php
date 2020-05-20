@@ -55,7 +55,7 @@ class CommentsFixture extends TestFixture
                 'modified' => '2012-11-25 13:39:26',
                 'created_by' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
                 'modified_by' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
-                'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498'
+                'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
             ],
             [
                 'id' => 'da213c84-3d61-596e-882b-f870c26bd0f5',
@@ -67,7 +67,7 @@ class CommentsFixture extends TestFixture
                 'modified' => '2012-11-25 13:39:25',
                 'created_by' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
                 'modified_by' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
-                'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498'
+                'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
             ],
         ];
         parent::init();

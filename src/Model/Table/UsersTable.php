@@ -43,6 +43,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
  * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsToMany $Groups
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable|\Cake\ORM\Association\HasMany $EntitiesHistory
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
@@ -57,6 +58,8 @@ use Cake\Validation\Validator;
 class UsersTable extends Table
 {
     use UsersFindersTrait;
+
+    const AFTER_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterRegister.success';
 
     /**
      * Initialize method
@@ -76,28 +79,32 @@ class UsersTable extends Table
 
         $this->belongsTo('Roles', [
             'foreignKey' => 'role_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->hasMany('AuthenticationTokens', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->hasMany('FileStorage', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->hasOne('Gpgkeys', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->hasOne('Profiles', [
             'foreignKey' => 'user_id',
         ]);
         $this->hasMany('GroupsUsers', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->belongsToMany('Groups', [
-            'through' => 'GroupsUsers'
+            'through' => 'GroupsUsers',
         ]);
         $this->hasMany('Permissions', [
-            'foreignKey' => 'aro_foreign_key'
+            'foreignKey' => 'aro_foreign_key',
+        ]);
+        $this->hasMany('EntitiesHistory', [
+            'className' => 'Passbolt/Log.EntitiesHistory',
+            'foreignKey' => 'foreign_key',
         ]);
     }
 
@@ -184,20 +191,20 @@ class UsersTable extends Table
     {
         // Add rule
         $rules->add($rules->isUnique(['username', 'deleted']), 'uniqueUsername', [
-            'message' => __('This username is already in use.')
+            'message' => __('This username is already in use.'),
         ]);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
-            'message' => __('This is not a valid role.')
+            'message' => __('This is not a valid role.'),
         ]);
 
         // Delete rules
-        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedResource', [
+        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedContent', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.')
+            'message' => __('You need to transfer the ownership for the shared content owned by this user before deleting this user.'),
         ]);
         $rules->addDelete(new IsNotSoleManagerOfNonEmptyGroupRule(), 'soleManagerOfNonEmptyGroup', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the user group manager role to other users before deleting this user.')
+            'message' => __('You need to transfer the user group manager role to other users before deleting this user.'),
         ]);
 
         return $rules;
@@ -248,10 +255,10 @@ class UsersTable extends Table
                         'validate' => 'register',
                         'accessibleFields' => [
                             'first_name' => true,
-                            'last_name' => true
-                        ]
-                    ]
-                ]
+                            'last_name' => true,
+                        ],
+                    ],
+                ],
             ]
         );
     }
@@ -313,10 +320,10 @@ class UsersTable extends Table
                     'validate' => 'update',
                     'accessibleFields' => $accessibleProfileFields,
                     'associated' => [
-                        'Avatars'
-                    ]
-                ]
-            ]
+                        'Avatars',
+                    ],
+                ],
+            ],
         ]);
 
         return $entity;
@@ -349,7 +356,8 @@ class UsersTable extends Table
         // find all the resources that only belongs to the user and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. checkRules)
-        $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true)->extract('aco_foreign_key')->toArray();
+        $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
+            ->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
@@ -358,7 +366,7 @@ class UsersTable extends Table
         // We do not want empty groups
         // Soft delete all the groups where the user is alone
         // Note that all associated resources are already deleted in previous step
-        // ref. findResourcesOnlyUserCanAccess checkGroupsUsers = true
+        // ref. findAcosOnlyAroCanAccess checkGroupsUsers = true
         $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)->extract('group_id')->toArray();
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
@@ -377,6 +385,9 @@ class UsersTable extends Table
         // Delete all favorites
         $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $Favorites->deleteAll(['user_id' => $user->id]);
+
+        // Mark gpg ke as deleted
+        $this->Gpgkeys->updateAll(['deleted' => true], ['user_id' => $user->id]);
 
         // Delete all tags
         if (Configure::read('passbolt.plugins.tags.enabled')) {
@@ -442,7 +453,7 @@ class UsersTable extends Table
         if (isset($control) && !is_null($control->userId())) {
             $eventData['adminId'] = $control->userId();
         }
-        $event = new Event('Model.Users.afterRegister.success', $this, $eventData);
+        $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);
 
         return $user;

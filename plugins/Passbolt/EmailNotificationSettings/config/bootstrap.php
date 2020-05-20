@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.10.0
  */
+
 use Cake\Core\Configure;
 
 Configure::load('Passbolt/EmailNotificationSettings.config', 'default', true);

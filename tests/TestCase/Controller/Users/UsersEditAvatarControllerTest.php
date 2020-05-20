@@ -53,9 +53,9 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                         'filesize' => 170049, // filesize in bytes
                         'error' => \UPLOAD_ERR_OK, // upload (error) status
                         'filename' => 'ada.png', // upload filename
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v1', $data);
         $this->assertSuccess();
@@ -97,9 +97,9 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                     'file' => [
                         'tmp_file' => $pdfFile,
                         'name' => 'minimal.pdf',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v1', $data);
         $this->assertError(400, 'Could not validate user data.');
@@ -117,8 +117,8 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $data = [
             'id' => UuidFactory::uuid('user.id.irene'),
             'profile' => [
-                'avatar' => []
-            ]
+                'avatar' => [],
+            ],
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v1', $data);
         $this->assertError(400, 'Could not validate user data.');
@@ -148,9 +148,9 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                     'extension' => 'jpg',
                     'hash' => '12345',
                     'path' => '/test/test1',
-                    'adapter' => 'TestAdapter'
-                ]
-            ]
+                    'adapter' => 'TestAdapter',
+                ],
+            ],
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v1', $data);
         $this->assertSuccess();

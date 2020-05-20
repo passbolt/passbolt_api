@@ -30,7 +30,7 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Favorites', 'app.Base/Avatars', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings'
+        'app.Base/Favorites', 'app.Base/Avatars', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
     ];
 
     public function setUp()
@@ -326,7 +326,7 @@ hcciUFw5
 
         // Try to add the user frances.
         $data = [
-            'name' => 'Updated group name'
+            'name' => 'Updated group name',
         ];
 
         // Update the group name.
@@ -352,7 +352,7 @@ hcciUFw5
 
         // Try to add the user frances.
         $data = [
-            'name' => 'Updated group name'
+            'name' => 'Updated group name',
         ];
 
         // Update the group name.
@@ -482,7 +482,7 @@ hcciUFw5
         // Try to add the user frances.
         $data = [
             'name' => 'Updated group name',
-            'groups_users' => $changes
+            'groups_users' => $changes,
         ];
 
         // Update the group users.
@@ -591,7 +591,7 @@ hcciUFw5
 
     public function testGroupsUpdateErrorDoesNotExistGroup()
     {
-        $this->authenticateAs('ada');
+        $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid();
         $this->putJson("/groups/$groupId.json");
         $this->assertError(404, 'The group does not exist.');

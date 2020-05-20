@@ -202,7 +202,7 @@ st3lhztahsDyWaZfpwNevoDzETA6ibxJ4aeDUMQ99OXf/V5vXA0300wqsBInri1f
 UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
 =GMak
 -----END PGP PRIVATE KEY BLOCK-----',
-            'fingerprint' => 'B16B0A095A9AF46D7D7FAA440A848FBED334B3EC'
+            'fingerprint' => 'B16B0A095A9AF46D7D7FAA440A848FBED334B3EC',
             ],
             'email' => [
                 'sender_name' => 'Webinstaller test',
@@ -226,11 +226,11 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
                 'username' => 'webinstaller@passbolt.com',
                 'deleted' => 0,
                 'role_id' => '0d6990c8-4aaa-4456-a333-00e803ba0828',
-            ]
+            ],
         ];
         if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
             $licenseSettings = [
-                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev')
+                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev'),
             ];
             $data += $licenseSettings;
         }
@@ -248,6 +248,10 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $this->assertContains('Installing', $data);
     }
 
+    /**
+     * @group triggerFilesystemChanges
+     * @throws \PHPUnit\Exception
+     */
     public function testWebInstallerInstallationDoInstallSuccess()
     {
         $this->skipTestIfNotWebInstallerFriendly();

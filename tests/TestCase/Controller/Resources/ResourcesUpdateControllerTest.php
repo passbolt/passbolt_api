@@ -15,256 +15,166 @@
 
 namespace App\Test\TestCase\Controller\Resources;
 
+use App\Model\Entity\Permission;
+use App\Test\Fixture\Base\AvatarsFixture;
+use App\Test\Fixture\Base\FavoritesFixture;
+use App\Test\Fixture\Base\GpgkeysFixture;
+use App\Test\Fixture\Base\GroupsFixture;
+use App\Test\Fixture\Base\GroupsUsersFixture;
+use App\Test\Fixture\Base\PermissionsFixture;
+use App\Test\Fixture\Base\ProfilesFixture;
+use App\Test\Fixture\Base\ResourcesFixture;
+use App\Test\Fixture\Base\RolesFixture;
+use App\Test\Fixture\Base\SecretsFixture;
+use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\SecretsModelTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers',
-        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/EmailQueue', 'app.Base/Avatars'];
+    use GroupsModelTrait;
+    use SecretsModelTrait;
 
-    public function setUp()
+    public $fixtures = [
+        AvatarsFixture::class,
+        FavoritesFixture::class,
+        GpgkeysFixture::class,
+        GroupsFixture::class,
+        GroupsUsersFixture::class,
+        PermissionsFixture::class,
+        ProfilesFixture::class,
+        ResourcesFixture::class,
+        RolesFixture::class,
+        SecretsFixture::class,
+        UsersFixture::class,
+    ];
+
+    public function testUpdateResourcesSuccess_UpdateResourceMeta()
     {
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-        $this->gpg = OpenPGPBackendFactory::get();
-        parent::setUp();
-    }
+        list($r1, $userAId, $userBId) = $this->insertFixture_UpdateResourceMeta();
+        $this->authenticateAs('betty');
 
-    protected function getValidSecret()
-    {
-        return '-----BEGIN PGP MESSAGE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
-xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
-y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
-SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
-tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
-kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
-P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
-hcciUFw5
-=TcQF
------END PGP MESSAGE-----';
-    }
-
-    protected function _getDummyPostdata($resource = null, $data = [])
-    {
-        // Build the default data
-        $defaultData = [
-            'name' => 'Resource name updated by test',
-            'username' => 'username_updated@by.test',
-            'uri' => 'https://uri.updated.by.test',
-            'description' => 'Resource description updated'
+        $data = [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
         ];
-
-        // If secrets provided update them all.
-        if (isset($resource->secrets)) {
-            foreach ($resource->secrets as $secret) {
-                $defaultData['secrets'][] = [
-                    'id' => $secret->id,
-                    'user_id' => $secret->user_id,
-                    'data' => $this->getValidSecret()
-                ];
-            }
-        }
-
-        $data = array_merge($defaultData, $data);
-
-        return $data;
-    }
-
-    public function testResourcesUpdateWithoutSecret()
-    {
-        $ownerId = UuidFactory::uuid('user.id.ada');
-        $modifierId = UuidFactory::uuid('user.id.betty');
-        $this->authenticateAs('betty');
-
-        // Cases.
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceId);
-        $success = [
-            'chinese' => $this->_getDummyPostData($resource, [
-                'name' => '新的專用資源名稱',
-                'username' => 'username@domain.com',
-                'uri' => 'https://www.域.com',
-                'description' => '新的資源描述'
-            ]),
-            'slavic' => $this->_getDummyPostData($resource, [
-                'name' => 'Новое имя частного ресурса',
-                'username' => 'username@domain.com',
-                'uri' => 'https://www.домен.com',
-                'description' => 'Новое описание частного ресурса'
-            ]),
-            'french' => $this->_getDummyPostData($resource, [
-                'name' => 'Nouveau nom de resource privée',
-                'username' => 'username@domain.com',
-                'uri' => 'https://www.mon-domain.com',
-                'description' => 'Nouvelle description de resource privée'
-            ]),
-            'emoticon' => $this->_getDummyPostData($resource, [
-                'name' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
-                'username' => 'username@domain.com',
-                'uri' => 'https://www.domain.com',
-                'description' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}"
-            ]),
-        ];
-
-        foreach ($success as $case => $data) {
-            $this->putJson("/resources/$resourceId.json?api-version=2", $data);
-            $this->assertSuccess();
-
-            // Check the server response.
-            $resource = $this->_responseJsonBody;
-
-            // Check the resource attributes.
-            $this->assertResourceAttributes($resource);
-            $this->assertEquals($data['name'], $resource->name);
-            $this->assertEquals($data['username'], $resource->username);
-            $this->assertEquals($data['uri'], $resource->uri);
-            $this->assertEquals($data['description'], $resource->description);
-            $this->assertEquals($ownerId, $resource->created_by);
-            $this->assertEquals($modifierId, $resource->modified_by);
-
-            // Check the creator attribute
-            $this->assertNotNull($resource->creator);
-            $this->assertUserAttributes($resource->creator);
-            $this->assertEquals($ownerId, $resource->creator->id);
-
-            // Check the modifier attribute
-            $this->assertNotNull($resource->modifier);
-            $this->assertUserAttributes($resource->modifier);
-            $this->assertEquals($modifierId, $resource->modifier->id);
-
-            // Check the secrets attribute
-            // Only the logged-in user should be returned.
-            $this->assertObjectHasAttribute('secrets', $resource);
-            $this->assertCount(1, $resource->secrets);
-            $this->assertSecretAttributes($resource->secrets[0]);
-        }
-    }
-
-    public function testResourcesUpdateWithSecret_SharedWithUsers()
-    {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->authenticateAs('betty');
-
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
-        $data = $this->_getDummyPostData($resource);
-        $this->assertNotEmpty($data['secrets']);
-        $this->putJson("/resources/$resourceId.json?api-version=2", $data);
-        $this->assertSuccess();
-
-        // Check the secrets are updated in database
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
-        $this->assertEquals(count($data['secrets']), count($resource->secrets));
-        foreach ($resource->secrets as $secret) {
-            $dataSecret = Hash::extract($data['secrets'], "{n}[user_id={$secret->user_id}]");
-            $this->assertCount(1, $dataSecret, "No secret found for the user {$secret->user_id}");
-            $this->assertEquals($resourceId, $secret->resource_id);
-            $this->assertEquals($dataSecret[0]['data'], $secret->data);
-        }
-    }
-
-    public function testResourcesUpdateWithSecret_SharedWithGroups()
-    {
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->authenticateAs('grace');
-
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
-        $data = $this->_getDummyPostData($resource);
-        $this->assertNotEmpty($data['secrets']);
-        $this->putJson("/resources/$resourceId.json?api-version=2", $data);
-        $this->assertSuccess();
-
-        // Check the secrets are updated in database
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
-        $this->assertEquals(count($data['secrets']), count($resource->secrets));
-        foreach ($resource->secrets as $secret) {
-            $dataSecret = Hash::extract($data['secrets'], "{n}[user_id={$secret->user_id}]");
-            $this->assertCount(1, $dataSecret, "No secret found for the user {$secret->user_id}");
-            $this->assertEquals($resourceId, $secret->resource_id);
-            $this->assertEquals($dataSecret[0]['data'], $secret->data);
-        }
-    }
-
-    public function testResourcesUpdateApiV1()
-    {
-        $ownerId = UuidFactory::uuid('user.id.ada');
-        $modifierId = UuidFactory::uuid('user.id.betty');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->authenticateAs('betty');
-
-        // Build the data to update.
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
-        $dataV2 = $this->_getDummyPostData($resource);
-        $data['Resource'] = $dataV2;
-        $data['Secret'] = $dataV2['secrets'];
-        unset($data['Resource']['secrets']);
-        $this->putJson("/resources/$resourceId.json?api-version=v1", $data);
+        $this->putJson("/resources/$r1->id.json?api-version=2", $data);
         $this->assertSuccess();
 
         // Check the server response.
         $resource = $this->_responseJsonBody;
 
         // Check the resource attributes.
-        $this->assertResourceAttributes($resource->Resource);
-        $this->assertEquals($data['Resource']['name'], $resource->Resource->name);
-        $this->assertEquals($data['Resource']['username'], $resource->Resource->username);
-        $this->assertEquals($data['Resource']['uri'], $resource->Resource->uri);
-        $this->assertEquals($data['Resource']['description'], $resource->Resource->description);
-        $this->assertEquals($ownerId, $resource->Resource->created_by);
-        $this->assertEquals($modifierId, $resource->Resource->modified_by);
+        $this->assertResourceAttributes($resource);
+        $this->assertEquals($data['name'], $resource->name);
+        $this->assertEquals($data['username'], $resource->username);
+        $this->assertEquals($data['uri'], $resource->uri);
+        $this->assertEquals($data['description'], $resource->description);
+        $this->assertEquals($userAId, $resource->created_by);
+        $this->assertEquals($userBId, $resource->modified_by);
 
         // Check the creator attribute
-        $this->assertNotNull($resource->Creator);
-        $this->assertUserAttributes($resource->Creator);
-        $this->assertEquals($ownerId, $resource->Creator->id);
+        $this->assertNotNull($resource->creator);
+        $this->assertUserAttributes($resource->creator);
+        $this->assertEquals($userAId, $resource->creator->id);
 
         // Check the modifier attribute
-        $this->assertNotNull($resource->Modifier);
-        $this->assertUserAttributes($resource->Modifier);
-        $this->assertEquals($modifierId, $resource->Modifier->id);
+        $this->assertNotNull($resource->modifier);
+        $this->assertUserAttributes($resource->modifier);
+        $this->assertEquals($userBId, $resource->modifier->id);
 
         // Check the secrets attribute
-        // Only the logged-in user should be returned.
-        $this->assertObjectHasAttribute('Secret', $resource);
-        $this->assertCount(1, $resource->Secret);
-        $this->assertSecretAttributes($resource->Secret[0]);
-
-        // Check the secrets are updated in database
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
-        $this->assertEquals(count($data['Secret']), count($resource->secrets));
-        foreach ($resource->secrets as $secret) {
-            $dataSecret = Hash::extract($data['Secret'], "{n}[user_id={$secret->user_id}]");
-            $this->assertCount(1, $dataSecret, "No secret found for the user {$secret->user_id}");
-            $this->assertEquals($resourceId, $secret->resource_id);
-            $this->assertEquals($dataSecret[0]['data'], $secret->data);
-        }
+        // Only the logged-in user secrets should be returned.
+        $this->assertObjectHasAttribute('secrets', $resource);
+        $this->assertCount(1, $resource->secrets);
+        $this->assertSecretAttributes($resource->secrets[0]);
     }
 
-    public function testErrorCsrfToken()
+    private function insertFixture_UpdateResourceMeta()
     {
-        $this->disableCsrfToken();
-        $this->authenticateAs('grace');
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->put("/resources/$resourceId.json?api-version=2");
-        $this->assertResponseCode(403);
+        // Ada is OWNER of resource R1
+        // Betty is OWNER of resource R1
+        // ---
+        // R1 (Ada:O, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $r1 = $this->addResourceFor(['name' => 'R1', 'username' => 'R1 username', 'uri' => 'https://r1.com', 'description' => 'R1 description'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+
+        return [$r1, $userAId, $userBId];
     }
 
-    public function testResourcesUpdateValidationErrors()
+    public function testUpdateResourcesSuccess_UpdateResourceSecrets()
     {
-        $this->markTestIncomplete();
+        list($r1, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_UpdateResourceSecrets();
+        $this->authenticateAs('betty');
+
+        $r1EncryptedSecretA = $this->encryptMessageFor($userAId, 'R1 secret updated');
+        $r1EncryptedSecretB = $this->encryptMessageFor($userBId, 'R1 secret updated');
+        $r1EncryptedSecretC = $this->encryptMessageFor($userCId, 'R1 secret updated');
+        $data = [
+            'secrets' => [
+                ['user_id' => $userAId, 'data' => $r1EncryptedSecretA],
+                ['user_id' => $userBId, 'data' => $r1EncryptedSecretB],
+                ['user_id' => $userCId, 'data' => $r1EncryptedSecretC],
+            ],
+        ];
+        $this->putJson("/resources/$r1->id.json?api-version=2", $data);
+        $this->assertSuccess();
+
+        // Check the server response.
+        $resourceUpdated = $this->_responseJsonBody;
+
+        // Check the resource attributes.
+        $this->assertResourceAttributes($resourceUpdated);
+        $this->assertEquals($r1->name, $resourceUpdated->name);
+        $this->assertEquals($r1->username, $resourceUpdated->username);
+        $this->assertEquals($r1->uri, $resourceUpdated->uri);
+        $this->assertEquals($r1->description, $resourceUpdated->description);
+        $this->assertEquals($userAId, $resourceUpdated->created_by);
+        $this->assertEquals($userBId, $resourceUpdated->modified_by);
+
+        // Check the creator attribute
+        $this->assertNotNull($resourceUpdated->creator);
+        $this->assertUserAttributes($resourceUpdated->creator);
+        $this->assertEquals($userAId, $resourceUpdated->creator->id);
+
+        // Check the modifier attribute
+        $this->assertNotNull($resourceUpdated->modifier);
+        $this->assertUserAttributes($resourceUpdated->modifier);
+        $this->assertEquals($userBId, $resourceUpdated->modifier->id);
+
+        // Check the secrets attribute
+        // Only the logged-in user secrets should be returned.
+        $this->assertObjectHasAttribute('secrets', $resourceUpdated);
+        $this->assertCount(1, $resourceUpdated->secrets);
+        $this->assertSecretAttributes($resourceUpdated->secrets[0]);
+        $this->assertEquals($r1EncryptedSecretB, $resourceUpdated->secrets[0]->data);
     }
 
-    public function testResourcesUpdateCannotModifyNotAccessibleFields()
+    private function insertFixture_UpdateResourceSecrets()
     {
-        $this->markTestIncomplete();
+        // Ada is OWNER of resource R1
+        // Betty is OWNER of resource R1
+        // G1 is OWNER of resource R1
+        // ---
+        // R1 (Ada:O, Betty:O, G1:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $userCId = UuidFactory::uuid('user.id.carol');
+        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
+            ['user_id' => $userAId, 'is_admin' => true],
+            ['user_id' => $userCId, 'is_admin' => true],
+        ]]);
+        $r1 = $this->addResourceFor(['name' => 'R1', 'username' => 'R1 username', 'uri' => 'https://r1.com', 'description' => 'R1 description'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+
+        return [$r1, $g1, $userAId, $userBId, $userCId];
     }
 
-    public function testResourcesUpdateErrorNotValidId()
+    public function testUpdateResourcesError_NotValidId()
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
@@ -272,7 +182,59 @@ hcciUFw5
         $this->assertError(400, 'The resource id is not valid.');
     }
 
-    public function testResourcesUpdateErrorDoesNotExistResource()
+    public function testUpdateResourcesError_ValidationErrors()
+    {
+        list($r1, $userAId, $userBId) = $this->insertFixture_UpdateResourceMeta();
+        $this->authenticateAs('ada');
+
+        $data = [
+            'name' => '',
+        ];
+        $this->putJson("/resources/$r1->id.json?api-version=2", $data);
+        $this->assertError(400, 'Could not validate resource data.');
+    }
+
+    public function testUpdateResourcesError_CsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid();
+        $this->put("/resources/$resourceId.json?api-version=2");
+        $this->assertResponseCode(403);
+    }
+
+    public function testResourcesUpdateError_InsufficientPermission()
+    {
+        list($r1, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        $data = [
+            'name' => ['Updated name'],
+        ];
+        $this->authenticateAs('betty');
+        $this->putJson("/resources/$r1->id.json", $data);
+        $this->assertError(403, 'You are not allowed to update this resource.');
+    }
+
+    private function insertFixture_InsufficientPermission()
+    {
+        // Ada is OWNER of resource R1
+        // Betty has READ on resource R1
+        // ---
+        // R1 (Ada:O, Betty:R)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+
+        return [$r1, $userAId, $userBId];
+    }
+
+    public function testUpdateResourcesError_NotAuthenticated()
+    {
+        list($r1, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        $this->putJson("/resources/$r1->id.json", []);
+        $this->assertAuthenticationError();
+    }
+
+    public function testUpdateResourcesError_ResourceDoesNotExist()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
@@ -280,39 +242,19 @@ hcciUFw5
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testResourcesUpdateErrorResourceIsSoftDeleted()
+    public function testUpdateResourcesError_NoAccessToResource()
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $resource = $this->Resources->get($resourceId);
-        $data = $this->_getDummyPostData($resource);
-        $this->putJson("/resources/$resourceId.json?api-version=v1", $data);
+        list($r1, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        $this->authenticateAs('dame');
+        $this->putJson("/resources/$r1->id.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testResourcesUpdateErrorAccessDenied()
+    public function testUpdateResourcesError_ResourceIsSoftDeleted()
     {
-        $testCases = [
-            'Cannot update a resource if no permission' => [
-                'userAlias' => 'ada', 'resourceId' => UuidFactory::uuid('resource.id.april')],
-            'Cannot update a resource with only read access' => [
-                'userAlias' => 'ada', 'resourceId' => UuidFactory::uuid('resource.id.bower')],
-        ];
-
-        foreach ($testCases as $testCase) {
-            $this->authenticateAs($testCase['userAlias']);
-            $resourceId = $testCase['resourceId'];
-            $this->putJson("/resources/$resourceId.json?api-version=v1");
-            $this->assertError(404, 'The resource does not exist.');
-        }
-    }
-
-    public function testResourcesUpdateErrorNotAuthenticated()
-    {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceId);
-        $data = $this->_getDummyPostData($resource);
-        $this->putJson("/resources/$resourceId.json?api-version=v1", $data);
-        $this->assertAuthenticationError();
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.jquery');
+        $this->putJson("/resources/$resourceId.json", []);
+        $this->assertError(404, 'The resource does not exist.');
     }
 }

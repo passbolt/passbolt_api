@@ -70,10 +70,10 @@ class FavoritesTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Resources', [
-            'foreignKey' => 'foreign_key'
+            'foreignKey' => 'foreign_key',
         ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
     }
 
@@ -121,13 +121,13 @@ class FavoritesTable extends Table
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => __('The user is soft deleted.')
+            'message' => __('The user is soft deleted.'),
         ]);
         $rules->addCreate($rules->existsIn('foreign_key', 'Resources'), 'resource_exists');
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_not_soft_deleted', [
             'table' => 'Resources',
             'errorField' => 'foreign_key',
-            'message' => __('The resource is soft deleted.')
+            'message' => __('The resource is soft deleted.'),
         ]);
         $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
             'errorField' => 'foreign_key',
@@ -146,7 +146,7 @@ class FavoritesTable extends Table
         // Add delete rules.
         $rules->addDelete([$this, 'isOwnerRule'], 'is_owner', [
             'errorField' => 'user_id',
-            'message' => __('The user cannot delete this favorite.')
+            'message' => __('The user cannot delete this favorite.'),
         ]);
 
         return $rules;

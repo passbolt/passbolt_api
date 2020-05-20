@@ -26,7 +26,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
         //'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Secrets',
-        'app.Base/Gpgkeys', 'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue'
+        'app.Base/Gpgkeys', 'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue',
     ];
 
     /**
@@ -92,7 +92,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $url = '/setup/complete/' . $user->id . '.json';
         $this->postJson($url, [
             'AuthenticationToken' => ['token' => $tokens[0]['token']],
-            'Gpgkey' => ['key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key')]
+            'Gpgkey' => ['key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key')],
         ]);
         $this->assertSuccess();
 

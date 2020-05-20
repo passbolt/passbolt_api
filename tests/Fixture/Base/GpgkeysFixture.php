@@ -91,7 +91,7 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
                 'key_created' => '2018-11-29 05:26:48',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => '04481719-5d9d-5e22-880a-a6b9270601d2',
@@ -156,7 +156,7 @@ Tdb3ZfAajPMO3Iov5dwvm0zhJDQHFo7SFi5jH0Pgk4bAd9HBmB8sioxL4Q==
                 'key_created' => '2015-08-09 12:48:31',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:45',
-                'modified' => '2019-07-02 18:51:45'
+                'modified' => '2019-07-02 18:51:45',
             ],
             [
                 'id' => '0cb9e76f-4994-5e43-b3eb-848815042a03',
@@ -201,7 +201,7 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
                 'key_created' => '2018-11-29 05:26:48',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => '118fd79b-b683-5595-98d5-fe622c679711',
@@ -254,7 +254,7 @@ RQKw
                 'key_created' => '2016-05-25 13:25:07',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => '1d3d0565-f075-50d4-b58a-cbb82700e79b',
@@ -319,7 +319,7 @@ jZE642r3n6Qo+9PcAjjX4uof65PPOghNYm3LQOf8XMWxnT+QA+AzzbEoAg==
                 'key_created' => '2015-07-02 11:25:12',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => '2111bdd2-b19c-55a1-94ae-13e9ae67c1e9',
@@ -384,7 +384,7 @@ nJk6Cf187yErhiX/ozLwXOCDDIDlT0vqPdgO6K2jbr8AoZpF+Zd5CzcZFA==
                 'key_created' => '2015-07-03 10:51:31',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => '37691d6a-a057-57bf-80e1-485b59d790fa',
@@ -429,7 +429,7 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
                 'key_created' => '2018-11-29 05:26:48',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => '596201e6-8d3b-54b9-84e6-3ed6ef99113d',
@@ -507,7 +507,7 @@ c+LkVBCVV14NzzHmUm+4pjM/dVxyQCfURrT1rxB+9y5sy2F6SpCX4RkbZcsn+Ho=
                 'key_created' => '2015-07-03 10:56:50',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => '82eaeed6-32a9-5e56-af93-6bc362a9d62b',
@@ -572,7 +572,7 @@ d5o7RTE7uW+LciwI0b78SL7Mw1UH+njrtq6QjfYni1wLI770s3/7+lSUIi895K5T
                 'key_created' => '2015-07-03 10:48:31',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => '91d8a7fd-3ab3-5e98-a4a5-0d8694ff23b9',
@@ -638,7 +638,7 @@ FYNCFtV1fw==
                 'key_created' => '2015-10-31 16:21:43',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => '9801f2a6-a0f6-5cf6-8f81-df16855d07e9',
@@ -683,7 +683,7 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
                 'key_created' => '2018-11-29 05:26:48',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'a1dd3f22-30b1-51f1-a22d-5aeeb00fee1e',
@@ -728,7 +728,7 @@ erR4fuZF//Io+VikJe6mKufSflOpCDYfSOscdAA9
                 'key_created' => '2017-03-04 17:28:05',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'b2581347-f1e0-5296-99af-baee3240dcf6',
@@ -795,7 +795,7 @@ w9E+yhN8gIA=
                 'key_created' => '2016-05-27 09:33:17',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'b3cdb8ae-c5ab-52e6-a394-8cd800bfaed6',
@@ -840,7 +840,7 @@ wlPmpnNFp1iLbkFM2+/gVSR+9Ty2DNFPgRAov58Cb+oQ
                 'key_created' => '2017-03-04 17:25:52',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'b4ac2e2f-2764-51e6-82c9-2066943733ff',
@@ -905,7 +905,7 @@ HdlU4AAE7nI6dZeGf8IEXj5k/kDkIMSJmMtm2eXpJZcPYGDVUkOA30ioDY14fVY9
                 'key_created' => '2015-07-02 11:28:17',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:45',
-                'modified' => '2019-07-02 18:51:45'
+                'modified' => '2019-07-02 18:51:45',
             ],
             [
                 'id' => 'c4834439-b383-58bc-8386-a2e475d85318',
@@ -970,7 +970,7 @@ INLXDnGOuemMrmgWDFgRchk72iJDJh8/F//ZylnJ8ZON6aWT1hAZQxnnD17TXbsz
                 'key_created' => '2015-07-03 10:58:34',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'cf85775a-cfb0-5ad5-90b2-ecfde355f7de',
@@ -1035,7 +1035,7 @@ ROjyJ0/pKQiiFpLzfIZkXq2HO6E2A3U+n+SnbwxiXSJ5owOVjNtV+NC7Ew==
                 'key_created' => '2015-07-03 10:54:25',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'd7c9f849-71ba-5940-a3ca-ab26472c06fb',
@@ -1100,7 +1100,7 @@ U7pXXdihSht1ABsRNzO1YQLWDvrVWr1zaIC3bu0+ykwEsHEN4OQ2leaZ6Blj
                 'key_created' => '2015-07-03 10:49:21',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'da315c73-bf77-5aa6-8f10-faa47a579f15',
@@ -1166,7 +1166,7 @@ xp1ZRg5j
                 'key_created' => '2015-07-03 10:55:55',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'e0a978e1-fa74-5cf1-803d-25818671e886',
@@ -1211,7 +1211,7 @@ cOv3QJcgi02rfOMbtFrfHqeEPITCru9nZg==
                 'key_created' => '2017-03-04 17:22:43',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:45',
-                'modified' => '2019-07-02 18:51:45'
+                'modified' => '2019-07-02 18:51:45',
             ],
             [
                 'id' => 'e152cd5e-f4fb-593c-aebc-9b06a434cb39',
@@ -1256,7 +1256,7 @@ X9fv56KCnrIdY4NZx8iYqEmjMOZ/FRz9fpwxWapqn+V7eQl7mpSybNEt3gevuTmc
                 'key_created' => '2016-05-25 12:00:08',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:45',
-                'modified' => '2019-07-02 18:51:45'
+                'modified' => '2019-07-02 18:51:45',
             ],
             [
                 'id' => 'e290ed74-a470-5903-8e80-ee25c16fe47f',
@@ -1321,7 +1321,7 @@ RCbvyJhlaNqkSTLvnKsGYobuKrbXF+xFs9V7dTsu01W6LjKuHXrgTCsCXdcl
                 'key_created' => '2015-07-03 10:47:27',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'e6ed0cb7-b31d-5b82-85fa-41d74abb6cd0',
@@ -1388,7 +1388,7 @@ eUNE1fxScsE6UBlfdvKJapc=
                 'key_created' => '2016-05-27 09:34:04',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'f0df9afb-2f0a-5273-aa1e-1f625f2920a0',
@@ -1454,7 +1454,7 @@ UXjj0w==
                 'key_created' => '2015-07-02 11:58:41',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
             [
                 'id' => 'f2b76b3a-892a-5b4d-9b27-2c051d4d6f4a',
@@ -1499,52 +1499,7 @@ C1bPERQcYXABssLYtGmFVdoC3DLBcCY+tjrJRz7DXtpo
                 'key_created' => '2017-03-04 17:26:50',
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
-            ],
-            [
-                'id' => 'fc8d6501-9391-5cd4-ad17-f46df3443d6f',
-                'user_id' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
-                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQENBFwOJQQBCADRAFkj8r4nB2XBDkZjIZC5Bom5U6Rf914guuXul8Qvr62RDpdK
-FFPEKurVEzPikI7ZFg6n3fAPsvPl90WJIvXlUX9tXJaPY/OO3A0AepTkglAYpgKT
-PIEDmmDneYtt7lyRKYmrfw1jYKllA6+MUVEvy+bLj2y93eHPCq/DKnk0K6ce84Kg
-TuWL9aU8p8ylz2EYi5RNTqhvAUuaEen3kurVrcKka9jGY765UzCVdRtW2iX0MWK/
-muLThWgis8jD7P6Ojms/X12zU2wjC+TSyrhHg379UC2xsyyr/RCzBBIJ+jPS+Q4D
-Lv+qyVBPAQNKpzbhlmboacQ/2Jfu9Q62F5XZABEBAAG0J0Fub255bW91cyBVc2Vy
-IDxhbm9ueW1vdXNAcGFzc2JvbHQuY29tPokBTgQTAQoAOBYhBHSIv+86HnHDbqfH
-zaivjPebwNB2BQJcDiUEAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEKiv
-jPebwNB2kDoIAJBAdjosPI49MAEPdHl8KWZ9CjRqpycxkr72mw8bnSMwj/+NtveL
-HhPMIq9HDhljefMCEZuEPv5zCPlHiq5Tsci+qZaUg59P5jELeSF9coIhE4vf/0qt
-TZuokpxHnbWTpEW6dgYOqC08mHVAC8eaeirnVQKhw8iBWqLrEJDUAPvhNDsjq9xd
-V7gkMQH0CTMcvm34efUIzF7LgqCoY5y0QH9LYAnQtiBeMjc74wH6lRVboCVkpAxw
-PvNhdM+a+6qq5s2IhJUbOBx+NqgTz2Y9eGSzg7YpWFSscpWKLVgYF7VmD91dQl1L
-v4lX8JcYppcoICiIZgUYwKV5GR8MlaA03sq5AQ0EXA4lBAEIALy4jNGklWVA0CVj
-B9jryGGJMIzjxnNMjn9jgLJXkBx3y64/OoTW9gmUSzZYeQgDItz9Kcs5vaR7pHYN
-6VossH7v+tAOKh4jjbMjNjFwo28K9wfR3BtHdxdg+yjFTEXkD7EYh8Q1vzSid9V1
-k+FvNRY79XIN5IfG1d0O6g0AmHocuq+S7oRUt1nRfbPnolDVGPopBCLExGZevmBL
-qSXBYJzh2+QARvhEL8P57sPrUgyBK6GqEInpWyzdnrQDhYrWMmk15ySiAG7V/ic1
-JzKaiN0gJmCnxQUO0xLMqMLC0MlihB6HgAiquc0Ia/cTAaojFxm5zcVWwKpj+GUp
-V6zWMqUAEQEAAYkBNgQYAQoAIBYhBHSIv+86HnHDbqfHzaivjPebwNB2BQJcDiUE
-AhsMAAoJEKivjPebwNB2BKkIALZFZgq3MnbpsXzl1+Vyp40/c5agxjAmndqB3dVx
-Yhwo+i5Xqk/DTwWuVu288ZxohXrqUTVDYIeB2k+xAH853ByWuoq0YYTcsZTpHicb
-N3NLRcy+Gi/F+4mDfdgWEIhFRiTUyZxb7aCnKcMFr7ibu/KCas1IX3D/eXN725AC
-iWptsicD+4JoCsZRNEnlZFWbacsOOnmjdfLlWbGn2a0KkKgsd3JPKMcA8AoKMdJ6
-C5KUCIC8mpLTwhvLwQS27k3nBkVAinYBBX1zCfrVYgnBjC35Ho7ftR9mT+RYJmsH
-Px4aG63zJWA7DjnzYJS0sAoNJxBrXU3TS530f5b1owOAogg=
-=qspo
------END PGP PUBLIC KEY BLOCK-----
-',
-                'bits' => 2048,
-                'uid' => 'Anonymous User <anonymous@passbolt.com>',
-                'key_id' => '9BC0D076',
-                'fingerprint' => '7488BFEF3A1E71C36EA7C7CDA8AF8CF79BC0D076',
-                'type' => 'RSA',
-                'expires' => null,
-                'key_created' => '2018-12-10 08:34:12',
-                'deleted' => false,
-                'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
+                'modified' => '2019-07-02 18:51:44',
             ],
         ];
         parent::init();

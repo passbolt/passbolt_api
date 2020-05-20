@@ -19,6 +19,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Table\PermissionsTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
@@ -30,6 +31,8 @@ use Cake\Validation\Validation;
 
 class UsersDeleteController extends AppController
 {
+    const DELETE_SUCCESS_EVENT_NAME = 'UsersDeleteController.delete.success';
+
     /**
      * Before filter
      *
@@ -74,7 +77,7 @@ class UsersDeleteController extends AppController
 
         $this->GroupsUsers->getConnection()->transactional(function () use ($user) {
             $this->_transferGroupsManagers($user);
-            $this->_transferResourcesOwners($user);
+            $this->_transferContentOwners($user);
             $this->_validateDelete($user);
             if (!$this->Users->softDelete($user, ['checkRules' => false])) {
                 throw new InternalErrorException(__('Could not delete the user, please try again later.'));
@@ -143,14 +146,16 @@ class UsersDeleteController extends AppController
                 $msg .= $errors['id']['soleManagerOfNonEmptyGroup'];
             }
 
-            if (isset($errors['id']['soleOwnerOfSharedResource'])) {
-                $resourcesIds = $this->Permissions->findSharedResourcesUserIsSoleOwner($user->id, true)->extract('aco_foreign_key')->toArray();
-                $findResourcesOptions = [];
-                $findResourcesOptions['contain']['permissions.user.profile'] = true;
-                $findResourcesOptions['contain']['permissions.group'] = true;
-                $resources = $this->Resources->findAllByIds($user->id, $resourcesIds, $findResourcesOptions);
-                $body['errors']['resources']['sole_owner'] = $resources;
-                $msg .= $errors['id']['soleOwnerOfSharedResource'];
+            if (isset($errors['id']['soleOwnerOfSharedContent'])) {
+                $resourcesIds = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])->extract('aco_foreign_key')->toArray();
+                if ($resourcesIds) {
+                    $findResourcesOptions = [];
+                    $findResourcesOptions['contain']['permissions.user.profile'] = true;
+                    $findResourcesOptions['contain']['permissions.group'] = true;
+                    $resources = $this->Resources->findAllByIds($user->id, $resourcesIds, $findResourcesOptions);
+                    $body['errors']['resources']['sole_owner'] = $resources;
+                    $msg .= $errors['id']['soleOwnerOfSharedContent'];
+                }
             }
 
             $groupsToDeleteIds = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)->extract('group_id')->toArray();
@@ -199,12 +204,12 @@ class UsersDeleteController extends AppController
     }
 
     /**
-     * Transfer the resources permissions which blocked the user delete
+     * Transfer the content permissions which blocked the user delete
      * @param {User} $user entity
      * @throws BadRequestException if the array of manager is
      * @return void
      */
-    protected function _transferResourcesOwners($user)
+    protected function _transferContentOwners($user)
     {
         $owners = $this->request->getData('transfer.owners');
         if (empty($owners)) {
@@ -218,32 +223,32 @@ class UsersDeleteController extends AppController
             }
         }
 
-        $resourcesIdsToUpdate = Hash::extract($owners, '{n}.aco_foreign_key');
-        sort($resourcesIdsToUpdate);
+        $contentIdsToUpdate = Hash::extract($owners, '{n}.aco_foreign_key');
+        sort($contentIdsToUpdate);
 
-        $resourcesIdsBlockingDelete = $this->Permissions->findSharedResourcesUserIsSoleOwner($user->id, true)->extract('aco_foreign_key')->toArray();
-        sort($resourcesIdsBlockingDelete);
+        $contentIdBlockingDelete = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])->extract('aco_foreign_key')->toArray();
+        sort($contentIdBlockingDelete);
 
         // If all the resources that are requiring a change are not satisfied, throw an exception.
-        if ($resourcesIdsToUpdate != $resourcesIdsBlockingDelete) {
+        if ($contentIdsToUpdate != $contentIdBlockingDelete) {
             throw new BadRequestException('The transfer is not authorized');
         }
 
-        // Update all the permissions given as parameter as long as they are relative to a resource which blocked the delete process.
-        $this->Permissions->updateAll(['type' => Permission::OWNER], ['id IN' => $permissionsIdsToUpdate, 'aco_foreign_key IN' => $resourcesIdsBlockingDelete]);
+        // Update all the permissions given as parameter as long as they are relative to a content which blocked the delete process.
+        $this->Permissions->updateAll(['type' => Permission::OWNER], ['id IN' => $permissionsIdsToUpdate, 'aco_foreign_key IN' => $contentIdBlockingDelete]);
     }
 
     /**
      * Send email notification
      *
-     * @param User $user entity
+     * @param User  $deletedUser entity
      * @param array $groupIds list of Group entity user was member of
      * @return void
      */
-    protected function _notifyUsers(User $user, array $groupIds)
+    protected function _notifyUsers(User $deletedUser, array $groupIds)
     {
-        $event = new Event('UsersDeleteController.delete.success', $this, [
-            'user' => $user,
+        $event = new Event(static::DELETE_SUCCESS_EVENT_NAME, $this, [
+            'user' => $deletedUser,
             'groupsIds' => $groupIds,
             'deletedBy' => $this->User->id(),
         ]);

@@ -15,7 +15,9 @@
 
 namespace App\Error;
 
+use App\Error\Exception\ExceptionWithErrorsDetailInterface;
 use Cake\Error\ExceptionRenderer;
+use Cake\Http\Response;
 
 class AppExceptionRenderer extends ExceptionRenderer
 {
@@ -24,16 +26,11 @@ class AppExceptionRenderer extends ExceptionRenderer
      * If the exception contains an error attribute, set it as controller view variable.
      *
      * @see \App\Controller\ErrorController
-     * @return \Cake\Http\Response The response to be sent.
+     * @return Response The response to be sent.
      */
     public function render()
     {
-        $class = get_class($this->error);
-        $exceptionWithErrorSet = [
-            'App\Error\Exception\CustomValidationException',
-            'App\Error\Exception\ValidationException'
-        ];
-        if (in_array($class, $exceptionWithErrorSet)) {
+        if ($this->error instanceof ExceptionWithErrorsDetailInterface) {
             $this->controller->set(['body' => $this->error]);
         }
 

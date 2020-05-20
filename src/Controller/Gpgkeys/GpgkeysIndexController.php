@@ -27,7 +27,7 @@ class GpgkeysIndexController extends AppController
     public function index()
     {
         $this->loadModel('Gpgkeys');
-        $whitelist = ['filter' => ['modified-after']];
+        $whitelist = ['filter' => ['modified-after', 'is-deleted']];
         $options = $this->QueryString->get($whitelist);
         $gpgkeys = $this->Gpgkeys->find('index', $options);
         $this->success(__('The operation was successful.'), $gpgkeys);

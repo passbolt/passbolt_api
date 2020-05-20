@@ -21,6 +21,9 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use UserAgentParser\Provider\DonatjUAParser;
 
+/**
+ * @property Component\AuthComponent Auth
+ */
 class UserComponent extends Component
 {
 

@@ -63,7 +63,7 @@ class GpgkeysTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
     }
 
@@ -86,7 +86,7 @@ class GpgkeysTable extends Table
             ->notEmpty('armored_key')
             ->add('armored_key', ['custom' => [
                 'rule' => [$this, 'isParsableArmoredPublicKey'],
-                'message' => __('The key should be a valid OpenPGPG ASCII armored key.')
+                'message' => __('The key should be a valid OpenPGP ASCII armored key.'),
             ]]);
 
         $validator
@@ -105,7 +105,7 @@ class GpgkeysTable extends Table
             ->notEmpty('key_id')
             ->add('key_id', ['custom' => [
                 'rule' => [$this, 'isValidKeyIdRule'],
-                'message' => __('The key id should be a string of 8 hexadecimal characters.')
+                'message' => __('The key id should be a string of 8 hexadecimal characters.'),
             ]]);
 
         $validator
@@ -115,7 +115,7 @@ class GpgkeysTable extends Table
             ->notEmpty('fingerprint')
             ->add('fingerprint', ['custom' => [
                 'rule' => [$this, 'isValidFingerprintRule'],
-                'message' => __('The key id should be a string of 40 hexadecimal characters.')
+                'message' => __('The key id should be a string of 40 hexadecimal characters.'),
             ]]);
 
         $validator
@@ -125,7 +125,7 @@ class GpgkeysTable extends Table
             ->notEmpty('type')
             ->add('type', ['custom' => [
                 'rule' => [$this, 'isValidKeyTypeRule'],
-                'message' => __('The key type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.')
+                'message' => __('The key type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.'),
             ]]);
 
         $validator
@@ -133,7 +133,7 @@ class GpgkeysTable extends Table
             ->allowEmpty('expires')
             ->add('expires', ['custom' => [
                 'rule' => [$this, 'isInFutureRule'],
-                'message' => __('The key should not already be expired.')
+                'message' => __('The key should not already be expired.'),
             ]]);
 
         $validator
@@ -142,7 +142,7 @@ class GpgkeysTable extends Table
             ->notEmpty('key_created')
             ->add('key_created', ['custom' => [
                 'rule' => [$this, 'isInFuturePastRule'],
-                'message' => __('The key creation date should be set in the past.')
+                'message' => __('The key creation date should be set in the past.'),
             ]]);
 
         $validator
@@ -302,11 +302,12 @@ class GpgkeysTable extends Table
      */
     public function findIndex(Query $query, array $options)
     {
-        $query->where(['deleted' => false]);
         if (isset($options['filter']['modified-after'])) {
             $modified = date('Y-m-d H:i:s', $options['filter']['modified-after']);
             $query->where(['modified >' => $modified]);
         }
+
+        $query->where(['deleted' => $options['filter']['is-deleted'] ?? false]);
 
         return $query;
     }
@@ -353,7 +354,7 @@ class GpgkeysTable extends Table
         return $this->find()
             ->where([
                 'user_id' => $userId,
-                'fingerprint' => strtoupper($fingerprint)
+                'fingerprint' => strtoupper($fingerprint),
             ])
             ->first();
     }
@@ -389,7 +390,7 @@ class GpgkeysTable extends Table
             'armored_key' => $armoredKey,
             'deleted' => false,
             'key_created' => new FrozenTime($info['key_created']),
-            'expires' => null
+            'expires' => null,
         ];
         if (!empty($info['expires'])) {
             $data['expires'] = new FrozenTime($info['expires']);

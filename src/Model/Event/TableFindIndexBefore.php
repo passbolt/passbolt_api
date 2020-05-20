@@ -96,7 +96,7 @@ class TableFindIndexBefore extends Event
     {
         return new static(static::EVENT_NAME, $table, [
             'query' => $query,
-            'options' => $options
+            'options' => $options,
         ]);
     }
 

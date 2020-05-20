@@ -123,7 +123,7 @@ class EmailController extends WebInstallerController
         try {
             $this->email
                 ->setFrom([
-                    $data['sender_email'] => $data['sender_name']
+                    $data['sender_email'] => $data['sender_name'],
                 ])
                 ->setTo($data['email_test_to'])
                 ->setSubject(__('passbolt test email'))

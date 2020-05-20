@@ -99,8 +99,8 @@ abstract class AppIntegrationTestCase extends TestCase
                 'last_name' => 'testing',
             ],
             'role' => [
-                'name' => Role::USER
-            ]
+                'name' => Role::USER,
+            ],
         ];
         if ($userFirstName === 'admin') {
             $data['role']['name'] = Role::ADMIN;

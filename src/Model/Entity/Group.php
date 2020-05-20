@@ -52,7 +52,7 @@ class Group extends Entity
         'modified_by' => false,
 
         // Associated entities
-        'groups_users' => false
+        'groups_users' => false,
     ];
 
     /**

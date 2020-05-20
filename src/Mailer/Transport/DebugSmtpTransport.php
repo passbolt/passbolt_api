@@ -36,7 +36,7 @@ class DebugSmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
     {
         $entry = [
             'cmd' => $data,
-            'response' => $response
+            'response' => $response,
         ];
         $this->trace[] = $entry;
 

@@ -45,8 +45,8 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
                 'User' => [
                     'id' => UuidFactory::uuid('users.id.ada'),
                     'username' => 'ada@passbolt.com',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $this->get('/auth/logout');

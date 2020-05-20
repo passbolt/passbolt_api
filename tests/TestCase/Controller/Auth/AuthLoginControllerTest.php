@@ -26,7 +26,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
-        'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Avatars'
+        'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Avatars',
     ];
     public $keyid;
 
@@ -53,9 +53,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->post('/auth/login', [
             'data' => [
                 'gpg_auth' => [
-                    'keyid' => '252B91CB28A96C6D67E8FC139020576F08D8B763'
-                ]
-            ]
+                    'keyid' => '252B91CB28A96C6D67E8FC139020576F08D8B763',
+                ],
+            ],
         ]);
         $msg = 'There is no user associated with this key. User not found.';
         $this->assertHeader('X-GPGAuth-Debug', $msg);
@@ -115,9 +115,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->post('/auth/login', [
             'data' => [
                 'gpg_auth' => [
-                    'keyid' => 'testid'
-                ]
-            ]
+                    'keyid' => 'testid',
+                ],
+            ],
         ]);
         $this->assertHeader('X-GPGAuth-Progress', 'stage0');
     }
@@ -144,9 +144,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             $this->post('/auth/login', [
                 'data' => [
                     'gpg_auth' => [
-                        'keyid' => $keyid
-                    ]
-                ]
+                        'keyid' => $keyid,
+                    ],
+                ],
             ]);
             $headers = $this->getHeaders();
             $this->assertTrue(isset($headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set for keyid:"' . $keyid . '"');
@@ -186,7 +186,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             'gpgauthv1.3.0|64|' . $uuid . $uuid . '|gpgauthv1.3.0' => false, // wrong length 3
             'gpgauthv1.3.0|0|' . $uuid . $uuid . '|gpgauthv1.3.0' => false, // wrong length 4
             'gpgauthv1.3.0|32|' . $uuid . '|gpgauthv1.3.0|x' => false, // wrong format
-            'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0' => true // right
+            'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0' => true, // right
         ];
 
         $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
@@ -197,9 +197,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
                 'data' => [
                     'gpg_auth' => [
                         'keyid' => $this->adaKeyId, // Ada's key
-                        'server_verify_token' => $msg
-                    ]
-                ]
+                        'server_verify_token' => $msg,
+                    ],
+                ],
             ]);
 
             $headers = $this->getHeaders();
@@ -246,9 +246,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             'data' => [
                 'gpg_auth' => [
                     'keyid' => $this->adaKeyId,
-                    'server_verify_token' => $msg
-                ]
-            ]
+                    'server_verify_token' => $msg,
+                ],
+            ],
         ]);
         $headers = $this->getHeaders();
         $this->assertTrue(isset($headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
@@ -269,8 +269,8 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             'data' => [
                 'gpg_auth' => [
                     'keyid' => $this->adaKeyId, // Ada's key
-                ]
-            ]
+                ],
+            ],
         ]);
 
         // check headers
@@ -311,9 +311,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             'data' => [
                 'gpg_auth' => [
                     'keyid' => $this->adaKeyId, // Ada's key
-                    'user_token_result' => $plaintext
-                ]
-            ]
+                    'user_token_result' => $plaintext,
+                ],
+            ],
         ]);
 
         $headers = $this->getHeaders();
