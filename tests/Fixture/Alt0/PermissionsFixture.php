@@ -48,7 +48,16 @@ class PermissionsFixture extends TestFixture
      */
     public function init()
     {
-        $this->records = [
+        $this->records = $this->getRecords();
+        parent::init();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getRecords()
+    {
+        return [
             [
                 'id' => '0179338c-7beb-57df-bf5e-407393fc9b2d',
                 'aco' => 'Resource',
@@ -650,6 +659,5 @@ class PermissionsFixture extends TestFixture
                 'modified' => '2017-11-17 12:37:04',
             ],
         ];
-        parent::init();
     }
 }

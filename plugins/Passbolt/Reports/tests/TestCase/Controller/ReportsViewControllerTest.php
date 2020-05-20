@@ -15,7 +15,8 @@
 namespace Passbolt\Reports\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\Reports\Utility\CombinedReports\EmployeeOnBoardingReport;
+use Passbolt\Reports\Utility\AbstractSingleReport;
+use Passbolt\Reports\Utility\ReportPool;
 
 class ReportsViewControllerTest extends AppIntegrationTestCase
 {
@@ -24,17 +25,42 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments',
     ];
 
+    private $sampleReport;
+
+    private function _setEmptyReport($slug)
+    {
+        $ReportClass = new class extends AbstractSingleReport
+        {
+            public function getData()
+            {
+                return [];
+            }
+        };
+
+        $this->sampleReport = new $ReportClass();
+        $this->sampleReport
+             ->setSlug($slug)
+             ->setName(__('Sample report'))
+             ->setDescription(__('This is a description for sample report'));
+
+        ReportPool::getInstance()->addReport($this->sampleReport);
+    }
+
     public function testReportsViewControllerError_ThrowErrorWhenNotAuthenticated()
     {
-        $this->getJson('/reports/' . EmployeeOnBoardingReport::SLUG . '.json');
+        $slug = 'sample-report';
+        $this->_setEmptyReport($slug, []);
+        $this->getJson('/reports/' . $slug . '.json');
         $this->assertAuthenticationError();
     }
 
     public function testReportsViewControllerError_ThrowUnauthorizedErrorWhenNotAdmin()
     {
+        $slug = 'sample-report';
+        $this->_setEmptyReport($slug, []);
         $this->authenticateAs('ada');
-        $this->getJson('/reports/' . EmployeeOnBoardingReport::SLUG . '.json');
-        $this->assertError(403, 'Only administrators can view admin reports.');
+        $this->getJson('/reports/' . $slug . '.json');
+        $this->assertError(403, 'Only administrators can view reports.');
     }
 
     public function testReportsViewControllerError_BadRequestWhenSlugIsNotSupported()
@@ -46,8 +72,10 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
 
     public function testReportsViewControllerSuccess()
     {
+        $slug = 'sample-report';
+        $this->_setEmptyReport($slug, []);
         $this->authenticateAs('admin');
-        $this->getJson('/reports/' . EmployeeOnBoardingReport::SLUG . '.json?api-version=2');
+        $this->getJson('/reports/' . $slug . '.json?api-version=2');
         $this->assertResponseSuccess();
     }
 }

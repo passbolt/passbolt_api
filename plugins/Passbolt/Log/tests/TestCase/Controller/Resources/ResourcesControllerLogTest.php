@@ -16,6 +16,7 @@
 namespace Passbolt\Log\Test\TestCase\Controller\Share;
 
 use App\Utility\UuidFactory;
+use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
@@ -27,7 +28,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue',
         'plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs',
         'plugin.Passbolt/Log.Base/EntitiesHistory', 'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretsHistory',
+        'plugin.Passbolt/Log.Base/SecretsHistory', 'app.Base/OrganizationSettings',
     ];
 
     public function testLogResourcesAddSuccessWithSecrets()
@@ -40,7 +41,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
             'uri' => 'https://www.domain.com',
             'description' => 'new resource description',
             'secrets' => [[
-                'data' => self::getDummySecretData($userId),
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
             ]],
         ];
         $this->postJson("/resources.json?api-version=v2", $data);
@@ -119,19 +120,19 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
             'description' => 'Apache description udpated.',
             'secrets' => [[
                 'id' => UuidFactory::uuid("secret.id.$resourceId-$adaId"),
-                'data' => self::getDummySecretData($adaId),
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
                 'user_id' => $adaId,
             ], [
                 'id' => UuidFactory::uuid("secret.id.$resourceId-$bettyId"),
-                'data' => self::getDummySecretData($bettyId),
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
                 'user_id' => $bettyId,
             ], [
                 'id' => UuidFactory::uuid("secret.id.$resourceId-$carolId"),
-                'data' => self::getDummySecretData($carolId),
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
                 'user_id' => $carolId,
             ], [
                 'id' => UuidFactory::uuid("secret.id.$resourceId-$dameId"),
-                'data' => self::getDummySecretData($dameId),
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
                 'user_id' => $dameId,
             ]],
         ];

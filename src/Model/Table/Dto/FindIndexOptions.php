@@ -59,6 +59,12 @@ class FindIndexOptions
     private $filterValidators = [];
 
     /**
+     * UUID of a User
+     * @var string
+     */
+    private $userId;
+
+    /**
      * @param array $filter filters Filters
      * @param array $order orders Orders
      * @param array $contain contains Contains
@@ -190,6 +196,25 @@ class FindIndexOptions
     public function getFilterValidator(string $filterName)
     {
         return $this->filterValidators[$filterName] ?? null;
+    }
+
+    /**
+     * Set the ID of the user for which the findIndex is executed
+     * @param string $userId The user id
+     * @return void
+     */
+    public function setUserId(string $userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * Return the ID of the user for which the findIndex is executed
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->userId;
     }
 
     /**

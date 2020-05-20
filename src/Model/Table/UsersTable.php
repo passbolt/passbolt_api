@@ -198,9 +198,9 @@ class UsersTable extends Table
         ]);
 
         // Delete rules
-        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedResource', [
+        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedContent', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.'),
+            'message' => __('You need to transfer the ownership for the shared content owned by this user before deleting this user.'),
         ]);
         $rules->addDelete(new IsNotSoleManagerOfNonEmptyGroupRule(), 'soleManagerOfNonEmptyGroup', [
             'errorField' => 'id',
@@ -356,7 +356,8 @@ class UsersTable extends Table
         // find all the resources that only belongs to the user and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. checkRules)
-        $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true)->extract('aco_foreign_key')->toArray();
+        $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
+            ->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
@@ -365,7 +366,7 @@ class UsersTable extends Table
         // We do not want empty groups
         // Soft delete all the groups where the user is alone
         // Note that all associated resources are already deleted in previous step
-        // ref. findResourcesOnlyUserCanAccess checkGroupsUsers = true
+        // ref. findAcosOnlyAroCanAccess checkGroupsUsers = true
         $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)->extract('group_id')->toArray();
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);

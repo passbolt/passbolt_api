@@ -14,10 +14,65 @@
  */
 namespace App\Test\Lib\Model;
 
+use App\Model\Entity\Group;
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 
 trait GroupsModelTrait
 {
+    /**
+     * Add a dummy group.
+     *
+     * @param array $data The group data
+     * @param array $options The entity options
+     * @return Group
+     */
+    public function addGroup($data = [], $options = [])
+    {
+        $groupsTable = TableRegistry::getTableLocator()->get('Groups');
+        $group = self::getDummyGroupEntity($data, $options);
+
+        $groupsTable->save($group, ['checkRules' => true]);
+
+        return $group;
+    }
+
+    /**
+     * Get a new group entity
+     *
+     * @param array $data The group data.
+     * @param array $options The new entity options.
+     * @return Resouce
+     */
+    public function getDummyGroupEntity($data = [], $options = [])
+    {
+        $groupsTable = TableRegistry::getTableLocator()->get('Groups');
+        $defaultOptions = [
+            'validate' => false,
+            'accessibleFields' => [
+                'name' => true,
+                'created_by' => true,
+                'modified_by' => true,
+                'groups_users' => true,
+                'deleted' => true,
+            ],
+            'associated' => [
+                'GroupsUsers' => [
+                    'validate' => false,
+                    'accessibleFields' => [
+                        'user_id' => true,
+                        'is_admin' => true,
+                    ],
+                ],
+            ],
+        ];
+
+        $data = self::getDummyGroupData($data);
+        $options = array_merge($defaultOptions, $options);
+
+        return $groupsTable->newEntity($data, $options);
+    }
+
     /**
      * Get a dummy group with test data.
      * The comment returned passes a default validation.
@@ -25,14 +80,10 @@ trait GroupsModelTrait
      * @param array $data Custom data that will be merged with the default content.
      * @return array Comment data
      */
-    public static function getDummyGroup($data = [])
+    public static function getDummyGroupData($data = [])
     {
         $entityContent = [
             'name' => 'New group name',
-            'groups_users' => [
-                ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => true],
-                ['user_id' => UuidFactory::uuid('user.id.betty')],
-            ],
             'created_by' => UuidFactory::uuid('user.id.admin'),
             'modified_by' => UuidFactory::uuid('user.id.admin'),
             'deleted' => false,

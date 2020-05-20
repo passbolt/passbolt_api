@@ -33,7 +33,7 @@ class ReportViewService
      */
     public function __construct(ReportPool $reportPool = null)
     {
-        $this->reportPool = $reportPool ?? new ReportPool();
+        $this->reportPool = $reportPool ?? ReportPool::getInstance();
     }
 
     /**

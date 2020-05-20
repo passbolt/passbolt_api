@@ -14,19 +14,95 @@
  */
 namespace Passbolt\Reports\Utility;
 
-use Passbolt\Reports\Utility\CombinedReports\EmployeeOnBoardingReport;
-use Passbolt\Reports\Utility\CombinedReports\EmptyCombinedReport;
-use Passbolt\Reports\Utility\SingleReports\Users\ActiveUsersCountReport;
-use Passbolt\Reports\Utility\SingleReports\Users\NonActiveUsersCountReport;
-use Passbolt\Reports\Utility\SingleReports\Users\NonActiveUsersListReport;
-
 /**
- * Contains the list of all available report services.
+ * Singleton class.
+ * Used to add and list available reports.
  *
  * @package Passbolt\Reports\Utility
  */
 class ReportPool
 {
+    /**
+     * Instance of class used for singleton.
+     * @var
+     */
+    private static $instance;
+
+    /**
+     * Reports list.
+     * @var array
+     */
+    private static $reports = [];
+
+    /**
+     * ReportPool constructor.
+     */
+    private function __construct()
+    {
+        return $this;
+    }
+
+    /**
+     * Get ReportPool singleton.
+     *
+     * @return ReportPool
+     */
+    public static function getInstance()
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new ReportPool();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Add a report in the report pool.
+     * @param AbstractReport $report The report to add
+     *
+     * @return AbstractReport[] list of reports
+     */
+    public function addReport(AbstractReport $report)
+    {
+        $closure = function () use ($report) {
+            return $report;
+        };
+        $closure = $closure->bindTo($report);
+        self::$reports[$report->getSlug()] = $closure;
+
+        return self::$reports;
+    }
+
+    /**
+     * Add reports in the report pool.
+     * @param Callable[] $reports list of callable Reports (AbstractReport)
+     *
+     * Example:
+     * [
+     *    // Combined reports
+     *    EmployeeOnBoardingReport::SLUG => function () {
+     *      return new EmployeeOnBoardingReport();
+     *    },
+
+     *    // The sky the limit reports -> make setCallableGetData
+     *    'my-dynamic-report' => function () {
+     *      return (new EmptyCombinedReport())
+     *        ->setSlug('my-dynamic-report')
+     *        ->setDescription('Out of control reports')
+     *        ->setName('No limits')
+     *        ->addReport(new NonActiveUsersCountReport());
+     *    },
+     * ];
+     *
+     * @return Callable[] list of callable reports (AbstractReport)
+     */
+    public function addReports(array $reports)
+    {
+        self::$reports = array_merge(self::$reports, $reports);
+
+        return self::$reports;
+    }
+
     /**
      * Return a an array of callable to instantiate to get a report
      * Each Report is created callable to avoid to instantiate a report collection when it will
@@ -36,31 +112,6 @@ class ReportPool
      */
     public function getReports()
     {
-        return [
-            // Combined reports
-            EmployeeOnBoardingReport::SLUG => function () {
-                return new EmployeeOnBoardingReport();
-            },
-
-            // Single reports
-            ActiveUsersCountReport::SLUG => function () {
-                return new ActiveUsersCountReport();
-            },
-            NonActiveUsersCountReport::SLUG => function () {
-                return new NonActiveUsersCountReport();
-            },
-            NonActiveUsersListReport::SLUG => function () {
-                return new NonActiveUsersListReport();
-            },
-
-            // The sky the limit reports -> make setCallableGetData
-            'my-dynamic-report' => function () {
-                return (new EmptyCombinedReport())
-                    ->setSlug('my-dynamic-report')
-                    ->setDescription('Out of control reports')
-                    ->setName('No limits')
-                    ->addReport(new NonActiveUsersCountReport());
-            },
-        ];
+        return self::$reports;
     }
 }

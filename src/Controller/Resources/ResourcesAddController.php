@@ -18,9 +18,12 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
-use App\Model\Entity\Resource;
+use App\Model\Table\ResourcesTable;
 use Cake\Event\Event;
 
+/**
+ * @property ResourcesTable Resources
+ */
 class ResourcesAddController extends AppController
 {
     const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
@@ -29,17 +32,23 @@ class ResourcesAddController extends AppController
      * Resource Add action
      *
      * @return void
+     * @throws \Exception
      */
     public function add()
     {
         $this->loadModel('Resources');
 
-        // Build and validate the entity
-        $resource = $this->_buildAndValidateEntity();
+        $data = $this->_formatRequestData();
+        $resource = $this->_buildAndValidateEntity($data);
 
-        // Save the entity
-        $result = $this->Resources->save($resource, ['atomic' => false]);
-        $this->_handleValidationError($resource);
+        $result = $this->Resources->getConnection()->transactional(function () use ($resource, $data) {
+            $result = $this->Resources->save($resource, ['atomic' => false]);
+            $this->_handleValidationError($resource);
+            $this->afterCreate($resource, $data);
+            $this->_handleValidationError($resource);
+
+            return $result;
+        });
 
         // Retrieve the saved resource.
         $options = [
@@ -48,9 +57,8 @@ class ResourcesAddController extends AppController
                 'secret' => true, 'permission' => true,
             ],
         ];
-        $resource = $this->Resources->findView($this->User->id(), $result->id, $options)->first();
 
-        $this->_notifyUser($resource);
+        $resource = $this->Resources->findView($this->User->id(), $result->id, $options)->first();
 
         $this->success(__('The resource has been added successfully.'), $resource);
     }
@@ -58,12 +66,11 @@ class ResourcesAddController extends AppController
     /**
      * Build the resource entity from user input
      *
-     * @return \Cake\Datasource\EntityInterface $resource resource entity
+     * @param array $data Array of data
+     * @return \App\Model\Entity\Resource
      */
-    protected function _buildAndValidateEntity()
+    protected function _buildAndValidateEntity(array $data)
     {
-        $data = $this->_formatRequestData();
-
         // Enforce data.
         $data['created_by'] = $this->User->id();
         $data['modified_by'] = $this->User->id();
@@ -119,7 +126,7 @@ class ResourcesAddController extends AppController
     /**
      * Format request data formatted for API v1 to API v2 format
      *
-     * @return array data
+     * @return array
      */
     protected function _formatRequestData()
     {
@@ -144,11 +151,11 @@ class ResourcesAddController extends AppController
     /**
      * Manage validation errors.
      *
-     * @param \Cake\Datasource\EntityInterface $resource Resource
+     * @param \App\Model\Entity\Resource $resource the
      * @throws ValidationException if the resource validation failed
      * @return void
      */
-    protected function _handleValidationError($resource)
+    protected function _handleValidationError(\App\Model\Entity\Resource $resource)
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
@@ -157,14 +164,16 @@ class ResourcesAddController extends AppController
     }
 
     /**
-     * Send email notification
-     *
-     * @param resource $resource Resource
+     * Trigger the after resource create event.
+     * @param \App\Model\Entity\Resource $resource The created resource
+     * @param array $data The request data.
      * @return void
      */
-    protected function _notifyUser(Resource $resource)
+    protected function afterCreate(\App\Model\Entity\Resource $resource, array $data = [])
     {
-        $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, ['resource' => $resource, 'accessControl' => $this->User->getAccessControl()]);
+        $uac = $this->User->getAccessControl();
+        $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
+        $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);
     }
 }
