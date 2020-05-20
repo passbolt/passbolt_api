@@ -18,7 +18,6 @@ use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\Reports\Utility\AbstractSingleReport;
 use Passbolt\Reports\Utility\ReportPool;
 
-
 class ReportsViewControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
@@ -28,11 +27,12 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
 
     private $sampleReport;
 
-
-    private function _setEmptyReport($slug) {
+    private function _setEmptyReport($slug)
+    {
         $ReportClass = new class extends AbstractSingleReport
         {
-            public function getData() {
+            public function getData()
+            {
                 return [];
             }
         };
@@ -45,7 +45,6 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
 
         ReportPool::getInstance()->addReport($this->sampleReport);
     }
-
 
     public function testReportsViewControllerError_ThrowErrorWhenNotAuthenticated()
     {
