@@ -207,8 +207,8 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         foreach ($testCases as $testCase) {
             $this->authenticateAs($testCase['userAlias']);
             $resourceId = $testCase['resourceId'];
-            $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v1");
-            $this->assertError(404, 'The resource does not exist.');
+            $this->postJson("/share/simulate/resource/$resourceId.json");
+            $this->assertError(403, 'You are not authorized to update this resource.');
         }
     }
 
