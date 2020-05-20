@@ -86,7 +86,7 @@ class GpgkeysTable extends Table
             ->notEmpty('armored_key')
             ->add('armored_key', ['custom' => [
                 'rule' => [$this, 'isParsableArmoredPublicKey'],
-                'message' => __('The key should be a valid OpenPGPG ASCII armored key.'),
+                'message' => __('The key should be a valid OpenPGP ASCII armored key.'),
             ]]);
 
         $validator

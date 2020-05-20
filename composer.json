@@ -69,8 +69,9 @@
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
             "Passbolt\\Log\\": "./plugins/Passbolt/Log/src",
             "Passbolt\\EmailNotificationSettings\\": "./plugins/Passbolt/EmailNotificationSettings/src",
-            "Passbolt\\Folders\\": "./plugins/Passbolt/Folders/src",
-            "Passbolt\\EmailDigest\\": "./plugins/Passbolt/EmailDigest/src"
+            "Passbolt\\EmailDigest\\": "./plugins/Passbolt/EmailDigest/src",
+            "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src",
+            "Passbolt\\Folders\\": "./plugins/Passbolt/Folders/src"
         }
     },
     "autoload-dev": {
@@ -81,6 +82,7 @@
             "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests",
             "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/Passbolt/EmailNotificationSettings/tests",
             "Passbolt\\EmailDigest\\Test\\": "./plugins/Passbolt/EmailDigest/tests",
+            "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests",
             "Passbolt\\Folders\\Test\\": "./plugins/Passbolt/Folders/tests"
         }
     },
