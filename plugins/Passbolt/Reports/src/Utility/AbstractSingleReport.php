@@ -19,6 +19,10 @@ abstract class AbstractSingleReport extends AbstractReport
     const SINGLE_REPORT_TEMPLATE = 'Passbolt/Reports.SingleReport';
     const SINGLE_REPORT_TYPE = 'single';
 
+    const STATUS_SUCCESS = 'success';
+    const STATUS_IN_PROGRESS = 'in-progress';
+    const STATUS_FAIL = 'fail';
+
     /**
      * Return the template associated to the generated report by the report generator.
      *
