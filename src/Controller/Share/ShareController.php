@@ -120,7 +120,7 @@ class ShareController extends AppController
         }
         // The user can access the resource.
         if (!$this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $this->User->id(), Permission::OWNER)) {
-            throw new ForbiddenException(__('You are not authorized to update this resource.'));
+            throw new ForbiddenException(__('You are not authorized to share this resource.'));
         }
     }
 
