@@ -18,7 +18,6 @@ namespace App\Test\Lib\Model;
 
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
-use Cake\Validation\Validation;
 
 trait FormatValidationTrait
 {

@@ -14,19 +14,17 @@
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Form;
 
-use App\Model\Entity\Role;
-use App\Model\Table\OrganizationSettingsTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
-use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class LdapConfigurationFormTest extends AppTestCase
 {
+    use EventDispatcherTrait;
     use FormatValidationTrait;
 
     public $fixtures = [
