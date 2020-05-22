@@ -33,6 +33,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
     {
         TableRegistry::getTableLocator()->clear();
         parent::setUp();
+        $this->loadPlugins(['Passbolt/WebInstaller']);
         $this->_recover = false;
     }
 
