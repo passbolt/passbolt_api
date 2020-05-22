@@ -82,6 +82,15 @@ abstract class AppIntegrationTestCase extends TestCase
     }
 
     /**
+     * Tear dow
+     */
+    public function tearDown()
+    {
+        $this->clearPlugins();
+        parent::tearDown();
+    }
+
+    /**
      * Authenticate as a user.
      *
      * @param string $userFirstName The user first name.
