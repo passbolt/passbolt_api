@@ -30,13 +30,11 @@ abstract class TagPluginIntegrationTestCase extends AppIntegrationTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.tags.enabled', true);
-
-        TableRegistry::getTableLocator()->clear();
-        TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function tearDown()
     {
-        TableRegistry::getTableLocator()->clear();
+        parent::tearDown();
+        Configure::write('passbolt.plugins.tags.enabled', false);
     }
 }

@@ -53,6 +53,18 @@ abstract class AppTestCase extends TestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.tags.enabled', false);
+        Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
+        Configure::write('passbolt.plugins.log.enabled', false);
+        Configure::write('passbolt.plugins.folders.enabled', false);
+    }
+
+    /**
+     * Tear dow
+     */
+    public function tearDown()
+    {
+        $this->clearPlugins();
+        parent::tearDown();
     }
 
     /**
