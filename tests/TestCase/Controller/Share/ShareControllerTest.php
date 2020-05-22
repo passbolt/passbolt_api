@@ -245,7 +245,7 @@ hcciUFw5
             $this->authenticateAs($testCase['userAlias']);
             $resourceId = $testCase['resourceId'];
             $this->putJson("/share/resource/$resourceId.json");
-            $this->assertError(403, 'You are not authorized to update this resource.');
+            $this->assertError(403, 'You are not authorized to share this resource.');
         }
     }
 

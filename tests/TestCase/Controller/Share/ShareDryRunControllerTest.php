@@ -208,7 +208,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
             $this->authenticateAs($testCase['userAlias']);
             $resourceId = $testCase['resourceId'];
             $this->postJson("/share/simulate/resource/$resourceId.json");
-            $this->assertError(403, 'You are not authorized to update this resource.');
+            $this->assertError(403, 'You are not authorized to share this resource.');
         }
     }
 
