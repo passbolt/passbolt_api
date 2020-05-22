@@ -99,6 +99,17 @@ class ResourcesTable extends Table
                 'through' => 'Passbolt/Tags.ResourcesTags',
             ]);
         }
+
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            $this->hasMany('FoldersRelations', [
+                'className' => 'FoldersRelations',
+                'foreignKey' => 'foreign_id',
+                'conditions' => [
+                    'FoldersRelations.foreign_model' => 'Resource',
+                ],
+                'dependent' => true,
+            ]);
+        }
     }
 
     /**

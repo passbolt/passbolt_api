@@ -24,6 +24,7 @@ use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
+use Passbolt\Folders\Model\Entity\Folder;
 
 /**
  * @method EventManager getEventManager()
@@ -94,6 +95,13 @@ trait ResourcesFindersTrait
         // If plugin tag is present and request contains tags
         if (Configure::read('passbolt.plugins.tags.enabled')) {
             $query = \Passbolt\Tags\Model\Table\TagsTable::decorateForeignFind($query, $options, $userId);
+        }
+
+        if (Configure::read('passbolt.plugins.folders')) {
+            // Filter on resources with the given parent ids.
+            if (isset($options['filter']['has-parent'])) {
+                $query = $this->filterQueryByFolderParentIds($query, $options['filter']['has-parent']);
+            }
         }
 
         // Filter on resources I have permission.
@@ -319,5 +327,42 @@ trait ResourcesFindersTrait
         $query->where(['Resources.id IN' => $resourcesSharedWithGroupSubQuery]);
 
         return $query;
+    }
+
+    /**
+     * Filter a query by parents ids.
+     *
+     * @param Query $query Query to filter on
+     * @param array $parentIds Array of parent ids
+     * @return Query
+     */
+    public function filterQueryByFolderParentIds(Query $query, array $parentIds)
+    {
+        if (empty($parentIds)) {
+            return $query;
+        }
+
+        $includeRoot = false;
+        $parentIds = array_filter($parentIds, function ($value) use (&$includeRoot) {
+            if ($value == Folder::ROOT_ID) {
+                $includeRoot = true;
+
+                return false;
+            }
+
+            return true;
+        });
+
+        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot) {
+            $conditions = [];
+            if (!empty($parentIds)) {
+                $conditions[] = ['folder_parent_id IN' => $parentIds];
+            }
+            if ($includeRoot) {
+                $conditions[] = ['folder_parent_id IS NULL'];
+            }
+
+            return $q->where(['OR' => $conditions]);
+        });
     }
 }

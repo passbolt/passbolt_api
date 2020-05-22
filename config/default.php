@@ -112,7 +112,16 @@ return [
                         // Notify managers when group membership changes.
                         'update' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     ]
-                ]
+                ],
+                'folder' => [
+                    'created' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_CREATED', true), FILTER_VALIDATE_BOOLEAN),
+                    'updated' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_UPDATED', true), FILTER_VALIDATE_BOOLEAN),
+                    'deleted' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_DELETED', true), FILTER_VALIDATE_BOOLEAN),
+                    'share' => [
+                        'created' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE_CREATED', true), FILTER_VALIDATE_BOOLEAN),
+                        'dropped' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE_DROPPED', true), FILTER_VALIDATE_BOOLEAN),
+                    ],
+                ],
             ]
         ],
 

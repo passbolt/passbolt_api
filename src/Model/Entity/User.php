@@ -14,6 +14,7 @@
  */
 namespace App\Model\Entity;
 
+use App\Model\Table\PermissionsTable;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;

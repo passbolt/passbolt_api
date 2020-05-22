@@ -354,13 +354,29 @@ class UsersTable extends Table
         }
 
         // find all the resources that only belongs to the user and mark them as deleted
-        // Note: all resources that cannot be deleted should have been
-        // transferred to other people already (ref. checkRules)
+        // Note: all resources that cannot be deleted should have been transferred to other people already.
         $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
             ->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
+        }
+
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            // Find all the folders that only belongs to the deleted user and delete them.
+            // Note: all folders that cannot be deleted should have been transferred to other people already.
+            $foldersIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::FOLDER_ACO, $user->id, ['checkGroupsUsers' => true])
+                ->extract('aco_foreign_key')->toArray();
+            if (!empty($foldersIds)) {
+                $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+                $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+                $foldersTable->deleteAll(['id IN' => $foldersIds]);
+                $foldersRelationsTable->deleteAll(['foreign_id IN' => $foldersIds]);
+                $foldersRelationsTable->updateAll(['folder_parent_id' => null], ['folder_parent_id IN ' => $foldersIds]);
+            }
+            // Remove all the folders relations of the users.
+            $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+            $foldersRelationsTable->deleteAll(['user_id' => $user->id]);
         }
 
         // We do not want empty groups

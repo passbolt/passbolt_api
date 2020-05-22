@@ -81,6 +81,7 @@ abstract class AppIntegrationTestCase extends TestCase
         Configure::write('passbolt.plugins.tags.enabled', false);
         Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
+        Configure::write('passbolt.plugins.folders.enabled', false);
     }
 
     /**

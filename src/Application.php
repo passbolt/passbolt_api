@@ -228,6 +228,11 @@ class Application extends BaseApplication
             $this->addPlugin('Passbolt/AuditLog', ['bootstrap' => true, 'routes' => true]);
         }
 
+        $folderEnabled = Configure::read('passbolt.plugins.folders.enabled');
+        if (!isset($folderEnabled) || $folderEnabled) {
+            $this->addPlugin('Passbolt/Folders', ['bootstrap' => true, 'routes' => true]);
+        }
+
         return $this;
     }
 

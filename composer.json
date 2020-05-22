@@ -7,7 +7,10 @@
         "passbolt"
     ],
     "config": {
-      "optimize-autoloader": true
+      "optimize-autoloader": true,
+        "platform": {
+            "php": "7.0.33"
+        }
     },
     "homepage": "https://www.passbolt.com",
     "license": "AGPL-3.0-or-later",
@@ -62,7 +65,7 @@
         "phpunit/phpunit": "^5.7|^6.0",
         "cakephp/cakephp-codesniffer": "^3.0",
         "passbolt/passbolt_selenium_api": "^2.10.0",
-        "passbolt/passbolt_test_data": "^2.10.2"
+        "passbolt/passbolt_test_data": "^2.13.0"
     },
     "autoload": {
         "psr-4": {
@@ -78,7 +81,8 @@
             "Passbolt\\AuditLog\\": "./plugins/Passbolt/AuditLog/src",
             "Passbolt\\EmailNotificationSettings\\": "./plugins/Passbolt/EmailNotificationSettings/src",
             "Passbolt\\EmailDigest\\": "./plugins/Passbolt/EmailDigest/src",
-            "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src"
+            "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src",
+            "Passbolt\\Folders\\": "./plugins/Passbolt/Folders/src"
         }
     },
     "autoload-dev": {
@@ -95,7 +99,8 @@
             "Passbolt\\AuditLog\\Test\\": "./plugins/Passbolt/AuditLog/tests",
             "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/Passbolt/EmailNotificationSettings/tests",
             "Passbolt\\EmailDigest\\Test\\": "./plugins/Passbolt/EmailDigest/tests",
-            "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests"
+            "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests",
+            "Passbolt\\Folders\\Test\\": "./plugins/Passbolt/Folders/tests"
         }
     },
     "scripts": {

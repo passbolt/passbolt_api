@@ -139,7 +139,7 @@ class PermissionsUpdatePermissionsService
      *
      * @param array $errors The list of errors
      * @return void
-     * @throws ValidationException If the provided data does not validate.
+     * @throws CustomValidationException If the provided data does not validate.
      */
     private function handleValidationErrors(array $errors = [])
     {
