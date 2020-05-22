@@ -85,16 +85,7 @@ abstract class AppIntegrationTestCase extends TestCase
     }
 
     /**
-     * Tear dow
-     */
-    public function tearDown()
-    {
-        $this->clearPlugins();
-        parent::tearDown();
-    }
-
-    /**
-     * Tear dow
+     * Tear down
      */
     public function tearDown()
     {
