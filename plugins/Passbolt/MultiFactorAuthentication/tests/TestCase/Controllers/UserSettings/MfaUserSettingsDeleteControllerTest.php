@@ -41,7 +41,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         ProfilesFixture::class,
         GpgkeysFixture::class,
         AvatarsFixture::class,
-        GroupsUsersFixture::class
+        GroupsUsersFixture::class,
     ];
 
     const TESTED_ROUTE = '/mfa/setup/%s.json?api-version=v2';
@@ -64,7 +64,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
     {
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO],
-            MfaSettings::PROVIDER_DUO => []
+            MfaSettings::PROVIDER_DUO => [],
         ];
         $this->mockMfaAccountSettings('ada', $data);
 
@@ -101,7 +101,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
     {
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO],
-            MfaSettings::PROVIDER_DUO => [MfaAccountSettings::VERIFIED => FrozenTime::now()]
+            MfaSettings::PROVIDER_DUO => [MfaAccountSettings::VERIFIED => FrozenTime::now()],
         ];
         $this->mockMfaAccountSettings('ada', $data);
 

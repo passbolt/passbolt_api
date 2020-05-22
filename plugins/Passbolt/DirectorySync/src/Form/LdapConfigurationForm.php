@@ -35,7 +35,7 @@ class LdapConfigurationForm extends Form
     public static $connectionTypes = [
         self::CONNECTION_TYPE_PLAIN,
         self::CONNECTION_TYPE_SSL,
-        self::CONNECTION_TYPE_TLS
+        self::CONNECTION_TYPE_TLS,
     ];
 
     /**
@@ -67,7 +67,7 @@ class LdapConfigurationForm extends Form
         'sync_users_delete' => 'jobs.users.delete',
         'sync_groups_create' => 'jobs.groups.create',
         'sync_groups_delete' => 'jobs.groups.delete',
-        'sync_groups_update' => 'jobs.groups.update'
+        'sync_groups_update' => 'jobs.groups.update',
     ];
 
     /**
@@ -156,7 +156,7 @@ class LdapConfigurationForm extends Form
             ->uuid(('default_user'), false, __('Default user should be a valid uuid.'))
             ->add('default_user', ['isValidAdmin' => [
                 'rule' => [$this, 'isValidAdmin'],
-                'message' => __('The admin user provided does not exist.')
+                'message' => __('The admin user provided does not exist.'),
             ]]);
 
         $validator
@@ -165,7 +165,7 @@ class LdapConfigurationForm extends Form
             ->uuid(('default_group_admin_user'), false, __('Default group admin user should be a valid uuid.'))
             ->add('default_group_admin_user', ['isValidUser' => [
                 'rule' => [$this, 'isValidUser'],
-                'message' => __('The group admin user provided does not exist.')
+                'message' => __('The group admin user provided does not exist.'),
             ]]);
 
         $validator

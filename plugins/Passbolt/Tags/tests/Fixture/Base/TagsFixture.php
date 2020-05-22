@@ -58,58 +58,58 @@ class TagsFixture extends TestFixture
             [
                 'id' => UuidFactory::uuid('tag.id.alpha'),
                 'slug' => 'alpha',
-                'is_shared' => 0
+                'is_shared' => 0,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.#bravo'),
                 'slug' => '#bravo',
-                'is_shared' => 1
+                'is_shared' => 1,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.#charlie'),
                 'slug' => '#charlie',
-                'is_shared' => 1
+                'is_shared' => 1,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.#echo'),
                 'slug' => '#echo',
-                'is_shared' => 1
+                'is_shared' => 1,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.fox-trot'),
                 'slug' => 'fox-trot',
-                'is_shared' => 0
+                'is_shared' => 0,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.firefox'),
                 'slug' => 'firefox',
-                'is_shared' => 0
+                'is_shared' => 0,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.#golf'),
                 'slug' => '#golf',
-                'is_shared' => 1
+                'is_shared' => 1,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.hotel'),
                 'slug' => 'hotel',
-                'is_shared' => 0
+                'is_shared' => 0,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.hindi'),
                 'slug' => 'परदेशी-परदेशी',
-                'is_shared' => 0
+                'is_shared' => 0,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.unused'),
                 'slug' => 'unused',
-                'is_shared' => 0
+                'is_shared' => 0,
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.#unused'),
                 'slug' => '#unused',
-                'is_shared' => 1
-            ]
+                'is_shared' => 1,
+            ],
         ];
         parent::init();
     }

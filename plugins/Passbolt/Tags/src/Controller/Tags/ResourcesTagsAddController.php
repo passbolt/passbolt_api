@@ -108,7 +108,7 @@ class ResourcesTagsAddController extends AppController
                 if ($notShared) {
                     $existingTag->_joinData = new \StdClass();
                     $existingTag->_joinData = $this->Tags->ResourcesTags->newEntity([
-                        'user_id' => $userId
+                        'user_id' => $userId,
                     ]);
                 }
                 array_push($resource->tags, $existingTag);

@@ -25,7 +25,7 @@ class ResourceUpdateControllerTest extends TagPluginIntegrationTestCase
         'app.Base/Resources', 'app.Base/Favorites',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-        'app.Base/EmailQueue'
+        'app.Base/EmailQueue',
     ];
 
     public function testResourcesUpdateSuccess()
@@ -33,7 +33,7 @@ class ResourceUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $success = [
-            'resource' => [] // Nothing to update for now, we just check the update controller return value.
+            'resource' => [], // Nothing to update for now, we just check the update controller return value.
         ];
 
         foreach ($success as $case => $data) {

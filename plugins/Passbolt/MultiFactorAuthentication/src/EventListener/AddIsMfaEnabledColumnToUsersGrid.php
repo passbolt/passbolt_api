@@ -48,7 +48,7 @@ class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            ControllerFindIndexOptionsBeforeMarshal::EVENT_NAME => $this
+            ControllerFindIndexOptionsBeforeMarshal::EVENT_NAME => $this,
         ];
     }
 }

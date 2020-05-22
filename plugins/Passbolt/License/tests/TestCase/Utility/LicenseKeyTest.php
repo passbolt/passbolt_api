@@ -28,7 +28,7 @@ class LicenseKeyTest extends TestCase
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
         'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
     /**

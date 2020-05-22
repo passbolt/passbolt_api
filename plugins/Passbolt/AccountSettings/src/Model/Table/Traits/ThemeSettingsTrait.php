@@ -41,7 +41,7 @@ trait ThemeSettingsTrait
                     return (isset($context['data']['property']) && $context['data']['property'] === 'theme');
                 },
                 'rule' => [$this, 'isValidTheme'],
-                'message' => __('This theme is not supported.')
+                'message' => __('This theme is not supported.'),
             ]]);
 
         return $validator;
@@ -103,7 +103,7 @@ trait ThemeSettingsTrait
                 $response[] = [
                     'id' => UuidFactory::uuid('theme.id.' . $dir),
                     'name' => $dir,
-                    'preview' => Router::url('/img/themes/' . $defaultPreviewImageName, true)
+                    'preview' => Router::url('/img/themes/' . $defaultPreviewImageName, true),
                 ];
             } else {
                 $msg = __('ThemesIndexController: Could not load theme {0}, the main css file or preview image is missing', $dir);

@@ -27,8 +27,8 @@ return [
             'username' => 'neil@passbolt.com',
             'profile' => [
                 'first_name' => 'Neil',
-                'last_name' => 'Amstrong'
-            ]
+                'last_name' => 'Amstrong',
+            ],
         ],
     ],
     // A user that already exist
@@ -41,9 +41,9 @@ return [
             'username' => 'ada@passbolt.com',
             'profile' => [
                 'first_name' => 'Ada',
-                'last_name' => 'Lovelace'
-            ]
-        ]
+                'last_name' => 'Lovelace',
+            ],
+        ],
     ],
     [
         'id' => UuidFactory::uuid('ldap.user.id.betty'),
@@ -54,9 +54,9 @@ return [
             'username' => 'betty@passbolt.com',
             'profile' => [
                 'first_name' => 'Betty',
-                'last_name' => 'Holberton'
-            ]
-        ]
+                'last_name' => 'Holberton',
+            ],
+        ],
     ],
     // A user that does not exist and is not valid
 //    [
@@ -110,8 +110,8 @@ return [
             'username' => 'sofia@passbolt.com',
             'profile' => [
                 'first_name' => 'Sofia',
-                'last_name' => 'Kovalevskaya'
-            ]
-        ]
+                'last_name' => 'Kovalevskaya',
+            ],
+        ],
     ],
 ];

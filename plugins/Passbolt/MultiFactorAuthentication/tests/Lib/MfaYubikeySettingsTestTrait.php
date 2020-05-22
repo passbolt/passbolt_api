@@ -32,15 +32,15 @@ trait MfaYubikeySettingsTestTrait
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY => true],
             MfaSettings::PROVIDER_YUBIKEY => [
                 'clientId' => '12345',
-                'secretKey' => 'f4/ijjIAAO/bxO1k6hXmdgRRXUY='
-            ]
+                'secretKey' => 'f4/ijjIAAO/bxO1k6hXmdgRRXUY=',
+            ],
         ]);
         $this->mockMfaAccountSettings('ada', [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY],
             MfaSettings::PROVIDER_YUBIKEY => [
                 MfaAccountSettings::VERIFIED => FrozenTime::now(),
-                MfaAccountSettings::YUBIKEY_ID => 'ijfeijfeij'
-            ]
+                MfaAccountSettings::YUBIKEY_ID => 'ijfeijfeij',
+            ],
         ]);
     }
 }

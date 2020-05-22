@@ -34,7 +34,7 @@ class ResourceAddControllerTest extends TagPluginIntegrationTestCase
                 'name' => 'new resource name',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.domain.com',
-                'description' => 'new resource description'
+                'description' => 'new resource description',
             ],
             'Secret' => [
                 [
@@ -54,9 +54,9 @@ sG7jLzQBV/GVWtR4hVebstP+q05Sib+sKwLOTZhzWNPKruBsdaBCUTxcmI6qwDHS
 QQFgGx0K1xQj2rKiP2j0cDHyGsWIlOITN+4r6Ohx23qRhVo0txPWVOYLpC8JnlfQ
 W3AI8+rWjK8MGH2T88hCYI/6
 =uahb
------END PGP MESSAGE-----'
-                ]
-            ]
+-----END PGP MESSAGE-----',
+                ],
+            ],
         ];
         $data = array_merge($defaultData, $data);
 
@@ -66,7 +66,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
     public function testResourcesAddSuccess()
     {
         $success = [
-            'resource' => $this->_getDummyPostData()
+            'resource' => $this->_getDummyPostData(),
         ];
 
         foreach ($success as $case => $data) {

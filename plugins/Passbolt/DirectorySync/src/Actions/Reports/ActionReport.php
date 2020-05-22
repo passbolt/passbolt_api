@@ -75,7 +75,7 @@ class ActionReport implements \Serializable
             'action' => $this->action,
             'status' => $this->status,
             'created' => $this->created,
-            'version' => '2'
+            'version' => '2',
         ]);
     }
 
@@ -107,7 +107,7 @@ class ActionReport implements \Serializable
             'action' => $this->action,
             'status' => $this->status,
             'created' => $this->created,
-            'version' => '2'
+            'version' => '2',
         ];
     }
 

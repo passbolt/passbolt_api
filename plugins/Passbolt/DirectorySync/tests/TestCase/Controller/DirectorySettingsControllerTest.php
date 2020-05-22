@@ -33,7 +33,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     public $fixtures = [
         'app.Base/OrganizationSettings',
         'app.Base/AuthenticationTokens', 'app.Base/Users',
-        'app.Base/Roles'
+        'app.Base/Roles',
     ];
 
     public function setUp()

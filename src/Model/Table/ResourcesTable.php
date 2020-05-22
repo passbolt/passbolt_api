@@ -379,7 +379,7 @@ class ResourcesTable extends Table
             $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
             $ResourcesTags->deleteAll([
                 'resource_id' => $resourceId,
-                'user_id IN' => $usersId
+                'user_id IN' => $usersId,
             ]);
             $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
             $Tags->deleteAllUnusedTags();

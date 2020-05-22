@@ -38,7 +38,7 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
      */
     public $fixtures = [
         'app.Base/Users',
-        'plugin.Passbolt/AccountSettings.AccountSettings'
+        'plugin.Passbolt/AccountSettings.AccountSettings',
     ];
 
     /**

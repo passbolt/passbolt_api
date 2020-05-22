@@ -31,7 +31,7 @@ class DirectoryOrgSettingsTest extends AppTestCase
     public $fixtures = [
         'app.Base/OrganizationSettings',
         'app.Base/AuthenticationTokens', 'app.Base/Users',
-        'app.Base/Roles'
+        'app.Base/Roles',
     ];
 
     public static function getDummySettings()
@@ -43,13 +43,13 @@ class DirectoryOrgSettingsTest extends AppTestCase
             'jobs' => [
                 'users' => [
                     'create' => true,
-                    'delete' => false
+                    'delete' => false,
                 ],
                 'groups' => [
                     'create' => true,
                     'delete' => false,
-                    'update' => true
-                ]
+                    'update' => true,
+                ],
             ],
             'ldap' => [
                 'domains' => [
@@ -65,7 +65,7 @@ class DirectoryOrgSettingsTest extends AppTestCase
                         'ldap_type' => 'ad',
                     ],
                 ],
-            ]
+            ],
         ];
     }
 

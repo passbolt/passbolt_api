@@ -44,7 +44,7 @@ return [
             'users' => [
                 'CN=Ada Lovelace,OU=PassboltUsers,DC=passbolt,DC=local',
                 'CN=Betty Holberton,OU=PassboltUsers,DC=passbolt,DC=local',
-                'CN=Steve Shirley,OU=PassboltUsers,DC=passbolt,DC=local'
+                'CN=Steve Shirley,OU=PassboltUsers,DC=passbolt,DC=local',
             ],
         ],
     ],

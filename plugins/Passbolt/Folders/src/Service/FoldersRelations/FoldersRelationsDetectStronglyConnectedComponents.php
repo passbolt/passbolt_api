@@ -221,6 +221,8 @@ class FoldersRelationsDetectStronglyConnectedComponents
         ])->toArray();
     }
 
+    // @codingStandardsIgnoreStart
+
     /**
      * Detect strongly connected components in an adjacency graph.
      *
@@ -307,6 +309,8 @@ class FoldersRelationsDetectStronglyConnectedComponents
 
         return $f;
     }
+
+    // @codingStandardsIgnoreEnd
 
     /**
      * Format Tarjan result list into a folders relations list.

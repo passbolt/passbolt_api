@@ -64,19 +64,19 @@ class DirectoryIgnoreTable extends Table
             'dependent' => false,
             'className' => 'Users',
             'bindingKey' => 'id',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
 
         $this->hasOne('Groups', [
             'className' => 'Groups',
             'bindingKey' => 'id',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
 
         $this->hasOne('DirectoryEntries', [
             'className' => 'DirectoryEntries',
             'bindingKey' => 'id',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
     }
 
@@ -97,7 +97,7 @@ class DirectoryIgnoreTable extends Table
             ->scalar('foreign_model')
             ->requirePresence('foreign_model')
             ->inList('foreign_model', [
-                'Users', 'Groups', 'DirectoryEntries'
+                'Users', 'Groups', 'DirectoryEntries',
             ]);
 
         return $validator;
@@ -128,7 +128,7 @@ class DirectoryIgnoreTable extends Table
             'AssociatedRecordExists',
             [
                 'errorField' => 'id',
-                'message' => __('The associated record could not be found')
+                'message' => __('The associated record could not be found'),
             ]
         );
 
@@ -145,8 +145,8 @@ class DirectoryIgnoreTable extends Table
         $entity = $this->newEntity($data, [
             'accessibleFields' => [
                 'id' => true,
-                'foreign_model' => true
-            ]
+                'foreign_model' => true,
+            ],
         ]);
         $this->save($entity);
 
@@ -172,12 +172,12 @@ class DirectoryIgnoreTable extends Table
         $ignore = $this->newEntity(
             [
                 'id' => $foreignKey,
-                'foreign_model' => $foreignModel
+                'foreign_model' => $foreignModel,
             ],
             [
                 'accessibleFields' => [
                     'id' => true,
-                    'foreign_model' => true
+                    'foreign_model' => true,
                 ]]
         );
         if ($ignore->getErrors()) {

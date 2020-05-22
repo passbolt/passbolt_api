@@ -49,7 +49,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         GpgkeysFixture::class,
         RolesFixture::class,
         GroupsUsersFixture::class,
-        AvatarsFixture::class
+        AvatarsFixture::class,
     ];
 
     /**
@@ -100,8 +100,8 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
             MfaSettings::PROVIDER_TOTP => [
                 MfaAccountSettings::VERIFIED => FrozenTime::now(),
-                MfaAccountSettings::OTP_PROVISIONING_URI => 'http://provisioning.uri'
-            ]
+                MfaAccountSettings::OTP_PROVISIONING_URI => 'http://provisioning.uri',
+            ],
         ]));
 
         $this->authenticateAs('admin');
@@ -134,8 +134,8 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
             MfaSettings::PROVIDER_TOTP => [
                 MfaAccountSettings::VERIFIED => FrozenTime::now(),
-                MfaAccountSettings::OTP_PROVISIONING_URI => 'http://provisioning.uri'
-            ]
+                MfaAccountSettings::OTP_PROVISIONING_URI => 'http://provisioning.uri',
+            ],
         ]));
 
         $this->authenticateAs('admin');

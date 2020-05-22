@@ -29,7 +29,7 @@ class LicenseKeyDataFormTest extends TestCase
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
         'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
     /**
@@ -51,7 +51,7 @@ class LicenseKeyDataFormTest extends TestCase
             'plan_id' => UuidFactory::uuid(),
             'users' => 10000,
             'created' => (new Date())->addDays(2)->toIso8601String(),
-            'expiry' => (new Date())->addyear()->toIso8601String()
+            'expiry' => (new Date())->addyear()->toIso8601String(),
         ];
         $form = new LicenseKeyDataForm();
         $isValid = $form->execute($data);
@@ -69,7 +69,7 @@ class LicenseKeyDataFormTest extends TestCase
             'plan_id' => UuidFactory::uuid(),
             'users' => 10000,
             'created' => (new Date())->subMonths(6)->toIso8601String(),
-            'expiry' => (new Date())->subMonth()->toIso8601String()
+            'expiry' => (new Date())->subMonth()->toIso8601String(),
         ];
         $form = new LicenseKeyDataForm();
         $isValid = $form->execute($data);
@@ -87,7 +87,7 @@ class LicenseKeyDataFormTest extends TestCase
             'plan_id' => UuidFactory::uuid(),
             'users' => 1,
             'created' => (new Date())->subMonths(6)->toIso8601String(),
-            'expiry' => (new Date())->addMonths(6)->toIso8601String()
+            'expiry' => (new Date())->addMonths(6)->toIso8601String(),
         ];
         $form = new LicenseKeyDataForm();
         $isValid = $form->execute($data);

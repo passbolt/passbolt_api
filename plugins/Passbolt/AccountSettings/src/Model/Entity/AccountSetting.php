@@ -33,7 +33,7 @@ class AccountSetting extends Entity
     ];
 
     const SUPPORTED_PROPERTIES = [
-        'theme', 'mfa'
+        'theme', 'mfa',
     ];
 
     const UUID_NAMESPACE = 'account.settings.property.id.';

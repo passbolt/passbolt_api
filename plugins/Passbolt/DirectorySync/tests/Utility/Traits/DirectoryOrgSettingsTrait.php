@@ -33,13 +33,13 @@ trait DirectoryOrgSettingsTrait
             'jobs' => [
                 'users' => [
                     'create' => true,
-                    'delete' => true
+                    'delete' => true,
                 ],
                 'groups' => [
                     'create' => true,
                     'delete' => true,
-                    'update' => true
-                ]
+                    'update' => true,
+                ],
             ],
         ];
         $uac = $this->mockUserAccessControl('admin', Role::ADMIN);

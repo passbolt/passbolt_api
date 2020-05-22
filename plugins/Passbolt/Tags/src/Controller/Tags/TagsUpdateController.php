@@ -51,7 +51,7 @@ class TagsUpdateController extends AppController
         try {
             /** @var Tag $tag */
             $tag = $this->Tags->get($id, [
-                'contain' => ['ResourcesTags']
+                'contain' => ['ResourcesTags'],
             ]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The tag does not exist.'));

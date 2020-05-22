@@ -65,7 +65,7 @@ class DuoVerifyForm extends MfaForm
             ->notEmpty('sig_response', __('The signature should not be empty.'))
             ->add('sig_response', ['isValidSigResponse' => [
                 'rule' => [$this, 'isValidSigResponse'],
-                'message' => __('This is not a valid signature response.')
+                'message' => __('This is not a valid signature response.'),
             ]]);
 
         return $validator;

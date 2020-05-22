@@ -33,20 +33,20 @@ trait MfaTotpSettingsTestTrait
         switch ($case) {
             case 'orgOnly':
                 $this->mockMfaOrgSettings([
-                    MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP => true]
+                    MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP => true],
                 ]);
                 break;
             case 'valid':
                 $uri = MfaOtpFactory::generateTOTP($uac);
                 $this->mockMfaOrgSettings([
-                    MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP => true]
+                    MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP => true],
                 ]);
                 $this->mockMfaAccountSettings('ada', [
                     MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
                     MfaSettings::PROVIDER_TOTP => [
                         MfaAccountSettings::VERIFIED => FrozenTime::now(),
-                        MfaAccountSettings::OTP_PROVISIONING_URI => $uri
-                    ]
+                        MfaAccountSettings::OTP_PROVISIONING_URI => $uri,
+                    ],
                 ]);
                 break;
         }

@@ -119,8 +119,7 @@ class FoldersShareService
                 $this->moveSelfOrganizedContentWithInsufficientPermissionToRoot($uac, $folder);
             }
             $this->postPermissionsRevoked($folder, $result['removed']);
-            // @todo is it still necessary to pass isPersonal to postPermissionAdded ? Self organized content is moved to the root by the updated permissions function.
-            $this->postPermissionsAdded($uac, $folder, $isPersonal, $result['added']);
+            $this->postPermissionsAdded($uac, $folder, $result['added']);
         });
 
 //        $this->dispatchEvent(self::FOLDERS_UPDATE_FOLDER_EVENT, [
@@ -291,18 +290,17 @@ class FoldersShareService
      *
      * @param UserAccessControl $uac The operator
      * @param Folder $folder The target folder
-     * @param bool $isPersonal Was the folder personal before shared with other users.
      * @param array $addedPermissions The list of added permissions
      * @return void
      * @throws Exception If something unexpected occurred
      */
-    private function postPermissionsAdded(UserAccessControl $uac, Folder $folder, bool $isPersonal, array $addedPermissions = [])
+    private function postPermissionsAdded(UserAccessControl $uac, Folder $folder, array $addedPermissions = [])
     {
         foreach ($addedPermissions as $permission) {
             if ($permission->aro === PermissionsTable::GROUP_ARO) {
-                $this->addFolderToGroupUsersTrees($uac, $folder, $permission->aro_foreign_key, $isPersonal);
+                $this->addFolderToGroupUsersTrees($uac, $folder, $permission->aro_foreign_key);
             } else {
-                $this->addFolderToUserTree($uac, $folder, $permission->aro_foreign_key, $isPersonal);
+                $this->addFolderToUserTree($uac, $folder, $permission->aro_foreign_key);
             }
         }
     }
@@ -313,15 +311,14 @@ class FoldersShareService
      * @param UserAccessControl $uac The operator
      * @param Folder $folder The target folder
      * @param string $groupId The target group
-     * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
      * @return void
      * @throws Exception If something wrong occurred
      */
-    private function addFolderToGroupUsersTrees(UserAccessControl $uac, Folder $folder, string $groupId, bool $isPersonal = false)
+    private function addFolderToGroupUsersTrees(UserAccessControl $uac, Folder $folder, string $groupId)
     {
         $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
-            $this->addFolderToUserTree($uac, $folder, $groupUserId, $isPersonal);
+            $this->addFolderToUserTree($uac, $folder, $groupUserId);
         }
     }
 
@@ -331,12 +328,11 @@ class FoldersShareService
      * @param UserAccessControl $uac The operator
      * @param Folder $folder The target folder
      * @param string $userId The target user
-     * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
      * @return void
      * @throws Exception If something wrong occurred
      */
-    private function addFolderToUserTree(UserAccessControl $uac, Folder $folder, string $userId, bool $isPersonal = false)
+    private function addFolderToUserTree(UserAccessControl $uac, Folder $folder, string $userId)
     {
-        $this->foldersRelationsAddItemToUserTreeService->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $isPersonal);
+        $this->foldersRelationsAddItemToUserTreeService->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId);
     }
 }

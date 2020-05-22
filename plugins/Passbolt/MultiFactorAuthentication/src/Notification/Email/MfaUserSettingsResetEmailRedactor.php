@@ -71,7 +71,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
             $subject = __('Your multi-factor authentication settings were reset by you.'),
             [
                 'title' => __('Multi-factor authentication settings were reset.'),
-                'body' => ['user' => $user]
+                'body' => ['user' => $user],
             ],
             self::TEMPLATE_SELF
         );
@@ -91,7 +91,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
             $subject = __('Your multi-factor authentication settings were reset by an administrator.'),
             [
                 'title' => __('Multi-factor authentication settings were reset.'),
-                'body' => ['user' => $admin]
+                'body' => ['user' => $admin],
             ],
             self::TEMPLATE_ADMIN
         );
@@ -115,7 +115,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     public function getSubscribedEvents()
     {
         return [
-            MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT
+            MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT,
         ];
     }
 }

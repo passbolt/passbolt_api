@@ -44,7 +44,7 @@ class DirectoryReportsItemsTable extends Table
         $this->belongsTo('Reports', [
             'foreignKey' => 'report_id',
             'joinType' => 'INNER',
-            'className' => 'Passbolt/DirectorySync.Reports'
+            'className' => 'Passbolt/DirectorySync.Reports',
         ]);
     }
 
@@ -118,7 +118,7 @@ class DirectoryReportsItemsTable extends Table
                 'model' => true,
                 'action' => true,
                 'data' => true,
-            ]
+            ],
         ]);
         $result = $this->save($entity);
 

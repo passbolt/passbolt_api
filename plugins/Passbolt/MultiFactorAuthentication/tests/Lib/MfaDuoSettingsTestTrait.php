@@ -35,8 +35,8 @@ trait MfaDuoSettingsTestTrait
                         'salt' => 'qwertyuiopasdfghjklzxcvbnm12345678901234567890',
                         'integrationKey' => 'DICPIC33F13IWF1FR52J',
                         'secretKey' => '7TkYNgK8AGAuv3KW12qhsJLeIc1mJjHDHC1siNYX',
-                        'hostName' => 'api-42e9f2fe.duosecurity.com'
-                    ]
+                        'hostName' => 'api-42e9f2fe.duosecurity.com',
+                    ],
                 ]);
 
                 return;
@@ -47,14 +47,14 @@ trait MfaDuoSettingsTestTrait
                         'salt' => '__CHANGE_ME__THIS_MUST_BE_AT_LEAST_FOURTY_CHARACTERS_____',
                         'integrationKey' => 'CICDIC95F13URR1FW5SJ',
                         'secretKey' => '7tkYNgi8aGAuv3K31eq2sJLfIc1mJnHDYC1siNYX',
-                        'hostName' => 'api-33e9f1fb.duosecurity.com'
-                    ]
+                        'hostName' => 'api-33e9f1fb.duosecurity.com',
+                    ],
                 ]);
                 $this->mockMfaAccountSettings($user, [
                     MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO],
                     MfaSettings::PROVIDER_DUO => [
-                        MfaAccountSettings::VERIFIED => FrozenTime::now()
-                    ]
+                        MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                    ],
                 ]);
         }
     }

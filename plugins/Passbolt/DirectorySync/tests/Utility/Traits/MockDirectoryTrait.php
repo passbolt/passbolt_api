@@ -28,7 +28,7 @@ trait MockDirectoryTrait
         $entry = [
             'id' => $id,
             'foreign_model' => $model,
-            'created' => $created
+            'created' => $created,
         ];
         $ignore = $this->action->DirectoryEntries->DirectoryIgnore->newEntity($entry, ['validate' => false]);
         $save = $this->action->DirectoryEntries->DirectoryIgnore->save($ignore, ['checkRules' => false]);
@@ -87,7 +87,7 @@ trait MockDirectoryTrait
             'directory_created' => $data['dirCreated'],
             'directory_modified' => $data['dirModified'],
             'created' => $data['created'],
-            'modified' => $data['modified']
+            'modified' => $data['modified'],
         ];
         $entry = $this->action->DirectoryEntries->newEntity($entry, [
             'validate' => false,
@@ -99,8 +99,8 @@ trait MockDirectoryTrait
                 'directory_created' => true,
                 'directory_modified' => true,
                 'created' => true,
-                'modified' => true
-            ]
+                'modified' => true,
+            ],
         ]);
         $save = $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
         if (!$save) {
@@ -132,7 +132,7 @@ trait MockDirectoryTrait
             'directory_created' => $dirCreated,
             'directory_modified' => $dirModified,
             'created' => $created,
-            'modified' => $modified
+            'modified' => $modified,
         ];
         $entry = $this->action->DirectoryEntries->newEntity($entry, [
             'validate' => false,
@@ -144,8 +144,8 @@ trait MockDirectoryTrait
                 'directory_created' => true,
                 'directory_modified' => true,
                 'created' => true,
-                'modified' => true
-            ]
+                'modified' => true,
+            ],
         ]);
         $save = $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
         if (!$save) {
@@ -171,7 +171,7 @@ trait MockDirectoryTrait
                 'name' => strtolower($cn),
                 'groups' => [],
                 'users' => isset($options['group_users']) ? $options['group_users'] : [],
-            ]
+            ],
         ];
         $this->saveMockDirectoryGroupData($group);
 
@@ -208,7 +208,7 @@ trait MockDirectoryTrait
             'directory_created' => $dirCreated,
             'directory_modified' => $dirModified,
             'created' => $created,
-            'modified' => $modified
+            'modified' => $modified,
         ];
         $this->saveMockDirectoryEntry($entry);
 
@@ -238,8 +238,8 @@ trait MockDirectoryTrait
                 'directory_created' => true,
                 'directory_modified' => true,
                 'created' => true,
-                'modified' => true
-            ]
+                'modified' => true,
+            ],
         ]);
         $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
     }
@@ -270,9 +270,9 @@ trait MockDirectoryTrait
                 'username' => strtolower($username),
                 'profile' => [
                     'first_name' => ucfirst($fname),
-                    'last_name' => ucfirst($lname)
-                ]
-            ]
+                    'last_name' => ucfirst($lname),
+                ],
+            ],
         ];
         $users = $this->action->getDirectory()->getUsers();
         $users[] = $user;

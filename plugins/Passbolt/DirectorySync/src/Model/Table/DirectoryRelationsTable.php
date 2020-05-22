@@ -46,19 +46,19 @@ class DirectoryRelationsTable extends Table
             'dependent' => false,
             'className' => 'GroupsUsers',
             'bindingKey' => 'id',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
 
         $this->hasOne('UserDirectoryEntry', [
             'className' => 'DirectoryEntries',
             'bindingKey' => 'child_key',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
 
         $this->hasOne('GroupDirectoryEntry', [
             'className' => 'DirectoryEntries',
             'bindingKey' => 'parent_key',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
     }
 
@@ -98,7 +98,7 @@ class DirectoryRelationsTable extends Table
     public function cleanupHardDeletedUserGroups(array $entryIds)
     {
         $conditions = [
-            'GroupUser.id IS NULL'
+            'GroupUser.id IS NULL',
         ];
         if (!empty($entryIds)) {
             $conditions['DirectoryRelations.parent_key NOT IN'] = $entryIds;
@@ -185,8 +185,8 @@ class DirectoryRelationsTable extends Table
             'accessibleFields' => [
                 'id' => true,
                 'parent_key' => true,
-                'child_key' => true
-            ]
+                'child_key' => true,
+            ],
         ]);
         $this->save($entity);
 

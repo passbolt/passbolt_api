@@ -71,7 +71,7 @@ trait ResourcesTagsModelTrait
         $entityContent = [
             'resource_id' => UuidFactory::uuid(),
             'tag_id' => UuidFactory::uuid(),
-            'user_id' => UuidFactory::uuid()
+            'user_id' => UuidFactory::uuid(),
         ];
         $entityContent = array_merge($entityContent, $data);
 

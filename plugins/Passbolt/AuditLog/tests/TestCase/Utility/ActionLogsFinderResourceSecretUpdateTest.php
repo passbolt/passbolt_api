@@ -45,7 +45,7 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
         'plugin.Passbolt/Log.Base/EntitiesHistory',
         'plugin.Passbolt/Log.Base/PermissionsHistory',
         'plugin.Passbolt/Log.Base/SecretAccesses',
-        'plugin.Passbolt/Log.Base/SecretsHistory'
+        'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
     public function setUp()

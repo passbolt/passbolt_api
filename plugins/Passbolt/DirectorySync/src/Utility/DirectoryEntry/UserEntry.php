@@ -52,7 +52,7 @@ class UserEntry extends DirectoryEntry
             'profile' => [
                 'first_name' => $this->getFieldValue('firstname'),
                 'last_name' => $this->getFieldValue('lastname'),
-            ]
+            ],
         ];
         $this->validate();
 

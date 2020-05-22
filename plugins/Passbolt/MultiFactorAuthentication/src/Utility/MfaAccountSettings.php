@@ -187,7 +187,7 @@ class MfaAccountSettings
         } catch (RecordNotFoundException $exception) {
             $mfaAccountSettings = new MfaAccountSettings($uac, [
                 'providers' => [$provider],
-                $provider => $data
+                $provider => $data,
             ]);
         }
         $mfaAccountSettings->save();

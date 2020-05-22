@@ -23,7 +23,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
     // Success with currect personal and shared tags for resource with direct and group permissions
@@ -37,7 +37,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
             'bower' => [],
             'cakephp' => ['#charlie'],
             'chai' => ['alpha', 'hotel'],
-            'grogle' => ['#golf', 'firefox']
+            'grogle' => ['#golf', 'firefox'],
         ];
 
         $this->getJson('/resources.json?api-version=2&contain[tag]=1');

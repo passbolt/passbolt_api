@@ -68,7 +68,7 @@ class MfaMiddleware
         $whitelistedPaths = [
             '/mfa/verify',
             '/auth/logout',
-            '/logout'
+            '/logout',
         ];
         foreach ($whitelistedPaths as $path) {
             if (substr($request->getUri()->getPath(), 0, strlen($path)) === $path) {

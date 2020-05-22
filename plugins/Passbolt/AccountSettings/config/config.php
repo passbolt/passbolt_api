@@ -10,9 +10,9 @@ return [
                     ],
                 ],
                 'themes' => [
-                    'css' => 'api_main.min.css'
-                ]
+                    'css' => 'api_main.min.css',
+                ],
             ],
         ],
-    ]
+    ],
 ];

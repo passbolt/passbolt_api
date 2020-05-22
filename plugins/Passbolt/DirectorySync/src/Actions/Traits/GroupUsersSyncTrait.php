@@ -248,7 +248,7 @@ trait GroupUsersSyncTrait
             // If user already has a relation, send ignore report.
             $drExists = $this->DirectoryRelations->exists([
                 'parent_key' => $data['id'],
-                'child_key' => $directoryGroupUserEntriesByDn[$userDn]->id
+                'child_key' => $directoryGroupUserEntriesByDn[$userDn]->id,
             ]);
             if ($drExists) {
                 $u = $this->Users->get($userId);
@@ -315,7 +315,7 @@ trait GroupUsersSyncTrait
             $groupsUsersChange = [[
                 'group_id' => $group->id,
                 'user_id' => $userId,
-                'is_admin' => false
+                'is_admin' => false,
             ]];
 
             try {
@@ -329,7 +329,6 @@ trait GroupUsersSyncTrait
                     Alias::STATUS_SUCCESS,
                     $group
                 ));
-
             } catch (CustomValidationException $exception) {
                 $errors = $exception->getErrors();
                 $isNotActive = !empty(Hash::extract($errors, 'user_id.user_is_active'));
@@ -385,7 +384,7 @@ trait GroupUsersSyncTrait
             $gp = $this->GroupsUsers->findById($groupUserId)->contain(['Users'])->first();
             $groupsUsersChanges = [[
                 'id' => $groupUserId,
-                'delete' => true
+                'delete' => true,
             ]];
             try {
                 $groupUpdateGroupsUsersCreateService->updateGroupUsers($uac, $group->id, $groupsUsersChanges);

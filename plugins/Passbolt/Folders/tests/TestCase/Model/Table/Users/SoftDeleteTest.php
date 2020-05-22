@@ -49,7 +49,7 @@ class SoftDeleteTest extends FoldersTestCase
         PermissionsFixture::class,
         ResourcesFixture::class,
         SecretsFixture::class,
-        UsersFixture::class
+        UsersFixture::class,
     ];
 
     /**

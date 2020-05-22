@@ -81,7 +81,7 @@ class TotpVerifyForm extends MfaForm
             ]])
             ->add('totp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],
-                'message' => __('This OTP is not valid.')
+                'message' => __('This OTP is not valid.'),
             ]]);
 
         return $validator;

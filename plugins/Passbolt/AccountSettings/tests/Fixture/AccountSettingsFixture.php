@@ -49,14 +49,14 @@ class AccountSettingsFixture extends TestFixture
                 'user_id' => UuidFactory::uuid('user.id.ada'),
                 'property_id' => UuidFactory::uuid('account.settings.property.id.theme'),
                 'property' => 'theme',
-                'value' => 'midgar'
+                'value' => 'midgar',
             ],
             [
                 'id' => UuidFactory::uuid('account.settings.betty.theme'),
                 'user_id' => UuidFactory::uuid('user.id.betty'),
                 'property_id' => UuidFactory::uuid('account.settings.property.id.theme'),
                 'property' => 'theme',
-                'value' => 'default'
+                'value' => 'default',
             ],
         ];
         parent::init();

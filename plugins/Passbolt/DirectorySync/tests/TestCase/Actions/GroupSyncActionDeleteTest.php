@@ -576,7 +576,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
             'action' => Alias::ACTION_DELETE,
             'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_ERROR,
-            'type' => 'SyncError'
+            'type' => 'SyncError',
         ];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
@@ -603,7 +603,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
             'action' => Alias::ACTION_DELETE,
             'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_IGNORE,
-            'type' => 'DirectoryIgnore'
+            'type' => 'DirectoryIgnore',
         ];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryEntryEmpty();

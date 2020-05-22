@@ -64,12 +64,12 @@ class LicenseKeyForm extends Form
             ->add('key_ascii', 'is_valid_license_format', [
                 'last' => true,
                 'rule' => [$this, 'checkLicenseFormat'],
-                'message' => 'The license format is not valid.'
+                'message' => 'The license format is not valid.',
             ])
             ->add('key_ascii', 'is_valid_license', [
                 'last' => true,
                 'rule' => [$this, 'checkSignature'],
-                'message' => 'The license content or signature is not valid.'
+                'message' => 'The license content or signature is not valid.',
             ]);
 
         return $validator;

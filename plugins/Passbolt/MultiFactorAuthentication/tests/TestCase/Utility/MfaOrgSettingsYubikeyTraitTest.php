@@ -30,7 +30,7 @@ class MfaOrgSettingsYubikeyTraitTest extends MfaIntegrationTestCase
     public $fixtures = [
         'app.Base/OrganizationSettings',
         'app.Base/AuthenticationTokens', 'app.Base/Users',
-        'app.Base/Roles'
+        'app.Base/Roles',
     ];
 
     /**
@@ -40,12 +40,12 @@ class MfaOrgSettingsYubikeyTraitTest extends MfaIntegrationTestCase
 
     protected $defaultConfig = [
         'providers' => [
-            MfaSettings::PROVIDER_YUBIKEY => true
+            MfaSettings::PROVIDER_YUBIKEY => true,
         ],
         MfaSettings::PROVIDER_YUBIKEY => [
             'clientId' => '40123',
-            'secretKey' => 'i2/j3jIQBO/axOl3ah4mlgXlXU+Y='
-        ]
+            'secretKey' => 'i2/j3jIQBO/axOl3ah4mlgXlXU+Y=',
+        ],
     ];
 
     /**

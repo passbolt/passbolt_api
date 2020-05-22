@@ -47,15 +47,15 @@ class MfaVerifiedToken
                 'provider' => $provider,
                 'user_agent' => env('HTTP_USER_AGENT'),
                 'session_id' => (new DefaultPasswordHasher())->hash($sessionId),
-                'remember' => $remember
-            ])
+                'remember' => $remember,
+            ]),
         ];
         $accessibleFields = [
             'user_id' => true,
             'token' => true,
             'active' => true,
             'type' => true,
-            'data' => true
+            'data' => true,
         ];
         $token = $AuthenticationTokens->newEntity($entityData, ['accessibleFields' => $accessibleFields]);
         $msg = __('It is not possible to create an authentication token for this user.');

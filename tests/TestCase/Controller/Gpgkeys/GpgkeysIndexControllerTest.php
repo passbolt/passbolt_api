@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys'
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys',
     ];
 
     public function testGpgkeysIndexNotAllowedError()

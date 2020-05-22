@@ -306,7 +306,6 @@ class GroupsTable extends Table
             }
         }
 
-
         // Delete all group memberships
         $this->GroupsUsers->deleteAll(['group_id' => $group->id]);
 

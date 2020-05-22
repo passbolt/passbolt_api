@@ -49,7 +49,7 @@ class TagsDeleteController extends AppController
         try {
             /** @var Tag $tag */
             $tag = $this->Tags->get($id, [
-                'contain' => ['ResourcesTags']
+                'contain' => ['ResourcesTags'],
             ]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The tag does not exist.'));
@@ -80,7 +80,7 @@ class TagsDeleteController extends AppController
             // Delete all the association data from ResourceTags
             $this->ResourcesTags->deleteAll([
                 'tag_id' => $tagId,
-                'user_id' => $this->User->id()
+                'user_id' => $this->User->id(),
             ]);
 
             // Flush all unused tags

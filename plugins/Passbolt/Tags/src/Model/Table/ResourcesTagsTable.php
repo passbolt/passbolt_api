@@ -55,14 +55,14 @@ class ResourcesTagsTable extends Table
 
         $this->belongsTo('Resources', [
             'foreignKey' => 'resource_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Tags', [
             'foreignKey' => 'tag_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
     }
 
@@ -128,7 +128,7 @@ class ResourcesTagsTable extends Table
             ->select(['resource_id'])
             ->where([
                 'tag_id' => $newTagId,
-                'user_id' => $userId
+                'user_id' => $userId,
             ])
             ->extract('resource_id')
             ->toArray();
@@ -142,7 +142,7 @@ class ResourcesTagsTable extends Table
             $updateWhere['resource_id NOT IN'] = $resourcesIdAssociatedWithNewTag;
         }
         $this->updateAll([
-            'tag_id' => $newTagId
+            'tag_id' => $newTagId,
         ], $updateWhere);
 
         // Remove all associations between the old tag and the user resources.

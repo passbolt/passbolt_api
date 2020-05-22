@@ -41,7 +41,7 @@ class TagsTableTest extends TagTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
     /**
@@ -95,20 +95,20 @@ class TagsTableTest extends TagTestCase
         $tag = $this->Tags->newEntity([
             'slug' => 'test',
             'is_shared' => true,
-            'user_id' => $userId
+            'user_id' => $userId,
         ]);
         $this->assertEmpty($tag->toArray());
         $tag = $this->Tags->newEntity([
             'slug' => 'test',
             'is_shared' => true,
-            'user_id' => $userId
+            'user_id' => $userId,
         ], [
             'accessibleFields' => [
                 'id' => true,
                 'user_id' => true,
                 'slug' => true,
-                'is_shared' => true
-            ]
+                'is_shared' => true,
+            ],
         ]);
         $this->assertNotEmpty($tag->id);
         $this->assertEquals($tag->id, UuidFactory::uuid('tag.id.test'));

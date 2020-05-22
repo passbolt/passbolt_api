@@ -38,6 +38,6 @@ class Tag extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => false
+        '*' => false,
     ];
 }

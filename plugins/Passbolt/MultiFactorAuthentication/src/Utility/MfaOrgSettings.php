@@ -224,13 +224,13 @@ class MfaOrgSettings
                         self::DUO_SALT => $this->getDuoSalt(),
                         self::DUO_SECRET_KEY => $this->getDuoSecretKey(),
                         self::DUO_HOSTNAME => $this->getDuoHostname(),
-                        self::DUO_INTEGRATION_KEY => $this->getDuoIntegrationKey()
+                        self::DUO_INTEGRATION_KEY => $this->getDuoIntegrationKey(),
                     ];
                     break;
                 case MfaSettings::PROVIDER_YUBIKEY:
                     $results[MfaSettings::PROVIDER_YUBIKEY] = [
                         self::YUBIKEY_CLIENT_ID => $this->getYubikeyOTPClientId(),
-                        self::YUBIKEY_SECRET_KEY => $this->getYubikeyOTPSecretKey()
+                        self::YUBIKEY_SECRET_KEY => $this->getYubikeyOTPSecretKey(),
                     ];
                     break;
             }

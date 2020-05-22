@@ -27,7 +27,7 @@ class AddIsMfaEnabledBehavior implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Model.initialize' => $this
+            'Model.initialize' => $this,
         ];
     }
 

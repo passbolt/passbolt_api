@@ -212,7 +212,7 @@ class ActionLogResultsParser
                 'added' => [],
                 'updated' => [],
                 'removed' => [],
-            ]
+            ],
         ];
         foreach ($actionLog->entities_history as $entityHistory) {
             if ($entityHistory->foreign_model === 'PermissionsHistory') {

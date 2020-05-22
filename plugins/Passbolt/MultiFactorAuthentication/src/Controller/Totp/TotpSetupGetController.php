@@ -98,7 +98,7 @@ class TotpSetupGetController extends MfaSetupController
         } else {
             $data = [
                 'otpQrCodeImage' => $qrCode,
-                'otpProvisioningUri' => $uri
+                'otpProvisioningUri' => $uri,
             ];
             $this->success(__('Please setup the TOTP application.'), $data);
         }

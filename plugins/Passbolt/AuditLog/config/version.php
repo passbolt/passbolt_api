@@ -3,8 +3,8 @@ return [
     'passbolt' => [
         'plugins' => [
             'audit_log' => [
-                'version' => '1.0.0'
-            ]
-        ]
-    ]
+                'version' => '1.0.0',
+            ],
+        ],
+    ],
 ];

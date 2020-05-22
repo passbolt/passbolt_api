@@ -40,7 +40,7 @@ class IsMfaEnabledBehavior extends Behavior
     public function implementedEvents()
     {
         return [
-            TableFindIndexBefore::EVENT_NAME => 'addIsMfaEnabledBehavior'
+            TableFindIndexBefore::EVENT_NAME => 'addIsMfaEnabledBehavior',
         ];
     }
 

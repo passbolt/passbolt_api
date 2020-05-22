@@ -25,7 +25,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
     // A "not found" error is returned if the resource does not exist
@@ -178,7 +178,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $rt = $ResourcesTags->query()
             ->where([
                 'resource_id' => $resourceId,
-                'user_id' => UuidFactory::uuid('user.id.betty')
+                'user_id' => UuidFactory::uuid('user.id.betty'),
             ])
             ->all();
 

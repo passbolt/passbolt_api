@@ -24,7 +24,7 @@ class MfaVerifyAjaxErrorController extends MfaController
     {
         // Use AppController:error instead of exception to avoid logging the error
         $this->error(__('MFA authentication is required.'), [
-            'providers' => $this->mfaSettings->getProvidersVerifyUrls()
+            'providers' => $this->mfaSettings->getProvidersVerifyUrls(),
         ], 403);
     }
 }

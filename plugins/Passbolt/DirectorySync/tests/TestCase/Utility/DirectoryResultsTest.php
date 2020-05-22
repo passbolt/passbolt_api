@@ -48,7 +48,7 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
         $expectedGroupsUsers = [
             'CN=Administration,OU=PassboltUsers,DC=passbolt,DC=local' => [
                 'groups' => [
-                    'CN=Managers,OU=PassboltUsers,DC=passbolt,DC=local'
+                    'CN=Managers,OU=PassboltUsers,DC=passbolt,DC=local',
                 ],
                 'users' => [],
             ],
@@ -66,16 +66,16 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
                 'groups' => [],
                 'users' => [
                     'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
-                ]
+                ],
             ],
             'CN=Developers,OU=PassboltUsers,DC=passbolt,DC=local' => [
                 'groups' => [
-                    'CN=InvalidGroup1,OU=PassboltUsers,DC=passbolt,DC=local'
+                    'CN=InvalidGroup1,OU=PassboltUsers,DC=passbolt,DC=local',
                 ],
                 'users' => [
-                    'CN=User3,OU=PassboltUsers,DC=passbolt,DC=local'
-                ]
-            ]
+                    'CN=User3,OU=PassboltUsers,DC=passbolt,DC=local',
+                ],
+            ],
         ];
 
         foreach ($expectedGroupsUsers as $groupDn => $groupsUsers) {
@@ -110,7 +110,7 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
                 'groups' => [],
                 'users' => [
                     'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
-                ]
+                ],
             ],
         ];
 

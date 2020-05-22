@@ -53,7 +53,7 @@ trait ActionLogsOperationsTrait
         $entityHistory = [
             'foreign_model' => 'PermissionsHistory',
             'foreign_key' => $permissionHistoryCreated->id,
-            'crud' => $crud
+            'crud' => $crud,
         ];
         $EntitiesHistory->create($entityHistory, $userAction);
     }
@@ -81,7 +81,7 @@ trait ActionLogsOperationsTrait
         $entityHistory = [
             'foreign_model' => 'Resources',
             'foreign_key' => $resourceId,
-            'crud' => $crud
+            'crud' => $crud,
         ];
         $EntitiesHistory->create($entityHistory, $userAction);
     }
@@ -111,7 +111,7 @@ trait ActionLogsOperationsTrait
         $entityHistory = [
             'foreign_model' => 'SecretsHistory',
             'foreign_key' => $sh->id,
-            'crud' => EntityHistory::CRUD_UPDATE
+            'crud' => EntityHistory::CRUD_UPDATE,
         ];
         $EntitiesHistory->create($entityHistory, $userAction);
     }
@@ -136,7 +136,7 @@ trait ActionLogsOperationsTrait
         foreach ($resourceIds as $resourceId) {
             $secret = $Secrets->find()->where([
                 'resource_id' => $resourceId,
-                'user_id' => $user->getId()
+                'user_id' => $user->getId(),
             ])->first();
 
             if (!$secret) {
@@ -148,7 +148,7 @@ trait ActionLogsOperationsTrait
             $entityHistory = [
                 'foreign_model' => 'SecretAccesses',
                 'foreign_key' => $sa->id,
-                'crud' => EntityHistory::CRUD_CREATE
+                'crud' => EntityHistory::CRUD_CREATE,
             ];
             $EntitiesHistory->create($entityHistory, $userAction);
         }

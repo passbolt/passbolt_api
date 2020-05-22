@@ -34,7 +34,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
      */
     public $fixtures = [
         'app.Base/AuthenticationTokens',
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles'
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles',
     ];
 
     /**
@@ -180,8 +180,8 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             'type' => AuthenticationToken::TYPE_MFA,
             'data' => json_encode([
                 'provider' => MfaSettings::PROVIDER_TOTP,
-                'user_agent' => 'another user agent'
-            ])
+                'user_agent' => 'another user agent',
+            ]),
         ];
         $accessibleFields = ['user_id' => true, 'token' => true, 'active' => true, 'type' => true, 'data' => true];
         $token = $this->AuthenticationTokens->newEntity($entityData, ['accessibleFields' => $accessibleFields]);
@@ -210,8 +210,8 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
                 'provider' => MfaSettings::PROVIDER_TOTP,
                 'user_agent' => null,
                 'session_id' => $sessionId,
-                'remember' => true
-            ])
+                'remember' => true,
+            ]),
         ];
         $accessibleFields = ['user_id' => true, 'token' => true, 'active' => true, 'type' => true, 'data' => true, 'created' => true];
         $token = $this->AuthenticationTokens->newEntity($entityData, ['accessibleFields' => $accessibleFields]);
@@ -237,8 +237,8 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
                 'provider' => MfaSettings::PROVIDER_TOTP,
                 'user_agent' => null,
                 'session_id' => $sessionId,
-                'remember' => true
-            ])
+                'remember' => true,
+            ]),
         ];
         $accessibleFields = ['user_id' => true, 'token' => true, 'active' => true, 'type' => true, 'data' => true, 'created' => true];
         $token = $this->AuthenticationTokens->newEntity($entityData, ['accessibleFields' => $accessibleFields]);

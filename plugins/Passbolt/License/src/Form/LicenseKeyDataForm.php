@@ -49,20 +49,20 @@ class LicenseKeyDataForm extends Form
             ->add('users', 'is_within_range', [
                 'last' => true,
                 'rule' => [$this, 'checkUsersLimitIsInRange'],
-                'message' => 'The users limit is exceeded.'
+                'message' => 'The users limit is exceeded.',
             ])
             ->requirePresence('created', 'create', __('A creation date is required.'))
             ->notEmpty('created', __('A creation date is required.'))
             ->add('created', 'is_created_in_past', [
                 'rule' => [$this, 'checkCreatedInPast'],
-                'message' => 'The key should have been created in the past.'
+                'message' => 'The key should have been created in the past.',
             ])
             ->requirePresence('expiry', 'create', __('An expiry date is required.'))
             ->notEmpty('expiry', __('An expiry date is required.'))
             ->add('expiry', 'is_not_expired', [
                 'last' => true,
                 'rule' => [$this, 'checkNotExpired'],
-                'message' => 'The license is expired.'
+                'message' => 'The license is expired.',
             ]);
 
         return $validator;

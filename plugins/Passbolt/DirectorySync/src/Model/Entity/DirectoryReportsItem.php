@@ -34,6 +34,6 @@ class DirectoryReportsItem extends Entity
         'action' => false,
         'data' => false,
         'created' => false,
-        'report' => false
+        'report' => false,
     ];
 }

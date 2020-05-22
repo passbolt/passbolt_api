@@ -116,7 +116,7 @@ class GroupSyncAction extends SyncAction
                 ->where([
                     'Users.deleted' => false,
                     'Users.active' => true,
-                    'Users.username' => $groupAdmin
+                    'Users.username' => $groupAdmin,
                 ])
                 ->first();
             if (!empty($groupAdmin)) {

@@ -36,11 +36,11 @@ class YubikeySetupForm extends YubikeyVerifyForm
             ->add('hotp', ['isValidModhex' => [
                 'rule' => [$this, 'isValidModhex'],
                 'last' => true,
-                'message' => __('This OTP is not valid.')
+                'message' => __('This OTP is not valid.'),
             ]])
             ->add('hotp', ['isValidHotp' => [
                 'rule' => [$this, 'isValidHotp'],
-                'message' => __('This OTP is not valid.')
+                'message' => __('This OTP is not valid.'),
             ]]);
 
         return $validator;

@@ -36,7 +36,7 @@ class ActionLogsFinder
         $query = $ActionLog->find();
         $query->group([
             'ActionLogs.id',
-            'EntitiesHistory.created'
+            'EntitiesHistory.created',
         ]);
 
         $query->contain(['Actions' => [
@@ -73,7 +73,7 @@ class ActionLogsFinder
         $query->contain(['EntitiesHistory.PermissionsHistory.PermissionsHistoryUsers' => [
             'fields' => [
                 'PermissionsHistoryUsers.id',
-                'PermissionsHistoryUsers.username'
+                'PermissionsHistoryUsers.username',
             ]]]);
         $query->leftJoinWith('EntitiesHistory.PermissionsHistory.PermissionsHistoryUsers');
 
@@ -95,7 +95,7 @@ class ActionLogsFinder
             'fields' => [
                 'Resources.id',
                 'Resources.name',
-            ]
+            ],
         ]]);
         $query->leftJoinWith('EntitiesHistory.Resources');
 
@@ -103,7 +103,7 @@ class ActionLogsFinder
             'fields' => [
                 'SecretAccesses.id',
                 'SecretAccessResources.id',
-                'SecretAccessResources.name'
+                'SecretAccessResources.name',
             ]]]);
         $query->leftJoinWith('EntitiesHistory.SecretAccesses.SecretAccessResources');
 
@@ -116,7 +116,7 @@ class ActionLogsFinder
         $query->contain(['EntitiesHistory.SecretsHistory.SecretsHistoryUsers' => [
             'fields' => [
                 'SecretsHistoryUsers.id',
-                'SecretsHistoryUsers.username'
+                'SecretsHistoryUsers.username',
             ]]]);
         $query->leftJoinWith('EntitiesHistory.SecretsHistory.SecretsHistoryUsers');
 
@@ -148,7 +148,7 @@ class ActionLogsFinder
                 'Resources.id' => $resourceId,
                 'SecretAccesses.resource_id' => $resourceId,
                 'SecretsHistoryResources.id' => $resourceId,
-            ]
+            ],
         ]);
 
         $query->order([

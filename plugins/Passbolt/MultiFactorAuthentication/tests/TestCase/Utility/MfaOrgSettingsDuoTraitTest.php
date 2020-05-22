@@ -30,7 +30,7 @@ class MfaOrgSettingsDuoTraitTest extends MfaIntegrationTestCase
     public $fixtures = [
         'app.Base/OrganizationSettings',
         'app.Base/AuthenticationTokens', 'app.Base/Users',
-        'app.Base/Roles'
+        'app.Base/Roles',
     ];
 
     /**
@@ -46,8 +46,8 @@ class MfaOrgSettingsDuoTraitTest extends MfaIntegrationTestCase
             'salt' => '__CHANGE_ME__THIS_MUST_BE_AT_LEAST_FOURTY_CHARACTERS_____',
             'integrationKey' => 'UICPIC93F14RWR5F55SJ',
             'secretKey' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
-            'hostName' => 'api-45e9f2ca.duosecurity.com'
-        ]
+            'hostName' => 'api-45e9f2ca.duosecurity.com',
+        ],
     ];
 
     /**

@@ -29,7 +29,7 @@ class DuoSetupDeleteControllerTest extends MfaIntegrationTestCase
         'app.Base/OrganizationSettings',
         'plugin.Passbolt/AccountSettings.AccountSettings',
         'app.Base/AuthenticationTokens', 'app.Base/Users',
-        'app.Base/Roles'
+        'app.Base/Roles',
     ];
 
     /**

@@ -31,7 +31,7 @@ class UserLogsController extends AppController
     public $paginate = [
         'limit' => 5,
         'maxLimit' => 20,
-        'whiteList' => ['limit', 'page']
+        'whiteList' => ['limit', 'page'],
     ];
 
     /**

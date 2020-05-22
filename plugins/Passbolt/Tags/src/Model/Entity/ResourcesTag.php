@@ -42,6 +42,6 @@ class ResourcesTag extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => false
+        '*' => false,
     ];
 }

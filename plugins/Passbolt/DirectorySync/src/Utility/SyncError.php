@@ -77,7 +77,7 @@ class SyncError implements \Serializable
     {
         return serialize([
             'entity' => serialize($this->entity),
-            'version' => '2'
+            'version' => '2',
         ]);
     }
 

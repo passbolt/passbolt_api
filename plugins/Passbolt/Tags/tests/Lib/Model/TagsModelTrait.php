@@ -24,10 +24,11 @@ trait TagsModelTrait
      * Add a personal resource dummy tag for a list of given users.
      *
      * @param array $data The tag data
+     * @param string $resourceId The resource to add the tag for
      * @param array $usersIds The list of users ids
      * @return Tag
      */
-    public function addResourcePersonalTagFor(array $data = [], string $resourceId, array $usersIds = [])
+    public function addResourcePersonalTagFor(array $data, string $resourceId, array $usersIds = [])
     {
         $tag = $this->addTag($data);
 
@@ -35,7 +36,7 @@ trait TagsModelTrait
             $resourceTagData = [
                 'resource_id' => $resourceId,
                 'tag_id' => $tag->id,
-                'user_id' => $userId
+                'user_id' => $userId,
             ];
             $this->addResourceTag($resourceTagData);
         }
@@ -93,7 +94,7 @@ trait TagsModelTrait
     {
         $entityContent = [
             'slug' => 'Tag slug',
-            'is_shared' => false
+            'is_shared' => false,
         ];
         $entityContent = array_merge($entityContent, $data);
 

@@ -25,7 +25,7 @@ class MfaRedactorPool extends AbstractSubscribedEmailRedactorPool
     public function getSubscribedRedactors()
     {
         return [
-            new MfaUserSettingsResetEmailRedactor(TableRegistry::getTableLocator()->get('Users'))
+            new MfaUserSettingsResetEmailRedactor(TableRegistry::getTableLocator()->get('Users')),
         ];
     }
 }

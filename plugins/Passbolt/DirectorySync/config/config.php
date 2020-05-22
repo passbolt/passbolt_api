@@ -33,7 +33,7 @@ return [
                             'name' => 'name',
                             'created' => 'created',
                             'modified' => 'modified',
-                            'users' => 'members'
+                            'users' => 'members',
                         ],
                     ],
                     'openldap' => [
@@ -54,7 +54,7 @@ return [
                         ],
                     ],
                 ],
-            ]
-        ]
-    ]
+            ],
+        ],
+    ],
 ];

@@ -64,7 +64,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
         $event->setData([
             'target' => $user,
-            'uac' => $uac
+            'uac' => $uac,
         ]);
 
         $this->usersTableMock->expects($this->once())
@@ -79,7 +79,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $this->assertEquals(MfaUserSettingsResetEmailRedactor::TEMPLATE_ADMIN, $email->getTemplate());
         $this->assertEquals([
             'title' => __('Multi-factor authentication settings were reset.'),
-            'body' => ['user' => $adminUser]
+            'body' => ['user' => $adminUser],
         ], $email->getData());
     }
 
@@ -93,7 +93,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
         $event->setData([
             'target' => $user,
-            'uac' => $uac
+            'uac' => $uac,
         ]);
 
         $emailCollection = $this->sut->onSubscribedEvent($event);
@@ -104,7 +104,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $this->assertEquals(MfaUserSettingsResetEmailRedactor::TEMPLATE_SELF, $email->getTemplate());
         $this->assertEquals([
             'title' => __('Multi-factor authentication settings were reset.'),
-            'body' => ['user' => $user]
+            'body' => ['user' => $user],
         ], $email->getData());
     }
 }

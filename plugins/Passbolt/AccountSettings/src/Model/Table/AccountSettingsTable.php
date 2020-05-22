@@ -65,7 +65,7 @@ class AccountSettingsTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
-            'className' => UsersTable::class
+            'className' => UsersTable::class,
         ]);
     }
 
@@ -88,7 +88,7 @@ class AccountSettingsTable extends Table
             ->notEmpty('property')
             ->add('property', ['isValidProperty' => [
                 'rule' => [$this, 'isValidProperty'],
-                'message' => __('This setting is not supported.')
+                'message' => __('This setting is not supported.'),
             ]]);
 
         $validator

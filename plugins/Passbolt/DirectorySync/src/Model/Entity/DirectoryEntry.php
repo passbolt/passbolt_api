@@ -51,7 +51,7 @@ class DirectoryEntry extends Entity
         'directory_created' => false,
         'directory_modified' => false,
         'created' => false,
-        'modified' => false
+        'modified' => false,
     ];
 
     /**

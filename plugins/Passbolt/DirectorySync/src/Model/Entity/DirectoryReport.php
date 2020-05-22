@@ -36,6 +36,6 @@ class DirectoryReport extends Entity
         'created' => false,
         'modified' => false,
         'parent_directory_report' => false,
-        'child_directory_reports' => false
+        'child_directory_reports' => false,
     ];
 }

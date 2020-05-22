@@ -56,7 +56,7 @@ class TotpSetupForm extends MfaForm
             ->notEmpty('otpProvisioningUri')
             ->add('otpProvisioningUri', ['isValidOtpProvisioningUri' => [
                 'rule' => [$this, 'isValidOtpProvisioningUri'],
-                'message' => __('This OTP provision uri is not valid.')
+                'message' => __('This OTP provision uri is not valid.'),
             ]]);
 
         $validator
@@ -64,7 +64,7 @@ class TotpSetupForm extends MfaForm
             ->notEmpty('totp', __('The OTP should not be empty.'))
             ->add('totp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],
-                'message' => __('This OTP is not valid.')
+                'message' => __('This OTP is not valid.'),
             ]]);
 
         return $validator;

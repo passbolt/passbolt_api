@@ -76,14 +76,14 @@ class DirectoryEntriesTable extends Table
             'dependent' => false,
             'className' => 'Users',
             'bindingKey' => 'foreign_key',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
 
         $this->hasOne('Groups', [
             'dependent' => false,
             'className' => 'Groups',
             'bindingKey' => 'foreign_key',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
     }
 
@@ -177,7 +177,7 @@ class DirectoryEntriesTable extends Table
         $this->patchEntity($entity, ['directory_name' => $directoryName], [
             'fieldList' => ['directory_name'],
             'accessibleFields' => ['directory_name' => true],
-            'associated' => []
+            'associated' => [],
         ]);
         $updatedEntity = $this->save($entity);
         if (!$updatedEntity) {

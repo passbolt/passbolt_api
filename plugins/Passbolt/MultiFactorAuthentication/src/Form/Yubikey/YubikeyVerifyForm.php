@@ -68,16 +68,16 @@ class YubikeyVerifyForm extends MfaForm
             ->add('hotp', ['isValidModhex' => [
                 'rule' => [$this, 'isValidModhex'],
                 'last' => true,
-                'message' => __('This OTP is not valid.')
+                'message' => __('This OTP is not valid.'),
             ]])
             ->add('hotp', ['isSameYubikeyId' => [
                 'rule' => [$this, 'isSameYubikeyId'],
                 'last' => true,
-                'message' => __('This yubikey is not associated with this user.')
+                'message' => __('This yubikey is not associated with this user.'),
             ]])
             ->add('hotp', ['isValidHotp' => [
                 'rule' => [$this, 'isValidHotp'],
-                'message' => __('This OTP is not valid.')
+                'message' => __('This OTP is not valid.'),
             ]]);
 
         return $validator;

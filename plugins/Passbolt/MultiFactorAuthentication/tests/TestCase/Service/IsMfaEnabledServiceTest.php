@@ -166,17 +166,17 @@ class IsMfaEnabledServiceTest extends TestCase
     {
         return [
             [
-                ['totp'], ['yubikey']
+                ['totp'], ['yubikey'],
             ],
             [
-                ['totp'], []
+                ['totp'], [],
             ],
             [
-                [], ['totp']
+                [], ['totp'],
             ],
             [
-                [], []
-            ]
+                [], [],
+            ],
         ];
     }
 
@@ -187,13 +187,13 @@ class IsMfaEnabledServiceTest extends TestCase
     {
         return [
             [
-                ['totp'], ['totp']
+                ['totp'], ['totp'],
             ],
             [
-                ['totp'], ['totp', 'yubikey']
+                ['totp'], ['totp', 'yubikey'],
             ],
             [
-                ['totp', 'yubikey'], ['totp']
+                ['totp', 'yubikey'], ['totp'],
             ],
         ];
     }

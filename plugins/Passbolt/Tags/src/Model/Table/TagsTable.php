@@ -64,7 +64,7 @@ class TagsTable extends Table
         ]);
 
         $this->hasMany('ResourcesTags', [
-            'foreignKey' => 'tag_id'
+            'foreignKey' => 'tag_id',
         ]);
     }
 
@@ -84,7 +84,7 @@ class TagsTable extends Table
             ->add('slug', 'scalar', [
                 'rule' => 'isScalar',
                 'last' => true,
-                'message' => __('The tag should be a string')
+                'message' => __('The tag should be a string'),
             ])
             ->maxLength('slug', 128, __('Tag can not be more than 128 characters in length.'))
             ->requirePresence('slug', 'create')
@@ -118,7 +118,7 @@ class TagsTable extends Table
                         'OR' => [
                             ['ResourcesTags.user_id =' => $userId],
                             ['ResourcesTags.user_id IS NULL'],
-                        ]
+                        ],
                     ]);
                 })
                 ->order('slug')
@@ -234,8 +234,8 @@ class TagsTable extends Table
                     'accessibleFields' => [
                         'slug' => true,
                         'is_shared' => true,
-                        'resources_tags' => true
-                    ]
+                        'resources_tags' => true,
+                    ],
                 ]);
                 // If not shared, add the user_id in the resources_tags join table
                 // @codingStandardsIgnoreStart
@@ -243,11 +243,11 @@ class TagsTable extends Table
                 // @codingStandardsIgnoreEnd
                 $resourceTagUserId = $notShared ? $userId : null;
                 $collection[$i]['_joinData'] = $this->ResourcesTags->newEntity([
-                    'user_id' => $resourceTagUserId
+                    'user_id' => $resourceTagUserId,
                 ], [
                     'accessibleFields' => [
-                        'user_id' => true
-                    ]
+                        'user_id' => true,
+                    ],
                 ]);
             }
         }
@@ -316,7 +316,7 @@ class TagsTable extends Table
                 'accessibleFields' => [
                     'slug' => true,
                     'is_shared' => true,
-                ]
+                ],
             ]);
 
             if (!empty($tagExists->getErrors())) {

@@ -112,18 +112,18 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDERS => [
                 MfaSettings::PROVIDER_DUO => true,
                 MfaSettings::PROVIDER_TOTP => true,
-                MfaSettings::PROVIDER_YUBIKEY => true
+                MfaSettings::PROVIDER_YUBIKEY => true,
             ],
             MfaSettings::PROVIDER_YUBIKEY => [
                 'clientId' => '12345',
-                'secretKey' => 'i2/j3jIQBO/axOl3ah4mlgXlXUY='
+                'secretKey' => 'i2/j3jIQBO/axOl3ah4mlgXlXUY=',
             ],
             MfaSettings::PROVIDER_DUO => [
                 'salt' => '__CHANGE_ME__THIS_MUST_BE_AT_LEAST_FOURTY_CHARACTERS_____',
                 'integrationKey' => 'UICPIC93F14RWR5F55SJ',
                 'secretKey' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
-                'hostName' => 'api-45e9f2ca.duosecurity.com'
-            ]
+                'hostName' => 'api-45e9f2ca.duosecurity.com',
+            ],
         ]);
         $this->assertResponseSuccess();
     }
@@ -141,7 +141,7 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $this->putJson('/mfa/settings.json?api-version=v2', [
             'providers' => ['duo', 'nope', 'yubikey'],
             'duo' => ['wrong' => 'config'],
-            'yubikey' => ['clientId' => 'aaa', 'secretKey' => '123']
+            'yubikey' => ['clientId' => 'aaa', 'secretKey' => '123'],
         ]);
         $result = json_decode($this->_getBodyAsString(), true);
         $this->assertTrue(isset($result['body']['duo']['salt']['notEmpty']));

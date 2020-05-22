@@ -93,7 +93,7 @@ class MfaSettings
         return [
             self::PROVIDER_TOTP,
             self::PROVIDER_DUO,
-            self::PROVIDER_YUBIKEY
+            self::PROVIDER_YUBIKEY,
         ];
     }
 

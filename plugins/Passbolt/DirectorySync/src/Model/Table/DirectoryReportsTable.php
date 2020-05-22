@@ -47,15 +47,15 @@ class DirectoryReportsTable extends Table
 
         $this->belongsTo('ParentDirectoryReports', [
             'className' => 'Passbolt/DirectorySync.DirectoryReports',
-            'foreignKey' => 'parent_id'
+            'foreignKey' => 'parent_id',
         ]);
         $this->hasMany('ChildDirectoryReports', [
             'className' => 'Passbolt/DirectorySync.DirectoryReports',
-            'foreignKey' => 'parent_id'
+            'foreignKey' => 'parent_id',
         ]);
         $this->hasMany('DirectoryReportsItems', [
             'className' => 'Passbolt/DirectorySync.DirectoryReportsItems',
-            'foreignKey' => 'parent_id'
+            'foreignKey' => 'parent_id',
         ]);
     }
 
@@ -105,7 +105,7 @@ class DirectoryReportsTable extends Table
             'ParentDirectoryReports',
             [
                 'errorField' => 'parent_id',
-                'message' => __('The associated record could not be found')
+                'message' => __('The associated record could not be found'),
             ]
         );
 
@@ -120,12 +120,12 @@ class DirectoryReportsTable extends Table
     {
         $entity = $this->newEntity([
             'parent_id' => $parentId,
-            'status' => DirectoryReport::STATUS_RUNNING
+            'status' => DirectoryReport::STATUS_RUNNING,
         ], [
             'accessibleFields' => [
                 'parent_id' => true,
                 'status' => true,
-            ]
+            ],
         ]);
         $result = $this->save($entity);
 
