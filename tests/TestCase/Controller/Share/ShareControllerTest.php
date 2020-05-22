@@ -245,7 +245,7 @@ hcciUFw5
             $this->authenticateAs($testCase['userAlias']);
             $resourceId = $testCase['resourceId'];
             $this->putJson("/share/resource/$resourceId.json");
-            $this->assertError(404, 'The resource does not exist.');
+            $this->assertError(403, 'You are not authorized to share this resource.');
         }
     }
 

@@ -24,6 +24,7 @@ use App\Service\Resources\ResourcesShareService;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
@@ -118,9 +119,8 @@ class ShareController extends AppController
             throw new NotFoundException(__('The resource does not exist.'));
         }
         // The user can access the resource.
-        // @todo check, but it should be a forbidden
         if (!$this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $this->User->id(), Permission::OWNER)) {
-            throw new NotFoundException(__('The resource does not exist.'));
+            throw new ForbiddenException(__('You are not authorized to share this resource.'));
         }
     }
 
