@@ -16,6 +16,9 @@
 namespace Passbolt\Tags\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Entity\Permission;
+use App\Model\Entity\Role;
+use App\Service\Resources\ResourcesShareService;
+use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -69,10 +72,7 @@ hcciUFw5
 
     public function testLostAccessAssociatedDataDeleted()
     {
-        // Define actors of this tests
         $resourceAId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceAId, ['contain' => ['Permissions', 'Secrets']]);
-        // Users
         $userAId = UuidFactory::uuid('user.id.ada');
         $userEId = UuidFactory::uuid('user.id.edith');
 
@@ -91,8 +91,11 @@ hcciUFw5
         $secrets[] = ['user_id' => $userEId, 'data' => $this->getValidSecret()];
 
         // Share.
-        $result = $this->Resources->share($resource, $changes, $secrets);
-        $this->assertNotFalse($result);
+        $uac = new UserAccessControl(Role::USER, $userAId);
+        $resourceShareService = new ResourcesShareService();
+        $resourceShareService->share($uac, $resourceAId, $changes, $secrets);
+
+        $this->assertUserHasNotAccessResources($userAId, [$resourceAId]);
 
         // Ensure the apache favorite for Dame is deleted
         // But the other favorites for this resource are not touched.

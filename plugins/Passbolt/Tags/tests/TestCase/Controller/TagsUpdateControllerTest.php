@@ -15,6 +15,7 @@
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Test\Lib\Model\ResourcesModelTrait;
+use App\Test\Lib\Model\SecretsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -241,7 +242,9 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     public function testTagUpdateUserWithExistingTagHandleTagsAssociationDuplicate()
     {
         $this->authenticateAs('ada');
-        $resource = $this->_addTestResource(ResourcesModelTrait::getDummyResource());
+        $resourceData = ResourcesModelTrait::getDummyResourceData();
+        $resourceData['secrets'][0] = SecretsModelTrait::getDummySecretData();
+        $resource = $this->_addTestResource($resourceData);
         $tags = $this->_addTestTag($resource->id, ['test-tag-1', 'test-tag-2']);
         $this->assertCount(2, $tags);
 
@@ -341,7 +344,9 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     public function testTagAdminPersonalUpdateResponseContainsTag()
     {
         $this->authenticateAs('admin');
-        $resource = $this->_addTestResource(ResourcesModelTrait::getDummyResource());
+        $resourceData = ResourcesModelTrait::getDummyResourceData();
+        $resourceData['secrets'][0] = SecretsModelTrait::getDummySecretData();
+        $resource = $this->_addTestResource($resourceData);
         $tags = $this->_addTestTag($resource->id, ['admin-personal']);
         $tag = $tags[0];
 
