@@ -285,10 +285,7 @@ class ResourcesShareService
             return;
         }
 
-        $this->favoritesTable->deleteAll([
-            'foreign_key' => $resource->id,
-            'user_id' => $userId,
-        ]);
+        $this->resourcesTable->deleteLostAccessAssociatedData($resource->id, [$userId]);
     }
 
     /**
