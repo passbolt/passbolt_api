@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         3.0.0
  */
 namespace Passbolt\EmailDigest\Exception;
 
@@ -19,7 +19,7 @@ use Exception;
 use Throwable;
 
 /**
- * This exception must only be used by the email digest marshallers
+ * This exception must only be used by the email digests
  */
 class UnsupportedEmailDigestDataException extends Exception
 {

@@ -50,7 +50,7 @@ if ($showDescription) {
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
-if ($showSecret) {
+if ($showSecret && isset($resource->secrets[0]->data)) {
     echo $this->element('Email/module/code', [
         'text' => $resource->secrets[0]->data
     ]);

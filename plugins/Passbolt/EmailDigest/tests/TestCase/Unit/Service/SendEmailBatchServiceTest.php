@@ -10,20 +10,19 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 namespace Passbolt\EmailDigest\Test\TestCase\Unit\Service;
 
 use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Lib\AppIntegrationTestCase;
-use ArrayIterator;
 use Cake\Mailer\Email;
 use Cake\Mailer\TransportFactory;
 use Cake\Network\Exception\SocketException;
 use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestEmailTransport;
 use EmailQueue\Model\Table\EmailQueueTable;
-use Passbolt\EmailDigest\Service\MarshallEmailsDigestsService;
+use Passbolt\EmailDigest\Service\EmailDigestService;
 use Passbolt\EmailDigest\Service\SendEmailBatchService;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -44,9 +43,9 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
     private $sut;
 
     /**
-     * @var MockObject|MarshallEmailsDigestsService
+     * @var MockObject|EmailDigestService
      */
-    private $marshallEmailsDigestsServiceMock;
+    private $emailDigestServiceMock;
 
     /**
      * @var EmailQueueTable|MockObject
@@ -58,8 +57,8 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
         parent::setUp();
         $this->loadPlugins(['Passbolt/EmailDigest']);
 
-        // Mock the marshaller service
-        $this->marshallEmailsDigestsServiceMock = $this->createMock(MarshallEmailsDigestsService::class);
+        // Mock the digest service
+        $this->emailDigestServiceMock = $this->createMock(EmailDigestService::class);
 
         // Mock a model, maintain fixtures and table association
         $this->emailQueueTableMock = $this->getMockForModel('EmailQueue.EmailQueue', [
@@ -73,11 +72,11 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
 
         $this->sut = new SendEmailBatchService(
             $this->emailQueueTableMock,
-            $this->marshallEmailsDigestsServiceMock
+            $this->emailDigestServiceMock
         );
     }
 
-    public function testThatSendEmailMarkAsSentAllTheEmailsPartOfTheDigestWhenSendDigestSucceed()
+    public function testSendEmailBatchService_MarkAsSentWhenSendDigestSucceed()
     {
         // Define the list of email queue entity ids that should be marked as success at the end of the test
         $expectedEmailsIdsToUpdate = [[1], [2]];
@@ -93,11 +92,11 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
             ->method('getBatch')
             ->willReturn($emailQueueEntities);
 
-        // We mock the marshall digest services and make it returns digests
-        // It is normally returned by the digests marshallers but we directly create them in this situation
+        // We mock the digest services and make it returns digests
+        // It is normally returned by the digests but we directly create them in this situation
         // because we do not need to test the marshalling logic in this test which is a separate concern)
-        $this->marshallEmailsDigestsServiceMock->expects($this->once())
-            ->method('createDigestsByRecipient')
+        $this->emailDigestServiceMock->expects($this->once())
+            ->method('createDigests')
             ->willReturn($this->createEmailDigestsFromEmailEntities($emailQueueEntities));
 
         // It should call the success method of the email queue for each emails
@@ -106,7 +105,7 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
         $this->sut->sendNextEmailsBatch();
     }
 
-    public function testThatSendEmailMarkAsNonSentAllTheEmailsPartOfTheDigestWhenSendDigestFailed()
+    public function testSendEmailBatchService_MarkAsNonSentWhenSendDigestFailed()
     {
         $this->makeEmailTransportFailWithException(new SocketException('Failed to send email.'));
 
@@ -127,11 +126,11 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
             ->method('getBatch')
             ->willReturn($emailQueueEntities);
 
-        // We mock the marshall digest services and make it returns our digests initialized earlier
-        // It is normally returned by the marshallers but we directly create them in this situation
+        // We mock the digest services and make it returns our digests initialized earlier
+        // It is normally returned by the digests but we directly create them in this situation
         // because we do not need to test the marshalling logic in this test)
-        $this->marshallEmailsDigestsServiceMock->expects($this->once())
-            ->method('createDigestsByRecipient')
+        $this->emailDigestServiceMock->expects($this->once())
+            ->method('createDigests')
             ->willReturn($this->createEmailDigestsFromEmailEntities($emailQueueEntities));
 
         $this->assertEmailQueueWillFlagEmailsAsFailed($expectedIdFailureMessageCouples);
@@ -139,7 +138,7 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
         $this->sut->sendNextEmailsBatch();
     }
 
-    public function testThatSendEmailsReleaseLocksOnTheEmailsPartOfTheDigestAfterSend()
+    public function testSendEmailBatchService_ReleaseLocksAfterSend()
     {
         // Define the list of email queue entity ids that should be marked as success at the end of the test
         $expectedEmailsIdsToUpdate = [1, 2];
@@ -155,11 +154,11 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
             ->method('getBatch')
             ->willReturn($emailQueueEntities);
 
-        // We mock the marshall digest services and make it returns our digests initialized earlier
-        // It is normally returned by the marshallers but we directly create them in this situation
+        // We mock the digest services and make it returns our digests initialized earlier
+        // It is normally returned by the digests but we directly create them in this situation
         // because we do not need to test the marshalling logic in this test)
-        $this->marshallEmailsDigestsServiceMock->expects($this->once())
-            ->method('createDigestsByRecipient')
+        $this->emailDigestServiceMock->expects($this->once())
+            ->method('createDigests')
             ->willReturn($this->createEmailDigestsFromEmailEntities($emailQueueEntities));
 
         // It should call the releaseLocks method with the ids of every emails which have been sent with or without success
@@ -196,9 +195,7 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
 
     private function createEmailDigestsFromEmailEntities(array $emailEntities)
     {
-        return new ArrayIterator([
-            [$this->createEmailDigest($emailEntities)],
-        ]);
+        return [$this->createEmailDigest($emailEntities)];
     }
 
     /**

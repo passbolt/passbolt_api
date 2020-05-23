@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 
 namespace Passbolt\EmailDigest\Shell;
@@ -43,6 +43,14 @@ class PreviewShell extends Shell
                     'help' => 'How many emails should be in this batch?',
                     'default' => Configure::read('passbolt.plugins.EmailDigest.batchSizeLimit'),
                 ]
+            )
+            ->addOption(
+                'body',
+                [
+                    'boolean' => true,
+                    'help' => 'Display the email content?',
+                    'default' => false,
+                ]
             );
 
         return $parser;
@@ -56,7 +64,14 @@ class PreviewShell extends Shell
     {
         $emailSenderService = new PreviewEmailBatchService();
 
-        $emailSenderService->previewNextEmailsBatch($this->getParam('limit'));
+        $previews = $emailSenderService->previewNextEmailsBatch($this->getParam('limit'));
+        foreach ($previews as $preview) {
+            $this->out($preview->getHeaders());
+            if ($this->param('body') === true) {
+                $this->out($preview->getContent());
+            }
+            $this->out('------------------------');
+        }
     }
 
     /**

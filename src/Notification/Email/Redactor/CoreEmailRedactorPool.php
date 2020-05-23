@@ -19,10 +19,10 @@ use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
 use App\Notification\Email\Redactor\Comment\CommentAddEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUpdateAdminSummaryEmailRedactor;
-use App\Notification\Email\Redactor\Group\GroupUpdateMembershipEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserAddEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserAddRequestEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserDeleteEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupUserUpdateEmailRedactor;
 use App\Notification\Email\Redactor\Recovery\AccountRecoveryEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceDeleteEmailRedactor;
@@ -86,7 +86,7 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
             $redactors[] = new GroupDeleteEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.group.user.update')) {
-            $redactors[] = new GroupUpdateMembershipEmailRedactor();
+            $redactors[] = new GroupUserUpdateEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.group.user.delete')) {
             $redactors[] = new GroupUserDeleteEmailRedactor();

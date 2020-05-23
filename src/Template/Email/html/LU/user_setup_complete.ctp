@@ -33,8 +33,10 @@ $invitedWhen = $body['invitedWhen'];
 /** @var bool $invitedByYou */
 $invitedByYou = $body['invitedByYou'];
 
+$avatar = 'img/avatar/user.png';
+
 echo $this->element('Email/module/avatar',[
-    'url' => Router::url(DS . $user->profile->avatar->url['small'], true),
+    'url' => Router::url($avatar, true),
     'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($user->username),
         'first_name' => Purifier::clean($user->profile->first_name),
@@ -48,13 +50,20 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = ' ' . __('The user is now active on passbolt and you can share passwords with them.');
-$text .= '<br/><br/>';
+$text .= ' ';
 if ($invitedByYou) {
     $text .= __('This user was invited by you {0}.', $invitedWhen);
+} else if ($user->username === $invitedBy->username) {
+    $text .= __('This user signed up themselves, since you have open registration active.');
 } else {
     $text .= __('This user was invited by {0} {1}.', $invitedBy->profile->first_name, $invitedWhen);
 }
 $text .= '<br/>';
 echo $this->element('Email/module/text', [
     'text' => $text
+]);
+
+echo $this->element('Email/module/button', [
+    'url' => Router::url("/users", true),
+    'text' => __('view users')
 ]);

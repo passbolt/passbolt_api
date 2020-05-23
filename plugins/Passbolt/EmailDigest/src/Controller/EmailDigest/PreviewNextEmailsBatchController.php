@@ -10,9 +10,8 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         3.0.0
  */
-
 namespace Passbolt\EmailDigest\Controller\EmailDigest;
 
 use App\Controller\AppController;
@@ -53,7 +52,9 @@ class PreviewNextEmailsBatchController extends AppController
 
         $previewContent = '';
         foreach ($previews as $preview) {
+            $previewContent .= '<pre>' . $preview->getHeaders() . '</pre>';
             $previewContent .= $preview->getContent();
+            $previewContent .= '<hr>';
         }
 
         return $this->response

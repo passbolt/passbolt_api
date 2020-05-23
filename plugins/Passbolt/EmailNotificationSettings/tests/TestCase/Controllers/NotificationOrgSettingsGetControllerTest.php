@@ -14,12 +14,7 @@
  */
 namespace Passbolt\EmailNotificationSettings\Test\TestCase\Controllers;
 
-use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\GeneralNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
@@ -44,12 +39,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         parent::setUp();
         $this->loadPlugins(['Passbolt/EmailNotificationSettings']);
         EventManager::instance()
-            ->on(new CommentNotificationSettingsDefinition())
-            ->on(new GroupNotificationSettingsDefinition())
-            ->on(new GeneralNotificationSettingsDefinition())
-            ->on(new ResourceNotificationSettingsDefinition())
-            ->on(new UserNotificationSettingsDefinition())
-            ->on(new AdminNotificationSettingsDefinition());
+            ->on(new CoreNotificationSettingsDefinition());
     }
 
     public function tearDown()

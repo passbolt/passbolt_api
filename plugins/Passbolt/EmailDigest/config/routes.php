@@ -10,12 +10,12 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         3.0.0
  */
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
-Router::plugin('Passbolt/EmailDigest', ['path' => '/emaildigest'], function (RouteBuilder $routes) {
+Router::plugin('Passbolt/EmailDigest', ['path' => '/seleniumtests'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     /**
@@ -23,7 +23,7 @@ Router::plugin('Passbolt/EmailDigest', ['path' => '/emaildigest'], function (Rou
      * @uses \Passbolt\EmailDigest\Controller\EmailDigest\PreviewNextEmailsBatchController::preview()
      */
     $routes->connect(
-        '/next-email-batch/preview',
+        '/showLastBatch',
         ['prefix' => 'EmailDigest', 'controller' => 'PreviewNextEmailsBatch', 'action' => 'preview']
     )
     ->setMethods(['GET']);
