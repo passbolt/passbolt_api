@@ -1,0 +1,5 @@
+cron.d.in
+docs.in
+logrotate.in
+triggers.in
+lintian-overrides.in

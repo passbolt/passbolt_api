@@ -1,0 +1,310 @@
+#!/bin/bash
+#
+#  Debconf config script file.
+#
+#  The config script is responsible for asking any questions
+#  necessary to configure the package.
+#
+
+. /usr/share/debconf/confmodule
+
+db_version 2.0
+
+deb_action=$1
+deb_version=$2
+
+
+########################################
+# Helper functions
+########################################
+
+_echo() {
+  [ -z "${VERBOSE}" ] || echo ">>> $1"
+}
+
+#
+# is_interactive()
+#
+# Returns 1 if last db_input command was interactive
+# 0 otherwise, meaning noninteractive frontend.
+#
+is_interactive() {
+  rc=$?
+  [ "$rc" != "30" ] && return 0
+  return 1
+}
+
+
+blank_string() {
+  local string="$1"
+
+  if [ -z "$string" ]; then
+    return 0
+  fi
+  return 1
+}
+
+invalid_characters() {
+  local string="$1"
+
+  if [[ "$string" =~ .*-.*|.*' '.* ]]; then
+    return 0
+  fi
+
+  return 1
+}
+
+########################################
+# Password related validation functions
+########################################
+
+password_verify() {
+  local password="$1"
+  local verification="$2"
+
+  if [ "$password" != "$verification" ]; then
+    return 1
+  fi
+  return 0
+}
+
+
+###########################################
+# Database setup functions
+###########################################
+
+db_name_validator() {
+  local db_name="$1"
+
+  if blank_string "$db_name" || invalid_characters "$db_name"; then
+    return 1
+  fi
+
+  return 0
+}
+
+db_name_validation() {
+  local db_name=""
+
+  db_get passbolt/mysql-passbolt-dbname
+  db_name="$RET"
+  while ! db_name_validator "$db_name"
+  do
+    db_set passbolt/mysql-passbolt-dbname ""
+    db_input high passbolt/db_invalid_characters || true
+    db_input high passbolt/mysql-passbolt-dbname || true
+    db_go || true
+    db_get passbolt/mysql-passbolt-dbname
+    db_name="$RET"
+  done
+}
+
+db_password_validation() {
+  local password=''
+  local verification='_UNDEF_'
+
+  while ! password_verify "$password" "$verification"
+  do
+    db_get passbolt/mysql-passbolt-password
+    password="$RET"
+    if blank_string "$password"; then
+      db_input high passbolt/non-empty-password || true
+      db_input high passbolt/mysql-passbolt-password || true
+      db_go || true
+    else
+      db_input high passbolt/mysql-passbolt-password-repeat || true
+      db_go || true
+      db_get passbolt/mysql-passbolt-password-repeat
+      verification="$RET"
+      if ! password_verify "$password" "$verification"; then
+        db_input high passbolt/non-matching-passwords || true
+        db_input high passbolt/mysql-passbolt-password || true
+        db_go || true
+      fi
+    fi
+  done
+}
+
+get_admin_credentials() {
+  db_input high passbolt/mysql-username || true
+  db_input high passbolt/mysql-password || true
+}
+
+get_user_credentials() {
+  db_input high passbolt/mysql-passbolt-username || true
+  db_input high passbolt/mysql-passbolt-password
+  if is_interactive; then
+    db_go || true
+    db_password_validation
+  fi
+}
+
+get_database_name() {
+  db_input high passbolt/mysql-passbolt-dbname
+  if is_interactive; then
+    db_go || true
+    db_name_validation
+  fi
+}
+
+database_setup() {
+  db_input high passbolt/mysql-configuration || true
+  db_go || true
+  db_get passbolt/mysql-configuration
+  enable_mysql_conf=$RET
+
+  if [ "$enable_mysql_conf" == true ]; then
+    get_admin_credentials
+    get_user_credentials
+    get_database_name
+  fi
+}
+
+
+###########################################
+# Domain setup functions
+###########################################
+
+#
+# hostname_validation()
+#
+# Validates the domain syntax in the form example.com
+# Returns 0 if domain is correct, 1 if malformed.
+# Empty string is accepted as correct.
+# IP addresses are also considerect correct
+hostname_validation() {
+  local host="$1"
+
+  if ! [[ "$host" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ || \
+          "$host" =~ ^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$ || \
+          -z "$host" ]]; then
+    return 1
+  else
+    return 0
+  fi
+}
+
+get_domain() {
+  local validated=0
+
+  while [ "$validated" == "0" ]; do
+    db_input high passbolt/nginx-domain || true
+    if is_interactive; then
+      db_go || true
+      db_get passbolt/nginx-domain
+      if ! hostname_validation "$RET"; then
+        db_input high passbolt/nginx-domain-incorrect || true
+        db_go || true
+      else
+        validated=1
+      fi
+    else
+      validated=1
+    fi
+  done
+}
+
+###########################################
+# SSL setup functions
+###########################################
+
+get_ssl_path() {
+  local template="$1"
+
+  db_input high passbolt/"${template}" || true
+  db_go || true
+  db_get passbolt/"${template}"
+}
+
+ssl_cert_validation() {
+  local path='_UNDEF_'
+  local cert_type="$1"
+
+  get_ssl_path "nginx-${cert_type}-file"
+  path="$RET"
+
+  while [ ! -f "$path" ]
+  do
+    db_set passbolt/nginx-"${cert_type}"-file ""
+    get_ssl_path "${cert_type}-file-not-found"
+    get_ssl_path "nginx-${cert_type}-file"
+    path="$RET"
+  done
+}
+
+ssl_manual_setup() {
+  ssl_cert_validation 'certificate'
+  ssl_cert_validation 'certificate-key'
+}
+
+get_ssl_conf_mode() {
+  local mode="$1"
+
+  case "$mode" in
+    "manual")
+      ssl_manual_setup
+      ;;
+    "auto")
+      db_input high passbolt/nginx-letsencrypt-email || true
+      ;;
+    "none")
+      ;;
+    *)
+      echo "WARNING: Invalid Passbolt configuration mode: $mode"
+      exit 1
+      ;;
+  esac
+  db_go || true
+}
+
+###########################################
+# Nginx setup functions
+###########################################
+
+get_nginx_conf_mode() {
+  if [ -x "$(command -v certbot)"  ]; then
+    db_input high passbolt/nginx-configuration-three-choices || true
+    db_go || true
+    db_set passbolt/nginx-configuration-two-choices ""
+    db_get passbolt/nginx-configuration-three-choices
+  else
+    db_input high passbolt/nginx-configuration-two-choices || true
+    db_go || true
+    db_set passbolt/nginx-configuration-three-choices ""
+    db_get passbolt/nginx-configuration-two-choices
+  fi
+}
+
+nginx_setup() {
+  db_input high passbolt/nginx-configuration || true
+  db_go || true
+  db_get passbolt/nginx-configuration
+  enable_nginx_conf=$RET
+
+  if [ "$enable_nginx_conf" == true ]; then
+    get_nginx_conf_mode
+    nginx_conf_mode="$RET"
+
+    get_domain
+    get_ssl_conf_mode "$nginx_conf_mode"
+  fi
+}
+
+
+###########################################
+# Script starts here
+###########################################
+
+_echo "entering config script: action=$deb_action version=$deb_version"
+
+if [[ ( "${deb_action}" == "reconfigure" ) || \
+        ( "${deb_action}" == "configure" && "${deb_version}" == "" ) ]]; then
+
+  # On interactive installs, we want debconf dialogs only when:
+  # installing for the first time
+  # dpkg-reconfigure package
+  database_setup
+  nginx_setup
+else
+  _echo "config to upgrade from version: $deb_version, nothing to do"
+fi

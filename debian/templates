@@ -1,0 +1,138 @@
+Template: passbolt/mysql-configuration
+Type: boolean
+Choices: true, false
+Default: false
+Description: Create a passbolt database on the local mysql?
+ .
+ This script will guide you to create an empty database
+ .
+ and grant permissions to a user for passbolt to use.
+
+Template: passbolt/mysql-username
+Type: string
+Default: root
+Description: MySQL administator username:
+ Please, provide a username with enough privileges
+ .
+ to create databases on your mysql server.
+
+Template: passbolt/mysql-password
+Type: password
+Description: MySQL administator password:
+ Please, provide a password for the mysql admin user.
+
+Template: passbolt/mysql-passbolt-username
+Type: string
+Default: passboltadmin
+Description: Passbolt database user:
+ Choose a new username that Passbolt will use to connect to mysql
+
+Template: passbolt/mysql-passbolt-password
+Type: password
+Description: Passbolt database password:
+ Choose a new password for the Passbolt mysql user
+
+Template: passbolt/mysql-passbolt-password-repeat
+Type: password
+Description: Repeat the password to confirm:
+  Passwords must match
+
+Template: passbolt/non-empty-password
+Type: error
+Description: Empty passwords are not accepted
+ Please choose a new non-empty password.
+
+Template: passbolt/db_invalid_characters
+Type: error
+Description: Invalid database name
+ Database name can not be empty and can not contain dashes '-' or whitespaces, please try again.
+
+Template: passbolt/non-matching-passwords
+Type: error
+Description: The provided passwords do not match
+  Passwords must match, please try again.
+
+Template: passbolt/mysql-passbolt-dbname
+Type: string
+Default: passboltdb
+Description: Passbolt database name:
+ Please, provide the database name that passbolt will use.
+
+Template: passbolt/nginx-configuration
+Type: boolean
+Choices: true, false
+Default: false
+Description: Do you want to configure the nginx server?
+ .
+ Passbolt requires nginx or apache to serve http requests
+ .
+ This script can automatically configure nginx for you.
+
+Template: passbolt/nginx-configuration-three-choices
+Type: select
+Choices: none, manual, auto
+Default: none
+Description: Passbolt nginx setup:
+ This script adds a nginx site for passbolt. Select which SSL setup for the nginx config:
+ .
+ "none" will delay SSL configuration to a later stage.
+ .
+ "manual" allows you to provide the SSL keys.
+ .
+ "auto" will generate SSL keys for your domain through Letsencrypt.org
+
+Template: passbolt/nginx-configuration-two-choices
+Type: select
+Choices: none, manual
+Default: none
+Description: Passbolt nginx setup:
+ This script adds a nginx site for passbolt. Select which SSL setup for the nginx config:
+ .
+ "none" will delay configuration to a later stage.
+ .
+ "manual" allows you to provide your SSL keys.
+
+Template: passbolt/nginx-domain
+Type: string
+Description: Passbolt domain name:
+ Provide the domain name where you will run Passbolt.
+ .
+ If you do not have a domain name or you are not sure, introduce the ip address of this machine.
+
+Template: passbolt/nginx-domain-incorrect
+Type: error
+Description: Domain validation
+ The domain name format is incorrect, it should be in the form example.com.
+ .
+ Please try again.
+
+Template: passbolt/nginx-letsencrypt-email
+Type: string
+Default: admin@mydomain.com
+Description: Letsencrypt email:
+ Provide an administrative email address for your domain.
+ .
+ The email address is required by letsencrypt to send you notifications
+ .
+ about expiration of your certificates.
+
+Template: passbolt/nginx-certificate-file
+Type: string
+Description: Provide the filename for the SSL fullchain key:
+  This is the path where you have your SSL certificate stored.
+  If you have not uploaded your SSL certificate to this machine, do it now.
+
+Template: passbolt/nginx-certificate-key-file
+Type: string
+Description: Provide the filename for the SSL Private Key:
+  If you have not uploaded your SSL key to this machine, do it now.
+
+Template: passbolt/certificate-file-not-found
+Type: error
+Description: The SSL certificate file could not be found, please try again.
+  Please provide the correct absolute path where your certificate is stored.
+
+Template: passbolt/certificate-key-file-not-found
+Type: error
+Description: The SSL key file could not be found, please try again
+  Please provide the correct absolute path where your key is stored.
