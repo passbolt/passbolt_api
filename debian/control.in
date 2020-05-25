@@ -1,0 +1,30 @@
+Source: passbolt-@PASSBOLT_FLAVOUR@-server
+Maintainer: Passbolt SA <contact@passbolt.com>
+Section: php
+Priority: optional
+Standards-Version: 4.1.3
+Build-Depends: debhelper (>= 10), dh-exec
+Homepage: https://www.passbolt.com
+Vcs-Git: git@github.com:passbolt/passbolt-api.git
+
+Package: passbolt-@PASSBOLT_FLAVOUR@-server
+Architecture: all
+Pre-depends:
+  debconf
+Depends: ${misc:Depends},
+  php-cli (>= 7),
+  php-mbstring (>= 7),
+  php-intl (>= 7),
+  php-mysql (>= 7),
+  php-fpm (>= 7),
+  php-xml (>= 7),
+  php-gd (>= 7),
+  @PASSBOLT_EXTENSIONS@
+  php-gnupg,
+  cron
+Recommends: default-mysql-server | virtual-mysql-server, nginx | apache2
+Suggests: certbot, python-certbot-nginx | python-certbot-apache
+Description: Passbolt, open source password manager for teams
+ Passbolt is a free and open source password manager
+ designed for collaboration. It allows team members to store and share
+ credentials securely.
