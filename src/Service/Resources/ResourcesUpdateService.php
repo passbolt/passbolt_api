@@ -123,7 +123,8 @@ class ResourcesUpdateService
      */
     private function getResource(UserAccessControl $uac, string $id)
     {
-        $permission = $this->permissionsTable->findHighestByAcoAndAro(PermissionsTable::RESOURCE_ACO, $id, $uac->userId())
+        $permission = $this->permissionsTable
+            ->findHighestByAcoAndAro(PermissionsTable::RESOURCE_ACO, $id, $uac->userId())
             ->first();
 
         if (empty($permission)) {
@@ -254,6 +255,8 @@ class ResourcesUpdateService
      */
     private function postResourceUpdate(UserAccessControl $uac, Resource $resource, array $data)
     {
+        $secrets = $this->secretsTable->findByResourcesUser([$resource->id], $uac->userId())->all()->toArray();
+        $resource['secrets'] = $secrets;
         $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
         $this->dispatchEvent(static::UPDATE_SUCCESS_EVENT_NAME, $eventData);
     }

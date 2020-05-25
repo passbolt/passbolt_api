@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 
 namespace Passbolt\EmailDigest\Utility\Mailer;
@@ -206,6 +206,8 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
+     * Add key/value pair to "body" variable available in email view
+     *
      * @param string $name Name of the variable to add to be used with the template of the email
      * @param mixed $value Value of the variable
      * @return $this
@@ -218,6 +220,8 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
+     * Add variable available in email template
+     *
      * @param string $name Name of the variable to add to be used with the layout of the email
      * @param mixed $value Value of the variable
      * @return $this

@@ -18,16 +18,11 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
-use App\Notification\EmailDigest\DigestMarshallerRegister\Group\GroupUserEmailDigestMarshallerRegister;
-use App\Notification\EmailDigest\DigestMarshallerRegister\Resource\ResourceEmailDigestMarshallerRegister;
+use App\Notification\EmailDigest\DigestRegister\GroupDigests;
+use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
-use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\GeneralNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -112,18 +107,15 @@ class Application extends BaseApplication
         }
 
         $this->getEventManager()
-            // Contains all emails redactors for Passbolt Core
             ->on(new CoreEmailRedactorPool())
-            // Add the different email settings definitions for Passbolt Core
-            ->on(new CommentNotificationSettingsDefinition())
-            ->on(new GroupNotificationSettingsDefinition())
-            ->on(new GeneralNotificationSettingsDefinition())
-            ->on(new ResourceNotificationSettingsDefinition())
-            ->on(new UserNotificationSettingsDefinition())
-            ->on(new AdminNotificationSettingsDefinition())
-            // Register emails digest marshallers
-            ->on(new GroupUserEmailDigestMarshallerRegister())
-            ->on(new ResourceEmailDigestMarshallerRegister());
+            ->on(new CoreNotificationSettingsDefinition());
+
+        if (PHP_SAPI === 'cli' || (Configure::read('debug') && Configure::read('passbolt.selenium.active'))) {
+            // Core email digests
+            $this->getEventManager()
+                ->on(new GroupDigests())
+                ->on(new ResourceDigests());
+        }
     }
 
     /**

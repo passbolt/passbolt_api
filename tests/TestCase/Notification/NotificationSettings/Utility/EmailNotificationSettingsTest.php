@@ -18,12 +18,7 @@ namespace App\Test\TestCase\Notification\NotificationSettings\Utility;
 use App\Model\Entity\Role;
 use App\Model\Table\OrganizationSettingsTable;
 use App\Model\Table\UsersTable;
-use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\GeneralNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -57,12 +52,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
         $this->Users = TableRegistry::getTableLocator()->get('Users');
 
         EventManager::instance()
-            ->on(new CommentNotificationSettingsDefinition())
-            ->on(new GroupNotificationSettingsDefinition())
-            ->on(new GeneralNotificationSettingsDefinition())
-            ->on(new ResourceNotificationSettingsDefinition())
-            ->on(new UserNotificationSettingsDefinition())
-            ->on(new AdminNotificationSettingsDefinition());
+            ->on(new CoreNotificationSettingsDefinition());
     }
 
     public function tearDown()

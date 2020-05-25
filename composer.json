@@ -8,9 +8,9 @@
     ],
     "config": {
       "optimize-autoloader": true,
-        "platform": {
-            "php": "7.0.33"
-        }
+      "platform": {
+        "php": "7.0.33"
+      }
     },
     "homepage": "https://www.passbolt.com",
     "license": "AGPL-3.0-or-later",

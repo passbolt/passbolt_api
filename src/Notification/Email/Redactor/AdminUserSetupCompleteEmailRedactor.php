@@ -104,6 +104,11 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         $createdHistory = $userWhoCompletedSetup->entities_history[0];
 
         $invitedBy = $createdHistory->action_log->user;
+        if (!isset($invitedBy)) {
+            // If nobody invited the user it means open registration is on
+            $invitedBy = $userWhoCompletedSetup;
+        }
+
         $invitedWhen = $createdHistory->action_log->created;
 
         /** @var User[] $admins */
