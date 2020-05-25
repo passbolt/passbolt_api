@@ -14,8 +14,11 @@
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
+use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Shell\AppShellBootstrap;
 use App\Utility\UuidFactory;
+use Cake\Event\EventManager;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
@@ -24,17 +27,29 @@ use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryRelationsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 {
     use AssertDirectoryRelationsTrait;
     use AssertGroupsTrait;
     use AssertGroupUsersTrait;
+    use EmailNotificationSettingsTestTrait;
 
     public function setUp()
     {
         parent::setUp();
         $this->initAction();
+        $this->loadNotificationSettings();
+        $this->setEmailNotificationSetting('send.group.user.add', true);
+        EventManager::instance()->on(new CoreEmailRedactorPool());
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
     /**
