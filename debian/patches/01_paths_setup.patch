@@ -1,0 +1,80 @@
+Index: passbolt-@PASSBOLT_FLAVOUR@-server/bin/cake.php
+===================================================================
+--- passbolt-@PASSBOLT_FLAVOUR@-server.orig/bin/cake.php
++++ passbolt-@PASSBOLT_FLAVOUR@-server/bin/cake.php
+@@ -3,6 +3,8 @@
+ // Check platform requirements
+ require dirname(__DIR__) . '/config/requirements.php';
+ require dirname(__DIR__) . '/vendor/autoload.php';
++include '/etc/passbolt/bootstrap.php';
++
+ use App\Application;
+ use Cake\Console\CommandRunner;
+ // Build the runner with an application and root executable name.
+Index: passbolt-@PASSBOLT_FLAVOUR@-server/config/default.php
+===================================================================
+--- passbolt-@PASSBOLT_FLAVOUR@-server.orig/config/default.php
++++ passbolt-@PASSBOLT_FLAVOUR@-server/config/default.php
+@@ -138,10 +138,10 @@ return [
+             // - Apache on Debian it would be in '/var/www/.gnupg'
+             // - Nginx on Centos it would be in '/var/lib/nginx/.gnupg'
+             // - etc.
+-            'keyring' => getenv("HOME") . DS . '.gnupg',
++            'keyring' => '/var/lib/passbolt' . DS . '.gnupg',
+ 
+             // Replace GNUPGHOME with above value even if it is set.
+-            'putenv' => false,
++            'putenv' => true,
+ 
+             // Main server key.
+             'serverKey' => [
+Index: passbolt-@PASSBOLT_FLAVOUR@-server/config/paths.php
+===================================================================
+--- passbolt-@PASSBOLT_FLAVOUR@-server.orig/config/paths.php
++++ passbolt-@PASSBOLT_FLAVOUR@-server/config/paths.php
+@@ -28,7 +28,7 @@ if (!defined('DS')) {
+ /**
+  * The full path to the directory which holds "src", WITHOUT a trailing DS.
+  */
+-define('ROOT', dirname(__DIR__));
++define('ROOT', '/usr/share/php/passbolt');
+ 
+ /**
+  * The actual directory name for the application directory. Normally
+@@ -44,7 +44,7 @@ define('APP', ROOT . DS . APP_DIR . DS);
+ /**
+  * Path to the config directory.
+  */
+-define('CONFIG', ROOT . DS . 'config' . DS);
++define('CONFIG', '/etc/passbolt' . DS);
+ 
+ /**
+  * File path to the webroot directory.
+@@ -69,12 +69,12 @@ define('FIXTURES', TESTS . 'Fixture' . D
+ /**
+  * Path to the temporary files directory.
+  */
+-define('TMP', ROOT . DS . 'tmp' . DS);
++define('TMP', '/var/lib/passbolt/tmp' . DS);
+ 
+ /**
+  * Path to the logs directory.
+  */
+-define('LOGS', ROOT . DS . 'logs' . DS);
++define('LOGS', '/var/log/passbolt' . DS);
+ 
+ /**
+  * Path to the cache files directory. It can be shared between hosts in a multi-server setup.
+Index: passbolt-@PASSBOLT_FLAVOUR@-server/webroot/index.php
+===================================================================
+--- passbolt-@PASSBOLT_FLAVOUR@-server.orig/webroot/index.php
++++ passbolt-@PASSBOLT_FLAVOUR@-server/webroot/index.php
+@@ -32,7 +32,7 @@ use App\Application;
+ use Cake\Http\Server;
+ 
+ // Bind your application to the server.
+-$server = new Server(new Application(dirname(__DIR__) . '/config'));
++$server = new Server(new Application('/etc/passbolt'));
+ 
+ // Run the request/response through the application
+ // and emit the response.

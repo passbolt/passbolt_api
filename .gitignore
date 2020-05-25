@@ -97,3 +97,13 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
+.kitchen/
+.kitchen.local.yml
+debian/tmp/
+debian/passbolt-ce/
+debian/.debhelper/
+debian/files
+debian/passbolt-api-ce/
+debian/passbolt-api-pro/
+debian/*debhelper*
+debian/*substvars*
