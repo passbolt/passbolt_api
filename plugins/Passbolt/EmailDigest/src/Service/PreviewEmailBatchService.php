@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 
 namespace Passbolt\EmailDigest\Service;
@@ -38,21 +38,21 @@ class PreviewEmailBatchService
     /** @var EmailPreviewFactory */
     private $emailPreviewFactory;
 
-    /** @var MarshallEmailsDigestsService */
-    private $marshallEmailsDigestsService;
+    /** @var EmailDigestService */
+    private $emailDigestsService;
 
     /**
      * @param EmailQueueTable $emailQueueTable Email Queue Table
-     * @param MarshallEmailsDigestsService $marshallEmailsDigestsService Marshall Emails Digests Service
+     * @param EmailDigestService $emailDigestsService Emails Digests Service
      * @param EmailPreviewFactory $emailPreviewFactory Email Preview Factory
      */
     public function __construct(
         EmailQueueTable $emailQueueTable = null,
-        MarshallEmailsDigestsService $marshallEmailsDigestsService = null,
+        EmailDigestService $emailDigestsService = null,
         EmailPreviewFactory $emailPreviewFactory = null
     ) {
         $this->emailQueueTable = $emailQueueTable ?? TableRegistry::getTableLocator()->get('EmailQueue', ['className' => EmailQueueTable::class]);
-        $this->marshallEmailsDigestsService = $marshallEmailsDigestsService ?? new MarshallEmailsDigestsService();
+        $this->emailDigestsService = $emailDigestsService ?? new EmailDigestService();
         $this->emailPreviewFactory = $emailPreviewFactory ?? new EmailPreviewFactory();
     }
 
@@ -86,13 +86,11 @@ class PreviewEmailBatchService
      */
     public function getPreviewsOfEmailsAsDigests(array $emails)
     {
-        $emailDigestsByRecipient = $this->marshallEmailsDigestsService->createDigestsByRecipient($emails);
+        $emailDigests = $this->emailDigestsService->createDigests($emails);
         $previews = [];
 
-        foreach ($emailDigestsByRecipient as $emailDigests) {
-            foreach ($emailDigests as $digest) {
-                $previews[] = $this->emailPreviewFactory->renderEmailPreviewFromDigest($digest, 'default');
-            }
+        foreach ($emailDigests as $digest) {
+            $previews[] = $this->emailPreviewFactory->renderEmailPreviewFromDigest($digest, 'default');
         }
 
         return $previews;

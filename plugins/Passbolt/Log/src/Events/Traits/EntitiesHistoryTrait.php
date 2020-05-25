@@ -81,6 +81,13 @@ trait EntitiesHistoryTrait
                 ],
             ],
         ],
+        'UsersRegister.registerPost' => [
+            'models' => [
+                'Users' => [
+                    EntityHistory::CRUD_CREATE,
+                ],
+            ],
+        ],
         'UsersAdd.addPost' => [
             'models' => [
                 'Users' => [

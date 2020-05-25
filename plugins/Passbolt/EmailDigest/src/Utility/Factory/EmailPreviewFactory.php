@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 
 namespace Passbolt\EmailDigest\Utility\Factory;
@@ -99,6 +99,7 @@ class EmailPreviewFactory
     private function configureEmailView(Email $email, string $template, string $layout = null, string $theme = null)
     {
         $email->viewBuilder()
+            ->setVar('title', 'Email digest preview')
             ->setLayout($layout)
             ->setTheme($theme)
             ->setTemplate($template);

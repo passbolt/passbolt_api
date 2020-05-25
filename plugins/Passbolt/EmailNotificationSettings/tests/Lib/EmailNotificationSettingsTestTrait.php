@@ -15,12 +15,27 @@
 namespace Passbolt\EmailNotificationSettings\Test\Lib;
 
 use App\Model\Entity\Role;
+use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Event\EventManager;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 trait EmailNotificationSettingsTestTrait
 {
+    protected function loadNotificationSettings()
+    {
+        $this->loadPlugins(['Passbolt/EmailNotificationSettings']);
+
+        EventManager::instance()
+            ->on(new CoreNotificationSettingsDefinition());
+    }
+
+    protected function unloadNotificationSettings()
+    {
+        EmailNotificationSettings::flushCache();
+    }
+
     /**
      * Set email notification setting
      *

@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 
 namespace Passbolt\EmailDigest\Service;
@@ -26,8 +26,8 @@ use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
  * Class SendEmailBatchService sends batch of emails entities as digests.
- * Digests are composed using MarshallEmailsDigestsService
- * @see MarshallEmailsDigestsService
+ * Digests are composed using EmailDigestService
+ * @see EmailDigestService
  */
 class SendEmailBatchService
 {
@@ -36,17 +36,17 @@ class SendEmailBatchService
     /** @var EmailQueueTable */
     private $emailQueueTable;
 
-    /** @var MarshallEmailsDigestsService */
-    private $marshallEmailsDigestsService;
+    /** @var EmailDigestService */
+    private $emailDigestService;
 
     /**
      * @param EmailQueueTable $emailQueueTable An instance of EmailQueueTable
-     * @param MarshallEmailsDigestsService $marshallEmailsDigestsService An instance Marshall Emails Digests Service
+     * @param EmailDigestService $emailDigestService An instance Emails Digests Service
      */
-    public function __construct(EmailQueueTable $emailQueueTable = null, MarshallEmailsDigestsService $marshallEmailsDigestsService = null)
+    public function __construct(EmailQueueTable $emailQueueTable = null, EmailDigestService $emailDigestService = null)
     {
         $this->emailQueueTable = $emailQueueTable ?? TableRegistry::getTableLocator()->get('EmailQueue', ['className' => EmailQueueTable::class]);
-        $this->marshallEmailsDigestsService = $marshallEmailsDigestsService ?? new MarshallEmailsDigestsService();
+        $this->emailDigestService = $emailDigestService ?? new EmailDigestService();
     }
 
     /**
@@ -61,12 +61,10 @@ class SendEmailBatchService
 
         $emails = $this->emailQueueTable->getBatch($limit);
 
-        $emailDigestsByRecipient = $this->marshallEmailsDigestsService->createDigestsByRecipient($emails);
+        $emailDigests = $this->emailDigestService->createDigests($emails);
 
-        foreach ($emailDigestsByRecipient as $emailDigests) {
-            foreach ($emailDigests as $digest) {
-                $this->sendDigest($digest);
-            }
+        foreach ($emailDigests as $digest) {
+            $this->sendDigest($digest);
         }
     }
 

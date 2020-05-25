@@ -38,7 +38,14 @@ class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
     public function setUp()
     {
         parent::setUp();
+        $this->loadNotificationSettings();
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+    }
+
+    public function tearDown()
+    {
+        $this->unloadNotificationSettings();
+        parent::tearDown();
     }
 
     public function testResourcesUpdateNotificationDisabled()

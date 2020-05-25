@@ -10,15 +10,14 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         3.0.0
  */
-
 /**
  * This is the default template used by any email digest
- * Its content is defined by the marshaller which create the digest
+ * Its content is defined by the class which created the digest
  */
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
 
-$digestContent = $body[EmailDigest::TPL_VAR_DIGEST_CONTENT];
-
-echo $digestContent;
+if (isset($body[EmailDigest::TPL_VAR_DIGEST_CONTENT])) {
+    echo $body[EmailDigest::TPL_VAR_DIGEST_CONTENT];
+}

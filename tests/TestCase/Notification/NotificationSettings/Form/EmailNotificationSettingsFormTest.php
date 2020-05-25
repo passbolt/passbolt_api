@@ -15,12 +15,7 @@
 
 namespace App\Test\TestCase\Notification\NotificationSettings\Form;
 
-use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\GeneralNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\Event\EventDispatcherTrait;
@@ -39,12 +34,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
 
         $this->getEventManager()
             // Add the different email settings definitions for Passbolt Core
-            ->on(new CommentNotificationSettingsDefinition())
-            ->on(new GroupNotificationSettingsDefinition())
-            ->on(new GeneralNotificationSettingsDefinition())
-            ->on(new ResourceNotificationSettingsDefinition())
-            ->on(new UserNotificationSettingsDefinition())
-            ->on(new AdminNotificationSettingsDefinition());
+            ->on(new CoreNotificationSettingsDefinition());
     }
 
     public function testNotificationSettingsFormFieldShowComment()

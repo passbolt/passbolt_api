@@ -10,53 +10,55 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 namespace Passbolt\EmailDigest\Test\Lib;
 
 use App\Model\Entity\Profile;
 use App\Model\Entity\User;
 use Cake\ORM\Entity;
+use Passbolt\EmailDigest\Utility\Digest\AbstractDigest;
+use Passbolt\EmailDigest\Utility\Digest\DigestInterface;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
-use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerInterface;
-use Passbolt\EmailDigest\Utility\Marshaller\Type\AbstractDigestMarshaller;
 
 trait EmailDigestMockTestTrait
 {
     /**
-     * Create a new digests marshaller at runtime for testing.
-     * @param bool $canMarshallDigests Returned by canMarshallDigests method of the marshaller.
-     * @param array $digests Some digests that the marshaller must return
-     * @return DigestMarshallerInterface
+     * Create a new digest at runtime for testing.
+     * @param bool $canAddToDigests Returned by canAddToDigests method of the digest.
+     * @param array $digests Some email digests that the digest must return
+     * @return DigestInterface
      */
-    public function createMarshaller(bool $canMarshallDigests, array $digests)
+    public function createDigest(bool $canAddToDigests, array $digests)
     {
-        return new class ($canMarshallDigests, $digests) extends AbstractDigestMarshaller
+        return new class ($canAddToDigests, $digests) extends AbstractDigest
         {
-            private $canMarshallDigests;
-            private $digests = [];
+            private $canAddToDigests;
+            private $emailDigests = [];
 
-            public function __construct(bool $canMarshallDigests, array $digests)
+            public function __construct(bool $canAddToDigests, array $emailDigests)
             {
-                $this->canMarshallDigests = $canMarshallDigests;
-                $this->digests = $digests;
+                $this->canAddToDigests = $canAddToDigests;
+                $this->emailDigests = $emailDigests;
             }
 
-            public function marshalDigests()
+            public function marshalEmails()
             {
-                return $this->digests;
+                return $this->emailDigests;
             }
 
-            public function canMarshalDigestsFrom(Entity $emailQueueEntity)
+            public function canAddToDigest(Entity $emailQueueEntity)
             {
-                return $this->canMarshallDigests;
+                return $this->canAddToDigests;
             }
         };
     }
 
     /**
      * Create an email queue entity with the passed properties.
-     * @param array $properties Properties for the email queue entity
+     *
+     * @param array $properties properties for the email queue entity
+     * @param array $templateBodyVars variables for email body
      * @return Entity
      */
     protected function createEmailQueueEntity(array $properties = [], array $templateBodyVars = [])
@@ -78,6 +80,8 @@ trait EmailDigestMockTestTrait
     }
 
     /**
+     * Create an email digest
+     *
      * @param Entity[] $emailsData Array of emails queue entity
      * @return EmailDigest
      */
@@ -103,6 +107,13 @@ trait EmailDigestMockTestTrait
         return $emailDigest;
     }
 
+    /**
+     * Create a User Entity for the email
+     *
+     * @param string $username email
+     * @param string $firstName first name
+     * @return User
+     */
     protected function createUserForEmail(string $username, string $firstName)
     {
         return new User([
