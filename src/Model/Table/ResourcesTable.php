@@ -92,6 +92,11 @@ class ResourcesTable extends Table
             'foreignKey' => 'resource_id',
             'saveStrategy' => 'replace',
         ]);
+        $this->hasOne('Schema', [
+            'className' => 'Schemas',
+            'bindingKey' => 'schema_id',
+            'foreignKey' => 'id',
+        ]);
     }
 
     /**
@@ -141,6 +146,10 @@ class ResourcesTable extends Table
             ->requirePresence('modified_by', 'create')
             ->allowEmptyString('modified_by', null, false);
 
+        $validator
+            ->uuid('schema_id', __('The schema id by must be a valid UUID.'))
+            ->requirePresence('schema_id', 'create');
+
         // Associated fields
         $validator
             ->requirePresence('permissions', 'create', __('The permissions are required.'))
@@ -151,6 +160,11 @@ class ResourcesTable extends Table
             ->requirePresence('secrets', 'create', __('A secret is required.'))
             ->allowEmptyString('secrets', __('The secret cannot be empty.'), false)
             ->hasAtMost('secrets', 1, __('Only the secret of the owner must be provided.'), 'create');
+
+        $validator
+            ->requirePresence('schema', 'create', __('The permissions are required.'))
+            ->allowEmptyString('permissions', __('The permissions cannot be empty.'), false)
+            ->hasAtMost('permissions', 1, __('Only the permission of the owner must be provided.'), 'create');
 
         return $validator;
     }
