@@ -2,8 +2,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [unreleased]
+## [2.13.0-RC1] - 2019-05-27
+### Added
+- PB-1165 As a logged in user I can create a folder
+- PB-1213 As a logged in user I edit folder permissions
+- PB-1165 As a LU I can delete folders (with and without cascade)
+- PB-1165 As LU I can move a resource in a folder I own
+- PB-1253 As a LU I can move folders
+- PB-1214 As a LU I cannot create cycles when moving/sharing folders
+- PB-1046 Cleanup shell tasks for folders
+- PB-1164 As GM while deleting a group I should be able to transfer ownership of folder if necessary
+- PB-1164 As AD while deleting a user I should be able to transfer ownership of folder if necessary
+- PB-1168 Add baseline code and tests for Debian package build
+- PB-1067 As a user I can receive digest emails when creating a lot of resources
+- PB-1067 As a user I can receive digest emails when added/removed from a lot of groups
+
+### Improved
+- Pro Styleguide version bump v2.13.10
+- Appjs version bump v2.13.0.
+- PB-1046 Adapt Cleanup test runner to take in account cleanup that are adding records
+- PB-1046 Adapt Cleanup shell task to allow external sources to add cleanup tasks
+- PB-1046 Remove empty EmailTraits files
+- Delete unused default keys (cleanup)
+- Update to latest passbolt_test_data version.
+- Misc refactoring for email notifications
+- Misc refactoring to split model logic into services
+- Clear plugins in tearDown of application test cases
+
 ### Fixed
+- Fix appjs plugin requestUntilSuccess bug
+- Fix load the plugin license manually in the integration tests
+- Fix load webinstaller plugin manually in plugin tests
+- Fix composer php version.
+- Fix misc checkstyle issues
 - PB-980: Fix "secret access logging in password activity log should not display other resources secret access after a multiple share"
 
 ## [2.12.0] - 2019-12-05
