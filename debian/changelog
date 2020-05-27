@@ -1,0 +1,24 @@
+passbolt-pro-server (2.12.0-1) stretch; urgency=medium
+  * Refactor config script
+  * Refactor postinst script
+  * Added questions for nginx setup
+  * Wording on the templates file
+  * Cleaned git files from build
+  * Added .in templates for multiple build files
+  * Added lintian overrides
+  * Added logrotation for /var/log/passbolt/error.log
+  * Introduced triggers for mysql and nginx
+
+ -- Diego Lendoiro <diego@passbolt.com> Thu, 21 May 2020 18:24:00 +0000
+
+passbolt-pro-server (2.12.0-0) stretch; urgency=medium
+
+  * Created an automated debian package
+
+ -- Albert Casals <skarbat@gmail.com>  Fri, 27 Dec 2019 01:15:00 +0100
+
+passbolt-pro-server (2.7.1-0) stretch; urgency=medium
+
+  * Initial release.
+
+ -- Diego Lendoiro <diego@passbolt.com>  Fri, 8 Mar 2019 10:08:11 +0000
