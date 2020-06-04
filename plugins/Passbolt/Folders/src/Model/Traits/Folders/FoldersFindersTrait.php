@@ -101,9 +101,27 @@ trait FoldersFindersTrait
             $query->contain('Creator');
         }
 
+        // If contains create profile.
+        if (isset($options['contain']['creator.profile'])) {
+            $query->contain([
+                'Creator' => [
+                    'Profiles' => AvatarsTable::addContainAvatar(),
+                ],
+            ]);
+        }
+
         // If contains modifier.
         if (isset($options['contain']['modifier'])) {
             $query->contain('Modifier');
+        }
+
+        // If contains create profile.
+        if (isset($options['contain']['modifier.profile'])) {
+            $query->contain([
+                'Modifier' => [
+                    'Profiles' => AvatarsTable::addContainAvatar(),
+                ],
+            ]);
         }
 
         // Retrieve the permission and the details of a user attach to it if any
