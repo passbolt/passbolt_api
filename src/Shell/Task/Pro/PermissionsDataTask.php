@@ -91,7 +91,7 @@ class PermissionsDataTask extends DataTask
             'aco_foreign_key' => UuidFactory::uuid('folder.id.blogs'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.admin'),
-            'type' => 1
+            'type' => 15
         ];
         $permissions[] = [
             'aco' => 'Folder',
