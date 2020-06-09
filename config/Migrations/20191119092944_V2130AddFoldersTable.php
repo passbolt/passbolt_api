@@ -10,12 +10,12 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 
 use Migrations\AbstractMigration;
 
-class V2140AddFoldersRelationsTable extends AbstractMigration
+class V2130AddFoldersTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -26,7 +26,7 @@ class V2140AddFoldersRelationsTable extends AbstractMigration
      */
     public function change()
     {
-        $this->table('folders_relations', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+        $this->table('folders', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
             ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
@@ -34,31 +34,10 @@ class V2140AddFoldersRelationsTable extends AbstractMigration
                 'encoding' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->addColumn('foreign_model', 'string', [
+            ->addColumn('name', 'string', [
                 'default' => null,
-                'limit' => 30,
+                'limit' => 64,
                 'null' => false,
-                'encoding' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci'
-            ])
-            ->addColumn('foreign_id', 'char', [
-                'default' => null,
-                'limit' => 36,
-                'null' => false,
-                'encoding' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci'
-            ])
-            ->addColumn('user_id', 'char', [
-                'default' => null,
-                'limit' => 36,
-                'null' => false,
-                'encoding' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci'
-            ])
-            ->addColumn('folder_parent_id', 'char', [
-                'default' => null,
-                'limit' => 36,
-                'null' => true,
                 'encoding' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ])
@@ -71,6 +50,20 @@ class V2140AddFoldersRelationsTable extends AbstractMigration
                 'default' => null,
                 'limit' => null,
                 'null' => false,
+            ])
+            ->addColumn('created_by', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->addColumn('modified_by', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->create();
     }

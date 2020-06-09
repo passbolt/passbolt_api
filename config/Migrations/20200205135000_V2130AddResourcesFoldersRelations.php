@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
@@ -20,7 +20,7 @@ use Cake\ORM\TableRegistry;
 use Migrations\AbstractMigration;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 
-class V2140AddResourcesFoldersRelations extends AbstractMigration
+class V2130AddResourcesFoldersRelations extends AbstractMigration
 {
     public function up()
     {
