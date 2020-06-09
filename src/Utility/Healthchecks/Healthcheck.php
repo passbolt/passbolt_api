@@ -10,13 +10,14 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 namespace App\Utility\Healthchecks;
 
 use InvalidArgumentException;
 
-class Healthcheck {
+class Healthcheck
+{
 
     const STATUS_ERROR = 'error';
     const STATUS_WARNING = 'warning';
@@ -63,8 +64,10 @@ class Healthcheck {
      * Mark check as failed
      * @return $this
      */
-    public function fail() {
+    public function fail()
+    {
         $this->success = false;
+
         return $this;
     }
 
@@ -72,8 +75,10 @@ class Healthcheck {
      * Mark check as pass
      * @return $this
      */
-    public function pass() {
+    public function pass()
+    {
         $this->success = true;
+
         return $this;
     }
 
@@ -108,6 +113,7 @@ class Healthcheck {
     public function setName(string $name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -118,26 +124,28 @@ class Healthcheck {
     public function setCategory(string $category)
     {
         $this->category = $category;
+
         return $this;
     }
 
     /**
-     * @param string $detail
+     * @param string $detail information message
      * @param string $status success, warning, error, info
      * @return $this
      */
-    public function addDetail(string $detail, string $status) {
+    public function addDetail(string $detail, string $status)
+    {
         $allowedStatus = [
-            self::STATUS_ERROR, self::STATUS_INFO, self::STATUS_SUCCESS, self::STATUS_WARNING
+            self::STATUS_ERROR, self::STATUS_INFO, self::STATUS_SUCCESS, self::STATUS_WARNING,
         ];
         if (!in_array($status, $allowedStatus)) {
             throw new InvalidArgumentException('Invalid health check detail status: ' . $status);
         }
         $this->details[] = [
             'status' => $status,
-            'message' => $detail
+            'message' => $detail,
         ];
+
         return $this;
     }
-
 }

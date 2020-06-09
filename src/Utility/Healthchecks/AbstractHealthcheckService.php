@@ -10,11 +10,12 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 namespace App\Utility\Healthchecks;
 
-abstract class AbstractHealthcheckService {
+abstract class AbstractHealthcheckService
+{
     /**
      * @var string $serviceName
      */
@@ -51,25 +52,29 @@ abstract class AbstractHealthcheckService {
      * @param bool $success optional
      * @return Healthcheck
      */
-    protected function healthcheckFactory(string $checkName, bool $success = null) {
+    protected function healthcheckFactory(string $checkName, bool $success = null)
+    {
         return new Healthcheck($checkName, $this->serviceName, $success);
     }
 
     /**
      * @return array of Healthchecks
      */
-    abstract function check();
+    abstract public function check();
 
     // =======================================================
     // GETTERS
     // =======================================================
+
     /**
      * @return array[]
      */
-    protected function getHealthchecks() {
+    protected function getHealthchecks()
+    {
         if ($this->serviceCategory !== null) {
             return [$this->serviceCategory => $this->checks];
         }
+
         return $this->checks;
     }
 
@@ -92,6 +97,7 @@ abstract class AbstractHealthcheckService {
     // =======================================================
     // SETTERS
     // =======================================================
+
     /**
      * @param string $serviceName name
      * @return $this
@@ -99,6 +105,7 @@ abstract class AbstractHealthcheckService {
     public function setServiceName(string $serviceName)
     {
         $this->serviceName = $serviceName;
+
         return $this;
     }
 
@@ -109,6 +116,7 @@ abstract class AbstractHealthcheckService {
     public function setCategory(string $serviceCategory)
     {
         $this->serviceCategory = $serviceCategory;
+
         return $this;
     }
 }

@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 namespace App\Service\Gpgkeys;
 
@@ -38,17 +38,15 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     private $table;
 
     /**
-     * @var array $recordIds
-     */
-    private $recordIds;
-
-    /**
      * @var OpenPGPBackend
      */
     private $gpg;
 
     /**
-     * Service constructor
+     * Service constructor.
+     *
+     * @param OpenPGPBackend $gpg gpg backend to use
+     * @param GpgkeysTable $table gpgkeys table
      */
     public function __construct($gpg = null, $table = null)
     {
@@ -62,15 +60,16 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     /**
      * @inheritDoc
      */
-    public function check() {
-        $this->recordIds = $this->table->find()
+    public function check()
+    {
+        $recordIds = $this->table->find()
             ->select('id')
             ->where(['deleted' => false])
             ->all()
             ->toArray();
-        $this->recordIds = Hash::extract($this->recordIds, '{n}.id');
+        $recordIds = Hash::extract($recordIds, '{n}.id');
 
-        foreach ($this->recordIds as $i => $id) {
+        foreach ($recordIds as $i => $id) {
             $gpgkey = $this->table->get($id);
             $this->canEncrypt($gpgkey);
             $this->canValidate($gpgkey);
@@ -83,15 +82,17 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
      * Validates
      *
      * @param Gpgkey $gpgkey gpg key
+     * @return void
      */
-    private function canValidate(Gpgkey $gpgkey) {
+    private function canValidate(Gpgkey $gpgkey)
+    {
         try {
             $copy = $this->table->buildEntityFromArmoredKey($gpgkey->armored_key, $gpgkey->user_id);
             if (count(array_diff($copy->toArray(), $gpgkey->toArray()))) {
                 new Exception('Parse data does not match data in database.');
             }
             $this->checks[self::CHECK_VALIDATES]
-                ->addDetail(__('Validation is ok for key {0}', $gpgkey->fingerprint), Healthcheck::STATUS_SUCCESS);
+                ->addDetail(__('Validation success for key {0}', $gpgkey->fingerprint), Healthcheck::STATUS_SUCCESS);
         } catch (Exception $exception) {
             $this->checks[self::CHECK_VALIDATES]->fail()
                 ->addDetail(__('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage()), Healthcheck::STATUS_ERROR);
@@ -102,8 +103,10 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
      * Can encrypt
      *
      * @param Gpgkey $gpgkey gpg key
+     * @return void
      */
-    private function canEncrypt(Gpgkey $gpgkey) {
+    private function canEncrypt(Gpgkey $gpgkey)
+    {
         try {
             $this->initUserKey($gpgkey->fingerprint, $gpgkey->armored_key);
             $this->gpg->encrypt('test');

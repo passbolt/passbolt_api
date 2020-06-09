@@ -120,6 +120,7 @@ class PassboltShell extends AppShell
             'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
             'parser' => $this->Datacheck->getOptionParser(),
         ]);
+
         return $parser;
     }
 }
