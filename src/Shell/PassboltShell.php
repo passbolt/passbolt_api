@@ -24,6 +24,7 @@ class PassboltShell extends AppShell
     public $tasks = [
         'Cleanup',
         'DropTables',
+        'Datacheck',
         'Healthcheck',
         'Install',
         'KeyringInit',
@@ -113,6 +114,11 @@ class PassboltShell extends AppShell
         $parser->addSubcommand('send_test_email', [
             'help' => __d('cake_console', 'Test the email configuration by trying to send an email and display the client / server communication trace.'),
             'parser' => $this->SendTestEmail->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('datacheck', [
+            'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
+            'parser' => $this->Datacheck->getOptionParser(),
         ]);
 
         return $parser;
