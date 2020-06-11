@@ -17,7 +17,9 @@ namespace Passbolt\Folders\Service\FoldersRelations;
 
 use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Utility\Tarjan;
 
 class FoldersRelationsDetectStronglyConnectedComponents
 {
@@ -41,48 +43,39 @@ class FoldersRelationsDetectStronglyConnectedComponents
     }
 
     /**
-     * Bulk detect strongly connected components for a list of users.
-     * Detect SCCS by checking all users trees of the list with the rest of passbolt users.
+     * Bulk detect strongly connected components comparing a list of given users with all the non deleted users.
+     * The script stops and returns the first SCC found.
      *
      * @param array $usersIds The list of users ids to check for
-     * @param bool $stopOnFirst Stop the detection on the first SCC found
      * @return array
      * [
      *   [
-     *     string $foreign_id The entity id
-     *     string $folder_parent_id The entity parent id
+     *     'foreign_id' => The foreign id,
+     *     'folder_parent_id' => the folder parent id
      *   ],
      *   ...
      * ]
      */
-    public function bulkDetectForUsers(array $usersIds, bool $stopOnFirst = false)
+    public function bulkDetectForUsers(array $usersIds)
     {
         $result = [];
-        $allUsersIds = $this->getAllNonDeletedUsersIds();
-        $alreadyComparedUsers = [];
+        $usersIdsToCompareWith = $this->getAllNonDeletedUsersIds();
+        $usersFoldersRelations = $this->getUsersFoldersRelationsGroupedByUser($usersIdsToCompareWith);
 
         foreach ($usersIds as $firstUserId) {
-            foreach ($allUsersIds as $secondUserId) {
-                // If the 2 users trees have already been compared, skip.
-                $comparedUsersIdsKey = $this->getUsersIdsCombinedKey($firstUserId, $secondUserId);
-                if (array_key_exists($comparedUsersIdsKey, $alreadyComparedUsers)) {
-                    continue;
+            foreach ($usersIdsToCompareWith as $secondUserId) {
+                $foldersRelations = array_merge($usersFoldersRelations[$firstUserId], $usersFoldersRelations[$secondUserId]);
+                $scc = $this->detectInFoldersRelations($foldersRelations);
+                if (!empty($scc)) {
+                    return $scc;
                 }
-                $alreadyComparedUsers[$comparedUsersIdsKey] = true;
-
-                $sccs = $this->detectInAggregatedUsersTrees([$firstUserId, $secondUserId], false);
-                if (!empty($sccs)) {
-                    foreach ($sccs as $sccHash => $sccForeignIds) {
-                        // If the SCC has already been found don't add it to the result list.
-                        if (!array_key_exists($sccHash, $result)) {
-                            $result[$sccHash] = $sccForeignIds;
-                        }
-                    }
-                    // Stop on first SCCs found.
-                    if ($stopOnFirst) {
-                        break 2;
-                    }
-                }
+            }
+            // Avoid comparing users that have already been compared. As the user has already been compared with all non
+            // deleted users, then it has already been compared with all the users given in parameter, remove it from
+            // the list of users to compare with
+            $firstUserIndex = array_search($firstUserId, $usersIdsToCompareWith);
+            if ($firstUserIndex != -1) {
+                unset($usersIdsToCompareWith[$firstUserIndex]);
             }
         }
 
@@ -96,7 +89,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
      */
     private function getAllNonDeletedUsersIds()
     {
-        return $this->foldersRelationsTable->Users->find()
+        return $this->usersTable->find()
             ->where(['deleted' => false])
             ->select('id')
             ->extract('id')
@@ -104,41 +97,64 @@ class FoldersRelationsDetectStronglyConnectedComponents
     }
 
     /**
-     * Get a unique combined key representing 2 users ids.
+     * Retrieve users folders relations.
      *
-     * @param string $firstUserId The target first user id
-     * @param string $secondUserId The target second user id
-     * @return string
+     * @param array $usersIds The users to retrieve the folders relations for
+     * @param bool $includePersonal Include personal folders. Default false
+     * @return array<array> Return an array of folders relations formatted as following
+     * [
+     *   [
+     *     'foreign_id' => The foreign id,
+     *     'folder_parent_id' => the folder parent id
+     *   ],
+     *   ...
+     * ]
      */
-    private function getUsersIdsCombinedKey(string $firstUserId, string $secondUserId)
+    private function getUsersFoldersRelationsGroupedByUser(array $usersIds, bool $includePersonal = false)
     {
-        $key = [$firstUserId, $secondUserId];
-        sort($key);
+        $result = array_fill_keys($usersIds, []);
 
-        return implode('-', $key);
+        $query = $this->foldersRelationsTable->find();
+        $query = $this->foldersRelationsTable->filterByUsersIds($query, $usersIds);
+        $query = $this->foldersRelationsTable->filterByForeignModel($query, FoldersRelation::FOREIGN_MODEL_FOLDER);
+        if (!$includePersonal) {
+            $query = $this->foldersRelationsTable->filterQueryByIsNotPersonalFolder($query);
+        }
+        $foldersRelations = $query->select(['foreign_id', 'folder_parent_id', 'user_id'])
+            ->disableHydration()->toArray();
+
+        foreach ($foldersRelations as $key => $folderRelation) {
+            $result[$folderRelation['user_id']][] = [
+                'foreign_id' => $folderRelation['foreign_id'],
+                'folder_parent_id' => $folderRelation['folder_parent_id'],
+            ];
+            unset($foldersRelations[$key]);
+        }
+
+        return $result;
     }
 
     /**
-     * Detect strongly connected components sets in a graph composed by the aggregated trees of a list of users.
-     *
-     * @param array $usersIds The list of users to aggregate the graph for.
-     * @param bool $includePersonalFolders Include personal folder in the aggregated graph. Default false.
-     * @return array
+     * Return the first detected strongly components set
+     * @param array $foldersRelations The folders relation to test formatted as following
      * [
-     *    SCC_HASH => array $foldersRelations The list of folders relations involved in the strongly connected components set
+     *   [
+     *     'foreign_id' => The foreign id,
+     *     'folder_parent_id' => the folder parent id
+     *   ],
+     *   ...
      * ]
+     * @return array
      */
-    public function detectInAggregatedUsersTrees(array $usersIds, bool $includePersonalFolders = false)
+    private function detectInFoldersRelations(array $foldersRelations)
     {
         $result = [];
-        list ($graph, $graphForeignIdsMap) = $this->getTarjanAdjacencyGraphFor($usersIds, $includePersonalFolders);
 
-        $stronglyConnectedComponentsSets = $this->php_tarjan_entry($graph);
-        foreach ($stronglyConnectedComponentsSets as $stronglyConnectedComponentsSet) {
-            $nodes = explode('|', $stronglyConnectedComponentsSet);
-            if (!array_key_exists($stronglyConnectedComponentsSet, $result)) {
-                $result[$stronglyConnectedComponentsSet] = $this->formatTarjanResultListToFoldersRelations($nodes, $graphForeignIdsMap);
-            }
+        list ($graph, $graphForeignIdsMap) = $this->formatFoldersRelationInAdjacencyGraph($foldersRelations);
+        $stronglyConnectedComponentsSets = Tarjan::detect($graph);
+        if (!empty($stronglyConnectedComponentsSets)) {
+            $nodes = explode('|', $stronglyConnectedComponentsSets[0]);
+            $result = $this->formatDetectInGraphResultInFoldersRelations($nodes, $graphForeignIdsMap);
         }
 
         return $result;
@@ -147,8 +163,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
     /**
      * Get an adjacency graph relative to the aggregated trees of the users given in parameter.
      *
-     * @param array $usersIds The list of users to aggregate the trees to the graph for
-     * @param bool $includePersonalFolders Include personal folder in the graph. Default false
+     * @param array $foldersRelations The folders relations to format.
      * @return array
      * [
      *   array $graph The tarjan adjacency graph
@@ -165,19 +180,18 @@ class FoldersRelationsDetectStronglyConnectedComponents
      * ]
      *
      * graphForeignIdsMap. The key represents a tarjan node id (integer). The value represents the mapped folder id (uuid).
+     * the array
      * [
      *   0 => e97b14ba-8957-57c9-a357-f78a6e1e1a46
      *   1 => 904bcd9f-ff51-5cfd-9de8-d2c876ade498
      * ]
      */
-    private function getTarjanAdjacencyGraphFor(array $usersIds, bool $includePersonalFolders = false)
+    private function formatFoldersRelationInAdjacencyGraph(array $foldersRelations)
     {
         $graphForeignIdsMap = [];
         $graph = [];
 
-        $foldersRelations = $this->getUsersFoldersRelations($usersIds, $includePersonalFolders);
-
-        // Build the tarjan adjacency graph.
+        // Build the adjacency graph.
         foreach ($foldersRelations as $folderRelation) {
             $foreignId = $folderRelation['foreign_id'];
             $folderParentId = $folderRelation['folder_parent_id'];
@@ -202,123 +216,12 @@ class FoldersRelationsDetectStronglyConnectedComponents
     }
 
     /**
-     * Retrieve users' folders relations.
+     * Format the algorithm result list into a folders relations list.
      *
-     * @param array $usersIds The users to look for
-     * @param bool $includePersonalFolders Include personal folder in the graph. Default false
-     * @return array
-     */
-    private function getUsersFoldersRelations(array $usersIds, bool $includePersonalFolders = false)
-    {
-        $query = $this->foldersRelationsTable->findUsersFoldersRelations($usersIds);
-        if (!$includePersonalFolders) {
-            $query = $this->foldersRelationsTable->filterQueryByIsNotPersonalFolder($query);
-        }
-
-        return $query->select([
-            'foreign_id',
-            'folder_parent_id',
-        ])->toArray();
-    }
-
-    // @codingStandardsIgnoreStart
-
-    /**
-     * Detect strongly connected components in an adjacency graph.
-     *
-     * @param array $graph The graph to look into
-     * @return array list of SCCs found in the graph
-     * [
-     *    '0|2|3|5',
-     *    '1|2|4',
-     * ]
-     */
-    private function php_tarjan_entry(array $graph)
-    {
-        $cycles = [];
-        $marked = [];
-        $marked_stack = [];
-        $point_stack = [];
-
-        for ($x = 0; $x < count($graph); $x++) {
-            $marked[$x] = false;
-        }
-
-        for ($i = 0; $i < count($graph); $i++) {
-            $this->php_tarjan($i, $i, $graph, $cycles, $marked, $marked_stack, $point_stack);
-            while (!empty($marked_stack)) {
-                $marked[array_pop($marked_stack)] = false;
-            }
-//            echo '<br>'.($i+1).' / '.count($G_local); // Enable if you wish to follow progression through the array rows.
-        }
-
-        $cycles = array_keys($cycles);
-
-        return $cycles;
-    }
-
-    /**
-     * Apply the tarjan algorithm on a node
-     *
-     * @param $s
-     * @param $v
-     * @param $graph
-     * @param $cycles
-     * @param $marked
-     * @param $marked_stack
-     * @param $point_stack
-     * @return bool
-     */
-    private function php_tarjan($s, $v, &$graph, &$cycles, &$marked, &$marked_stack, &$point_stack)
-    {
-        $f = false;
-        $point_stack[] = $v;
-        $marked[$v] = true;
-        $marked_stack[] = $v;
-
-        //$maxlooplength = 3; // Enable to Limit the length of loops to keep in the results (see below).
-
-        foreach ($graph[$v] as $w) {
-            if ($w < $s) {
-                $graph[$w] = [];
-            } elseif ($w == $s) {
-                //if (count($point_stack) == $maxlooplength){ // Enable to collect cycles of a given length only.
-                // Add new cycles as array keys to avoid duplication. Way faster than using array_search.
-                $cycles[implode('|', $point_stack)] = true;
-                //}
-                $f = true;
-            } elseif ($marked[$w] === false) {
-                //if (count($point_stack) < $maxlooplength){ // Enable to only collect cycles up to $maxlooplength.
-                $g = $this->php_tarjan($s, $w, $graph, $cycles, $marked, $marked_stack, $point_stack);
-                //}
-                if (!empty($f) || !empty($g)) {
-                    $f = true;
-                }
-            }
-        }
-
-        if ($f === true) {
-            while (end($marked_stack) != $v) {
-                $marked[array_pop($marked_stack)] = false;
-            }
-            array_pop($marked_stack);
-            $marked[$v] = false;
-        }
-
-        array_pop($point_stack);
-
-        return $f;
-    }
-
-    // @codingStandardsIgnoreEnd
-
-    /**
-     * Format Tarjan result list into a folders relations list.
-     *
-     * @param array $nodes The tarjan result list. A list of integers representing the strongly connected components set
-     * i.e. [0, 2, 3, 5, 1]
-     * @param array $graphForeignIdsMap The tarjan nodes map. The map key is relative to a tarjan node when the value
-     * is relative to a folder id.
+     * @param array $nodes A list of integers representing the strongly connected components set
+     * [0, 2, 3, 5, 1]
+     * @param array $graphForeignIdsMap The nodes map. The map key is relative to a node when the value is relative to
+     * a folder id.
      * @return array
      * [
      *   [
@@ -328,7 +231,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
      *   ...
      * ]
      */
-    private function formatTarjanResultListToFoldersRelations(array $nodes, array $graphForeignIdsMap)
+    private function formatDetectInGraphResultInFoldersRelations(array $nodes, array $graphForeignIdsMap)
     {
         $result = [];
 
@@ -342,5 +245,30 @@ class FoldersRelationsDetectStronglyConnectedComponents
         }
 
         return $result;
+    }
+
+    /**
+     * Detect the first strongly connected components set in a given user tree.
+     * The detection also includes personal folders.
+     * The script stops and returns the first SCC found.
+     *
+     * @param string $userId The target user
+     * @return array The list of folders relations involved in the strongly connected components set
+     * [
+     *   [
+     *     'foreign_id' => The foreign id,
+     *     'folder_parent_id' => the folder parent id
+     *   ],
+     *   ...
+     * ]
+     */
+    public function detectInUserTree(string $userId)
+    {
+        $query = $this->foldersRelationsTable->findByUserId($userId);
+        $query = $this->foldersRelationsTable->filterByForeignModel($query, FoldersRelation::FOREIGN_MODEL_FOLDER);
+        $foldersRelations = $query->select(['foreign_id', 'folder_parent_id'])
+            ->disableHydration()->toArray();
+
+        return $this->detectInFoldersRelations($foldersRelations);
     }
 }

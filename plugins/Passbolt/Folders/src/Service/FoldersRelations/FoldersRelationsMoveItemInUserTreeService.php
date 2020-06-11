@@ -259,8 +259,8 @@ class FoldersRelationsMoveItemInUserTreeService
      */
     private function assertCycleFree(UserAccessControl $uac)
     {
-        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->detectInAggregatedUsersTrees([$uac->userId()], true);
-        if (!empty($sccs)) {
+        $scc = $this->folderRelationsDetectStronglyConnectedComponents->detectInUserTree($uac->userId());
+        if (!empty($scc)) {
             $errors = ['folder_parent_id' => ['cycle' => 'The folder cannot be moved into one of its descendants.']];
             $this->handleValidationErrors($errors);
         }
@@ -277,13 +277,12 @@ class FoldersRelationsMoveItemInUserTreeService
     private function detectAndRepairStronglyConnectedComponents(UserAccessControl $uac, string $userId, array $usersIdsImpacted)
     {
         $usersIdsToDetectSCCsFor = array_merge([$userId], $usersIdsImpacted);
-        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->bulkDetectForUsers($usersIdsToDetectSCCsFor, true);
-        if (empty($sccs)) {
+        $scc = $this->folderRelationsDetectStronglyConnectedComponents->bulkDetectForUsers($usersIdsToDetectSCCsFor);
+        if (empty($scc)) {
             return;
         }
 
         // Treat the first scc found.
-        $scc = reset($sccs);
         $this->foldersRelationsRepairStronglyConnectedComponents->repair($uac, $userId, $scc);
 
         // Run the repair function again in order to find others SCCs.

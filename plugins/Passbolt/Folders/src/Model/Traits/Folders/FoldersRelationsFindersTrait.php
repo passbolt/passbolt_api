@@ -66,17 +66,31 @@ trait FoldersRelationsFindersTrait
     }
 
     /**
-     * Return a query that retrieves all the users' folders relations.
+     * Filter a query by users ids
      *
+     * @param Query $query The query to decorate
      * @param array $usersIds The list of users ids
      * @return Query
      */
-    public function findUsersFoldersRelations(array $usersIds)
+    public function filterByUsersIds(Query $query, array $usersIds)
     {
-        return $this->find()
-            ->where([
-                'user_id IN' => $usersIds,
-            ]);
+        return $query->where([
+            'user_id IN' => $usersIds,
+        ]);
+    }
+
+    /**
+     * Filter a query by foreign model
+     *
+     * @param Query $query The query to decorate
+     * @param string $foreignModel The foreign model to filter on
+     * @return Query
+     */
+    public function filterByForeignModel(Query $query, string $foreignModel)
+    {
+        return $query->where([
+            'foreign_model' => $foreignModel,
+        ]);
     }
 
     /**

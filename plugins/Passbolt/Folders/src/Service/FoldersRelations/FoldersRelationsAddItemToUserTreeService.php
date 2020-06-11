@@ -391,19 +391,16 @@ class FoldersRelationsAddItemToUserTreeService
      */
     private function detectAndRepairCycleInUserTree(string $userId)
     {
-        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->detectInAggregatedUsersTrees([$userId], true);
-        if (empty($sccs)) {
+        $scc = $this->folderRelationsDetectStronglyConnectedComponents->detectInUserTree($userId);
+        if (empty($scc)) {
             return;
         }
 
-        $foldersRelations = reset($sccs);
-        $folderRelationToBreak = $this->identifyCycleFolderRelationToBreak($userId, $foldersRelations);
+        $folderRelationToBreak = $this->identifyCycleFolderRelationToBreak($userId, $scc);
         $this->foldersRelationsTable->moveItemFrom($folderRelationToBreak['foreign_id'], [$folderRelationToBreak['folder_parent_id']], FoldersRelation::ROOT);
 
         // Continue to look and fix cycle until the tree is cycle free.
-        if (count($sccs) > 1) {
-            $this->detectAndRepairCycleInUserTree($userId);
-        }
+        $this->detectAndRepairCycleInUserTree($userId);
     }
 
     /**
@@ -446,13 +443,11 @@ class FoldersRelationsAddItemToUserTreeService
     private function detectAndRepairStronglyConnectedComponents(UserAccessControl $uac, string $userId, array $usersIdsImpacted)
     {
         $usersIdsToDetectSCCsFor = array_merge([$userId], $usersIdsImpacted);
-        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->bulkDetectForUsers($usersIdsToDetectSCCsFor);
-        if (empty($sccs)) {
+        $scc = $this->folderRelationsDetectStronglyConnectedComponents->bulkDetectForUsers($usersIdsToDetectSCCsFor);
+        if (empty($scc)) {
             return;
         }
 
-        // Treat the first scc found.
-        $scc = reset($sccs);
         $this->foldersRelationsRepairStronglyConnectedComponents->repair($uac, $userId, $scc);
 
         // Run the repair function again in order to find others SCCs.
