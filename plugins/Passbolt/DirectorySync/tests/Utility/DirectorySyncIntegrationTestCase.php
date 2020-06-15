@@ -45,6 +45,7 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
         'app.Base/Favorites',
         'app.Base/EmailQueue',
         'app.Base/OrganizationSettings',
+        'app.Base/Gpgkeys',
         'plugin.Passbolt/DirectorySync.Base/DirectoryEntries',
         'plugin.Passbolt/DirectorySync.Base/DirectoryIgnore',
         'plugin.Passbolt/DirectorySync.Base/DirectoryRelations',

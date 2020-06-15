@@ -17,6 +17,7 @@ namespace Passbolt\AuditLog\Utility;
 
 use App\Model\Table\AvatarsTable;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Datasource\Paginator;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Query;
@@ -130,6 +131,22 @@ class ActionLogsFinder
         $query->where([
             'ActionLogs.status' => 1]);
 
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            $query->contain(['EntitiesHistory.PermissionsHistory.PermissionsHistoryFolders' => [
+                'fields' => [
+                    'PermissionsHistoryFolders.id',
+                    'PermissionsHistoryFolders.name',
+                ]]]);
+            $query->leftJoinWith('EntitiesHistory.PermissionsHistory.PermissionsHistoryFolders');
+
+            $query->contain(['EntitiesHistory.FoldersHistory' => [
+                'fields' => [
+                    'FoldersHistory.folder_id',
+                    'FoldersHistory.name',
+                ]]]);
+            $query->leftJoinWith('EntitiesHistory.FoldersHistory');
+        }
+
         return $query;
     }
 
@@ -148,6 +165,29 @@ class ActionLogsFinder
                 'Resources.id' => $resourceId,
                 'SecretAccesses.resource_id' => $resourceId,
                 'SecretsHistoryResources.id' => $resourceId,
+            ],
+        ]);
+
+        $query->order([
+            'ActionLogs.created' => 'DESC',
+            'EntitiesHistory.created' => 'DESC',
+        ]);
+
+        return $query;
+    }
+
+    /**
+     * Filter a query by folder id
+     * @param Query $query The target query
+     * @param string $folderId The target folder
+     * @return Query
+     */
+    protected function _filterQueryByFolderId(Query $query, string $folderId)
+    {
+        $query->where([
+            'OR' => [
+                'PermissionsHistoryFolders.id' => $folderId,
+                'FoldersHistory.folder_id' => $folderId,
             ],
         ]);
 
@@ -212,6 +252,41 @@ class ActionLogsFinder
         }
         $actionLogs = $q->all();
         $resultParser = new ActionLogResultsParser($actionLogs, ['resources' => [$resourceId]]);
+        $res = $resultParser->parse();
+
+        return $res;
+    }
+
+    /**
+     * find action logs for a given folder.
+     * @param UserAccessControl $user user
+     * @param string $folderId resource id
+     * @param array $options options array
+     *
+     * @return array
+     */
+    public function findForFolder(UserAccessControl $user, string $folderId, array $options = [])
+    {
+        if (!Configure::read('passbolt.plugins.folders.enabled')) {
+            return [];
+        }
+
+        // Check that the folder exists and is accessible.
+        $Folders = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        $folder = $Folders->findView($user->getId(), $folderId, $options)->first();
+
+        if (empty($folder)) {
+            throw new NotFoundException('The folder does not exist.');
+        }
+
+        // Build query.
+        $q = $this->_getBaseQuery();
+        $q = $this->_filterQueryByFolderId($q, $folderId);
+        if (!empty($options)) {
+            $q = $this->_paginate($q, $options);
+        }
+        $actionLogs = $q->all();
+        $resultParser = new ActionLogResultsParser($actionLogs, ['folders' => [$folderId]]);
         $res = $resultParser->parse();
 
         return $res;

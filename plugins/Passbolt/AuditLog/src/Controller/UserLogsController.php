@@ -72,4 +72,31 @@ class UserLogsController extends AppController
 
         $this->success(__('The operation was successful.'), $userLogs);
     }
+
+    /**
+     * View action logs for a given folder.
+     * @param string $folderId folder id
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the resource id has the wrong format
+     * @throws NotFoundException if the user cannot access the given resource, or if the resource does not exist
+     */
+    public function viewByFolder(string $folderId = null)
+    {
+        // Check request sanity
+        if (!Validation::uuid($folderId)) {
+            throw new BadRequestException(__('The folder id is not valid.'));
+        }
+
+        // Get pagination options.
+        $options = $this->Paginator->mergeOptions(null, $this->paginate);
+
+        try {
+            $actionLogFinder = new ActionLogsFinder();
+            $userLogs = $actionLogFinder->findForFolder($this->User->getAccessControl(), $folderId, $options);
+        } catch (PageOutOfBoundsException $e) {
+            $userLogs = [];
+        }
+
+        $this->success(__('The operation was successful.'), $userLogs);
+    }
 }

@@ -17,6 +17,7 @@ namespace Passbolt\AuditLog\Utility;
 
 use App\Model\Table\AvatarsTable;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\ResultSet;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\ActionLog;
@@ -34,6 +35,9 @@ class ActionLogResultsParser
     const TYPE_RESOURCE_CREATED = 'Resources.created';
     const TYPE_RESOURCE_UPDATED = 'Resources.updated';
     const TYPE_RESOURCE_DELETED = 'Resources.deleted';
+    const TYPE_FOLDER_CREATED = 'Folders.created';
+    const TYPE_FOLDER_UPDATED = 'Folders.updated';
+    const TYPE_FOLDER_DELETED = 'Folders.deleted';
 
     /**
      * ActionLogResultsParser constructor.
@@ -143,6 +147,38 @@ class ActionLogResultsParser
     }
 
     /**
+     * Process folders crud operations.
+     * @param ActionLog $actionLog action log
+     * @return void
+     */
+    protected function _processFoldersCrudOperations(ActionLog $actionLog)
+    {
+        foreach ($actionLog->entities_history as $entityHistory) {
+            if ($entityHistory->foreign_model == 'FoldersHistory') {
+                $data = [
+                    'folder' => $entityHistory->folders_history->toArray(),
+                ];
+
+                if ($entityHistory->crud == EntityHistory::CRUD_CREATE) {
+                    $type = self::TYPE_FOLDER_CREATED;
+                }
+
+                if ($entityHistory->crud == EntityHistory::CRUD_UPDATE) {
+                    $type = self::TYPE_FOLDER_UPDATED;
+                }
+
+                if ($entityHistory->crud == EntityHistory::CRUD_DELETE) {
+                    $type = self::TYPE_FOLDER_DELETED;
+                }
+
+                if (isset($type)) {
+                    $this->_addEntry($type, $data, $actionLog);
+                }
+            }
+        }
+    }
+
+    /**
      * Process secrets update operations
      * @param ActionLog $actionLog action log
      * @return void
@@ -229,6 +265,13 @@ class ActionLogResultsParser
                 $permission->resource = $permission->permissions_history_resource;
                 unset($permission->permissions_history_resource);
 
+                if (Configure::read('passbolt.plugins.folders.enabled')) {
+                    if (isset($permission->permissions_history_folder)) {
+                        $permission->folder = $permission->permissions_history_folder;
+                        unset($permission->permissions_history_folder);
+                    }
+                }
+
                 $permission->user = $permission->permissions_history_user;
                 unset($permission->permissions_history_user);
 
@@ -247,6 +290,12 @@ class ActionLogResultsParser
 
                 if (!isset($data['resource'])) {
                     $data['resource'] = $permission->resource;
+                }
+
+                if (Configure::read('passbolt.plugins.folders.enabled')) {
+                    if (! isset($data['folder'])) {
+                        $data['folder'] = $permission->folder;
+                    }
                 }
             }
         }
@@ -287,6 +336,9 @@ class ActionLogResultsParser
         $this->_processSecretAccessesOperations($actionLog);
         $this->_processSecretsUpdateOperations($actionLog);
         $this->_processPermissionsUpdateOperations($actionLog);
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            $this->_processFoldersCrudOperations($actionLog);
+        }
     }
 
     /**
