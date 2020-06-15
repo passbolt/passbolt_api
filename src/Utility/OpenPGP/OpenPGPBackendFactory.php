@@ -15,16 +15,13 @@
 namespace App\Utility\OpenPGP;
 
 use App\Utility\OpenPGP\Backends\Gnupg;
-use App\Utility\OpenPGP\Backends\Http;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Http\Exception\InternalErrorException;
 
 class OpenPGPBackendFactory
 {
-
     const GNUPG = 'gnupg';
-    const HTTP = 'http';
 
     /**
      * @var OpenPGPBackend
