@@ -144,7 +144,7 @@ class GroupsDeleteController extends AppController
                         $findFoldersOptions = [];
                         $findFoldersOptions['contain']['permissions.user.profile'] = true;
                         $findFoldersOptions['contain']['permissions.group'] = true;
-                        $findFoldersOptions['filer']['has-id'] = $foldersIds;
+                        $findFoldersOptions['filter']['has-id'] = $foldersIds;
                         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
                         $folders = $foldersTable->findIndex($group->id, $findFoldersOptions);
                         $body['errors']['folders']['sole_owner'] = $folders;
