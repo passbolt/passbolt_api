@@ -12,6 +12,10 @@ services:
   cache:
     paths:
       - $PACKAGE_MANAGER_PATH
+  only:
+    - develop
+    - release
+    - master
 
 composer:
   extends: .dependencies
@@ -48,6 +52,10 @@ build-debian:
       cp ../*.build .
       cp ../*.buildinfo .
       cp ../*.changes .
+  only:
+    - develop
+    - release
+    - master
 
 .kitchen-test:
   image: chef/chefdk:latest
@@ -58,6 +66,10 @@ build-debian:
   script:
     - gem install bundler:2.1.2
     - kitchen verify $KITCHEN_JOB -t tests/integration
+  only:
+    - develop
+    - release
+    - master
   except:
     variables:
       - $CI_COMMIT_MESSAGE =~ /skip-integration/
