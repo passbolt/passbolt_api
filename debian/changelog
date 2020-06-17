@@ -1,4 +1,4 @@
-passbolt-pro-server (2.12.0-1) stretch; urgency=medium
+passbolt-ce-server (2.12.1-1+beta) stretch; urgency=medium
   * Refactor config script
   * Refactor postinst script
   * Added questions for nginx setup
@@ -11,13 +11,13 @@ passbolt-pro-server (2.12.0-1) stretch; urgency=medium
 
  -- Diego Lendoiro <diego@passbolt.com> Thu, 21 May 2020 18:24:00 +0000
 
-passbolt-pro-server (2.12.0-0) stretch; urgency=medium
+passbolt-ce-server (2.12.0-0) stretch; urgency=medium
 
   * Created an automated debian package
 
  -- Albert Casals <skarbat@gmail.com>  Fri, 27 Dec 2019 01:15:00 +0100
 
-passbolt-pro-server (2.7.1-0) stretch; urgency=medium
+passbolt-ce-server (2.7.1-0) stretch; urgency=medium
 
   * Initial release.
 
