@@ -47,7 +47,7 @@ class UpdateTest extends AppTestCase
         return [
             'validate' => 'default',
             'accessibleFields' => [
-                'data' => true // Only data should be accessible when updating a secret.
+                'data' => true, // Only data should be accessible when updating a secret.
             ],
         ];
     }

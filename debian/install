@@ -1,0 +1,19 @@
+#!/usr/bin/dh-exec
+
+src/* usr/share/php/passbolt/src/
+bin/cake* usr/share/php/passbolt/bin/
+
+config/*php etc/passbolt/
+config/Migrations etc/passbolt/
+config/schema etc/passbolt/
+config/app.default.php => etc/passbolt/app.php
+
+plugins/* usr/share/php/passbolt/plugins/
+
+webroot/* usr/share/php/passbolt/webroot/
+vendor/* usr/share/php/passbolt/vendor/
+
+index.php usr/share/php/passbolt/
+.htaccess usr/share/php/passbolt/
+
+debian/conf/* usr/share/passbolt/examples

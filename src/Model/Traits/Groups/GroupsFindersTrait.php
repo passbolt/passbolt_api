@@ -40,7 +40,7 @@ trait GroupsFindersTrait
                                 ->select(['Permissions.aro_foreign_key'])
                                 ->where([
                                     'Permissions.aro' => 'Group',
-                                    'Permissions.aco_foreign_key' => $resourceId
+                                    'Permissions.aco_foreign_key' => $resourceId,
                                 ]);
 
         // Filter on the groups that do not have yet a permission.
@@ -203,10 +203,10 @@ trait GroupsFindersTrait
         $subQuery = $GroupsUsers->find()
                                 ->select([
                                     'GroupsUsers.group_id',
-                                    'count' => $query->func()->count('GroupsUsers.group_id')
+                                    'count' => $query->func()->count('GroupsUsers.group_id'),
                                 ])
                                 ->where([
-                                    'GroupsUsers.user_id IN' => $usersIds
+                                    'GroupsUsers.user_id IN' => $usersIds,
                                 ])
                                 ->group('GroupsUsers.group_id')
                                 ->having(['count' => count($usersIds)]);

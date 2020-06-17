@@ -57,7 +57,7 @@ class UpdateTest extends AppTestCase
                 'content' => true,
                 'created_by' => false,
                 'modified_by' => true,
-            ]
+            ],
         ];
 
         return $entityOptions;
@@ -78,7 +78,7 @@ class UpdateTest extends AppTestCase
         ];
         $comment = self::getDummyComment([
             'id' => UuidFactory::uuid('comment.id.apache-1'),
-            'modified_by' => UuidFactory::uuid('user.id.ada')
+            'modified_by' => UuidFactory::uuid('user.id.ada'),
         ]);
         $this->assertFieldFormatValidation($this->Comments, 'content', $comment, self::getEntityDefaultOptions(), $testCases);
     }
@@ -92,7 +92,7 @@ class UpdateTest extends AppTestCase
         ];
         $comment = self::getDummyComment([
             'id' => UuidFactory::uuid('comment.id.apache-1'),
-            'modified_by' => UuidFactory::uuid('user.id.ada')
+            'modified_by' => UuidFactory::uuid('user.id.ada'),
         ]);
         $this->assertFieldFormatValidation($this->Comments, 'modified_by', $comment, self::getEntityDefaultOptions(), $testCases);
     }

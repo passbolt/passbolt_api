@@ -33,7 +33,9 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Entity\FileStorage[] $file_storage
  * @property \App\Model\Entity\Gpgkey[] $gpgkeys
  * @property \App\Model\Entity\Profile[] $profiles
+ * @property \App\Model\Entity\Profile $profile
  * @property \App\Model\Entity\GroupUser[] $groups_users
+ * @property \Passbolt\Log\Model\Entity\EntityHistory[] $entities_history
  */
 class User extends Entity
 {
@@ -65,7 +67,7 @@ class User extends Entity
         'role_id' => false,
 
         // associated data
-        'profile' => false
+        'profile' => false,
     ];
 
     /**
@@ -98,12 +100,12 @@ class User extends Entity
         $tokenQuery = $AuthenticationTokens
             ->find()
             ->select([
-                'modified'
+                'modified',
             ])
             ->where([
                 'user_id' => $this->id,
                 'active' => 0,
-                'type' => AuthenticationToken::TYPE_LOGIN
+                'type' => AuthenticationToken::TYPE_LOGIN,
             ])
             ->order('modified DESC')
             ->first();

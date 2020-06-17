@@ -28,7 +28,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/EmailQueue', 'app.Base/Avatars'
+        'app.Base/EmailQueue', 'app.Base/Avatars',
     ];
 
     public function setUp()
@@ -44,7 +44,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
             'Group' => ['name' => 'New group name'],
             'GroupUsers' => [
                 ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]]
+                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]],
             ],
         ];
         $data = array_merge($defaultData, $data);
@@ -59,7 +59,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
                 'Group' => ['name' => '私人團體'],
                 'GroupUsers' => [
                     ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
-                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]]
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]],
                 ],
             ],
             'slavic' => [
@@ -67,23 +67,23 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
                 'GroupUsers' => [
                     ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
                     ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty'), 'is_admin' => 1]],
-                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.carol')]]
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.carol')]],
                 ],
             ],
             'french' => [
                 'Group' => ['name' => 'Groupe privé'],
                 'GroupUsers' => [
                     ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
-                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]]
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]],
                 ],
             ],
             'funny' => [
                 'Group' => ['name' => '😃'],
                 'GroupUsers' => [
                     ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
-                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]]
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]],
                 ],
-            ]
+            ],
         ];
 
         foreach ($success as $case => $data) {
@@ -117,50 +117,50 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
             'group name is missing' => [
                 'errorField' => 'Group.name._empty',
                 'errorMessage' => 'The name cannot be empty.',
-                'data' => $this->_getDummyPostData(['Group' => []])
+                'data' => $this->_getDummyPostData(['Group' => []]),
             ],
             'group name already exist' => [
                 'errorField' => 'Group.name.group_unique',
                 'errorMessage' => 'The name provided is already used by another group.',
-                'data' => $this->_getDummyPostData(['Group' => ['name' => 'Freelancer']])
+                'data' => $this->_getDummyPostData(['Group' => ['name' => 'Freelancer']]),
             ],
             'group name invalid' => [
                 'errorField' => 'Group.name.utf8Extended',
                 'errorMessage' => 'The name is not a valid utf8 string.',
-                'data' => $this->_getDummyPostData(['Group' => ['name' => ['test']]])
+                'data' => $this->_getDummyPostData(['Group' => ['name' => ['test']]]),
             ],
             'at least one group manager' => [
                 'errorField' => 'GroupUsers.at_least_one_admin',
                 'errorMessage' => 'A group manager must be provided.',
                 'data' => $this->_getDummyPostData(['GroupUsers' => [
-                    0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada')]]
-                ]])
+                    0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada')]],
+                ]]),
             ],
             'nos users provided' => [
                 'errorField' => 'GroupUsers.at_least_one_admin',
                 'errorMessage' => 'A group manager must be provided.',
-                'data' => ['Group' => ['name' => 'New group name']]
+                'data' => ['Group' => ['name' => 'New group name']],
             ],
             'group user id not valid' => [
                 'errorField' => 'GroupUsers.0.GroupUser.user_id.uuid',
                 'errorMessage' => 'The provided value is invalid',
                 'data' => $this->_getDummyPostData(['GroupUsers' => [
-                    0 => ['GroupUser' => ['user_id' => 'invalid-id']]
-                ]])
+                    0 => ['GroupUser' => ['user_id' => 'invalid-id']],
+                ]]),
             ],
             'group user soft deleted' => [
                 'errorField' => 'GroupUsers.0.GroupUser.user_id.user_is_not_soft_deleted',
                 'errorMessage' => 'The user does not exist.',
                 'data' => $this->_getDummyPostData(['GroupUsers' => [
-                    0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.sofia'), 'is_admin' => true]]
-                ]])
+                    0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.sofia'), 'is_admin' => true]],
+                ]]),
             ],
             'group user inactive' => [
                 'errorField' => 'GroupUsers.0.GroupUser.user_id.user_is_active',
                 'errorMessage' => 'The user does not exist.',
                 'data' => $this->_getDummyPostData(['GroupUsers' => [
-                    0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ruth'), 'is_admin' => true]]
-                ]])
+                    0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ruth'), 'is_admin' => true]],
+                ]]),
             ],
         ];
 

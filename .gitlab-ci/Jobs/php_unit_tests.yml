@@ -46,6 +46,10 @@
   artifacts:
     reports:
       junit: unitreport.xml
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-unit/
+
 
 php7.4-mariadb10.4:
   variables:

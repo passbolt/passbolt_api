@@ -64,6 +64,6 @@ class Resource extends Entity
         'modifier' => false,
         'permission' => false,
         'permissions' => false,
-        'secrets' => false
+        'secrets' => false,
     ];
 }

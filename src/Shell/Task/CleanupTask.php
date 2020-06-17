@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace App\Shell\Task;
 
 use App\Shell\AppShell;
@@ -19,6 +20,65 @@ use Cake\ORM\TableRegistry;
 
 class CleanupTask extends AppShell
 {
+    /**
+     * @var array The list of cleanup jobs to perform.
+     */
+    private static $cleanups = [
+        'GroupsUsers' => [
+            'Soft Deleted Users',
+            'Hard Deleted Users',
+            'Soft Deleted Groups',
+            'Hard Deleted Groups',
+        ],
+        'Favorites' => [
+            'Soft Deleted Users',
+            'Hard Deleted Users',
+            'Soft Deleted Resources',
+            'Hard Deleted Resources',
+        ],
+        'Comments' => [
+            'Soft Deleted Users',
+            'Hard Deleted Users',
+            'Soft Deleted Resources',
+            'Hard Deleted Resources',
+        ],
+        'Permissions' => [
+            'Soft Deleted Users',
+            'Hard Deleted Users',
+            'Soft Deleted Groups',
+            'Hard Deleted Groups',
+            'Soft Deleted Resources',
+            'Hard Deleted Resources',
+        ],
+        'Secrets' => [
+            'Soft Deleted Users',
+            'Hard Deleted Users',
+            'Soft Deleted Resources',
+            'Hard Deleted Resources',
+            'Hard Deleted Permissions',
+        ],
+    ];
+
+    /**
+     * Add cleanups jobs.
+     *
+     * @param array $cleanups The cleanups jobs to add
+     * [
+     *   MODEL_NAME => List of jobs to perform on this model,
+     *   ...
+     * ]
+     * @return void
+     */
+    public static function addCleanups(array $cleanups)
+    {
+        foreach ($cleanups as $modelName => $modelCleanups) {
+            if (!array_key_exists($modelName, self::$cleanups)) {
+                self::$cleanups[$modelName] = [];
+            }
+            self::$cleanups[$modelName] = array_merge(self::$cleanups[$modelName], $cleanups[$modelName]);
+        }
+    }
+
     /**
      * Initializes the Shell
      * acts as constructor for subclasses
@@ -48,9 +108,9 @@ class CleanupTask extends AppShell
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser->setDescription(__('Cleanup orphan records in database.'))
+        $parser->setDescription(__('Cleanup and fix issues in database.'))
             ->addOption('dry-run', [
-                'help' => 'Don\'t delete only display report',
+                'help' => 'Don\'t fix only display report',
                 'default' => 'true',
                 'boolean' => true,
             ]);
@@ -65,55 +125,18 @@ class CleanupTask extends AppShell
      */
     public function main()
     {
-        $dryRun = true;
-        $cleanups = [
-            'GroupsUsers' => [
-                'Soft Deleted Users',
-                'Hard Deleted Users',
-                'Soft Deleted Groups',
-                'Hard Deleted Groups'
-            ],
-            'Favorites' => [
-                'Soft Deleted Users',
-                'Hard Deleted Users',
-                'Soft Deleted Resources',
-                'Hard Deleted Resources'
-            ],
-            'Comments' => [
-                'Soft Deleted Users',
-                'Hard Deleted Users',
-                'Soft Deleted Resources',
-                'Hard Deleted Resources'
-            ],
-            'Permissions' => [
-                'Soft Deleted Users',
-                'Hard Deleted Users',
-                'Soft Deleted Groups',
-                'Hard Deleted Groups',
-                'Soft Deleted Resources',
-                'Hard Deleted Resources'
-            ],
-            'Secrets' => [
-                'Soft Deleted Users',
-                'Hard Deleted Users',
-                'Soft Deleted Resources',
-                'Hard Deleted Resources',
-                'Hard Deleted Permissions'
-            ]
-        ];
-
         $this->out(' Cleanup shell', 0);
         $dryRun = false;
         if ($this->param('dry-run')) {
             $dryRun = true;
             $this->out(' (dry-run)');
         } else {
-            $this->out(' (delete mode)');
+            $this->out(' (fix mode)');
         }
         $this->hr();
 
         $totalErrorCount = 0;
-        foreach ($cleanups as $tableName => $tableCleanup) {
+        foreach (self::$cleanups as $tableName => $tableCleanup) {
             $table = TableRegistry::getTableLocator()->get($tableName);
             foreach ($tableCleanup as $i => $cleanupName) {
                 $cleanupMethod = 'cleanup' . str_replace(' ', '', $cleanupName);
@@ -122,9 +145,9 @@ class CleanupTask extends AppShell
                 if ($recordCount) {
                     $cleanupName = strtolower($cleanupName);
                     if ($dryRun) {
-                        $this->out(__('{0} orphan records found in table {1} ({2})', $recordCount, $tableName, $cleanupName));
+                        $this->out(__('{0} issues found in table {1} ({2})', $recordCount, $tableName, $cleanupName));
                     } else {
-                        $this->out(__('{0} orphan records deleted in table {1} ({2})', $recordCount, $tableName, $cleanupName));
+                        $this->out(__('{0} issues fixed in table {1} ({2})', $recordCount, $tableName, $cleanupName));
                     }
                 }
             }

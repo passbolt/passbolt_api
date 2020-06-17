@@ -36,8 +36,8 @@ trait UsersModelTrait
             'active' => false,
             'profile' => [
                 'first_name' => 'dummy',
-                'last_name' => 'content'
-            ]
+                'last_name' => 'content',
+            ],
         ];
         $entityContent = array_merge($entityContent, $data);
 
@@ -61,8 +61,8 @@ trait UsersModelTrait
             'active' => false,
             'profile' => [
                 'first_name' => 'updated',
-                'last_name' => 'name'
-            ]
+                'last_name' => 'name',
+            ],
         ];
 
         return array_merge($updateData, $override);
@@ -100,6 +100,9 @@ trait UsersModelTrait
 
         $favorites = $this->Favorites->find()->where(['user_id' => $id])->count();
         $this->assertEquals(0, $favorites);
+
+        $gpgKeys = $this->Gpgkeys->find()->where(['user_id' => $id, 'deleted' => 0])->count();
+        $this->assertEquals(0, $gpgKeys);
     }
 
     /**

@@ -60,7 +60,7 @@ trait ObjectTrait
     /**
      * Asserts that an object has specified attributes.
      *
-     * @param string $attributesNames
+     * @param array $attributesNames
      * @param object $object
      */
     public function assertObjectHasAttributes($attributesNames, $object)

@@ -82,6 +82,15 @@ abstract class AppIntegrationTestCase extends TestCase
     }
 
     /**
+     * Tear dow
+     */
+    public function tearDown()
+    {
+        $this->clearPlugins();
+        parent::tearDown();
+    }
+
+    /**
      * Authenticate as a user.
      *
      * @param string $userFirstName The user first name.
@@ -97,8 +106,8 @@ abstract class AppIntegrationTestCase extends TestCase
                 'last_name' => 'testing',
             ],
             'role' => [
-                'name' => Role::USER
-            ]
+                'name' => Role::USER,
+            ],
         ];
         if ($userFirstName === 'admin') {
             $data['role']['name'] = Role::ADMIN;

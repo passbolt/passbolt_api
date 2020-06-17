@@ -39,7 +39,7 @@ class AvatarsTable extends FileStorageTable
 
         $this->belongsTo('Profiles', [
             'foreignKey' => 'foreign_key',
-            'conditions' => ['model' => 'Avatar']
+            'conditions' => ['model' => 'Avatar'],
         ]);
 
         $this->setTable('file_storage');
@@ -60,11 +60,11 @@ class AvatarsTable extends FileStorageTable
                 'rule' => ['mimeType', ['image/jpeg', 'image/png', 'image/gif']],
             ])
             ->add('file', 'validExtension', [
-                'rule' => ['extension', ['png', 'jpg', 'gif']]
+                'rule' => ['extension', ['png', 'jpg', 'gif']],
             ])
             ->add('file', 'validUploadedFile', [
                 'rule' => ['uploadedFile', ['optional' => false]],
-                'message' => 'File is no valid uploaded file'
+                'message' => 'File is no valid uploaded file',
             ]);
 
         return $validator;
@@ -86,7 +86,7 @@ class AvatarsTable extends FileStorageTable
             ->where([
                 'foreign_key' => $entity->foreign_key,
                 'id <>' => $entity->id,
-                'model' => 'Avatar'
+                'model' => 'Avatar',
             ])
             ->first();
 
@@ -141,7 +141,7 @@ class AvatarsTable extends FileStorageTable
                 return $q->formatResults(function (CollectionInterface $avatars) {
                     return AvatarsTable::formatResults($avatars);
                 });
-            }
+            },
         ];
     }
 }

@@ -62,7 +62,7 @@ class SaveTest extends AppTestCase
         $data = [
             'fingerprint' => 'test',
             'key_id' => 'test',
-            'type' => 'test'
+            'type' => 'test',
         ];
         $gpgkey = $this->Gpgkeys->newEntity($data);
         $errors = $gpgkey->getErrors();
@@ -81,7 +81,7 @@ class SaveTest extends AppTestCase
             'short string' => 'AF',
             'out of range char' => '03F60E958F4CB29723ACDF761353B5B15D9B054Z',
             'out of range emoji' => '03F60E958F4CB29723ACDF761353B5B15D9B054🔥',
-            'extra space' => '03F6 0E95 8F4C B297 23AC  DF76 1353 B5B1 5D9B 054F'
+            'extra space' => '03F6 0E95 8F4C B297 23AC  DF76 1353 B5B1 5D9B 054F',
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
@@ -100,7 +100,7 @@ class SaveTest extends AppTestCase
             'floats' => 3.5,
             'short string' => 'AF',
             'out of range char' => '03F60E9Z',
-            'out of range emoji' => '03F60EE🔥'
+            'out of range emoji' => '03F60EE🔥',
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
@@ -118,7 +118,7 @@ class SaveTest extends AppTestCase
             'integer' => 3,
             'floats' => 3.5,
             'short string' => 'AFZ',
-            'short string emoji' => '🔥🔥🔥'
+            'short string emoji' => '🔥🔥🔥',
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
@@ -142,7 +142,7 @@ class SaveTest extends AppTestCase
             'integer' => 3,
             'floats' => 3.5,
             'short string' => 'AFZ',
-            'email contains emoji' => 'uid (comment) <🔥@nope.com>'
+            'email contains emoji' => 'uid (comment) <🔥@nope.com>',
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
@@ -153,7 +153,7 @@ class SaveTest extends AppTestCase
 
         $success = [
             'ok' => 'test <this@fine.com>',
-            'ok with comment' => 'test (comment) <this@fine.com>'
+            'ok with comment' => 'test (comment) <this@fine.com>',
         ];
         foreach ($success as $case => $value) {
             $this->assertTrue(
@@ -167,7 +167,7 @@ class SaveTest extends AppTestCase
     {
         $fails = [
             'yesterday' => FrozenTime::yesterday(),
-            'now' => FrozenTime::now()
+            'now' => FrozenTime::now(),
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
@@ -179,7 +179,7 @@ class SaveTest extends AppTestCase
         $successes = [
             'tomorrow' => FrozenTime::tomorrow(),
             'tomorrow as time' => Date::tomorrow(),
-            'way later' => FrozenTime::createFromDate('2030')
+            'way later' => FrozenTime::createFromDate('2030'),
         ];
         foreach ($successes as $case => $value) {
             $this->assertTrue(

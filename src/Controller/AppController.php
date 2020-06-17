@@ -12,18 +12,17 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace App\Controller;
 
 use App\Controller\Component\EmailSubscriptionComponent;
 use App\Controller\Component\QueryStringComponent;
 use App\Controller\Component\UserComponent;
-use App\Controller\Events\EmailNotificationsListener;
 use App\Utility\UserAction;
 use Cake\Controller\Component\AuthComponent;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Event\EventManager;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
 
@@ -33,9 +32,9 @@ use Cake\Routing\Router;
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
  *
- * @property UserComponent User
- * @property QueryStringComponent QueryString
- * @property AuthComponent Auth
+ * @property UserComponent              User
+ * @property QueryStringComponent       QueryString
+ * @property AuthComponent              Auth
  * @property EmailSubscriptionComponent EmailSubscription
  *
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
@@ -46,8 +45,8 @@ class AppController extends Controller
      * Initialization hook method.
      * Used to add common initialization code like loading components.
      *
-     * @throws \Exception If a component class cannot be found.
      * @return void
+     * @throws \Exception If a component class cannot be found.
      */
     public function initialize()
     {
@@ -63,30 +62,19 @@ class AppController extends Controller
          */
         $this->loadComponent('Auth', [
             'authenticate' => [
-                'Gpg'
+                'Gpg',
             ],
             'loginAction' => [
                 'prefix' => 'Auth',
                 'controller' => 'AuthLogin',
                 'action' => 'loginGet',
                 '_method' => 'GET',
-                'plugin' => null
+                'plugin' => null,
             ],
         ]);
 
-        $this->loadComponent(
-            'EmailSubscription',
-            [EmailSubscriptionComponent::APP_FULL_BASE_URL => Configure::read('App.fullBaseUrl')]
-        );
-
         // Init user action.
         UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
-
-        /*
-         * Global event listeners
-         */
-        $emails = new EmailNotificationsListener();
-        EventManager::instance()->on($emails);
 
         /*
          * Enable the following components for recommended CakePHP security settings.
@@ -122,7 +110,7 @@ class AppController extends Controller
      * All passbolt response contains an header (metadata like status) an a body (data)
      *
      * @param string $message message in the header section
-     * @param array $body data for the body section
+     * @param array  $body data for the body section
      * @return void
      */
     protected function success($message = null, $body = null)
@@ -142,7 +130,7 @@ class AppController extends Controller
                 'code' => 200,
             ],
             'body' => $body,
-            '_serialize' => ['header', 'body']
+            '_serialize' => ['header', 'body'],
         ]);
         $this->setViewBuilderOptions();
     }
@@ -151,8 +139,8 @@ class AppController extends Controller
      * Render an error response
      *
      * @param string $message optional message
-     * @param mixed $body optional json reponse body
-     * @param int $errorCode optional http error code
+     * @param mixed  $body optional json reponse body
+     * @param int    $errorCode optional http error code
      * @return void
      */
     protected function error($message = null, $body = null, $errorCode = 200)
@@ -172,10 +160,10 @@ class AppController extends Controller
                 'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
-                'code' => $errorCode
+                'code' => $errorCode,
             ],
             'body' => $body,
-            '_serialize' => ['header', 'body']
+            '_serialize' => ['header', 'body'],
         ]);
         $this->setViewBuilderOptions();
     }
@@ -210,6 +198,7 @@ class AppController extends Controller
 
     /**
      * Get the request api version.
+     *
      * @return string
      */
     public function getApiVersion()

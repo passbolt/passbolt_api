@@ -19,6 +19,7 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
+use App\Model\Table\PermissionsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -30,6 +31,8 @@ use Cake\Validation\Validation;
 
 class ResourcesDeleteController extends AppController
 {
+    const DELETE_SUCCESS_EVENT_NAME = 'ResourcesDeleteController.delete.success';
+
     /**
      * Resource Delete action
      *
@@ -93,7 +96,7 @@ class ResourcesDeleteController extends AppController
         }
         if (isset($errors['id']['has_access'])) {
             // If the user has a read access return a 403, otherwise return a 404 to avoid data leak.
-            if ($this->Resources->hasAccess($this->User->id(), $resource->id)) {
+            if ($this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resource->id, $this->User->id())) {
                 throw new ForbiddenException(__('You do not have the permission to delete this resource.'));
             }
             throw new NotFoundException(__('The resource does not exist.'));
@@ -110,10 +113,10 @@ class ResourcesDeleteController extends AppController
      */
     protected function _notifyUser(Resource $resource, \Cake\Datasource\ResultSetInterface $users)
     {
-        $event = new Event('ResourcesDeleteController.delete.success', $this, [
+        $event = new Event(static::DELETE_SUCCESS_EVENT_NAME, $this, [
             'resource' => $resource,
             'deletedBy' => $this->User->id(),
-            'users' => $users
+            'users' => $users,
         ]);
         $this->getEventManager()->dispatch($event);
     }

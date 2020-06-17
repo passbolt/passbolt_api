@@ -55,10 +55,10 @@ class RolesTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->hasMany('ControllerLogs', [
-            'foreignKey' => 'role_id'
+            'foreignKey' => 'role_id',
         ]);
         $this->hasMany('Users', [
-            'foreignKey' => 'role_id'
+            'foreignKey' => 'role_id',
         ]);
     }
 

@@ -14,8 +14,12 @@
  */
 namespace App\Notification\Email;
 
+use Cake\Core\InstanceConfigTrait;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+
 /**
  * Trait SubscribedEmailRedactorTrait
+ *
  * @package App\Notification\Email
  *
  * The SubscribedEmailRedactorTrait is a convenient trait used by EmailRedactor implementing
@@ -24,13 +28,32 @@ namespace App\Notification\Email;
  */
 trait SubscribedEmailRedactorTrait
 {
+    use InstanceConfigTrait {
+        InstanceConfigTrait::getConfig as parentGetConfig;
+    }
+
+    /**
+     * @var
+     */
+    private $_defaultConfig = [];
+
+    /**
+     * @param null $key Configuration key to retrieve
+     * @param null $default Default value
+     * @return mixed
+     */
+    public function getConfig($key = null, $default = null)
+    {
+        return $this->parentGetConfig($key) ?? EmailNotificationSettings::get($key);
+    }
+
     /**
      * @return array
      */
     public function implementedEvents()
     {
         return [
-            CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this
+            CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this,
         ];
     }
 

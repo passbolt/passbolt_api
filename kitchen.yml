@@ -1,0 +1,53 @@
+---
+driver:
+  name: dokken
+  volumes:
+    - <%= ENV['PWD'] %>:/tmp/passbolt
+
+transport:
+  name: dokken
+
+provisioner:
+  name: dokken
+  chef_license: accept-no-persist
+  attributes:
+    dest_dir: '/tmp/passbolt'
+    passbolt_flavour: <%= ENV['PASSBOLT_FLAVOUR'] %>
+
+verifier:
+  name: inspec
+  inputs:
+    passbolt_flavour: <%= ENV['PASSBOLT_FLAVOUR'] %>
+
+platforms:
+  - name: debian-buster
+    driver:
+      image: debian:buster
+      ports:
+        - '127.0.0.1:8080:8080'
+  - name: ubuntu-18.04
+  - name: ubuntu-19.10
+
+suites:
+  - name: filesystem-benchmarks
+    run_list:
+      - recipe[passbolt_package::passbolt_package_build]
+      - recipe[passbolt_package::passbolt_install]
+    attributes:
+      parameters: '--no-install-recommends'
+  - name: purge-benchmarks
+    run_list:
+      - recipe[passbolt_package::passbolt_package_build]
+      - recipe[passbolt_package::passbolt_install_and_purge]
+    attributes:
+      parameters: '--no-install-recommends'
+  - name: runtime-benchmarks
+    run_list:
+      - recipe[passbolt_package::passbolt_package_build]
+      - recipe[passbolt_package::passbolt_install_mariadb_nginx]
+    attributes:
+  - name: break-benchmarks
+    run_list:
+      - recipe[passbolt_package::passbolt_package_build]
+      - recipe[passbolt_package::passbolt_install_break_and_recover]
+    attributes:

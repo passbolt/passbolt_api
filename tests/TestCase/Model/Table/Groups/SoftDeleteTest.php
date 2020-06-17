@@ -32,7 +32,7 @@ class SoftDeleteTest extends AppTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
         'app.Base/Gpgkeys', 'app.Base/Resources', 'app.Base/Favorites', 'app.Alt0/Secrets',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions'
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
     ];
 
     public function setUp()
@@ -91,13 +91,13 @@ class SoftDeleteTest extends AppTestCase
         // CONTEXTUAL TEST CHANGES Make the group sole owner of the resource
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $userId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
@@ -105,7 +105,7 @@ class SoftDeleteTest extends AppTestCase
         $group = $this->Groups->get($groupId);
         $this->assertFalse($this->Groups->softDelete($group));
         $errors = $group->getErrors();
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedContent']);
         $this->assertGroupIsNotSoftDeleted($groupId);
         $this->assertResourceIsNotSoftDeleted($resourceId);
         $this->assertPermission($resourceId, $groupId, Permission::OWNER);
@@ -122,13 +122,13 @@ class SoftDeleteTest extends AppTestCase
         // CONTEXTUAL TEST CHANGES Make the group sole owner of the resource
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $userMId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
@@ -136,7 +136,7 @@ class SoftDeleteTest extends AppTestCase
         // FIX
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $userMId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);

@@ -16,6 +16,7 @@ namespace App\Test\Lib\Model;
 
 use App\Model\Entity\Permission;
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 
 trait PermissionsModelTrait
 {
@@ -27,7 +28,7 @@ trait PermissionsModelTrait
      * @param array $data Custom data that will be merged with the default content.
      * @return array Comment data
      */
-    public static function getDummyPermission($data = [])
+    public static function getDummyPermission(array $data = [])
     {
         $entityContent = [
             'aco' => 'Resource',
@@ -44,28 +45,36 @@ trait PermissionsModelTrait
     /**
      * Add permission.
      * @param string $aco Aco
-     * @param string $aco_foreign_key Target aco
+     * @param string $acoForeignKey Target aco
      * @param string $aro Aro
-     * @param string $aro_foreign_key Target aro
+     * @param string $aroForeignKey Target aro
      * @param int $type The type of permissions
+     * @return Permission
      */
-    public function addPermission($aco, $aco_foreign_key, $aro, $aro_foreign_key, $type = Permission::OWNER)
+    public function addPermission(string $aco, string $acoForeignKey, string $aro = null, string $aroForeignKey, int $type = Permission::OWNER)
     {
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $saveOptions = [
             'validate' => 'default',
             'accessibleFields' => [
-                '*' => true
+                '*' => true,
             ],
         ];
+        // If aro is not given, then try to determine it.
+        if (is_null($aro)) {
+            $groupsTable = TableRegistry::getTableLocator()->get('Groups');
+            $aro = $groupsTable->exists(['id' => $aroForeignKey]) ? 'Group' : 'User';
+        }
         $data = [
+            'id' => UuidFactory::uuid("permission.id.{$acoForeignKey}-{$aroForeignKey}"),
             'aco' => $aco,
-            'aco_foreign_key' => $aco_foreign_key,
+            'aco_foreign_key' => $acoForeignKey,
             'aro' => $aro,
-            'aro_foreign_key' => $aro_foreign_key,
-            'type' => $type
+            'aro_foreign_key' => $aroForeignKey,
+            'type' => $type,
         ];
-        $permission = $this->Permissions->newEntity($data, $saveOptions);
-        $this->Permissions->save($permission);
+        $permission = $permissionsTable->newEntity($data, $saveOptions);
+        $permissionsTable->saveOrFail($permission, ['checkRules' => false]);
 
         return $permission;
     }
@@ -89,7 +98,8 @@ trait PermissionsModelTrait
      */
     protected function assertPermission($acoForeignKey, $aroForeignKey, $type)
     {
-        $permission = $this->Permissions->find()->where([
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $permission = $permissionsTable->find()->where([
             'aco_foreign_key' => $acoForeignKey,
             'aro_foreign_key' => $aroForeignKey,
             'type' => $type,
@@ -104,7 +114,21 @@ trait PermissionsModelTrait
      */
     protected function assertPermissionNotExist($acoForeignKey, $aroForeignKey)
     {
-        $permission = $this->Permissions->find()->where(['aco_foreign_key' => $acoForeignKey, 'aro_foreign_key' => $aroForeignKey])->first();
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $permission = $permissionsTable->find()->where(['aco_foreign_key' => $acoForeignKey, 'aro_foreign_key' => $aroForeignKey])->first();
         $this->assertEmpty($permission);
+    }
+
+    /**
+     * Assert that an aro has an expected computed access.
+     * @param string $aco
+     * @param string $acoForeignKey
+     * @param string $aroForeignKey
+     * @param string $type
+     */
+    protected function assertComputedAccess($aco, $acoForeignKey, $aroForeignKey, $type)
+    {
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $this->assertTrue($permissionsTable->hasAccess($aco, $acoForeignKey, $aroForeignKey, $type));
     }
 }

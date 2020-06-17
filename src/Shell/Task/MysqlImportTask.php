@@ -36,7 +36,7 @@ class MysqlImportTask extends AppShell
             ->addOption('datasource', [
                 'short' => 'd',
                 'default' => 'default',
-                'help' => __('Datasource name')
+                'help' => __('Datasource name'),
             ])
             ->addOption('file', [
                 'help' => 'The file to import the schema and data from',

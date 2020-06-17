@@ -33,7 +33,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/healthcheck.json');
         $this->assertResponseSuccess();
         $attributes = [
-            'ssl', 'application', 'gpg', 'core', 'configFile', 'environment', 'database'
+            'ssl', 'application', 'gpg', 'core', 'configFile', 'environment', 'database',
         ];
         foreach ($attributes as $attr) {
             $this->assertObjectHasAttribute($attr, $this->_responseJsonBody);

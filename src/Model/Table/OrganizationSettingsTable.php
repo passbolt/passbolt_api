@@ -68,7 +68,7 @@ class OrganizationSettingsTable extends Table
             ->notEmpty('property')
             ->add('property', ['isValidProperty' => [
                 'rule' => [$this, 'isValidProperty'],
-                'message' => __('This setting is not supported.')
+                'message' => __('This setting is not supported.'),
             ]]);
 
         $validator
@@ -109,7 +109,7 @@ class OrganizationSettingsTable extends Table
     {
         // Add rule
         $rules->add($rules->isUnique(['property_id']), 'uniquePropertyId', [
-            'message' => __('This property id is already in use.')
+            'message' => __('This property id is already in use.'),
         ]);
 
         return $rules;

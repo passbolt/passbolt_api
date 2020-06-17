@@ -86,7 +86,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $postData = [
             'Comment' => [
                 'content' => $commentContent,
-                'parent_id' => UuidFactory::uuid('comment.id.apache-1')
+                'parent_id' => UuidFactory::uuid('comment.id.apache-1'),
             ],
         ];
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -168,7 +168,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $postData = [
             'Comment' => [
                 'content' => $commentContent,
-                'parent_id' => UuidFactory::uuid('comment.id.doesNotExist')
+                'parent_id' => UuidFactory::uuid('comment.id.doesNotExist'),
             ],
         ];
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -204,7 +204,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
                 'created_by' => $createdBy,
                 'modified_by' => $createdBy,
                 'created' => $createdDate,
-                'modified' => $createdDate
+                'modified' => $createdDate,
             ],
         ];
         $resourceId = UuidFactory::uuid('resource.id.cakephp');

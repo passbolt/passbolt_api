@@ -27,7 +27,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Gpgkeys', 'app.Base/Permissions'
+        'app.Base/GroupsUsers', 'app.Base/Gpgkeys', 'app.Base/Permissions',
     ];
 
     public function testGroupsViewSuccess()

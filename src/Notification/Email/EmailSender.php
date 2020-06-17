@@ -16,7 +16,9 @@
 namespace App\Notification\Email;
 
 use App\Utility\Purifier;
+use Cake\Core\Configure;
 use Cake\Event\EventManagerInterface;
+use Cake\ORM\TableRegistry;
 use EmailQueue\EmailQueue;
 use EmailQueue\Model\Table\EmailQueueTable;
 use Exception;
@@ -37,11 +39,6 @@ class EmailSender
     private $emailQueue;
 
     /**
-     * @var EventManagerInterface
-     */
-    private $eventManager;
-
-    /**
      * @var string
      */
     private $appFullBaseUrl;
@@ -52,17 +49,15 @@ class EmailSender
     private $purifySubject = false;
 
     /**
-     * @param EventManagerInterface $eventManager EventManager object
-     * @param EmailQueueTable $emailQueue Email queue
+     * @param EmailQueueTable $emailQueue Email Queue Table instance
      * @param string $appFullBaseUrl Full base url of the Passbolt instance
-     * @param bool $purifySubject True if subject must be purified
+     * @param bool $purifySubject True if subject of emails must be purified before generation
      */
-    public function __construct(EventManagerInterface $eventManager, EmailQueueTable $emailQueue, string $appFullBaseUrl, bool $purifySubject)
+    public function __construct(EmailQueueTable $emailQueue = null, string $appFullBaseUrl = null, bool $purifySubject = null)
     {
-        $this->emailQueue = $emailQueue;
-        $this->eventManager = $eventManager;
-        $this->appFullBaseUrl = $appFullBaseUrl;
-        $this->purifySubject = $purifySubject;
+        $this->emailQueue = $emailQueue ?? TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
+        $this->appFullBaseUrl = $appFullBaseUrl ?? Configure::read('App.fullBaseUrl');
+        $this->purifySubject = $purifySubject ?? Configure::read('passbolt.email.purify.subject');
     }
 
     /**
@@ -75,7 +70,7 @@ class EmailSender
         $email = $this->addFullBaseUrlToEmail($email);
         $options = $this->getEmailOptions($email);
 
-        if (!$this->emailQueue->enqueue($email->getTo(), $email->getData(), $options)) {
+        if (!$this->emailQueue->enqueue($email->getRecipient(), $email->getData(), $options)) {
             throw new EmailSenderException($email, $options);
         }
 
@@ -93,7 +88,7 @@ class EmailSender
             'subject' => $this->purifySubject($email->getSubject()),
             'format' => 'html',
             'config' => 'default',
-            'headers' => ['Auto-Submitted' => 'auto-generated']
+            'headers' => ['Auto-Submitted' => 'auto-generated'],
         ];
     }
 
@@ -118,8 +113,8 @@ class EmailSender
     {
         return $email->withData(array_merge_recursive($email->getData(), [
             'body' => [
-                'fullBaseUrl' => $this->appFullBaseUrl
-            ]
+                'fullBaseUrl' => $this->appFullBaseUrl,
+            ],
         ]));
     }
 }

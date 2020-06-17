@@ -13,6 +13,7 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
+use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
@@ -23,13 +24,13 @@ $resource = $body['resource'];
 $showComment = $body['showComment'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => Router::url(DS . $creator->profile->avatar->url['small'], true),
+    'url' => AvatarHelper::getAvatarUrl($creator->profile->avatar),
     'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($creator->username),
         'first_name' => Purifier::clean($creator->profile->first_name),
         'last_name' => Purifier::clean($creator->profile->last_name),
         'datetime' => $comment->created,
-        'text' => __('{0} commented on {1}', null, Purifier::clean($resource->name))
+        'text' => __('{0} commented on {1}', Purifier::clean($creator->profile->first_name), Purifier::clean($resource->name))
     ])
 ]);
 
