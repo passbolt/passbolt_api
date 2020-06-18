@@ -15,7 +15,6 @@
 namespace Passbolt\DirectorySync\Shell;
 
 use App\Shell\AppShell;
-use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
@@ -32,6 +31,7 @@ class DirectorySyncShell extends AppShell
         'Passbolt/DirectorySync.IgnoreList',
         'Passbolt/DirectorySync.IgnoreCreate',
         'Passbolt/DirectorySync.IgnoreDelete',
+        'Passbolt/DirectorySync.Debug',
     ];
 
     /**
@@ -104,6 +104,10 @@ class DirectorySyncShell extends AppShell
         $parser->addSubcommand('ignore-delete', [
             'help' => __d('cake_console', 'Stop ignoring a record during the directory synchronization process.'),
             'parser' => $this->IgnoreDelete->getOptionParser(),
+        ]);
+        $parser->addSubcommand('debug', [
+            'help' => __d('cake_console', 'Debug configuration helper'),
+            'parser' => $this->Debug->getOptionParser(),
         ]);
 
         return $parser;

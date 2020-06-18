@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+- PB-1347 As a Passbolt server administrator I should be able to use advanced filters for the ldap queries.
+
 ## [2.13.0-RC1] - 2019-05-27
 ### Added
 - PB-1165 As a logged in user I can create a folder

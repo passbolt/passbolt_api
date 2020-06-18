@@ -54,19 +54,31 @@ return [
                 //      // Needed mainly if using openldap.
                 //      // Keep commented or empty if default rules work fine.
                 // ],
-                //
+
                 // Group Object Class. Only used if the server type is openldap.
                 // 'groupObjectClass' => 'posixGroup',
-                //
+
                 // User Object Class. Only used if the server type is openldap.
                 // 'userObjectClass' => 'inetOrgPerson',
-                //
+
                 // Group path is used in addition to base_dn while searching groups.
                 // 'groupPath' => '',
-                //
+
                 // User path is used in addition to base_dn while searching users.
                 // 'userPath' => '',
-                //
+
+                // User custom filters. Build advanced query filters to retrieve users.
+                // Doc: http://www.phpldaptools.com/tutorials/Building-LDAP-Queries/
+                // 'userCustomFilters' => function(LdapQueryBuilder $query) {
+                //     return $query;
+                // }
+
+                // Group custom filters. Build advanced query filters to retrieve groups.
+                // Doc: http://www.phpldaptools.com/tutorials/Building-LDAP-Queries/
+                // 'groupCustomFilters' => function(LdapQueryBuilder $query) {
+                //     return $query;
+                // }
+
                 // Optional: disable one or more sync tasks
                 // 'jobs' => [
                 //    'users' => [

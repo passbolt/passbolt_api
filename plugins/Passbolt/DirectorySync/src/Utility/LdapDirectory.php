@@ -19,7 +19,9 @@ use LdapTools\Connection\LdapConnection;
 use LdapTools\Event\Event;
 use LdapTools\Event\LdapObjectSchemaEvent;
 use LdapTools\LdapManager;
+use LdapTools\Object\LdapObjectCollection;
 use LdapTools\Object\LdapObjectType;
+use LdapTools\Query\LdapQueryBuilder;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
 /**
@@ -184,15 +186,11 @@ class LdapDirectory implements DirectoryInterface
     /**
      * Fetch and initialize all users that are in the provided DN.
      *
-     * @return array list of users.
+     * @return \LdapTools\Query\LdapQueryBuilder query corresponding to the list of users.
      * @throws \Exception
      */
-    private function _fetchAndInitializeUsers()
+    private function _fetchAndInitializeUsersQuery()
     {
-        if (!empty($this->users)) {
-            return $this->users;
-        }
-
         $enabledUsersOnly = $this->directorySettings->getEnabledUsersOnly();
 
         $query = $this->ldap->buildLdapQuery();
@@ -204,35 +202,27 @@ class LdapDirectory implements DirectoryInterface
             $usersQuery->andWhere(['enabled' => true]);
         }
 
-        $ldapUsers = $usersQuery
-            ->getLdapQuery()
-            ->getResult();
+        $usersQuery = $this->_customizeUsersQuery($usersQuery);
 
-        return $ldapUsers;
+        return $usersQuery;
     }
 
     /**
      * Fetch and initialize all groups that are in the provided DN.
      *
-     * @return array collection of groups entry.
+     * @return \LdapTools\Query\LdapQueryBuilder query corresponding to groups entry.
      * @throws \Exception
      */
-    private function _fetchAndInitializeGroups()
+    private function _fetchAndInitializeGroupsQuery()
     {
-        if (!empty($this->groups)) {
-            return $this->groups;
-        }
-
         $query = $this->ldap->buildLdapQuery();
         $groupsQuery = $query
             ->setBaseDn($this->getDNFullPath(LdapObjectType::GROUP))
             ->fromGroups();
 
-        $ldapGroups = $groupsQuery
-            ->getLdapQuery()
-            ->getResult();
+        $groupsQuery = $this->_customizeGroupsQuery($groupsQuery);
 
-        return $ldapGroups;
+        return $groupsQuery;
     }
 
     /**
@@ -242,9 +232,29 @@ class LdapDirectory implements DirectoryInterface
      */
     public function fetchDirectoryData()
     {
+        // Fetch directory data for all domains.
+        $domains = $this->ldap->getDomains();
+        $ldapGroups = new LdapObjectCollection();
+        $ldapUsers = new LdapObjectCollection();
+
         if ($this->directoryResults->isEmpty()) {
-            $ldapGroups = $this->_fetchAndInitializeGroups();
-            $ldapUsers = $this->_fetchAndInitializeUsers();
+            foreach ($domains as $domain) {
+                $this->ldap->switchDomain($domain);
+                $tmpGroups = $this->_fetchAndInitializeGroupsQuery()->getLdapQuery()->getResult();
+                if ($tmpGroups) {
+                    foreach ($tmpGroups as $tmpGroup) {
+                        $ldapGroups->add($tmpGroup);
+                    }
+                }
+
+                $tmpUsers = $this->_fetchAndInitializeUsersQuery()->getLdapQuery()->getResult();
+                if ($tmpUsers) {
+                    foreach ($tmpUsers as $tmpUser) {
+                        $ldapUsers->add($tmpUser);
+                    }
+                }
+            }
+
             $this->directoryResults->initializeWithLdapResults($ldapUsers, $ldapGroups);
         }
 
@@ -276,5 +286,61 @@ class LdapDirectory implements DirectoryInterface
         $groups = $directoryResults->getGroupsAsArray();
 
         return $groups;
+    }
+
+    /**
+     * Customize users query as per configuration (if available).
+     * @param LdapQueryBuilder $query query
+     *
+     * @return LdapQueryBuilder
+     */
+    private function _customizeUsersQuery(LdapQueryBuilder $query)
+    {
+        $f = $this->directorySettings->getUserCustomFilters();
+        if (is_callable($f)) {
+            $query = $f($query);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Customize groups query as per configuration (if available).
+     * @param LdapQueryBuilder $query query
+     *
+     * @return LdapQueryBuilder
+     */
+    private function _customizeGroupsQuery(LdapQueryBuilder $query)
+    {
+        $f = $this->directorySettings->getGroupCustomFilters();
+        if (is_callable($f)) {
+            $query = $f($query);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Return filters used to retrieve users as a string, in ldapsearch format.
+     * @return string
+     * @throws \Exception
+     */
+    public function getUserFiltersAsString()
+    {
+        $query = $this->_fetchAndInitializeUsersQuery();
+
+        return $query->toLdapFilter();
+    }
+
+    /**
+     * Return filters used to retrieve groups as a string, in ldapsearch format.
+     * @return string
+     * @throws \Exception
+     */
+    public function getGroupFiltersAsString()
+    {
+        $query = $this->_fetchAndInitializeGroupsQuery();
+
+        return $query->toLdapFilter();
     }
 }

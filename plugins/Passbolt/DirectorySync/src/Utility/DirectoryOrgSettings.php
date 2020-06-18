@@ -281,6 +281,24 @@ class DirectoryOrgSettings
     }
 
     /**
+     * Get UserCustomFilters
+     * @return mixed (should be callable)
+     */
+    public function getUserCustomFilters()
+    {
+        return Hash::get($this->settings, "userCustomFilters");
+    }
+
+    /**
+     * Get GroupCustomFilters
+     * @return mixed (should be callable)
+     */
+    public function getGroupCustomFilters()
+    {
+        return Hash::get($this->settings, "groupCustomFilters");
+    }
+
+    /**
      * Get the settings.
      *
      * @return array
