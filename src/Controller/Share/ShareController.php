@@ -19,9 +19,12 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use App\Model\Table\PermissionsTable;
+use App\Service\Resources\ResourcesShareService;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
@@ -29,6 +32,8 @@ use Cake\Validation\Validation;
 
 class ShareController extends AppController
 {
+    const SHARE_SUCCESS_EVENT_NAME = 'ShareController.share.success';
+
     /**
      * Share Dry Run action
      *
@@ -39,24 +44,21 @@ class ShareController extends AppController
      * @throws NotFoundException if the user does not have access to the resource
      * @throws ValidationException if the provided changes do not validate
      * @return void
+     * @throws \Exception If an expected error occurred
      */
     public function dryRun($resourceId)
     {
         $this->loadModel('Resources');
         $this->loadModel('Users');
 
-        // Check request sanity
+        $uac = $this->User->getAccessControl();
         $this->_assertRequestParameters($resourceId);
-
-        // Retrieve the resource along with its permissions.
-        $resource = $this->Resources->get($resourceId, ['contain' => 'Permissions']);
-
-        // Patch and validate the entity
         $data = $this->_formatRequestData();
-        $result = $this->Resources->shareDryRun($resource, $data['permissions']);
-        $this->_handleValidationError($resource);
+        $changes = Hash::get($data, 'permissions');
+        $resourcesShareService = new ResourcesShareService();
+        $dryRunResult = $resourcesShareService->shareDryRun($uac, $resourceId, $changes);
 
-        $output = $this->_formatDryRunResult($result['added'], $result['removed']);
+        $output = $this->_formatDryRunResult($dryRunResult['added'], $dryRunResult['deleted']);
         $this->success(__('The operation was successful.'), $output);
     }
 
@@ -71,24 +73,21 @@ class ShareController extends AppController
      * @throws ValidationException if the provided changes do not validate
      * @throws InternalErrorException if something else went wrong during the save
      * @return void
+     * @throws \Exception If an expected error occurred
      */
     public function share($resourceId)
     {
         $this->loadModel('Resources');
         $this->loadModel('Users');
 
-        // Check request sanity
+        $uac = $this->User->getAccessControl();
         $this->_assertRequestParameters($resourceId);
-
-        // Retrieve the resource along with its permissions.
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
-
-        // Patch and validate the entity
         $data = $this->_formatRequestData();
-        if (!$this->Resources->share($resource, $data['permissions'], $data['secrets'])) {
-            $this->_handleValidationError($resource);
-            throw new InternalErrorException(__('Could not update the password permissions. Please try again later.'));
-        }
+        $permissions = Hash::get($data, 'permissions');
+        $secrets = Hash::get($data, 'secrets');
+
+        $resourcesShareService = new ResourcesShareService();
+        $resource = $resourcesShareService->share($uac, $resourceId, $permissions, $secrets);
 
         $this->_notifyUsers($resource, $data);
         $this->success(__('The operation was successful.'));
@@ -120,8 +119,8 @@ class ShareController extends AppController
             throw new NotFoundException(__('The resource does not exist.'));
         }
         // The user can access the resource.
-        if (!$this->Resources->hasAccess($this->User->id(), $resourceId, Permission::OWNER)) {
-            throw new NotFoundException(__('The resource does not exist.'));
+        if (!$this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $this->User->id(), Permission::OWNER)) {
+            throw new ForbiddenException(__('You are not authorized to share this resource.'));
         }
     }
 
@@ -147,22 +146,6 @@ class ShareController extends AppController
         }
 
         return $result;
-    }
-
-    /**
-     * Manage validation errors.
-     *
-     * @param \Cake\Datasource\EntityInterface $resource The resource to share
-     * @throws NotFoundException
-     * @throws ValidationException
-     * @return void
-     */
-    protected function _handleValidationError($resource)
-    {
-        $errors = $resource->getErrors();
-        if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->Resources);
-        }
     }
 
     /**
@@ -193,8 +176,8 @@ class ShareController extends AppController
         $result = [
             'changes' => [
                 'added' => [],
-                'removed' => []
-            ]
+                'removed' => [],
+            ],
         ];
 
         // Format the content.
@@ -217,7 +200,7 @@ class ShareController extends AppController
      */
     protected function _notifyUsers(Resource $resource, array $data)
     {
-        $event = new Event('ShareController.share.success', $this, [
+        $event = new Event(static::SHARE_SUCCESS_EVENT_NAME, $this, [
             'resource' => $resource,
             'changes' => $data,
             'ownerId' => $this->User->id(),

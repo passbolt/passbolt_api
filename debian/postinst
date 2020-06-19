@@ -1,0 +1,275 @@
+#!/bin/bash
+#
+#  postinst
+#
+#  Debian package post installation script
+#
+#  The configure step below covers both initial package installation,
+#  *as well as* upgrades from version x.y to x.z.
+#
+#  For specific tasks during an upgrade, see postrm script, "upgrade" step.
+#
+#  To display response variables for debugging the installation:
+#
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+db_version 2.0
+
+# Parameters passed from apt install
+deb_action=$1
+deb_version=$2
+
+current_version=$(dpkg-query --show --showformat='${Version}' passbolt-@PASSBOLT_FLAVOUR@-server)
+
+# Array variables set by get_* functions
+declare -A sql_values
+declare -A nginx_values
+
+# We want to extract php version in the form: "php7.x"
+PHP_MAJOR_MINOR="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[0-3]\).*:\1:')"
+PHP_VERSION="php${PHP_MAJOR_MINOR}"
+
+NGINX_CONF_EXAMPLE="/usr/share/passbolt/examples/nginx-passbolt.conf"
+NGINX_SSL_EXAMPLE="/usr/share/passbolt/examples/nginx-passbolt-ssl.conf"
+NGINX_CONF="/etc/nginx/sites-enabled/nginx-passbolt.conf"
+NGINX_SSL="/etc/passbolt/nginx-ssl.conf"
+NGINX_SITES_AVAILABLE="/etc/nginx/sites-available"
+NGINX_SITES_ENABLED="/etc/nginx/sites-enabled"
+PASSBOLT_SSL_CERT_PATH="/etc/ssl/certs"
+PASSBOLT_SSL_KEY_PATH="/etc/ssl/private"
+
+###########################################
+# Functions to debug debconf responses
+###########################################
+
+_echo() {
+  [ -z "${VERBOSE}" ] || echo ">>> $1"
+}
+
+debug_mysql_values() {
+  _echo "sql values:"
+  for i in "${!sql_values[@]}"; do
+    _echo "    ${i}=${sql_values[$i]}"
+  done
+}
+
+debug_nginx_values() {
+  _echo "nginx values:"
+  for i in "${!nginx_values[@]}"; do
+    _echo "    ${i}=${nginx_values[$i]}"
+  done
+}
+
+
+###########################################
+# Functions to get debconf response values
+###########################################
+
+get_mysql_values() {
+
+  db_get passbolt/mysql-configuration
+  sql_values[configuration]=$RET
+  db_get passbolt/mysql-username
+  sql_values[db_username]=$RET
+  db_get passbolt/mysql-password
+  sql_values[db_password]=$RET
+
+  db_get passbolt/mysql-passbolt-username
+  sql_values[db_passbolt_username]=$RET
+  db_get passbolt/mysql-passbolt-password
+  sql_values[db_passbolt_password]=$RET
+  db_get passbolt/mysql-passbolt-dbname
+  sql_values[db_passbolt_dbname]=$RET
+}
+
+get_nginx_values() {
+  db_get passbolt/nginx-configuration-three-choices
+  value=$RET
+  if [ "$value" == "" ]; then
+    db_get passbolt/nginx-configuration-two-choices
+    value=$RET
+  else
+    db_set passbolt/nginx-configuration-two-choices ""
+  fi
+  nginx_values[configuration]=$value
+
+  # assign domain name, set "_" catch-all if empty
+  db_get passbolt/nginx-domain
+  nginx_values[domain]="${RET:-_}"
+
+  db_get passbolt/nginx-letsencrypt-email
+  nginx_values[letsencrypt_email]=$RET
+  db_get passbolt/nginx-certificate-file
+  nginx_values[cert_file]=$RET
+  db_get passbolt/nginx-certificate-key-file
+  nginx_values[cert_key_file]=$RET
+}
+
+
+###########################################
+# Functions to run Passbolt migrations
+###########################################
+
+is_upgrade() {
+  # Returns 0 if we are running a package upgrade, 1 otherwise.
+  if [[ "${deb_action}" == "configure" && \
+        ("${deb_version}" == "$current_version" || "${deb_version}" == "" ) ]]; then
+    return 1
+  fi
+  return 0
+}
+
+run_migrations() {
+  # Migrations are running as the superuser
+  _echo "running Passbolt migrations steps"
+  /usr/share/php/passbolt/bin/cake passbolt migrate
+}
+
+
+###########################################
+# Functions to configure mysql
+###########################################
+
+configure_mysql() {
+
+  # Sanity check: Do not accept empty data for mysql setup.
+  # This could be specially confusing with automated installs and reconfigures.
+  if [[ "${sql_values[db_passbolt_username]}" == "" || \
+        "${sql_values[db_passbolt_dbname]}" == "" || \
+        "${sql_values[db_passbolt_password]}" == "" ]]; then
+
+    echo "WARNING: Passbolt is missing mysql responses: check username, dbname and password"
+    return
+  fi
+
+  # Create the Passbolt Database and Username; Grant all access to new user
+  MYSQL="mysql -u${sql_values[db_username]} -e "
+  if [ "${sql_values[db_password]}" != "" ]; then
+    MYSQL="mysql -u${sql_values[db_username]} -p${sql_values[db_password]} -e "
+  fi
+
+  $MYSQL "CREATE DATABASE IF NOT EXISTS ${sql_values[db_passbolt_dbname]} \
+         DEFAULT CHARACTER SET utf8 COLLATE utf8_bin ;"
+
+  $MYSQL "CREATE USER IF NOT EXISTS '${sql_values[db_passbolt_username]}'@'127.0.0.1' \
+         IDENTIFIED BY '${sql_values[db_passbolt_password]}' ;"
+
+  $MYSQL "GRANT ALL PRIVILEGES ON ${sql_values[db_passbolt_dbname]}.* \
+         TO '${sql_values[db_passbolt_username]}'@'127.0.0.1' ;"
+}
+
+
+###########################################
+# Functions to configure nginx
+###########################################
+
+configure_nginx_config_file() {
+  if [ -d "$NGINX_SITES_AVAILABLE" ] && [ -d "$NGINX_SITES_ENABLED" ]; then
+    _echo "nginx: activating http configuration file"
+
+    # install passbolt virtual host configuration
+    cp $NGINX_CONF_EXAMPLE "$NGINX_SITES_AVAILABLE"
+    ln -sf "$NGINX_SITES_AVAILABLE/nginx-passbolt.conf" "$NGINX_SITES_ENABLED/"
+    sed -i "s/# server_name/server_name ${nginx_values[domain]};/g" $NGINX_CONF
+    sed -i "s/__PHP_VERSION__/$PHP_VERSION/g" $NGINX_CONF
+  fi
+}
+
+configure_nginx_local_certs() {
+  configure_nginx_config_file
+  _echo "nginx: activating https with local certificates"
+
+  # copy user certificate files to local passbolt namespace
+  cp "${nginx_values[cert_file]}" "$PASSBOLT_SSL_CERT_PATH"
+  cp "${nginx_values[cert_key_file]}" "$PASSBOLT_SSL_KEY_PATH"
+
+  # copy nginx https sample configuration for ssl options
+  cp "$NGINX_SSL_EXAMPLE" "$NGINX_SSL"
+
+  # replace paths to pull from the locally copied files
+  local_cert_file="${PASSBOLT_SSL_CERT_PATH}/$(basename "${nginx_values[cert_file]}")"
+  local_cert_key_file="${PASSBOLT_SSL_KEY_PATH}/$(basename "${nginx_values[cert_key_file]}")"
+
+  # apply changes to nginx virtual host file, and ssl include file
+  sed -i "s|listen 80;|listen 443;|g" "$NGINX_CONF"
+  sed -i "s|# include __PASSBOLT_SSL__|include ${NGINX_SSL};|g" "$NGINX_CONF"
+  sed -i "s|ssl_certificate __CERT_PATH__|ssl_certificate ${local_cert_file};|g" "$NGINX_SSL"
+  sed -i "s|ssl_certificate_key __KEY_PATH__|ssl_certificate_key ${local_cert_key_file};|g" "$NGINX_SSL"
+}
+
+configure_nginx_letsencrypt() {
+  configure_nginx_config_file
+  _echo "nginx: activating https via letsencrypt"
+
+  # Certbot will generate the certificate and edit nginx config for us
+  certbot --agree-tos --non-interactive \
+          --nginx -m "${nginx_values[letsencrypt_email]}" \
+          --domains "${nginx_values[domain]}"
+}
+
+configure_nginx() {
+    case "${nginx_values[configuration]}" in
+      "manual")
+        configure_nginx_local_certs
+        ;;
+      "auto")
+        configure_nginx_letsencrypt
+        ;;
+      "none")
+        configure_nginx_config_file
+        ;;
+      "*")
+        # No action taken when no config is set
+        # This covers the scenario of no-install-recommends or non-interactive
+        ;;
+    esac
+}
+
+info_message() {
+  local proto
+  if [ "${nginx_values[configuration]}" == 'none' ]; then
+    proto='http'
+  else
+    proto='https'
+  fi
+
+  printf -- '\033[32m ===================================================================== \033[0m\n\n'
+  printf -- '\033[32m   Well done! Visit %s://%s to finish installation \033[0m\n\n' "$proto" "${nginx_values[domain]}"
+  printf -- '\033[32m ===================================================================== \033[0m\n'
+}
+###########################################
+# Script starts here
+###########################################
+
+_echo "entering postinst script: action=$deb_action version=$deb_version"
+case "$deb_action" in
+
+  configure)
+
+    get_mysql_values
+    get_nginx_values
+
+    # mysql setup
+    if [ "${sql_values[configuration]}" == true ]; then
+      # Clear debconf cached sensitive responses.
+      # Stop debconf to avoid stdout clashing with mysql daemon
+      db_purge
+      db_stop
+      configure_mysql
+    fi
+
+    # nginx setup
+    configure_nginx
+    info_message
+    db_stop
+
+    # Run the migrations process on upgrade
+    if is_upgrade; then
+      su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
+    fi
+esac
+
+#DEBHELPER#

@@ -14,10 +14,10 @@
  */
 namespace App\Controller;
 
+use App\Error\Exception\ExceptionWithErrorsDetailInterface;
 use App\Utility\UserAction;
 use Cake\Event\Event;
 use Cake\Routing\Router;
-use Cake\Utility\Hash;
 
 /**
  * Error Handling Controller
@@ -52,10 +52,9 @@ class ErrorController extends AppController
             // If the body is a that exposes the getErrors functionality
             // for example ValidationRulesException
             $error = $this->viewVars['error'];
-            if (method_exists($error, 'getErrors')) {
+
+            if ($error instanceof ExceptionWithErrorsDetailInterface) {
                 $body = $error->getErrors();
-            } else {
-                $body = '';
             }
 
             $prefix = strtolower($this->request->getParam('prefix'));
@@ -71,8 +70,8 @@ class ErrorController extends AppController
                     'url' => Router::url(),
                     'code' => $this->viewVars['code'],
                 ],
-                'body' => $body,
-                '_serialize' => ['header', 'body']
+                'body' => $body ?? '',
+                '_serialize' => ['header', 'body'],
             ]);
 
             // render a legacy JSON view by default

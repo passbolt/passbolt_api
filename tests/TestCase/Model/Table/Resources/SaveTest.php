@@ -19,12 +19,14 @@ use App\Model\Entity\Permission;
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
+    use ResourcesModelTrait;
 
     public $Resources;
 
@@ -56,7 +58,7 @@ class SaveTest extends AppTestCase
                 'created_by' => true,
                 'modified_by' => true,
                 'secrets' => true,
-                'permissions' => true
+                'permissions' => true,
             ],
             'associated' => [
                 'Permissions' => [
@@ -65,18 +67,28 @@ class SaveTest extends AppTestCase
                         'aco' => true,
                         'aro' => true,
                         'aro_foreign_key' => true,
-                        'type' => true
-                    ]
+                        'type' => true,
+                    ],
                 ],
                 'Secrets' => [
                     'validate' => 'saveResource',
                     'accessibleFields' => [
                         'user_id' => true,
-                        'data' => true
-                    ]
-                ]
-            ]
+                        'data' => true,
+                    ],
+                ],
+            ],
         ];
+    }
+
+    private function _getDummyResourceData()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $dummy = self::getDummyResourceData();
+        $dummy['permissions'][] = $this->getDummyPermission(['aco_foreign_key' => $userId]);
+        $dummy['secrets'][] = $this->getDummySecretData(['resource_id' => null]);
+
+        return $dummy;
     }
 
     /* ************************************************************** */
@@ -91,7 +103,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Resources, 'name', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Resources, 'name', $this->_getDummyResourceData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationUsername()
@@ -101,7 +113,7 @@ class SaveTest extends AppTestCase
             'maxLength' => self::getMaxLengthTestCases(64),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Resources, 'username', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Resources, 'username', $this->_getDummyResourceData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationUri()
@@ -111,7 +123,7 @@ class SaveTest extends AppTestCase
             'maxLength' => self::getMaxLengthTestCases(1024),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Resources, 'uri', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Resources, 'uri', $this->_getDummyResourceData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationDescription()
@@ -121,12 +133,12 @@ class SaveTest extends AppTestCase
             'maxLength' => self::getMaxLengthTestCases(10000),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Resources, 'description', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Resources, 'description', $this->_getDummyResourceData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationPermissions()
     {
-        $resource = self::getDummyResource();
+        $resource = $this->_getDummyResourceData();
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
@@ -155,12 +167,12 @@ class SaveTest extends AppTestCase
 
     public function testValidationSecrets()
     {
-        $resource = self::getDummyResource();
+        $resource = $this->_getDummyResourceData();
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),
-            'notEmpty' => self::getNotEmptyTestCases()
+            'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Resources, 'secrets', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Resources, 'secrets', $this->_getDummyResourceData(), self::getEntityDefaultOptions(), $testCases);
 
         // Cannot use the default AssertFieldFormatValidation to test array value.
         // Test the hasMost rule.
@@ -183,7 +195,7 @@ sG7jLzQBV/GVWtR4hVebstP+q05Sib+sKwLOTZhzWNPKruBsdaBCUTxcmI6qwDHS
 QQFgGx0K1xQj2rKiP2j0cDHyGsWIlOITN+4r6Ohx23qRhVo0txPWVOYLpC8JnlfQ
 W3AI8+rWjK8MGH2T88hCYI/6
 =uahb
------END PGP MESSAGE-----'
+-----END PGP MESSAGE-----',
         ]];
         $secrets[1] = $secrets[0];
         $entityData = array_merge($resource, ['secrets' => $secrets]);
@@ -199,7 +211,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
     public function testSave()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $data = self::getDummyResource();
+        $data = $this->_getDummyResourceData();
         $options = self::getEntityDefaultOptions();
         $entity = $this->Resources->newEntity($data, $options);
         $save = $this->Resources->save($entity);
@@ -256,7 +268,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
     public function testErrorRulAtLeastOneOwner()
     {
-        $data = self::getDummyResource();
+        $data = $this->_getDummyResourceData();
         $data['permissions'][0]['type'] = Permission::UPDATE;
         $options = self::getEntityDefaultOptions();
         $entity = $this->Resources->newEntity($data, $options);
@@ -269,7 +281,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
     public function testErrorRuleOwnerSecretProvided()
     {
-        $data = self::getDummyResource();
+        $data = $this->_getDummyResourceData();
         $data['secrets'][0]['user_id'] = UuidFactory::uuid('user.id.betty');
         $options = self::getEntityDefaultOptions();
         $entity = $this->Resources->newEntity($data, $options);

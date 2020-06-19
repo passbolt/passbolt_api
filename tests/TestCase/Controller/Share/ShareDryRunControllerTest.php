@@ -114,37 +114,37 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $userSId = UuidFactory::uuid('user.id.sofia');
         $testCases = [
             'cannot update a permission that does not exist' => [
-                'errorField' => 'permissions.0.id.permission_exists',
-                'data' => [['id' => UuidFactory::uuid()]]
+                'errorField' => 'permissions.0.id.exists',
+                'data' => [['id' => UuidFactory::uuid()]],
             ],
             'cannot delete a permission of another resource' => [
-                'errorField' => 'permissions.0.id.permission_exists',
+                'errorField' => 'permissions.0.id.exists',
                 'data' => [
-                    ['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"), 'delete' => true]]
+                    ['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"), 'delete' => true]],
             ],
             'cannot add a permission with invalid data' => [
-                'errorField' => 'permissions.0.aro_foreign_key._required',
-                'data' => [['aro' => 'User', 'type' => Permission::OWNER]]
+                'errorField' => 'permissions.0.aro_foreign_key._empty',
+                'data' => [['aro' => 'User', 'type' => Permission::OWNER]],
             ],
             'cannot add a permission for a soft deleted user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => $userSId,
-                    'type' => Permission::OWNER]]
+                    'type' => Permission::OWNER]],
             ],
             'cannot add a permission for an inactive user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => $userRId,
-                    'type' => Permission::OWNER]]
+                    'type' => Permission::OWNER]],
             ],
             'cannot remove the latest owner' => [
                 'errorField' => 'permissions.at_least_one_owner',
                 'data' => [
-                    ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'delete' => true]]
-            ]
+                    ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'delete' => true]],
+            ],
         ];
 
         $this->authenticateAs('ada');
@@ -208,7 +208,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
             $this->authenticateAs($testCase['userAlias']);
             $resourceId = $testCase['resourceId'];
             $this->postJson("/share/simulate/resource/$resourceId.json");
-            $this->assertError(404, 'The resource does not exist.');
+            $this->assertError(403, 'You are not authorized to share this resource.');
         }
     }
 

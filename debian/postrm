@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+#  postrm
+#
+#  Debian package post removal script
+#  Covers steps for: upgrading the package, removing, and purging.
+#
+#  Read: https://wiki.debian.org/MaintainerScripts
+#
+#  To display response variables for debugging the installation:
+#
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+db_version 2.0
+
+# Parameters passed from apt install
+deb_action=$1
+deb_version=$2
+
+###########################################
+# Helper internal functions
+###########################################
+
+_echo() {
+  [ -z "${VERBOSE}" ] || echo ">>> $1"
+}
+
+
+###########################################
+# Script starts here
+###########################################
+
+_echo "entering postrm script: action=$deb_action version=$deb_version"
+
+case "$1" in
+
+  upgrade)
+    # This stage is invoked when upgrading from x.y to x.z,
+    # Before postinst configure is invoked.
+    # Note that during an upgrade, files from the new package
+    # are not unfolded to their destination paths yet.
+    ;;
+
+  failed-upgrade)
+    # This case is called in case the "upgrade" step above would fail.
+    # Try to recover the problem and go forward with x.z,
+    # Otherwise apt will jump to abort-upgrade below to rollback to x.y
+    ;;
+
+  abort-upgrade)
+    # Do any internal fixup steps before apt rolls back to version x.y
+    ;;
+
+  remove)
+    # Called as a result of apt-get remove package
+    ;;
+
+  purge)
+    # Called as a result of apt-get remove package; includes configuration files
+    _echo "postrm: purge"
+
+    # Restore nginx original configuration, remove passbolt site
+    if [ -d /etc/nginx/sites-available ] && [ -d /etc/nginx/sites-enabled ]; then
+      _echo "postrm: cleanup passbolt nginx configuration"
+      ln -sfd /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+      rm -f /etc/nginx/sites-enabled/passbolt
+      rm -f /etc/nginx/sites-available/passbolt
+    fi
+
+    # Cleanup folders.
+    _echo "postrm: cleanup passbolt /var and /etc"
+    rm -rf /var/lib/passbolt/tmp/cache/*
+    rm -rf /var/log/passbolt/*
+    rm -rf /var/lib/passbolt/.gnupg/*
+    rm -rf /etc/passbolt/*
+
+    # TODO: What needs to happen to mysql passbolt database?
+
+    if [ -f /usr/share/dbconfig-common/dpkg/postrm ]; then
+      _echo "postrm: prelude manager"
+      . /usr/share/dbconfig-common/dpkg/postrm
+      dbc_go prelude-manager "$@"
+    fi
+
+    _echo "postrm: db_purge"
+    db_purge
+    ;;
+
+esac
+
+#DEBHELPER#
+
+db_stop

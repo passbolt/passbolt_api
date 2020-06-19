@@ -17,6 +17,7 @@ namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Utility\UserAction;
+use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -60,6 +61,12 @@ class EntitiesHistoryTable extends Table
             'foreignKey' => 'foreign_key',
             'className' => 'Passbolt/Log.SecretAccesses',
         ]);
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            $this->belongsTo('FoldersHistory', [
+                'foreignKey' => 'foreign_key',
+                'className' => 'Passbolt/Folders.FoldersHistory',
+            ]);
+        }
     }
 
     /**
@@ -129,7 +136,7 @@ class EntitiesHistoryTable extends Table
                         'type' => true,
                     ],
                 ],
-            ]
+            ],
         ]);
     }
 

@@ -12,14 +12,20 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace App\Model\Traits\Resources;
 
-use App\Model\Entity\Permission;
+use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\PermissionsTable;
-use Cake\Collection\CollectionInterface;
+use Cake\Event\EventManager;
+use Cake\ORM\Query;
 use Cake\Validation\Validation;
 
+/**
+ * @method EventManager getEventManager()
+ */
 trait ResourcesFindersTrait
 {
     /**
@@ -27,8 +33,8 @@ trait ResourcesFindersTrait
      *
      * @param string $userId The user to get the resources for
      * @param array $options options
+     * @return Query
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
-     * @return \Cake\ORM\Query
      */
     public function findIndex(string $userId, array $options = [])
     {
@@ -37,6 +43,14 @@ trait ResourcesFindersTrait
         }
 
         $query = $this->find();
+
+        $findIndexOptions = FindIndexOptions::createFromArray($options);
+        $findIndexOptions->setUserId($userId);
+
+        $event = TableFindIndexBefore::create($query, $findIndexOptions, $this);
+
+        /** @var TableFindIndexBefore $event */
+        $this->getEventManager()->dispatch($event);
 
         // Filter out deleted resources
         $query->where(['Resources.deleted' => false]);
@@ -60,42 +74,36 @@ trait ResourcesFindersTrait
             }
         }
 
-        // If shared with group.
+        // Filter on resources owned by me.
         if (isset($options['filter']['is-owned-by-me'])) {
             $query = $this->_filterQueryIsOwnedByUser($query, $userId);
         }
 
-        // If shared with group.
+        // Filter on resource shared with me.
         if (isset($options['filter']['is-shared-with-me'])) {
             $query = $this->_filterQuerySharedWithUser($query, $userId);
         }
 
-        // If shared with group.
+        // Filter on resources shared with group.
         if (isset($options['filter']['is-shared-with-group'])) {
             $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
         }
 
-        /*
-         * If the contain permission option is given, filter on resources the user is allowed to access
-         * and retrieve the user permission. Otherwise only filter on resources the user is allowed to
-         * access.
-         */
-        if (isset($options['contain']['permission'])) {
-            // Matching will make available the user permission in the result _matchingData property.
-            $query->matching('Permission');
-            $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
-            // Format the query result to populate the permission property as a contain would do.
-            $query->formatResults(function (CollectionInterface $results) {
-                return $results->map(function ($row) {
-                    $row['permission'] = $row['_matchingData']['Permission'];
-                    unset($row['_matchingData']);
+        // Filter on resources I have permission.
+        $query = $this->_filterQueryByPermissions($query, $userId);
 
-                    return $row;
-                });
+        // If contains the user permission.
+        if (isset($options['contain']['permission'])) {
+            $query->contain('Permission', function (Query $q) use ($userId) {
+                $subQueryOptions = ['checkGroupsUsers' => true];
+                $permissionIdSubQuery = $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $userId, $subQueryOptions)
+                    ->where(['Permissions.aco_foreign_key = Resources.id'])
+                    ->order(['Permissions.type DESC'])
+                    ->limit(1)
+                    ->select(['Permissions.id']);
+
+                return $q->where(['Permission.id' => $permissionIdSubQuery]);
             });
-        } else {
-            $query->innerJoinWith('Permission');
-            $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
         }
 
         // If contains Secrets.
@@ -127,9 +135,9 @@ trait ResourcesFindersTrait
             $query->contain([
                 'Permissions' => [
                     'Users' => [
-                        'Profiles' => AvatarsTable::addContainAvatar()
-                    ]
-                ]
+                        'Profiles' => AvatarsTable::addContainAvatar(),
+                    ],
+                ],
             ]);
         }
 
@@ -154,9 +162,9 @@ trait ResourcesFindersTrait
      * @param string $userId The user to get the resources for
      * @param string $resourceId The resource to retrieve
      * @param array $options options
-     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @return Query
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
-     * @return \Cake\ORM\Query
+     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
     public function findView(string $userId, string $resourceId, array $options = [])
     {
@@ -167,8 +175,8 @@ trait ResourcesFindersTrait
             throw new \InvalidArgumentException(__('The parameter resourceId should be a valid uuid.'));
         }
 
-        $query = $this->findIndex($userId, $options);
-        $query->where(['Resources.id' => $resourceId]);
+        $query = $this->findIndex($userId, $options)
+            ->where(['Resources.id' => $resourceId]);
 
         return $query;
     }
@@ -177,7 +185,7 @@ trait ResourcesFindersTrait
      * Build the query that fetches the resources that a group has access on.
      *
      * @param string $groupId uuid The group to fetch the resources for
-     * @return \Cake\ORM\Query
+     * @return Query
      */
     public function findAllByGroupAccess(string $groupId)
     {
@@ -185,14 +193,9 @@ trait ResourcesFindersTrait
             throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
         }
 
-        $query = $this->find();
-
-        // Filter on resources the group has a permission for.
-        $query->innerJoinWith('Permissions')
-            ->where(['aro_foreign_key' => $groupId]);
-
-        // Filter out deleted resources
-        $query->where(['Resources.deleted' => false]);
+        $query = $this->find()
+            ->where(['Resources.deleted' => false]);
+        $this->_filterQuerySharedWithGroup($query, $groupId);
 
         return $query;
     }
@@ -203,9 +206,9 @@ trait ResourcesFindersTrait
      * @param string $userId uuid
      * @param array $resourceIds array of resource uuids
      * @param array $options array of options
-     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @return Query
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
-     * @return \Cake\ORM\Query
+     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
     public function findAllByIds(string $userId, array $resourceIds = [], array $options = [])
     {
@@ -213,11 +216,11 @@ trait ResourcesFindersTrait
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
         if (empty($resourceIds)) {
-            throw new \InvalidArgumentException(__('The resources can not be empty.'));
+            throw new \InvalidArgumentException(__('The resources ids array can not be empty.'));
         } else {
             foreach ($resourceIds as $resourceId) {
                 if (!Validation::uuid($resourceId)) {
-                    throw new \InvalidArgumentException(__('The resource id should be a valid uuid.'));
+                    throw new \InvalidArgumentException(__('The resources ids arrays should contain only valid uuid.'));
                 }
             }
         }
@@ -236,46 +239,23 @@ trait ResourcesFindersTrait
      *
      * This function can be used on any queries joined with Permissions as following
      * > $query->innerJoinWith('Permissions') or $query->matching('Permissions')
-     * > _filterQueryByPermissionsType($query, $userId);
+     * > _filterQueryByPermissions($query, $userId);
      *
-     * @param \Cake\ORM\Query $query The query to filter.
+     * @param Query $query The query to filter.
      * @param string $userId The user to check the permissions for.
-     * @param int $permissionType The minimum permission type.
+     * @return Query
      * @throws \InvalidArgumentException if the user id is not a uuid
-     * @return \Cake\ORM\Query
      */
-    private function _filterQueryByPermissionsType(\Cake\ORM\Query $query, string $userId, int $permissionType = Permission::READ)
+    private function _filterQueryByPermissions(Query $query, string $userId)
     {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
-        }
+        $subQueryOptions = [
+            'checkGroupsUsers' => true,
+        ];
+        $resourcesFilterByPermissionTypeSubQuery = $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $userId, $subQueryOptions)
+            ->select(['Permissions.aco_foreign_key'])
+            ->distinct();
 
-        // Build the list of allowed permission types.
-        $allowedPermissionTypes = array_filter(PermissionsTable::ALLOWED_TYPES, function ($type) use ($permissionType) {
-            return $type >= $permissionType;
-        });
-
-        // Retrieve the groups ids the user is member of in a subquery.
-        $groupsIdsSubQuery = $this->_findGroupsByUserId($userId)
-            ->select('Groups.id');
-
-        // In a subquery retrieve the highest permission.
-        $permissionSubquery = $this->getAssociation('Permissions')
-            ->find()
-            ->select('Permissions.id')
-            ->where([
-                'Permissions.aco_foreign_key = Resources.id',
-                'OR' => [
-                    ['Permissions.aro_foreign_key' => $userId],
-                    ['Permissions.aro_foreign_key IN' => $groupsIdsSubQuery],
-                ],
-                'Permissions.type IN' => $allowedPermissionTypes,
-            ])
-            ->order(['Permissions.type' => 'DESC'])
-            ->limit(1);
-
-        // Filter the Resources query by permissions.
-        $query->where(['Permission.id' => $permissionSubquery]);
+        $query->where(['Resources.id IN' => $resourcesFilterByPermissionTypeSubQuery]);
 
         return $query;
     }
@@ -283,13 +263,15 @@ trait ResourcesFindersTrait
     /**
      * Augment any Resources queries to filter on resources owned by the given user.
      * A owned resource means a resource that is shared with the OWNER permission.
-     * @param \Cake\ORM\Query $query The query to filter.
+     * @param Query $query The query to filter.
      * @param string $userId The user identifier to filter on.
-     * @return \Cake\ORM\Query
+     * @return Query
      */
-    private function _filterQueryIsOwnedByUser(\Cake\ORM\Query $query, string $userId)
+    private function _filterQueryIsOwnedByUser(Query $query, string $userId)
     {
-        $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::OWNER);
+        $resourcesUserIsOwnerSubQueryOptions = ['checkGroupsUsers' => true];
+        $resourcesUserIsOwnerSubQuery = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId, $resourcesUserIsOwnerSubQueryOptions);
+        $query = $query->where(['Resources.id IN' => $resourcesUserIsOwnerSubQuery]);
 
         return $query;
     }
@@ -298,13 +280,15 @@ trait ResourcesFindersTrait
      * Augment any Resources queries to filter on resources shared with the given user.
      * We consider that a resource is shared with a user when it is accessible by the user but is not owner or one
      * of a group he is member is owner.
-     * @param \Cake\ORM\Query $query The query to filter.
+     * @param Query $query The query to filter.
      * @param string $userId The user identifier to filter on.
-     * @return \Cake\ORM\Query
+     * @return Query
      */
-    private function _filterQuerySharedWithUser(\Cake\ORM\Query $query, string $userId)
+    private function _filterQuerySharedWithUser(Query $query, string $userId)
     {
-        $query = $query->where(['Resources.id NOT IN' => $this->Permissions->findResourcesUserIsOwner($userId, true)]);
+        $resourcesUserIsOwnerSubQueryOptions = ['checkGroupsUsers' => true];
+        $resourcesUserIsOwnerSubQuery = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId, $resourcesUserIsOwnerSubQueryOptions);
+        $query = $query->where(['Resources.id NOT IN' => $resourcesUserIsOwnerSubQuery]);
 
         return $query;
     }
@@ -312,48 +296,21 @@ trait ResourcesFindersTrait
     /**
      * Augment any Resources queries to filter on resources shared with a given group.
      *
-     * @param \Cake\ORM\Query $query The query to filter.
+     * @param Query $query The query to filter.
      * @param string $groupId The group to check the permissions for.
+     * @return Query
      * @throws \InvalidArgumentException if the group id is not a uuid
-     * @return \Cake\ORM\Query
      */
-    private function _filterQuerySharedWithGroup(\Cake\ORM\Query $query, string $groupId)
+    private function _filterQuerySharedWithGroup(Query $query, string $groupId)
     {
         if (!Validation::uuid($groupId)) {
             throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
         }
 
-        // Filter the main query.
-        $query->innerJoinWith('Permissions', function ($q) use ($groupId) {
-            return $q->where([
-                'Permissions.aco_foreign_key = Resources.id',
-                'Permissions.aro_foreign_key' => $groupId
-            ]);
-        });
+        $resourcesSharedWithGroupSubQuery = $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $groupId)
+            ->select(['Permissions.aco_foreign_key']);
+        $query->where(['Resources.id IN' => $resourcesSharedWithGroupSubQuery]);
 
         return $query;
-    }
-
-    /**
-     * Retrieve the groups a user is member of.
-     *
-     * @param string $userId The user to retrieve the group for.
-     * @throws \InvalidArgumentException if the user id is not a uuid
-     * @return \Cake\ORM\Query
-     */
-    private function _findGroupsByUserId(string $userId)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
-        }
-
-        return $this->getAssociation('Permissions')
-            ->getAssociation('Groups')
-            ->find()
-            ->innerJoinWith('Users')
-            ->where([
-                'Groups.deleted' => 0,
-                'Users.id' => $userId
-            ]);
     }
 }

@@ -1,0 +1,13 @@
+Index: passbolt-@PASSBOLT_FLAVOUR@-server/webroot/index.php
+===================================================================
+--- passbolt-@PASSBOLT_FLAVOUR@-server.orig/webroot/index.php
++++ passbolt-@PASSBOLT_FLAVOUR@-server/webroot/index.php
+@@ -14,7 +14,7 @@
+  * @since         0.2.9
+  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+  */
+-require dirname(__DIR__) . '/config/requirements.php';
++include '/etc/passbolt/requirements.php';
+ 
+ // for built-in server
+ if (php_sapi_name() === 'cli-server') {

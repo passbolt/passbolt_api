@@ -1,0 +1,4 @@
+# we prefer etc/passbolt to not be readable for others
+non-standard-dir-perm etc/passbolt/* 0770 != 0755
+# Files inside etc/passbolt are not readable for others
+non-standard-file-perm etc/passbolt/* 0640 != 0644

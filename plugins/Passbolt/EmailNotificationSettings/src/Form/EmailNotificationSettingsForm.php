@@ -14,71 +14,66 @@
  */
 namespace Passbolt\EmailNotificationSettings\Form;
 
+use Cake\Event\EventManager;
 use Cake\Form\Form;
 use Cake\Form\Schema;
-use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionRegisterEvent;
 
 class EmailNotificationSettingsForm extends Form
 {
     /**
-     * Database configuration schema.
+     * @var EmailNotificationSettingsDefinitionInterface[]
+     */
+    private $notificationSettingsDefinitions = [];
+
+    /**
+     * @param EventManager|null $eventManager An instance of event manager
+     */
+    public function __construct(EventManager $eventManager = null)
+    {
+        parent::__construct($eventManager);
+
+        $this->getEventManager()->dispatch(EmailNotificationSettingsDefinitionRegisterEvent::create($this));
+    }
+
+    /**
+     * @param EmailNotificationSettingsDefinitionInterface $emailNotificationSettingsDefinition Email notification setting definition
+     * @return void
+     */
+    public function addEmailNotificationSettingsDefinition(EmailNotificationSettingsDefinitionInterface $emailNotificationSettingsDefinition)
+    {
+        $this->notificationSettingsDefinitions[] = $emailNotificationSettingsDefinition;
+    }
+
+    /**
+     * Database configuration schema. Build schema from all notification settings definitions schemas.
      *
      * @param Schema $schema schema
      * @return Schema
      */
     protected function _buildSchema(Schema $schema)
     {
-        return $schema
-            // Show controls
-            ->addField('show_comment', ['type' => 'boolean'])
-            ->addField('show_description', ['type' => 'boolean'])
-            ->addField('show_secret', ['type' => 'boolean'])
-            ->addField('show_uri', ['type' => 'boolean'])
-            ->addField('show_username', ['type' => 'boolean'])
+        foreach ($this->notificationSettingsDefinitions as $notificationSettingsDefinition) {
+            $notificationSettingsDefinition->buildSchema($schema);
+        }
 
-            // Send controls
-            ->addField('send_comment_add', ['type' => 'boolean'])
-            ->addField('send_password_create', ['type' => 'boolean'])
-            ->addField('send_password_share', ['type' => 'boolean'])
-            ->addField('send_password_update', ['type' => 'boolean'])
-            ->addField('send_password_delete', ['type' => 'boolean'])
-            ->addField('send_user_create', ['type' => 'boolean'])
-            ->addField('send_user_recover', ['type' => 'boolean'])
-            ->addField('send_group_delete', ['type' => 'boolean'])
-            ->addField('send_group_user_add', ['type' => 'boolean'])
-            ->addField('send_group_user_delete', ['type' => 'boolean'])
-            ->addField('send_group_user_update', ['type' => 'boolean'])
-            ->addField('send_group_manager_update', ['type' => 'boolean']);
+        return $schema;
     }
 
     /**
-     * Validation rules.
+     * Validation rules. Build validator rules from all notification settings definitions validators.
      *
      * @param Validator $validator validator
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
     {
-        $validator
-            ->boolean('show_comment', __('Show comment should be a boolean.'))
-            ->boolean('show_description', __('Show description should be a boolean.'))
-            ->boolean('show_secret', __('Show secret should be a boolean.'))
-            ->boolean('show_uri', __('Show uri should be a boolean.'))
-            ->boolean('show_username', __('Show username should be a boolean.'))
-            ->boolean('send_comment_add', __('Send comment add should be a boolean.'))
-            ->boolean('send_password_create', __('Send password create should be a boolean.'))
-            ->boolean('send_password_share', __('Send password share should be a boolean.'))
-            ->boolean('send_password_update', __('Send password update should be a boolean.'))
-            ->boolean('send_password_delete', __('Send password delete should be a boolean.'))
-            ->boolean('send_user_create', __('Send user create should be a boolean.'))
-            ->boolean('send_user_recover', __('Send user recover should be a boolean.'))
-            ->boolean('send_group_delete', __('Send group delete should be a boolean.'))
-            ->boolean('send_group_user_add', __('Send group user add should be a boolean.'))
-            ->boolean('send_group_user_delete', __('Send group user delete should be a boolean.'))
-            ->boolean('send_group_user_update', __('Send group user update should be a boolean.'))
-            ->boolean('send_group_manager_update', __('Send group manager update should be a boolean.'));
+        foreach ($this->notificationSettingsDefinitions as $notificationSettingsDefinition) {
+            $notificationSettingsDefinition->buildValidator($validator);
+        }
 
         return $validator;
     }
@@ -99,7 +94,7 @@ class EmailNotificationSettingsForm extends Form
         $data = static::stripInvalidKeys($data);
 
         foreach ($data as $prop => $propVal) {
-            $key = str_replace('_', '.', $prop);
+            $key = EmailNotificationSettings::underscoreToDottedFormat($prop);
             $settings[$key] = $propVal;
         }
 

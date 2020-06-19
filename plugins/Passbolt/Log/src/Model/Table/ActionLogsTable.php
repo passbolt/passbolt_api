@@ -39,7 +39,7 @@ class ActionLogsTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
 
         $this->belongsTo('Actions', [
@@ -101,7 +101,7 @@ class ActionLogsTable extends Table
                 'action_id' => true,
                 'context' => true,
                 'status' => true,
-                'created' => true
+                'created' => true,
             ],
         ]);
     }

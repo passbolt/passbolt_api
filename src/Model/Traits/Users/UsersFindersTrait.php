@@ -15,6 +15,7 @@
 namespace App\Model\Traits\Users;
 
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
@@ -30,7 +31,6 @@ use InvalidArgumentException;
  */
 trait UsersFindersTrait
 {
-
     /**
      * Filter a Groups query by groups users.
      *
@@ -56,7 +56,7 @@ trait UsersFindersTrait
         $subQuery = $this->GroupsUsers->find()
             ->select([
                 'GroupsUsers.user_id',
-                'count' => $query->func()->count('GroupsUsers.user_id')
+                'count' => $query->func()->count('GroupsUsers.user_id'),
             ])
             ->where(['GroupsUsers.group_id IN' => $groupsIds])
             ->group('GroupsUsers.user_id')
@@ -115,7 +115,7 @@ trait UsersFindersTrait
             ->select('Groups.id')
             ->where([
                 'Groups.deleted' => false,
-                'GroupsUsers.user_id = Users.id'
+                'GroupsUsers.user_id = Users.id',
             ]);
 
         // Use distinct to avoid duplicate as it can happen that a user is member of two groups which
@@ -126,7 +126,7 @@ trait UsersFindersTrait
             ->where(
                 ['OR' => [
                     ['PermissionsFilterAccess.aro_foreign_key = Users.id'],
-                    ['PermissionsFilterAccess.aro_foreign_key IN' => $groupsSubquery]
+                    ['PermissionsFilterAccess.aro_foreign_key IN' => $groupsSubquery],
                 ]]
             );
     }
@@ -155,7 +155,7 @@ trait UsersFindersTrait
         return $query->where(['OR' => [
             ['Users.username LIKE' => $search],
             ['Profiles.first_name LIKE' => $search],
-            ['Profiles.last_name LIKE' => $search]
+            ['Profiles.last_name LIKE' => $search],
         ]]);
     }
 
@@ -183,7 +183,7 @@ trait UsersFindersTrait
             ->select(['Permissions.aro_foreign_key'])
             ->where([
                 'Permissions.aro' => 'User',
-                'Permissions.aco_foreign_key' => $resourceId
+                'Permissions.aco_foreign_key' => $resourceId,
             ]);
 
         // Filter on the users who do not have yet a permission.
@@ -249,13 +249,13 @@ trait UsersFindersTrait
         // Filter out guests and deleted users
         $query->where([
             'Users.deleted' => false,
-            'Roles.name <>' => Role::GUEST
+            'Roles.name <>' => Role::GUEST,
         ]);
 
         // If searching admins
         if (isset($options['filter']['is-admin'])) {
             $query->where([
-                'Roles.name' => Role::ADMIN
+                'Roles.name' => Role::ADMIN,
             ]);
         }
 
@@ -380,7 +380,7 @@ trait UsersFindersTrait
             ->where(['Users.username' => $username, 'Users.deleted' => false])
             ->contain([
                 'Roles',
-                'Profiles' => AvatarsTable::addContainAvatar()
+                'Profiles' => AvatarsTable::addContainAvatar(),
             ])
             ->order(['Users.active' => 'DESC']);
 
@@ -406,7 +406,7 @@ trait UsersFindersTrait
             ->where([
                 'Users.id' => $userId,
                 'Users.deleted' => false, // forbid deleted users to start setup
-                'Users.active' => false // forbid users that have completed the setup to retry
+                'Users.active' => false, // forbid users that have completed the setup to retry
             ])
             ->first();
 
@@ -432,7 +432,7 @@ trait UsersFindersTrait
             ->where([
                 'Users.id' => $userId,
                 'Users.deleted' => false, // forbid deleted users to start setup
-                'Users.active' => true // forbid users that have not completed the setup to recover
+                'Users.active' => true, // forbid users that have not completed the setup to recover
             ])
             ->first();
 
@@ -444,7 +444,7 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @throws InvalidArgumentException if the user id is not a valid uuid
-     * @return object User
+     * @return User
      */
     public function findFirstForEmail(string $userId)
     {
@@ -474,13 +474,33 @@ trait UsersFindersTrait
             ->where([
                 'Users.deleted' => false,
                 'Users.active' => true,
-                'Roles.name' => Role::ADMIN
+                'Roles.name' => Role::ADMIN,
             ])
             ->order(['Users.created' => 'ASC'])
             ->contain(['Roles'])
             ->first();
 
         return $user;
+    }
+
+    /**
+     * Return a list of admin users (active, non soft-deleted) with their role attached
+     * @return User[]
+     */
+    public function findAdmins()
+    {
+        $users = $this->find()
+            ->where(
+                [
+                    'Users.deleted' => false,
+                    'Users.active' => true,
+                    'Roles.name' => Role::ADMIN,
+                ]
+            )
+            ->order(['Users.created' => 'ASC'])
+            ->contain(['Roles']);
+
+        return $users;
     }
 
     /**

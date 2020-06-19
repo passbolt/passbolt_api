@@ -13,6 +13,7 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
+use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
@@ -25,13 +26,13 @@ $showDescription = $body['showDescription'];
 $showSecret = $body['showSecret'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => Router::url(DS . $user->profile->avatar->url['small'], true),
+    'url' => AvatarHelper::getAvatarUrl($user->profile->avatar),
     'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($user->username),
         'first_name' => Purifier::clean($user->profile->first_name),
         'last_name' => Purifier::clean($user->profile->last_name),
         'datetime' => $resource->modified,
-        'text' => __('{0} updated the password {1}', null, Purifier::clean($resource->name))
+        'text' => __('{0} updated the password {1}', Purifier::clean($user->profile->first_name), Purifier::clean($resource->name))
     ])
 ]);
 
@@ -49,7 +50,7 @@ if ($showDescription) {
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
-if ($showSecret) {
+if ($showSecret && isset($resource->secrets[0]->data)) {
     echo $this->element('Email/module/code', [
         'text' => $resource->secrets[0]->data
     ]);

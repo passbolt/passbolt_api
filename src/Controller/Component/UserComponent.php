@@ -19,6 +19,9 @@ use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
 use UserAgentParser\Provider\DonatjUAParser;
 
+/**
+ * @property Component\AuthComponent Auth
+ */
 class UserComponent extends Component
 {
 

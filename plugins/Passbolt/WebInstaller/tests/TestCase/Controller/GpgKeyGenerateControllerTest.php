@@ -48,7 +48,7 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
     public function testWebInstallerGpgKeyGeneratePostError_InvalidData()
     {
         $postData = $this->getDummyGpgkey([
-            'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E'
+            'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
         ]);
         $this->post('/install/gpg_key', $postData);
         $data = ($this->_getBodyAsString());

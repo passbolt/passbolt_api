@@ -14,11 +14,9 @@
  */
 namespace App\Shell;
 
-use App\Controller\Events\EmailNotificationsListener;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
-use App\Utility\UuidFactory;
 use Cake\Event\EventManager;
 
 /**
@@ -45,21 +43,10 @@ class AppShellBootstrap
     {
         if (!isset(self::$instance)) {
             self::$instance = new AppShellBootstrap();
-            self::$instance->_bindEvents();
             self::$instance->_initUserAction();
         }
 
         return self::$instance;
-    }
-
-    /**
-     * Bind events that are needed for AppShell.
-     * @return void
-     */
-    private function _bindEvents()
-    {
-        $emails = new EmailNotificationsListener();
-        EventManager::instance()->on($emails);
     }
 
     /**

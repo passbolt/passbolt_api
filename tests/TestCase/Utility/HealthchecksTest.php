@@ -26,7 +26,7 @@ class HealthchecksTest extends AppIntegrationTestCase
         $check = Healthchecks::application();
         $attributes = [
             'schema', 'robotsIndexDisabled', 'sslForce', 'sslFullBaseUrl', 'seleniumDisabled',
-            'registrationClosed', 'jsProd', 'emailNotificationEnabled', 'latestVersion'
+            'registrationClosed', 'jsProd', 'emailNotificationEnabled', 'latestVersion',
         ];
         $this->assertArrayHasAttributes($attributes, $check['application']);
     }
@@ -72,7 +72,7 @@ class HealthchecksTest extends AppIntegrationTestCase
         $attributes = [
             'lib', 'gpgKey', 'gpgKeyNotDefault', 'gpgHome', 'gpgHomeWritable', 'gpgKeyPublic', 'gpgKeyPublicReadable',
             'gpgKeyPrivate', 'gpgKeyPrivateReadable', 'gpgKeyPrivateFingerprint', 'gpgKeyPublicFingerprint',
-            'gpgKeyPublicEmail', 'gpgKeyPublicInKeyring', 'canEncrypt', 'canDecrypt'
+            'gpgKeyPublicEmail', 'gpgKeyPublicInKeyring', 'canEncrypt', 'canDecrypt',
         ];
         $this->assertArrayHasAttributes($attributes, $check['gpg']);
     }

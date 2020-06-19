@@ -22,7 +22,10 @@ use Cake\Utility\Hash;
 
 class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Users', 'app.Base/Secrets'];
+    public $fixtures = [
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
+        'app.Base/Users', 'app.Base/Secrets', 'app.Base/OrganizationSettings',
+    ];
 
     public function setUp()
     {
@@ -161,7 +164,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         // Try to add the user Ada.
         $data = [
             'name' => 'Name changed',
-            'groups_users' => [['user_id' => $userAId]]
+            'groups_users' => [['user_id' => $userAId]],
         ];
 
         // Update the group name.

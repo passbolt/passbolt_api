@@ -33,7 +33,7 @@ class ShareSearchController extends AppController
 
         // Build the find options.
         $whitelist = [
-            'filter' => ['search']
+            'filter' => ['search'],
         ];
         $options = $this->QueryString->get($whitelist);
 

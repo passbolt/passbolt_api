@@ -14,6 +14,7 @@
  */
 namespace App\View;
 
+use App\Error\Exception\ExceptionWithTableDetailInterface;
 use App\View\Helper\LegacyApiHelper;
 use Cake\Core\Configure;
 use Cake\View\View;
@@ -49,7 +50,7 @@ class LegacyJsonView extends View
         if (isset($body)) {
             if (isset($this->viewVars['error'])) {
                 $error = $this->viewVars['error'];
-                if (method_exists($error, 'getTable')) {
+                if ($error instanceof ExceptionWithTableDetailInterface) {
                     $table = $error->getTable();
                     $body = LegacyApiHelper::formatErrors($body, $table);
                 } else {

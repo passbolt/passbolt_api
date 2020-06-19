@@ -57,7 +57,7 @@ class CreateTest extends AppTestCase
                 'content' => true,
                 'created_by' => true,
                 'modified_by' => true,
-            ]
+            ],
         ];
 
         return $entityOptions;
@@ -177,7 +177,7 @@ class CreateTest extends AppTestCase
         $comment = $this->Comments->newEntity(
             self::getDummyComment([
                 'foreign_key' => UuidFactory::uuid('resource.id.apache'),
-                'parent_id' => UuidFactory::uuid('comment.id.doesnotexist')
+                'parent_id' => UuidFactory::uuid('comment.id.doesnotexist'),
             ]),
             self::getEntityDefaultOptions()
         );
@@ -193,7 +193,7 @@ class CreateTest extends AppTestCase
         $comment = $this->Comments->newEntity(
             self::getDummyComment([
                 'foreign_key' => UuidFactory::uuid('resource.id.bower'),
-                'parent_id' => UuidFactory::uuid('comment.id.apache-1')
+                'parent_id' => UuidFactory::uuid('comment.id.apache-1'),
             ]),
             self::getEntityDefaultOptions()
         );

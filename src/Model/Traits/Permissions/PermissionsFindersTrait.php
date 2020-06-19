@@ -16,28 +16,46 @@ namespace App\Model\Traits\Permissions;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\AvatarsTable;
-use Cake\ORM\TableRegistry;
+use Cake\ORM\Query;
+use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 
 trait PermissionsFindersTrait
 {
     /**
-     * Build the query that fetches data for aco permissions view
+     * Find the highest permission an aro or the groups the aro is member of could have for a given aco.
      *
-     * @param string $acoForeignKey The aco instance id to retrieve to get the permissions for
-     * @param array $options options
-     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
-     * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
-     * @return \Cake\ORM\Query
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $acoForeignKey The target aco. By instance resource or folder id.
+     * @param string $aroForeignKey The target aro id. By instance a user or a group id.
+     * @return Query
      */
-    public function findViewAcoPermissions(string $acoForeignKey, array $options = [])
+    public function findHighestByAcoAndAro(string $acoType, string $acoForeignKey, string $aroForeignKey)
     {
-        if (!Validation::uuid($acoForeignKey)) {
-            throw new \InvalidArgumentException(__('The parameter acoForeignKey is not a valid uuid.'));
+        return $this->findAllByAro($acoType, $aroForeignKey, ['checkGroupsUsers' => true])
+            ->where(['Permissions.aco_foreign_key' => $acoForeignKey])
+            ->order(['Permissions.type' => 'DESC'])
+            ->limit(1);
+    }
+
+    /**
+     * Returns a query retrieving data for aco permissions view
+     *
+     * @param string $aco The target aco id. By instance a resource or a folder id.
+     * @param array $options options
+     * @throws InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @throws InvalidArgumentException if the resourceId parameter is not a valid uuid.
+     * @return Query
+     */
+    public function findViewAcoPermissions(string $aco, array $options = [])
+    {
+        if (!Validation::uuid($aco)) {
+            throw new InvalidArgumentException(__('The aco parameter is not a valid uuid.'));
         }
 
         $query = $this->find()
-            ->where(['Permissions.aco_foreign_key' => $acoForeignKey]);
+            ->where(['Permissions.aco_foreign_key' => $aco]);
 
         // If contains group.
         if (isset($options['contain']['group'])) {
@@ -54,8 +72,8 @@ trait PermissionsFindersTrait
             $query->contain([
                 'Users' => [
                     'Profiles' =>
-                        AvatarsTable::addContainAvatar()
-                ]
+                        AvatarsTable::addContainAvatar(),
+                ],
             ]);
         }
 
@@ -63,22 +81,65 @@ trait PermissionsFindersTrait
     }
 
     /**
-     * Return resources the user is the owner of and that are shared
-     * with somebody else. Useful to know which resources need to be transferred
-     * when deleting the user.
+     * Returns a query retrieving the permissions an aro have.
      *
-     * Setting $checkGroupsUsers will also take in account the groups the users
-     * is sole manager that could be sole owner of shared resources.
+     * The $checkGroupsUsers will also return the permissions inherited from the groups the aro is member of.
      *
-     * @param string $userId uuid of the user
-     * @param bool $checkGroupsUsers also check for group user is sole member of
-     * @throws \InvalidArgumentException if the user id is not a valid uuid
-     * @return \Cake\ORM\Query
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $aroForeignKey The target aro id. By instance a user or a group id.
+     * @param array $options (optional) array of options
+     * [
+     *   bool $checkGroupsUsers Check also for the groups the aro is member of
+     * ]
+     * @return Query
      */
-    public function findSharedResourcesUserIsSoleOwner(string $userId, bool $checkGroupsUsers = false)
+    public function findAllByAro(string $acoType, string $aroForeignKey, array $options = [])
     {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
+
+        $query = $this->find()
+            ->where(['aco' => $acoType]);
+
+        if (!$checkGroupsUsers) {
+            $query->where(['Permissions.aro_foreign_key' => $aroForeignKey]);
+        } else {
+            // Subquery retrieving the groups ids the given aro is member of.
+            $groupsIdsSubQuery = $this->Groups->GroupsUsers->findByUserId($aroForeignKey)->select('group_id');
+            // All the permissions defined for the given aro or the groups the aro is member of.
+            $query->where([
+                'OR' => [
+                    ['Permissions.aro_foreign_key' => $aroForeignKey],
+                    ['Permissions.aro_foreign_key IN' => $groupsIdsSubQuery],
+                ],
+            ]);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Returns a query retrieving the acos (resources or folders) that are shared with someone else that the given aco
+     * (user or group). By instance, it is useful to know which resources ownership need to be transferred when deleting
+     * a user.
+     *
+     * The options $checkGroupsUsers option will also take in account the groups the aro is sole manager that could be
+     * sole owner of shared acos.
+     *
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $aro The target aro id. By instance a user or a group id.
+     * @param array $options (optional) array of options
+     * [
+     *   bool $checkGroupsUsers Check also for the groups the aro is member of
+     * ]
+     * @throws InvalidArgumentException if the user id is not a valid uuid
+     * @return Query
+     */
+    public function findSharedAcosByAroIsSoleOwner(string $acoType, string $aro, array $options = [])
+    {
+        $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
+
+        if (!Validation::uuid($aro)) {
+            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
         if ($checkGroupsUsers) {
@@ -95,78 +156,68 @@ trait PermissionsFindersTrait
             // ACOS_ONLY_ACCESSIBLE_BY_USER, all the ACOS that are only accessible by the user and the groups he is the only member
             // R = ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS - ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS - ACOS_ONLY_ACCESSIBLE_BY_USER
 
-            $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
             // (USER_AND_SOLE_MANAGER_GROUPS)
-            $groupsSoleManager = $GroupsUsers->findGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
+            $groupsSoleManager = $this->Groups->GroupsUsers->findGroupsWhereUserIsSoleManager($aro)
+                ->extract('group_id')->toArray();
             // (R = ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS)
-            $arosIds = [$userId];
-            $arosIds = array_merge($arosIds, $groupsSoleManager);
-            $query = $this->findResourcesArosIsSoleOwner($arosIds);
+            $aros = [$aro];
+            $aros = array_merge($aros, $groupsSoleManager);
+            $query = $this->findAcosByArosAreSoleOwner($acoType, $aros);
 
             // (USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
-            $nonEmptyGroupsSoleManager = $GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
+            $nonEmptyGroupsSoleManager = $this->Groups->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($aro)
+                ->extract('group_id')->toArray();
             if (!empty($nonEmptyGroupsSoleManager)) {
                 // (ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
                 $acosOnlyOwnedByUsersAndSoleManagerOfNonEmptyGroups = $this->find()
                     ->select('aco_foreign_key')->distinct()
-                    ->where(['type' => Permission::OWNER, 'aro_foreign_key IN' => $nonEmptyGroupsSoleManager]);
+                    ->where([
+                        'aco' => $acoType,
+                        'type' => Permission::OWNER,
+                        'aro_foreign_key IN' => $nonEmptyGroupsSoleManager,
+                    ]);
 
                 // (R = R - ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
                 $query->where(['aco_foreign_key NOT IN' => $acosOnlyOwnedByUsersAndSoleManagerOfNonEmptyGroups]);
             }
 
             // (ACOS_ONLY_ACCESSIBLE_BY_USER)
-            $subquery = $this->findResourcesOnlyUserCanAccess($userId, true);
+            $subquery = $this->findAcosOnlyAroCanAccess($acoType, $aro, ['checkGroupsUsers' => $checkGroupsUsers]);
             // (R = R - ACOS_ONLY_ACCESSIBLE_BY_USER)
-            $query->where(['aco_foreign_key NOT IN' => $subquery]);
+            $query->where([
+                'aco' => $acoType,
+                'aco_foreign_key NOT IN' => $subquery,
+            ]);
         } else {
-            $arosIds = [$userId];
+            $aros = [$aro];
             // (R = ACOS_ONLY_OWNED_BY_USER)
-            $query = $this->findResourcesArosIsSoleOwner($arosIds);
+            $query = $this->findAcosByArosAreSoleOwner($acoType, $aros);
             // (ACOS_ONLY_ACCESSIBLE_BY_USER)
-            $subquery = $this->findResourcesOnlyUserCanAccess($userId, $checkGroupsUsers);
+            $subquery = $this->findAcosOnlyAroCanAccess($acoType, $aro, ['checkGroupsUsers' => $checkGroupsUsers]);
             // (R = R - ACOS_ONLY_ACCESSIBLE_BY_USER)
-            $query->where(['aco_foreign_key NOT IN' => $subquery]);
+            $query->where([
+                'aco' => $acoType,
+                'aco_foreign_key NOT IN' => $subquery,
+            ]);
         }
 
         return $query;
     }
 
     /**
-     * Group alias for findSharedResourcesAroIsSoleOwner
+     * Returns a query retrieving the acos (resources or folders) that at least one of the given aros (users or groups)
+     * is sole owner.
      *
-     * @param string $groupId uuid of the group
-     * @throws \InvalidArgumentException if the group id is not a valid uuid
-     * @return \Cake\ORM\Query
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param array $aros An array of aro id. Composed of users or groups ids.
+     * @throw \InvalidArgumentException if the aros parameter contains not only uuid value.
+     * @return Query
      */
-    public function findSharedResourcesGroupIsSoleOwner(string $groupId)
+    public function findAcosByArosAreSoleOwner(string $acoType, array $aros)
     {
-        if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
-        }
-
-        // (R = ACOS_ONLY_OWNED_BY_GROUP
-        $query = $this->findResourcesArosIsSoleOwner([$groupId]);
-        // (ACOS_ONLY_ACCESSIBLE_BY_GROUP)
-        $subquery = $this->findResourcesOnlyArosCanAccess([$groupId]);
-        // (R = R - ACOS_ONLY_ACCESSIBLE_BY_GROUP)
-        $query->where(['aco_foreign_key NOT IN' => $subquery]);
-
-        return $query;
-    }
-
-    /**
-     * Returns an array of resources the given AROs are the owner of.
-     *
-     * @param array $arosIds uuid of the users|groups
-     * @throw \InvalidArgumentException if the aros ids are not valid uuids
-     * @return \Cake\ORM\Query
-     */
-    public function findResourcesArosIsSoleOwner(array $arosIds)
-    {
-        foreach ($arosIds as $aroId) {
-            if (!Validation::uuid($aroId)) {
-                throw new \InvalidArgumentException(__('The aro id should be a valid uuid.'));
+        foreach ($aros as $aro) {
+            if (!Validation::uuid($aro)) {
+                throw new InvalidArgumentException(__('The aro id should be a valid uuid.'));
             }
         }
 
@@ -189,8 +240,9 @@ trait PermissionsFindersTrait
         $acosOwnedByOtherUsersAndGroups = $this->find()
             ->select(['aco_foreign_key'])->distinct()
             ->where([
-                'aro_foreign_key NOT IN' => $arosIds,
-                'type' => Permission::OWNER
+                'aco' => $acoType,
+                'aro_foreign_key NOT IN' => $aros,
+                'type' => Permission::OWNER,
             ]);
 
         // (R)
@@ -203,7 +255,8 @@ trait PermissionsFindersTrait
             ->select(['aco_foreign_key'])->distinct()
             // ACOS_OWNED_BY_USERS_AND_GROUPS
             ->where([
-                'aro_foreign_key IN' => $arosIds,
+                'aco' => $acoType,
+                'aro_foreign_key IN' => $aros,
                 'type' => Permission::OWNER,
             ])
             // ACOS_OWNED_BY_USERS_AND_GROUPS - ACOS_OWNED_BY_OTHER_USERS_AND_GROUPS
@@ -211,47 +264,24 @@ trait PermissionsFindersTrait
     }
 
     /**
-     * Returns the list of resources ids that the ARO has access
-     * and that are not shared with anybody
+     * Returns a query retrieving the acos (resources or folders) a given aro (user or group) is the only one to have
+     * access.
      *
-     * Note: this does not check for ownership right. In theory it should not be possible to have
-     * a resource with only a group|user permission set to anything else than OWNER,
-     * but since we might as well delete these, we do cast a wider net.
+     * The $checkGroupsUsers options will also check the groups the aro is member of. The returned query will return
+     * also the acos that are accessible only by the groups the aro is the only member of.
      *
-     * @param string $aroId uuid
-     * @throws \InvalidArgumentException if the aro id is not a valid uuid
-     * @return \Cake\ORM\Query
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $aro The target aro id. By instance a user or a group id.
+     * @param array $options (optional) array of options
+     * [
+     *   bool $checkGroupsUsers Check also for the groups the aro is member of.
+     * ]
+     * @throws InvalidArgumentException if the aro id is not a valid uuid
+     * @return Query
      */
-    public function findResourcesOnlyAroCanAccess(string $aroId)
+    public function findAcosOnlyAroCanAccess(string $acoType, string $aro, array $options = [])
     {
-        if (!Validation::uuid($aroId)) {
-            throw new \InvalidArgumentException(__('The aro id should be a valid uuid.'));
-        }
-
-        $arosIds = [$aroId];
-
-        return $this->findResourcesOnlyArosCanAccess($arosIds);
-    }
-
-    /**
-     * Returns the list of resources ids that the ARO has access
-     * and that are not shared with anybody
-     *
-     * Note: this does not check for ownership right. In theory it should not be possible to have
-     * a resource with only a group|user permission set to anything else than OWNER,
-     * but since we might as well delete these, we do cast a wider net.
-     *
-     * @param array $arosIds array of uuid
-     * @throws \InvalidArgumentException if the aro id is not a valid uuid
-     * @return \Cake\ORM\Query
-     */
-    public function findResourcesOnlyArosCanAccess(array $arosIds)
-    {
-        foreach ($arosIds as $aroId) {
-            if (!Validation::uuid($aroId)) {
-                throw new \InvalidArgumentException(__('The aro id should be a valid uuid.'));
-            }
-        }
+        $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
 
         // R = All the resources that are only accessible by a list of users and/or groups.
         //
@@ -263,13 +293,24 @@ trait PermissionsFindersTrait
         // ACOS_ACCESSIBLE_BY_OTHER_USERS_AND_GROUPS, is the set of AROS that are accessible by OTHER_USERS_AND_GROUPS
         // R = ACOS_ACCESSIBLE_BY_USERS_AND_GROUPS - ACOS_ACCESSIBLE_BY_OTHER_USERS_AND_GROUPS, is the set of ACOS only accessible by USERS_AND_GROUPS
 
+        // USER_AND_GROUPS
+        $aros = [$aro];
+        if ($checkGroupsUsers) {
+            $groups = $this->Groups->GroupsUsers->findGroupsWhereUserOnlyMember($aro)
+                ->extract('group_id')->toArray();
+            $aros = array_merge($aros, $groups);
+        }
+
         // (ACOS_ACCESSIBLE_BY_OTHER_USERS_AND_GROUPS)
         // SELECT aco_foreign_key
         // FROM permissions
         // WHERE aro_foreign_key NOT IN (USER_AND_GROUPS)
         $acosAccessibleByOtherUsersAndGroups = $this->find()
             ->select(['aco_foreign_key'])
-            ->where(['aro_foreign_key NOT IN' => $arosIds]);
+            ->where([
+                'aco' => $acoType,
+                'aro_foreign_key NOT IN' => $aros,
+            ]);
 
         // SELECT aco_foreign_key
         // FROM permissions
@@ -278,114 +319,59 @@ trait PermissionsFindersTrait
         return $this->find()
             ->select(['aco_foreign_key'])->distinct()
             // ACOS_ACCESSIBLE_BY_USERS_AND_GROUPS
-            ->where(['aro_foreign_key IN' => $arosIds])
+            ->where([
+                'aco' => $acoType,
+                'aro_foreign_key IN' => $aros,
+            ])
             // ACOS_ACCESSIBLE_BY_USERS_AND_GROUPS - ACOS_ACCESSIBLE_BY_OTHER_USERS_AND_GROUPS
             ->where(['aco_foreign_key NOT IN' => $acosAccessibleByOtherUsersAndGroups]);
     }
 
     /**
-     * User alias for findResourcesOnlyAroCanAccess
+     * Returns a query retrieving the acos (resources or folders) a given aro (user or group) is owner of.
      *
-     * @param string $userId uuid
-     * @param bool $checkGroupsUsers also check for group user is sole member of
-     * @throws \InvalidArgumentException if the user id is not a valid uuid
-     * @return \Cake\ORM\Query
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $aro The target aro id. By instance a user or a group id.
+     * @param array $options (optional) array of options
+     * [
+     *   bool $checkGroupsUsers Check also for the groups the aro is member of
+     * ]
+     * @throws InvalidArgumentException if the aro foreign key is not a valid uuid
+     * @return Query
      */
-    public function findResourcesOnlyUserCanAccess(string $userId, bool $checkGroupsUsers = false)
+    public function findAcosByAroIsOwner(string $acoType, string $aro, array $options = [])
     {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
-        }
-
-        $arosIds = [$userId];
-        if ($checkGroupsUsers) {
-            $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
-            $groups = $GroupsUsers->findGroupsWhereUserOnlyMember($userId)->extract('group_id')->toArray();
-            $arosIds = array_merge($arosIds, $groups);
-        }
-
-        return $this->findResourcesOnlyArosCanAccess($arosIds);
+        return $this->findAllByAro($acoType, $aro, $options)
+            ->where(['Permissions.type' => Permission::OWNER])
+            ->select('aco_foreign_key')->distinct();
     }
 
     /**
-     * Group alias for findResourcesOnlyAroCanAccess
+     * Check that an aro has access to an aco.
      *
-     * @param string $groupId uuid
-     * @throws \InvalidArgumentException if the group id is not a valid uuid
-     * @return \Cake\ORM\Query
+     * @param string $acoType The target aco type. By instance a Resource or a Folder.
+     * @param string $acoForeignKey The target aco id. By instance a resource or a folder id.
+     * @param string $aroForeignKey The target aro id. By instance a user or a group id.
+     * @param int $permissionType The minimum permission type
+     * @throws InvalidArgumentException if the $aco parameter is not a valid uuid.
+     * @throws InvalidArgumentException if the $aro parameter is not a valid uuid.
+     * @return bool
      */
-    public function findResourcesOnlyGroupCanAccess(string $groupId)
+    public function hasAccess(string $acoType, string $acoForeignKey, string $aroForeignKey, int $permissionType = Permission::READ)
     {
-        if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
+        if (!Validation::uuid($acoForeignKey)) {
+            throw new InvalidArgumentException(__('The aco parameter should be a valid uuid.'));
+        }
+        if (!Validation::uuid($aroForeignKey)) {
+            throw new InvalidArgumentException(__('The aro parameter should be a valid uuid.'));
+        }
+        if (!$this->isValidPermissionType($permissionType)) {
+            throw new InvalidArgumentException(__('The permission type should be in the list of allowed permission type.'));
         }
 
-        return $this->findResourcesOnlyAroCanAccess($groupId);
-    }
+        $query = $this->findHighestByAcoAndAro($acoType, $acoForeignKey, $aroForeignKey)
+            ->where(['Permissions.type >=' => $permissionType]);
 
-    /**
-     * Group alias for findResourcesOnlyArosCanAccess
-     *
-     * @param array $groupsIds list of uuid
-     * @throws \InvalidArgumentException if one of the group id is not a valid uuid
-     * @return \Cake\ORM\Query
-     */
-    public function findResourcesOnlyGroupsCanAccess(array $groupsIds = [])
-    {
-        foreach ($groupsIds as $groupId) {
-            if (!Validation::uuid($groupId)) {
-                throw new \InvalidArgumentException(__('The groups ids should be valid uuids.'));
-            }
-        }
-
-        return $this->findResourcesOnlyArosCanAccess($groupsIds);
-    }
-
-    /**
-     * Returns the list of resources that a user own.
-     *
-     * @param string $userId uuid
-     * @param bool $checkGroupsUsers also check for group user is member of
-     * @throws \InvalidArgumentException if the aro id is not a valid uuid
-     * @return \Cake\ORM\Query
-     */
-    public function findResourcesUserIsOwner(string $userId, bool $checkGroupsUsers = false)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
-        }
-
-        $arosIds = [$userId];
-        if ($checkGroupsUsers) {
-            $groupsIds = $this->Groups->GroupsUsers->findGroupsWhereUserIsMember($userId)->extract('group_id')->toArray();
-            if (!empty($groupsIds)) {
-                $arosIds = array_merge($arosIds, $groupsIds);
-            }
-        }
-
-        return $this->findResourcesArosIsOwner($arosIds);
-    }
-
-    /**
-     * Returns the list of resources that Aros (users and/or groups) are owner.
-     *
-     * @param array $arosIds array of uuid
-     * @throws \InvalidArgumentException if an aro id is not a valid uuid
-     * @return \Cake\ORM\Query
-     */
-    public function findResourcesArosIsOwner(array $arosIds)
-    {
-        foreach ($arosIds as $aroId) {
-            if (!Validation::uuid($aroId)) {
-                throw new \InvalidArgumentException(__('The aro id should be a valid uuid.'));
-            }
-        }
-
-        return $this->find()
-            ->select('aco_foreign_key')->distinct()
-            ->where([
-                'aro_foreign_key IN' => $arosIds,
-                'type' => Permission::OWNER
-            ]);
+        return $query->count() !== 0;
     }
 }

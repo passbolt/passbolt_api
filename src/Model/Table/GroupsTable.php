@@ -32,7 +32,7 @@ use Cake\Validation\Validator;
  * Groups Model
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsToMany $Users
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
+ * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Modifier
  *
  * @method \App\Model\Entity\Group get($primaryKey, $options = [])
@@ -48,6 +48,8 @@ use Cake\Validation\Validator;
 class GroupsTable extends Table
 {
     use GroupsFindersTrait;
+
+    const GROUP_CREATE_SUCCESS_EVENT_NAME = 'Model.Groups.create.success';
 
     /**
      * Initialize method
@@ -68,19 +70,19 @@ class GroupsTable extends Table
         $this->hasOne('Modifier', [
             'className' => 'Users',
             'bindingKey' => 'modified_by',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
         $this->hasMany('GroupsUsers', [
-            'saveStrategy' => 'replace'
+            'saveStrategy' => 'replace',
         ]);
         $this->hasOne('MyGroupUser', [
-            'className' => 'GroupsUsers'
+            'className' => 'GroupsUsers',
         ]);
         $this->hasMany('Permissions', [
-            'foreignKey' => 'aro_foreign_key'
+            'foreignKey' => 'aro_foreign_key',
         ]);
         $this->belongsToMany('Users', [
-            'through' => 'GroupsUsers'
+            'through' => 'GroupsUsers',
         ]);
     }
 
@@ -138,7 +140,7 @@ class GroupsTable extends Table
         );
         $rules->addCreate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
             'errorField' => 'groups_users',
-            'message' => __('A group manager must be provided.')
+            'message' => __('A group manager must be provided.'),
         ]);
 
         // Update rules.
@@ -149,20 +151,16 @@ class GroupsTable extends Table
             ),
             'group_unique'
         );
-        $rules->addUpdate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
-            'errorField' => 'groups_users',
-            'message' => __('A group manager must be provided.')
-        ]);
         $rules->addUpdate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
             'table' => 'Groups',
             'errorField' => 'id',
-            'message' => __('The group cannot be soft deleted.')
+            'message' => __('The group cannot be soft deleted.'),
         ]);
 
         // Delete rules
-        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedResource', [
+        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedContent', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.')
+            'message' => __('You need to transfer the ownership for the shared content owned by this user before deleting this user.'),
         ]);
 
         return $rules;
@@ -182,17 +180,17 @@ class GroupsTable extends Table
                 'created_by' => true,
                 'modified_by' => true,
                 'groups_users' => true,
-                'deleted' => true
+                'deleted' => true,
             ],
             'associated' => [
                 'GroupsUsers' => [
                     'validate' => 'saveGroup',
                     'accessibleFields' => [
                         'user_id' => true,
-                        'is_admin' => true
-                    ]
+                        'is_admin' => true,
+                    ],
                 ],
-            ]
+            ],
         ]);
     }
 
@@ -236,7 +234,7 @@ class GroupsTable extends Table
 
         // Dispatch event.
         $eventData = ['group' => $groupSaved, 'requester' => $control];
-        $event = new Event('Model.Groups.create.success', $this, $eventData);
+        $event = new Event(static::GROUP_CREATE_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);
 
         return $groupSaved;
@@ -286,8 +284,8 @@ class GroupsTable extends Table
         // find all the resources that only belongs to the group and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
-        $Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $resourceIds = $Permissions->findResourcesOnlyGroupCanAccess($group->id)->extract('aco_foreign_key')->toArray();
+        $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
+            ->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
@@ -298,7 +296,7 @@ class GroupsTable extends Table
 
         // Delete all permissions
         // Delete all the secrets that lost permissions in the process
-        $Permissions->deleteAll(['aro_foreign_key' => $group->id]);
+        $this->Permissions->deleteAll(['aro_foreign_key' => $group->id]);
         $Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $Secrets->cleanupHardDeletedPermissions();
 

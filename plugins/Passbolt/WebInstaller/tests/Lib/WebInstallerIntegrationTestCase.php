@@ -31,6 +31,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->loadPlugins(['Passbolt/WebInstaller']);
         $this->_recover = false;
     }
 

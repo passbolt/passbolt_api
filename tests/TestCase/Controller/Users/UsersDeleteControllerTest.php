@@ -32,8 +32,8 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Resources', 'app.Base/Secrets',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue'
+        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/OrganizationSettings',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue',
     ];
 
     public function setUp()
@@ -46,6 +46,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
             $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
             $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+            $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
     public function testUsersDeleteDryRunSuccess()
@@ -189,7 +190,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertError(400);
             $this->assertUserIsNotSoftDeleted($userKId);
             $this->assertResourceIsNotSoftDeleted($resourceMId);
-            $this->assertContains('You need to transfer the ownership for the shared passwords', $this->_responseJsonHeader->message);
+            $this->assertContains('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
 
             $errors = $this->_responseJsonBody->errors;
             $this->assertFalse(isset($errors->groups));
@@ -314,7 +315,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             // CONTEXTUAL TEST CHANGES Make the group also owner of the resource
             $permission = $this->Permissions->find()->select()->where([
                 'aro_foreign_key' => $groupLId,
-                'aco_foreign_key' => $resourceOId
+                'aco_foreign_key' => $resourceOId,
             ])->first();
             $permission->type = Permission::OWNER;
             $this->Permissions->save($permission);
@@ -338,7 +339,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->Permissions->deleteAll(['aro_foreign_key IN' => $userNId, 'aco_foreign_key' => $resourceOId]);
             $permission = $this->Permissions->find()->select()->where([
                 'aro_foreign_key' => $groupLId,
-                'aco_foreign_key' => $resourceOId
+                'aco_foreign_key' => $resourceOId,
             ])->first();
             $permission->type = Permission::OWNER;
             $this->Permissions->save($permission);
@@ -433,7 +434,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
             $this->Permissions->deleteAll([
                 'aro_foreign_key' => $userOId,
-                'aco_foreign_key' => UuidFactory::uuid('resource.id.linux')
+                'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
             ]);
 
             $this->deleteJson("/users/$userOId.json?api-version=v2");
@@ -459,7 +460,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
             $this->Permissions->deleteAll([
                 'aro_foreign_key' => $userOId,
-                'aco_foreign_key' => UuidFactory::uuid('resource.id.linux')
+                'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
             ]);
 
             $transfer['managers'][] = ['id' => 'invalid-uuid', 'group_id' => $groupBId];
@@ -479,7 +480,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
             $this->Permissions->deleteAll([
                 'aro_foreign_key' => $userOId,
-                'aco_foreign_key' => UuidFactory::uuid('resource.id.linux')
+                'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
             ]);
 
             $transfer['managers'][] = ['id' => UuidFactory::uuid('group_user.id.management-ping'), 'group_id' => $groupMId];
@@ -522,7 +523,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
             $permission = $this->Permissions->find()->select()->where([
                 'aro_foreign_key' => $userTId,
-                'aco_foreign_key' => $resourcePId
+                'aco_foreign_key' => $resourcePId,
             ])->first();
             $permission->type = Permission::OWNER;
             $this->Permissions->save($permission);
@@ -597,7 +598,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
             $permission = $this->Permissions->find()->select()->where([
                 'aro_foreign_key' => $groupMId,
-                'aco_foreign_key' => $resourceLId
+                'aco_foreign_key' => $resourceLId,
             ])->first();
             $permission->type = Permission::READ;
             $this->Permissions->save($permission);
@@ -630,7 +631,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
             $permission = $this->Permissions->find()->select()->where([
                 'aro_foreign_key' => $groupMId,
-                'aco_foreign_key' => $resourceLId
+                'aco_foreign_key' => $resourceLId,
             ])->first();
             $permission->type = Permission::READ;
             $this->Permissions->save($permission);

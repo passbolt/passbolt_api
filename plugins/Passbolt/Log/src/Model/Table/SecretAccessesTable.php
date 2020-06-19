@@ -40,22 +40,22 @@ class SecretAccessesTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Secrets', [
-            'foreignKey' => 'secret_id'
+            'foreignKey' => 'secret_id',
         ]);
         $this->belongsTo('Resources', [
-            'foreignKey' => 'resource_id'
+            'foreignKey' => 'resource_id',
         ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->belongsTo('SecretAccessResources', [
             'foreignKey' => 'resource_id',
             'className' => 'Resources',
-            'joinType' => 'LEFT'
+            'joinType' => 'LEFT',
         ]);
         $this->belongsTo('EntitiesHistory', [
             'className' => 'Passbolt/Log.EntitiesHistory',
-            'foreignKey' => 'foreign_key'
+            'foreignKey' => 'foreign_key',
         ]);
     }
 

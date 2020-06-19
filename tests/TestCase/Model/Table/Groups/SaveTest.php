@@ -32,7 +32,7 @@ class SaveTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Permissions',
-        'app.Base/Resources', 'app.Base/Secrets'
+        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
     public function setUp()
@@ -58,17 +58,17 @@ class SaveTest extends AppTestCase
                 'created_by' => true,
                 'modified_by' => true,
                 'groups_users' => true,
-                'deleted' => true
+                'deleted' => true,
             ],
             'associated' => [
                 'GroupsUsers' => [
                     'validate' => 'saveGroup',
                     'accessibleFields' => [
                         'user_id' => true,
-                        'is_admin' => true
-                    ]
+                        'is_admin' => true,
+                    ],
                 ],
-            ]
+            ],
         ];
     }
 
@@ -84,7 +84,7 @@ class SaveTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Groups, 'name', self::getDummyGroup(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Groups, 'name', self::getDummyGroupData(), self::getEntityDefaultOptions(), $testCases);
     }
 
     /* ************************************************************** */
@@ -93,7 +93,15 @@ class SaveTest extends AppTestCase
 
     public function testSuccess()
     {
-        $data = self::getDummyGroup();
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $groupData = [
+            'groups_users' => [
+                ['user_id' => $userAId, 'is_admin' => true],
+                ['user_id' => $userBId],
+            ],
+        ];
+        $data = self::getDummyGroupData($groupData);
         $options = self::getEntityDefaultOptions();
         $entity = $this->Groups->newEntity($data, $options);
         $save = $this->Groups->save($entity);
@@ -121,7 +129,15 @@ class SaveTest extends AppTestCase
     {
         $group = $this->Groups->findById(UuidFactory::uuid('group.id.freelancer'))->first();
         $this->Groups->softDelete($group);
-        $data = self::getDummyGroup();
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $groupData = [
+            'groups_users' => [
+                ['user_id' => $userAId, 'is_admin' => true],
+                ['user_id' => $userBId],
+            ],
+        ];
+        $data = self::getDummyGroupData($groupData);
         $data['name'] = 'Freelancer';
         $options = self::getEntityDefaultOptions();
         $entity = $this->Groups->newEntity($data, $options);
@@ -132,7 +148,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleGroupUnique()
     {
-        $data = self::getDummyGroup();
+        $data = self::getDummyGroupData();
         $data['name'] = 'Freelancer';
         $options = self::getEntityDefaultOptions();
         $entity = $this->Groups->newEntity($data, $options);
@@ -145,10 +161,10 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleAtLeastOneAdmin()
     {
-        $data = self::getDummyGroup();
+        $data = self::getDummyGroupData();
         $data['groups_users'] = [
             ['user_id' => UuidFactory::uuid('user.id.ada')],
-            ['user_id' => UuidFactory::uuid('user.id.betty')]
+            ['user_id' => UuidFactory::uuid('user.id.betty')],
         ];
         $options = self::getEntityDefaultOptions();
         $entity = $this->Groups->newEntity($data, $options);

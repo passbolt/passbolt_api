@@ -17,6 +17,7 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\TestCase\Controller\Resources\ResourcesUpdateControllerTest;
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
@@ -26,8 +27,26 @@ class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Gpgkeys',
         'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars'
+        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/OrganizationSettings',
     ];
+
+    /**
+     * @var ResourcesTable
+     */
+    private $resourcesTable;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->loadNotificationSettings();
+        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+    }
+
+    public function tearDown()
+    {
+        $this->unloadNotificationSettings();
+        parent::tearDown();
+    }
 
     public function testResourcesUpdateNotificationDisabled()
     {
@@ -35,8 +54,12 @@ class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
 
         // Get and update resource
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
-        $data = $this->_getDummyPostData($resource);
+        $data = [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
+        ];
 
         // Post udpated data
         $this->authenticateAs('betty');
@@ -55,8 +78,12 @@ class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
 
         // Get and update resource
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
-        $data = $this->_getDummyPostData($resource);
+        $data = [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
+        ];
 
         // Post udpated data
         $this->authenticateAs('betty');

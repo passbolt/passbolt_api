@@ -1,0 +1,68 @@
+#!/usr/bin/make -f
+#
+# Uncomment line below to get a verbose build
+#
+#export DH_VERBOSE=1
+#export DH_OPTIONS=-v
+#
+
+# to set the variables on build time
+
+ifeq ($(PASSBOLT_FLAVOUR), ce)
+	CONTROL_OP := d
+endif
+
+ifeq ($(PASSBOLT_FLAVOUR), pro)
+	PASSBOLT_EXTENSIONS := php-ldap,
+	SED_COMMAND := s
+	CONTROL_OP := /g
+endif
+
+PASSBOLT_PACKAGE = passbolt-$(PASSBOLT_FLAVOUR)-server
+PKG_ROOT := $(CURDIR)/debian/$(PASSBOLT_PACKAGE)
+PREPARE_FILES := $(shell cat debian/prepare-files)
+PATCHES_FILES := $(shell find debian/postinst debian/patches debian/README.debian.md -type f)
+
+%:
+	dh $@
+
+check_env:
+	if [ -z $(PASSBOLT_FLAVOUR) ]; then echo "Please set PASSBOLT_FLAVOUR env var"; exit 1; fi
+
+override_dh_install:
+	dh_install
+	find $(PKG_ROOT)/ -type f -name '.git*' -delete
+
+override_dh_fixperms: check_env
+	dh_fixperms
+
+	# Adjust some system directory permissions
+	chown -R www-data:www-data $(PKG_ROOT)/var/lib/passbolt
+	chown -R www-data:www-data $(PKG_ROOT)/var/log/passbolt
+	# Img public folder should be writeable by www-data
+	chown -R www-data:www-data $(PKG_ROOT)/usr/share/php/passbolt/webroot/img/public
+	chown -R root:www-data $(PKG_ROOT)/etc/passbolt
+	# No file should be executable except bin/cake
+	chmod -R -x+X $(PKG_ROOT)/etc/*
+	chmod -R -x+X $(PKG_ROOT)/usr/*
+	chmod -R -x+X $(PKG_ROOT)/var/*
+	chmod +x $(PKG_ROOT)/usr/share/php/passbolt/bin/cake
+	chmod +x $(PKG_ROOT)/usr/share/php/passbolt/bin/cake.php
+	# Configuration files not readable by others
+	chmod -R o-rw $(PKG_ROOT)/etc/passbolt/*
+	# www-data needs to write on /etc/passbolt for webinstaller
+	chmod 0770 $(PKG_ROOT)/etc/passbolt
+	chmod 0770 $(PKG_ROOT)/etc/passbolt/gpg
+	chmod -R o-rwx $(PKG_ROOT)/etc/passbolt/*
+  # Strict permissions for gnupg server keyring
+	chmod 0700 $(PKG_ROOT)/var/lib/passbolt/.gnupg/
+
+debian/control: debian/control.in check_env
+	# $@ means the target name (debian/control)
+	# $< is the param passed (debian/control.in)
+	sed -e "s/@PASSBOLT_FLAVOUR@/$(PASSBOLT_FLAVOUR)/g" -e "$(SED_COMMAND)/@PASSBOLT_EXTENSIONS@/$(PASSBOLT_EXTENSIONS)$(CONTROL_OP)" >$@ <$<
+	# ${file%.*} stripes the extension from the file name
+	for file in $(PREPARE_FILES); do cat debian/$$file > debian/passbolt-$(PASSBOLT_FLAVOUR)-server.$${file%.*}; done
+	for file in $(PATCHES_FILES); do sed -i "s/@PASSBOLT_FLAVOUR@/$(PASSBOLT_FLAVOUR)/g" $$file; done
+
+.PHONY: debian/control check_env

@@ -36,7 +36,7 @@ class HealthcheckTask extends AppShell
         'hide-pass' => false,
         'hide-warning' => false,
         'hide-help' => false,
-        'hide-title' => false
+        'hide-title' => false,
     ];
 
     /**
@@ -56,50 +56,50 @@ class HealthcheckTask extends AppShell
             ->setDescription(__('Check the configuration of this installation and associated environment.'))
             ->addOption('hide-pass', [
                 'help' => __d('cake_console', 'Hide passing checks.'),
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('hide-warning', [
                 'help' => __d('cake_console', 'Hide warnings.'),
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('hide-help', [
                 'help' => __d('cake_console', 'Hide help messages.'),
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('hide-title', [
                 'help' => __d('cake_console', 'Hide section titles.'),
-                'boolean' => true
+                'boolean' => true,
             ]);
 
         // Checks
         $parser
             ->addOption('environment', [
                 'help' => __d('cake_console', 'Run environment tests only.'),
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('configFiles', [
                 'help' => __d('cake_console', 'Run configFiles tests only.'),
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('core', [
                 'help' => __d('cake_console', 'Run core tests only.'),
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('ssl', [
                 'help' => __d('cake_console', 'Run SSL tests only.'),
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('database', [
                 'help' => __d('cake_console', 'Run database tests only.'),
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('gpg', [
                 'help' => __d('cake_console', 'Run gpg tests only.'),
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('application', [
                 'help' => __d('cake_console', 'Run passbolt app tests only.'),
-                'boolean' => true
+                'boolean' => true,
             ]);
 
         return $parser;
@@ -128,7 +128,7 @@ class HealthcheckTask extends AppShell
         // if user only want to run one check
         $paramChecks = [];
         $checks = [
-            'environment', 'configFiles', 'core', 'ssl', 'database', 'gpg', 'application'
+            'environment', 'configFiles', 'core', 'ssl', 'database', 'gpg', 'application',
         ];
         foreach ($checks as $check) {
             if (isset($this->params[$check]) && $this->params[$check]) {
@@ -234,7 +234,7 @@ class HealthcheckTask extends AppShell
             __('Intl extension is installed.'),
             __('You must enable the intl extension to use Passbolt.'),
             [
-                __('See. https://secure.php.net/manual/en/book.intl.php')
+                __('See. https://secure.php.net/manual/en/book.intl.php'),
             ]
         );
         $this->assert(
@@ -242,7 +242,7 @@ class HealthcheckTask extends AppShell
             __('Mbstring extension is installed.'),
             __('You must enable the mbstring extension to use Passbolt.'),
             [
-                __('See. https://secure.php.net/manual/en/book.mbstring.php')
+                __('See. https://secure.php.net/manual/en/book.mbstring.php'),
             ]
         );
     }
@@ -271,7 +271,7 @@ class HealthcheckTask extends AppShell
             __('The passbolt config file is missing in {0}', CONFIG),
             [
                 __('Copy {0} to {1}', CONFIG . 'passbolt.php.default', CONFIG . 'passbolt.php'),
-                __('The passbolt config file is not required if passbolt is configured with environment variables')
+                __('The passbolt config file is not required if passbolt is configured with environment variables'),
             ]
         );
     }
@@ -318,7 +318,7 @@ class HealthcheckTask extends AppShell
             __('App.fullBaseUrl does not validate. {0}.', $checks['core']['info']['fullBaseUrl']),
             [
                 __('Edit App.fullBaseUrl in {0}', 'config/passbolt.php'),
-                __('Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt')
+                __('Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt'),
             ]
         );
         $this->assert(
@@ -327,7 +327,7 @@ class HealthcheckTask extends AppShell
             __('Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl'),
             [
                 __('Check that the domain name is correct in {0}', 'config/passbolt.php'),
-                __('Check the network settings')
+                __('Check the network settings'),
             ]
         );
     }
@@ -382,7 +382,7 @@ class HealthcheckTask extends AppShell
             __('The application is not able to connect to the database.'),
             [
                 __('Double check the host, database name, username and password in config/passbolt.php'),
-                __('Make sure the database exists and is accessible for the given database user.')
+                __('Make sure the database exists and is accessible for the given database user.'),
             ]
         );
         $this->assert(
@@ -391,7 +391,7 @@ class HealthcheckTask extends AppShell
             __('No table found'),
             [
                 __('Run the install script to install the database tables'),
-                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake passbolt install" ' . PROCESS_USER
+                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake passbolt install" ' . PROCESS_USER,
             ]
         );
         $this->assert(
@@ -400,7 +400,7 @@ class HealthcheckTask extends AppShell
             __('No default content found'),
             [
                 __('Run the install script to set the default content such as roles and permission types'),
-                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake passbolt install" ' . PROCESS_USER
+                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake passbolt install" ' . PROCESS_USER,
             ]
         );
         $this->assert(
@@ -410,7 +410,7 @@ class HealthcheckTask extends AppShell
             [
                 __('Run the migration scripts:'),
                 'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake migrations migrate --no-lock" ' . PROCESS_USER,
-                __('See. https://www.passbolt.com/help/tech/update')
+                __('See. https://www.passbolt.com/help/tech/update'),
             ]
         );
     }
@@ -476,7 +476,7 @@ class HealthcheckTask extends AppShell
             __('Registration is open to everyone.'),
             [
                 __('Make sure this instance is not publicly available on the internet.'),
-                __('Or set passbolt.registration.public to false in config/passbolt.php.')
+                __('Or set passbolt.registration.public to false in config/passbolt.php.'),
             ]
         );
         $this->warning(
@@ -555,7 +555,7 @@ class HealthcheckTask extends AppShell
                 __('Do not use the default gpg key for the server'),
                 [
                     __('Create a key, export it and add the fingerprint to config/passbolt.php'),
-                    __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+                    __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
                 ]
             );
         } else {
@@ -565,7 +565,7 @@ class HealthcheckTask extends AppShell
                 __('The server gpg key is not set'),
                 [
                     __('Create a key, export it and add the fingerprint to config/passbolt.php'),
-                    __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+                    __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
                 ]
             );
         }
@@ -577,7 +577,7 @@ class HealthcheckTask extends AppShell
                 __('Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in config/passbolt.php.'),
                 __('Ensure there is a public key armored block in the key file.'),
                 __('Ensure the public key defined in config/passbolt.php exists and is accessible by the webserver user.'),
-                __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+                __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
             ]
         );
         $this->assert(
@@ -588,7 +588,7 @@ class HealthcheckTask extends AppShell
                 __('Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in config/passbolt.php.'),
                 __('Ensure there is a private key armored block in the key file.'),
                 __('Ensure the private key defined in config/passbolt.php exists and is accessible by the webserver user.'),
-                __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+                __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
             ]
         );
         $this->assert(
@@ -599,7 +599,7 @@ class HealthcheckTask extends AppShell
                 __('Double check the key fingerprint, example: '),
                 'sudo su -s /bin/bash -c "gpg --list-keys --fingerprint --home ' . $checks['gpg']['info']['gpgHome'] . '" ' . PROCESS_USER . ' | grep -i -B 2 \'SERVER_KEY_EMAIL\'',
                 __('SERVER_KEY_EMAIL: The email you used when you generated the server key.'),
-                __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+                __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
             ]
         );
         $this->assert(
@@ -609,7 +609,7 @@ class HealthcheckTask extends AppShell
             [
                 __('Import the private server key in the keyring of the webserver user.'),
                 __('you can try:'),
-                'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER
+                'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER,
             ]
         );
         $this->assert(
@@ -624,7 +624,7 @@ class HealthcheckTask extends AppShell
                 __('Make sure that the server private key is valid and that there is no passphrase.'),
                 __('Make sure you imported the private server key in the keyring of the webserver user.'),
                 __('you can try:'),
-                'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER
+                'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER,
             ];
 
             $this->assert(

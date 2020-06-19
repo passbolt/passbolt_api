@@ -21,7 +21,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens', 'app.Base/EmailQueue', 'app.Base/Avatars'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
+        'app.Base/EmailQueue', 'app.Base/Avatars'];
 
     public function testUsersRecoverNotificationSuccess()
     {
@@ -42,7 +43,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('You have initiated an account recovery!');
     }
 
-    public function testUsersRecoverNotificationDisabled()
+    public function testUsersCreateNotificationDisabled()
     {
         // setup
         $this->setEmailNotificationSetting('send.user.create', false);
@@ -52,7 +53,10 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
         $this->assertResponseCode(500);
         $this->assertResponseContains('No email was sent to this user.');
+    }
 
+    public function testUsersRecoverNotificationDisabled()
+    {
         // recovery
         $this->setEmailNotificationSetting('send.user.recover', false);
 

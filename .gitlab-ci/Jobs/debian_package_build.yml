@@ -1,0 +1,151 @@
+services:
+  - docker:19.03.0-dind
+
+.dependencies:
+  image: $PACKAGE_MANAGER_IMAGE
+  stage: deps
+  artifacts:
+    paths:
+      - $PACKAGE_MANAGER_PATH
+    expire_in: 1 days
+    when: always
+  cache:
+    paths:
+      - $PACKAGE_MANAGER_PATH
+  only:
+    - develop
+    - release
+    - master
+
+composer:
+  extends: .dependencies
+  variables:
+    PACKAGE_MANAGER_IMAGE: "composer:latest"
+    PACKAGE_MANAGER_PATH: vendor/
+  script:
+    - |
+      composer global require hirak/prestissimo
+      composer install --prefer-dist -o --no-dev --ignore-platform-reqs --no-interaction
+
+build-debian:
+  image: debian:stable-slim
+  stage: build
+  dependencies:
+    - composer
+  artifacts:
+    paths:
+      - '*.deb'
+      - '*.build'
+      - '*.buildinfo'
+      - '*.changes'
+    expire_in: 1 week
+    when: always
+  script:
+    - |
+      apt-get update
+      apt-get install -y devscripts apt-utils debconf-utils fakeroot equivs cdbs
+      make -f debian/rules debian/control
+      mk-build-deps -irt'apt-get --no-install-recommends -yV' debian/control
+      dpkg-checkbuilddeps
+      debuild --preserve-envvar PASSBOLT_FLAVOUR -us -uc -b -i -I
+      cp ../*.deb .
+      cp ../*.build .
+      cp ../*.buildinfo .
+      cp ../*.changes .
+  only:
+    - develop
+    - release
+    - master
+
+.kitchen-test:
+  image: chef/chefdk:latest
+  stage: test
+  dependencies:
+    - composer
+    - build-debian
+  script:
+    - gem install bundler:2.1.2
+    - kitchen verify $KITCHEN_JOB -t tests/integration
+  only:
+    - develop
+    - release
+    - master
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-integration/
+
+.publish:
+  image: registry.gitlab.com/passbolt/passbolt-ops/passbolt-aptly
+  stage: publish
+  dependencies:
+    - build-debian
+  script:
+    - /publisher.sh
+  only:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /publish-package/
+
+dist-debian:
+  extends: .publish
+  variables:
+    DISTRIBUTION: buster
+    COMPONENT: stable
+    PREFIX: $PASSBOLT_FLAVOUR/debian
+
+debian-fs:
+  extends: .kitchen-test
+  dependencies:
+    - composer
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-debian-buster
+
+debian-purge:
+  extends: .kitchen-test
+  variables:
+    KITCHEN_JOB: purge-benchmarks-debian-buster
+
+debian-runtime:
+  extends: .kitchen-test
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-debian-buster
+
+debian-break:
+  extends: .kitchen-test
+  variables:
+    KITCHEN_JOB: break-benchmarks-debian-buster
+
+ubuntu-1804-fs:
+  extends: .kitchen-test
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-ubuntu-1804
+
+ubuntu-1804-purge:
+  extends: .kitchen-test
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: purge-benchmarks-ubuntu-1804
+
+ubuntu-1804-runtime:
+  extends: .kitchen-test
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-ubuntu-1804
+
+ubuntu-1910-fs:
+  extends: .kitchen-test
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-ubuntu-1910
+
+ubuntu-1910-purge:
+  extends: .kitchen-test
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: purge-benchmarks-ubuntu-1910
+
+ubuntu-1910-runtime:
+  extends: .kitchen-test
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-ubuntu-1910

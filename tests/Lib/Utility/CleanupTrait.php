@@ -14,6 +14,9 @@
  */
 namespace App\Test\Lib\Utility;
 
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
+
 trait CleanupTrait
 {
     /**
@@ -21,26 +24,40 @@ trait CleanupTrait
      *
      * @param string $modelName model to call
      * @param string $checkName function to call to cleanup
-     * @param int $originalCount initial number of records before broken record insert
+     * @param int $expectedCount expected number of records after the cleanup
+     * @param array $options
+     * [
+     *   bool $isDeleteCleanup Does the cleanup delete record. Default true. Some cleanup add records, false for them.
+     *   int $cleanupCount The number of records the cleanup will treat. Default 1.
+     * ]
      */
-    protected function runCleanupChecks($modelName, $checkName, $originalCount)
+    protected function runCleanupChecks(string $modelName, string $checkName, int $expectedCount, array $options = [])
     {
+        $isDeleteCleanup = Hash::get($options, 'isDeleteCleanup', true);
+        $cleanupCount = Hash::get($options, 'cleanupCount', 1);
+        $table = TableRegistry::getTableLocator()->get($modelName);
+
         // Check that the broken record was inserted
-        $afterCount = $this->{$modelName}->find()->count();
-        $this->assertEquals($originalCount + 1, $afterCount, 'Broken record was not inserted');
+        $beforeCleanupCount = $table->find()->count();
+        if ($isDeleteCleanup) {
+            $expectedCountBeforeCleanup = $expectedCount + $cleanupCount;
+        } else {
+            $expectedCountBeforeCleanup = $expectedCount - $cleanupCount;
+        }
+        $this->assertEquals($expectedCountBeforeCleanup, $beforeCleanupCount, 'The number of records before cleanup is not the one expected');
 
         // Check that a dry run does not delete anything
-        $deletedCount = $this->{$modelName}->{$checkName}(true); // dry-run
-        $this->assertEquals(1, $deletedCount, 'Could not find anything to delete (Dry run)');
+        $deletedCount = $table->{$checkName}(true); // dry-run
+        $this->assertEquals($cleanupCount, $deletedCount, 'Could not find anything to fix (Dry run)');
 
         // Check that running the cleanup delete the broken record
-        $deletedCount = $this->{$modelName}->{$checkName}();
-        $this->assertEquals(1, $deletedCount, 'Could not find anything to delete');
+        $deletedCount = $table->{$checkName}();
+        $this->assertEquals($cleanupCount, $deletedCount, 'Could not find anything to fix');
 
         // Check that subsequent cleanup do not delete anything
-        $deletedCount = $this->{$modelName}->{$checkName}();
-        $this->assertEquals(0, $deletedCount, 'Running a second cleanup should not find more stuffs to delete');
-        $afterCount = $this->{$modelName}->find()->count();
-        $this->assertEquals($originalCount, $afterCount, 'Cleanup should not delete more than necessary');
+        $deletedCount = $table->{$checkName}();
+        $this->assertEquals(0, $deletedCount, 'Running a second cleanup should not find more stuffs to fix');
+        $afterCount = $table->find()->count();
+        $this->assertEquals($expectedCount, $afterCount, 'Cleanup should not fix more than necessary');
     }
 }

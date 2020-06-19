@@ -41,13 +41,13 @@ class SecretsHistoryTable extends Table
 
         $this->hasOne('EntitiesHistory', [
             'foreignKey' => 'foreign_key',
-            'className' => 'Passbolt/Log.EntitiesHistory'
+            'className' => 'Passbolt/Log.EntitiesHistory',
         ]);
         $this->belongsTo('Resources', [
-            'foreignKey' => 'resource_id'
+            'foreignKey' => 'resource_id',
         ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
 
         // The contains below are a duplicate of above.
@@ -56,12 +56,12 @@ class SecretsHistoryTable extends Table
         $this->belongsTo('SecretsHistoryUsers', [
             'foreignKey' => 'user_id',
             'className' => 'Users',
-            'joinType' => 'LEFT'
+            'joinType' => 'LEFT',
         ]);
         $this->belongsTo('SecretsHistoryResources', [
             'foreignKey' => 'resource_id',
             'className' => 'Resources',
-            'joinType' => 'LEFT'
+            'joinType' => 'LEFT',
         ]);
     }
 
