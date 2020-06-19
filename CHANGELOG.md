@@ -40,7 +40,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fix misc checkstyle issues
 - PB-980: Fix "secret access logging in password activity log should not display other resources secret access after a multiple share"
 
-## [2.12.0] - 2019-12-05
+## [2.12.1] - 2020-04-14
+### Security fixes
+- PB-1209: Update javascript client dependencies
+
+## [2.12.0] - 2019-12-06
 ### Added
 - PB-575: As AD I can see the MFA status of each user in the users grid
 - PB-639: As LU I can delete a personal tag
@@ -798,7 +802,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.12.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...HEAD
+[2.12.1]: https://github.com/passbolt/passbolt_api/compare/v2.12.0...v2.12.1
 [2.12.0]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...v2.12.0
 [2.11.0]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...v2.11.0
 [2.10.0]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...v2.10.0

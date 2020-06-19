@@ -14,10 +14,10 @@
   "homepage": "https://www.passbolt.com",
   "devDependencies": {
     "babel-polyfill": "^6.26.0",
-    "grunt": "^1.0.4",
+    "grunt": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "openpgp": "4.6.2",
     "passbolt-appjs": "^2.13.5",
     "passbolt-styleguide": "^2.13.12"
