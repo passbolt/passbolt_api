@@ -19,7 +19,7 @@
     "grunt-contrib-watch": "^1.1.0",
     "jquery": "^3.4.1",
     "openpgp": "4.6.2",
-    "passbolt-appjs": "^2.13.5",
+    "passbolt-appjs": "^2.13.6",
     "passbolt-styleguide": "^2.13.13"
   }
 }
