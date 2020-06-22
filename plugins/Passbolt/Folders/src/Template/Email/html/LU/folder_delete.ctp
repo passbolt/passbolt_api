@@ -18,7 +18,7 @@ if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
 $user = $body['user'];
-$folder = $body['resource'];
+$folder = $body['folder'];
 
 echo $this->element('Email/module/avatar',[
     'url' => Router::url(DS . $user->profile->avatar->url['small'], true),
