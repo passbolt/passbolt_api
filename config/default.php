@@ -114,13 +114,10 @@ return [
                     ]
                 ],
                 'folder' => [
-                    'created' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_CREATED', true), FILTER_VALIDATE_BOOLEAN),
-                    'updated' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_UPDATED', true), FILTER_VALIDATE_BOOLEAN),
-                    'deleted' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_DELETED', true), FILTER_VALIDATE_BOOLEAN),
-                    'share' => [
-                        'created' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE_CREATED', true), FILTER_VALIDATE_BOOLEAN),
-                        'dropped' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE_DROPPED', true), FILTER_VALIDATE_BOOLEAN),
-                    ],
+                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_CREATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'update' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_DELETE', true), FILTER_VALIDATE_BOOLEAN),
+                    'share' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
             ]
         ],

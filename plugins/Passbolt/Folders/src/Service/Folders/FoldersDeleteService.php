@@ -15,10 +15,10 @@
 
 namespace Passbolt\Folders\Service\Folders;
 
-use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
+use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -55,6 +55,11 @@ class FoldersDeleteService
     private $foldersRelationsDeleteService;
 
     /**
+     * @var PermissionsGetUsersIdsHavingAccessToService
+     */
+    private $getUsersIdsHavingAccessToService;
+
+    /**
      * @var PermissionsTable
      */
     private $permissionsTable;
@@ -76,6 +81,7 @@ class FoldersDeleteService
     {
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+        $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->userHasPermissionService = new UserHasPermissionService();
@@ -99,10 +105,12 @@ class FoldersDeleteService
         }
 
         $this->foldersTable->getConnection()->transactional(function () use ($uac, $folder, $cascade) {
+            $usersIds = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($folder->id);
             $this->deleteFolder($uac, $folder, $cascade);
             $this->dispatchEvent(self::FOLDERS_DELETE_FOLDER_EVENT, [
                 'uac' => $uac,
                 'folder' => $folder,
+                'users' => $usersIds,
             ]);
         });
     }

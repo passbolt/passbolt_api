@@ -1,11 +1,4 @@
 <?php
-namespace Passbolt\Folders\Notification\Email;
-
-use App\Model\Table\UsersTable;
-use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
-use App\Notification\Email\SubscribedEmailRedactorInterface;
-use Cake\ORM\TableRegistry;
-
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,6 +13,12 @@ use Cake\ORM\TableRegistry;
  * @since         2.13.0
  */
 
+namespace Passbolt\Folders\Notification\Email;
+
+use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
+use App\Notification\Email\SubscribedEmailRedactorInterface;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+
 class FoldersEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
     /**
@@ -28,13 +27,35 @@ class FoldersEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
      */
     public function getSubscribedRedactors()
     {
-        /** @var UsersTable $usersTable */
-        $usersTable = TableRegistry::getTableLocator()->get('Users');
+        $redactors = [];
 
-        return [
-            new CreateFolderEmailRedactor($usersTable),
-            new DeleteFolderEmailRedactor($usersTable),
-            new UpdateFolderEmailRedactor($usersTable),
-        ];
+        if ($this->isRedactorEnabled('send.folder.create')) {
+            $redactors[] = new CreateFolderEmailRedactor();
+        }
+
+        if ($this->isRedactorEnabled('send.folder.update')) {
+            $redactors[] = new UpdateFolderEmailRedactor();
+        }
+
+        if ($this->isRedactorEnabled('send.folder.delete')) {
+            $redactors[] = new DeleteFolderEmailRedactor();
+        }
+
+        if ($this->isRedactorEnabled('send.folder.share')) {
+            $redactors[] = new ShareFolderEmailRedactor();
+        }
+
+        return $redactors;
+    }
+
+    /**
+     * Return true if the redactor is enabled
+     *
+     * @param string $notificationSettingPath Notification Settings path with dot notation
+     * @return mixed
+     */
+    private function isRedactorEnabled(string $notificationSettingPath)
+    {
+        return EmailNotificationSettings::get($notificationSettingPath);
     }
 }

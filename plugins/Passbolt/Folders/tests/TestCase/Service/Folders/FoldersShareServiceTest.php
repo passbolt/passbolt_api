@@ -19,26 +19,34 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
+use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Test\Fixture\Base\AvatarsFixture;
+use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
+use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\SecretsFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
+use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 use Passbolt\Folders\Service\Folders\FoldersShareService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
@@ -53,6 +61,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersShareServiceTest extends FoldersTestCase
 {
+    use EmailNotificationSettingsTestTrait;
     use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -60,6 +69,8 @@ class FoldersShareServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
+        AvatarsFixture::class,
+        EmailQueueFixture::class,
         FoldersFixture::class,
         FoldersRelationsFixture::class,
         GpgkeysFixture::class,
@@ -68,6 +79,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         PermissionsFixture::class,
         ProfilesFixture::class,
         ResourcesFixture::class,
+        RolesFixture::class,
         SecretsFixture::class,
         UsersFixture::class,
     ];
@@ -100,6 +112,17 @@ class FoldersShareServiceTest extends FoldersTestCase
         $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
         $this->service = new FoldersShareService();
+
+        $this->loadNotificationSettings();
+        EventManager::instance()->on(new FolderNotificationSettingsDefinition());
+        EventManager::instance()->on(new FoldersEmailRedactorPool());
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
     public function testShareFolderError_FolderNotFound()
@@ -125,12 +148,11 @@ class FoldersShareServiceTest extends FoldersTestCase
 
     public function testShareFolderError_InsufficientPermission()
     {
-        $folder = $this->insertFixture_ShareFolderError_InsufficientPermission();
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
+        list($folderA, $userAId, $userBId) = $this->insertFixture_ShareFolderError_InsufficientPermission();
+        $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->expectException(ForbiddenException::class);
-        $this->service->share($uac, $folder->id);
+        $this->service->share($uac, $folderA->id);
     }
 
     public function insertFixture_ShareFolderError_InsufficientPermission()
@@ -140,14 +162,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         // A (Ada:R, Betty:O)
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
-        $folder = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::UPDATE, $userBId => Permission::OWNER]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::UPDATE, $userBId => Permission::OWNER]);
 
-        return $folder;
-    }
-
-    public function testShareFolderSuccess_NotifyUserByEmail()
-    {
-        $this->markTestIncomplete();
+        return [$folderA, $userAId, $userBId];
     }
 
     public function testShareFolderError_AddUser_InvalidPermission()
@@ -209,6 +226,26 @@ class FoldersShareServiceTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
 
         return [$folderA, $userAId];
+    }
+
+    public function testShareFolderSuccess_NotifyUserAfterShare()
+    {
+        list($folderA, $userAId) = $this->insertFixture_ShareFolderSuccess_AddUser();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $userCId = UuidFactory::uuid('user.id.carol');
+        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::READ];
+        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userCId, 'type' => Permission::READ];
+        $this->service->share($uac, $folderA->id, $data);
+
+        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('shared the folder');
+
+        $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('shared the folder');
     }
 
     public function testShareFolderSuccess_AddGroup()

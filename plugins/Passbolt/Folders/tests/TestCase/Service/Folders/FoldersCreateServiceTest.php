@@ -19,11 +19,15 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
+use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Test\Fixture\Base\AvatarsFixture;
+use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
+use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UserAccessControl;
@@ -31,11 +35,15 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
+use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 use Passbolt\Folders\Service\Folders\FoldersCreateService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
@@ -50,6 +58,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersCreateServiceTest extends FoldersTestCase
 {
+    use EmailNotificationSettingsTestTrait;
     use EventDispatcherTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -57,6 +66,8 @@ class FoldersCreateServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
+        AvatarsFixture::class,
+        EmailQueueFixture::class,
         FoldersFixture::class,
         FoldersRelationsFixture::class,
         GpgkeysFixture::class,
@@ -64,6 +75,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
         GroupsUsersFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,
+        RolesFixture::class,
         UsersFixture::class,
     ];
 
@@ -97,34 +109,22 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
         /** @var FoldersCreateService service */
         $this->service = new FoldersCreateService();
+
+        $this->loadNotificationSettings();
+        EventManager::instance()->on(new FolderNotificationSettingsDefinition());
+        EventManager::instance()->on(new FoldersEmailRedactorPool());
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
     /* ************************************************************** */
     /* COMMON & VALIDATION */
     /* ************************************************************** */
-
-    public function testThatFoldersCreateDispatchEventToSendEmailAfterFolderIsCreated()
-    {
-        $eventNameToTest = FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT;
-        $eventWasDispatched = false;
-
-        $callable = function (Event $event) use (&$eventWasDispatched) {
-            $this->assertArrayHasKey('folder', $event->getData(), "Event should provide the `folder` entity as event data.");
-            $this->assertArrayHasKey('uac', $event->getData(), "Event should provide the `uac` as event data.");
-            $eventWasDispatched = true;
-        };
-
-        // We use the same instance of event manager that the service is using to test that dispatch is done.
-        $this->service->getEventManager()->on($eventNameToTest, $callable);
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => 'A'];
-
-        $this->service->create($uac, $folderData);
-
-        $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was created with success.");
-    }
 
     public function testCreateFolder_CommonError1_ValidationError()
     {
@@ -187,6 +187,18 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::OWNER]);
 
         return [$folderA];
+    }
+
+    public function testCreateFolder_CommonSuccess_NotifyUserAfterCreate()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folderData = ['name' => 'A'];
+        $this->service->create($uac, $folderData);
+
+        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('You have created a new folder');
     }
 
     /* ************************************************************** */
