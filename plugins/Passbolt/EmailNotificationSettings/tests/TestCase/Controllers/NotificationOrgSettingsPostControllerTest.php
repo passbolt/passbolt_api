@@ -14,15 +14,31 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettings;
 
+use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
 {
+    use EmailNotificationSettingsTestTrait;
+
+    public $fixtures = [
+        OrganizationSettingsFixture::class,
+    ];
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->loadNotificationSettings();
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+    }
+
     public function tearDown()
     {
-        EmailNotificationSettings::flushCache();
         parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
     /**

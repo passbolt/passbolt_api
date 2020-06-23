@@ -30,8 +30,8 @@ EventManager::instance()
     ->on(new GroupsEventListener()) // Add / remove folders relations when a group members list is updated
     ->on(new AddFolderParentIdBehavior()) // Decorate the query to add the "folder_parent_id" property on the entities
     ->on(new PermissionsModelInitializeEventListener()) // Decorate the permissions table class to add cleanup method
-    ->on(new FoldersEmailRedactorPool()) // Register email redactors
-    ->on(new FolderNotificationSettingsDefinition()); // Add email notification settings definition
+    ->on(new FolderNotificationSettingsDefinition())// Add email notification settings definition
+    ->on(new FoldersEmailRedactorPool()); // Register email redactors
 
 // Add cleanup tasks jobs.
 $cleanups = [

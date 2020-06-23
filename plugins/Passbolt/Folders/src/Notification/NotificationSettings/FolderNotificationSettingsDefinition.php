@@ -1,4 +1,17 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.13.0
+ */
 declare(strict_types=1);
 
 namespace Passbolt\Folders\Notification\NotificationSettings;
@@ -12,18 +25,16 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
 {
     use EmailNotificationSettingsDefinitionTrait;
 
-    const FOLDER_DELETED = 'send_folder_deleted';
-    const FOLDER_CREATED = 'send_folder_created';
-    const FOLDER_UPDATED = 'send_folder_updated';
-    const FOLDER_SHARE_CREATED = 'send_folder_share_created';
-    const FOLDER_SHARE_DROPPED = 'send_folder_share_dropped';
+    const FOLDER_CREATE = 'send_folder_create';
+    const FOLDER_DELETE = 'send_folder_delete';
+    const FOLDER_UPDATE = 'send_folder_update';
+    const FOLDER_SHARE = 'send_folder_share';
 
     const FIELDS = [
-        self::FOLDER_DELETED,
-        self::FOLDER_CREATED,
-        self::FOLDER_UPDATED,
-        self::FOLDER_SHARE_CREATED,
-        self::FOLDER_SHARE_DROPPED,
+        self::FOLDER_DELETE,
+        self::FOLDER_CREATE,
+        self::FOLDER_UPDATE,
+        self::FOLDER_SHARE,
     ];
 
     /**

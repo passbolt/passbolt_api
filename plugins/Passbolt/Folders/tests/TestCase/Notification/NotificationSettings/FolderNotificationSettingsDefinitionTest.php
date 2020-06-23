@@ -23,11 +23,10 @@ use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSetting
 class FolderNotificationSettingsDefinitionTest extends TestCase
 {
     const EXPECTED_FIELDS = [
-        'send_folder_deleted',
-        'send_folder_created',
-        'send_folder_updated',
-        'send_folder_share_created',
-        'send_folder_share_dropped',
+        'send_folder_delete',
+        'send_folder_create',
+        'send_folder_update',
+        'send_folder_share',
     ];
 
     /**

@@ -15,27 +15,27 @@
 
 namespace Passbolt\Folders\Notification\Email;
 
+use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
-use Passbolt\Folders\Service\Folders\FoldersCreateService;
+use Passbolt\Folders\Service\Folders\FoldersShareService;
 
-class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
+class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
     /**
      * @var string
-     * @see Template/Email/html/LU/folder_create.ctp
+     * @see Template/Email/html/LU/folder_share.ctp
      */
-    const TEMPLATE = 'Passbolt/Folders.LU/folder_create';
+    const TEMPLATE = 'Passbolt/Folders.LU/folder_share';
 
     /**
      * @var UsersTable
@@ -56,7 +56,7 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT,
+            FoldersShareService::FOLDERS_SHARE_FOLDER_EVENT,
         ];
     }
 
@@ -78,33 +78,37 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
             throw new InvalidArgumentException('`uac` is missing from event data.');
         }
 
-        $email = $this->createEmail($folder, $uac);
+        $userId = $event->getData('userId');
+        if (!$userId) {
+            throw new InvalidArgumentException('`userId` is missing from event data.');
+        }
 
-        return $emailCollection->addEmail($email);
+        $operator = $this->usersTable->findFirstForEmail($uac->userId());
+        $recipient = $this->usersTable->findById($userId)->select('username')->extract('username')->first();
+
+        $email = $this->createEmail($recipient, $operator, $folder);
+        $emailCollection->addEmail($email);
+
+        return $emailCollection;
     }
 
     /**
-     * @param Folder $folder Folder entity
-     * @param UserAccessControl $userAccessControl UserAccessControl
+     * @param string $recipient The recipient email
+     * @param User $operator The user at the origin of the operation
+     * @param Folder $folder The target folder
      * @return Email
      */
-    private function createEmail(Folder $folder, UserAccessControl $userAccessControl)
+    private function createEmail(string $recipient, User $operator, Folder $folder)
     {
-        $user = $this->usersTable->findFirstForEmail($userAccessControl->userId());
-
-        $subject = __("You added the folder {0}", $folder->name);
-
-        return new Email(
-            $user->username,
-            $subject,
-            [
-                'body' => [
-                    'user' => $user,
-                    'folder' => $folder,
-                ],
-                'title' => $subject,
+        $subject = __("{0} shared the folder {1}", $operator->profile->first_name, $folder->name);
+        $data = [
+            'body' => [
+                'user' => $operator,
+                'folder' => $folder,
             ],
-            self::TEMPLATE
-        );
+            'title' => $subject,
+        ];
+
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }
