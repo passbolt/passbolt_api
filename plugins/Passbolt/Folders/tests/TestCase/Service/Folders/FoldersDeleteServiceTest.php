@@ -19,7 +19,10 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
+use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Fixture\Alt0\SecretsFixture;
+use App\Test\Fixture\Base\AvatarsFixture;
+use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -27,6 +30,7 @@ use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
+use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
@@ -35,13 +39,17 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
+use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 use Passbolt\Folders\Service\Folders\FoldersDeleteService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
@@ -58,6 +66,7 @@ use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
  */
 class FoldersDeleteServiceTest extends FoldersTestCase
 {
+    use EmailNotificationSettingsTestTrait;
     use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -68,6 +77,8 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     public $fixtures = [
         ActionsFixture::class,
         ActionLogsFixture::class,
+        AvatarsFixture::class,
+        EmailQueueFixture::class,
         FoldersFixture::class,
         FoldersRelationsFixture::class,
         GpgkeysFixture::class,
@@ -77,6 +88,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         ProfilesFixture::class,
         UsersFixture::class,
         ResourcesFixture::class,
+        RolesFixture::class,
         SecretsFixture::class,
         FavoritesFixture::class,
     ];
@@ -124,6 +136,17 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
 
         $this->service = new FoldersDeleteService();
+
+        $this->loadNotificationSettings();
+        EventManager::instance()->on(new FolderNotificationSettingsDefinition());
+        EventManager::instance()->on(new FoldersEmailRedactorPool());
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
     /* ************************************************************** */
@@ -150,27 +173,20 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $this->service->delete($uac, $folder->id);
     }
 
-    public function testDeleteFolder_CommonSuccess1_EmailSentAfterDelete()
+    public function testDeleteFolder_CommonSuccess2_NotifyUsersAfterDelete()
     {
-        $eventNameToTest = FoldersDeleteService::FOLDERS_DELETE_FOLDER_EVENT;
-        $eventWasDispatched = false;
+        list($folderA, $folderB, $userAId, $userBId) = $this->insertSharedSuccess2Fixture();
 
-        $callable = function (Event $event) use (&$eventWasDispatched) {
-            $this->assertArrayHasKey('folder', $event->getData(), "Event should provide the `folder` entity as event data.");
-            $this->assertArrayHasKey('uac', $event->getData(), "Event should provide the `uac` as event data.");
-            $eventWasDispatched = true;
-        };
+        $uac = new UserAccessControl(Role::USER, $userAId);
+        $this->service->delete($uac, $folderA->id);
 
-        // We use the same instance of event manager that the service is using to test that dispatch is done.
-        $this->service->getEventManager()->on($eventNameToTest, $callable);
+        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('deleted the folder');
 
-        $folder = $this->insertPersoSuccess1Fixture();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $this->service->delete($uac, $folder->id);
-
-        $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was deleted with success.");
+        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('deleted the folder');
     }
 
     /* ************************************************************** */
@@ -384,7 +400,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
         $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
-        return [$folderA, $folderB];
+        return [$folderA, $folderB, $userAId, $userBId];
     }
 
     public function testDeleteFolder_SharedSuccess3_CascadeDelete()

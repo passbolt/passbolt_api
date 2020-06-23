@@ -18,20 +18,29 @@ namespace Passbolt\Folders\Test\TestCase\Service\Folders;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Test\Fixture\Base\AvatarsFixture;
+use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
+use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
+use App\Test\Fixture\Base\ProfilesFixture;
+use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
+use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
@@ -46,6 +55,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersUpdateServiceTest extends FoldersTestCase
 {
+    use EmailNotificationSettingsTestTrait;
     use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -53,11 +63,16 @@ class FoldersUpdateServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
+        AvatarsFixture::class,
+        EmailQueueFixture::class,
         FoldersFixture::class,
         FoldersRelationsFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
+        OrganizationSettingsFixture::class,
         PermissionsFixture::class,
+        ProfilesFixture::class,
+        RolesFixture::class,
         UsersFixture::class,
     ];
 
@@ -81,6 +96,17 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         parent::setUp();
         $this->service = new FoldersUpdateService();
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+
+        $this->loadNotificationSettings();
+        EventManager::instance()->on(new FolderNotificationSettingsDefinition());
+        EventManager::instance()->on(new FoldersEmailRedactorPool());
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
     public function testUpdateFolderSuccess_UpdateFolderMeta()
@@ -107,26 +133,18 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderSuccess_NotifyUserAfterUpdate()
     {
-        $eventNameToTest = FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT;
-        $eventWasDispatched = false;
-
-        $callable = function (Event $event) use (&$eventWasDispatched) {
-            $this->assertArrayHasKey('folder', $event->getData(), "Event should provide the `folder` entity as event data.");
-            $this->assertArrayHasKey('uac', $event->getData(), "Event should provide the `uac` as event data.");
-            $eventWasDispatched = true;
-        };
-
-        // We use the same instance of event manager that the service is using to test that dispatch is done.
-        $this->service->getEventManager()->on($eventNameToTest, $callable);
-
-        list($folderA, $userAId) = $this->insertFixture_UpdateFolderMeta();
+        list($folderA, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->update($uac, $folderA->id, ['name' => 'new name']);
 
-        $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was updated with success.");
+        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('updated the folder');
 
-//        $this->markTestIncomplete("should check that an email has been sent?");
+        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('updated the folder');
     }
 
     public function testUpdateFolderError_ValidationError()
@@ -160,7 +178,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         // Ada is OWNER of folder A
         // Betty has READ on folder A
         // ---
-        // A (Ada:O)
+        // A (Ada:O, Betty:R)
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);

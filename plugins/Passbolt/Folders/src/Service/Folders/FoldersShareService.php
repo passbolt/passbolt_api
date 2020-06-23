@@ -42,6 +42,8 @@ class FoldersShareService
 {
     use EventDispatcherTrait;
 
+    const FOLDERS_SHARE_FOLDER_EVENT = 'folders.folder.share';
+
     /**
      * @var FoldersTable
      */
@@ -121,11 +123,6 @@ class FoldersShareService
             $this->postPermissionsRevoked($folder, $result['removed']);
             $this->postPermissionsAdded($uac, $folder, $result['added']);
         });
-
-//        $this->dispatchEvent(self::FOLDERS_UPDATE_FOLDER_EVENT, [
-//            'uac' => $uac,
-//            'folder' => $folder,
-//        ]);
 
         return $folder;
     }
@@ -333,6 +330,16 @@ class FoldersShareService
      */
     private function addFolderToUserTree(UserAccessControl $uac, Folder $folder, string $userId)
     {
+        $exists = $this->foldersRelationsTable->isItemInUserTree($userId, $folder->id);
+        if ($exists) {
+            return;
+        }
+
         $this->foldersRelationsAddItemToUserTreeService->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId);
+        $this->dispatchEvent(self::FOLDERS_SHARE_FOLDER_EVENT, [
+            'uac' => $uac,
+            'folder' => $folder,
+            'userId' => $userId,
+        ]);
     }
 }
