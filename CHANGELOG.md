@@ -3,6 +3,32 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+## [2.13.0] 2019-06-23
+### Added
+- PB-1168 Add baseline code and tests for Debian package build
+- PB-1067 As a user I can receive digest emails when creating a lot of resources
+- PB-1067 As a user I can receive digest emails when added/removed from a lot of groups
+- PB-1284 Add tasks and services to re-validate existing data
+
+### Improved
+- Pro Styleguide version bump v2.13.13
+- Appjs version bump v2.13.7
+- PB-1046 Adapt Cleanup test runner to take in account cleanup that are adding records
+- PB-1046 Adapt Cleanup shell task to allow external sources to add cleanup tasks
+- PB-1046 Remove empty EmailTraits files
+- Delete unused default keys (cleanup)
+- Update to latest passbolt_test_data version.
+- Misc refactoring for email notifications
+- Misc refactoring to split model logic into services
+- Clear plugins in tearDown of application test cases
+
+### Fixed
+- GITHUB-350 No mails are sent when providers offer AUTH PLAIN authentication only
+- Fix appjs plugin requestUntilSuccess bug
+- Fix load webinstaller plugin manually in plugin tests
+- Fix composer php version.
+- Fix misc checkstyle issues
+- PB-980: Fix "secret access logging in password activity log should not display other resources secret access after a multiple share"
 
 ## [2.12.1] - 2020-04-14
 ### Security fixes
@@ -683,7 +709,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.13.0...HEAD
+[2.13.0]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...v2.13.0
 [2.12.1]: https://github.com/passbolt/passbolt_api/compare/v2.12.0...v2.12.1
 [2.12.0]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...v2.12.0
 [2.11.0]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...v2.11.0
