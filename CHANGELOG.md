@@ -2,8 +2,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.13.0] 2019-06-23
+### Added
 - PB-1347 As a Passbolt server administrator I should be able to use advanced filters for the ldap queries.
+- Folders audit log
+- PB-1284 Add tasks and services to re-validate existing data
+- Add contain options (creator.profile and modifier.profile) to the folders view and index entry points
+
+### Improved
+- Appjs version bump v2.13.7
+- Pro Styleguide version bump v2.13.13
+- Cache the list of users folders relations while performing a bulk SSCs detection
+- PB-1320 Folders performances fix missing folders tables indexes
+
+### Fixed
+- GITHUB-350 No mails are sent when providers offer AUTH PLAIN authentication only
+- PB-1328 Fixed various folders email issue
+- Fix group delete sole owner of non shared folders issue
 
 ## [2.13.0-RC1] - 2019-05-27
 ### Added
@@ -802,7 +817,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.13.0...HEAD
+[2.13.0]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...v2.13.0
 [2.12.1]: https://github.com/passbolt/passbolt_api/compare/v2.12.0...v2.12.1
 [2.12.0]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...v2.12.0
 [2.11.0]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...v2.11.0
