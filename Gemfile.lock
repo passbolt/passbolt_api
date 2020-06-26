@@ -441,7 +441,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (4.0.5)
-    rack (2.2.2)
+    rack (2.2.3)
     regexp_parser (1.7.0)
     representable (3.0.4)
       declarative (< 0.1.0)
