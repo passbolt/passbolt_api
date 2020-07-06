@@ -61,6 +61,11 @@ class PermissionsCleanupTest extends FoldersTestCase
     private $foldersTable;
 
     /**
+     * @var ResourcesTable
+     */
+    private $resourcesTables;
+
+    /**
      * setUp method
      *
      * @return void

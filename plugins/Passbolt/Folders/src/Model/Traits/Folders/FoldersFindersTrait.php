@@ -20,14 +20,14 @@ use App\Model\Table\PermissionsTable;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 
 /**
  * Trait FoldersFindersTrait
  * @package Passbolt\Folders\Model\Traits\Folders
  *
- * @mixin ContainFolderParentIdBehavior
+ * @mixin FolderizableBehavior
  */
 trait FoldersFindersTrait
 {
@@ -47,9 +47,7 @@ trait FoldersFindersTrait
 
         $query = $this->find();
 
-        if ($this->hasBehavior(ContainFolderParentIdBehavior::class)) {
-            $query->find(ContainFolderParentIdBehavior::FINDER_NAME, ['user_id' => $userId]);
-        }
+        $query->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
 
         if (isset($options['filter']['has-id'])) {
             $this->filterByIds($query, $options['filter']['has-id']);
@@ -84,7 +82,7 @@ trait FoldersFindersTrait
         if (isset($options['contain']['children_folders'])) {
             $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
                 return $q->where(['user_id' => $userId])
-                    ->find(ContainFolderParentIdBehavior::FINDER_NAME, ['user_id' => $userId]);
+                    ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
             });
         }
 
@@ -92,7 +90,7 @@ trait FoldersFindersTrait
         if (isset($options['contain']['children_resources'])) {
             $query->contain('ChildrenResources', function (Query $q) use ($userId) {
                 return $q->where(['user_id' => $userId])
-                    ->find(ContainFolderParentIdBehavior::FINDER_NAME, ['user_id' => $userId]);
+                    ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
             });
         }
 

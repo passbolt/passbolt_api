@@ -137,7 +137,7 @@ trait FoldersModelTrait
      */
     protected function assertFolderAttributes($folder)
     {
-        $attributes = ['id', 'name', 'created', 'modified', 'created_by', 'modified_by', 'folder_parent_id'];
+        $attributes = ['id', 'name', 'created', 'modified', 'created_by', 'modified_by'];
         $this->assertObjectHasAttributes($attributes, $folder);
     }
 

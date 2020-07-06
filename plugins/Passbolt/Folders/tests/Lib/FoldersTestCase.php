@@ -18,10 +18,11 @@ use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
-use Passbolt\Folders\EventListener\AddFolderParentIdBehavior;
+use Passbolt\Folders\EventListener\AddFolderizableBehavior;
 use Passbolt\Folders\EventListener\PermissionsModelInitializeEventListener;
 use Passbolt\Folders\EventListener\ResourcesEventListener;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Folders\Model\Behavior\PermissionsCleanupBehavior;
 
 abstract class FoldersTestCase extends AppTestCase
 {
@@ -31,11 +32,14 @@ abstract class FoldersTestCase extends AppTestCase
         Configure::write('passbolt.plugins.folders.enabled', true);
 
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
-        $resourcesTable->addBehavior(ContainFolderParentIdBehavior::class);
+        $resourcesTable->addBehavior(FolderizableBehavior::class);
+
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $permissionsTable->addBehavior(PermissionsCleanupBehavior::class);
 
         EventManager::instance()
             ->on(new ResourcesEventListener()) // Add folder relation when resource is created / update
-            ->on(new AddFolderParentIdBehavior()) // Decorate the query to add the "folder_parent_id" property on the entities
+            ->on(new AddFolderizableBehavior()) // Decorate core/other plugins table class with the folderizable behavior
             ->on(new PermissionsModelInitializeEventListener()); // Decorate the permissions table class to add cleanup method
     }
 }

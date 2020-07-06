@@ -23,14 +23,13 @@ use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Exception;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
@@ -137,14 +136,15 @@ class FoldersShareService
      */
     private function getFolder(string $folderId, UserAccessControl $uac)
     {
-        try {
-            return $this->foldersTable->get($folderId, [
-                'finder' => ContainFolderParentIdBehavior::FINDER_NAME,
-                'user_id' => $uac->userId(),
-            ]);
-        } catch (RecordNotFoundException $e) {
+        $folder = $this->foldersTable->findById($folderId)
+            ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $uac->getId()])
+            ->first();
+
+        if (empty($folder)) {
             throw new NotFoundException(__('The folder does not exist.'));
         }
+
+        return $folder;
     }
 
     /**

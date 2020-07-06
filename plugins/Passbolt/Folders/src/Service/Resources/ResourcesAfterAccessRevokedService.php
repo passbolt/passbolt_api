@@ -25,7 +25,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Exception;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
 
 class ResourcesAfterAccessRevokedService
@@ -92,8 +92,8 @@ class ResourcesAfterAccessRevokedService
     {
         try {
             return $this->resourcesTable->get($resourceId, [
-                'finder' => ContainFolderParentIdBehavior::FINDER_NAME,
-                'user_id' => $uac->userId(),
+                'finder' => FolderizableBehavior::FINDER_NAME,
+                'user_id' => $uac->getId(),
             ]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
