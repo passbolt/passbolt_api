@@ -18,7 +18,6 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
-
 use Cake\Event\Event;
 
 class AuthLoginController extends AppController
