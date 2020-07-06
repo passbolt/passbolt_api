@@ -18,7 +18,7 @@ namespace Passbolt\Folders\Model\Table;
 use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 
@@ -35,7 +35,7 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
  * @method Folder findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin TimestampBehavior
- * @mixin ContainFolderParentIdBehavior
+ * @mixin FolderizableBehavior
  */
 class FoldersTable extends Table
 {
@@ -56,7 +56,7 @@ class FoldersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior(TimestampBehavior::class);
-        $this->addBehavior(ContainFolderParentIdBehavior::class);
+        $this->addBehavior(FolderizableBehavior::class);
 
         $this->hasOne('Creator', [
             'className' => 'Users',

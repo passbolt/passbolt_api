@@ -19,16 +19,15 @@ use App\Model\Table\ResourcesTable;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Table;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 
 /**
- * Add the FolderParentId behavior at runtime. It allows to add a behavior on core classes without directly changing the
- * decorated class.
+ * Add the folderizable behavior at runtime to the core or other plugins table classes.
  *
- * Class AddFolderParentIdBehavior
+ * Class AddFolderizableBehavior
  * @package Passbolt\Folders\EventListener
  */
-class AddFolderParentIdBehavior implements EventListenerInterface
+class AddFolderizableBehavior implements EventListenerInterface
 {
     const TABLES_TO_ADD = [
         ResourcesTable::class,
@@ -54,7 +53,7 @@ class AddFolderParentIdBehavior implements EventListenerInterface
             if ($event->getSubject() instanceof $allowed) {
                 /** @var Table $table */
                 $table = $event->getSubject();
-                $table->addBehavior(ContainFolderParentIdBehavior::class);
+                $table->addBehavior(FolderizableBehavior::class);
 
                 return;
             }

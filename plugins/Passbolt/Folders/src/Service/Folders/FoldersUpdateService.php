@@ -107,7 +107,7 @@ class FoldersUpdateService
      */
     private function getFolder(UserAccessControl $uac, string $folderId)
     {
-        $permission = $this->permissionsTable->findHighestByAcoAndAro(PermissionsTable::FOLDER_ACO, $folderId, $uac->userId())
+        $permission = $this->permissionsTable->findHighestByAcoAndAro(PermissionsTable::FOLDER_ACO, $folderId, $uac->getId())
             ->first();
 
         if (empty($permission)) {

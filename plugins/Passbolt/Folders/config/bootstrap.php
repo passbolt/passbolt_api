@@ -16,7 +16,7 @@
 use App\Shell\Task\CleanupTask;
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
-use Passbolt\Folders\EventListener\AddFolderParentIdBehavior;
+use Passbolt\Folders\EventListener\AddFolderizableBehavior;
 use Passbolt\Folders\EventListener\GroupsEventListener;
 use Passbolt\Folders\EventListener\PermissionsModelInitializeEventListener;
 use Passbolt\Folders\EventListener\ResourcesEventListener;
@@ -28,7 +28,7 @@ Configure::load('Passbolt/Folders.config', 'default', true);
 EventManager::instance()
     ->on(new ResourcesEventListener()) //Add / remove folders relations when a resources is created / deleted
     ->on(new GroupsEventListener()) // Add / remove folders relations when a group members list is updated
-    ->on(new AddFolderParentIdBehavior()) // Decorate the query to add the "folder_parent_id" property on the entities
+    ->on(new AddFolderizableBehavior()) // Decorate the core/other plugins table classes that can be organized in folder
     ->on(new PermissionsModelInitializeEventListener()) // Decorate the permissions table class to add cleanup method
     ->on(new FolderNotificationSettingsDefinition())// Add email notification settings definition
     ->on(new FoldersEmailRedactorPool()); // Register email redactors

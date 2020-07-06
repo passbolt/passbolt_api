@@ -180,11 +180,29 @@ class FoldersTableTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
         $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
 
-        $options['contain']['folder_parent_id'] = true;
-        $folder = $this->Folders->findView($userId, $folderB->id, $options)->first();
+        $folder = $this->Folders->findView($userId, $folderB->id)->first();
 
         // Expected fields.
         $this->assertEquals($folderA->id, $folder->folder_parent_id);
+    }
+
+    public function testFindView_ContainPersonal()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+
+        // Insert fixtures.
+        // Ada has access to folder A, B as OWNER
+        // Betty has access to folder B as OWNER
+        // A (Ada:O)
+        // B (Ada:O)
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+
+        $folderA = $this->Folders->findView($userAId, $folderA->id)->first();
+        $this->assertEquals(true, $folderA->personal);
+        $folderB = $this->Folders->findView($userAId, $folderB->id)->first();
+        $this->assertEquals(false, $folderB->personal);
     }
 
     /* ************************************************************** */

@@ -17,7 +17,7 @@ namespace Passbolt\Folders\Test\Lib;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 
 abstract class FoldersIntegrationTestCase extends AppIntegrationTestCase
 {
@@ -38,7 +38,7 @@ abstract class FoldersIntegrationTestCase extends AppIntegrationTestCase
         ]);
 
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
-        $resourcesTable->addBehavior(ContainFolderParentIdBehavior::class);
+        $resourcesTable->addBehavior(FolderizableBehavior::class);
     }
 
     public function tearDown()
