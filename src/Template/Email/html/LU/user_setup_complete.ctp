@@ -64,6 +64,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url("/users", true),
+    'url' => Router::url("/app/users", true),
     'text' => __('view users')
 ]);
