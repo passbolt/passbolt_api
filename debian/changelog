@@ -1,3 +1,27 @@
+passbolt-ce-server (2.13.0-1) stretch; urgency=medium
+  * PB-1168 Add baseline code and tests for Debian package build
+  * PB-1067 As a user I can receive digest emails when creating a lot of resources
+  * PB-1067 As a user I can receive digest emails when added/removed from a lot of groups
+  * PB-1284 Add tasks and services to re-validate existing data
+  * Pro Styleguide version bump v2.13.13
+  * Appjs version bump v2.13.7
+  * PB-1046 Adapt Cleanup test runner to take in account cleanup that are adding records
+  * PB-1046 Adapt Cleanup shell task to allow external sources to add cleanup tasks
+  * PB-1046 Remove empty EmailTraits files
+  * Delete unused default keys (cleanup)
+  * Update to latest passbolt_test_data version.
+  * Misc refactoring for email notifications
+  * Misc refactoring to split model logic into services
+  * Clear plugins in tearDown of application test cases
+  * GITHUB-350 No mails are sent when providers offer AUTH PLAIN authentication only
+  * Fix appjs plugin requestUntilSuccess bug
+  * Fix load webinstaller plugin manually in plugin tests
+  * Fix composer php version.
+  * Fix misc checkstyle issues
+  * PB-980: Fix "secret access logging in password activity log should not display other resources secret access after a multiple share"
+
+ -- Diego Lendoiro <diego@passbolt.com>  Thu, 25 Jun 2020 17:24:00 +0000
+
 passbolt-ce-server (2.12.1-1+beta) stretch; urgency=medium
   * Refactor config script
   * Refactor postinst script
@@ -9,7 +33,7 @@ passbolt-ce-server (2.12.1-1+beta) stretch; urgency=medium
   * Added logrotation for /var/log/passbolt/error.log
   * Introduced triggers for mysql and nginx
 
- -- Diego Lendoiro <diego@passbolt.com> Thu, 21 May 2020 18:24:00 +0000
+ -- Diego Lendoiro <diego@passbolt.com>  Thu, 21 May 2020 18:24:00 +0000
 
 passbolt-ce-server (2.12.0-0) stretch; urgency=medium
 
