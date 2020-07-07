@@ -1,4 +1,9 @@
 passbolt-ce-server (2.13.0-1) stretch; urgency=medium
+  * PB-1372 Fix user setup completed admin email notification
+
+ -- Diego Lendoiro <diego@passbolt.com>  Thu, 7 Jul 2020 17:24:00 +0000
+
+passbolt-ce-server (2.13.0-1) stretch; urgency=medium
   * PB-1168 Add baseline code and tests for Debian package build
   * PB-1067 As a user I can receive digest emails when creating a lot of resources
   * PB-1067 As a user I can receive digest emails when added/removed from a lot of groups
