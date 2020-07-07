@@ -1,4 +1,4 @@
-passbolt-ce-server (2.13.0-1) stretch; urgency=medium
+passbolt-ce-server (2.13.1-1) stretch; urgency=medium
   * PB-1372 Fix user setup completed admin email notification
 
  -- Diego Lendoiro <diego@passbolt.com>  Thu, 7 Jul 2020 17:24:00 +0000
