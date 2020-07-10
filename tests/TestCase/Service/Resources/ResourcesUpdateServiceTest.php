@@ -84,6 +84,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
     {
         list($r1, $r2, $userAId) = $this->insertFixture_UpdateResourceMeta();
         // Wait 1 second in order to test that the modified field is not on the same second.
+        sleep(1);
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data = [
