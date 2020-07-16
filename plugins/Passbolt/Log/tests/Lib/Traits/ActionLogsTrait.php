@@ -13,8 +13,73 @@
  */
 namespace Passbolt\Log\Test\Lib\Traits;
 
+use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
+
 trait ActionLogsTrait
 {
+    /**
+     * Add an action log
+     * @param array $data The data
+     * @param array $options The options
+     * @return mixed
+     * @throws \Exception
+     */
+    public function addActionLog($data = [], $options = [])
+    {
+        $actionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        $actionLog = self::getDummyActionLogEntity($data, $options);
+
+        $actionLogsTable->saveOrFail($actionLog);
+
+        return $actionLog;
+    }
+
+    /**
+     * Get a dummy action log entity
+     * @param array $data The data
+     * @param array $options The options
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getDummyActionLogEntity($data = [], $options = [])
+    {
+        $actionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        $defaultOptions = [
+            'checkRules' => true,
+            'accessibleFields' => [
+                '*' => true,
+            ],
+        ];
+
+        $data = self::getDummyActionLogData($data);
+        $options = array_merge($defaultOptions, $options);
+
+        return $actionLogsTable->newEntity($data, $options);
+    }
+
+    /**
+     * Get a dummy action log with test data.
+     * The relation returned should pass a default validation.
+     *
+     * @param array $data Custom data that will be merged with the default content.
+     * @return array
+     * @throws \Exception If the create date is not correct.
+     */
+    public function getDummyActionLogData($data = [])
+    {
+        $entityContent = [
+            'user_id' => UuidFactory::uuid('user.id.test-place-holder'),
+            'action_id' => UuidFactory::uuid('action.id.test-place-holder'),
+            'context' => 'TEST PLACE HOlDER',
+            'status' => 1,
+            'created' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ];
+        $entityContent = array_merge($entityContent, $data);
+
+        return $entityContent;
+    }
+
     public function assertActionLogExists($conditions)
     {
         $actionLog = $this->ActionLogs
