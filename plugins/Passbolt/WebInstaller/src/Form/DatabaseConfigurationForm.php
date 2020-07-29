@@ -61,12 +61,28 @@ class DatabaseConfigurationForm extends Form
 
         $validator
             ->allowEmpty('password')
+            ->add('password', 'no_quotes', [
+                'rule' => function ($value, $context) {
+                    if (empty($value)) {
+                        return true;
+                    }
+
+                    return (strpos($value, '"') === false && strpos($value, "'") === false);
+                },
+                'message' => __('The password cannot contain quotes.'),
+            ])
             ->utf8('password', __('The host is not a valid utf8 string.'));
 
         $validator
             ->requirePresence('database', 'create', __('A database is required.'))
             ->notEmpty('database', __('A database is required.'))
-            ->utf8('database', __('The database is not a valid utf8 string.'));
+            ->utf8('database', __('The database is not a valid utf8 string.'))
+            ->add('database', 'no_dashes', [
+                'rule' => function ($value, $context) {
+                    return (strpos($value, '-') === false);
+                },
+                'message' => __('The database name cannot contain dashes.'),
+            ]);
 
         return $validator;
     }

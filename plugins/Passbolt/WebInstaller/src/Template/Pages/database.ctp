@@ -53,7 +53,6 @@ use Cake\Routing\Router;
                                 'placeholder' => __('password'),
                                 'label' => __('Password'),
                                 'class' => 'fluid',
-                                'type' => 'password',
                             ]); ?>
 
                             <?= $this->Form->control('database', [
