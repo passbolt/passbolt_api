@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.13.5] 2019-07-29
+### Fixed
+- Fix email notification settings bootstrap messes up non persistent database connection in wizard
+- Bump dependencies versions
+
 ## [2.13.1] 2019-07-06
 ### Improved
 - PB-1370 Performance improvement while retrieving items associated folder_parent_id and personal status
