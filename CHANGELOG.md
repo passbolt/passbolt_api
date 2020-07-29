@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.13.5] 2019-07-29
 ### Fixed
+- Fix display a validation error when db password contains a quote or db name contain a dash
 - Fix email notification settings bootstrap messes up non persistent database connection in wizard
 - Bump dependencies versions
 

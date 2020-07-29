@@ -25,7 +25,6 @@ use Cake\Routing\Router;
                             ]); ?>
                             <?= $this->Form->control('host', [
                                 'type' => 'text',
-                                'required' => 'required',
                                 'placeholder' => __('host name or ip address'),
                                 'label' => __('Host'),
                                 'class' => 'required fluid'
@@ -53,7 +52,6 @@ use Cake\Routing\Router;
                                 'placeholder' => __('password'),
                                 'label' => __('Password'),
                                 'class' => 'fluid',
-                                'type' => 'password',
                             ]); ?>
 
                             <?= $this->Form->control('database', [
