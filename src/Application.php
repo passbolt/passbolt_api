@@ -27,6 +27,7 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
+use Cake\Http\MiddlewareQueue;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
@@ -37,8 +38,8 @@ class Application extends BaseApplication
     /**
      * Setup the PSR-7 middleware passbolt application will use.
      *
-     * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to setup.
-     * @return \Cake\Http\MiddlewareQueue The updated middleware.
+     * @param MiddlewareQueue $middleware The middleware queue to setup.
+     * @return MiddlewareQueue The updated middleware.
      */
     public function middleware($middleware)
     {
@@ -106,9 +107,22 @@ class Application extends BaseApplication
             $this->addCliPlugins();
         }
 
-        $this->getEventManager()
-            ->on(new CoreEmailRedactorPool())
-            ->on(new CoreNotificationSettingsDefinition());
+        $this->initEmails();
+    }
+
+    /**
+     * Register core emails notification and settings
+     * Register core email digests
+     * @return void
+     */
+    public function initEmails()
+    {
+        // Gather
+        if (WebInstallerMiddleware::isConfigured()) {
+            $this->getEventManager()
+                ->on(new CoreEmailRedactorPool())
+                ->on(new CoreNotificationSettingsDefinition());
+        }
 
         if (PHP_SAPI === 'cli' || (Configure::read('debug') && Configure::read('passbolt.selenium.active'))) {
             // Core email digests
