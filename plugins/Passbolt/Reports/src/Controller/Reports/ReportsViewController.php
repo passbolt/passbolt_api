@@ -64,8 +64,12 @@ class ReportsViewController extends AppController
             throw new ForbiddenException(__('Only administrators can view reports.'));
         }
 
+        // Retrieve the report argument passed as url parameters.
+        $arguments = func_get_args();
+        $reportArguments = array_slice($arguments, 1);
+
         try {
-            $report = $this->reportViewService->getReport($reportSlug);
+            $report = $this->reportViewService->getReport($reportSlug, $reportArguments);
         } catch (InvalidArgumentException $exception) {
             throw new BadRequestException(__('The requested report `{0}` does not exist.', $reportSlug));
         }
@@ -91,14 +95,14 @@ class ReportsViewController extends AppController
      * Format request data
      * Get supported options from report service and extract / validate them using QueryString component
      *
-     * @param FindIndexOptions $allowedOptions allowed options
+     * @param FindIndexOptions $supportedOptions allowed options
      * @return FindIndexOptions
      */
-    private function formatRequestData(FindIndexOptions $allowedOptions)
+    private function formatRequestData(FindIndexOptions $supportedOptions)
     {
-        $options = $this->QueryString->get($allowedOptions->toArray(), $allowedOptions->getFilterValidators());
+        $query = $this->QueryString->get($supportedOptions->getAllowedOptions(), $supportedOptions->getFilterValidators());
 
-        return FindIndexOptions::createFromArray($options);
+        return FindIndexOptions::createFromArray($query);
     }
 
     /**

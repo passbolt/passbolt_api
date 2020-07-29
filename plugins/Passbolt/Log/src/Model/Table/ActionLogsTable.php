@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
@@ -19,6 +20,7 @@ use App\Utility\UserAction;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\ActionLog;
 
 class ActionLogsTable extends Table
 {
@@ -87,32 +89,12 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * Return a action_log entity.
-     * @param array $data entity data
-     *
-     * @return ActionLog
-     */
-    public function buildEntity(array $data)
-    {
-        return $this->newEntity($data, [
-            'accessibleFields' => [
-                'id' => true,
-                'user_id' => true,
-                'action_id' => true,
-                'context' => true,
-                'status' => true,
-                'created' => true,
-            ],
-        ]);
-    }
-
-    /**
      * Create a new user_log.
      *
      * @param UserAction $userAction log type in clear
      * @param int $status user_log data
      *
-     * @return \App\Model\Entity\UserLog|bool
+     * @return ActionLog|bool
      * @throws ValidationException
      * @throws InternalErrorException
      */
@@ -149,5 +131,25 @@ class ActionLogsTable extends Table
         }
 
         return $logSaved;
+    }
+
+    /**
+     * Return a action_log entity.
+     * @param array $data entity data
+     *
+     * @return ActionLog
+     */
+    public function buildEntity(array $data)
+    {
+        return $this->newEntity($data, [
+            'accessibleFields' => [
+                'id' => true,
+                'user_id' => true,
+                'action_id' => true,
+                'context' => true,
+                'status' => true,
+                'created' => true,
+            ],
+        ]);
     }
 }

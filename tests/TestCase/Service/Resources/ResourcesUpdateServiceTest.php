@@ -83,6 +83,8 @@ class ResourcesUpdateServiceTest extends AppTestCase
     public function testUpdateResourcesSuccess_UpdateResourceMeta()
     {
         list($r1, $r2, $userAId) = $this->insertFixture_UpdateResourceMeta();
+        // Wait 1 second in order to test that the modified field is not on the same second.
+        sleep(1);
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data = [
@@ -99,6 +101,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
         $this->assertEquals('R1 username updated', $r1Updated->username);
         $this->assertEquals('https://r1-updated.com', $r1Updated->uri);
         $this->assertEquals('R1 description updated', $r1Updated->description);
+        $this->assertGreaterThan($r1->modified, $r1Updated->modified);
 
         // Assert R2 have not been updated
         $r2 = $this->resourcesTable->findById($r2->id)->first();
@@ -122,6 +125,9 @@ class ResourcesUpdateServiceTest extends AppTestCase
     public function testUpdateResourcesSuccess_UpdateResourceSecrets()
     {
         list($r1, $r2, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_UpdateResourceSecrets();
+        // Wait 1 second in order to test that the modified field is not on the same second.
+        sleep(1);
+
         $uac = new UserAccessControl(Role::USER, $userAId);
         $r2SecretA = $this->secretsTable->findByResourceIdAndUserId($r2->id, $userAId)->first();
 
@@ -145,13 +151,14 @@ class ResourcesUpdateServiceTest extends AppTestCase
         $r1SecretC = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userCId)->first();
         $this->assertEquals($r1EncryptedSecretC, $r1SecretC->data);
 
-        // Assert R1 meta has not been updated
+        // Assert R1 meta has not been updated except for the modified field.
         $r1Updated = $this->resourcesTable->findById($r1->id)->first();
         $this->assertEquals('R1', $r1Updated->name);
         $this->assertEquals('R1 username', $r1Updated->username);
         $this->assertEquals('https://r1.com', $r1Updated->uri);
         $this->assertEquals('R1 description', $r1Updated->description);
         $this->assertEquals('R1', $r1Updated->name);
+        $this->assertGreaterThan($r1->modified, $r1Updated->modified);
 
         // Assert R2 secrets have not been updated
         $r2AfterUpdateSecretA = $this->secretsTable->findByResourceIdAndUserId($r2->id, $userAId)->first();
