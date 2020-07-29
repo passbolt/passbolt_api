@@ -263,14 +263,14 @@ class HealthcheckTask extends AppShell
             $checks['configFile']['app'],
             __('The application config file is present'),
             __('The application config file is missing in {0}', CONFIG),
-            __('Copy {0} to {1}', CONFIG . 'app.php.default', CONFIG . 'app.php')
+            __('Copy {0} to {1}', CONFIG . 'app.default.php', CONFIG . 'app.php')
         );
         $this->warning(
             $checks['configFile']['passbolt'],
             __('The passbolt config file is present'),
             __('The passbolt config file is missing in {0}', CONFIG),
             [
-                __('Copy {0} to {1}', CONFIG . 'passbolt.php.default', CONFIG . 'passbolt.php'),
+                __('Copy {0} to {1}', CONFIG . 'passbolt.default.php', CONFIG . 'passbolt.php'),
                 __('The passbolt config file is not required if passbolt is configured with environment variables'),
             ]
         );
