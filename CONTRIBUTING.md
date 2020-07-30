@@ -27,7 +27,7 @@ composer run-script cs-fix
 sudo su -s /bin/bash -c "./bin/cake PassboltTestData.fixturize default" www-data
 ```
 
-## How do I contribute to the the js application
+## How do I contribute to the js application
 
 Clone the appjs repository in a separate folder
 ```
