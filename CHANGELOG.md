@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+## [2.13.5] 2019-07-30
+### Fixed
+- Fix email notification settings bootstrap messes up non persistent database connection in wizard
+- Bump dependencies versions
+
 ## [2.13.1] 2019-07-06
 ### Fixed
 - PB-1372 Fix user setup completed admin email notification
@@ -713,7 +718,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.13.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.13.5...HEAD
+[2.13.5]: https://github.com/passbolt/passbolt_api/compare/v2.13.1...v2.13.5
 [2.13.1]: https://github.com/passbolt/passbolt_api/compare/v2.13.0...v2.13.1
 [2.13.0]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...v2.13.0
 [2.12.1]: https://github.com/passbolt/passbolt_api/compare/v2.12.0...v2.12.1
