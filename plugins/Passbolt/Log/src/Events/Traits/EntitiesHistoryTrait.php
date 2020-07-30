@@ -30,10 +30,8 @@ trait EntitiesHistoryTrait
                     EntityHistory::CRUD_UPDATE,
                     EntityHistory::CRUD_DELETE,
                 ],
-                'models' => [
-                    'SecretAccesses' => [
-                        EntityHistory::CRUD_CREATE,
-                    ],
+                'Secrets' => [
+                    EntityHistory::CRUD_CREATE,
                 ],
             ],
         ],
@@ -167,8 +165,9 @@ trait EntitiesHistoryTrait
 
     /**
      * Entity associations initialize
-     * Initialize needed associations for the required models on the fly.
+     * Initialize needed associations for the required core models on the fly.
      * Example: we need to associate PermissionsHistory to Permissions in order to track the history.
+     *
      * @param Event $event the event
      * @return void
      */

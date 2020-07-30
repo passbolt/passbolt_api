@@ -13,34 +13,24 @@
  */
 namespace Passbolt\Log\Test\Lib\Traits;
 
-trait PermissionsHistoryTrait
+trait SecretsHistoryTrait
 {
-    public function assertPermissionHistoryExists($conditions)
+    public function assertSecretHistoryExists($conditions)
     {
-        $permissionHistory = $this->PermissionsHistory
+        $secretHistory = $this->SecretsHistory
             ->find()
             ->where($conditions)
             ->first();
-        $this->assertNotEmpty($permissionHistory, 'No corresponding permissionsHistory could be found');
+        $this->assertNotEmpty($secretHistory, 'No corresponding secretsHistory could be found');
 
-        return $permissionHistory;
+        return $secretHistory;
     }
 
-    public function assertPermissionsHistoryCount($expectedCount)
+    public function assertSecretsHistoryCount($expectedCount)
     {
-        $entityHistoryCount = $this->PermissionsHistory
+        $count = $this->SecretsHistory
             ->find()
             ->count();
-        $this->assertEquals($expectedCount, $entityHistoryCount);
-    }
-
-    public function assertOnePermissionHistory()
-    {
-        $this->assertPermissionsHistoryCount(1);
-    }
-
-    public function assertPermissionsHistoryEmpty()
-    {
-        $this->assertPermissionsHistoryCount(0);
+        $this->assertEquals($expectedCount, $count);
     }
 }

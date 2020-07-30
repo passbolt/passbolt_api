@@ -29,6 +29,7 @@ use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -187,12 +188,16 @@ class ResourcesUpdateService
     private function patchEntity(UserAccessControl $uac, Resource $resource, array $data)
     {
         $data['modified_by'] = $uac->userId();
+        // Force the modified field to be updated to ensure the field is updated even if no meta are. It's the case
+        // when a user updates only the secret.
+        $data['modified'] = new Time();
 
         $accessibleFields = [
             'name' => true,
             'username' => true,
             'uri' => true,
             'description' => true,
+            'modified' => true,
             'modified_by' => true,
         ];
 

@@ -64,11 +64,7 @@ class ReportPool
      */
     public function addReport(AbstractReport $report)
     {
-        $closure = function () use ($report) {
-            return $report;
-        };
-        $closure = $closure->bindTo($report);
-        self::$reports[$report->getSlug()] = $closure;
+        self::$reports[$report->getSlug()] = $report;
 
         return self::$reports;
     }
