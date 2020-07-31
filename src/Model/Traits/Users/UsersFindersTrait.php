@@ -240,7 +240,7 @@ trait UsersFindersTrait
         }
 
         if (in_array('LastLoggedIn', $contain)) {
-            $query = $this->_containLastLoggedIn($query);
+            $query->find('lastLoggedIn');
             unset($contain[array_search('LastLoggedIn', $contain)]);
         }
 
