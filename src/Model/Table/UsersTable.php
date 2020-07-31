@@ -215,24 +215,33 @@ class UsersTable extends Table
     }
 
     /**
-     * Add last_logged_in contain element.
-     * Basically, add a placeholder to the entity that will be treated
-     * in a virtual field in the User entity.
+     * Retrieve the last logged in date of a user.
      *
      * @param Query $query query
      * @return Query
      */
-    private function _containLastLoggedIn(\Cake\ORM\Query $query)
+    public function findlastLoggedIn(Query $query)
     {
-        $query->formatResults(function ($results) {
-            return $results->map(function ($row) {
-                $row[User::LAST_LOGGED_IN_PLACEHOLDER] = '';
+        // Retrieve the last logged in date for each user, based on the authentication_tokens table.
+        $subQuery = $this->AuthenticationTokens->find();
+        $subQuery->select([
+                'user_id' => 'AuthenticationTokens.user_id',
+                'last_logged_in' => $subQuery->func()->max('AuthenticationTokens.modified'),
+            ])
+            ->where([
+                'AuthenticationTokens.active' => 0,
+                'AuthenticationTokens.type' => AuthenticationToken::TYPE_LOGIN,
+            ])
+            ->group(['user_id']);
 
-                return $row;
-            });
-        });
-
-        return $query;
+        return $query->select(['last_logged_in' => 'JoinedUsersLastLoggedIn.last_logged_in'])
+            ->enableAutoFields() // Autofields are disabled when a select is made manually on a query, reestablish it.
+            ->join([
+                'table' => $subQuery,
+                'alias' => 'JoinedUsersLastLoggedIn',
+                'type' => 'LEFT',
+                'conditions' => 'Users.id = JoinedUsersLastLoggedIn.user_id',
+            ]);
     }
 
     /**

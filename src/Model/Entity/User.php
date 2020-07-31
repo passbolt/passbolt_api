@@ -14,10 +14,7 @@
  */
 namespace App\Model\Entity;
 
-use App\Model\Table\PermissionsTable;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
 
 /**
  * User Entity
@@ -47,11 +44,6 @@ class User extends Entity
     protected $_virtual = ['last_logged_in'];
 
     /**
-     * Placeholder name for last_logged_in.
-     */
-    const LAST_LOGGED_IN_PLACEHOLDER = '__placeholder_last_logged_in__';
-
-    /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
      * Note that when '*' is set to true, this allows all unspecified fields to
@@ -70,47 +62,4 @@ class User extends Entity
         // associated data
         'profile' => false,
     ];
-
-    /**
-     * Url virtual field implementation.
-     * @return string
-     */
-    protected function _getLastLoggedIn()
-    {
-        $fieldExist = isset($this->{self::LAST_LOGGED_IN_PLACEHOLDER});
-        if ($fieldExist) {
-            $this->__unset(self::LAST_LOGGED_IN_PLACEHOLDER);
-            if ($this->active == true) {
-                $token = $this->_getAuthenticationTokensQuery();
-                if ($token) {
-                    return $token->modified;
-                }
-            }
-        }
-
-        return "";
-    }
-
-    /**
-     * Get a query that returns used authentication tokens for a given user.
-     * @return EntityInterface
-     */
-    protected function _getAuthenticationTokensQuery()
-    {
-        $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        $tokenQuery = $AuthenticationTokens
-            ->find()
-            ->select([
-                'modified',
-            ])
-            ->where([
-                'user_id' => $this->id,
-                'active' => 0,
-                'type' => AuthenticationToken::TYPE_LOGIN,
-            ])
-            ->order('modified DESC')
-            ->first();
-
-        return $tokenQuery;
-    }
 }
