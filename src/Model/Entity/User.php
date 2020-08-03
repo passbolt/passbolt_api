@@ -26,6 +26,7 @@ use Cake\ORM\Entity;
  * @property bool $deleted
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime $last_logged_in
  *
  * @property \App\Model\Entity\Role $role
  * @property \App\Model\Entity\FileStorage[] $file_storage

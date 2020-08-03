@@ -26,7 +26,6 @@ use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -212,36 +211,6 @@ class UsersTable extends Table
         ]);
 
         return $rules;
-    }
-
-    /**
-     * Retrieve the last logged in date of a user.
-     *
-     * @param Query $query query
-     * @return Query
-     */
-    public function findlastLoggedIn(Query $query)
-    {
-        // Retrieve the last logged in date for each user, based on the authentication_tokens table.
-        $subQuery = $this->AuthenticationTokens->find();
-        $subQuery->select([
-                'user_id' => 'AuthenticationTokens.user_id',
-                'last_logged_in' => $subQuery->func()->max('AuthenticationTokens.modified'),
-            ])
-            ->where([
-                'AuthenticationTokens.active' => 0,
-                'AuthenticationTokens.type' => AuthenticationToken::TYPE_LOGIN,
-            ])
-            ->group(['user_id']);
-
-        return $query->select(['last_logged_in' => 'JoinedUsersLastLoggedIn.last_logged_in'])
-            ->enableAutoFields() // Autofields are disabled when a select is made manually on a query, reestablish it.
-            ->join([
-                'table' => $subQuery,
-                'alias' => 'JoinedUsersLastLoggedIn',
-                'type' => 'LEFT',
-                'conditions' => 'Users.id = JoinedUsersLastLoggedIn.user_id',
-            ]);
     }
 
     /**

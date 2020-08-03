@@ -10,28 +10,34 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.14.0
  */
 
 namespace App\Test\TestCase\Model\Table\Users\Finders;
 
-use App\Model\Entity\AuthenticationToken;
 use App\Model\Table\UsersTable;
-use App\Test\Fixture\Base\AuthenticationTokensFixture;
 use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\AuthenticationTokenModelTrait;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
+use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
+use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
 
-class FindIndexTest extends AppTestCase
+class FindIndexTest extends AppIntegrationTestCase
 {
-    use AuthenticationTokenModelTrait;
+    use ActionLogsTrait;
 
     public $fixtures = [
-        AuthenticationTokensFixture::class,
+        ActionsFixture::class,
+        ActionLogsFixture::class,
         UsersFixture::class,
     ];
+
+    /**
+     * @var UsersTable
+     */
+    private $usersTable;
 
     public function setUp()
     {
@@ -42,19 +48,32 @@ class FindIndexTest extends AppTestCase
 
     public function testFindLastLoggedIn()
     {
+        list($actionLogAdaLogin1, $actionLogAdaLogin2, $userAId) = $this->insertFixture_FindLastLoggedIn();
+
+        $userA = $this->usersTable->findById($userAId)->find('lastLoggedIn')->first();
+        $this->assertNotEmpty($userA->last_logged_in);
+        $this->assertGreaterThan($actionLogAdaLogin1->created, $userA->last_logged_in);
+    }
+
+    private function insertFixture_FindLastLoggedIn()
+    {
         $userAId = UuidFactory::uuid('user.id.ada');
+        $loginActionId = UuidFactory::uuid('AuthLogin.loginPost');
 
-        $this->quickDummyAuthToken($userAId, AuthenticationToken::TYPE_LOGIN, 'inactive');
-        $userA = $this->usersTable->findById($userAId)->find('lastLoggedIn')->first();
-        $userALastLoggedInFirst = $userA->last_logged_in;
-        $this->assertNotEmpty($userALastLoggedInFirst);
-        sleep(1);
+        // Add logged in in the determined period.
+        $actionLogAdaLogin1Data = [
+            'user_id' => $userAId,
+            'action_id' => $loginActionId,
+            'context' => 'POST /auth/login.json',
+            'status' => 1,
+            'created' => (new \DateTime())->modify('-1 second'),
+        ];
+        $actionLogAdaLogin1 = $this->addActionLog($actionLogAdaLogin1Data);
 
-        $this->quickDummyAuthToken($userAId, AuthenticationToken::TYPE_LOGIN, 'inactive');
-        $userA = $this->usersTable->findById($userAId)->find('lastLoggedIn')->first();
-        $userALastLoggedInSecond = $userA->last_logged_in;
-        $this->assertNotEmpty($userALastLoggedInSecond);
-        $this->assertNotEquals($userALastLoggedInFirst, $userALastLoggedInSecond);
-        $this->assertGreaterThan($userALastLoggedInFirst, $userALastLoggedInSecond);
+        $actionLogAdaLogin2Data = $actionLogAdaLogin1Data;
+        $actionLogAdaLogin2Data['created'] = new \DateTime();
+        $actionLogAdaLogin2 = $this->addActionLog($actionLogAdaLogin2Data);
+
+        return [$actionLogAdaLogin1, $actionLogAdaLogin2, $userAId];
     }
 }
