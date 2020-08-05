@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+### Fixed
+- GITHUB-350 update CakePHP to 3.8.13 and support email AUTH PLAIN authentication
+
 ## [2.13.1] 2019-07-06
 ### Fixed
 - PB-1372 Fix user setup completed admin email notification
