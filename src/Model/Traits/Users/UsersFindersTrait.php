@@ -19,7 +19,9 @@ use App\Model\Entity\User;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -240,7 +242,7 @@ trait UsersFindersTrait
         }
 
         if (in_array('LastLoggedIn', $contain)) {
-            $query = $this->_containLastLoggedIn($query);
+            $query->find('lastLoggedIn');
             unset($contain[array_search('LastLoggedIn', $contain)]);
         }
 
@@ -519,5 +521,49 @@ trait UsersFindersTrait
              ->all();
 
         return $user;
+    }
+
+    /**
+     * Retrieve users' last logged in date.
+     *
+     * @param Query $query query
+     * @return Query
+     */
+    public function findlastLoggedIn(Query $query)
+    {
+        // Retrieve the last logged in date for each user, based on the action_logs table.
+        $loginActionId = UuidFactory::uuid('AuthLogin.loginPost');
+        $subQuery = $this->ActionLogs->find();
+        $subQuery->select([
+            'user_id' => 'user_id',
+            'last_logged_in' => $subQuery->func()->max('ActionLogs.created'),
+        ])
+            ->where([
+                'ActionLogs.action_id' => $loginActionId,
+                'ActionLogs.user_id IS NOT NULL',
+                'ActionLogs.status' => 1,
+            ])
+            ->group('user_id');
+
+        // Left join the last logged in query to the given query.
+        $query = $query->select(['last_logged_in' => 'JoinedUsersLastLoggedIn.last_logged_in'])
+            ->enableAutoFields() // Autofields are disabled when a select is made manually on a query, reestablish it.
+            ->join([
+                'table' => $subQuery,
+                'alias' => 'JoinedUsersLastLoggedIn',
+                'type' => 'LEFT',
+                'conditions' => 'Users.id = JoinedUsersLastLoggedIn.user_id',
+            ]);
+
+        // The last logged in date should be formatted as other dates (FrozenTime).
+        $query->decorateResults(function ($row) {
+            if (!is_null($row['last_logged_in'])) {
+                $row['last_logged_in'] = new FrozenTime($row['last_logged_in']);
+            }
+
+            return $row;
+        });
+
+        return $query;
     }
 }
