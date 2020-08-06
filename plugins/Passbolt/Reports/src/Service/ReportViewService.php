@@ -40,18 +40,20 @@ class ReportViewService
      * Build a object implementing ReportInterface for given slug
      *
      * @param string $reportSlug Slug of the report
-     * @throws InvalidArgumentException if the slug is not supported
+     * @param array $parameters The report parameters
      * @return ReportInterface
      */
-    public function getReport(string $reportSlug)
+    public function getReport(string $reportSlug, array $parameters = [])
     {
         $reports = $this->reportPool->getReports();
-        $report = $reports[$reportSlug] ?? false;
+        $reportClass = $reports[$reportSlug] ?? false;
 
-        if (!$report) {
+        if (!$reportClass) {
             throw new InvalidArgumentException();
         }
 
-        return $report($this);
+        $reflectionClass = new \ReflectionClass($reportClass);
+
+        return $reflectionClass->newInstance(...$parameters);
     }
 }

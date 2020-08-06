@@ -98,6 +98,14 @@ class QueryStringComponent extends Component
                     if (!is_array($query['filter']['search'])) {
                         $query['filter']['search'] = [$query['filter']['search']];
                     }
+                } elseif ($filterName === 'from') {
+                    try {
+                        $query['filter']['from'] = new \DateTime($query['filter']['from']);
+                    } catch (\Exception $e) {
+                        $query['filter']['from'] = false;
+                    }
+                } elseif ($filterName === 'frequency') {
+                    $query['filter'][$filterName] = self::normalizeInteger($filter);
                 }
             }
         }
@@ -234,6 +242,9 @@ class QueryStringComponent extends Component
                     case 'search':
                         self::validateFilterSearch($values);
                         break;
+                    case 'from':
+                        self::validateFilterDateTime($values, $filterName);
+                        break;
                     case 'has-access':
                     case 'has-id':
                         self::validateFilterResources($values, $filterName);
@@ -258,6 +269,9 @@ class QueryStringComponent extends Component
                     case 'is-shared-with-me':
                     case 'is-deleted':
                         self::validateFilterBoolean($values, $filterName);
+                        break;
+                    case 'frequency':
+                        self::validateFilterInteger($values, $filterName);
                         break;
                     default:
                         // Check if custom filter validators were defined for this filter
@@ -288,6 +302,23 @@ class QueryStringComponent extends Component
     public static function validateFilterBoolean($values, string $filtername)
     {
         if (!is_bool($values)) {
+            throw new Exception(__('"{0}" is not a valid value for filter {1}.', $values, $filtername));
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the filter is a valid integer
+     *
+     * @param mixed $values to check
+     * @param string $filtername for error message display
+     * @throw Exception if the filter is not valid
+     * @return bool true if the filter is valid
+     */
+    public static function validateFilterInteger($values, string $filtername)
+    {
+        if (!is_int($values)) {
             throw new Exception(__('"{0}" is not a valid value for filter {1}.', $values, $filtername));
         }
 
@@ -447,6 +478,25 @@ class QueryStringComponent extends Component
     }
 
     /**
+     * Validate a filter that is a datetime.
+     *
+     * @param string $values the value to check
+     * @param string $filtername for error message display
+     * @throw Exception if the filter is not valid
+     * @return bool if validate
+     */
+    public static function validateFilterDateTime($values, string $filtername)
+    {
+        try {
+            new \DateTime($values);
+        } catch (\Exception $e) {
+            throw new Exception(__('"{0}" is not a valid datetime for filter {1}.', $values, $filtername));
+        }
+
+        return true;
+    }
+
+    /**
      * Validate order
      *
      * @param array $orders a list of order to validate like ['Groups.name ASC', 'Users.created']
@@ -511,6 +561,23 @@ class QueryStringComponent extends Component
         } else {
             return $str;
         }
+    }
+
+    /**
+     * Normalize string to integer if it looks like one
+     * '1' becomes true
+     * '0' becomes 0
+     *
+     * @param string $str the string to normalize
+     * @return bool|string if original string is not bool
+     */
+    public static function normalizeInteger($str)
+    {
+        if (!is_scalar($str)) {
+            return false;
+        }
+
+        return intval($str);
     }
 
     /**

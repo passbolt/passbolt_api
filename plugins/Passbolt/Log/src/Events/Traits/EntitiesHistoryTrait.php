@@ -14,6 +14,7 @@
 namespace Passbolt\Log\Events\Traits;
 
 use App\Utility\UserAction;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
@@ -29,10 +30,59 @@ trait EntitiesHistoryTrait
                     EntityHistory::CRUD_UPDATE,
                     EntityHistory::CRUD_DELETE,
                 ],
-                'models' => [
-                    'SecretAccesses' => [
-                        EntityHistory::CRUD_CREATE,
-                    ],
+                'Secrets' => [
+                    EntityHistory::CRUD_CREATE,
+                ],
+            ],
+        ],
+        'FoldersShare.share' => [
+            'models' => [
+                'Permissions' => [
+                    EntityHistory::CRUD_CREATE,
+                    EntityHistory::CRUD_UPDATE,
+                    EntityHistory::CRUD_DELETE,
+                ],
+                'FoldersRelations' => [
+                    EntityHistory::CRUD_CREATE,
+                    EntityHistory::CRUD_UPDATE,
+                    EntityHistory::CRUD_DELETE,
+                ],
+            ],
+        ],
+        'FoldersCreate.create' => [
+            'models' => [
+                'Folders' => [
+                    EntityHistory::CRUD_CREATE,
+                ],
+                'FoldersRelations' => [
+                    EntityHistory::CRUD_CREATE,
+                ],
+            ],
+        ],
+        'FoldersRelationsMove.move' => [
+            'models' => [
+                'FoldersRelations' => [
+                    EntityHistory::CRUD_CREATE,
+                    EntityHistory::CRUD_UPDATE,
+                    EntityHistory::CRUD_DELETE,
+                ],
+            ],
+        ],
+        'FoldersUpdate.update' => [
+            'models' => [
+                'Folders' => [
+                    EntityHistory::CRUD_UPDATE,
+                ],
+            ],
+        ],
+        'FoldersDelete.delete' => [
+            'models' => [
+                'Folders' => [
+                    EntityHistory::CRUD_DELETE,
+                ],
+                'FoldersRelations' => [
+                    EntityHistory::CRUD_DELETE,
+                    EntityHistory::CRUD_CREATE,
                 ],
             ],
         ],
@@ -115,8 +165,9 @@ trait EntitiesHistoryTrait
 
     /**
      * Entity associations initialize
-     * Initialize needed associations for the required models on the fly.
+     * Initialize needed associations for the required core models on the fly.
      * Example: we need to associate PermissionsHistory to Permissions in order to track the history.
+     *
      * @param Event $event the event
      * @return void
      */
@@ -145,6 +196,20 @@ trait EntitiesHistoryTrait
             $table->belongsTo('Passbolt/Log.EntitiesHistory', [
                 'foreignKey' => 'foreign_key',
             ]);
+        }
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            if ($modelName == 'Folders') {
+                $table->belongsTo('FoldersHistory', [
+                    'className' => 'Passbolt/Folders.FoldersHistory',
+                    'foreignKey' => 'foreign_key',
+                ]);
+            }
+            if ($modelName == 'FoldersRelations') {
+                $table->belongsTo('FoldersRelationsHistory', [
+                    'className' => 'Passbolt/Folders.FoldersRelationsHistory',
+                    'foreignKey' => 'foreign_key',
+                ]);
+            }
         }
     }
 
@@ -180,9 +245,14 @@ trait EntitiesHistoryTrait
             // If there is a detailed history table, populate it first, then entitiesHistory.
             $modelDetailedHistory = $this->_hasTableDetailedHistory($table);
             if ($modelDetailedHistory) {
+                // We first create the detailed history (PermissionsHistory, FoldersHistory, etc..)
                 $foreignModel = $modelDetailedHistory;
-                $table->getAssociation($foreignModel)
+                $detailedHistory = $table->getAssociation($foreignModel)
                       ->create($entity->toArray());
+
+                // There can be manipulations of id while creating detailed history.
+                // We make sure we have the id of the entity that has been created.
+                $entityHistoryData['foreign_key'] = $detailedHistory->id;
 
                 $entityHistoryData['foreign_model'] = $foreignModel;
                 $table->getAssociation($foreignModel)

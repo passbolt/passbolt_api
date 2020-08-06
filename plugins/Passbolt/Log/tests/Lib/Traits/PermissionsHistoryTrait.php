@@ -28,7 +28,7 @@ trait PermissionsHistoryTrait
 
     public function assertPermissionsHistoryCount($expectedCount)
     {
-        $entityHistoryCount = $this->EntitiesHistory
+        $entityHistoryCount = $this->PermissionsHistory
             ->find()
             ->count();
         $this->assertEquals($expectedCount, $entityHistoryCount);
