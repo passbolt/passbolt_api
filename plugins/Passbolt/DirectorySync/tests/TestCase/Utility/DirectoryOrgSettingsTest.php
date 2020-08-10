@@ -110,6 +110,7 @@ class DirectoryOrgSettingsTest extends AppTestCase
         $defaultSettings = require(PLUGINS . 'Passbolt' . DS . 'DirectorySync' . DS . 'config' . DS . 'config.php');
         $settings = Hash::merge(Hash::get($defaultSettings, 'passbolt.plugins.directorySync'), $settings);
 
+        $settings = array_merge(['source' => 'db'], $settings);
         $retrievedDirectoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertEquals($settings, $retrievedDirectoryOrgSettings->toArray());
     }

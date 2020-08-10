@@ -44,6 +44,7 @@ class LdapConfigurationForm extends Form
      * @var array
      */
     private static $configurationMapping = [
+        'source' => 'source',
         'directory_type' => 'ldap.domains.org_domain.ldap_type',
         'domain_name' => 'ldap.domains.org_domain.domain_name',
         'username' => 'ldap.domains.org_domain.username',

@@ -305,6 +305,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
+            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because he has not yet activated his account.',
         ];
         $this->assertReport($reports[1], $expectedUserGroupReport);
 
@@ -351,6 +352,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS,
+            'message' => 'The group newgroup was successfully added to passbolt.',
         ];
         $this->assertReport($reports[0], $expectedGroupReport);
 
@@ -359,6 +361,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS,
+            'message' => 'The user frances@passbolt.com was successfully added to the group newgroup.',
         ];
         $this->assertReport($reports[1], $expectedUserGroupReport);
 
@@ -367,6 +370,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
+            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because he has not yet activated his account.',
         ];
         $this->assertReport($reports[2], $expectedUserGroupReport);
 
@@ -375,7 +379,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
-        $groupUserAda = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
+        $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
         $this->assertGroupUserNotExist(null, ['group_id' => $groupCreated->id, 'user_id' => UuidFactory::uuid('user.id.ruth')]);
         $this->assertDirectoryRelationNotEmpty();
     }

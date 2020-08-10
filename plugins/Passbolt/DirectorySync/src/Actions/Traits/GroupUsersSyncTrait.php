@@ -331,14 +331,14 @@ trait GroupUsersSyncTrait
                 ));
             } catch (CustomValidationException $exception) {
                 $errors = $exception->getErrors();
-                $isNotActive = !empty(Hash::extract($errors, 'user_id.user_is_active'));
-                $isDeleted = !empty(Hash::extract($errors, 'user_id.user_is_not_soft_deleted'));
+                $isNotActive = !empty(Hash::extract($errors, '0.user_id.user_is_active'));
+                $isDeleted = !empty(Hash::extract($errors, '0.user_id.user_is_not_soft_deleted'));
                 if (($isNotActive && $isDeleted) || $isDeleted) {
-                    $msg = __('The user {0} could not be added to group {1} because it is deleted.', $user->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt.', $user->username, $group->name);
                 } elseif ($isNotActive) {
-                    $msg = __('The user {0} could not be added to group {1} because it is not active yet.', $user->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $user->username, $group->name);
                 } else {
-                    $msg = __('The user {0} could not be added to the group {1} because some validation issues.', $user->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because of validation issues.', $user->username, $group->name);
                 }
                 $this->addReportItem(new ActionReport(
                     $msg,

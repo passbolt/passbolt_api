@@ -53,6 +53,8 @@ abstract class SyncTask extends AppShell
             $this->_displayReport($report);
         }
         $this->out();
+        $this->info(__('For more explanation on sync error messages, see: {0}', ['https://help.passbolt.com/configure/ldap/ldap-common-sync-error-messages']));
+        $this->out();
     }
 
     /**

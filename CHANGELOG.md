@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Fixed
+- PB-1429 Fix "ldap error messages are incorrect in case of validation issues"
+
 ## [2.13.1] 2019-07-06
 ### Improved
 - PB-1370 Performance improvement while retrieving items associated folder_parent_id and personal status
