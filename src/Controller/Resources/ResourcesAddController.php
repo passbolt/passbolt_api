@@ -108,6 +108,7 @@ class ResourcesAddController extends AppController
                 'modified_by' => true,
                 'secrets' => true,
                 'permissions' => true,
+                'resource_type_id' => true,
             ],
             'associated' => [
                 'Permissions' => [

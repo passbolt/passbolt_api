@@ -147,7 +147,7 @@ trait ResourcesFindersTrait
         }
 
         // If contains Resource type.
-        if (isset($options['contain']['resource-types'])) {
+        if (isset($options['contain']['resource-type'])) {
             $query->contain('ResourceTypes');
         }
 

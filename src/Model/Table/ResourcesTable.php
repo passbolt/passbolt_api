@@ -99,11 +99,8 @@ class ResourcesTable extends Table
             'foreignKey' => 'resource_id',
             'saveStrategy' => 'replace',
         ]);
-        $this->hasOne('ResourceTypes', [
-            'className' => 'ResourceTypes',
-            'bindingKey' => 'resource_type_id',
-            'foreignKey' => 'id',
-        ]);
+
+        $this->belongsTo('ResourceTypes');
     }
 
     /**
@@ -180,6 +177,11 @@ class ResourcesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        // Create and Update rules
+        $rules->add($rules->existsIn(['resource_type_id'], 'ResourceTypes'), 'validResourceType', [
+            'message' => __('This is not a valid resource type.'),
+        ]);
+
         // Create rules.
         $rules->addCreate([$this, 'isOwnerPermissionProvidedRule'], 'owner_permission_provided', [
             'errorField' => 'permissions',

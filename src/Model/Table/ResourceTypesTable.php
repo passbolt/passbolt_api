@@ -58,6 +58,8 @@ class ResourceTypesTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
+        $this->addBehavior('Timestamp');
+
         $this->hasMany('Resources');
     }
 

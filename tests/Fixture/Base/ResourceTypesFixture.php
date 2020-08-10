@@ -23,13 +23,6 @@ use Cake\TestSuite\Fixture\TestFixture;
 class ResourceTypesFixture extends TestFixture
 {
     /**
-     * Table name
-     *
-     * @var string
-     */
-    public $table = 'resource_types';
-
-    /**
      * Fields
      *
      * @var array
@@ -111,6 +104,8 @@ class ResourceTypesFixture extends TestFixture
                         ],
                     ],
                 ]),
+                'created' => '2019-07-02 18:51:41',
+                'modified' => '2019-07-02 18:51:41',
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.password-and-description'),
@@ -161,6 +156,8 @@ class ResourceTypesFixture extends TestFixture
                         ],
                     ],
                 ]),
+                'created' => '2019-07-02 18:51:41',
+                'modified' => '2019-07-02 18:51:41',
             ],
         ];
         parent::init();

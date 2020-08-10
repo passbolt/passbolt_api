@@ -52,6 +52,16 @@ class V300AddResourceTypesTable extends AbstractMigration
                 'encoding' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
             ])
+            ->addColumn('created', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => false,
+            ])
+            ->addColumn('modified', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => false,
+            ])
             ->addIndex(
                 'slug',
                 ['unique' => true]
