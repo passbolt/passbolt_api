@@ -18,8 +18,11 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
+use App\Model\Entity\Resource;
 use App\Model\Table\ResourcesTable;
+use App\Model\Table\ResourceTypesTable;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 
 /**
  * @property ResourcesTable Resources
@@ -27,6 +30,9 @@ use Cake\Event\Event;
 class ResourcesAddController extends AppController
 {
     const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
+
+    /** @var ResourcesTable $Resources  */
+    public $Resources;
 
     /**
      * Resource Add action
@@ -36,7 +42,7 @@ class ResourcesAddController extends AppController
      */
     public function add()
     {
-        $this->loadModel('Resources');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
 
         $data = $this->_formatRequestData();
         $resource = $this->_buildAndValidateEntity($data);
@@ -67,7 +73,7 @@ class ResourcesAddController extends AppController
      * Build the resource entity from user input
      *
      * @param array $data Array of data
-     * @return \App\Model\Entity\Resource
+     * @return resource resource entity
      */
     protected function _buildAndValidateEntity(array $data)
     {
@@ -80,12 +86,18 @@ class ResourcesAddController extends AppController
             'aco' => 'Resource',
             'type' => Permission::OWNER,
         ]];
+
         // If no secrets given, the model will throw a validation error, no need to take care of it here.
         if (isset($data['secrets'])) {
             $data['secrets'][0]['user_id'] = $this->User->id();
         }
 
+        if (!isset($data['resource_type_id'])) {
+            $data['resource_type_id'] = ResourceTypesTable::getDefaultTypeId();
+        }
+
         // Build entity and perform basic check
+        /** @var Resource $resource */
         $resource = $this->Resources->newEntity($data, [
             'accessibleFields' => [
                 'name' => true,
@@ -151,11 +163,11 @@ class ResourcesAddController extends AppController
     /**
      * Manage validation errors.
      *
-     * @param \App\Model\Entity\Resource $resource the
+     * @param resource $resource resource
      * @throws ValidationException if the resource validation failed
      * @return void
      */
-    protected function _handleValidationError(\App\Model\Entity\Resource $resource)
+    protected function _handleValidationError(Resource $resource)
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
@@ -165,11 +177,11 @@ class ResourcesAddController extends AppController
 
     /**
      * Trigger the after resource create event.
-     * @param \App\Model\Entity\Resource $resource The created resource
+     * @param resource $resource The created resource
      * @param array $data The request data.
      * @return void
      */
-    protected function afterCreate(\App\Model\Entity\Resource $resource, array $data = [])
+    protected function afterCreate(Resource $resource, array $data = [])
     {
         $uac = $this->User->getAccessControl();
         $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];

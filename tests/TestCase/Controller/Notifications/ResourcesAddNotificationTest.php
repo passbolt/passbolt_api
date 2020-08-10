@@ -17,6 +17,7 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\TestCase\Controller\Resources\ResourcesAddControllerTest;
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ResourcesAddNotificationTest extends ResourcesAddControllerTest
@@ -26,7 +27,20 @@ class ResourcesAddNotificationTest extends ResourcesAddControllerTest
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets',
         'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Avatars',
+        'app.Base/OrganizationSettings',
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->loadNotificationSettings();
+    }
+
+    public function tearDown()
+    {
+        $this->unloadNotificationSettings();
+        parent::tearDown();
+    }
 
     public function testResourcesAddNotificationDisabled()
     {

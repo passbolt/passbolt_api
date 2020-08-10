@@ -146,6 +146,11 @@ trait ResourcesFindersTrait
             $query->contain('Permissions.Groups');
         }
 
+        // If contains Resource type.
+        if (isset($options['contain']['resource-types'])) {
+            $query->contain('ResourceTypes');
+        }
+
         // Manage order clauses.
         if (isset($options['order']['Resources.modified'])) {
             $query->order('Resources.modified DESC');

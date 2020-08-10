@@ -16,6 +16,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Permission;
+use App\Model\Entity\ResourceType;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
@@ -48,6 +49,12 @@ use Cake\Validation\Validator;
 class ResourcesTable extends Table
 {
     use ResourcesFindersTrait;
+
+    const DESCRIPTION_MAX_LENGTH = 10000;
+    const NAME_MAX_LENGTH = 64;
+    const PASSWORD_MAX_LENGTH = 4096;
+    const URI_MAX_LENGTH = 1024;
+    const USERNAME_MAX_LENGTH = 64;
 
     /**
      * Initialize method
@@ -92,9 +99,9 @@ class ResourcesTable extends Table
             'foreignKey' => 'resource_id',
             'saveStrategy' => 'replace',
         ]);
-        $this->hasOne('Schema', [
-            'className' => 'Schemas',
-            'bindingKey' => 'schema_id',
+        $this->hasOne('ResourceTypes', [
+            'className' => 'ResourceTypes',
+            'bindingKey' => 'resource_type_id',
             'foreignKey' => 'id',
         ]);
     }
@@ -113,23 +120,23 @@ class ResourcesTable extends Table
 
         $validator
             ->utf8Extended('name', __('The name is not a valid utf8 string.'))
-            ->maxLength('name', 64, __('The name length should be maximum {0} characters.', 64))
+            ->maxLength('name', self::NAME_MAX_LENGTH, __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH))
             ->requirePresence('name', 'create', __('A name is required.'))
             ->allowEmptyString('name', __('The name cannot be empty.'), false);
 
         $validator
             ->utf8Extended('username', __('The username is not a valid utf8 string.'))
-            ->maxLength('username', 64, __('The username length should be maximum {0} characters.', 64))
+            ->maxLength('username', self::USERNAME_MAX_LENGTH, __('The username length should be maximum {0} characters.', self::USERNAME_MAX_LENGTH))
             ->allowEmptyString('username');
 
         $validator
             ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
-            ->maxLength('uri', 1024, __('The uri length should be maximum {0} characters.', 1024))
+            ->maxLength('uri', self::URI_MAX_LENGTH, __('The uri length should be maximum {0} characters.', self::URI_MAX_LENGTH))
             ->allowEmptyString('uri');
 
         $validator
             ->utf8Extended('description', __('The description is not a valid utf8 string.'))
-            ->maxLength('description', 10000, __('The description length should be maximum {0} characters.', 10000))
+            ->maxLength('description', self::DESCRIPTION_MAX_LENGTH, __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH))
             ->allowEmptyString('description');
 
         $validator
@@ -147,8 +154,8 @@ class ResourcesTable extends Table
             ->allowEmptyString('modified_by', null, false);
 
         $validator
-            ->uuid('schema_id', __('The schema id by must be a valid UUID.'))
-            ->requirePresence('schema_id', 'create');
+            ->uuid('resource_type_id', __('The resource type id by must be a valid UUID.'))
+            ->requirePresence('resource_type_id', 'create', __('A type is required.'));
 
         // Associated fields
         $validator
@@ -160,11 +167,6 @@ class ResourcesTable extends Table
             ->requirePresence('secrets', 'create', __('A secret is required.'))
             ->allowEmptyString('secrets', __('The secret cannot be empty.'), false)
             ->hasAtMost('secrets', 1, __('Only the secret of the owner must be provided.'), 'create');
-
-        $validator
-            ->requirePresence('schema', 'create', __('The permissions are required.'))
-            ->allowEmptyString('permissions', __('The permissions cannot be empty.'), false)
-            ->hasAtMost('permissions', 1, __('Only the permission of the owner must be provided.'), 'create');
 
         return $validator;
     }
@@ -373,8 +375,7 @@ class ResourcesTable extends Table
      */
     public function softDeleteAll($resourceIds, $cascade = true)
     {
-        $Resources = TableRegistry::getTableLocator()->get('Resources');
-        $Resources->updateAll(['deleted' => true], ['id IN' => $resourceIds]);
+        $this->updateAll(['deleted' => true], ['id IN' => $resourceIds]);
 
         if ($cascade) {
             $Favorites = TableRegistry::getTableLocator()->get('Favorites');
@@ -386,5 +387,24 @@ class ResourcesTable extends Table
             $Permissions = TableRegistry::getTableLocator()->get('Permissions');
             $Permissions->deleteAll(['aco_foreign_key IN' => $resourceIds]);
         }
+    }
+
+    /**
+     * Cleanup resource where resource type id is null
+     * Set it to the default
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupMissingResourceTypeId($dryRun = false)
+    {
+        $condition = ['resource_type_id IS' => null];
+        if ($dryRun) {
+            return $this->find()
+                ->where($condition)
+                ->count();
+        }
+
+        return $this->updateAll(['resource_type_id' => ResourceTypesTable::getDefaultTypeId()], $condition);
     }
 }

@@ -24,27 +24,38 @@ class V300AddResourceTypesTable extends AbstractMigration
      */
     public function up()
     {
-        $this->table('schemas', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+        $this->table('resource_types', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
             ->addColumn('id', 'char', [
              'default' => null,
              'limit' => 36,
              'null' => false,
             ])
+            ->addColumn('slug', 'char', [
+                'default' => null,
+                'limit' => 64,
+                'null' => false,
+            ])
             ->addColumn('name', 'char', [
                 'default' => null,
-                'limit' => 255,
+                'limit' => 64,
                 'null' => false,
+            ])
+            ->addColumn('description', 'char', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
             ])
             ->addColumn('definition', 'text', [
                 'default' => null,
                 'limit' => null,
                 'null' => true,
                 'encoding' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci'
+                'collation' => 'utf8mb4_unicode_ci',
             ])
-             ->addIndex([
-                 'id',
-             ])
+            ->addIndex(
+                'slug',
+                ['unique' => true]
+            )
              ->create();
     }
 }

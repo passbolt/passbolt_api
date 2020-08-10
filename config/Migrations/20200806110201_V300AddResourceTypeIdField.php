@@ -7,7 +7,7 @@
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.0.0
@@ -25,12 +25,13 @@ class V300AddResourceTypeIdField extends AbstractMigration
     public function up()
     {
         $this->table('resources')
-            ->addColumn('schema_id', 'char', [
+            ->addColumn('resource_type_id', 'char', [
                 'default' => null,
                 'limit' => 36,
-                'null' => false,
+                'null' => true,
             ])
-            ->addIndex(['schema_id']);
+            ->addIndex(['resource_type_id'])
+            ->save();
     }
 }
 // @codingStandardsIgnoreEnd

@@ -109,7 +109,7 @@ trait ResourcesModelTrait
      *
      * @param array $data The resource data.
      * @param array $options The new entity options.
-     * @return Resouce
+     * @return Resource
      */
     public function getDummyResourceEntity($data = [], $options = [])
     {
@@ -142,6 +142,7 @@ trait ResourcesModelTrait
             'username' => 'username@domain.com',
             'uri' => 'https://www.domain.com',
             'description' => 'New resource description',
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.simple-password'),
             'created_by' => $userId,
             'modified_by' => $userId,
         ];
