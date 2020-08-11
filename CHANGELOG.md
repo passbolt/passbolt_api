@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 ### Fixed
 - PB-1429 Fix "ldap error messages are incorrect in case of validation issues"
+- PB-1431 Fix "LDAP: a notification should not be sent to a group administrator requesting him to add a non-active user."
 
 ## [2.13.1] 2019-07-06
 ### Improved
