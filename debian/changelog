@@ -1,3 +1,9 @@
+passbolt-pro-server (2.13.5-1) stretch; urgency=medium
+  * Fix display a validation error when db password contains a quote or db name contain a dash
+  * Fix email notification settings bootstrap messes up non persistent database connection in wizard
+  * Bump dependencies versions
+
+ -- Diego Lendoiro <diego@passbolt.com>  Thu, 13 Aug 2020 10:00:00 +0000
 passbolt-pro-server (2.13.1-1) stretch; urgency=medium
   * pb-1347 as a passbolt server administrator i should be able to use advanced filters for the ldap queries.
   * folders audit log
