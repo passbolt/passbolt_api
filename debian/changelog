@@ -1,3 +1,9 @@
+passbolt-ce-server (2.13.5-1) stretch; urgency=medium
+  * Fix email notification settings bootstrap messes up non persistent database connection in wizard
+  * Bump dependencies versions
+
+ -- Diego Lendoiro <diego@passbolt.com>  Thu, 13 Aug 2020 10:24:00 +0000
+
 passbolt-ce-server (2.13.1-1) stretch; urgency=medium
   * PB-1372 Fix user setup completed admin email notification
 
