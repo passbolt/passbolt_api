@@ -3,16 +3,16 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
-## [2.13.5] 2019-07-30
+## [2.13.5] 2020-07-30
 ### Fixed
 - Fix email notification settings bootstrap messes up non persistent database connection in wizard
 - Bump dependencies versions
 
-## [2.13.1] 2019-07-06
+## [2.13.1] 2020-07-06
 ### Fixed
 - PB-1372 Fix user setup completed admin email notification
 
-## [2.13.0] 2019-06-23
+## [2.13.0] 2020-06-23
 ### Added
 - PB-1168 Add baseline code and tests for Debian package build
 - PB-1067 As a user I can receive digest emails when creating a lot of resources
