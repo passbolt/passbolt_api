@@ -154,7 +154,17 @@ class UserAction
      */
     public function getActionId()
     {
-        return UuidFactory::uuid($this->getActionName());
+        return self::actionId($this->getActionName());
+    }
+
+    /**
+     * Convert an action name to an action Id.
+     * @param string $actionName
+     * @return string
+     */
+    public static function actionId(string $actionName)
+    {
+        return UuidFactory::uuid($actionName);
     }
 
     /**

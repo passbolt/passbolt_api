@@ -17,6 +17,7 @@ namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Utility\UserAction;
+use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -88,11 +89,26 @@ class ActionLogsTable extends Table
         return $validator;
     }
 
+
     /**
-     * Create a new user_log.
+     * Check whether a given action is blacklisted from being logged.
+     * @param UserAction $userAction
+     * @return bool
+     */
+    private function isActionBlackListed(UserAction $userAction)
+    {
+        $blackList = Configure::read('passbolt.plugins.log.config.blackList', []);
+
+        return in_array($userAction->getActionName(), $blackList);
+    }
+
+    /**
+     * Create a new action_log from a userAction.
      *
-     * @param UserAction $userAction log type in clear
-     * @param int $status user_log data
+     * Will not process blacklisted actions (see config).
+     *
+     * @param UserAction $userAction user action
+     * @param int $status status
      *
      * @return ActionLog|bool
      * @throws ValidationException
@@ -100,7 +116,11 @@ class ActionLogsTable extends Table
      */
     public function create(UserAction $userAction, int $status)
     {
-        $userId = $userAction->getUserAccessControl()->userId();
+        if ($this->isActionBlackListed($userAction)) {
+            return false;
+        }
+
+        $userId = $userAction->getUserAccessControl()->getId();
 
         // Create corresponding action.
         $action = $this->Actions->findOrCreateAction($userAction->getActionId(), $userAction->getActionName());

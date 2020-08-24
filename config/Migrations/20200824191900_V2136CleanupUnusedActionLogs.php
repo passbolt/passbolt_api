@@ -10,14 +10,22 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.13.0
  */
 
-use Cake\Core\Configure;
-use Cake\Event\EventManager;
-use Passbolt\Log\Events\ActionsListener;
+use App\Utility\UserAction;
+use Cake\ORM\TableRegistry;
+use Migrations\AbstractMigration;
 
-Configure::load('Passbolt/Log.config', 'default', true);
+class V2136CleanupUnusedActionLogs extends AbstractMigration
+{
+    public function up()
+    {
+        $actionToCleanup = 'AuthIsAuthenticated.isAuthenticated';
 
-// Listen on controller actions.
-$actions = new ActionsListener();
-EventManager::instance()->on($actions);
+        $actionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        $actionLogsTable->deleteAll([
+            'action_id' => UserAction::actionId($actionToCleanup)
+        ]);
+    }
+}
