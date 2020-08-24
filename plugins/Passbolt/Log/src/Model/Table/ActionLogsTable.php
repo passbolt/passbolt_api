@@ -89,10 +89,9 @@ class ActionLogsTable extends Table
         return $validator;
     }
 
-
     /**
      * Check whether a given action is blacklisted from being logged.
-     * @param UserAction $userAction
+     * @param UserAction $userAction user action
      * @return bool
      */
     private function isActionBlackListed(UserAction $userAction)

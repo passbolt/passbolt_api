@@ -14,7 +14,6 @@
 
 namespace Passbolt\Log\Test\TestCase\Model\ActionLogs;
 
-
 use App\Model\Entity\Role;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
@@ -22,8 +21,8 @@ use App\Utility\UserAction;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Passbolt\Log\Model\Table\ActionsTable;
 use Passbolt\Log\Model\Table\ActionLogsTable;
+use Passbolt\Log\Model\Table\ActionsTable;
 
 class ActionLogsTest extends AppTestCase
 {

@@ -159,7 +159,7 @@ class UserAction
 
     /**
      * Convert an action name to an action Id.
-     * @param string $actionName
+     * @param string $actionName action name
      * @return string
      */
     public static function actionId(string $actionName)
