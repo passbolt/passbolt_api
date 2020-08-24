@@ -23,7 +23,7 @@ class AuthTokenConfigValidatorTest extends TestCase
      */
     public function testThatAuthTokenConfigValidatorReturnNullIfValidationFailed($value)
     {
-        $this->assertNull(call_user_func($this->sut, value));
+        $this->assertNull(call_user_func($this->sut, $value));
     }
 
     /**
