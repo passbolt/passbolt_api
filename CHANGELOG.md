@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-1391 Fix a resource modified field should be updated when its secret is modified
 - Fix display a validation error when db password contains a quote or db name contain a dash
 - PB-1413: Fix "User last_logged_in virtual field should be based on action logs"
+- PB-1484: Fix "LDAP: The user of a ldap group that cannot be synced should not have their memberships synchronized"
 
 ### Improved
 - PB-1464 Add configuration option for Log module in order to blacklist the logging of certain entry points that cause too much volume.
