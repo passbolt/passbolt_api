@@ -24,7 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-1464 Remove 'AuthIsAuthenticated.isAuthenticated' log entries from db and prevent further logging.
 - PB-1464 Add indexes in action_logs related tables in order to improve password history performances.
 - Add an entry to secrets_history when a resource is shared with a new user.
-- Appjs version bump v2.13.8
+- Appjs version bump v2.13.9
 
 ## [2.13.5] 2020-07-29
 ### Fixed
