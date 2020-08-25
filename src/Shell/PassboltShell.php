@@ -116,7 +116,7 @@ class PassboltShell extends AppShell
 
         $parser->addSubcommand('migrate', [
             'help' => __d('cake_console', 'Run database migrations.'),
-            'parser' => $this->Install->getOptionParser(),
+            'parser' => $this->Migrate->getOptionParser(),
         ]);
 
         $parser->addSubcommand('mysql_export', [

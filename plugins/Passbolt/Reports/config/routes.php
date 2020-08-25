@@ -23,6 +23,10 @@ Router::plugin('Passbolt/Reports', ['path' => '/reports'], function (RouteBuilde
      *
      * @uses \Passbolt\Reports\Controller\Reports\ReportsViewController::getReport()
      */
+    $routes->connect('/:reportSlug/:arg1', ['prefix' => 'Reports', 'controller' => 'ReportsView', 'action' => 'view'])
+        ->setMethods(['GET'])
+        ->setPass(['reportSlug', 'arg1']);
+
     $routes->connect('/:reportSlug', ['prefix' => 'Reports', 'controller' => 'ReportsView', 'action' => 'view'])
         ->setMethods(['GET'])
         ->setPass(['reportSlug']);

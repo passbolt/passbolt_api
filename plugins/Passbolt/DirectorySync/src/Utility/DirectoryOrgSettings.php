@@ -83,6 +83,9 @@ class DirectoryOrgSettings
         if (!empty($password)) {
             $settings = Hash::insert($settings, 'ldap.domains.org_domain.password', self::decrypt($password));
         }
+        if (!empty($settings)) {
+            $settings['source'] = 'db';
+        }
 
         return $settings;
     }
@@ -100,7 +103,10 @@ class DirectoryOrgSettings
         }
         $data = require($path);
 
-        return Hash::get($data, 'passbolt.plugins.directorySync', []);
+        $settings = Hash::get($data, 'passbolt.plugins.directorySync', []);
+        $settings['source'] = 'file';
+
+        return $settings;
     }
 
     /**
@@ -296,6 +302,16 @@ class DirectoryOrgSettings
     public function getGroupCustomFilters()
     {
         return Hash::get($this->settings, "groupCustomFilters");
+    }
+
+    /**
+     * Get Source. (file or db).
+     *
+     * @return mixed
+     */
+    public function getSource()
+    {
+        return Hash::get($this->settings, "source");
     }
 
     /**

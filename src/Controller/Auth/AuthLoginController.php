@@ -16,6 +16,8 @@ namespace App\Controller\Auth;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use App\Utility\UserAccessControl;
+use App\Utility\UserAction;
 use Cake\Event\Event;
 
 class AuthLoginController extends AppController
@@ -72,6 +74,10 @@ class AuthLoginController extends AppController
 
         if ($user) {
             $this->Auth->setUser($user);
+            UserAction::getInstance()->setUserAccessControl(new UserAccessControl(
+                $user['role']['name'],
+                $user['id']
+            ));
             $this->success(__('You are successfully logged in.'), $user);
         } else {
             // Login failure, same as GET

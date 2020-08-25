@@ -66,6 +66,9 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        if (file_exists(CONFIG . 'ldap.php')) {
+            throw new \Exception('The directory_sync tests should not run with the ldap.php configuration file enabled');
+        }
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->DirectoryEntries = TableRegistry::getTableLocator()->get('DirectoryEntries');

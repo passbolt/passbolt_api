@@ -56,6 +56,8 @@ class DebugTask extends AppShell
             $userFilter = $ldapDirectory->getUserFiltersAsString();
             $groupFilter = $ldapDirectory->getGroupFiltersAsString();
 
+            $this->out(__('<info>Configuration source:</info> {0}', $directoryOrgSettings->getSource()));
+            echo $this->nl(1);
             $this->info(__('The following filters are in use'));
             $this->out(__("users:\n{0}", [$userFilter]));
             echo $this->nl(1);

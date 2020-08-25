@@ -12,13 +12,16 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Utility\UserAction;
+use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\ActionLog;
 
 class ActionLogsTable extends Table
 {
@@ -87,38 +90,36 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * Return a action_log entity.
-     * @param array $data entity data
-     *
-     * @return ActionLog
+     * Check whether a given action is blacklisted from being logged.
+     * @param UserAction $userAction user action
+     * @return bool
      */
-    public function buildEntity(array $data)
+    private function isActionBlackListed(UserAction $userAction)
     {
-        return $this->newEntity($data, [
-            'accessibleFields' => [
-                'id' => true,
-                'user_id' => true,
-                'action_id' => true,
-                'context' => true,
-                'status' => true,
-                'created' => true,
-            ],
-        ]);
+        $blackList = Configure::read('passbolt.plugins.log.config.blackList', []);
+
+        return in_array($userAction->getActionName(), $blackList);
     }
 
     /**
-     * Create a new user_log.
+     * Create a new action_log from a userAction.
      *
-     * @param UserAction $userAction log type in clear
-     * @param int $status user_log data
+     * Will not process blacklisted actions (see config).
      *
-     * @return \App\Model\Entity\UserLog|bool
+     * @param UserAction $userAction user action
+     * @param int $status status
+     *
+     * @return ActionLog|bool
      * @throws ValidationException
      * @throws InternalErrorException
      */
     public function create(UserAction $userAction, int $status)
     {
-        $userId = $userAction->getUserAccessControl()->userId();
+        if ($this->isActionBlackListed($userAction)) {
+            return false;
+        }
+
+        $userId = $userAction->getUserAccessControl()->getId();
 
         // Create corresponding action.
         $action = $this->Actions->findOrCreateAction($userAction->getActionId(), $userAction->getActionName());
@@ -149,5 +150,25 @@ class ActionLogsTable extends Table
         }
 
         return $logSaved;
+    }
+
+    /**
+     * Return a action_log entity.
+     * @param array $data entity data
+     *
+     * @return ActionLog
+     */
+    public function buildEntity(array $data)
+    {
+        return $this->newEntity($data, [
+            'accessibleFields' => [
+                'id' => true,
+                'user_id' => true,
+                'action_id' => true,
+                'context' => true,
+                'status' => true,
+                'created' => true,
+            ],
+        ]);
     }
 }

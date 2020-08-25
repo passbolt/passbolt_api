@@ -69,7 +69,7 @@ class DatabaseConfigurationForm extends Form
 
                     return (strpos($value, '"') === false && strpos($value, "'") === false);
                 },
-                'message' =>  __('The password cannot contain quotes.')
+                'message' => __('The password cannot contain quotes.'),
             ])
             ->utf8('password', __('The host is not a valid utf8 string.'));
 
@@ -81,7 +81,7 @@ class DatabaseConfigurationForm extends Form
                 'rule' => function ($value, $context) {
                     return (strpos($value, '-') === false);
                 },
-                'message' =>  __('The database name cannot contain dashes.')
+                'message' => __('The database name cannot contain dashes.'),
             ]);
 
         return $validator;

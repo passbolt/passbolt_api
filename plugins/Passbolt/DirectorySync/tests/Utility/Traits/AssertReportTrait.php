@@ -59,6 +59,15 @@ trait AssertReportTrait
     }
 
     /**
+     * @param ActionReport $report
+     * @param string $message
+     */
+    public function assertReportMessage(ActionReport $report, string $message)
+    {
+        $this->assertEquals($message, $report->getMessage());
+    }
+
+    /**
      * @param ActionReportCollection $reports
      * @param string $model
      */
@@ -95,6 +104,9 @@ trait AssertReportTrait
         }
         if (isset($data['type'])) {
             $this->assertReportDataType($report, $data['type']);
+        }
+        if (isset($data['message'])) {
+            $this->assertReportMessage($report, $data['message']);
         }
     }
 

@@ -103,23 +103,46 @@ trait GroupUsersSyncTrait
     {
         foreach ($userIdsToAdd as $userId) {
             $u = $this->Users->get($userId);
-            $this->addReportItem(new ActionReport(
-                __('A request to add user {0} in group {1} was sent to the group manager.', $u->username, $group->name),
-                Alias::MODEL_GROUPS_USERS,
-                Alias::ACTION_CREATE,
-                Alias::STATUS_SUCCESS,
-                $u
-            ));
+            $groupUsers = [];
+
+            // If users are deleted or active, we just ignore the entry.
+            if ($u->deleted) {
+                $msg = __('The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt.', $u->username, $group->name);
+                $this->addReportItem(new ActionReport(
+                    $msg,
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_IGNORE,
+                    $group
+                ));
+
+                continue;
+            } elseif (!$u->active) {
+                $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $u->username, $group->name);
+                $this->addReportItem(new ActionReport(
+                    $msg,
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_IGNORE,
+                    $group
+                ));
+
+                continue;
+            } else {
+                $groupUsers[] = $this->GroupsUsers->buildEntity(['group_id' => $group->id, 'user_id' => $userId]);
+                $this->addReportItem(new ActionReport(
+                    __('The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually.', $u->username, $group->name),
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_SUCCESS,
+                    $u
+                ));
+            }
         }
 
-        // Send notification if not in dry-run mode.
-        if (!$this->isDryRun()) {
+        // Send notification if group users are required to be added, and job not in dry-run mode.
+        if (!empty($groupUsers) && !$this->isDryRun()) {
             $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
-            $groupUsers = [];
-            // Build group_users entity for the call.
-            foreach ($userIdsToAdd as $userId) {
-                $groupUsers[] = $this->GroupsUsers->buildEntity(['group_id' => $group->id, 'user_id' => $userId]);
-            }
             $eventData = ['groupUsers' => $groupUsers, 'group' => $group, 'requester' => $accessControl];
             $event = new Event('Model.Groups.requestGroupUsers.success', $this, $eventData);
             $this->getEventManager()->dispatch($event);
@@ -331,14 +354,14 @@ trait GroupUsersSyncTrait
                 ));
             } catch (CustomValidationException $exception) {
                 $errors = $exception->getErrors();
-                $isNotActive = !empty(Hash::extract($errors, 'user_id.user_is_active'));
-                $isDeleted = !empty(Hash::extract($errors, 'user_id.user_is_not_soft_deleted'));
+                $isNotActive = !empty(Hash::extract($errors, '0.user_id.user_is_active'));
+                $isDeleted = !empty(Hash::extract($errors, '0.user_id.user_is_not_soft_deleted'));
                 if (($isNotActive && $isDeleted) || $isDeleted) {
-                    $msg = __('The user {0} could not be added to group {1} because it is deleted.', $user->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt.', $user->username, $group->name);
                 } elseif ($isNotActive) {
-                    $msg = __('The user {0} could not be added to group {1} because it is not active yet.', $user->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $user->username, $group->name);
                 } else {
-                    $msg = __('The user {0} could not be added to the group {1} because some validation issues.', $user->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because of validation issues.', $user->username, $group->name);
                 }
                 $this->addReportItem(new ActionReport(
                     $msg,
