@@ -26,7 +26,6 @@ use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -105,6 +104,10 @@ class UsersTable extends Table
         $this->hasMany('EntitiesHistory', [
             'className' => 'Passbolt/Log.EntitiesHistory',
             'foreignKey' => 'foreign_key',
+        ]);
+        $this->hasMany('ActionLogs', [
+            'className' => 'Passbolt/Log.ActionLogs',
+            'foreignKey' => 'user_id',
         ]);
     }
 
@@ -208,27 +211,6 @@ class UsersTable extends Table
         ]);
 
         return $rules;
-    }
-
-    /**
-     * Add last_logged_in contain element.
-     * Basically, add a placeholder to the entity that will be treated
-     * in a virtual field in the User entity.
-     *
-     * @param Query $query query
-     * @return Query
-     */
-    private function _containLastLoggedIn(\Cake\ORM\Query $query)
-    {
-        $query->formatResults(function ($results) {
-            return $results->map(function ($row) {
-                $row[User::LAST_LOGGED_IN_PLACEHOLDER] = '';
-
-                return $row;
-            });
-        });
-
-        return $query;
     }
 
     /**

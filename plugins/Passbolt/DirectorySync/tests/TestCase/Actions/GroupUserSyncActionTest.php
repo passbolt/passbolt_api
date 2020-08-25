@@ -305,6 +305,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
+            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because he has not yet activated his account.',
         ];
         $this->assertReport($reports[1], $expectedUserGroupReport);
 
@@ -351,6 +352,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS,
+            'message' => 'The group newgroup was successfully added to passbolt.',
         ];
         $this->assertReport($reports[0], $expectedGroupReport);
 
@@ -359,6 +361,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS,
+            'message' => 'The user frances@passbolt.com was successfully added to the group newgroup.',
         ];
         $this->assertReport($reports[1], $expectedUserGroupReport);
 
@@ -367,6 +370,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
+            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because he has not yet activated his account.',
         ];
         $this->assertReport($reports[2], $expectedUserGroupReport);
 
@@ -375,7 +379,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
-        $groupUserAda = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
+        $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
         $this->assertGroupUserNotExist(null, ['group_id' => $groupCreated->id, 'user_id' => UuidFactory::uuid('user.id.ruth')]);
         $this->assertDirectoryRelationNotEmpty();
     }
@@ -548,6 +552,60 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertResponseCode(200);
         $this->assertResponseContains('requested you to add members to a group');
         $this->assertResponseContains('Frances Allen (Member)');
+    }
+
+    /**
+     * PB-1431: Fix: LDAP: a notification should not be sent to a group administrator requesting him to add a non-active user.
+     *
+     * Scenario: a non active groupUser has been added to a ldap group, not yet added in Passbolt.
+     * But the passbolt group has access to shared passwords.
+     * Expected result: No email notification should be sent. An ignore report should be broadcasted.
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_PB1431()
+    {
+        // Init AppShellBootstrap to handle email notifications.
+        AppShellBootstrap::init();
+
+        $defaultGroupAdmin = 'edith@passbolt.com';
+        $this->setDefaultGroupAdminUser($defaultGroupAdmin);
+        $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
+        $this->initAction();
+
+        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'ruth', 'foreign_key' => UuidFactory::uuid('user.id.ruth')]);
+        $this->mockDirectoryEntryGroup('accounting');
+        $this->mockDirectoryUserData('ruth', 'ruth', 'ruth@passbolt.com');
+        $this->mockDirectoryGroupData('accounting', [
+            'group_users' => [
+                $userEntry->directory_name,
+            ],
+        ]);
+
+        $reports = $this->action->execute();
+
+        $this->assertEquals(count($reports), 1);
+        $expectedUserGroupReport = [
+            'action' => Alias::ACTION_CREATE,
+            'model' => Alias::MODEL_GROUPS_USERS,
+            'status' => Alias::STATUS_IGNORE,
+            'type' => Alias::MODEL_GROUPS,
+            'message' => 'The user ruth@passbolt.com could not be added to the group Accounting because he has not yet activated his account.',
+        ];
+        $this->assertReport($reports[0], $expectedUserGroupReport);
+
+        // Group user for default admin should not exist.
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => $defaultGroupAdmin->id]);
+
+        // Frances should not be in group users and directoryRelations.
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.ruth')]);
+        $this->assertDirectoryRelationEmpty();
+
+        // No email notification should have been sent to the group manager.
+        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
+        $this->assertResponseCode(500);
     }
 
     /**

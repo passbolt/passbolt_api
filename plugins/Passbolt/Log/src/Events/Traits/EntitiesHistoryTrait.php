@@ -30,10 +30,8 @@ trait EntitiesHistoryTrait
                     EntityHistory::CRUD_UPDATE,
                     EntityHistory::CRUD_DELETE,
                 ],
-                'models' => [
-                    'SecretAccesses' => [
-                        EntityHistory::CRUD_CREATE,
-                    ],
+                'Secrets' => [
+                    EntityHistory::CRUD_CREATE,
                 ],
             ],
         ],

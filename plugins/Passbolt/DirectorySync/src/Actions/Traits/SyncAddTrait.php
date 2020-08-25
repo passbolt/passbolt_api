@@ -68,6 +68,8 @@ trait SyncAddTrait
                     Alias::STATUS_ERROR,
                     $reportData
                 ));
+
+                return;
             }
         }
 

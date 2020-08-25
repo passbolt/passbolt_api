@@ -78,6 +78,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->assertSuccess();
         $settings = $this->_responseJsonBody;
         $this->assertNotEmpty($settings);
+        $this->assertEquals($settings->source, 'db');
     }
 
     /**
@@ -253,6 +254,5 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->assertTrue(isset($this->_responseJsonBody->groups));
         $this->assertEquals(5, count($this->_responseJsonBody->groups));
         $this->assertTrue(isset($this->_responseJsonBody->tree));
-        $this->assertEquals(1, count($this->_responseJsonBody->tree));
     }
 }

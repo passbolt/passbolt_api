@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Added
+- Add an option to the migrate shell task to avoid clearing the cache after the migration is completed
+
+### Fixed
+- PB-1429 Fix "ldap error messages are incorrect in case of validation issues"
+- PB-1431 Fix "LDAP: a notification should not be sent to a group administrator requesting him to add a non-active user."
+- Fix: user_id should be saved in action_logs table after successful login
+- PB-1370 Folders: Fix Performance improvement while retrieving items associated folder_parent_id and personal status
+- Fix user setup completed admin email notification
+- PB-1391 Fix a resource modified field should be updated when its secret is modified
+- Fix display a validation error when db password contains a quote or db name contain a dash
+- PB-1413: Fix "User last_logged_in virtual field should be based on action logs"
+- PB-1484: Fix "LDAP: The user of a ldap group that cannot be synced should not have their memberships synchronized"
+
+### Improved
+- PB-1464 Add configuration option for Log module in order to blacklist the logging of certain entry points that cause too much volume.
+- PB-1464 Remove 'AuthIsAuthenticated.isAuthenticated' log entries from db and prevent further logging.
+- PB-1464 Add indexes in action_logs related tables in order to improve password history performances.
+- Add an entry to secrets_history when a resource is shared with a new user.
+- Appjs version bump v2.13.8
+
 ## [2.13.5] 2019-07-29
 ### Fixed
 - Fix display a validation error when db password contains a quote or db name contain a dash
