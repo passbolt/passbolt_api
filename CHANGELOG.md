@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
+
+## [2.13.6] 2020-08-25
 ### Added
 - Add an option to the migrate shell task to avoid clearing the cache after the migration is completed
 
@@ -24,14 +26,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Add an entry to secrets_history when a resource is shared with a new user.
 - Appjs version bump v2.13.8
 
-## [2.13.1] 2019-07-06
+## [2.13.5] 2020-07-29
+### Fixed
+- Fix display a validation error when db password contains a quote or db name contain a dash
+- Fix email notification settings bootstrap messes up non persistent database connection in wizard
+- Bump dependencies versions
+
+## [2.13.1] 2020-07-06
 ### Improved
 - PB-1370 Performance improvement while retrieving items associated folder_parent_id and personal status
 
 ### Fixed
 - PB-1372 Fix user setup completed admin email notification
 
-## [2.13.0] 2019-06-23
+## [2.13.0] 2020-06-23
 ### Added
 - PB-1347 As a Passbolt server administrator I should be able to use advanced filters for the ldap queries.
 - Folders audit log
@@ -49,7 +57,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-1328 Fixed various folders email issue
 - Fix group delete sole owner of non shared folders issue
 
-## [2.13.0-RC1] - 2019-05-27
+## [2.13.0-RC1] - 2020-05-27
 ### Added
 - PB-1165 As a logged in user I can create a folder
 - PB-1213 As a logged in user I edit folder permissions
@@ -846,7 +854,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.13.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.13.6...HEAD
+[2.13.6]: https://github.com/passbolt/passbolt_api/compare/v2.13.5...v2.13.6
+[2.13.5]: https://github.com/passbolt/passbolt_api/compare/v2.13.1...v2.13.5
 [2.13.1]: https://github.com/passbolt/passbolt_api/compare/v2.13.0...v2.13.1
 [2.13.0]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...v2.13.0
 [2.12.1]: https://github.com/passbolt/passbolt_api/compare/v2.12.0...v2.12.1
