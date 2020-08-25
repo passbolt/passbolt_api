@@ -12,8 +12,9 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-
+use App\Utility\UserAction;
 use Migrations\AbstractMigration;
+use Cake\Validation\Validation;
 
 /**
  * Class V2130ReconcileLoginHistory
@@ -28,11 +29,11 @@ class V2130ReconcileLoginHistory extends AbstractMigration
      */
     public function up()
     {
-        $loginActions = $this->fetchAll("SELECT id, created FROM action_logs WHERE user_id IS NULL AND action_id=(SELECT id FROM actions WHERE name='AuthLogin.loginPost') AND status=1 ORDER BY created ASC");
-        if (empty($loginActions)) {
+        $authLoginActionId = UserAction::actionId('AuthLogin.loginPost');
+        $loginActions = $this->fetchAll("SELECT id, created FROM action_logs WHERE user_id IS NULL AND action_id='{$authLoginActionId}' AND status=1 ORDER BY created ASC");
+        if (empty($loginActions) || !Validation::datetime($loginActions[0]['created'])) {
             return;
         }
-
         $loginTokens = $this->fetchAll("SELECT id, user_id, modified FROM authentication_tokens WHERE type='login' AND active=0 AND modified >= '{$loginActions[0]['created']}'");
         $loginActionsToUpdate = [];
         foreach ($loginTokens as $loginToken) {
@@ -45,10 +46,11 @@ class V2130ReconcileLoginHistory extends AbstractMigration
                 }
             }
         }
-
         if (!empty($loginActionsToUpdate)) {
             foreach($loginActionsToUpdate as $loginAction) {
-                $this->execute("UPDATE action_logs SET user_id='{$loginAction['user_id']}' where id='{$loginAction['id']}'");
+                if (Validation::uuid($loginAction['user_id']) && Validation::uuid($loginAction['id'])) {
+                    $this->execute("UPDATE action_logs SET user_id='{$loginAction['user_id']}' where id='{$loginAction['id']}'");
+                }
             }
         }
     }
