@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## [2.13.6] 2020-08-25
+## [2.14.0] 2020-08-25
 ### Added
 - Add an option to the migrate shell task to avoid clearing the cache after the migration is completed
 
@@ -854,8 +854,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.13.6...HEAD
-[2.13.6]: https://github.com/passbolt/passbolt_api/compare/v2.13.5...v2.13.6
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.14.0...HEAD
+[2.14.0]: https://github.com/passbolt/passbolt_api/compare/v2.13.5...v2.14.0
 [2.13.5]: https://github.com/passbolt/passbolt_api/compare/v2.13.1...v2.13.5
 [2.13.1]: https://github.com/passbolt/passbolt_api/compare/v2.13.0...v2.13.1
 [2.13.0]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...v2.13.0
