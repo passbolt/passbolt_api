@@ -28,7 +28,7 @@ class ResourceTypesViewControllerTest extends AppIntegrationTestCase
     public function testResourceTypesView_Success()
     {
         $this->authenticateAs('ada');
-        $resourceType = UuidFactory::uuid('resource-types.id.simple-password');
+        $resourceType = UuidFactory::uuid('resource-types.id.password-string');
         $this->getJson("/resource-types/$resourceType.json?api-version=2");
         $this->assertSuccess();
         $this->assertResourceTypeAttributes($this->_responseJsonBody);

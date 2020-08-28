@@ -28,54 +28,54 @@ class V300AddResourceTypesDefaultData extends AbstractMigration
     {
         $defaultResourceTypes = [
             [
-                'id' => UuidFactory::uuid('resource-types.id.simple-password'),
-                'slug' => 'simple-password',
+                'id' => UuidFactory::uuid('resource-types.id.password-string'),
+                'slug' => 'password-string',
                 'name' => 'Simple password',
-                'description' => 'The original passbolt resource type, where only the password is encrypted.',
+                'description' => 'The original passbolt resource type, where the secret is a non empty string.',
                 'definition' => json_encode([
                     "resource" => [
-                        "name" => [
-                        "type" => "string",
-                          "maxLength" => 64
-                        ],
-                        "username" => [
-                            "anyOf" => [[
-                                "type" => "string",
-                                "maxLength" => 64
-                            ], [
-                                "type" => "null"
-                            ]]
-                        ],
-                        "uri" => [
-                            "anyOf" => [[
-                                "type" => "string",
-                                "maxLength" => 1024
-                            ], [
-                                "type" => "null"
-                            ]]
-                        ],
-                        "description" => [
-                            "anyOf" => [[
-                                "type" => "string",
-                                "maxLength" => 10000
-                            ], [
-                                "type" => "null"
-                            ]]
-                        ],
-                    ],
-                    "secret" => [
                         "type" => "object",
                         "required" => [
-                            "password"
+                            "name"
                         ],
                         "properties" => [
-                            "password" => [
+                            "name" => [
                                 "type" => "string",
-                                "maxLength" => 4064
+                                "maxLength" => 64
                             ],
-                        ],
+                            "username" => [
+                                "anyOf" => [[
+                                    "type" => "string",
+                                    "maxLength" => 64
+                                ], [
+                                    "type" => "null"
+                                ]]
+                            ],
+                            "uri" => [
+                                "anyOf" => [[
+                                    "type" => "string",
+                                    "maxLength" => 1024
+                                ], [
+                                    "type" => "null"
+                                ]]
+                            ],
+                            "description" => [
+                                "anyOf" => [[
+                                    "type" => "string",
+                                    "maxLength" => 10000
+                                ], [
+                                    "type" => "null"
+                                ]]
+                            ],
+                        ]
+                    ],
+                    "secret" => [
+                        "type" => "string",
+                        "maxLength" => 4064
                     ],
                 ]),
+                'created' => date("Y-m-d H:i:s"),
+                'modified' => date("Y-m-d H:i:s"),
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.password-and-description'),
@@ -84,26 +84,32 @@ class V300AddResourceTypesDefaultData extends AbstractMigration
                 'description' => 'A resource with the password and the description encrypted.',
                 'definition' => json_encode([
                     "resource" => [
-                        "name" => [
-                            "type" => "string",
-                            "maxLength" => 64
+                        "type" => "object",
+                        "required" => [
+                            "name"
                         ],
-                        "username" => [
-                            "anyOf" => [[
+                        "properties" => [
+                            "name" => [
                                 "type" => "string",
                                 "maxLength" => 64
-                            ], [
-                                "type" => "null"
-                            ]]
-                        ],
-                        "uri" => [
-                            "anyOf" => [[
-                                "type" => "string",
-                                "maxLength" => 1024
-                            ], [
-                                "type" => "null"
-                            ]]
-                        ],
+                            ],
+                            "username" => [
+                                "anyOf" => [[
+                                    "type" => "string",
+                                    "maxLength" => 64
+                                ], [
+                                    "type" => "null"
+                                ]]
+                            ],
+                            "uri" => [
+                                "anyOf" => [[
+                                    "type" => "string",
+                                    "maxLength" => 1024
+                                ], [
+                                    "type" => "null"
+                                ]]
+                            ],
+                        ]
                     ],
                     "secret" => [
                         "type" => "object",
@@ -126,6 +132,8 @@ class V300AddResourceTypesDefaultData extends AbstractMigration
                         ],
                     ],
                 ]),
+                'created' => date("Y-m-d H:i:s"),
+                'modified' => date("Y-m-d H:i:s"),
             ],
         ];
         $this->table('resource_types')->insert($defaultResourceTypes)->save();

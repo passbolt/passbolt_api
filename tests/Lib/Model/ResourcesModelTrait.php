@@ -142,7 +142,7 @@ trait ResourcesModelTrait
             'username' => 'username@domain.com',
             'uri' => 'https://www.domain.com',
             'description' => 'New resource description',
-            'resource_type_id' => UuidFactory::uuid('resource-types.id.simple-password'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
             'created_by' => $userId,
             'modified_by' => $userId,
         ];

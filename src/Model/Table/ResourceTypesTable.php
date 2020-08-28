@@ -17,6 +17,7 @@ namespace App\Model\Table;
 
 use App\Model\Entity\ResourceType;
 use App\Utility\UuidFactory;
+use Cake\Collection\CollectionInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -149,6 +150,30 @@ class ResourceTypesTable extends Table
      */
     public static function getDefaultTypeId()
     {
-        return UuidFactory::uuid('resource-types.id.simple-password');
+        return UuidFactory::uuid('resource-types.id.password-string');
+    }
+
+    /**
+     * Make sure the definition is de-serialized after find
+     *
+     * @param bool $contain is the find done from an association
+     * @return \Closure
+     */
+    static public function resultFormatter($contain = false) {
+        if (!$contain) {
+            return function (CollectionInterface $results) {
+                return $results->map(function ($row) {
+                    $row['definition'] = json_decode($row['definition']);
+                    return $row;
+                });
+            };
+        } else {
+            return function (CollectionInterface $results) {
+                return $results->map(function ($row) {
+                    $row['resource_type']['definition'] = json_decode($row['resource_type']['definition']);
+                    return $row;
+                });
+            };
+        }
     }
 }

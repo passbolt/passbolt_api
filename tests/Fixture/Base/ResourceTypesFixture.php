@@ -56,8 +56,8 @@ class ResourceTypesFixture extends TestFixture
     {
         $this->records = [
             [
-                'id' => UuidFactory::uuid('resource-types.id.simple-password'),
-                'slug' => 'simple-password',
+                'id' => UuidFactory::uuid('resource-types.id.password-string'),
+                'slug' => 'password-string',
                 'name' => 'Simple password',
                 'description' => 'The original passbolt resource type, where only the password is encrypted.',
                 'definition' => json_encode([

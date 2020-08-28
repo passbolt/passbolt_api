@@ -17,6 +17,7 @@ namespace App\Controller\ResourceTypes;
 
 use App\Controller\AppController;
 use App\Model\Table\ResourceTypesTable;
+use App\Service\ResourceTypes\ResourceTypesFinderService;
 use Cake\ORM\TableRegistry;
 
 class ResourceTypesIndexController extends AppController
@@ -28,9 +29,8 @@ class ResourceTypesIndexController extends AppController
      */
     public function index()
     {
-        /** @var ResourceTypesTable $resourceTypesTable */
-        $resourceTypesTable = TableRegistry::getTableLocator()->get('ResourceTypes');
-        $resourceTypes = $resourceTypesTable->find()->all();
+        $resourceTypeFinderService = new ResourceTypesFinderService();
+        $resourceTypes = $resourceTypeFinderService->find()->all();
         $this->success(__('The operation was successful.'), $resourceTypes);
     }
 }
