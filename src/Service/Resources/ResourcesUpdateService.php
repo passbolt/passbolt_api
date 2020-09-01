@@ -202,7 +202,7 @@ class ResourcesUpdateService
             'description' => true,
             'modified' => true,
             'modified_by' => true,
-            'resource_type_id' => true
+            'resource_type_id' => true,
         ];
 
         return $this->resourcesTable->patchEntity($resource, $data, ['accessibleFields' => $accessibleFields]);

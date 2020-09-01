@@ -16,7 +16,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Permission;
-use App\Model\Entity\ResourceType;
+use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
@@ -178,7 +178,7 @@ class ResourcesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         // Create and Update rules
-        $rules->add($rules->existsIn(['resource_type_id'], 'ResourceTypes'), 'validResourceType', [
+        $rules->add($rules->existsIn(['resource_type_id'], 'ResourceTypes'), 'resource_type_exists', [
             'message' => __('This is not a valid resource type.'),
         ]);
 
@@ -213,11 +213,11 @@ class ResourcesTable extends Table
     /**
      * Validate that the entity has at least one owner
      *
-     * @param \App\Model\Entity\Resource $entity The entity that will be created or updated.
+     * @param resource $entity The entity that will be created or updated.
      * @param array $options options
      * @return bool
      */
-    public function isOwnerPermissionProvidedRule($entity, array $options = [])
+    public function isOwnerPermissionProvidedRule(Resource $entity, array $options = [])
     {
         if (isset($entity->permissions)) {
             $found = Hash::extract($entity->permissions, '{n}[type=' . Permission::OWNER . ']');
@@ -232,11 +232,11 @@ class ResourcesTable extends Table
     /**
      * Validate that the a resource can be created only if the secret of the owner is provided.
      *
-     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param resource $entity The entity that will be created.
      * @param array $options options
      * @return bool
      */
-    public function isOwnerSecretProvidedRule(\App\Model\Entity\Resource $entity, array $options = [])
+    public function isOwnerSecretProvidedRule(Resource $entity, array $options = [])
     {
         return ($entity->secrets[0]->user_id === $entity->created_by);
     }
@@ -244,11 +244,11 @@ class ResourcesTable extends Table
     /**
      * Validate that the secrets of all the allowed users are provided if the secret changed.
      *
-     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param resource $entity The entity that will be created.
      * @param array $options options
      * @return bool
      */
-    public function isSecretsProvidedRule(\App\Model\Entity\Resource $entity, array $options = [])
+    public function isSecretsProvidedRule(Resource $entity, array $options = [])
     {
         // Secrets are not required to update a resource, but if provided check that the list of secrets correspond
         // only to the users who have access to the resource.
@@ -282,11 +282,11 @@ class ResourcesTable extends Table
      * Soft delete a resource.
      *
      * @param string $userId The user who perform the delete.
-     * @param \App\Model\Entity\Resource $resource The resource to delete.
+     * @param resource $resource The resource to delete.
      * @throws \InvalidArgumentException if the user id is not a uuid
      * @return bool true if success
      */
-    public function softDelete(string $userId, \App\Model\Entity\Resource $resource)
+    public function softDelete(string $userId, Resource $resource)
     {
         // The softDelete will perform an update to the entity to soft delete it.
         if (!Validation::uuid($userId)) {
@@ -355,7 +355,7 @@ class ResourcesTable extends Table
      * @param array $usersId The list of users who lost access to the resource
      * @return void
      */
-    public function deleteLostAccessAssociatedData($resourceId, array $usersId = [])
+    public function deleteLostAccessAssociatedData(string $resourceId, array $usersId = [])
     {
         if (empty($usersId)) {
             return;
@@ -371,11 +371,11 @@ class ResourcesTable extends Table
     /**
      * Soft delete a list of resources by Ids
      *
-     * @param string $resourceIds uuid of Resources
+     * @param array $resourceIds uuid of Resources
      * @param bool $cascade true
      * @return void
      */
-    public function softDeleteAll($resourceIds, $cascade = true)
+    public function softDeleteAll(array $resourceIds, bool $cascade = true)
     {
         $this->updateAll(['deleted' => true], ['id IN' => $resourceIds]);
 
@@ -398,7 +398,7 @@ class ResourcesTable extends Table
      * @param bool $dryRun false
      * @return number of affected records
      */
-    public function cleanupMissingResourceTypeId($dryRun = false)
+    public function cleanupMissingResourceTypeId(bool $dryRun = false)
     {
         $condition = ['resource_type_id IS' => null];
         if ($dryRun) {

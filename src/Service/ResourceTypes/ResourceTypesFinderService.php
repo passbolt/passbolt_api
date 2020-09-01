@@ -40,7 +40,8 @@ class ResourceTypesFinderService
      * Get resource types query
      * @return array|Query
      */
-    public function find() {
+    public function find()
+    {
         return $this->resourceTypesTable
             ->find()
             ->formatResults(ResourceTypesTable::resultFormatter());
@@ -49,14 +50,14 @@ class ResourceTypesFinderService
     /**
      * Get a resource type by Id
      *
-     * @param string $id
+     * @param string $id uuid
      * @throws RecordNotFoundException if resource type is not present
      * @return array|EntityInterface
      */
-    public function get(string $id) {
+    public function get(string $id)
+    {
         return $this->find()
             ->where(['id' => $id])
             ->firstOrFail();
     }
-
 }

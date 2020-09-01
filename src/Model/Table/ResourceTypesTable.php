@@ -40,7 +40,6 @@ use Cake\Validation\Validator;
  */
 class ResourceTypesTable extends Table
 {
-
     const NAME_MAX_LENGTH = 64;
     const SLUG_MAX_LENGTH = 64;
     const DESCRIPTION_MAX_LENGTH = 255;
@@ -159,11 +158,13 @@ class ResourceTypesTable extends Table
      * @param bool $contain is the find done from an association
      * @return \Closure
      */
-    static public function resultFormatter($contain = false) {
+    public static function resultFormatter($contain = false)
+    {
         if (!$contain) {
             return function (CollectionInterface $results) {
                 return $results->map(function ($row) {
                     $row['definition'] = json_decode($row['definition']);
+
                     return $row;
                 });
             };
@@ -171,6 +172,7 @@ class ResourceTypesTable extends Table
             return function (CollectionInterface $results) {
                 return $results->map(function ($row) {
                     $row['resource_type']['definition'] = json_decode($row['resource_type']['definition']);
+
                     return $row;
                 });
             };
