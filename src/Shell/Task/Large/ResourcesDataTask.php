@@ -59,6 +59,7 @@ class ResourcesDataTask extends DataTask
                     'modified_by' => $userId,
                     'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
                     'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
+                    'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
                 ];
             }
         }
@@ -81,6 +82,7 @@ class ResourcesDataTask extends DataTask
                 'modified_by' => UuidFactory::uuid('user.id.user_1'),
                 'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
                 'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
+                'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
             ];
         }
 

@@ -39,6 +39,7 @@ class ResourcesDataTask extends DataTask
             'modified_by' => UuidFactory::uuid('user.id.ada'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.april'),
@@ -49,6 +50,7 @@ class ResourcesDataTask extends DataTask
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
             'modified_by' => UuidFactory::uuid('user.id.betty'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.bower'),
@@ -61,6 +63,7 @@ class ResourcesDataTask extends DataTask
             'modified_by' => UuidFactory::uuid('user.id.carol'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 years')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 years')),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.cakephp'),
@@ -73,6 +76,7 @@ class ResourcesDataTask extends DataTask
             'modified_by' => UuidFactory::uuid('user.id.ada'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 hours')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 hours')),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.canjs'),
@@ -85,6 +89,7 @@ class ResourcesDataTask extends DataTask
             'modified_by' => UuidFactory::uuid('user.id.edith'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 weeks')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 weeks')),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.centos'),
@@ -97,6 +102,7 @@ class ResourcesDataTask extends DataTask
             'modified_by' => UuidFactory::uuid('user.id.dame'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 months')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 months')),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.chai'),
@@ -106,7 +112,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Chai is a BDD / TDD assertion library for node and the browser',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
-            'modified_by' => UuidFactory::uuid('user.id.betty')
+            'modified_by' => UuidFactory::uuid('user.id.betty'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.composer'),
@@ -119,6 +126,7 @@ class ResourcesDataTask extends DataTask
             'modified_by' => UuidFactory::uuid('user.id.carol'),
             'created' => date('Y-m-d H:i:s', strtotime('-2 minutes')),
             'modified' => date('Y-m-d H:i:s', strtotime('-1 minutes')),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.debian'),
@@ -128,7 +136,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'The universal operating system',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.dame'),
-            'modified_by' => UuidFactory::uuid('user.id.dame')
+            'modified_by' => UuidFactory::uuid('user.id.dame'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.docker'),
@@ -138,7 +147,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'An open platform for distributed applications for developers and sysadmins',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.edith'),
-            'modified_by' => UuidFactory::uuid('user.id.edith')
+            'modified_by' => UuidFactory::uuid('user.id.edith'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.enlightenment'),
@@ -148,7 +158,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Party like it\'s 1996.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.ada'),
-            'modified_by' => UuidFactory::uuid('user.id.ada')
+            'modified_by' => UuidFactory::uuid('user.id.ada'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.fosdem'),
@@ -158,7 +169,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'FOSDEM is a free event for software developers to meet, share ideas and collaborate.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
-            'modified_by' => UuidFactory::uuid('user.id.betty')
+            'modified_by' => UuidFactory::uuid('user.id.betty'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.framasoft'),
@@ -168,7 +180,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Parce que libre ne veut pas dire gratuit!',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.carol'),
-            'modified_by' => UuidFactory::uuid('user.id.carol')
+            'modified_by' => UuidFactory::uuid('user.id.carol'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.fsfe'),
@@ -178,7 +191,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Free Software Foundation Europe is a charity that empowers users to control technology.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.dame'),
-            'modified_by' => UuidFactory::uuid('user.id.dame')
+            'modified_by' => UuidFactory::uuid('user.id.dame'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.ftp'),
@@ -188,7 +202,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'ftp test',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.edith'),
-            'modified_by' => UuidFactory::uuid('user.id.edith')
+            'modified_by' => UuidFactory::uuid('user.id.edith'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.git'),
@@ -198,7 +213,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Git is a free and open source distributed version control system.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.dame'),
-            'modified_by' => UuidFactory::uuid('user.id.dame')
+            'modified_by' => UuidFactory::uuid('user.id.dame'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.gnupg'),
@@ -208,7 +224,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'GnuPG is a complete and free implementation of the OpenPGP standard as defined by RFC4880',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.carol'),
-            'modified_by' => UuidFactory::uuid('user.id.carol')
+            'modified_by' => UuidFactory::uuid('user.id.carol'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.grogle'),
@@ -218,7 +235,8 @@ class ResourcesDataTask extends DataTask
             'description' => '',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.ada'),
-            'modified_by' => UuidFactory::uuid('user.id.ada')
+            'modified_by' => UuidFactory::uuid('user.id.ada'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.grunt'),
@@ -228,7 +246,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'The javascript taskrunner',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
-            'modified_by' => UuidFactory::uuid('user.id.betty')
+            'modified_by' => UuidFactory::uuid('user.id.betty'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.inkscape'),
@@ -238,7 +257,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Inkscape is a professional vector graphics editor. It is free and open source.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.edith'),
-            'modified_by' => UuidFactory::uuid('user.id.edith')
+            'modified_by' => UuidFactory::uuid('user.id.edith'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.jquery'),
@@ -248,7 +268,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'jQuery is a cross-platform JavaScript library designed to simplify the client-side scripting of HTML.',
             'deleted' => 1,
             'created_by' => UuidFactory::uuid('user.id.dame'),
-            'modified_by' => UuidFactory::uuid('user.id.dame')
+            'modified_by' => UuidFactory::uuid('user.id.dame'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.kde'),
@@ -258,7 +279,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'The Plasma Desktop is one of the most recognized projects of KDE',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.betty'),
-            'modified_by' => UuidFactory::uuid('user.id.betty')
+            'modified_by' => UuidFactory::uuid('user.id.betty'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.linux'),
@@ -268,7 +290,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'The Linux kernel is an open-source monolithic Unix-like computer operating system kernel.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.hedy'),
-            'modified_by' => UuidFactory::uuid('user.id.hedy')
+            'modified_by' => UuidFactory::uuid('user.id.hedy'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.mailvelope'),
@@ -278,7 +301,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Mailvelope is a browser extension that enables the exchange of encrypted emails following the OpenPGP encryption standard.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.jean'),
-            'modified_by' => UuidFactory::uuid('user.id.jean')
+            'modified_by' => UuidFactory::uuid('user.id.jean'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.mocha'),
@@ -288,7 +312,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Mocha is a feature-rich JavaScript test framework running on Node.js and in the browser, making asynchronous testing simple and fun.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.kathleen'),
-            'modified_by' => UuidFactory::uuid('user.id.kathleen')
+            'modified_by' => UuidFactory::uuid('user.id.kathleen'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.nodejs'),
@@ -298,7 +323,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Node.js® is a JavaScript runtime built on Chrome\'s V8 JavaScript engine.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.marlyn'),
-            'modified_by' => UuidFactory::uuid('user.id.marlyn')
+            'modified_by' => UuidFactory::uuid('user.id.marlyn'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.openpgpjs'),
@@ -308,7 +334,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'This project aims to provide an Open Source OpenPGP library in JavaScript so it can be used on virtually every device.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.nancy'),
-            'modified_by' => UuidFactory::uuid('user.id.nancy')
+            'modified_by' => UuidFactory::uuid('user.id.nancy'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.phpunit'),
@@ -318,7 +345,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'PHPUnit is a programmer-oriented testing framework for PHP.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.ursula'),
-            'modified_by' => UuidFactory::uuid('user.id.ursula')
+            'modified_by' => UuidFactory::uuid('user.id.ursula'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.qgis'),
@@ -328,7 +356,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'QGIS is a free and open-source cross-platform desktop geographic information system (GIS) application that supports viewing, editing, and analysis of geospatial data.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.wang'),
-            'modified_by' => UuidFactory::uuid('user.id.wang')
+            'modified_by' => UuidFactory::uuid('user.id.wang'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.selenium'),
@@ -338,7 +367,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Selenium automates browsers.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.yvonne'),
-            'modified_by' => UuidFactory::uuid('user.id.yvonne')
+            'modified_by' => UuidFactory::uuid('user.id.yvonne'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.stealjs'),
@@ -348,7 +378,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'Futuristic JavaScript dependency loader and builder.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.adele'),
-            'modified_by' => UuidFactory::uuid('user.id.adele')
+            'modified_by' => UuidFactory::uuid('user.id.adele'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.virtualbox'),
@@ -358,7 +389,8 @@ class ResourcesDataTask extends DataTask
             'description' => 'VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterprise as well as home use.',
             'deleted' => 0,
             'created_by' => UuidFactory::uuid('user.id.adele'),
-            'modified_by' => UuidFactory::uuid('user.id.adele')
+            'modified_by' => UuidFactory::uuid('user.id.adele'),
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
         ];
 
         return $resources;

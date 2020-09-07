@@ -29,6 +29,7 @@ return [
                 'install' => [
                     'shellTasks' => [
                         'PassboltTestData.Base/RolesData',
+                        'PassboltTestData.Base/ResourceTypesData',
                         'PassboltTestData.Base/UsersData',
                         'PassboltTestData.Security/XssUsersData',
                         'PassboltTestData.Base/ProfilesData',
@@ -77,6 +78,7 @@ return [
             'alt0' => [
                 'install' => [
                     'shellTasks' => [
+                        'PassboltTestData.Base/ResourceTypesData',
                         'PassboltTestData.Base/GroupsData',
                         'PassboltTestData.Base/UsersData',
                         'PassboltTestData.Base/ProfilesData',
@@ -114,6 +116,7 @@ return [
                         'tags_shared' => 2
                     ],
                     'shellTasks' => [
+                        'PassboltTestData.Base/ResourceTypesData',
                         'PassboltTestData.Base/RolesData',
                         'PassboltTestData.Large/UsersData',
                         'PassboltTestData.Large/ProfilesData',

@@ -44,6 +44,7 @@ class XssResourcesDataTask extends ResourcesDataTask
                 'modified_by' => UuidFactory::uuid('user.id.xss' . count($resources)),
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
+                'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string')
             ];
         }
 

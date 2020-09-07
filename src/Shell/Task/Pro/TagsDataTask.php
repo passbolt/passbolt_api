@@ -65,7 +65,7 @@ class TagsDataTask extends DataTask
         ];
         $tags[] = [
             'id' => UuidFactory::uuid('tag.id.hotel'),
-            'slug' => 'hotel',
+            'slug' => '#hotel',
             'is_shared' => 1
         ];
         $tags[] = [
