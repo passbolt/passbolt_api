@@ -19,6 +19,8 @@ use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourceTypesTable;
+use App\Service\ResourceTypes\ResourceTypesFinderService;
 use Cake\Event\EventManager;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
@@ -144,6 +146,12 @@ trait ResourcesFindersTrait
         // Retrieve the permission and the details of a group attach to it if any
         if (isset($options['contain']['permissions.group'])) {
             $query->contain('Permissions.Groups');
+        }
+
+        // If contains Resource type.
+        if (isset($options['contain']['resource-type'])) {
+            $query->contain('ResourceTypes')
+                ->formatResults(ResourceTypesTable::resultFormatter(true));
         }
 
         // Manage order clauses.

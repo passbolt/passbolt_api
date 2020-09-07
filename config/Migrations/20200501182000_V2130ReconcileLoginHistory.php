@@ -14,6 +14,7 @@
  */
 
 use Migrations\AbstractMigration;
+use Cake\Validation\Validation;
 
 /**
  * Class V2130ReconcileLoginHistory
@@ -29,7 +30,7 @@ class V2130ReconcileLoginHistory extends AbstractMigration
     public function up()
     {
         $loginActions = $this->fetchAll("SELECT id, created FROM action_logs WHERE user_id IS NULL AND action_id=(SELECT id FROM actions WHERE name='AuthLogin.loginPost') AND status=1 ORDER BY created ASC");
-        if (empty($loginActions)) {
+        if (empty($loginActions) || !Validation::datetime($loginActions[0]['created'])) {
             return;
         }
 
@@ -48,7 +49,9 @@ class V2130ReconcileLoginHistory extends AbstractMigration
 
         if (!empty($loginActionsToUpdate)) {
             foreach($loginActionsToUpdate as $loginAction) {
-                $this->execute("UPDATE action_logs SET user_id='{$loginAction['user_id']}' where id='{$loginAction['id']}'");
+                if (Validation::uuid($loginAction['user_id']) && Validation::uuid($loginAction['id'])) {
+                    $this->execute("UPDATE action_logs SET user_id='{$loginAction['user_id']}' where id='{$loginAction['id']}'");
+                }
             }
         }
     }
