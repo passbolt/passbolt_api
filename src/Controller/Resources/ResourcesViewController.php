@@ -63,7 +63,7 @@ class ResourcesViewController extends AppController
      */
     protected function _logSecretAccesses(Resource $resource)
     {
-        if (!isset($resource->secrets) || !$this->Resources->hasAssociation('SecretAccesses')) {
+        if (!isset($resource->secrets) || !$this->Resources->getAssociation('Secrets')->hasAssociation('SecretAccesses')) {
             return;
         }
 
@@ -71,7 +71,7 @@ class ResourcesViewController extends AppController
             try {
                 $this->Resources
                     ->getAssociation('Secrets')
-                    ->getassociation('SecretAccesses')
+                    ->getAssociation('SecretAccesses')
                     ->create($secret, $this->User->getAccessControl());
             } catch (\Exception $e) {
                 throw new InternalErrorException(__('Could not log secret access entry.'));
