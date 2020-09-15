@@ -63,9 +63,9 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     public function testResourceViewControllerContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[secret]=1'
-            . '&contain[permission]=1&contain[permissions]=1'
-            . '&contain[permissions.user.profile]=1&contain[permissions.group]=1';
+        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[secret]=1';
+        $urlParameter .= '&contain[permission]=1&contain[permissions]=1';
+        $urlParameter .= '&contain[permissions.user.profile]=1&contain[permissions.group]=1';
         $resourceId = UuidFactory::uuid('resource.id.git');
         $this->getJson("/resources/$resourceId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
