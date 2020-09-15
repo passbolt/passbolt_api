@@ -17,15 +17,17 @@ namespace App\Test\TestCase\Controller\Resources;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\FavoritesModelTrait;
+use App\Test\Lib\Model\GroupsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class ResourcesViewControllerTest extends AppIntegrationTestCase
 {
     use FavoritesModelTrait;
+    use GroupsModelTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
         'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars',
     ];
 
@@ -58,31 +60,56 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('Secret', $this->_responseJsonBody);
     }
 
-    public function testContainSuccess()
+    public function testResourceViewControllerContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[secret]=1'
+            . '&contain[permission]=1&contain[permissions]=1'
+            . '&contain[permissions.user.profile]=1&contain[permissions.group]=1';
+        $resourceId = UuidFactory::uuid('resource.id.git');
         $this->getJson("/resources/$resourceId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
 
         // Expected fields.
         $this->assertResourceAttributes($this->_responseJsonBody);
+
         // Contain creator.
         $this->assertObjectHasAttribute('creator', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->creator);
+
         // Contain modifier.
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->modifier);
+
         // Contain permission.
         $this->assertObjectHasAttribute('permission', $this->_responseJsonBody);
         $this->assertPermissionAttributes($this->_responseJsonBody->permission);
+
+        // Contain permissions.
+        $this->assertObjectHasAttribute('permissions', $this->_responseJsonBody);
+        $this->assertPermissionAttributes($this->_responseJsonBody->permissions[0]);
+
+        // Contain permissions.user.
+        $this->assertObjectHasAttribute('permissions', $this->_responseJsonBody);
+        $this->assertUserAttributes($this->_responseJsonBody->permissions[0]->user);
+        $this->assertProfileAttributes($this->_responseJsonBody->permissions[0]->user->profile);
+
+        // Contain permissions.group
+        $this->assertGroupAttributes($this->_responseJsonBody->permissions[6]->group);
+
         // Contain secret.
         $this->assertObjectHasAttribute('secrets', $this->_responseJsonBody);
         $this->assertCount(1, $this->_responseJsonBody->secrets);
         $this->assertSecretAttributes($this->_responseJsonBody->secrets[0]);
+
+        // Apache
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $this->getJson("/resources/$resourceId.json?$urlParameter&api-version=2");
+        $this->assertSuccess();
+
         // Contain favorite.
         $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody);
+
         // A resource marked as favorite contains the favorite data.
         $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody);
         $this->assertFavoriteAttributes($this->_responseJsonBody->favorite);

@@ -32,7 +32,10 @@ class ResourcesIndexController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['creator', 'favorite', 'modifier', 'permission', 'permissions.user.profile', 'permissions.group', 'secret', 'resource-type'],
+            'contain' => [
+                'creator', 'favorite', 'modifier', 'secret', 'resource-type',
+                'permission', 'permissions', 'permissions.user.profile', 'permissions.group',
+            ],
             'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id'],
             'order' => ['Resource.modified'],
         ];
