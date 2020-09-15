@@ -41,7 +41,10 @@ class ResourcesViewController extends AppController
         $this->loadModel('Resources');
 
         // Retrieve and sanity the query options.
-        $whitelist = ['contain' => ['creator', 'favorite', 'modifier', 'permission', 'secret', 'resource-type']];
+        $whitelist = ['contain' => [
+            'creator', 'favorite', 'modifier', 'secret', 'resource-type',
+            'permission', 'permissions.user.profile', 'permissions.group'
+        ]];
         $options = $this->QueryString->get($whitelist);
 
         // Retrieve the resource.
