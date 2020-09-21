@@ -62,14 +62,18 @@ class GroupsAddController extends AppController
 
     /**
      * Format request data formatted for API v1 to API v2 format
+     * Note: historically broken in v2.14 and before
+     * Method expect POST data in v1 format only
      *
      * @return array
      */
     protected function _formatRequestData()
     {
         $data = $this->request->getData();
-        $output['name'] = Hash::get($data, 'Group.name');
-        if (isset($data['GroupUsers'])) {
+        $output['name'] = $data['name'] ?? Hash::get($data, 'Group.name');
+        if (isset($data['groups_users'])) {
+            $output['groups_users'] = $data['groups_users'];
+        } elseif (isset($data['GroupUsers'])) {
             $output['groups_users'] = Hash::reduce($data, 'GroupUsers.{n}', function ($result, $row) {
                 $result[] = [
                     'user_id' => Hash::get($row, 'GroupUser.user_id', ''),
@@ -77,7 +81,7 @@ class GroupsAddController extends AppController
                 ];
 
                 return $result;
-            }, []);
+            });
         }
 
         return $output;

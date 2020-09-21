@@ -109,6 +109,28 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         }
     }
 
+    public function testGroupsAddSuccessApiv2()
+    {
+        $data = [
+            'name' => 'testgroup1',
+            'groups_users' => [
+                ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1],
+                ['user_id' => UuidFactory::uuid('user.id.betty')],
+            ],
+        ];
+        $this->authenticateAs('admin');
+        $this->postJson('/groups.json?api-version=v2', $data);
+        $this->assertResponseSuccess();
+        $group = $this->Groups->find()
+            ->contain('GroupsUsers')
+            ->contain('GroupsUsers.Users')
+            ->where(['id' => $this->_responseJsonBody->id])
+            ->first();
+        $this->assertEquals($data['name'], $group->name);
+        $this->assertEquals(false, $group->deleted);
+        $this->assertCount(count($data['groups_users']), $group->groups_users);
+    }
+
     public function testGroupsAddValidationErrors()
     {
         $responseCode = 400;
