@@ -88,8 +88,13 @@ trait GroupsFindersTrait
             $query->contain('Modifier.Profiles');
         }
 
-        // If contains user.
-        if (isset($options['contain']['user'])) {
+        // If contains users
+        // contain.user is deprecated, should be users
+        if (
+            isset($options['contain']['users'])
+            // @deprecated when v2 support is dropped
+            || isset($options['contain']['user'])
+        ) {
             $query->contain('Users');
         }
 
@@ -100,23 +105,39 @@ trait GroupsFindersTrait
             });
         }
 
-        // If contains group_user.
-        if (isset($options['contain']['group_user'])) {
+        // If contains groups_users.
+        if (
+            isset($options['contain']['groups_users'])
+            // @deprecated when v2 support is dropped: contain[group_user] should be plural
+            || isset($options['contain']['group_user'])
+        ) {
             $query->contain('GroupsUsers');
         }
 
         // If contains group_user user.
-        if (isset($options['contain']['group_user.user'])) {
+        if (
+            isset($options['contain']['groups_users.user']) ||
+            // @deprecated when v2 support is dropped
+            isset($options['contain']['group_user.user'])
+        ) {
             $query->contain('GroupsUsers.Users');
         }
 
         // If contains user profile.
-        if (isset($options['contain']['group_user.user.profile'])) {
+        if (
+            isset($options['contain']['groups_users.user.profile'])
+            // @deprecated when v2 support is dropped
+            || isset($options['contain']['group_user.user.profile'])
+        ) {
             $query->contain('GroupsUsers.Users.Profiles');
         }
 
         // If contains user gpgkey.
-        if (isset($options['contain']['group_user.user.gpgkey'])) {
+        if (
+            isset($options['contain']['groups_users.user.gpgkey']) ||
+            // @deprecated when v2 support is dropped
+            isset($options['contain']['group_user.user.gpgkey'])
+        ) {
             $query->contain('GroupsUsers.Users.Gpgkeys');
         }
 

@@ -16,12 +16,31 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
+use App\Model\Table\GroupsTable;
+use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
 class GroupsViewController extends AppController
 {
+    /**  @var GroupsTable */
+    public $Groups;
+
+    /**
+     * Before filter
+     *
+     * @param Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+
+        return parent::beforeFilter($event);
+    }
+
     /**
      * Group View action
      *
@@ -41,20 +60,17 @@ class GroupsViewController extends AppController
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => [
-                'modifier', 'modifier.profile', 'user', 'group_user', 'group_user.user',
-                'group_user.user.profile', 'group_user.user.gpgkey', 'my_group_user',
+                'modifier', 'modifier.profile', 'my_group_user',
+                'users', 'groups_users', 'groups_users.user', 'groups_users.user.profile', 'groups_users.user.gpgkey',
+                // Deprecated contains, use plural form instead
+                // @deprecated remove when v2 support is dropped
+                'user', 'group_user', 'group_user.user', 'group_user.user.profile', 'group_user.user.gpgkey',
             ],
         ];
         $options = $this->QueryString->get($whitelist);
         if (isset($options['contain']['my_group_user'])) {
             $options['my_user_id'] = $this->User->id();
         }
-
-        // Default v1 options.
-        $defaultV1Options = [
-            'contain' => ['group_user' => 1, 'group_user.user' => 1, 'group_user.user.profile' => 1, 'group_user.user.gpgkey' => 1],
-        ];
-        $options = array_merge_recursive($options, $defaultV1Options);
 
         // Retrieve the group.
         $group = $this->Groups->findView($id, $options)->first();

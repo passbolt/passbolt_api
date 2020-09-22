@@ -42,7 +42,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         // Not expected content.
         $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('users', $this->_responseJsonBody[0]);
-        $this->assertObjectNotHasAttribute('group_user', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('groups_users', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('my_group_user', $this->_responseJsonBody[0]);
     }
 

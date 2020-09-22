@@ -17,13 +17,22 @@ namespace App\Controller\Groups;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsAddController extends AppController
 {
+    /**  @var GroupsTable */
+    public $Groups;
+
+    /** @var UsersTable */
+    public $Users;
+
     /**
      * Before filter
      *
@@ -32,10 +41,10 @@ class GroupsAddController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->loadModel('Groups');
-        $this->loadModel('Users');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
 
-        return AppController::beforeFilter($event);
+        return parent::beforeFilter($event);
     }
 
     /**
@@ -61,9 +70,11 @@ class GroupsAddController extends AppController
     }
 
     /**
-     * Format request data formatted for API v1 to API v2 format
+     * Format request data formatted for API v1
+     *
      * Note: historically broken in v2.14 and before
-     * Method expect POST data in v1 format only
+     * Prior to v3 this method expected data in v1 format only
+     * So both v2 and v1 format are supported in v2
      *
      * @return array
      */
