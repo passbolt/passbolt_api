@@ -166,6 +166,9 @@ return [
         'legal' => [
             'privacy_policy' => [
                 'url' => env('PASSBOLT_LEGAL_PRIVACYPOLICYURL', '')
+            ],
+            'terms' => [
+                'url' => env('PASSBOLT_LEGAL_TERMSURL', 'https://www.passbolt.com/terms')
             ]
         ],
 

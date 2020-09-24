@@ -21,6 +21,7 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use Composer\Config;
 
 class SettingsIndexController extends AppController
 {
@@ -105,6 +106,7 @@ class SettingsIndexController extends AppController
                     ],
                 ],
                 'passbolt' => [
+                    'legal' => Configure::read('passbolt.legal'),
                     'edition' => Configure::read('passbolt.edition'),
                     'plugins' => $this->_getWhiteListedPluginConfig($this->_getPluginWhiteList(false)),
                 ],
@@ -116,6 +118,7 @@ class SettingsIndexController extends AppController
                     'url' => Router::url('/', true),
                 ],
                 'passbolt' => [
+                    'legal' => Configure::read('passbolt.legal'),
                     'edition' => Configure::read('passbolt.edition'),
                     'plugins' => $this->_getWhiteListedPluginConfig($this->_getPluginWhiteList(true)),
                 ],
