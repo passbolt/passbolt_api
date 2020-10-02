@@ -16,11 +16,30 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
+use App\Model\Table\ResourcesTable;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 
 class ResourcesIndexController extends AppController
 {
+    /**  @var ResourcesTable */
+    public $Resources;
+
+    /**
+     * Before filter
+     *
+     * @param Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+
+        return parent::beforeFilter($event);
+    }
+
     /**
      * Resource Index action
      *
@@ -41,7 +60,7 @@ class ResourcesIndexController extends AppController
         ];
 
         if (Configure::read('passbolt.plugins.tags')) {
-            $whitelist['contain'][] = 'tag';
+            $whitelist['contain'][] = 'tag'; // @deprecate should be tags
             $whitelist['filter'][] = 'has-tag';
         }
         $options = $this->QueryString->get($whitelist);

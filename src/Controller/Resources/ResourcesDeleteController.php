@@ -64,7 +64,7 @@ class ResourcesDeleteController extends AppController
         // Get the list of users who have access to the resource
         // useful to do now to notify users later, since it wont be possible to after delete
         $Users = TableRegistry::getTableLocator()->get('Users');
-        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
+        $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
         $users = $Users->findIndex(Role::USER, $options)->all();
 
         // Update the entity to delete=1 and drop associated permissions

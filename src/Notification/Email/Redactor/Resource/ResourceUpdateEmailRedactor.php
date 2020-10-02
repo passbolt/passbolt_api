@@ -72,7 +72,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         $resource = $event->getData('resource');
 
         // Get the users that can access this resource
-        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
+        $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
         $users = $this->usersTable->findIndex(Role::USER, $options)->all();
         $owner = $this->usersTable->findFirstForEmail($resource->modified_by);
 

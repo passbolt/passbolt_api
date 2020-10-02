@@ -20,7 +20,6 @@ use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourceTypesTable;
-use App\Service\ResourceTypes\ResourceTypesFinderService;
 use Cake\Event\EventManager;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;

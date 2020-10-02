@@ -68,6 +68,11 @@ class QueryStringComponent extends Component
             unset($query['filter']['keywords']);
         }
 
+        if (isset($query['contain']['LastLoggedIn'])) {
+            $query['contain']['last_logged_in'] = $query['contain']['LastLoggedIn'];
+            unset($query['contain']['LastLoggedIn']);
+        }
+
         return $query;
     }
 

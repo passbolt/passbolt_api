@@ -80,7 +80,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
         $comment = $event->getData('comment');
 
         // Find the users that have access to the resource (including via their groups)
-        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$comment->foreign_key]]];
+        $options = ['contain' => ['role'], 'filter' => ['has-access' => [$comment->foreign_key]]];
         $users = $this->usersTable->findIndex(Role::USER, $options)->all();
         if (count($users) < 2) {
             // if there is nobody or just one user, give it up

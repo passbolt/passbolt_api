@@ -221,43 +221,38 @@ trait UsersFindersTrait
         }
 
         // Default associated data
-        $containDefault = ['Profiles', 'Gpgkeys', 'Roles', 'GroupsUsers'];
-        $containWhiteList = ['LastLoggedIn'];
-        if (!isset($options['contain']) || (!is_array($options['contain']))) {
-            $contain = $containDefault;
-        } else {
-            $containOptions = [];
-            foreach ($options['contain'] as $option => $value) {
-                if ($value == 1) {
-                    $containOptions[] = $option;
-                }
-            }
-            $contain = array_merge($containDefault, array_intersect($containOptions, $containWhiteList));
-        }
+        $containDefault = [
+            'gpgkey' => true, 'profile' => true, 'groups_users' => true, 'role' => true,
+        ];
+        $options['contain'] = $options['contain'] ?? [];
+        $options['contain'] = array_merge($containDefault, $options['contain']);
 
-        // If contains Profiles, then include Avatars too.
-        if (in_array('Profiles', $contain)) {
-            $contain['Profiles'] = AvatarsTable::addContainAvatar();
-            unset($contain[array_search('Profiles', $contain)]);
+        if (isset($options['contain']['role']) && $options['contain']['role']) {
+            $query->contain('Roles');
         }
-
-        if (in_array('LastLoggedIn', $contain)) {
+        if (isset($options['contain']['gpgkey']) && $options['contain']['gpgkey']) {
+            $query->contain('Gpgkeys');
+        }
+        if (isset($options['contain']['profile']) && $options['contain']['profile']) {
+            $query->contain(['Profiles' => AvatarsTable::addContainAvatar()]);
+        }
+        if (isset($options['contain']['groups_users']) && $options['contain']['groups_users']) {
+            $query->contain('GroupsUsers');
+        }
+        if (isset($options['contain']['last_logged_in']) && $options['contain']['last_logged_in']) {
             $query->find('lastLoggedIn');
-            unset($contain[array_search('LastLoggedIn', $contain)]);
         }
-
-        $query->contain($contain);
 
         // Filter out guests and deleted users
         $query->where([
             'Users.deleted' => false,
-            'Roles.name <>' => Role::GUEST,
+            'Users.role_id <>' => $this->Roles->getIdByName(Role::GUEST),
         ]);
 
         // If searching admins
         if (isset($options['filter']['is-admin'])) {
             $query->where([
-                'Roles.name' => Role::ADMIN,
+                'Users.role_id' => $this->Roles->getIdByName(Role::ADMIN),
             ]);
         }
 
