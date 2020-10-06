@@ -73,7 +73,7 @@ class GroupsUpdateController extends AppController
 
         // The v1 expect the updated group to be returned.
         $viewOptions = [
-            'contain' => ['group_user' => 1, 'group_user.user.profile' => 1],
+            'contain' => ['groups_users' => 1, 'groups_users.user.profile' => 1],
         ];
         $group = $this->Groups->findView($id, $viewOptions)->first();
         $this->success(__('The operation was successful.'), $group);

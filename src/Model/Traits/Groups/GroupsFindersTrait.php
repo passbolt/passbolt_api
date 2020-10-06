@@ -91,9 +91,9 @@ trait GroupsFindersTrait
         // If contains users
         // contain.user is deprecated, should be users
         if (
-            isset($options['contain']['users'])
+            (isset($options['contain']['users']) && $options['contain']['users'])
             // @deprecated when v2 support is dropped
-            || isset($options['contain']['user'])
+            || (isset($options['contain']['user']) && $options['contain']['user'])
         ) {
             $query->contain('Users');
         }
@@ -106,38 +106,32 @@ trait GroupsFindersTrait
         }
 
         // If contains groups_users.
-        if (
-            isset($options['contain']['groups_users'])
+        $contain_groups_users = (isset($options['contain']['groups_users']) && $options['contain']['groups_users'])
             // @deprecated when v2 support is dropped: contain[group_user] should be plural
-            || isset($options['contain']['group_user'])
-        ) {
+            || (isset($options['contain']['group_user']) && $options['contain']['group_user']);
+        $contain_groups_users_user = (isset($options['contain']['groups_users.user']) && $options['contain']['groups_users.user'])
+            // @deprecated when v2 support is dropped
+            || (isset($options['contain']['group_user.user']) && $options['contain']['group_user.user']);
+        $contain_groups_users_user_profile = (isset($options['contain']['groups_users.user.profile']) && $options['contain']['groups_users.user.profile'])
+            // @deprecated when v2 support is dropped
+            || (isset($options['contain']['group_user.user.profile']) && $options['contain']['group_user.user.profile']);
+        $contain_groups_users_user_gpgkey = (isset($options['contain']['groups_users.user.gpgkey']) && $options['contain']['groups_users.user.gpgkey'])
+            // @deprecated when v2 support is dropped
+            || (isset($options['contain']['group_user.user.gpgkey']) && $options['contain']['group_user.user.gpgkey']);
+
+        $contain_groups_users_user = $contain_groups_users_user || $contain_groups_users_user_gpgkey || $contain_groups_users_user_profile;
+        $contain_groups_users = $contain_groups_users || $contain_groups_users_user;
+
+        if ($contain_groups_users) {
             $query->contain('GroupsUsers');
         }
-
-        // If contains group_user user.
-        if (
-            isset($options['contain']['groups_users.user']) ||
-            // @deprecated when v2 support is dropped
-            isset($options['contain']['group_user.user'])
-        ) {
+        if ($contain_groups_users_user) {
             $query->contain('GroupsUsers.Users');
         }
-
-        // If contains user profile.
-        if (
-            isset($options['contain']['groups_users.user.profile'])
-            // @deprecated when v2 support is dropped
-            || isset($options['contain']['group_user.user.profile'])
-        ) {
+        if ($contain_groups_users_user_profile) {
             $query->contain('GroupsUsers.Users.Profiles');
         }
-
-        // If contains user gpgkey.
-        if (
-            isset($options['contain']['groups_users.user.gpgkey']) ||
-            // @deprecated when v2 support is dropped
-            isset($options['contain']['group_user.user.gpgkey'])
-        ) {
+        if ($contain_groups_users_user_gpgkey) {
             $query->contain('GroupsUsers.Users.Gpgkeys');
         }
 

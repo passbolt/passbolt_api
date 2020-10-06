@@ -61,10 +61,12 @@ class GroupsViewController extends AppController
         $whitelist = [
             'contain' => [
                 'modifier', 'modifier.profile', 'my_group_user',
-                'users', 'groups_users', 'groups_users.user', 'groups_users.user.profile', 'groups_users.user.gpgkey',
+                'users', 'groups_users', 'groups_users.user',
+                'groups_users.user.profile', 'groups_users.user.gpgkey',
                 // Deprecated contains, use plural form instead
                 // @deprecated remove when v2 support is dropped
-                'user', 'group_user', 'group_user.user', 'group_user.user.profile', 'group_user.user.gpgkey',
+                'user', 'group_user', 'group_user.user', 'group_user.user.profile',
+                'group_user.user.gpgkey',
             ],
         ];
         $options = $this->QueryString->get($whitelist);
