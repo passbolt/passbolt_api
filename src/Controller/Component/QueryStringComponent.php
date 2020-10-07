@@ -76,7 +76,7 @@ class QueryStringComponent extends Component
     }
 
     /**
-     * Additional normalization and array tranformations
+     * Additional normalization and array transformations
      *
      * @param array $query original query string items
      * @return array modified query
@@ -164,7 +164,7 @@ class QueryStringComponent extends Component
     {
         foreach ($query as $key => $items) {
             if ($key === 'contain') {
-                break;
+                continue;
             }
             if (is_array($items)) {
                 foreach ($items as $subKey => $subItems) {

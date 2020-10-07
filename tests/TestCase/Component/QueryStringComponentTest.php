@@ -41,7 +41,7 @@ class QueryStringComponentTest extends TestCase
         parent::setUp();
     }
 
-    public function testThatValidateFiltersThrowExceptionIfNoValidationRuleIsDefinedForFilter()
+    public function testQueryStringComponent_ValidateFiltersError_NoValidationRuleDefined()
     {
         $filterName = 'non-existing-filter';
         $this->expectException(Exception::class);
@@ -50,7 +50,7 @@ class QueryStringComponentTest extends TestCase
         $this->sut::validateFilters([$filterName => '']);
     }
 
-    public function testThatValidateFiltersThrowExceptionIfValidationCallbackFailed()
+    public function testQueryStringComponent_ValidateFiltersError_ValidationCallbackFailed()
     {
         $filterName = 'filter-with-validation-callback';
 
@@ -65,7 +65,7 @@ class QueryStringComponentTest extends TestCase
         );
     }
 
-    public function testThatValidateFiltersReturnTrueIfValidationIsSuccessfulWithValidationCallback()
+    public function testQueryStringComponent_ValidateFiltersSuccess()
     {
         $filterName = 'filter-with-validation-callback';
 
@@ -157,5 +157,49 @@ class QueryStringComponentTest extends TestCase
             $normalizedValue = $this->sut::normalizeInteger($testCaseValue);
             $this->assertTrue($normalizedValue === 0 || $normalizedValue === false);
         }
+    }
+
+    public function testQueryStringComponent_extractQueryArrayItems()
+    {
+        $expected = [
+            'filter' => [
+                'has-users' => ['user1', 'user2']
+            ],
+            'contain' => [
+                'users' => 1
+            ]
+        ];
+        $query = [
+            'filter' => [
+                'has-users' => 'user1,user2'
+            ],
+            'contain' => [
+                'users' => 1
+            ]
+        ];
+        $actual = QueryStringComponent::extractQueryArrayItems($query);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testQueryStringComponent_rewriteLegacyItems()
+    {
+        $expected = [
+            'filter' => [
+                'modified-after' => 'yesterday',
+                'search' => 'test'
+            ],
+            'contain' => [
+                'last_logged_in' => 1
+            ]
+        ];
+        $query = [
+            'modified_after' => 'yesterday',
+            'keywords' => 'test',
+            'contain' => [
+                'LastLoggedIn' => 1
+            ]
+        ];
+        $actual = QueryStringComponent::rewriteLegacyItems($query);
+        $this->assertEquals($expected, $actual);
     }
 }
