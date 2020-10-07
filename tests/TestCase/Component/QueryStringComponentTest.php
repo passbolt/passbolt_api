@@ -163,19 +163,19 @@ class QueryStringComponentTest extends TestCase
     {
         $expected = [
             'filter' => [
-                'has-users' => ['user1', 'user2']
+                'has-users' => ['user1', 'user2'],
             ],
             'contain' => [
-                'users' => 1
-            ]
+                'users' => 1,
+            ],
         ];
         $query = [
             'filter' => [
-                'has-users' => 'user1,user2'
+                'has-users' => 'user1,user2',
             ],
             'contain' => [
-                'users' => 1
-            ]
+                'users' => 1,
+            ],
         ];
         $actual = QueryStringComponent::extractQueryArrayItems($query);
         $this->assertEquals($expected, $actual);
@@ -186,18 +186,18 @@ class QueryStringComponentTest extends TestCase
         $expected = [
             'filter' => [
                 'modified-after' => 'yesterday',
-                'search' => 'test'
+                'search' => 'test',
             ],
             'contain' => [
-                'last_logged_in' => 1
-            ]
+                'last_logged_in' => 1,
+            ],
         ];
         $query = [
             'modified_after' => 'yesterday',
             'keywords' => 'test',
             'contain' => [
-                'LastLoggedIn' => 1
-            ]
+                'LastLoggedIn' => 1,
+            ],
         ];
         $actual = QueryStringComponent::rewriteLegacyItems($query);
         $this->assertEquals($expected, $actual);
