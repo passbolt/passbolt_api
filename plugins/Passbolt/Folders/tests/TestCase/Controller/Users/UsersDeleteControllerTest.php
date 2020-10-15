@@ -93,7 +93,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
 
     public function testUsersDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
-        list($folderA, $userAId, $userBId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
+        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
         $this->authenticateAs('admin');
 
         $this->deleteJson("/users/$userAId.json?api-version=v2");
@@ -115,12 +115,15 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
     {
         // Ada is OWNER of folder A
         // Betty has READ on folder A
+        // Ada is OWNER of folder B
         // ---
         // A (Ada:O, Betty:R)
+        // B (Ada:O)
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER]);
 
-        return [$folderA, $userAId, $userBId];
+        return [$folderA, $folderB, $userAId, $userBId];
     }
 }
