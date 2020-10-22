@@ -33,7 +33,7 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = '<h3>' . __('Welcome back!') . '</h3><br/>';
-$text .= __('You have just requested to recover your passbolt account on this device.');
+$text .= __('You just requested to recover your passbolt account on this device.');
 $text .= ' ' . __('Make sure you have a backup of your secret key handy.');
 $text .= ' ' . __('Click on the link below to proceed.');
 echo $this->element('Email/module/text', [
