@@ -24,7 +24,7 @@ use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
 use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
 
-class FindIndexTest extends AppIntegrationTestCase
+class FindLastLoggedInTest extends AppIntegrationTestCase
 {
     use ActionLogsTrait;
 

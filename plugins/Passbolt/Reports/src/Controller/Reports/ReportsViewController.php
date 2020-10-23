@@ -25,7 +25,7 @@ use Cake\ORM\TableRegistry;
 use Exception;
 use InvalidArgumentException;
 use Passbolt\Reports\Utility\ReportInterface;
-use Passbolt\Reports\Utility\ReportViewService;
+use Passbolt\Reports\Service\ReportViewService;
 
 class ReportsViewController extends AppController
 {

@@ -14,9 +14,6 @@
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Utility\Healthchecks;
-use Cake\Core\Configure;
-use Passbolt\WebInstaller\Controller\WebInstallerController;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class OptionsControllerTest extends WebInstallerIntegrationTestCase

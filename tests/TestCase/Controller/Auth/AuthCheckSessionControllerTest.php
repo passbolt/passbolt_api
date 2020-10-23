@@ -16,7 +16,7 @@ namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
 
-class CheckSessionControllerTest extends AppIntegrationTestCase
+class AuthCheckSessionControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
         'app.Base/OrganizationSettings'];

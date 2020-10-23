@@ -13,7 +13,7 @@
  * @since         2.8.0
  */
 
-namespace Passbolt\Log\Test\TestCase\Controller\Share;
+namespace Passbolt\Log\Test\TestCase\Controller\Resources;
 
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;

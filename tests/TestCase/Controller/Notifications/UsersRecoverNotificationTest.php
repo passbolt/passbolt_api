@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Controller\Notifications;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
-class UsersRecoverControllerTest extends AppIntegrationTestCase
+class UsersRecoverNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 

@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace Passbolt\Reports\Utility;
+namespace Passbolt\Reports\Service;
 
 use InvalidArgumentException;
 
