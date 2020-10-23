@@ -2,7 +2,7 @@
     "name": "passbolt/passbolt_test_data",
     "description": "Passbolt data test plugin.",
     "type": "cakephp-plugin",
-    "version": "2.14.0",
+    "version": "2.14.1",
     "keywords": [
         "password",
         "passbolt"
