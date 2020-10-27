@@ -31,6 +31,7 @@ class VersionTask extends AppShell
     {
         $parser = parent::getOptionParser();
         $parser->setDescription(__('Print version number for the passbolt application.'));
+
         return $parser;
     }
 
@@ -41,10 +42,9 @@ class VersionTask extends AppShell
      */
     public function main()
     {
-        $v = 'Passbolt ' . strtoupper(Configure::read('passbolt.edition')) . ' '
-            . Configure::read('passbolt.version') . "\n"
-            . 'Cakephp ' . Configure::version();
+        $v = 'Passbolt ' . strtoupper(Configure::read('passbolt.edition')) . ' ' . Configure::read('passbolt.version') . "\n" . 'Cakephp ' . Configure::version();
         $this->out($v);
+
         return true;
     }
 }

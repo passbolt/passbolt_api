@@ -114,5 +114,4 @@ class UserComponent extends Component
 
         return $this->_userAgent;
     }
-
 }

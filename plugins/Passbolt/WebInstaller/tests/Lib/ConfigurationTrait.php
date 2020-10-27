@@ -53,6 +53,7 @@ trait ConfigurationTrait
         $passboltConfigFileIsWritable = file_exists($passboltConfigPath) ? is_writable($passboltConfigPath) : $configFolderWritable;
         if (!$passboltConfigFileIsWritable) {
             $this->installerFriendly = false;
+
             return $this->installerFriendly;
         }
 
@@ -60,16 +61,19 @@ trait ConfigurationTrait
         $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ? is_writable($passboltLicensePath) : $configFolderWritable;
         if (!$passboltLicenseFileIsWritable) {
             $this->installerFriendly = false;
+
             return $this->installerFriendly;
         }
 
         $this->installerFriendly = true;
+
         return $this->installerFriendly;
     }
 
     /*
      * Backup the passbolt configuration
      */
+
     protected function backupConfiguration()
     {
         // Backup the config and restore it after each test.
