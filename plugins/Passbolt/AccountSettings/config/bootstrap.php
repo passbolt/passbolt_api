@@ -12,29 +12,6 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Pages;
-
-use App\Controller\AppController;
 use Cake\Core\Configure;
 
-class HomeController extends AppController
-{
-    /**
-     * Password workspace page action
-     *
-     * @return void
-     */
-    public function view()
-    {
-        $this->viewBuilder()
-            ->setLayout('default')
-            ->setTemplatePath('/Home')
-            ->setTemplate('home');
-
-        $this->set('theme', $this->User->theme());
-        $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
-
-        $this->success();
-    }
-}
+Configure::load('Passbolt/AccountSettings.config', 'default', true);

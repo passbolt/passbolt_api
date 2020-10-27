@@ -64,6 +64,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "src",
+            "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
             "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
             "Passbolt\\Log\\": "./plugins/Passbolt/Log/src",
@@ -76,6 +77,7 @@
         "psr-4": {
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
+            "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests",
             "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests",
             "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/Passbolt/EmailNotificationSettings/tests",

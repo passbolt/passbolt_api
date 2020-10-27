@@ -132,7 +132,7 @@ module.exports = function(grunt) {
             // Passbolt logos
             'logo/icon-20_white.png', 'logo/icon-20_grey.png', 'logo/icon-20.png',
             'logo/icon-48_white.png', 'logo/icon-48.png',
-            'logo/logo.png', 'logo/logo@2x.png', 'logo/logo.svg', 'logo/logo_white.svg',
+            'logo/logo.png', 'logo/logo@2x.png', 'logo/logo.svg', 'logo/logo_white.svg', 'logo/logo_white.png',
             // Image for inputs and controls
             'controls/dot_white.svg',
             'controls/dot_red.svg',
@@ -148,7 +148,9 @@ module.exports = function(grunt) {
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
             'third_party/ChromeWebStore.png',
-            'third_party/gnupg_logo_disabled.png', 'third_party/gnupg_logo.png'
+            'third_party/gnupg_logo_disabled.png', 'third_party/gnupg_logo.png',
+            // Themes preview
+            'themes/*.png',
           ],
           dest: paths.webroot + 'img',
           expand: true
@@ -158,7 +160,13 @@ module.exports = function(grunt) {
           src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
-        }]
+        }, {
+          // Midgar css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
+          src: ['api_main.min.css'],
+          dest: paths.webroot + 'css/themes/midgar',
+          expand: true
+        },]
       }
     },
 

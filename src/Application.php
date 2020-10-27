@@ -194,9 +194,10 @@ class Application extends BaseApplication
         }
 
         // Add Common plugins.
-        $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);

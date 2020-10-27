@@ -24,8 +24,8 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles',
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
-        'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue',
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/ResourceTypes', 'app.Base/Permissions',
+        'app.Base/Secrets', 'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue',
         'plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs',
         'plugin.Passbolt/Log.Base/EntitiesHistory', 'plugin.Passbolt/Log.Base/PermissionsHistory',
         'plugin.Passbolt/Log.Base/SecretsHistory', 'app.Base/OrganizationSettings',

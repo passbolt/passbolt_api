@@ -13,28 +13,37 @@
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Controller\Pages;
+namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\ORM\TableRegistry;
 
-class HomeControllerTest extends AppIntegrationTestCase
+class ThemesIndexControllerTest extends AppIntegrationTestCase
 {
+    public $AccountSettings;
+
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'plugin.Passbolt/AccountSettings.AccountSettings',
+        'app.Base/OrganizationSettings',
     ];
 
-    public function testHomeNotLoggedInError()
+    public function setUp()
     {
-        $this->get('/home');
-        $this->assertRedirect('/auth/login?redirect=%2Fhome');
+        parent::setUp();
+        $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings');
     }
 
-    public function testHomeSuccess()
+    public function testThemesIndexSuccess()
     {
+        // Authenticate as ada and list the themes
         $this->authenticateAs('ada');
-        $this->get('/home');
+        $this->get('/account/settings/themes.json?api-version=v2');
         $this->assertResponseOk();
-        $this->assertResponseContains('loading');
+    }
+
+    public function testThemesIndexErrorNotAuthenticated()
+    {
+        $this->getJson('/account/settings/themes.json?api-version=v2');
+        $this->assertAuthenticationError();
     }
 }

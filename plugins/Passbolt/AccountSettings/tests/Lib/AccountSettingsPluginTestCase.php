@@ -12,29 +12,24 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Pages;
 
-use App\Controller\AppController;
+namespace Passbolt\AccountSettings\Test\Lib;
+
+use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 
-class HomeController extends AppController
+abstract class AccountSettingsPluginTestCase extends AppTestCase
 {
+
     /**
-     * Password workspace page action
+     * setUp method
      *
      * @return void
      */
-    public function view()
+    public function setUp()
     {
-        $this->viewBuilder()
-            ->setLayout('default')
-            ->setTemplatePath('/Home')
-            ->setTemplate('home');
-
-        $this->set('theme', $this->User->theme());
-        $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
-
-        $this->success();
+        parent::setUp();
+        $config = require(PLUGINS . 'Passbolt' . DS . 'AccountSettings' . DS . 'config' . DS . 'config.php');
+        Configure::write($config);
     }
 }

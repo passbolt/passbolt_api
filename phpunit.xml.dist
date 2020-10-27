@@ -15,11 +15,12 @@
     <testsuites>
         <testsuite name="App Test Suite">
             <directory>./tests/TestCase</directory>
-            <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
             <directory>./plugins/Passbolt/Log/tests/TestCase</directory>
             <directory>./plugins/Passbolt/EmailNotificationSettings/tests/TestCase</directory>
             <directory>./plugins/Passbolt/EmailDigest/tests/TestCase</directory>
             <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>
@@ -38,6 +39,7 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./src/</directory>
+            <directory suffix=".php">./plugins/AccountSettings/src/</directory>
             <directory suffix=".php">./plugins/WebInstaller/src/</directory>
             <directory suffix=".php">./plugins/Log/src/</directory>
             <directory suffix=".php">./plugins/EmailNotificationSettings/src/</directory>

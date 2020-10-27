@@ -17,7 +17,11 @@ namespace App\Controller\Component;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
+use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 use donatj\UserAgent\UserAgentParser;
+use Exception;
+use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 /**
  * @property Component\AuthComponent Auth
@@ -90,7 +94,7 @@ class UserComponent extends Component
      * Get user agent details from name defined in environment variable
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function agent()
     {
@@ -99,13 +103,13 @@ class UserComponent extends Component
             try {
                 $agent = env('HTTP_USER_AGENT');
                 if ($agent === null) {
-                    throw new \Exception(__('undefined user agent'));
+                    throw new Exception(__('undefined user agent'));
                 }
                 $provider = new UserAgentParser();
                 $parser = $provider->parse($agent);
                 $this->_userAgent['Browser']['name'] = $parser->browser();
                 $this->_userAgent['Browser']['version'] = $parser->browserVersion();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Failure is not an option
                 $this->_userAgent['Browser']['name'] = 'invalid';
                 $this->_userAgent['Browser']['version'] = 'invalid';
@@ -113,5 +117,27 @@ class UserComponent extends Component
         }
 
         return $this->_userAgent;
+    }
+
+    /**
+     * Get the user theme
+     *
+     * @return string
+     */
+    public function theme()
+    {
+        $defaultTheme = 'default';
+        if (Configure::read('passbolt.plugins.accountSettings')) {
+            /** @var AccountSettingsTable $AccountSettings */
+            $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
+            $theme = $AccountSettings->getTheme($this->id());
+            if (!$theme) {
+                $theme = $defaultTheme;
+            }
+
+            return $theme;
+        }
+
+        return $defaultTheme;
     }
 }

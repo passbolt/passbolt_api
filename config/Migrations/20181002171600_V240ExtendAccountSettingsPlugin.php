@@ -10,31 +10,32 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.4.0
  */
-namespace App\Controller\Pages;
 
-use App\Controller\AppController;
-use Cake\Core\Configure;
+use Migrations\AbstractMigration;
 
-class HomeController extends AppController
+class V240ExtendAccountSettingsPlugin extends AbstractMigration
 {
     /**
-     * Password workspace page action
+     * Up
      *
      * @return void
      */
-    public function view()
+    public function up()
     {
-        $this->viewBuilder()
-            ->setLayout('default')
-            ->setTemplatePath('/Home')
-            ->setTemplate('home');
-
-        $this->set('theme', $this->User->theme());
-        $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
-
-        $this->success();
+        $this->table('account_settings')
+            ->changeColumn('value', 'text')
+            ->addColumn('created', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->addColumn('modified', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->update();
     }
 }

@@ -10,31 +10,23 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.1.0
  */
-namespace App\Controller\Pages;
+namespace Passbolt\AccountSettings\Controller\AccountSettings;
 
 use App\Controller\AppController;
-use Cake\Core\Configure;
 
-class HomeController extends AppController
+class AccountSettingsIndexController extends AppController
 {
     /**
-     * Password workspace page action
+     * AccountSettings Index action
      *
      * @return void
      */
-    public function view()
+    public function index()
     {
-        $this->viewBuilder()
-            ->setLayout('default')
-            ->setTemplatePath('/Home')
-            ->setTemplate('home');
-
-        $this->set('theme', $this->User->theme());
-        $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
-
-        $this->success();
+        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
+        $response = $this->AccountSettings->findIndex($this->User->id(), ['theme']);
+        $this->success(__('The operation was successful.'), $response);
     }
 }
