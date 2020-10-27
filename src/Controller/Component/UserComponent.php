@@ -17,7 +17,7 @@ namespace App\Controller\Component;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
-use UserAgentParser\Provider\DonatjUAParser;
+use donatj\UserAgent\UserAgentParser;
 
 /**
  * @property Component\AuthComponent Auth
@@ -41,6 +41,16 @@ class UserComponent extends Component
     public function id()
     {
         return $this->Auth->user('id');
+    }
+
+    /**
+     * Return the current username if the user is identified
+     *
+     * @return string|null
+     */
+    public function username()
+    {
+        return $this->Auth->user('username');
     }
 
     /**
@@ -73,15 +83,14 @@ class UserComponent extends Component
      */
     public function getAccessControl()
     {
-        return new UserAccessControl($this->role(), $this->id());
+        return new UserAccessControl($this->role(), $this->id(), $this->username());
     }
 
     /**
      * Get user agent details from name defined in environment variable
      *
      * @return array
-     * @throws Exception
-     * @throws ValidationException
+     * @throws \Exception
      */
     public function agent()
     {
@@ -92,13 +101,10 @@ class UserComponent extends Component
                 if ($agent === null) {
                     throw new \Exception(__('undefined user agent'));
                 }
-                // For now we use the simple DonatjUAParser which allow only a basic parsing to retrieve
-                // browser information. Other parser are available, check out the project repository for more information:
-                // https://github.com/ThaDafinser/UserAgentParser
-                $provider = new DonatjUAParser();
+                $provider = new UserAgentParser();
                 $parser = $provider->parse($agent);
-                $this->_userAgent['Browser']['name'] = $parser->getBrowser()->getName();
-                $this->_userAgent['Browser']['version'] = $parser->getBrowser()->getVersion()->getComplete();
+                $this->_userAgent['Browser']['name'] = $parser->browser();
+                $this->_userAgent['Browser']['version'] = $parser->browserVersion();
             } catch (\Exception $e) {
                 // Failure is not an option
                 $this->_userAgent['Browser']['name'] = 'invalid';
@@ -108,4 +114,5 @@ class UserComponent extends Component
 
         return $this->_userAgent;
     }
+
 }
