@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+./bin/cake passbolt version
+uname -a
+php --version | grep -m1 ""
+mysql --version
+gpg --version | grep -m2 ""
+composer --version
