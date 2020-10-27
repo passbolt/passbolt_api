@@ -20,6 +20,7 @@ trait ConfigurationTrait
 {
     // Keep a copy of the original passbolt config.
     private $backupConfig = [];
+    private $installerFriendly = null;
 
     /*
      * Skip the test if the environment is production like:
@@ -42,27 +43,33 @@ trait ConfigurationTrait
 
     protected function isWebInstallerFriendly()
     {
+        if (isset($this->installerFriendly)) {
+            return $this->installerFriendly;
+        }
+
         $configFolderWritable = is_writable(CONFIG);
 
         $passboltConfigPath = CONFIG . 'passbolt.php';
         $passboltConfigFileIsWritable = file_exists($passboltConfigPath) ? is_writable($passboltConfigPath) : $configFolderWritable;
         if (!$passboltConfigFileIsWritable) {
-            return false;
+            $this->installerFriendly = false;
+            return $this->installerFriendly;
         }
 
         $passboltLicensePath = CONFIG . 'license';
         $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ? is_writable($passboltLicensePath) : $configFolderWritable;
         if (!$passboltLicenseFileIsWritable) {
-            return false;
+            $this->installerFriendly = false;
+            return $this->installerFriendly;
         }
 
-        return true;
+        $this->installerFriendly = true;
+        return $this->installerFriendly;
     }
 
     /*
      * Backup the passbolt configuration
      */
-
     protected function backupConfiguration()
     {
         // Backup the config and restore it after each test.

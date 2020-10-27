@@ -1,3 +1,7 @@
+# Personal scripts #
+################
+/bin/my/*
+
 # Local config #
 ################
 /config/app.php
