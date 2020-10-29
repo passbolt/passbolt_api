@@ -85,7 +85,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
 
         $this->authenticateAs('betty');
         $postData = ['content' => 'this is a test'];
-        $resourceId =  UuidFactory::uuid('resource.id.bower');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
         $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
         $this->assertSuccess();
 
