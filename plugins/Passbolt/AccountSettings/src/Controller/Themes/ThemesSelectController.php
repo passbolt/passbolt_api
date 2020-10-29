@@ -20,6 +20,9 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
+/**
+ * @property AccountSettingsTable AccountSettings
+ */
 class ThemesSelectController extends AppController
 {
     /**
@@ -35,9 +38,9 @@ class ThemesSelectController extends AppController
         }
 
         /** @var AccountSettingsTable $AccountSettings */
-        $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
+        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
         try {
-            $setting = $AccountSettings->createOrUpdateSetting($this->User->id(), 'theme', $theme);
+            $setting = $this->AccountSettings->createOrUpdateSetting($this->User->id(), 'theme', $theme);
         } catch (ValidationException $e) {
             throw new BadRequestException(__('This is not a valid theme.'));
         }

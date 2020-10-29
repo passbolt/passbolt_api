@@ -22,24 +22,11 @@ use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @property ResourcesTable Resources
+ */
 class ResourcesIndexController extends AppController
 {
-    /**  @var ResourcesTable */
-    public $Resources;
-
-    /**
-     * Before filter
-     *
-     * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(Event $event)
-    {
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-
-        return parent::beforeFilter($event);
-    }
-
     /**
      * Resource Index action
      *

@@ -15,14 +15,18 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Controller\Component\QueryStringComponent;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
+/**
+ * @property UsersTable Users
+ */
 class UsersEditController extends AppController
 {
 
@@ -33,12 +37,14 @@ class UsersEditController extends AppController
      * @param string $id user uuid
      * @return void
      */
-    public function editPost($id)
+    public function editPost(string $id)
     {
         $data = $this->_validateRequestData($id);
 
         // Try to find the user and validate changes it
         $this->loadModel('Users');
+
+        /** @var User $user */
         $user = $this->Users->findView($id, $this->User->role())->first();
         if (empty($user)) {
             throw new BadRequestException(__('The user does not exist or has been deleted.'));
@@ -63,48 +69,6 @@ class UsersEditController extends AppController
     }
 
     /**
-     * Format request data formatted for API v1 to API v2 format
-     * Example:
-     * - API v1: ['User' => ['role_id' => '...'], 'Profile' => ['first_name' => 'ada' ...]]
-     * - API v1: ['role_id' => '...', 'profile' => ['first_name' => 'ada' ...]]
-     *
-     * @return null|array $data
-     */
-    protected function _formatRequestData()
-    {
-        $data = $this->request->getData();
-        if (isset($data['User'])) {
-            // Convert string and numbers into proper booleans
-            $booleans = ['active', 'deleted'];
-            foreach ($booleans as $i => $fieldName) {
-                if (isset($data['User'][$fieldName])) {
-                    $data['User'][$fieldName] = QueryStringComponent::normalizeBoolean($data['User'][$fieldName]);
-                }
-            }
-            // Flatten
-            $result = $data['User'];
-            $associated = ['Profile', 'Gpgkey', 'Role'];
-            foreach ($associated as $i => $model) {
-                if (isset($data[$model])) {
-                    $result[strtolower($model)] = $data[$model];
-                }
-            }
-            if (isset($data['GroupUser'])) {
-                $result['groups_user'] = $data['GroupUser'];
-            }
-            // nested model: User.Profile.Avatar case.
-            if (isset($data['Profile']) && isset($data['Profile']['Avatar'])) {
-                $result['profile']['avatar'] = $data['Profile']['Avatar'];
-                unset($result['profile']['Avatar']);
-            }
-        } else {
-            $result = $data;
-        }
-
-        return $result;
-    }
-
-    /**
      * Assert request sanity and return the sanitized data
      *
      * @throws ForbiddenException if the user is not admin or not editing themselves
@@ -115,7 +79,7 @@ class UsersEditController extends AppController
      * @param string $id user uuid
      * @return array|null
      */
-    protected function _validateRequestData($id)
+    protected function _validateRequestData(string $id)
     {
         // Admin can edit all users, other users can only edit themselves
         if ($this->User->role() !== Role::ADMIN && $id !== $this->User->id()) {
@@ -126,7 +90,7 @@ class UsersEditController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The user id must be a valid uuid.'));
         }
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         $data['id'] = $id;
         if (empty($data) || count($data) < 2) {
             throw new BadRequestException(__('Some user data must be provided.'));

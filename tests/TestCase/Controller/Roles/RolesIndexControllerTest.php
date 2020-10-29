@@ -30,16 +30,6 @@ class RolesIndexControllerTest extends AppIntegrationTestCase
         $this->assertRoleAttributes($this->_responseJsonBody[0]);
     }
 
-    public function testRolesIndexGetApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $this->getJson('/roles.json');
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-        $this->assertObjectHasAttribute('Role', $this->_responseJsonBody[0]);
-        $this->assertRoleAttributes($this->_responseJsonBody[0]->Role);
-    }
-
     public function testRolesIndexErrorNotAuthenticated()
     {
         $this->getJson('/roles.json');

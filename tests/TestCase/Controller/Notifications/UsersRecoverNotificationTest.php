@@ -48,7 +48,7 @@ class UsersRecoverNotificationTest extends AppIntegrationTestCase
         // setup
         $this->setEmailNotificationSetting('send.user.create', false);
 
-        $this->postJson('/users/recover.json?api-version=v1', ['username' => 'ruth@passbolt.com']);
+        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ruth@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
         $this->assertResponseCode(500);
@@ -60,7 +60,7 @@ class UsersRecoverNotificationTest extends AppIntegrationTestCase
         // recovery
         $this->setEmailNotificationSetting('send.user.recover', false);
 
-        $this->postJson('/users/recover.json?api-version=v1', ['username' => 'ada@passbolt.com']);
+        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ada@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showlastemail/ada@passbolt.com');
         $this->assertResponseCode(500);

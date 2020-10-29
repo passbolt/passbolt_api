@@ -52,18 +52,6 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->assertFavoriteAttributes($this->_responseJsonBody);
     }
 
-    public function testFavoritesAddSuccessApiV1()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson("/favorites/resource/$resourceId.json");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody);
-        $this->assertFavoriteAttributes($this->_responseJsonBody->Favorite);
-    }
-
     public function testFavoritesAddCannotModifyNotAccessibleFields()
     {
         $this->authenticateAs('dame');

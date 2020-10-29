@@ -89,10 +89,10 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $this->assertResponseCode(200);
 
         // Setup complete should work
-        $url = '/setup/complete/' . $user->id . '.json';
+        $url = '/setup/complete/' . $user->id . '.json?api-version=v2';
         $this->postJson($url, [
-            'AuthenticationToken' => ['token' => $tokens[0]['token']],
-            'Gpgkey' => ['key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key')],
+            'authenticationtoken' => ['token' => $tokens[0]['token']],
+            'gpgkey' => ['armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key')],
         ]);
         $this->assertSuccess();
 

@@ -84,26 +84,6 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testUsersRegisterPostApiV1Success()
-    {
-        $success = [
-            'legacy format' => [
-                'User' => [
-                    'username' => 'anna@passbolt.com',
-                ],
-                'Profile' => [
-                    'first_name' => 'Anna',
-                    'last_name' => 'Fisher',
-                ],
-            ],
-        ];
-
-        foreach ($success as $case => $data) {
-            $this->post('/users/register', $data);
-            $this->assertResponseSuccess();
-        }
-    }
-
     public function testUsersRegisterPostFailValidation()
     {
         $fails = [

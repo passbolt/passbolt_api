@@ -25,14 +25,12 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
+/**
+ * @property GroupsTable Groups
+ * @property UsersTable Users
+ */
 class GroupsAddController extends AppController
 {
-    /**  @var GroupsTable */
-    public $Groups;
-
-    /** @var UsersTable */
-    public $Users;
-
     /**
      * Before filter
      *
@@ -41,8 +39,8 @@ class GroupsAddController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->loadModel('Groups');
+        $this->loadModel('Users');
 
         return parent::beforeFilter($event);
     }
@@ -74,8 +72,9 @@ class GroupsAddController extends AppController
      *
      * Note: historically broken in v2.14 and before
      * Prior to v3 this method expected data in v1 format only
-     * So both v2 and v1 format are supported in v2
+     * So both v2 and v1 format are supported in v2 & v3
      *
+     * @deprecated when support for API v2 is dropped
      * @return array
      */
     protected function _formatRequestData()

@@ -29,25 +29,18 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
+/**
+ * @property GroupsTable Groups
+ * @property GroupsUsersTable GroupsUsers
+ * @property PermissionsTable Permissions
+ * @property ResourcesTable Resources
+ */
 class GroupsDeleteController extends AppController
 {
     const DELETE_SUCCESS_EVENT_NAME = 'GroupsDeleteController.delete.success';
-
-    /**  @var GroupsTable */
-    public $Groups;
-
-    /** @var GroupsUsersTable */
-    public $GroupsUsers;
-
-    /** @var PermissionsTable */
-    public $Permissions;
-
-    /** @var ResourcesTable */
-    public $Resources;
 
     /**
      * Before filter
@@ -57,10 +50,10 @@ class GroupsDeleteController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->loadModel('Groups');
+        $this->loadModel('GroupsUsers');
+        $this->loadModel('Permissions');
+        $this->loadModel('Resources');
 
         return parent::beforeFilter($event);
     }
@@ -149,6 +142,7 @@ class GroupsDeleteController extends AppController
 
             if (isset($errors['id']['soleOwnerOfSharedContent'])) {
                 $resourcesIds = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
+                $body = [];
                 if ($resourcesIds) {
                     $findResourcesOptions = [];
                     $findResourcesOptions['contain']['permissions.user.profile'] = true;

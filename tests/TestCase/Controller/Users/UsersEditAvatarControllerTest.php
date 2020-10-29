@@ -14,6 +14,7 @@
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Model\Table\AvatarsTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -24,7 +25,13 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
     public $localFileStorageListener = null;
     public $imageProcessingListener = null;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Avatars'];
+    /** @var AvatarsTable $Avatars */
+    public $Avatars;
+
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Gpgkeys',
+        'app.Base/GroupsUsers', 'app.Base/Avatars',
+    ];
 
     public function setUp()
     {
@@ -101,11 +108,11 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                 ],
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v2', $data);
         $this->assertError(400, 'Could not validate user data.');
-        $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->validExtension);
-        $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->validMimeType);
-        $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->validUploadedFile);
+        $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validExtension);
+        $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validMimeType);
+        $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validUploadedFile);
 
         $avatarCountsAfter = $this->Avatars->find()->count();
         $this->assertEquals($avatarCountsBefore, $avatarCountsAfter, "The number of avatars in db should be same before and after the test");
@@ -122,7 +129,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
         $this->assertError(400, 'Could not validate user data.');
-        $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->_required);
+        $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->_required);
     }
 
     public function testUsersEditAvatarCantOverrideData()

@@ -16,12 +16,15 @@
 namespace App\Controller\ResourceTypes;
 
 use App\Controller\AppController;
+use App\Model\Table\ResourceTypesTable;
 use Cake\Core\Exception\Exception;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
+/**
+ * @property ResourceTypesTable ResourceTypes
+ */
 class ResourceTypesViewController extends AppController
 {
     /**
@@ -38,8 +41,8 @@ class ResourceTypesViewController extends AppController
             throw new BadRequestException(__('The resource id is not valid.'));
         }
         try {
-            $resourceTypesTable = TableRegistry::getTableLocator()->get('ResourceTypes');
-            $resourceType = $resourceTypesTable->get($id);
+            $this->loadModel('ResourceTypes');
+            $resourceType = $this->ResourceTypes->get($id);
         } catch (Exception $exception) {
             throw new NotFoundException(__('The resource type does not exist.'));
         }

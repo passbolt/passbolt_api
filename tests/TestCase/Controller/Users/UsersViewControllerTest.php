@@ -46,39 +46,16 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $this->assertGroupUserAttributes($this->_responseJsonBody->groups_users[0]);
     }
 
-    public function testUsersViewGetApiV1Success()
-    {
-        $this->authenticateAs('ursula');
-        $uuid = UuidFactory::uuid('user.id.ursula');
-        $this->getJson('/users/' . $uuid . '.json');
-        $this->assertSuccess();
-        $this->assertNotNull($this->_responseJsonBody);
-
-        $this->assertObjectHasAttribute('User', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->User);
-        $this->assertObjectHasAttribute('Profile', $this->_responseJsonBody);
-        $this->assertProfileAttributes($this->_responseJsonBody->Profile);
-        $this->assertObjectHasAttribute('Avatar', $this->_responseJsonBody->Profile);
-        $this->assertAvatarAttributes($this->_responseJsonBody->Profile->Avatar);
-        $this->assertObjectHasAttribute('Gpgkey', $this->_responseJsonBody);
-        $this->assertGpgkeyAttributes($this->_responseJsonBody->Gpgkey);
-        $this->assertObjectHasAttribute('Role', $this->_responseJsonBody);
-        $this->assertRoleAttributes($this->_responseJsonBody->Role);
-        $this->assertObjectHasAttribute('GroupUser', $this->_responseJsonBody);
-        $this->assertGroupUserAttributes($this->_responseJsonBody->GroupUser[0]);
-    }
-
     public function testUsersViewGetMeSuccess()
     {
         $this->authenticateAs('ada');
         $uuid = UuidFactory::uuid('user.id.ada');
-        $this->getJson('/users/me.json');
+        $this->getJson('/users/me.json?api-version=v2');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
-        $this->assertObjectHasAttribute('User', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->User);
-        $this->assertEquals($this->_responseJsonBody->User->id, $uuid);
+        $this->assertUserAttributes($this->_responseJsonBody);
+        $this->assertEquals($this->_responseJsonBody->id, $uuid);
     }
 
     public function testUsersViewNotLoggedInError()

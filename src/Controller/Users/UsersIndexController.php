@@ -20,16 +20,12 @@ use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\UsersTable;
 use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
 
 /**
  * @property UsersTable Users
  */
 class UsersIndexController extends AppController
 {
-    /**  @var UsersTable */
-    public $Users;
-
     /**
      * Before filter
      *
@@ -38,7 +34,7 @@ class UsersIndexController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->loadModel('Users');
 
         return parent::beforeFilter($event);
     }

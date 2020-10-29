@@ -22,7 +22,7 @@ use App\Model\Entity\Resource;
 use App\Model\Table\ResourcesTable;
 use App\Model\Table\ResourceTypesTable;
 use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
+use Exception;
 
 /**
  * @property ResourcesTable Resources
@@ -31,20 +31,17 @@ class ResourcesAddController extends AppController
 {
     const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
 
-    /** @var ResourcesTable $Resources  */
-    public $Resources;
-
     /**
      * Resource Add action
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function add()
     {
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->loadModel('Resources');
 
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         $resource = $this->_buildAndValidateEntity($data);
 
         $result = $this->Resources->getConnection()->transactional(function () use ($resource, $data) {
@@ -97,7 +94,6 @@ class ResourcesAddController extends AppController
         }
 
         // Build entity and perform basic check
-        /** @var Resource $resource */
         $resource = $this->Resources->newEntity($data, [
             'accessibleFields' => [
                 'name' => true,
@@ -134,31 +130,6 @@ class ResourcesAddController extends AppController
         $this->_handleValidationError($resource);
 
         return $resource;
-    }
-
-    /**
-     * Format request data formatted for API v1 to API v2 format
-     *
-     * @return array
-     */
-    protected function _formatRequestData()
-    {
-        $output = [];
-        $data = $this->request->getData();
-
-        // API v2 additional checks and error (was silent before)
-        if ($this->getApiVersion() == 'v2') {
-            $output = $data;
-        } else {
-            if (isset($data['Resource'])) {
-                $output = $data['Resource'];
-            }
-            if (isset($data['Secret'])) {
-                $output['secrets'] = $data['Secret'];
-            }
-        }
-
-        return $output;
     }
 
     /**

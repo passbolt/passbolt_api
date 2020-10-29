@@ -74,7 +74,8 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
 
         // for now only handle the new share
         // e.g. we don't notify when permission changes or are removed
-        $userIds = Hash::extract($changes['secrets'], '{n}.user_id');
+        $secrets = $changes['secrets'] ?? [];
+        $userIds = Hash::extract($secrets, '{n}.user_id');
         if (!empty($userIds)) {
             // Get the details of whoever did the changes
             $owner = $this->usersTable->findFirstForEmail($ownerId);

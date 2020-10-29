@@ -18,16 +18,24 @@ use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Entity\Gpgkey;
+use App\Model\Entity\User;
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\GpgkeysTable;
+use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
+/**
+ * @property AuthenticationTokensTable AuthenticationTokens
+ * @property GpgkeysTable Gpgkeys
+ * @property UsersTable Users
+ */
 class SetupCompleteController extends AppController
 {
     const COMPLETE_SUCCESS_EVENT_NAME = 'SetupCompleteController.complete.success';
-
-    private $_data; // formated request data
 
     /**
      * Before filter
@@ -39,7 +47,7 @@ class SetupCompleteController extends AppController
     {
         $this->Auth->allow('complete');
 
-        $this->loadModel('GpgKey');
+        $this->loadModel('Gpgkeys');
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('Users');
 
@@ -106,11 +114,11 @@ class SetupCompleteController extends AppController
      * @throws BadRequestException if no authentication token was provided
      * @throws BadRequestException if the authentication token is not a uuid
      * @throws BadRequestException if the authentication token is expired or invalid
-     * @return object Token entity
+     * @return AuthenticationToken
      */
     protected function _getAndAssertToken(string $userId, string $tokenType)
     {
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
             throw new BadRequestException(__('An authentication token must be provided.'));
         }
@@ -121,6 +129,8 @@ class SetupCompleteController extends AppController
         if (!$this->AuthenticationTokens->isValid($tokenId, $userId, $tokenType)) {
             throw new BadRequestException(__('The authentication token is not valid or has expired.'));
         }
+
+        /** @var AuthenticationToken $token */
         $token = $this->AuthenticationTokens->getByToken($tokenId);
 
         return $token;
@@ -132,7 +142,7 @@ class SetupCompleteController extends AppController
      * @param string $userId the user uuid
      * @throws BadRequestException if the user id is not a valid uuid
      * @throws BadRequestException if the user was deleted, is already active or does not exist
-     * @return bool if user id is valid
+     * @return User user entity
      */
     protected function _getAndAssertUser(string $userId)
     {
@@ -153,11 +163,11 @@ class SetupCompleteController extends AppController
      *
      * @param string $userId the user uuid
      * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
-     * @return object Gpgkey entity
+     * @return Gpgkey entity
      */
     protected function _getAndAssertGpgkey(string $userId)
     {
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         $armoredKey = $data['gpgkey']['armored_key'];
 
         if (empty($armoredKey)) {
@@ -175,36 +185,5 @@ class SetupCompleteController extends AppController
         }
 
         return $gpgkey;
-    }
-
-    /**
-     * Format request data formatted for API v1 to API v2 format
-     * Example:
-     * - API v1: ['Gpgkey' => ['key' => '...'], 'AuthenticationToken' => [...]]
-     * - API v2: ['gpgkey' => ['armored_key' => '...']', 'authenticationtoken' => [...]]
-     *
-     * @return null|array $data
-     */
-    protected function _formatRequestData()
-    {
-        if (!isset($this->_data)) {
-            $data = $this->request->getData();
-            if (isset($data['Gpgkey']) || isset($data['AuthenticationToken'])) {
-                if (isset($data['Gpgkey']['armored_key'])) {
-                    $this->_data['gpgkey']['armored_key'] = $data['Gpgkey']['armored_key'];
-                }
-                if (isset($data['Gpgkey']['key'])) {
-                    // legacy name v1 backward compatibility support
-                    $this->_data['gpgkey']['armored_key'] = $data['Gpgkey']['key'];
-                }
-                if (isset($data['AuthenticationToken'])) {
-                    $this->_data['authenticationtoken'] = $data['AuthenticationToken'];
-                }
-            } else {
-                $this->_data = $data;
-            }
-        }
-
-        return $this->_data;
     }
 }

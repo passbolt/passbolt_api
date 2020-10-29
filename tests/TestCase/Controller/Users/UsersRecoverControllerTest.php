@@ -49,9 +49,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         'can recover a user that has not completed setup' => [
             'form-data' => ['username' => 'ruth@passbolt.com'],
         ],
-        'legacy form data' => [
-            'form-data' => ['User' => ['username' => 'ruth@passbolt.com']],
-        ],
     ];
 
     public function testRecoverGetRedirect()
@@ -119,7 +116,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     public function testRecoverPostJsonError_MissingCsrfTokenError()
     {
         $this->disableCsrfToken();
-        $this->post('/users/recover.json?api-version=v1');
+        $this->post('/users/recover.json?api-version=v2');
         $this->assertResponseCode(403);
     }
 }

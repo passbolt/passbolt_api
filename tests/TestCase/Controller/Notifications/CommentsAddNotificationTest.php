@@ -36,8 +36,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.comment.add', true);
 
         $this->authenticateAs('dame');
-        $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.docker') . '.json', $postData);
+        $postData = ['content' => 'this is a test'];
+        $resourceId = UuidFactory::uuid('resource.id.docker');
+        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
         $this->assertSuccess();
 
         // Every member of the group should get notification
@@ -60,8 +61,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.comment.add', true);
 
         $this->authenticateAs('betty');
-        $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json', $postData);
+        $postData = ['content' => 'this is a test'];
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
         $this->assertSuccess();
 
         // Every users with direct permissions should get notified
@@ -82,8 +84,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('show.comment', false);
 
         $this->authenticateAs('betty');
-        $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json', $postData);
+        $postData = ['content' => 'this is a test'];
+        $resourceId =  UuidFactory::uuid('resource.id.bower');
+        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
         $this->assertSuccess();
 
         // Every users with direct permissions should get notified
@@ -97,8 +100,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.comment.add', false);
 
         $this->authenticateAs('betty');
-        $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json', $postData);
+        $postData = ['content' => 'this is a test'];
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
         $this->assertSuccess();
 
         // Nobody should get notifications

@@ -45,21 +45,6 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('secrets', $this->_responseJsonBody);
     }
 
-    public function testApiV1Success()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json");
-        $this->assertSuccess();
-        $this->assertNotNull($this->_responseJsonBody);
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
-        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
-        // Not expected fields.
-        $this->assertObjectNotHasAttribute('Secret', $this->_responseJsonBody);
-    }
-
     public function testResourceViewControllerContainSuccess()
     {
         $this->authenticateAs('ada');
@@ -113,37 +98,6 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         // A resource marked as favorite contains the favorite data.
         $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody);
         $this->assertFavoriteAttributes($this->_responseJsonBody->favorite);
-    }
-
-    public function testContainApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?$urlParameter");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
-        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
-        // Contain creator.
-        $this->assertObjectHasAttribute('Creator', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->Creator);
-        // Contain modifier.
-        $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->Modifier);
-        // Contain permission.
-        $this->assertObjectHasAttribute('Permission', $this->_responseJsonBody);
-        $this->assertPermissionAttributes($this->_responseJsonBody->Permission);
-        // Contain secret.
-        $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody);
-        $this->assertCount(1, $this->_responseJsonBody->Secret);
-        $this->assertSecretAttributes($this->_responseJsonBody->Secret[0]);
-        // Contain favorite.
-        $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody);
-        // A resource marked as favorite contains the favorite data.
-        $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody);
-        $this->assertFavoriteAttributes($this->_responseJsonBody->Favorite);
     }
 
     public function testErrorNotAuthenticated()

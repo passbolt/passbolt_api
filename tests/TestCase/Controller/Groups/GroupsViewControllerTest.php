@@ -47,22 +47,6 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('my_group_user', $this->_responseJsonBody);
     }
 
-    public function testGroupsViewApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->getJson("/groups/$groupId.json");
-        $this->assertSuccess();
-        $this->assertNotNull($this->_responseJsonBody);
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Group', $this->_responseJsonBody);
-        $this->assertGroupAttributes($this->_responseJsonBody->Group);
-        // Not expected fields.
-        $this->assertObjectNotHasAttribute('Modifier', $this->_responseJsonBody);
-        $this->assertObjectNotHasAttribute('User', $this->_responseJsonBody);
-    }
-
     public function testGroupsViewContainSuccess_DeprecatedContain()
     {
         $this->authenticateAs('ada');
@@ -141,29 +125,6 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertNotNull($this->_responseJsonBody);
         $this->assertObjectHasAttribute('my_group_user', $this->_responseJsonBody);
         $this->assertGroupUserAttributes($this->_responseJsonBody->my_group_user);
-    }
-
-    public function testGroupsViewContainApiV1SSuccess()
-    {
-        $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[user]=1&contain[group_user]=1&contain[group_user.user.profile]=1';
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->getJson("/groups/$groupId.json?$urlParameter");
-        $this->assertSuccess();
-        $this->assertNotNull($this->_responseJsonBody);
-
-        // Expected content.
-        $this->assertObjectHasAttribute('Group', $this->_responseJsonBody);
-        $this->assertGroupAttributes($this->_responseJsonBody->Group);
-        $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->Modifier);
-        $this->assertObjectHasAttribute('User', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->User[0]);
-        $this->assertObjectHasAttribute('GroupUser', $this->_responseJsonBody);
-        $this->assertGroupUserAttributes($this->_responseJsonBody->GroupUser[0]);
-        $this->assertObjectHasAttribute('User', $this->_responseJsonBody->GroupUser[0]);
-        $this->assertObjectHasAttribute('Profile', $this->_responseJsonBody->GroupUser[0]->User);
-        $this->assertProfileAttributes($this->_responseJsonBody->GroupUser[0]->User->Profile);
     }
 
     public function testGroupsViewErrorNotAuthenticated()

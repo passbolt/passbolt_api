@@ -15,6 +15,7 @@
 namespace App\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Entity\User;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
@@ -66,7 +67,7 @@ class RecoverCompleteController extends SetupCompleteController
      * @param string $userId the user uuid
      * @throws BadRequestException if the user id is not a valid uuid
      * @throws BadRequestException if the user was deleted or has not completed the setup
-     * @return bool if user id is valid
+     * @return User
      */
     protected function _getAndAssertUser(string $userId)
     {

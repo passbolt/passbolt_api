@@ -18,26 +18,12 @@ namespace App\Controller\Groups;
 use App\Controller\AppController;
 use App\Model\Table\GroupsTable;
 use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
 
+/**
+ * @property GroupsTable Groups
+ */
 class GroupsIndexController extends AppController
 {
-    /**  @var GroupsTable */
-    public $Groups;
-
-    /**
-     * Before filter
-     *
-     * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(Event $event)
-    {
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-
-        return parent::beforeFilter($event);
-    }
-
     /**
      * Group Index action
      *

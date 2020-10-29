@@ -17,6 +17,8 @@ namespace App\Controller\Comments;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Comment;
+use App\Model\Table\CommentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
@@ -24,6 +26,9 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
+/**
+ * @property CommentsTable Comments
+ */
 class CommentsUpdateController extends AppController
 {
     /**
@@ -35,7 +40,7 @@ class CommentsUpdateController extends AppController
      * @throws ValidationException
      * @return void
      */
-    public function update($commentId = null)
+    public function update(string $commentId)
     {
         if (!Validation::uuid($commentId)) {
             throw new BadRequestException(__('The comment id is not valid.'));
@@ -52,31 +57,13 @@ class CommentsUpdateController extends AppController
     }
 
     /**
-     * Format request data formatted for API v1 to API v2 format if needed.
-     *
-     * @return array
-     */
-    protected function _formatRequestData()
-    {
-        $data = $this->request->getData();
-
-        if (isset($data['Comment'])) {
-            $output = $data['Comment'];
-        } else {
-            $output = $data;
-        }
-
-        return $output;
-    }
-
-    /**
      * Manage validation errors.
-     * @param \Cake\Datasource\EntityInterface $comment comment
+     * @param Comment $comment comment
      * @throws ForbiddenException
      * @throws ValidationException
      * @return void
      */
-    protected function _handleValidationErrors($comment)
+    protected function _handleValidationErrors(Comment $comment)
     {
         $errors = $comment->getErrors();
         if (!empty($errors)) {
@@ -91,9 +78,9 @@ class CommentsUpdateController extends AppController
      * Patch and validate comment entity from user input.
      *
      * @param string $commentId The comment id.
-     * @return \Cake\Datasource\EntityInterface $comment comment entity
+     * @return Comment $comment comment entity
      */
-    protected function _patchAndValidateCommentEntity($commentId = null)
+    protected function _patchAndValidateCommentEntity(string $commentId)
     {
         try {
             $comment = $this->Comments->get($commentId);
@@ -101,7 +88,7 @@ class CommentsUpdateController extends AppController
             throw new NotFoundException(__('The comment does not exist.'));
         }
 
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
 
         $comment = $this->Comments->patchEntity(
             $comment,

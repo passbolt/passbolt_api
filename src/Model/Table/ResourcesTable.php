@@ -31,10 +31,10 @@ use Cake\Validation\Validator;
 /**
  * Resources Model
  *
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Creator
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Modifier
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasMany $Secrets
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Permissions
+ * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasOne $Permissions
  *
  * @method \App\Model\Entity\Resource get($primaryKey, $options = [])
  * @method \App\Model\Entity\Resource newEntity($data = null, array $options = [])

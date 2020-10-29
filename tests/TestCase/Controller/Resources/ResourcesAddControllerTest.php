@@ -25,14 +25,13 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles',
-        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue',
-        'app.Base/ResourceTypes',
+        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites',
+        'app.Base/EmailQueue', 'app.Base/ResourceTypes', 'app.Base/OrganizationSettings',
     ];
 
     public function setUp()
     {
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-        $this->ResourcesTypes = TableRegistry::getTableLocator()->get('Resources');
         parent::setUp();
     }
 
@@ -60,13 +59,11 @@ W3AI8+rWjK8MGH2T88hCYI/6
     protected function _getDummyPostData($data = [])
     {
         $defaultData = [
-            'Resource' => [
-                'name' => 'new resource name',
-                'username' => 'username@domain.com',
-                'uri' => 'https://www.domain.com',
-                'description' => 'new resource description',
-            ],
-            'Secret' => [
+            'name' => 'new resource name',
+            'username' => 'username@domain.com',
+            'uri' => 'https://www.domain.com',
+            'description' => 'new resource description',
+            'secrets' => [
                 [
                     'data' => $this->_getGpgMessage(),
                 ],
@@ -80,30 +77,30 @@ W3AI8+rWjK8MGH2T88hCYI/6
     public function testResourcesAddSuccess()
     {
         $success = [
-            'chinese' => $this->_getDummyPostData(['Resource' => [
+            'chinese' => $this->_getDummyPostData([
                 'name' => '新的專用資源名稱',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.域.com',
                 'description' => '新的資源描述',
-            ]]),
-            'slavic' => $this->_getDummyPostData(['Resource' => [
+            ]),
+            'slavic' => $this->_getDummyPostData([
                 'name' => 'Новое имя частного ресурса',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.домен.com',
                 'description' => 'Новое описание частного ресурса',
-            ]]),
-            'french' => $this->_getDummyPostData(['Resource' => [
+            ]),
+            'french' => $this->_getDummyPostData([
                 'name' => 'Nouveau nom de resource privée',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.mon-domain.com',
                 'description' => 'Nouvelle description de resource privée',
-            ]]),
-            'emoticon' => $this->_getDummyPostData(['Resource' => [
+            ]),
+            'emoticon' => $this->_getDummyPostData([
                 'name' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.domain.com',
                 'description' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
-            ]]),
+            ]),
         ];
 
         foreach ($success as $case => $data) {
@@ -117,10 +114,10 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
             // Check the resource attributes.
             $this->assertResourceAttributes($resource);
-            $this->assertEquals($data['Resource']['name'], $resource->name);
-            $this->assertEquals($data['Resource']['username'], $resource->username);
-            $this->assertEquals($data['Resource']['uri'], $resource->uri);
-            $this->assertEquals($data['Resource']['description'], $resource->description);
+            $this->assertEquals($data['name'], $resource->name);
+            $this->assertEquals($data['username'], $resource->username);
+            $this->assertEquals($data['uri'], $resource->uri);
+            $this->assertEquals($data['description'], $resource->description);
             $this->assertEquals($userId, $resource->created_by);
             $this->assertEquals($userId, $resource->modified_by);
 
@@ -149,59 +146,11 @@ W3AI8+rWjK8MGH2T88hCYI/6
             $this->assertCount(1, $resource->secrets);
             $this->assertEquals($userId, $resource->secrets[0]->user_id);
             $this->assertEquals($resource->id, $resource->secrets[0]->resource_id);
-            $this->assertEquals($data['Secret'][0]['data'], $resource->secrets[0]->data);
+            $this->assertEquals($data['secrets'][0]['data'], $resource->secrets[0]->data);
         }
     }
 
-    public function testResourcesAddApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $userId = UuidFactory::uuid('user.id.ada');
-        $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json", $data);
-        $this->assertSuccess();
-
-        // Check the server response.
-        $resource = $this->_responseJsonBody;
-
-        // Check the resource attributes.
-        $this->assertResourceAttributes($resource->Resource);
-        $this->assertEquals($data['Resource']['name'], $resource->Resource->name);
-        $this->assertEquals($data['Resource']['username'], $resource->Resource->username);
-        $this->assertEquals($data['Resource']['uri'], $resource->Resource->uri);
-        $this->assertEquals($data['Resource']['description'], $resource->Resource->description);
-        $this->assertEquals($userId, $resource->Resource->created_by);
-        $this->assertEquals($userId, $resource->Resource->modified_by);
-
-        // Check the creator attribute
-        $this->assertNotNull($resource->Creator);
-        $this->assertUserAttributes($resource->Creator);
-        $this->assertEquals($userId, $resource->Creator->id);
-
-        // Check the modifier attribute
-        $this->assertNotNull($resource->Modifier);
-        $this->assertUserAttributes($resource->Modifier);
-        $this->assertEquals($userId, $resource->Modifier->id);
-
-        // Check the permission attribute
-        $this->assertNotNull($resource->Permission);
-        $this->assertPermissionAttributes($resource->Permission);
-        $this->assertEquals('Resource', $resource->Permission->aco);
-        $this->assertEquals($resource->Resource->id, $resource->Permission->aco_foreign_key);
-        $this->assertEquals('User', $resource->Permission->aro);
-        $this->assertEquals($userId, $resource->Permission->aro_foreign_key);
-        $this->assertEquals(Permission::OWNER, $resource->Permission->type);
-
-        // Check the secret attribute
-        $this->assertNotEmpty($resource->Secret);
-        $this->assertSecretAttributes($resource->Secret[0]);
-        $this->assertCount(1, $resource->Secret);
-        $this->assertEquals($userId, $resource->Secret[0]->user_id);
-        $this->assertEquals($resource->Resource->id, $resource->Secret[0]->resource_id);
-        $this->assertEquals($data['Secret'][0]['data'], $resource->Secret[0]->data);
-    }
-
-    public function testActionIsProtectedByCsrfTokenAndReturnErrorIfNotProvided()
+    public function testResourcesAddCsrfTokenError()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
@@ -218,55 +167,61 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $responseCode = 400;
         $responseMessage = 'Could not validate resource data';
         $errors = [
-//            'resource name is missing' => [
-//                'errorField' => 'Resource.name._empty',
-//                'data' => $this->_getDummyPostData(['Resource' => ['name' => null]]),
-//            ],
-//            'secret must be provided' => [
-//                'errorField' => 'Secrets._required',
-//                'data' => $this->_getDummyPostData(['Secret' => null]),
-//            ],
-//            'secret is invalid' => [
-//                'errorField' => 'Secrets.0.Secret.data.isValidGpgMessage',
-//                'data' => $this->_getDummyPostData(['Secret' => [
-//                    0 => ['data' => 'Invalid secret'],
-//                ]]),
-//            ],
-//            'too many secrets provided' => [
-//                'errorField' => 'Secrets.hasAtMost',
-//                'data' => $this->_getDummyPostData(['Secret' => [
-//                    0 => ['data' => $this->_getGpgMessage()],
-//                    1 => ['user_id' => UuidFactory::uuid('user.id.betty'), 'data' => $this->_getGpgMessage()],
-//                ]]),
-//            ],
-//            'invalid resource type' => [
-//                'errorField' => 'Resource.resource_type_id',
-//                'data' => $this->_getDummyPostData(['Resource' => ['name' => 'new resource name',
-//                    'username' => 'username@domain.com',
-//                    'uri' => 'https://www.domain.com',
-//                    'description' => 'new resource description',
-//                    'resource_type_id' => 'invalid']
-//                ]),
-//            ],
-            'non-existing resource type' => [
-                'errorField' => 'Resource.resource_type_id',
-                'data' => $this->_getDummyPostData(['Resource' => ['name' => 'new resource name',
+            'resource name is missing' => [
+                'errorField' => 'name._empty',
+                'data' => $this->_getDummyPostData(['name' => null]),
+            ],
+            'secret must be provided' => [
+                'errorField' => 'secrets._empty',
+                'data' => $this->_getDummyPostData(['secrets' => null]),
+            ],
+            'secret data must be provided' => [
+                'errorField' => 'secrets.0.data._required',
+                'data' => $this->_getDummyPostData(['secrets' => []]),
+            ],
+            'secret is invalid' => [
+                'errorField' => 'secrets.0.data.isValidGpgMessage',
+                'data' => $this->_getDummyPostData(['secrets' => [
+                    0 => ['data' => 'Invalid secret'],
+                ]]),
+            ],
+            'too many secrets provided' => [
+                'errorField' => 'secrets.hasAtMost',
+                'data' => $this->_getDummyPostData(['secrets' => [
+                    0 => ['data' => $this->_getGpgMessage()],
+                    1 => ['user_id' => UuidFactory::uuid('user.id.betty'), 'data' => $this->_getGpgMessage()],
+                ]]),
+            ],
+            'invalid resource type' => [
+                'errorField' => 'resource_type_id',
+                'data' => $this->_getDummyPostData([
+                    'name' => 'new resource name',
                     'username' => 'username@domain.com',
                     'uri' => 'https://www.domain.com',
                     'description' => 'new resource description',
-                    'resource_type_id' => UuidFactory::uuid()],
+                    'resource_type_id' => 'invalid',
+                ]),
+            ],
+            'non-existing resource type' => [
+                'errorField' => 'resource_type_id',
+                'data' => $this->_getDummyPostData([
+                    'name' => 'new resource name',
+                    'username' => 'username@domain.com',
+                    'uri' => 'https://www.domain.com',
+                    'description' => 'new resource description',
+                    'resource_type_id' => UuidFactory::uuid(),
                 ]),
             ],
         ];
 
         foreach ($errors as $caseLabel => $case) {
             $this->authenticateAs('ada');
-            $this->postJson("/resources.json?api-version=v1", $case['data']);
+            $this->postJson("/resources.json?api-version=v2", $case['data']);
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $error = Hash::get($arr, $case['errorField']);
             $this->assertNotNull($error, "The case \"$caseLabel\" should fail");
-            $this->assertResourceNotExist(['Resources.name' => $case['data']['Resource']['name']]);
+            $this->assertResourceNotExist(['name' => $case['data']['name']]);
         }
     }
 

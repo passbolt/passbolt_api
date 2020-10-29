@@ -25,8 +25,8 @@ class ResourcesAddNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles',
-        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue',
-        'app.Base/ResourceTypes',
+        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites',
+        'app.Base/EmailQueue', 'app.Base/ResourceTypes', 'app.Base/OrganizationSettings',
     ];
 
     protected function _getGpgMessage()
@@ -53,13 +53,11 @@ W3AI8+rWjK8MGH2T88hCYI/6
     protected function _getDummyPostData($data = [])
     {
         $defaultData = [
-            'Resource' => [
-                'name' => 'new resource name',
-                'username' => 'username@domain.com',
-                'uri' => 'https://www.domain.com',
-                'description' => 'new resource description',
-            ],
-            'Secret' => [
+            'name' => 'new resource name',
+            'username' => 'username@domain.com',
+            'uri' => 'https://www.domain.com',
+            'description' => 'new resource description',
+            'secrets' => [
                 [
                     'data' => $this->_getGpgMessage(),
                 ],

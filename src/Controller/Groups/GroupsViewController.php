@@ -23,24 +23,11 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
+/**
+ * @property GroupsTable Groups
+ */
 class GroupsViewController extends AppController
 {
-    /**  @var GroupsTable */
-    public $Groups;
-
-    /**
-     * Before filter
-     *
-     * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(Event $event)
-    {
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-
-        return parent::beforeFilter($event);
-    }
-
     /**
      * Group View action
      *
@@ -49,7 +36,7 @@ class GroupsViewController extends AppController
      * @param string $id uuid Identifier of the group
      * @return void
      */
-    public function view($id)
+    public function view(string $id)
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
