@@ -16,8 +16,14 @@ namespace App\Controller\Setup;
 
 use App\Controller\Setup\SetupStartController;
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\UserAgentsTable;
+use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
 
+/**
+ * @property UsersTable $Users
+ * @property UserAgentsTable $UserAgents
+ */
 class RecoverStartController extends SetupStartController
 {
     /**
@@ -32,13 +38,12 @@ class RecoverStartController extends SetupStartController
      * @param string $tokenId uuid of the token
      * @return void
      */
-    public function start($userId, $tokenId)
+    public function start(string $userId, string $tokenId)
     {
         // Check user id and token id are valid
         $this->_assertRequestSanity($userId, $tokenId, AuthenticationToken::TYPE_RECOVER);
 
         // Retrieve the user.
-        $this->loadModel('Users');
         $user = $this->Users->findSetupRecover($userId);
         if (empty($user)) {
             $msg = __('The user does not exist or is not active.');
@@ -47,7 +52,6 @@ class RecoverStartController extends SetupStartController
         $this->set('user', $user);
 
         // Parse the user agent
-        $this->loadModel('UserAgents');
         $browserName = $this->UserAgents->browserName();
         $this->set('browserName', strtolower($browserName));
 

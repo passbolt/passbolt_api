@@ -30,10 +30,12 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Response;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Exception;
 
 /**
  * @property UsersTable Users
@@ -50,7 +52,7 @@ class UsersDeleteController extends AppController
      * Before filter
      *
      * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -80,7 +82,7 @@ class UsersDeleteController extends AppController
      * User delete action
      *
      * @param string $id user uuid
-     * @throws \Exception if user cannot be deleted
+     * @throws Exception if user cannot be deleted
      * @return void
      */
     public function delete(string $id)
@@ -112,7 +114,7 @@ class UsersDeleteController extends AppController
      * @throws NotFoundException if the user does not exist or is already deleted
      * @return User $user entity
      */
-    protected function _validateRequestData($id)
+    protected function _validateRequestData(string $id)
     {
         // Admin can delete all users
         if ($this->User->role() !== Role::ADMIN) {

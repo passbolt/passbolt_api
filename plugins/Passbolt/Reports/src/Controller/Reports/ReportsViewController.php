@@ -26,7 +26,7 @@ use Passbolt\Reports\Service\ReportViewService;
 use Passbolt\Reports\Utility\ReportInterface;
 
 /**
- * @property UsersTable Users
+ * @property UsersTable $Users
  */
 class ReportsViewController extends AppController
 {

@@ -17,8 +17,6 @@ namespace App\Test\TestCase\Controller\Users;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
-use Cake\ORM\TableRegistry;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
@@ -166,18 +164,6 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->assertEquals($this->_responseJsonBody->role->name, Role::ADMIN);
     }
 
-    public function testUsersEditNotAdminIgnoreRoleEditSuccess()
-    {
-        $this->authenticateAs('ada');
-        $data = [
-            'id' => UuidFactory::uuid('user.id.ada'),
-            'role_id' => UuidFactory::uuid('role.id.admin'),
-        ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v2', $data);
-        $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->role->name, Role::USER);
-    }
-
     public function testUsersEditNotAdminRoleEditError()
     {
         $this->authenticateAs('ada');
@@ -185,7 +171,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.ada'),
             'role_id' => UuidFactory::uuid('role.id.admin'),
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=2', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v2', $data);
         $this->assertForbiddenError('You are not authorized to edit the role.');
     }
 
@@ -196,7 +182,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.ada'),
             'gpgkey' => [],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=2', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v2', $data);
         $this->assertBadRequestError('Updating the gpgkey is not allowed.');
     }
 
@@ -207,7 +193,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.ada'),
             'groups_user' => [],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=2', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v2', $data);
         $this->assertBadRequestError('Updating the groups is not allowed.');
     }
 }

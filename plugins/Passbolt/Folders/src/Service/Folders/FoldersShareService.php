@@ -157,7 +157,7 @@ class FoldersShareService
      */
     private function assertUserCanShare(UserAccessControl $uac, Folder $folder)
     {
-        $userId = $uac->userId();
+        $userId = $uac->getId();
         $isAllowed = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folder->id, $userId, Permission::OWNER);
         if (!$isAllowed) {
             throw new ForbiddenException(__('You are not allowed to update the permissions of this folder.'));
@@ -216,13 +216,13 @@ class FoldersShareService
      */
     private function moveSelfOrganizedContentWithInsufficientPermissionToRoot(UserAccessControl $uac, Folder $folder)
     {
-        $personalItems = $this->foldersRelationsTable->findByUserIdAndFolderParentId($uac->userId(), $folder->id)
+        $personalItems = $this->foldersRelationsTable->findByUserIdAndFolderParentId($uac->getId(), $folder->id)
             ->select(['foreign_id', 'foreign_model'])
             ->toArray();
         foreach ($personalItems as $personalItem) {
-            $canUpdate = $this->userHasPermissionService->check($personalItem->foreign_model, $personalItem->foreign_id, $uac->userId(), Permission::UPDATE);
+            $canUpdate = $this->userHasPermissionService->check($personalItem->foreign_model, $personalItem->foreign_id, $uac->getId(), Permission::UPDATE);
             if (!$canUpdate) {
-                $this->foldersRelationsTable->moveItemFor($personalItem->foreign_id, [$uac->userId()], FoldersRelation::ROOT);
+                $this->foldersRelationsTable->moveItemFor($personalItem->foreign_id, [$uac->getId()], FoldersRelation::ROOT);
                 continue;
             }
         }

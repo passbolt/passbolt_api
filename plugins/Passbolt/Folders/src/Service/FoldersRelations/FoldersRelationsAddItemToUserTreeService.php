@@ -165,7 +165,7 @@ class FoldersRelationsAddItemToUserTreeService
         $folderParentsIds = $this->getPotentialParentIdsFor($foreignId, $userId);
 
         foreach ($folderParentsIds as $folderParentId) {
-            $inOperatorTree = $this->foldersRelationsTable->isItemInUserTree($uac->userId(), $folderParentId);
+            $inOperatorTree = $this->foldersRelationsTable->isItemInUserTree($uac->getId(), $folderParentId);
             $usedCount = $this->foldersRelationsTable->countRelationUsage($foreignId, $folderParentId);
             $created = $this->foldersTable->getCreatedDate($folderParentId);
 
@@ -238,7 +238,7 @@ class FoldersRelationsAddItemToUserTreeService
         $changes = [];
         $folderChildrenIds = $this->getPotentialChildrenIdsFor($foreignId, $userId);
         foreach ($folderChildrenIds as $folderChildId) {
-            $inOperatorTree = $this->foldersRelationsTable->isItemInUserTree($uac->userId(), $folderChildId);
+            $inOperatorTree = $this->foldersRelationsTable->isItemInUserTree($uac->getId(), $folderChildId);
             $usedCount = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($foreignId, $folderChildId)->count();
             $created = $this->foldersTable->findById($folderChildId)->select('created')->extract('created')->first();
             $changes[] = [

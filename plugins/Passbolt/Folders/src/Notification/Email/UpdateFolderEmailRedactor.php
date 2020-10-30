@@ -85,7 +85,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
             throw new InvalidArgumentException('`uac` is missing from event data.');
         }
 
-        $operator = $this->usersTable->findFirstForEmail($uac->userId());
+        $operator = $this->usersTable->findFirstForEmail($uac->getId());
         $usersUsernames = $this->findUsersUsernameToSendEmailTo($folder);
         foreach ($usersUsernames as $userUsername) {
             $email = $this->createEmail($userUsername, $operator, $folder);

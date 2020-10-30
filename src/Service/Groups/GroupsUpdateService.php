@@ -161,7 +161,7 @@ class GroupsUpdateService
                 'modified_by' => true,
             ],
         ];
-        $metaData['modified_by'] = $uac->userId();
+        $metaData['modified_by'] = $uac->getId();
         $this->groupsTable->patchEntity($group, $metaData, $groupPatchOptions);
         $this->groupsTable->save($group);
         $this->handleValidationErrors($group);
@@ -203,7 +203,7 @@ class GroupsUpdateService
         }
 
         // Only a group manager can add new members to a group.
-        $canAdd = $this->groupsUsersTable->isManager($uac->userId(), $group->id);
+        $canAdd = $this->groupsUsersTable->isManager($uac->getId(), $group->id);
         // If not a group manager keep only the changes that are relative to existing group users.
         if (!$canAdd) {
             $changes = Hash::extract($changes, '{n}[id=/.*/]');
@@ -338,7 +338,7 @@ class GroupsUpdateService
             'addedGroupsUsers' => $addedGroupsUsers,
             'updatedGroupsUsers' => $updatedGroupsUsers,
             'removedGroupsUsers' => $removedGroupsUsers,
-            'userId' => $uac->userId(),
+            'userId' => $uac->getId(),
         ]);
         $this->groupsTable->getEventManager()->dispatch($event);
     }

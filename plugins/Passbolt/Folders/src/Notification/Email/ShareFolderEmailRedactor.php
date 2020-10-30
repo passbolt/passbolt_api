@@ -83,7 +83,7 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
             throw new InvalidArgumentException('`userId` is missing from event data.');
         }
 
-        $operator = $this->usersTable->findFirstForEmail($uac->userId());
+        $operator = $this->usersTable->findFirstForEmail($uac->getId());
         $recipient = $this->usersTable->findById($userId)->select('username')->extract('username')->first();
 
         $email = $this->createEmail($recipient, $operator, $folder);

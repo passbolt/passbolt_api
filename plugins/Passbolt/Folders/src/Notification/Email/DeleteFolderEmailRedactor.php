@@ -83,7 +83,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
             throw new InvalidArgumentException('`users` is missing from event data.');
         }
 
-        $operator = $this->usersTable->findFirstForEmail($uac->userId());
+        $operator = $this->usersTable->findFirstForEmail($uac->getId());
         $usersUsernames = $this->findUsersUsernameToSendEmailTo($users);
         foreach ($usersUsernames as $userUsername) {
             $email = $this->createEmail($userUsername, $operator, $folder);

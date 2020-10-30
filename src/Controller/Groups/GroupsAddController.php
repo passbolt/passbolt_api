@@ -18,33 +18,15 @@ namespace App\Controller\Groups;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Table\GroupsTable;
-use App\Model\Table\UsersTable;
-use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 /**
- * @property GroupsTable Groups
- * @property UsersTable Users
+ * @property GroupsTable $Groups
  */
 class GroupsAddController extends AppController
 {
-    /**
-     * Before filter
-     *
-     * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(Event $event)
-    {
-        $this->loadModel('Groups');
-        $this->loadModel('Users');
-
-        return parent::beforeFilter($event);
-    }
-
     /**
      * Group Add action
      *
@@ -61,6 +43,8 @@ class GroupsAddController extends AppController
         }
 
         $data = $this->_formatRequestData();
+
+        $this->loadModel('Groups');
         $group = $this->Groups->create($data, $this->User->getAccessControl());
 
         $msg = __('The group has been added successfully.');

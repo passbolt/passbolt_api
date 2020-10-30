@@ -17,6 +17,7 @@ namespace App\Controller\Comments;
 
 use App\Controller\AppController;
 use App\Model\Entity\Comment;
+use App\Model\Table\CommentsTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -24,6 +25,9 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
+/**
+ * @property CommentsTable $Comments
+ */
 class CommentsAddController extends AppController
 {
     const ADD_SUCCESS_EVENT_NAME = 'CommentAddController.addPost.success';
@@ -36,7 +40,7 @@ class CommentsAddController extends AppController
      * @throws NotFoundException
      * @return void
      */
-    public function addPost($foreignKey)
+    public function addPost(string $foreignKey)
     {
         if (!Validation::uuid($foreignKey)) {
             throw new BadRequestException(__('The resource id is not valid.'));
@@ -58,7 +62,7 @@ class CommentsAddController extends AppController
     /**
      * Manage validation errors.
      *
-     * @param \App\Model\Entity\Comment $comment comment
+     * @param Comment $comment comment
      * @throws BadRequestException
      * @throws NotFoundException
      * @return void

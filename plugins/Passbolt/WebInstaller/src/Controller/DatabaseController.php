@@ -15,12 +15,16 @@
 namespace Passbolt\WebInstaller\Controller;
 
 use App\Model\Entity\Role;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
+/**
+ * @property UsersTable $Users
+ */
 class DatabaseController extends WebInstallerController
 {
     /**

@@ -209,7 +209,7 @@ class GroupsUpdateGroupUsersService
             return $groupUser;
         }
 
-        $data['modified_by'] = $uac->userId();
+        $data['modified_by'] = $uac->getId();
 
         $patchEntityOptions = ['accessibleFields' => ['is_admin' => true, 'modified_by' => true]];
         $groupUser = $this->groupsUsersTable->patchEntity($groupUser, $data, $patchEntityOptions);

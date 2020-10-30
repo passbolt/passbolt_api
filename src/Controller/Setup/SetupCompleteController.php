@@ -26,12 +26,13 @@ use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Response;
 use Cake\Validation\Validation;
 
 /**
- * @property AuthenticationTokensTable AuthenticationTokens
- * @property GpgkeysTable Gpgkeys
- * @property UsersTable Users
+ * @property AuthenticationTokensTable $AuthenticationTokens
+ * @property GpgkeysTable $Gpgkeys
+ * @property UsersTable $Users
  */
 class SetupCompleteController extends AppController
 {
@@ -41,7 +42,7 @@ class SetupCompleteController extends AppController
      * Before filter
      *
      * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -174,7 +175,6 @@ class SetupCompleteController extends AppController
             throw new BadRequestException(__('An OpenPGP key must be provided.'));
         }
 
-        $this->loadModel('Gpgkeys');
         if (!$this->Gpgkeys->isParsableArmoredPublicKey($armoredKey)) {
             throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
         }

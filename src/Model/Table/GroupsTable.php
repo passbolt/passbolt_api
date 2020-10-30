@@ -209,8 +209,8 @@ class GroupsTable extends Table
     {
         // Manage defaults.
         $defaults = [
-            'created_by' => $control->userId(),
-            'modified_by' => $control->userId(),
+            'created_by' => $control->getId(),
+            'modified_by' => $control->getId(),
             'deleted' => false,
         ];
         $data = array_merge($defaults, $data);

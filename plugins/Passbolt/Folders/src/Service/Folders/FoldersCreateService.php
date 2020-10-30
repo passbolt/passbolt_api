@@ -124,7 +124,7 @@ class FoldersCreateService
      */
     private function buildFolderEntity(UserAccessControl $uac, array $data)
     {
-        $userId = $uac->userId();
+        $userId = $uac->getId();
         $data = [
             'name' => Hash::get($data, 'name'),
             'created_by' => $userId,
@@ -163,7 +163,7 @@ class FoldersCreateService
      */
     private function createPermission(UserAccessControl $uac, Folder $folder)
     {
-        $userId = $uac->userId();
+        $userId = $uac->getId();
         $permissionData = [
             'aco' => PermissionsTable::FOLDER_ACO,
             'aco_foreign_key' => $folder->id,
@@ -196,7 +196,7 @@ class FoldersCreateService
         }
 
         try {
-            $userId = $uac->userId();
+            $userId = $uac->getId();
             $this->foldersRelationsCreateService->create($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $folderParentId);
             $folder->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
@@ -228,7 +228,7 @@ class FoldersCreateService
         }
 
         // The user should have at least UPDATE permission on the destination parent folder to insert content into.
-        $userId = $uac->userId();
+        $userId = $uac->getId();
         $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
         if (!$isAllowedToMoveIn) {
             $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];

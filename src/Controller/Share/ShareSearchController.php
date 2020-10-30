@@ -18,8 +18,15 @@ namespace App\Controller\Share;
 use App\Controller\AppController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\UsersTable;
 use Cake\Collection\Collection;
+use Cake\ORM\Query;
 
+/**
+ * @property UsersTable $Users
+ * @property GroupsTable $Groups
+ */
 class ShareSearchController extends AppController
 {
     /**
@@ -39,6 +46,7 @@ class ShareSearchController extends AppController
 
         $groups = $this->_searchGroups($options);
         $users = $this->_searchUsers($options);
+
         $aros = $users->append($groups);
         $output = $this->_formatResult($aros);
 
@@ -49,7 +57,7 @@ class ShareSearchController extends AppController
      * Search groups.
      *
      * @param array $options The find options
-     * @return \Cake\ORM\Query
+     * @return Query
      */
     private function _searchGroups(array $options = [])
     {
@@ -62,7 +70,7 @@ class ShareSearchController extends AppController
      * Search the users.
      *
      * @param array $options The find options
-     * @return \Cake\ORM\Query
+     * @return Query
      */
     private function _searchUsers(array $options = [])
     {
@@ -74,8 +82,8 @@ class ShareSearchController extends AppController
     /**
      * Format the result alphabetically.
      *
-     * @param \Cake\Collection\Collection $aros The collection of groups and users to sort.
-     * @return \Cake\Collection\Collection
+     * @param Collection $aros The collection of groups and users to sort.
+     * @return Collection
      */
     private function _formatResult(Collection $aros)
     {

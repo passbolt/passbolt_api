@@ -17,6 +17,7 @@ namespace Passbolt\WebInstaller\Controller;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Response;
 use Passbolt\WebInstaller\Utility\WebInstaller;
 
 /**
@@ -62,7 +63,7 @@ class WebInstallerController extends Controller
      * Do not let the user proceed if the configuration is not found in the session.
      * Instead redirect him to the first step.
      * @param Event $event event
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -76,6 +77,8 @@ class WebInstallerController extends Controller
 
             return $this->redirect('install/system_check');
         }
+
+        return null;
     }
 
     /**
@@ -122,7 +125,7 @@ class WebInstallerController extends Controller
      * @param string $message error message
      * @return void
      */
-    protected function _error($message)
+    protected function _error(string $message)
     {
         $this->Flash->error($message);
         $this->render($this->stepInfo['template']);

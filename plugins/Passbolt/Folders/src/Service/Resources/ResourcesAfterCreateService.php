@@ -79,7 +79,7 @@ class ResourcesAfterCreateService
         }
 
         try {
-            $userId = $uac->userId();
+            $userId = $uac->getId();
             $this->foldersRelationsCreateService->create($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $userId, $folderParentId);
             $resource->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
@@ -119,7 +119,7 @@ class ResourcesAfterCreateService
         }
 
         // The user should have at least UPDATE permission on the destination parent folder to insert content into.
-        $userId = $uac->userId();
+        $userId = $uac->getId();
         $isAllowedToCreateIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
         if (!$isAllowedToCreateIn) {
             $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];

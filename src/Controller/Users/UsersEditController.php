@@ -23,9 +23,10 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
+use Exception;
 
 /**
- * @property UsersTable Users
+ * @property UsersTable $Users
  */
 class UsersEditController extends AppController
 {
@@ -43,12 +44,17 @@ class UsersEditController extends AppController
 
         // Try to find the user and validate changes it
         $this->loadModel('Users');
-
-        /** @var User $user */
-        $user = $this->Users->findView($id, $this->User->role())->first();
+        try {
+            /** @var User $user */
+            $user = $this->Users->findView($id, $this->User->role())->first();
+        } catch (Exception $exception) {
+            throw new BadRequestException(__('The user does not exist or has been deleted.'));
+        }
         if (empty($user)) {
             throw new BadRequestException(__('The user does not exist or has been deleted.'));
         }
+
+        // Patch
         $user = $this->Users->editEntity($user, $data, $this->User->role());
         if ($user->getErrors()) {
             throw new ValidationException(__('Could not validate user data.'), $user, $this->Users);
@@ -64,7 +70,12 @@ class UsersEditController extends AppController
         }
 
         // Get the updated version (ex. Role needs to be fetched again if role_id changed)
-        $user = $this->Users->findView($id, $this->User->role())->first();
+        try {
+            $user = $this->Users->findView($id, $this->User->role())->first();
+        } catch (Exception $exception) {
+            throw new InternalErrorException(__('Could not find the user data after save. Maybe it has been deleted in the meantime.'));
+        }
+
         $this->success(__('User updated successfully!'), $user);
     }
 
@@ -96,18 +107,14 @@ class UsersEditController extends AppController
             throw new BadRequestException(__('Some user data must be provided.'));
         }
 
-        // API v2 additional checks and error (was silent before)
-        $apiVersion = $this->request->getQuery('api-version');
-        if (isset($apiVersion) && $apiVersion === '2') {
-            if (isset($data['gpgkey'])) {
-                throw new BadRequestException(__('Updating the gpgkey is not allowed.'));
-            }
-            if (isset($data['groups_user'])) {
-                throw new BadRequestException(__('Updating the groups is not allowed.'));
-            }
-            if ($this->User->role() !== Role::ADMIN && (isset($data['role']) || isset($data['role_id']))) {
-                throw new ForbiddenException(__('You are not authorized to edit the role.'));
-            }
+        if (isset($data['gpgkey'])) {
+            throw new BadRequestException(__('Updating the gpgkey is not allowed.'));
+        }
+        if (isset($data['groups_user'])) {
+            throw new BadRequestException(__('Updating the groups is not allowed.'));
+        }
+        if ($this->User->role() !== Role::ADMIN && (isset($data['role']) || isset($data['role_id']))) {
+            throw new ForbiddenException(__('You are not authorized to edit the role.'));
         }
 
         return $data;

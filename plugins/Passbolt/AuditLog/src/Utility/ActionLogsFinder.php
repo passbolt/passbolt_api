@@ -216,14 +216,14 @@ class ActionLogsFinder
 
     /**
      * Check if a given user has access to a resource.
-     * @param UserAccessControl $user user
+     * @param UserAccessControl $uac user
      * @param string $resourceId resource id
      * @return bool whether or not he has access to the resource
      */
-    protected function _checkUserCanAccessResource(UserAccessControl $user, string $resourceId)
+    protected function _checkUserCanAccessResource(UserAccessControl $uac, string $resourceId)
     {
         $Resource = TableRegistry::getTableLocator()->get('Resources');
-        $resource = $Resource->findView($user->userId(), $resourceId)->first();
+        $resource = $Resource->findView($uac->getId(), $resourceId)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }

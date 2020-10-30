@@ -85,12 +85,12 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param Folder $folder Folder entity
-     * @param UserAccessControl $userAccessControl UserAccessControl
+     * @param UserAccessControl $uac UserAccessControl
      * @return Email
      */
-    private function createEmail(Folder $folder, UserAccessControl $userAccessControl)
+    private function createEmail(Folder $folder, UserAccessControl $uac)
     {
-        $user = $this->usersTable->findFirstForEmail($userAccessControl->userId());
+        $user = $this->usersTable->findFirstForEmail($uac->getId());
 
         $subject = __("You added the folder {0}", $folder->name);
 

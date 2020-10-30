@@ -33,10 +33,10 @@ use Cake\Routing\Router;
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
  *
- * @property UserComponent              User
- * @property QueryStringComponent       QueryString
- * @property AuthComponent              Auth
- * @property EmailSubscriptionComponent EmailSubscription
+ * @property UserComponent              $User
+ * @property QueryStringComponent       $QueryString
+ * @property AuthComponent              $Auth
+ * @property EmailSubscriptionComponent $EmailSubscription
  *
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */

@@ -17,6 +17,10 @@ namespace App\Controller\Groups;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\GroupsUsersTable;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\SecretsTable;
 use App\Service\Groups\GroupsUpdateDryRunService;
 use App\Service\Groups\GroupsUpdateService;
 use App\Utility\UserAccessControl;
@@ -24,16 +28,24 @@ use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Response;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Exception;
 
+/**
+ * @property GroupsTable $Groups
+ * @property GroupsUsersTable $GroupsUsers
+ * @property ResourcesTable $Resources
+ * @property SecretsTable $Secrets
+ */
 class GroupsUpdateController extends AppController
 {
     /**
      * Before filter
      *
      * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -52,7 +64,7 @@ class GroupsUpdateController extends AppController
      * @return void
      * @throws ForbiddenException If the user is not an admin
      * @throws ValidationException If an error occurred when patching or saving the group
-     * @throws \Exception If an unexpected error occurred
+     * @throws Exception If an unexpected error occurred
      */
     public function update(string $id)
     {
@@ -100,7 +112,7 @@ class GroupsUpdateController extends AppController
         }
 
         // If the user is not manager of the group nor admin
-        $isGroupManager = $this->GroupsUsers->isManager($uac->userId(), $id);
+        $isGroupManager = $this->GroupsUsers->isManager($uac->getId(), $id);
         $isAdmin = $uac->isAdmin();
         if (!$isGroupManager && !$isAdmin) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
@@ -142,7 +154,7 @@ class GroupsUpdateController extends AppController
      * @return void
      * @throws ForbiddenException If the user is not an admin
      * @throws ValidationException If an error occurred when patching or saving the group
-     * @throws \Exception If something unexpected occurred
+     * @throws Exception If something unexpected occurred
      */
     public function dryRun(string $id)
     {

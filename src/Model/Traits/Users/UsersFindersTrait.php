@@ -32,7 +32,7 @@ use Passbolt\Log\Model\Table\ActionLogsTable;
 
 /**
  * @method EventDispatcher getEventManager()
- * @property ActionLogsTable ActionLogs
+ * @property ActionLogsTable $ActionLogs
  */
 trait UsersFindersTrait
 {

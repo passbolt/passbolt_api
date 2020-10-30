@@ -35,10 +35,10 @@ class UserAccessControl
     /**
      * UserAccessControl constructor.
      * @param string $roleName The role name
-     * @param string $userId the user uuid
-     * @param string $username the user email
+     * @param string|null $userId the user uuid
+     * @param string|null $username the user email
      */
-    public function __construct($roleName, $userId = null, $username = null)
+    public function __construct(string $roleName, string $userId = null, string $username = null)
     {
         if (!is_string($roleName)) {
             throw new InternalErrorException('Invalid UserControl role name.');
@@ -57,16 +57,6 @@ class UserAccessControl
     /**
      * Get the user id
      * @return string
-     * @deprecated use getId()
-     */
-    public function userId()
-    {
-        return $this->getId();
-    }
-
-    /**
-     * Get the user id
-     * @return string
      */
     public function getId()
     {
@@ -80,16 +70,6 @@ class UserAccessControl
     public function roleName()
     {
         return $this->roleName;
-    }
-
-    /**
-     * Return username / email
-     * @deprecated use getUsername
-     * @return null|string
-     */
-    public function username()
-    {
-        return $this->getUsername();
     }
 
     /**
@@ -116,7 +96,7 @@ class UserAccessControl
      */
     public function is(string $userId)
     {
-        return ($this->userId() === $userId);
+        return ($this->getId() === $userId);
     }
 
     /**

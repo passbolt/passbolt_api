@@ -16,11 +16,16 @@
 namespace App\Controller\Comments;
 
 use App\Controller\AppController;
+use App\Model\Entity\Comment;
+use App\Model\Table\CommentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property CommentsTable $Comments
+ */
 class CommentsDeleteController extends AppController
 {
     /**
@@ -31,7 +36,7 @@ class CommentsDeleteController extends AppController
      * @throws NotFoundException
      * @return void
      */
-    public function delete($id = null)
+    public function delete(string $id)
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
@@ -55,10 +60,10 @@ class CommentsDeleteController extends AppController
 
     /**
      * Manage delete errors
-     * @param \Cake\Datasource\EntityInterface $comment comment
+     * @param Comment $comment comment
      * @return void
      */
-    private function _handleDeleteErrors($comment)
+    private function _handleDeleteErrors(Comment $comment)
     {
         $errors = $comment->getErrors();
         if (!empty($errors)) {

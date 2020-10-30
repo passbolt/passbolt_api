@@ -141,7 +141,7 @@ class FoldersDeleteService
      */
     private function checkUserCanDelete(UserAccessControl $uac, string $itemModel, string $itemId)
     {
-        $userId = $uac->userId();
+        $userId = $uac->getId();
 
         return $this->userHasPermissionService->check($itemModel, $itemId, $userId, Permission::UPDATE);
     }
@@ -222,7 +222,7 @@ class FoldersDeleteService
      */
     private function deleteResource($uac, $resourceId)
     {
-        $userId = $uac->userId();
+        $userId = $uac->getId();
         $canDelete = $this->userHasPermissionService->check(PermissionsTable::RESOURCE_ACO, $resourceId, $userId, Permission::UPDATE);
         if (!$canDelete) {
             throw new ForbiddenException('You cannot delete this resource');
@@ -231,7 +231,7 @@ class FoldersDeleteService
         $resource = $this->resourcesTable->get($resourceId);
         // The soft delete function will trigger an event that once caught will remove the resource from the users
         // folders trees.
-        $this->resourcesTable->softDelete($uac->userId(), $resource);
+        $this->resourcesTable->softDelete($uac->getId(), $resource);
     }
 
     /**

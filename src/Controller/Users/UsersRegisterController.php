@@ -23,6 +23,7 @@ use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Response;
 
 /**
  * @property UsersTable Users
@@ -34,7 +35,7 @@ class UsersRegisterController extends AppController
      *
      * @param Event $event An Event instance
      * @throws NotFoundException if registration is not set to public
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {

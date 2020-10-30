@@ -84,7 +84,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
 
         // Get group managers of group.
         $groupManagers = $this->getGroupManagers($group->id);
-        $admin = $this->usersTable->findFirstForEmail($accessControl->userId());
+        $admin = $this->usersTable->findFirstForEmail($accessControl->getId());
 
         // Send to all group managers.
         foreach ($groupManagers as $groupManager) {

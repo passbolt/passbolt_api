@@ -95,7 +95,7 @@ class FoldersRelationsRepairStronglyConnectedComponents
      */
     private function getFolderRelationInfo(UserAccessControl $uac, string $userId, string $foreignId, string $folderParentId)
     {
-        $inOperatorTree = $this->foldersRelationsTable->isItemOrganizedInUserTree($uac->userId(), $foreignId, $folderParentId);
+        $inOperatorTree = $this->foldersRelationsTable->isItemOrganizedInUserTree($uac->getId(), $foreignId, $folderParentId);
         $inUserTree = $this->foldersRelationsTable->isItemOrganizedInUserTree($userId, $foreignId, $folderParentId);
         $usedCount = $this->foldersRelationsTable->countRelationUsage($foreignId, $folderParentId);
         $created = $this->foldersRelationsTable->getRelationOldestCreatedDate($foreignId, $folderParentId);

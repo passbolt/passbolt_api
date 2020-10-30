@@ -116,7 +116,7 @@ class SecretAccessesTable extends Table
      */
     public function create(Secret $secret, UserAccessControl $uac)
     {
-        $userId = $uac->userId();
+        $userId = $uac->getId();
 
         $data = [
             'user_id' => $userId,

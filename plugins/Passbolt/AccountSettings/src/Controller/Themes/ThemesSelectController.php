@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 /**
- * @property AccountSettingsTable AccountSettings
+ * @property AccountSettingsTable $AccountSettings
  */
 class ThemesSelectController extends AppController
 {
