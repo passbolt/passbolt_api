@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2fd0411baa549b9f829d7ada91f5479a",
+    "content-hash": "bb0cc80feb5d208cc7ce3a2672d8753d",
     "packages": [
         {
             "name": "aura/intl",
@@ -6792,7 +6792,9 @@
         "ext-posix": "*",
         "ext-intl": "*",
         "ext-mbstring": "*",
-        "ext-gnupg": "*"
+        "ext-gnupg": "*",
+        "ext-ldap": "*",
+        "ext-curl": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
