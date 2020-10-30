@@ -24,7 +24,6 @@ composer:
     PACKAGE_MANAGER_PATH: vendor/
   script:
     - |
-      composer global require hirak/prestissimo
       composer install --prefer-dist -o --no-dev --ignore-platform-reqs --no-interaction
 
 build-debian:
