@@ -66,28 +66,6 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteApiV1Success()
-    {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_RECOVER);
-        $url = '/setup/completeRecovery/' . UuidFactory::uuid('user.id.ada') . '.json';
-        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
-        $data = [
-            'AuthenticationToken' => [
-                'token' => $t->token,
-            ],
-            'Gpgkey' => [
-                'key' => $armoredKey,
-            ],
-        ];
-        $this->postJson($url, $data);
-        $this->assertSuccess();
-    }
-
-    /**
-     * @group AN
-     * @group recover
-     * @group recoverComplete
-     */
     public function testRecoverCompleteInvalidUserIdError()
     {
         $url = '/setup/recover/complete/nope.json';
@@ -153,7 +131,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-                'AuthenticationToken' => $case['data'],
+                'authenticationtoken' => $case['data'],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -179,7 +157,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-                'AuthenticationToken' => $case['data'],
+                'authenticationtoken' => $case['data'],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -226,10 +204,10 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-            'AuthenticationToken' => [
+            'authenticationtoken' => [
                 'token' => $t->token,
             ],
-            'Gpgkey' => $case['data'],
+            'gpgkey' => $case['data'],
             ];
         }
         $this->postJson($url, $data);

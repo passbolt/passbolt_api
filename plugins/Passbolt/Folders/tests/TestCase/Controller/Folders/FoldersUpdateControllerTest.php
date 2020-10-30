@@ -13,7 +13,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller;
+namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
 use App\Test\Fixture\Base\AvatarsFixture;
@@ -109,7 +109,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testResourcesUpdateError_InsufficientPermission()
+    public function testFoldersResourcesUpdateError_InsufficientPermission()
     {
         list($folderA, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
         $data = [
@@ -140,7 +140,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->assertAuthenticationError();
     }
 
-    public function testUpdateResourcesError_FolderDoesNotExist()
+    public function testFoldersUpdateResourcesError_FolderDoesNotExist()
     {
         $this->authenticateAs('ada');
         $folderId = UuidFactory::uuid();
@@ -148,7 +148,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->assertError(404, 'The folder does not exist.');
     }
 
-    public function testUpdateResourcesError_NoAccessToFolder()
+    public function testFoldersUpdateResourcesError_NoAccessToFolder()
     {
         list($folderA, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
         $this->authenticateAs('dame');

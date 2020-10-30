@@ -43,40 +43,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteApiV1Success()
-    {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
-        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
-        $data = [
-            'AuthenticationToken' => [
-                'token' => $t->token,
-            ],
-            'Gpgkey' => [
-                'key' => $armoredKey,
-            ],
-        ];
-        $this->postJson($url, $data);
-        $this->assertSuccess();
-        // Check that token is now inactive
-        $t2 = $this->AuthenticationTokens->get($t->id);
-        $this->assertFalse($t2->active);
-        // Check that ruth is active
-        $ruth = $this->Users->get(UuidFactory::uuid('user.id.ruth'));
-        $this->assertTrue($ruth->active);
-        // Check that ruth has a gpg key
-        $key = $this->Gpgkeys->find()
-            ->where(['user_id' => UuidFactory::uuid('user.id.ruth')])
-            ->order('created')
-            ->first();
-        $this->assertTrue(!empty($key));
-    }
-
-    /**
-     * @group AN
-     * @group setup
-     * @group setupComplete
-     */
     public function testSetupCompleteSuccess()
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
@@ -153,7 +119,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     public function testSetupCompleteInvalidAuthenticationTokenError()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $url = '/setup/complete/' . $userId . '.json';
+        $url = '/setup/complete/' . $userId . '.json?api-version=v2';
         $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'expired');
         $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'inactive');
         $fails = [
@@ -188,7 +154,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-                'AuthenticationToken' => $case['data'],
+                'authenticationtoken' => $case['data'],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -203,7 +169,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     public function testSetupCompleteInvalidGpgkeyError()
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
-        $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json?api-version=v2';
 
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
@@ -235,10 +201,10 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-            'AuthenticationToken' => [
+            'authenticationtoken' => [
                 'token' => $t->token,
             ],
-            'Gpgkey' => $case['data'],
+            'gpgkey' => $case['data'],
             ];
         }
         $this->postJson($url, $data);

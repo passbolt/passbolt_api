@@ -16,7 +16,11 @@ namespace Passbolt\AccountSettings\Controller\Themes;
 
 use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
+use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
+/**
+ * @property AccountSettingsTable AccountSettings
+ */
 class ThemesIndexController extends AppController
 {
     /**
@@ -26,8 +30,8 @@ class ThemesIndexController extends AppController
      */
     public function index()
     {
-        $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
-        $themes = $AccountSettings->findAllThemes();
+        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
+        $themes = $this->AccountSettings->findAllThemes();
         $this->success(__('The operation was successful.'), $themes);
     }
 }

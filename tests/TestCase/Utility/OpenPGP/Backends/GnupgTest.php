@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.10.0
  */
-namespace App\Test\TestCase\Utility\OpenPGP;
+namespace App\Test\TestCase\Utility\OpenPGP\Backends;
 
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;

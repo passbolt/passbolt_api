@@ -16,6 +16,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Permission;
+use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
@@ -31,10 +32,10 @@ use Cake\Validation\Validator;
 /**
  * Resources Model
  *
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Creator
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Modifier
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasMany $Secrets
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Permissions
+ * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasOne $Permissions
  *
  * @method \App\Model\Entity\Resource get($primaryKey, $options = [])
  * @method \App\Model\Entity\Resource newEntity($data = null, array $options = [])
@@ -49,6 +50,12 @@ use Cake\Validation\Validator;
 class ResourcesTable extends Table
 {
     use ResourcesFindersTrait;
+
+    const DESCRIPTION_MAX_LENGTH = 10000;
+    const NAME_MAX_LENGTH = 64;
+    const PASSWORD_MAX_LENGTH = 4096;
+    const URI_MAX_LENGTH = 1024;
+    const USERNAME_MAX_LENGTH = 64;
 
     /**
      * Initialize method
@@ -94,6 +101,8 @@ class ResourcesTable extends Table
             'saveStrategy' => 'replace',
         ]);
 
+        $this->belongsTo('ResourceTypes');
+
         if (Configure::read('passbolt.plugins.tags.enabled')) {
             $this->belongsToMany('Tags', [
                 'through' => 'Passbolt/Tags.ResourcesTags',
@@ -126,23 +135,23 @@ class ResourcesTable extends Table
 
         $validator
             ->utf8Extended('name', __('The name is not a valid utf8 string.'))
-            ->maxLength('name', 64, __('The name length should be maximum {0} characters.', 64))
+            ->maxLength('name', self::NAME_MAX_LENGTH, __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH))
             ->requirePresence('name', 'create', __('A name is required.'))
             ->allowEmptyString('name', __('The name cannot be empty.'), false);
 
         $validator
             ->utf8Extended('username', __('The username is not a valid utf8 string.'))
-            ->maxLength('username', 64, __('The username length should be maximum {0} characters.', 64))
+            ->maxLength('username', self::USERNAME_MAX_LENGTH, __('The username length should be maximum {0} characters.', self::USERNAME_MAX_LENGTH))
             ->allowEmptyString('username');
 
         $validator
             ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
-            ->maxLength('uri', 1024, __('The uri length should be maximum {0} characters.', 1024))
+            ->maxLength('uri', self::URI_MAX_LENGTH, __('The uri length should be maximum {0} characters.', self::URI_MAX_LENGTH))
             ->allowEmptyString('uri');
 
         $validator
             ->utf8Extended('description', __('The description is not a valid utf8 string.'))
-            ->maxLength('description', 10000, __('The description length should be maximum {0} characters.', 10000))
+            ->maxLength('description', self::DESCRIPTION_MAX_LENGTH, __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH))
             ->allowEmptyString('description');
 
         $validator
@@ -158,6 +167,10 @@ class ResourcesTable extends Table
             ->uuid('modified_by')
             ->requirePresence('modified_by', 'create')
             ->allowEmptyString('modified_by', null, false);
+
+        $validator
+            ->uuid('resource_type_id', __('The resource type id by must be a valid UUID.'))
+            ->requirePresence('resource_type_id', 'create', __('A type is required.'));
 
         // Associated fields
         $validator
@@ -182,6 +195,11 @@ class ResourcesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        // Create and Update rules
+        $rules->add($rules->existsIn(['resource_type_id'], 'ResourceTypes'), 'resource_type_exists', [
+            'message' => __('This is not a valid resource type.'),
+        ]);
+
         // Create rules.
         $rules->addCreate([$this, 'isOwnerPermissionProvidedRule'], 'owner_permission_provided', [
             'errorField' => 'permissions',
@@ -213,11 +231,11 @@ class ResourcesTable extends Table
     /**
      * Validate that the entity has at least one owner
      *
-     * @param \App\Model\Entity\Resource $entity The entity that will be created or updated.
+     * @param resource $entity The entity that will be created or updated.
      * @param array $options options
      * @return bool
      */
-    public function isOwnerPermissionProvidedRule($entity, array $options = [])
+    public function isOwnerPermissionProvidedRule(Resource $entity, array $options = [])
     {
         if (isset($entity->permissions)) {
             $found = Hash::extract($entity->permissions, '{n}[type=' . Permission::OWNER . ']');
@@ -232,11 +250,11 @@ class ResourcesTable extends Table
     /**
      * Validate that the a resource can be created only if the secret of the owner is provided.
      *
-     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param resource $entity The entity that will be created.
      * @param array $options options
      * @return bool
      */
-    public function isOwnerSecretProvidedRule(\App\Model\Entity\Resource $entity, array $options = [])
+    public function isOwnerSecretProvidedRule(Resource $entity, array $options = [])
     {
         return ($entity->secrets[0]->user_id === $entity->created_by);
     }
@@ -244,11 +262,11 @@ class ResourcesTable extends Table
     /**
      * Validate that the secrets of all the allowed users are provided if the secret changed.
      *
-     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param resource $entity The entity that will be created.
      * @param array $options options
      * @return bool
      */
-    public function isSecretsProvidedRule(\App\Model\Entity\Resource $entity, array $options = [])
+    public function isSecretsProvidedRule(Resource $entity, array $options = [])
     {
         // Secrets are not required to update a resource, but if provided check that the list of secrets correspond
         // only to the users who have access to the resource.
@@ -282,11 +300,11 @@ class ResourcesTable extends Table
      * Soft delete a resource.
      *
      * @param string $userId The user who perform the delete.
-     * @param \App\Model\Entity\Resource $resource The resource to delete.
+     * @param resource $resource The resource to delete.
      * @throws \InvalidArgumentException if the user id is not a uuid
      * @return bool true if success
      */
-    public function softDelete(string $userId, \App\Model\Entity\Resource $resource)
+    public function softDelete(string $userId, Resource $resource)
     {
         // The softDelete will perform an update to the entity to soft delete it.
         if (!Validation::uuid($userId)) {
@@ -363,7 +381,7 @@ class ResourcesTable extends Table
      * @param array $usersId The list of users who lost access to the resource
      * @return void
      */
-    public function deleteLostAccessAssociatedData($resourceId, array $usersId = [])
+    public function deleteLostAccessAssociatedData(string $resourceId, array $usersId = [])
     {
         if (empty($usersId)) {
             return;
@@ -389,14 +407,13 @@ class ResourcesTable extends Table
     /**
      * Soft delete a list of resources by Ids
      *
-     * @param string $resourceIds uuid of Resources
+     * @param array $resourceIds uuid of Resources
      * @param bool $cascade true
      * @return void
      */
-    public function softDeleteAll($resourceIds, $cascade = true)
+    public function softDeleteAll(array $resourceIds, bool $cascade = true)
     {
-        $Resources = TableRegistry::getTableLocator()->get('Resources');
-        $Resources->updateAll(['deleted' => true], ['id IN' => $resourceIds]);
+        $this->updateAll(['deleted' => true], ['id IN' => $resourceIds]);
 
         if ($cascade) {
             $Favorites = TableRegistry::getTableLocator()->get('Favorites');
@@ -415,5 +432,24 @@ class ResourcesTable extends Table
                 $Tags->deleteAllUnusedTags();
             }
         }
+    }
+
+    /**
+     * Cleanup resource where resource type id is null
+     * Set it to the default
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupMissingResourceTypeId(bool $dryRun = false)
+    {
+        $condition = ['resource_type_id IS' => null];
+        if ($dryRun) {
+            return $this->find()
+                ->where($condition)
+                ->count();
+        }
+
+        return $this->updateAll(['resource_type_id' => ResourceTypesTable::getDefaultTypeId()], $condition);
     }
 }

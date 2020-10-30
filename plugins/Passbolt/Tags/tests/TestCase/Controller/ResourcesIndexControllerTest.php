@@ -18,7 +18,7 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
+class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',

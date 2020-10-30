@@ -30,7 +30,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckIndexJsonOk()
     {
-        $this->getJson('/healthcheck.json?api-version=v1');
+        $this->getJson('/healthcheck.json?api-version=v2');
         $this->assertResponseSuccess();
         $attributes = [
             'ssl', 'application', 'gpg', 'core', 'configFile', 'environment', 'database',

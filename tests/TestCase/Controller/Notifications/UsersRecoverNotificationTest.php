@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Controller\Notifications;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
-class UsersRecoverControllerTest extends AppIntegrationTestCase
+class UsersRecoverNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 
@@ -29,14 +29,14 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.user.recover', true);
 
         // setup
-        $this->postJson('/users/recover.json?api-version=v1', ['username' => 'ruth@passbolt.com']);
+        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ruth@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
         $this->assertResponseOk();
         $this->assertResponseContains('You just opened an account');
 
         // recovery
-        $this->postJson('/users/recover.json?api-version=v1', ['username' => 'ada@passbolt.com']);
+        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ada@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showlastemail/ada@passbolt.com');
         $this->assertResponseOk();
@@ -48,7 +48,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         // setup
         $this->setEmailNotificationSetting('send.user.create', false);
 
-        $this->postJson('/users/recover.json?api-version=v1', ['username' => 'ruth@passbolt.com']);
+        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ruth@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
         $this->assertResponseCode(500);
@@ -60,7 +60,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         // recovery
         $this->setEmailNotificationSetting('send.user.recover', false);
 
-        $this->postJson('/users/recover.json?api-version=v1', ['username' => 'ada@passbolt.com']);
+        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ada@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showlastemail/ada@passbolt.com');
         $this->assertResponseCode(500);

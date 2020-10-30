@@ -156,15 +156,13 @@ module.exports = function(grunt) {
             'third_party/chosen-sprite@2x.png', 'third_party/chosen-sprite.png',
             // Themes preview
             'themes/*.png',
-            // Fontawesome
-            'fa/**',
             // Background images for error pages for ex
             'diagrams/totp.svg',
           ],
           dest: paths.webroot + 'img',
           expand: true
         }, {
-          // Default css theme
+          // CSS
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
           src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css'],
           dest: paths.webroot + 'css/themes/default',

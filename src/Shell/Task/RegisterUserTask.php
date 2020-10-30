@@ -16,6 +16,9 @@ namespace App\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\RolesTable;
+use App\Model\Table\UsersTable;
 use App\Shell\AppShell;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
@@ -23,6 +26,11 @@ use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
+/**
+ * @property UsersTable Users
+ * @property RolesTable Roles
+ * @property AuthenticationTokensTable AuthenticationTokens
+ */
 class RegisterUserTask extends AppShell
 {
     /**
@@ -105,20 +113,19 @@ class RegisterUserTask extends AppShell
             $accessControl = new UserAccessControl(Role::ADMIN);
         }
 
-        $result = false;
         $attempt = 0;
+        $user = null;
+
         if ($this->param('interactive')) {
             $maxAttempt = $this->param('interactive-loop');
         } else {
             $maxAttempt = 1;
         }
         while (($attempt < $maxAttempt)) {
-            $result = false;
             $attempt++;
             $data = $this->_getUserData();
             try {
                 $user = $this->Users->register($data, $accessControl);
-                $result = true;
                 break;
             } catch (ValidationException $exception) {
                 $this->out(__('Validation failed for the following user data:'));
@@ -128,7 +135,7 @@ class RegisterUserTask extends AppShell
             };
         }
 
-        if (!$result) {
+        if (!isset($user)) {
             $this->_error(__('User registration failed.'));
 
             return false;
@@ -207,14 +214,13 @@ class RegisterUserTask extends AppShell
     /**
      * Notify the user by trigerring a registerPost event
      *
-     * @param object $user Entity User
+     * @param User $user Entity User
      * @return void
      */
-    protected function _notifyUser($user)
+    protected function _notifyUser(User $user)
     {
         // Display the token in console for convenience
-        $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        $token = $AuthenticationTokens->getByUserId($user->id);
+        $token = $this->AuthenticationTokens->getByUserId($user->id);
 
         if (EmailNotificationSettings::get('send.user.create')) {
             $message = __(

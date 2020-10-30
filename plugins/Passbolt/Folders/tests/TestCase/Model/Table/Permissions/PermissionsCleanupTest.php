@@ -13,11 +13,12 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Model\Table;
+namespace Passbolt\Folders\Test\TestCase\Model\Table\Permissions;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\ResourcesTable;
 use App\Test\Fixture\Base\GroupsFixture;
+use App\Test\Fixture\Base\ResourceTypesFixture;
 use App\Test\Fixture\Base\SecretsFixture;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
@@ -52,6 +53,7 @@ class PermissionsCleanupTest extends FoldersTestCase
         GroupsFixture::class,
         PermissionsFixture::class,
         ResourcesFixture::class,
+        ResourceTypesFixture::class,
         SecretsFixture::class,
     ];
 

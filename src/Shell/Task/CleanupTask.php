@@ -57,6 +57,9 @@ class CleanupTask extends AppShell
             'Hard Deleted Resources',
             'Hard Deleted Permissions',
         ],
+        'Resources' => [
+            'Missing ResourceType Id',
+        ],
     ];
 
     /**
@@ -92,6 +95,7 @@ class CleanupTask extends AppShell
         parent::initialize();
         $this->loadModel('Users');
         $this->loadModel('Roles');
+        $this->loadModel('Resources');
         $this->loadModel('GroupsUsers');
         $this->loadModel('Permissions');
         $this->loadModel('AuthenticationTokens');

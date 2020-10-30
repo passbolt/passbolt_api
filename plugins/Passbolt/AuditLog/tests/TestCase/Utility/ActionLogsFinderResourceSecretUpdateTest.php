@@ -36,6 +36,7 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
         'app.Base/Groups',
         'app.Base/GroupsUsers',
         'app.Base/Resources',
+        'app.Base/ResourceTypes',
         'app.Base/Permissions',
         'app.Base/Secrets',
         'app.Base/Favorites',
@@ -55,7 +56,7 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
         $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
     }
 
-    public function testActionLogsFinderResourceSecretUpdated()
+    public function testAuditLogsActionLogsFinderResourceSecretUpdated()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateResourceSecretUpdate($uac, UuidFactory::uuid('resource.id.apache'));

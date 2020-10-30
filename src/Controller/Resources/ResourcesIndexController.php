@@ -16,9 +16,15 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
+use App\Model\Table\ResourcesTable;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 
+/**
+ * @property ResourcesTable Resources
+ */
 class ResourcesIndexController extends AppController
 {
     /**
@@ -32,7 +38,10 @@ class ResourcesIndexController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['creator', 'favorite', 'modifier', 'permission', 'permissions.user.profile', 'permissions.group', 'secret'],
+            'contain' => [
+                'creator', 'favorite', 'modifier', 'secret', 'resource-type',
+                'permission', 'permissions', 'permissions.user.profile', 'permissions.group',
+            ],
             'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id'],
             'order' => ['Resource.modified'],
         ];

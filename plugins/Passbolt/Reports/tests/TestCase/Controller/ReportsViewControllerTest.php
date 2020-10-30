@@ -16,8 +16,8 @@
 namespace Passbolt\Reports\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Reports\Service\ReportPool;
 use Passbolt\Reports\Utility\AbstractSingleReport;
-use Passbolt\Reports\Utility\ReportPool;
 
 class ReportsViewControllerTest extends AppIntegrationTestCase
 {

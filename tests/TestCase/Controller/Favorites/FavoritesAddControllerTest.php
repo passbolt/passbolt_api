@@ -52,18 +52,6 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->assertFavoriteAttributes($this->_responseJsonBody);
     }
 
-    public function testFavoritesAddSuccessApiV1()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=v1");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody);
-        $this->assertFavoriteAttributes($this->_responseJsonBody->Favorite);
-    }
-
     public function testFavoritesAddCannotModifyNotAccessibleFields()
     {
         $this->authenticateAs('dame');
@@ -107,7 +95,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=v1");
+        $this->postJson("/favorites/resource/$resourceId.json");
         $this->assertError(400, 'The resource id is not valid.');
     }
 

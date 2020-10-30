@@ -12,9 +12,10 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace Passbolt\Reports\Utility;
+namespace Passbolt\Reports\Service;
 
 use InvalidArgumentException;
+use Passbolt\Reports\Utility\ReportInterface;
 
 /**
  * Create report service instance. Use the ReportServicePool.
@@ -41,6 +42,7 @@ class ReportViewService
      *
      * @param string $reportSlug Slug of the report
      * @param array $parameters The report parameters
+     * @throws \ReflectionException
      * @return ReportInterface
      */
     public function getReport(string $reportSlug, array $parameters = [])
@@ -54,6 +56,9 @@ class ReportViewService
 
         $reflectionClass = new \ReflectionClass($reportClass);
 
-        return $reflectionClass->newInstance(...$parameters);
+        /** @var ReportInterface $report */
+        $report = $reflectionClass->newInstance(...$parameters);
+
+        return $report;
     }
 }

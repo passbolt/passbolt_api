@@ -13,7 +13,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller;
+namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
@@ -83,7 +83,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
     /* COMMON & VALIDATION */
     /* ************************************************************** */
 
-    public function testShareFolder_CommonError1_DoesNotExist()
+    public function testFoldersShareFolder_CommonError1_DoesNotExist()
     {
         $this->authenticateAs('ada');
         $folderId = UuidFactory::uuid();
@@ -91,7 +91,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $this->assertError(404, 'The folder does not exist.');
     }
 
-    public function testShareFolder_CommonError2_NoPermission()
+    public function testFoldersShareFolder_CommonError2_NoPermission()
     {
         $userBId = UuidFactory::uuid('user.id.betty');
         $folder = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::READ]);
@@ -101,14 +101,14 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $this->assertForbiddenError('You are not allowed to update the permissions of this folder.');
     }
 
-    public function testShareFolder_CommonError_NotAuthenticated()
+    public function testFoldersShareFolder_CommonError_NotAuthenticated()
     {
         $folderId = UuidFactory::uuid('folder.id.folder');
         $this->putJson("/folders/{$folderId}.json?api-version=2");
         $this->assertAuthenticationError();
     }
 
-    public function testShareFolder_CommonError_NotValidIdParameter()
+    public function testFoldersShareFolder_CommonError_NotValidIdParameter()
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
@@ -116,7 +116,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400, 'The folder id is not valid.');
     }
 
-    public function testShareFolder_CommonError_IsProtectedByCsrfToken()
+    public function testFoldersShareFolder_CommonError_IsProtectedByCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
@@ -133,7 +133,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
     /* SHARED */
     /* ************************************************************** */
 
-    public function testShareFolder_SharedError1_InsufficientPermission()
+    public function testFoldersShareFolder_SharedError1_InsufficientPermission()
     {
         $folder = $this->insertSharedError1Fixture();
 

@@ -35,7 +35,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.group.delete', false);
 
         $this->authenticateAs('edith');
-        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v1');
+        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v2');
         $this->assertResponseSuccess();
 
         // check email notification
@@ -52,7 +52,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.group.delete', true);
 
         $this->authenticateAs('edith');
-        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v1');
+        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v2');
         $this->assertResponseSuccess();
 
         // check email notification

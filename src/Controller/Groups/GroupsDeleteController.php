@@ -16,19 +16,30 @@ namespace App\Controller\Groups;
 
 use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
+use App\Model\Entity\Group;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
+/**
+ * @property GroupsTable Groups
+ * @property GroupsUsersTable GroupsUsers
+ * @property PermissionsTable Permissions
+ * @property ResourcesTable Resources
+ */
 class GroupsDeleteController extends AppController
 {
     const DELETE_SUCCESS_EVENT_NAME = 'GroupsDeleteController.delete.success';
@@ -55,7 +66,7 @@ class GroupsDeleteController extends AppController
      * @param string $id group uuid
      * @return void
      */
-    public function dryrun($id)
+    public function dryrun(string $id)
     {
         $group = $this->_validateRequestData($id);
         $this->_validateDelete($group);
@@ -67,9 +78,10 @@ class GroupsDeleteController extends AppController
      * Group delete action
      *
      * @param string $id group uuid
+     * @throws InternalErrorException if group cannot be deleted
      * @return void
      */
-    public function delete($id)
+    public function delete(string $id)
     {
         $this->GroupsUsers->getConnection()->transactional(function () use ($id) {
             $group = $this->_validateRequestData($id);
@@ -90,9 +102,9 @@ class GroupsDeleteController extends AppController
      * @throws ForbiddenException if current group is not an admin
      * @throws BadRequestException if the group uuid id invalid
      * @throws NotFoundException if the group does not exist or is already deleted
-     * @return \App\Model\Entity\Group $group entity
+     * @return Group $group entity
      */
-    protected function _validateRequestData($id)
+    protected function _validateRequestData(string $id)
     {
         // Admin can delete all groups
         if ($this->User->role() !== Role::ADMIN) {
@@ -103,7 +115,9 @@ class GroupsDeleteController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The group id must be a valid uuid.'));
         }
-        $group = $this->Groups->findView($id, ['contain' => ['group_user' => true]])->first();
+
+        /** @var Group $group */
+        $group = $this->Groups->findView($id, ['contain' => ['groups_users' => true]])->first();
         if (empty($group)) {
             throw new NotFoundException(__('The group does not exist or has been already deleted.'));
         }
@@ -112,12 +126,13 @@ class GroupsDeleteController extends AppController
     }
 
     /**
-     * Validate the delete operation.
+     * Validate the delete operation
+     *
      * @param Group $group The target group
      * @throws CustomValidationException if the group is sole owner of a shared resource
      * @return void
      */
-    protected function _validateDelete($group)
+    protected function _validateDelete(Group $group)
     {
         // Check business rules
         // Returning the validation error is not meaningful enough so we need to
@@ -129,6 +144,7 @@ class GroupsDeleteController extends AppController
 
             if (isset($errors['id']['soleOwnerOfSharedContent'])) {
                 $resourcesIds = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
+                $body = [];
                 if ($resourcesIds) {
                     $findResourcesOptions = [];
                     $findResourcesOptions['contain']['permissions.user.profile'] = true;
@@ -158,11 +174,12 @@ class GroupsDeleteController extends AppController
 
     /**
      * Transfer the resources permissions which blocked the group delete
-     * @param {Group} $group entity
+     *
+     * @param Group $group entity
      * @throws BadRequestException if the array of manager is
      * @return void
      */
-    protected function _transferContentOwners($group)
+    protected function _transferContentOwners(Group $group)
     {
         $owners = $this->request->getData('transfer.owners');
         if (empty($owners)) {
@@ -198,10 +215,10 @@ class GroupsDeleteController extends AppController
     /**
      * Notify the users that their group has been deleted
      *
-     * @param \App\Model\Entity\Group $group Group
+     * @param Group $group Group
      * @return void
      */
-    protected function _notifyUsers($group)
+    protected function _notifyUsers(Group $group)
     {
         $event = new Event(static::DELETE_SUCCESS_EVENT_NAME, $this, [
             'group' => $group,

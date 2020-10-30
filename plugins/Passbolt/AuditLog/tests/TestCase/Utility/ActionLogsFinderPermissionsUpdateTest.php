@@ -38,6 +38,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         'app.Base/Groups',
         'app.Base/GroupsUsers',
         'app.Base/Resources',
+        'app.Base/ResourceTypes',
         'app.Base/Permissions',
         'app.Base/Secrets',
         'app.Base/Favorites',
@@ -57,7 +58,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
     }
 
-    public function testActionLogsFinderPermissionCreated()
+    public function testAuditLogsActionLogsFinderPermissionCreated()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateShare(
@@ -85,7 +86,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $this->assertEquals($actionLogs[0]['data']['permissions']['added'][0]['user']['id'], UuidFactory::uuid('user.id.betty'));
     }
 
-    public function testActionLogsFinderPermissionUpdated()
+    public function testAuditLogsActionLogsFinderPermissionUpdated()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateShare(
@@ -114,7 +115,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $this->assertEquals($actionLogs[0]['data']['permissions']['updated'][0]['user']['id'], UuidFactory::uuid('user.id.betty'));
     }
 
-    public function testActionLogsFinderPermissionRemoved()
+    public function testAuditLogsActionLogsFinderPermissionRemoved()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateShare(

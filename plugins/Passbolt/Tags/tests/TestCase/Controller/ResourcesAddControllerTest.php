@@ -14,14 +14,15 @@
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
+use App\Utility\UuidFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class ResourceAddControllerTest extends TagPluginIntegrationTestCase
+class ResourcesAddControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
         'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Avatars',
-        'app.Base/Resources', 'app.Base/Favorites',
+        'app.Base/Resources', 'app.Base/ResourceTypes', 'app.Base/Favorites',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
         'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
@@ -30,13 +31,12 @@ class ResourceAddControllerTest extends TagPluginIntegrationTestCase
     protected function _getDummyPostData($data = [])
     {
         $defaultData = [
-            'Resource' => [
-                'name' => 'new resource name',
-                'username' => 'username@domain.com',
-                'uri' => 'https://www.domain.com',
-                'description' => 'new resource description',
-            ],
-            'Secret' => [
+            'name' => 'new resource name',
+            'username' => 'username@domain.com',
+            'uri' => 'https://www.domain.com',
+            'description' => 'new resource description',
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
+            'secrets' => [
                 [
                     'data' => '-----BEGIN PGP MESSAGE-----
 
@@ -63,23 +63,15 @@ W3AI8+rWjK8MGH2T88hCYI/6
         return $data;
     }
 
-    public function testResourcesAddSuccess()
+    public function testTagsResourcesAddSuccess()
     {
-        $success = [
-            'resource' => $this->_getDummyPostData(),
-        ];
+        $data = $this->_getDummyPostData();
+        $this->authenticateAs('admin');
+        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->assertSuccess();
 
-        foreach ($success as $case => $data) {
-            $this->authenticateAs('admin');
-            $this->postJson("/resources.json?api-version=2", $data);
-            $this->assertSuccess();
-
-            // Check the server response.
-            $resource = $this->_responseJsonBody;
-
-            // Check the resource attributes.
-            $this->assertObjectHasAttribute('tags', $resource);
-            $this->assertTrue(is_array($resource->tags));
-        }
+        // Check the resource attributes.
+        $this->assertObjectHasAttribute('tags', $this->_responseJsonBody);
+        $this->assertTrue(is_array($this->_responseJsonBody->tags));
     }
 }

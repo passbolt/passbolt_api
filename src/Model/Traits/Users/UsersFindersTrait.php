@@ -26,10 +26,13 @@ use Cake\ORM\Query;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Composer\EventDispatcher\EventDispatcher;
+use Exception;
 use InvalidArgumentException;
+use Passbolt\Log\Model\Table\ActionLogsTable;
 
 /**
  * @method EventDispatcher getEventManager()
+ * @property ActionLogsTable ActionLogs
  */
 trait UsersFindersTrait
 {
@@ -221,43 +224,38 @@ trait UsersFindersTrait
         }
 
         // Default associated data
-        $containDefault = ['Profiles', 'Gpgkeys', 'Roles', 'GroupsUsers'];
-        $containWhiteList = ['LastLoggedIn'];
-        if (!isset($options['contain']) || (!is_array($options['contain']))) {
-            $contain = $containDefault;
-        } else {
-            $containOptions = [];
-            foreach ($options['contain'] as $option => $value) {
-                if ($value == 1) {
-                    $containOptions[] = $option;
-                }
-            }
-            $contain = array_merge($containDefault, array_intersect($containOptions, $containWhiteList));
-        }
+        $containDefault = [
+            'gpgkey' => true, 'profile' => true, 'groups_users' => true, 'role' => true,
+        ];
+        $options['contain'] = $options['contain'] ?? [];
+        $options['contain'] = array_merge($containDefault, $options['contain']);
 
-        // If contains Profiles, then include Avatars too.
-        if (in_array('Profiles', $contain)) {
-            $contain['Profiles'] = AvatarsTable::addContainAvatar();
-            unset($contain[array_search('Profiles', $contain)]);
+        if (isset($options['contain']['role']) && $options['contain']['role']) {
+            $query->contain('Roles');
         }
-
-        if (in_array('LastLoggedIn', $contain)) {
+        if (isset($options['contain']['gpgkey']) && $options['contain']['gpgkey']) {
+            $query->contain('Gpgkeys');
+        }
+        if (isset($options['contain']['profile']) && $options['contain']['profile']) {
+            $query->contain(['Profiles' => AvatarsTable::addContainAvatar()]);
+        }
+        if (isset($options['contain']['groups_users']) && $options['contain']['groups_users']) {
+            $query->contain('GroupsUsers');
+        }
+        if (isset($options['contain']['last_logged_in']) && $options['contain']['last_logged_in']) {
             $query->find('lastLoggedIn');
-            unset($contain[array_search('LastLoggedIn', $contain)]);
         }
-
-        $query->contain($contain);
 
         // Filter out guests and deleted users
         $query->where([
             'Users.deleted' => false,
-            'Roles.name <>' => Role::GUEST,
+            'Users.role_id <>' => $this->Roles->getIdByName(Role::GUEST),
         ]);
 
         // If searching admins
         if (isset($options['filter']['is-admin'])) {
             $query->where([
-                'Roles.name' => Role::ADMIN,
+                'Users.role_id' => $this->Roles->getIdByName(Role::ADMIN),
             ]);
         }
 
@@ -346,14 +344,14 @@ trait UsersFindersTrait
      *
      * @param Query $query a query instance
      * @param array $options options
-     * @throws \Exception if fingerprint id is not set
+     * @throws Exception if fingerprint id is not set
      * @return \Cake\ORM\Query
      */
     public function findAuth(Query $query, array $options)
     {
         // Options must contain an id
         if (!isset($options['fingerprint'])) {
-            throw new \Exception(__('User table findAuth should have a fingerprint id set in options.'));
+            throw new Exception(__('User table findAuth should have a fingerprint id set in options.'));
         }
 
         // auth query is always done as guest
@@ -370,23 +368,22 @@ trait UsersFindersTrait
      * @param string $username email of user to retrieve
      * @param array $options options
      * @throws InvalidArgumentException if the username is not an email
-     * @return \Cake\ORM\Query
+     * @return Query
      */
     public function findRecover(string $username, array $options = [])
     {
         if (!Validation::email($username, Configure::read('passbolt.email.validate.mx'))) {
             throw new InvalidArgumentException(__('The username should be a valid email.'));
         }
+
         // show active first and do not count deleted ones
-        $query = $this->find()
+        return $this->find()
             ->where(['Users.username' => $username, 'Users.deleted' => false])
             ->contain([
                 'Roles',
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
             ->order(['Users.active' => 'DESC']);
-
-        return $query;
     }
 
     /**
@@ -394,15 +391,16 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @throws InvalidArgumentException if the user id is not a uuid
-     * @return object $user entity
+     * @return User $user entity
      */
-    public function findSetup($userId)
+    public function findSetup(string $userId)
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
         // show active first and do not count deleted ones
+        /** @var User $user */
         $user = $this->find()
             ->contain(['Roles', 'Profiles', 'Roles'])
             ->where([
@@ -420,7 +418,7 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @throws InvalidArgumentException if the user id is not a uuid
-     * @return object $user entity
+     * @return User $user entity
      */
     public function findSetupRecover(string $userId)
     {
@@ -429,6 +427,7 @@ trait UsersFindersTrait
         }
 
         // show active first and do not count deleted ones
+        /** @var User $user */
         $user = $this->find()
             ->contain(['Roles', 'Profiles', 'Roles'])
             ->where([
@@ -454,6 +453,7 @@ trait UsersFindersTrait
             throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
+        /** @var User $user */
         $user = $this->find()
             ->where(['Users.id' => $userId])
             ->contain([
@@ -468,10 +468,11 @@ trait UsersFindersTrait
     /**
      * Get a user info for an email notification context
      *
-     * @return object User
+     * @return User
      */
     public function findFirstAdmin()
     {
+        /** @var User $user */
         $user = $this->find()
             ->where([
                 'Users.deleted' => false,
@@ -487,11 +488,11 @@ trait UsersFindersTrait
 
     /**
      * Return a list of admin users (active, non soft-deleted) with their role attached
-     * @return User[]
+     * @return Query
      */
     public function findAdmins()
     {
-        $users = $this->find()
+        return $this->find()
             ->where(
                 [
                     'Users.deleted' => false,
@@ -501,26 +502,22 @@ trait UsersFindersTrait
             )
             ->order(['Users.created' => 'ASC'])
             ->contain(['Roles']);
-
-        return $users;
     }
 
     /**
      * Get all active users.
      *
-     * @return object User
+     * @return Query
      */
     public function findActive()
     {
-        $user = $this->find()
+        return $this->find()
              ->where([
                  'Users.deleted' => false,
                  'Users.active' => true,
              ])
              ->order(['Users.created' => 'ASC'])
              ->all();
-
-        return $user;
     }
 
     /**
@@ -535,9 +532,9 @@ trait UsersFindersTrait
         $loginActionId = UuidFactory::uuid('AuthLogin.loginPost');
         $subQuery = $this->ActionLogs->find();
         $subQuery->select([
-            'user_id' => 'user_id',
-            'last_logged_in' => $subQuery->func()->max('ActionLogs.created'),
-        ])
+                'user_id' => 'user_id',
+                'last_logged_in' => $subQuery->func()->max('ActionLogs.created'),
+            ])
             ->where([
                 'ActionLogs.action_id' => $loginActionId,
                 'ActionLogs.user_id IS NOT NULL',

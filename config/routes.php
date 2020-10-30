@@ -216,6 +216,20 @@ Router::scope('/resources', function ($routes) {
 });
 
 /**
+ * Resources types prefixed routes
+ */
+Router::scope('/resource-types', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/', ['prefix' => 'ResourceTypes', 'controller' => 'ResourceTypesIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/:id', ['prefix' => 'ResourceTypes', 'controller' => 'ResourceTypesView', 'action' => 'view'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Roles prefixed routes
  */
 Router::scope('/roles', function ($routes) {

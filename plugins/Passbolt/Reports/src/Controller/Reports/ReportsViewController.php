@@ -16,17 +16,18 @@ namespace Passbolt\Reports\Controller\Reports;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
-use App\Model\Entity\User;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\ORM\TableRegistry;
 use Exception;
 use InvalidArgumentException;
+use Passbolt\Reports\Service\ReportViewService;
 use Passbolt\Reports\Utility\ReportInterface;
-use Passbolt\Reports\Utility\ReportViewService;
 
+/**
+ * @property UsersTable Users
+ */
 class ReportsViewController extends AppController
 {
     const DEFAULT_LAYOUT = 'Passbolt/Reports.Reports/ReportsLayout';
@@ -37,11 +38,6 @@ class ReportsViewController extends AppController
     private $reportViewService;
 
     /**
-     * @var UsersTable
-     */
-    private $usersTable;
-
-    /**
      * @return void
      * @throws Exception
      */
@@ -49,7 +45,7 @@ class ReportsViewController extends AppController
     {
         parent::initialize();
         $this->reportViewService = new ReportViewService();
-        $this->usersTable = TableRegistry::getTableLocator()->get('Users');
+        $this->loadModel('Users');
     }
 
     /**
@@ -74,11 +70,9 @@ class ReportsViewController extends AppController
             throw new BadRequestException(__('The requested report `{0}` does not exist.', $reportSlug));
         }
 
-        /** @var FindIndexOptions $options */
         $options = $this->formatRequestData($report->getSupportedOptions());
 
-        /** @var User $creator */
-        $creator = $this->usersTable->get($this->User->id(), ['contain' => 'Profiles']);
+        $creator = $this->Users->get($this->User->id(), ['contain' => 'Profiles']);
 
         $report
             ->setOptions($options)

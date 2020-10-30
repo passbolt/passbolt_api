@@ -18,7 +18,7 @@ use App\Utility\UuidFactory;
 use Cake\Validation\Validation;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class ResourceViewControllerTest extends TagPluginIntegrationTestCase
+class ResourcesViewControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',

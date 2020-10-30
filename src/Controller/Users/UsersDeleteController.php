@@ -19,7 +19,11 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -31,6 +35,13 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
+/**
+ * @property UsersTable Users
+ * @property GroupsTable Groups
+ * @property GroupsUsersTable GroupsUsers
+ * @property PermissionsTable Permissions
+ * @property ResourcesTable Resources
+ */
 class UsersDeleteController extends AppController
 {
     const DELETE_SUCCESS_EVENT_NAME = 'UsersDeleteController.delete.success';
@@ -44,10 +55,10 @@ class UsersDeleteController extends AppController
     public function beforeFilter(Event $event)
     {
         $this->loadModel('Users');
-        $this->loadModel('Resources');
         $this->loadModel('Groups');
         $this->loadModel('GroupsUsers');
         $this->loadModel('Permissions');
+        $this->loadModel('Resources');
 
         return parent::beforeFilter($event);
     }
@@ -58,7 +69,7 @@ class UsersDeleteController extends AppController
      * @param string $id user uuid
      * @return void
      */
-    public function dryrun($id)
+    public function dryrun(string $id)
     {
         $user = $this->_validateRequestData($id);
         $this->_validateDelete($user);
@@ -69,9 +80,10 @@ class UsersDeleteController extends AppController
      * User delete action
      *
      * @param string $id user uuid
+     * @throws \Exception if user cannot be deleted
      * @return void
      */
-    public function delete($id)
+    public function delete(string $id)
     {
         $user = $this->_validateRequestData($id);
         // keep a list of group the user was a member of. Useful to notify the group managers after the delete
@@ -113,6 +125,8 @@ class UsersDeleteController extends AppController
         if ($id === $this->User->id()) {
             throw new BadRequestException(__('You are not allowed to delete yourself.'));
         }
+
+        /** @var User $user */
         $user = $this->Users->findDelete($id, $this->User->role())->first();
         if (empty($user)) {
             throw new NotFoundException(__('The user does not exist or has been already deleted.'));
@@ -123,13 +137,14 @@ class UsersDeleteController extends AppController
 
     /**
      * Validate the delete operation.
+     *
      * @param User $user The target user
      * @throws CustomValidationException if the user is sole manager of a group
      * @throws CustomValidationException if the user is sole owner of a shared resource
      * @throws CustomValidationException if the user is sole manager of a group that is the sole owner of a shared resource
      * @return void
      */
-    protected function _validateDelete($user)
+    protected function _validateDelete(User $user)
     {
         // Check business rules
         // Returning the validation error is not meaningful enough so we may need to
@@ -142,7 +157,7 @@ class UsersDeleteController extends AppController
             if (isset($errors['id']['soleManagerOfNonEmptyGroup'])) {
                 $groupIds = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($user->id)->extract('group_id')->toArray();
                 $findGroupsOptions = [];
-                $findGroupsOptions['contain']['group_user.user.profile'] = true;
+                $findGroupsOptions['contain']['groups_users.user.profile'] = true;
                 $groups = $this->Groups->findAllByIds($groupIds, $findGroupsOptions);
                 $body['errors']['groups']['sole_manager'] = $groups;
                 $msg .= $errors['id']['soleManagerOfNonEmptyGroup'];
@@ -186,11 +201,12 @@ class UsersDeleteController extends AppController
 
     /**
      * Transfer the group managers which blocked the user delete
-     * @param {User} $user entity
+     *
+     * @param User $user entity
      * @throws BadRequestException The groups that required a change are not all satisfied
      * @return void
      */
-    protected function _transferGroupsManagers($user)
+    protected function _transferGroupsManagers(User $user)
     {
         $managers = $this->request->getData('transfer.managers');
         if (empty($managers)) {
@@ -221,11 +237,12 @@ class UsersDeleteController extends AppController
 
     /**
      * Transfer the content permissions which blocked the user delete
-     * @param {User} $user entity
+     *
+     * @param User $user entity
      * @throws BadRequestException if the array of manager is
      * @return void
      */
-    protected function _transferContentOwners($user)
+    protected function _transferContentOwners(User $user)
     {
         $owners = $this->request->getData('transfer.owners');
         if (empty($owners)) {
@@ -261,7 +278,7 @@ class UsersDeleteController extends AppController
     /**
      * Send email notification
      *
-     * @param User  $deletedUser entity
+     * @param User $deletedUser entity
      * @param array $groupIds list of Group entity user was member of
      * @return void
      */

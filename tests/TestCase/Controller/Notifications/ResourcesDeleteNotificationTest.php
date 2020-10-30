@@ -24,17 +24,30 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
     use EmailNotificationSettingsTestTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets',
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/ResourceTypes', 'app.Base/Secrets',
         'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Gpgkeys',
+        'app.Base/OrganizationSettings',
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->loadNotificationSettings();
+    }
+
+    public function tearDown()
+    {
+        $this->unloadNotificationSettings();
+        parent::tearDown();
+    }
 
     public function testResourcesDeleteNotificationDisabled()
     {
         $this->setEmailNotificationSetting('send.password.delete', false);
 
         $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v1');
+        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v2');
         $this->assertSuccess();
 
         // check email notification
@@ -48,7 +61,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.password.delete', true);
 
         $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v1');
+        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v2');
         $this->assertSuccess();
 
         // check email notification

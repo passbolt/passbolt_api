@@ -19,8 +19,11 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\ResourceTypesTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Exception;
 
 /**
  * @property ResourcesTable Resources
@@ -33,13 +36,13 @@ class ResourcesAddController extends AppController
      * Resource Add action
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function add()
     {
         $this->loadModel('Resources');
 
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         $resource = $this->_buildAndValidateEntity($data);
 
         $result = $this->Resources->getConnection()->transactional(function () use ($resource, $data) {
@@ -71,7 +74,7 @@ class ResourcesAddController extends AppController
      * Build the resource entity from user input
      *
      * @param array $data Array of data
-     * @return \App\Model\Entity\Resource
+     * @return resource resource entity
      */
     protected function _buildAndValidateEntity(array $data)
     {
@@ -84,9 +87,14 @@ class ResourcesAddController extends AppController
             'aco' => 'Resource',
             'type' => Permission::OWNER,
         ]];
+
         // If no secrets given, the model will throw a validation error, no need to take care of it here.
         if (isset($data['secrets'])) {
             $data['secrets'][0]['user_id'] = $this->User->id();
+        }
+
+        if (!isset($data['resource_type_id'])) {
+            $data['resource_type_id'] = ResourceTypesTable::getDefaultTypeId();
         }
 
         // Build entity and perform basic check
@@ -100,6 +108,7 @@ class ResourcesAddController extends AppController
                 'modified_by' => true,
                 'secrets' => true,
                 'permissions' => true,
+                'resource_type_id' => true,
             ],
             'associated' => [
                 'Permissions' => [
@@ -128,38 +137,13 @@ class ResourcesAddController extends AppController
     }
 
     /**
-     * Format request data formatted for API v1 to API v2 format
-     *
-     * @return array
-     */
-    protected function _formatRequestData()
-    {
-        $output = [];
-        $data = $this->request->getData();
-
-        // API v2 additional checks and error (was silent before)
-        if ($this->getApiVersion() == 'v2') {
-            $output = $data;
-        } else {
-            if (isset($data['Resource'])) {
-                $output = $data['Resource'];
-            }
-            if (isset($data['Secret'])) {
-                $output['secrets'] = $data['Secret'];
-            }
-        }
-
-        return $output;
-    }
-
-    /**
      * Manage validation errors.
      *
-     * @param \App\Model\Entity\Resource $resource the
+     * @param resource $resource resource
      * @throws ValidationException if the resource validation failed
      * @return void
      */
-    protected function _handleValidationError(\App\Model\Entity\Resource $resource)
+    protected function _handleValidationError(Resource $resource)
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
@@ -169,11 +153,11 @@ class ResourcesAddController extends AppController
 
     /**
      * Trigger the after resource create event.
-     * @param \App\Model\Entity\Resource $resource The created resource
+     * @param resource $resource The created resource
      * @param array $data The request data.
      * @return void
      */
-    protected function afterCreate(\App\Model\Entity\Resource $resource, array $data = [])
+    protected function afterCreate(Resource $resource, array $data = [])
     {
         $uac = $this->User->getAccessControl();
         $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];

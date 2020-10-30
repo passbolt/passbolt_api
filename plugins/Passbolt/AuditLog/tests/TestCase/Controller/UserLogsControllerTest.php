@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 
-namespace Passbolt\AuditLog\Test\TestCase\Utility;
+namespace Passbolt\AuditLog\Test\TestCase\Controller;
 
 use App\Utility\UuidFactory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
@@ -41,7 +41,7 @@ class UserLogsControllerTest extends LogIntegrationTestCase
         'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
-    public function testUserLogsControllerViewByResourceEmpty()
+    public function testAuditLogUserLogsControllerViewByResourceEmpty()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
@@ -50,7 +50,7 @@ class UserLogsControllerTest extends LogIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testUserLogsControllerViewByResourceUserDoesNotHavePermission()
+    public function testAuditLogUserLogsControllerViewByResourceUserDoesNotHavePermission()
     {
         $this->authenticateAs('betty');
         $resourceId = UuidFactory::uuid('resource.id.bower');

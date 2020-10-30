@@ -178,7 +178,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->putJson("/resources/$resourceId.json?api-version=v1");
+        $this->putJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(400, 'The resource id is not valid.');
     }
 
@@ -238,7 +238,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
-        $this->putJson("/resources/$resourceId.json?api-version=v1");
+        $this->putJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(404, 'The resource does not exist.');
     }
 

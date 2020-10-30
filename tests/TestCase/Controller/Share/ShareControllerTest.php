@@ -57,7 +57,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    public function testSuccessApiV1()
+    public function testSuccess()
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -106,7 +106,7 @@ hcciUFw5
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         $this->authenticateAs('ada');
-        $this->putJson("/share/resource/$resourceId.json?api-version=v1", $data);
+        $this->putJson("/share/resource/$resourceId.json?api-version=v2", $data);
         $this->assertSuccess();
 
         // Load the resource.
@@ -210,7 +210,7 @@ hcciUFw5
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->putJson("/share/resource/$resourceId.json?api-version=v1");
+        $this->putJson("/share/resource/$resourceId.json");
         $this->assertError(400, 'The resource id is not valid.');
     }
 
@@ -218,7 +218,7 @@ hcciUFw5
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
-        $this->putJson("/share/resource/$resourceId.json?api-version=v1");
+        $this->putJson("/share/resource/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -226,7 +226,7 @@ hcciUFw5
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->putJson("/share/resource/$resourceId.json?api-version=v1");
+        $this->putJson("/share/resource/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -252,7 +252,7 @@ hcciUFw5
     public function testErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->putJson("/share/resource/$resourceId.json?api-version=v1");
+        $this->putJson("/share/resource/$resourceId.json");
         $this->assertAuthenticationError();
     }
 }

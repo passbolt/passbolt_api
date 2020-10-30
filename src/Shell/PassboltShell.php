@@ -33,6 +33,7 @@ class PassboltShell extends AppShell
         'MysqlImport',
         'RegisterUser',
         'SendTestEmail',
+        'Version',
     ];
 
     /**
@@ -142,6 +143,11 @@ class PassboltShell extends AppShell
         $parser->addSubcommand('datacheck', [
             'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
             'parser' => $this->Datacheck->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('version', [
+            'help' => __d('cake_console', 'Provide version number'),
+            'parser' => $this->Version->getOptionParser(),
         ]);
 
         return $parser;

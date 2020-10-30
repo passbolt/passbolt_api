@@ -103,6 +103,19 @@ class FindIndexOptions
     }
 
     /**
+     * @param array $contains Contains
+     * @return $this
+     */
+    public function allowContains(array $contains)
+    {
+        foreach ($contains as $contain) {
+            $this->allowContain($contain);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param array $orders Orders
      * @return $this
      */

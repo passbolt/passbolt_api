@@ -37,6 +37,7 @@ class ActionLogsFinderResourcesCrudTest extends LogIntegrationTestCase
         'app.Base/Groups',
         'app.Base/GroupsUsers',
         'app.Base/Resources',
+        'app.Base/ResourceTypes',
         'app.Base/Permissions',
         'app.Base/Secrets',
         'app.Base/Favorites',
@@ -56,7 +57,7 @@ class ActionLogsFinderResourcesCrudTest extends LogIntegrationTestCase
         $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
     }
 
-    public function testActionLogsFinderResourcesCreated()
+    public function testAuditLogsActionLogsFinderResourcesCreated()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateResourceCrud($uac, UuidFactory::uuid('resource.id.apache'), EntityHistory::CRUD_CREATE);
@@ -72,7 +73,7 @@ class ActionLogsFinderResourcesCrudTest extends LogIntegrationTestCase
         $this->assertEquals($actionLogs[0]['data']['resource']['name'], 'apache');
     }
 
-    public function testActionLogsFinderResourcesUpdated()
+    public function testAuditLogsActionLogsFinderResourcesUpdated()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateResourceCrud($uac, UuidFactory::uuid('resource.id.apache'), EntityHistory::CRUD_UPDATE);

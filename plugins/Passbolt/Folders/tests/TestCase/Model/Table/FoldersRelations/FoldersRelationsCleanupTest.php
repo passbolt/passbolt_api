@@ -13,7 +13,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Model\Table;
+namespace Passbolt\Folders\Test\TestCase\Model\Table\FoldersRelations;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;

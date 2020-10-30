@@ -36,7 +36,7 @@ use Cake\Validation\Validator;
  * Users Model
  *
  * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsTo $Roles
- * @property \App\Model\Table\FileStorageTable|\Cake\ORM\Association\HasMany $FileStorage
+ * @property \Burzum\FileStorage\Model\Table\FileStorageTable|\Cake\ORM\Association\HasMany $FileStorage
  * @property \App\Model\Table\GpgkeysTable|\Cake\ORM\Association\HasMany $Gpgkeys
  * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasMany $Permissions
  * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
@@ -218,7 +218,7 @@ class UsersTable extends Table
      *
      * @param array $data the request data
      * @throws \InvalidArgumentException if role name is not valid
-     * @return \App\Model\Entity\User
+     * @return User
      */
     public function buildEntity(array $data)
     {
@@ -251,12 +251,12 @@ class UsersTable extends Table
      * Also allow editing the role_id but only if admin
      * Other changes such as active or username are not permitted
      *
-     * @param \App\Model\Entity\User $user User
+     * @param User $user User
      * @param array $data request data
      * @param string $roleName role name for example Role::User or Role::ADMIN
-     * @return object the patched user entity
+     * @return User the patched user entity
      */
-    public function editEntity(\App\Model\Entity\User $user, array $data, string $roleName)
+    public function editEntity(User $user, array $data, string $roleName)
     {
         $accessibleUserFields = [
             'active' => false,
@@ -294,7 +294,7 @@ class UsersTable extends Table
             }
         }
 
-        $entity = $this->patchEntity($user, $data, [
+        return $this->patchEntity($user, $data, [
             'validate' => 'update',
             'accessibleFields' => $accessibleUserFields,
             'associated' => [
@@ -307,8 +307,6 @@ class UsersTable extends Table
                 ],
             ],
         ]);
-
-        return $entity;
     }
 
     /**
@@ -319,11 +317,11 @@ class UsersTable extends Table
      * Delete all UserGroups association entries
      * Delete all Permissions
      *
-     * @param \App\Model\Entity\User $user entity
-     * @param array $options additional delete options such as ['checkRules' => true]
+     * @param User $user entity
+     * @param array|null $options additional delete options such as ['checkRules' => true]
      * @return bool status
      */
-    public function softDelete(\App\Model\Entity\User $user, array $options = null)
+    public function softDelete(User $user, array $options = null)
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {
@@ -406,8 +404,9 @@ class UsersTable extends Table
 
     /**
      * Register a user
+     *
      * @param array $data register data
-     * @param UserAccessControl $control who is requesting the registration
+     * @param UserAccessControl|null $control who is requesting the registration
      * @throws InternalErrorException if there was an issue during the save
      * @throws ValidationException if the user data do not validate
      * @return User entity

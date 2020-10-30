@@ -12,7 +12,8 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace Passbolt\Folders\Test\TestCase\Controller;
+
+namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\GroupsTable;
@@ -25,6 +26,7 @@ use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
+use App\Test\Fixture\Base\ResourceTypesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
@@ -73,6 +75,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         UsersFixture::class,
         SecretsFixture::class,
         ResourcesFixture::class,
+        ResourceTypesFixture::class,
         GroupsFixture::class,
         ProfilesFixture::class,
         FileStorageFixture::class,
@@ -99,7 +102,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
-    public function testSuccess_ContainChildrenFolders()
+    public function testFoldersViewSuccess_ContainChildrenFolders()
     {
         $userId = UuidFactory::uuid('user.id.ada');
 
@@ -129,7 +132,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->assertContains($folderC->id, $childrenFoldersIds);
     }
 
-    public function testSuccess_ContainChildrenResources()
+    public function testFoldersViewSuccess_ContainChildrenResources()
     {
         $userId = UuidFactory::uuid('user.id.ada');
 
@@ -158,7 +161,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->assertContains($resource2->id, $childrenResourceIds);
     }
 
-    public function testError_NotValidIdParameter()
+    public function testFoldersViewError_NotValidIdParameter()
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
@@ -166,14 +169,14 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400, 'The folder id is not valid.');
     }
 
-    public function testError_NotAuthenticated()
+    public function testFoldersViewError_NotAuthenticated()
     {
         $folderId = UuidFactory::uuid('folder.id.folder');
         $this->getJson("/folders/{$folderId}.json?api-version=2");
         $this->assertAuthenticationError();
     }
 
-    public function testSuccess_ContainPermissionsGroup()
+    public function testFoldersViewSuccess_ContainPermissionsGroup()
     {
         $folder = $this->insertContainPermissionsGroupFixture();
 
@@ -212,7 +215,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         return $folder;
     }
 
-    public function testSuccess_ContainPermissionsUserProfile()
+    public function testFoldersViewSuccess_ContainPermissionsUserProfile()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $folder = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);

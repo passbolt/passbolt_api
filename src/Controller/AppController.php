@@ -23,6 +23,7 @@ use Cake\Controller\Component\AuthComponent;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
 
@@ -177,9 +178,8 @@ class AppController extends Controller
     {
         // render a legacy JSON view by default
         if ($this->request->is('json')) {
-            $apiVersion = $this->request->getQuery('api-version');
-            if (!isset($apiVersion) || $apiVersion === 'v1') {
-                $this->viewBuilder()->setClassName('LegacyJson');
+            if ($this->getApiVersion() === 'v1') {
+                throw new InternalErrorException(__('API v1 support is deprecated in this version.'));
             }
         } elseif (!Configure::read('debug')) {
             // Render a page not found if there is not template for the endpoint
@@ -204,10 +204,20 @@ class AppController extends Controller
     public function getApiVersion()
     {
         $apiVersion = $this->request->getQuery('api-version');
-        if (!isset($apiVersion) || $apiVersion === 'v1') {
-            return 'v1';
+        // Default to v2 in v3
+        if (!isset($apiVersion)) {
+            return 'v2';
         }
 
+        // Reformat api-version
+        if ($apiVersion === '1') {
+            return 'v1';
+        }
+        if ($apiVersion === '2') {
+            return 'v2';
+        }
+
+        // Return what is given
         return $apiVersion;
     }
 }

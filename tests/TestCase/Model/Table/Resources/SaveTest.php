@@ -30,7 +30,10 @@ class SaveTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets'];
+    public $fixtures = [
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Permissions',
+        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/ResourceTypes',
+    ];
 
     public function setUp()
     {
@@ -59,6 +62,7 @@ class SaveTest extends AppTestCase
                 'modified_by' => true,
                 'secrets' => true,
                 'permissions' => true,
+                'resource_type_id' => true,
             ],
             'associated' => [
                 'Permissions' => [
@@ -204,6 +208,15 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertEquals(false, (bool)$save, __("The test for {0}:{1} = {2} is not expected to save data", 'secrets', 'hasAtMost', json_encode($secrets)));
     }
 
+    public function testValidationResourceTypeId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Resources, 'resource_type_id', $this->_getDummyResourceData(), self::getEntityDefaultOptions(), $testCases);
+    }
+
     /* ************************************************************** */
     /* LOGIC VALIDATION TESTS */
     /* ************************************************************** */
@@ -290,5 +303,18 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['secrets']['owner_secret_provided']);
+    }
+
+    public function testErrorRuleResourceTypeDoesNotExist()
+    {
+        $data = $this->_getDummyResourceData();
+        $data['resource_type_id'] = UuidFactory::uuid('nope');
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Resources->newEntity($data, $options);
+        $save = $this->Resources->save($entity);
+        $this->assertFalse($save, 'The resource save operation should fail.');
+        $errors = $entity->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['resource_type_id']['resource_type_exists']);
     }
 }

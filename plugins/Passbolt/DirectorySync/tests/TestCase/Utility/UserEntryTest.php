@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Test\TestCase\Actions;
+namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;

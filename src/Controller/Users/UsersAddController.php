@@ -17,9 +17,13 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
+use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 
+/**
+ * @property UsersTable Users
+ */
 class UsersAddController extends UsersRegisterController
 {
     /**
@@ -46,7 +50,7 @@ class UsersAddController extends UsersRegisterController
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('Only administrators can add new users.'));
         }
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         $user = $this->Users->register($data, $this->User->getAccessControl());
         $user = $this->Users->findView($user->id, Role::ADMIN)->first();
         $msg = __('The user was successfully added. This user now need to complete the setup.');

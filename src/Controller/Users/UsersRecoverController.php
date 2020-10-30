@@ -17,12 +17,19 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Response;
 
+/**
+ * @property UsersTable Users
+ * @property AuthenticationTokensTable AuthenticationTokens
+ */
 class UsersRecoverController extends AppController
 {
     const RECOVER_SUCCESS_EVENT_NAME = 'UsersRecoverController.recoverPost.success';
@@ -31,7 +38,7 @@ class UsersRecoverController extends AppController
      * Before filter
      *
      * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -139,14 +146,15 @@ class UsersRecoverController extends AppController
      *
      * @throws BadRequestException if the username is not provided
      * @throws BadRequestException if the username is not valid
-     * @return \Cake\Datasource\EntityInterface user entity
+     * @return User user entity
      */
     protected function _assertValidation()
     {
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         if (!isset($data['username']) || empty($data['username'])) {
             throw new BadRequestException(__('Please provide a valid email address.'));
         }
+
         $user = $this->Users->newEntity(
             $data,
             ['validate' => 'recover', 'accessibleFields' => ['username' => true]]
@@ -166,7 +174,7 @@ class UsersRecoverController extends AppController
      */
     protected function _assertRules()
     {
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         $user = $this->Users->findRecover($data['username'])->first();
 
         if (empty($user)) {
@@ -180,24 +188,5 @@ class UsersRecoverController extends AppController
         }
 
         return $user;
-    }
-
-    /**
-     * Format request data formatted for API v1 to API v2 format
-     * Example:
-     * - API v1: ['User' => ['username' => 'ada@passbolt.com']]
-     * - API v2: ['username' => 'ada@passbolt.com']
-     *
-     * @return null|array $data
-     */
-    protected function _formatRequestData()
-    {
-        $data = $this->request->getData();
-
-        if (isset($data['User'])) {
-            return $data['User'];
-        }
-
-        return $data;
     }
 }

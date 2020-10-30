@@ -13,7 +13,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller;
+namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\GroupsTable;
@@ -26,6 +26,7 @@ use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
+use App\Test\Fixture\Base\ResourceTypesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
@@ -81,6 +82,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         ProfilesFixture::class,
         UsersFixture::class,
         ResourcesFixture::class,
+        ResourceTypesFixture::class,
         SecretsFixture::class,
         GroupsFixture::class,
         FileStorageFixture::class,
@@ -292,7 +294,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         }
     }
 
-    public function testSuccess_ContainChildrenResources()
+    public function testFoldersIndexSuccess_ContainChildrenResources()
     {
         $userId = UuidFactory::uuid('user.id.ada');
 
@@ -325,7 +327,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->assertContains($resource2->id, $childrenResourceIds);
     }
 
-    public function testSuccess_ContainChildrenFolders()
+    public function testFoldersIndexSuccess_ContainChildrenFolders()
     {
         $userId = UuidFactory::uuid('user.id.ada');
 
@@ -357,7 +359,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->assertContains($resource2->id, $childrenFolderIds);
     }
 
-    public function testSuccess_ContainPermission()
+    public function testFoldersIndexSuccess_ContainPermission()
     {
         $userId = UuidFactory::uuid('user.id.ada');
 
@@ -385,7 +387,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         }
     }
 
-    public function testSuccess_ContainPermissions()
+    public function testFoldersIndexSuccess_ContainPermissions()
     {
         $userId = UuidFactory::uuid('user.id.ada');
 
@@ -415,7 +417,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         }
     }
 
-    public function testSuccess_ContainPermissionsGroup()
+    public function testFoldersIndexSuccess_ContainPermissionsGroup()
     {
         $this->insertContainPermissionsGroupFixture();
 
@@ -455,7 +457,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER], [$group->id => Permission::OWNER]);
     }
 
-    public function testSuccess_ContainPermissionsUserProfile()
+    public function testFoldersIndexSuccess_ContainPermissionsUserProfile()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);

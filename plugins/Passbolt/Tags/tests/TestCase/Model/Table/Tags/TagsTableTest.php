@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\Tags\Test\TestCase\Model\Table;
+namespace Passbolt\Tags\Test\TestCase\Model\Table\Tags;
 
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UuidFactory;
@@ -39,7 +39,8 @@ class TagsTableTest extends TagTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources',
+        'app.Base/ResourceTypes', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];

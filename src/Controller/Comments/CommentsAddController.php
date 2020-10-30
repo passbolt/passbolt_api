@@ -84,12 +84,12 @@ class CommentsAddController extends AppController
     /**
      * Build and validate comment entity from user input.
      *
-     * @param string $foreignKey The identifier of the instance the comment belongs to.
-     * @return \App\Model\Entity\Comment $comment comment entity
+     * @param string|null $foreignKey The identifier of the instance the comment belongs to.
+     * @return Comment $comment comment entity
      */
     protected function _buildAndValidateCommentEntity(string $foreignKey = null)
     {
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
 
         // Build entity and perform basic check.
         $comment = $this->Comments->newEntity(
@@ -121,34 +121,12 @@ class CommentsAddController extends AppController
     }
 
     /**
-     * Format request data formatted for API v1 to API v2 format
-     *
-     * @return array data
-     */
-    protected function _formatRequestData()
-    {
-        $output = [];
-        $data = $this->request->getData();
-
-        // API v2 additional checks and error (was silent before)
-        if ($this->getApiVersion() == 'v2') {
-            $output = $data;
-        } else {
-            if (isset($data['Comment'])) {
-                $output = $data['Comment'];
-            }
-        }
-
-        return $output;
-    }
-
-    /**
      * Notify users about this new comment
      *
-     * @param \App\Model\Entity\Comment $comment comment entity
+     * @param Comment $comment comment entity
      * @return void
      */
-    protected function _notifyUsers($comment)
+    protected function _notifyUsers(Comment $comment)
     {
         $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, [
             'comment' => $comment,

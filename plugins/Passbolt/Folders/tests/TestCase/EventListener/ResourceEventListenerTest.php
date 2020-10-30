@@ -28,6 +28,7 @@ use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
+use App\Test\Fixture\Base\ResourceTypesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\ResourcesModelTrait;
@@ -77,6 +78,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         SecretsFixture::class,
         ProfilesFixture::class,
         ResourcesFixture::class,
+        ResourceTypesFixture::class,
         OrganizationSettingsFixture::class,
     ];
 
@@ -91,7 +93,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 
-    public function testResourcesEventListenerSuccess_AfterResourceAdded()
+    public function testFoldersResourcesEventListenerSuccess_AfterResourceAdded()
     {
         list($userId, $folder) = $this->insertFixture_AfterResourceAdded();
         $data = [
@@ -117,7 +119,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         return [$userId, $folder];
     }
 
-    public function testResourcesEventListenerSuccess_AfterResourceSoftDeleted()
+    public function testFoldersResourcesEventListenerSuccess_AfterResourceSoftDeleted()
     {
         list($userId, $resource) = $this->insertFixture_AfterResourceSoftDeleted();
         $data = $resource->toArray();
@@ -139,7 +141,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         return [$userId, $resource];
     }
 
-    public function testResourcesEventListenerSuccess_AfterAccessGranted()
+    public function testFoldersResourcesEventListenerSuccess_AfterAccessGranted()
     {
         list($folder, $resource, $userAId, $userBId) = $this->insertFixture_AfterAccessGranted();
 
@@ -165,7 +167,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         return [$folder, $resource, $userAId, $userBId];
     }
 
-    public function testResourcesEventListenerSuccess_AfterAccessRevoked()
+    public function testFoldersResourcesEventListenerSuccess_AfterAccessRevoked()
     {
         list($folder, $resource, $userAId, $userBId) = $this->insertFixture_AfterAccessRevoked();
 

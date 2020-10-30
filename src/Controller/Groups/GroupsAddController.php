@@ -17,11 +17,18 @@ namespace App\Controller\Groups;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
+/**
+ * @property GroupsTable Groups
+ * @property UsersTable Users
+ */
 class GroupsAddController extends AppController
 {
     /**
@@ -35,7 +42,7 @@ class GroupsAddController extends AppController
         $this->loadModel('Groups');
         $this->loadModel('Users');
 
-        return AppController::beforeFilter($event);
+        return parent::beforeFilter($event);
     }
 
     /**
@@ -61,15 +68,22 @@ class GroupsAddController extends AppController
     }
 
     /**
-     * Format request data formatted for API v1 to API v2 format
+     * Format request data formatted for API v1
      *
+     * Note: historically broken in v2.14 and before
+     * Prior to v3 this method expected data in v1 format only
+     * So both v2 and v1 format are supported in v2 & v3
+     *
+     * @deprecated when support for API v2 is dropped
      * @return array
      */
     protected function _formatRequestData()
     {
         $data = $this->request->getData();
-        $output['name'] = Hash::get($data, 'Group.name');
-        if (isset($data['GroupUsers'])) {
+        $output['name'] = $data['name'] ?? Hash::get($data, 'Group.name');
+        if (isset($data['groups_users'])) {
+            $output['groups_users'] = $data['groups_users'];
+        } elseif (isset($data['GroupUsers'])) {
             $output['groups_users'] = Hash::reduce($data, 'GroupUsers.{n}', function ($result, $row) {
                 $result[] = [
                     'user_id' => Hash::get($row, 'GroupUser.user_id', ''),
@@ -77,7 +91,7 @@ class GroupsAddController extends AppController
                 ];
 
                 return $result;
-            }, []);
+            });
         }
 
         return $output;

@@ -42,7 +42,10 @@ class ResourcesViewController extends AppController
         $this->loadModel('Resources');
 
         // Retrieve and sanity the query options.
-        $whitelist = ['contain' => ['creator', 'favorite', 'modifier', 'permission', 'secret']];
+        $whitelist = ['contain' => [
+            'creator', 'favorite', 'modifier', 'secret', 'resource-type',
+            'permission', 'permissions', 'permissions.user.profile', 'permissions.group',
+        ]];
 
         if (Configure::read('passbolt.plugins.tags.enabled')) {
             $whitelist['contain'][] = 'tag';
@@ -69,7 +72,7 @@ class ResourcesViewController extends AppController
      */
     protected function _logSecretAccesses(Resource $resource)
     {
-        if (!isset($resource->secrets) || !$this->Resources->hasAssociation('SecretAccesses')) {
+        if (!isset($resource->secrets) || !$this->Resources->getAssociation('Secrets')->hasAssociation('SecretAccesses')) {
             return;
         }
 
@@ -77,7 +80,7 @@ class ResourcesViewController extends AppController
             try {
                 $this->Resources
                     ->getAssociation('Secrets')
-                    ->getassociation('SecretAccesses')
+                    ->getAssociation('SecretAccesses')
                     ->create($secret, $this->User->getAccessControl());
             } catch (\Exception $e) {
                 throw new InternalErrorException(__('Could not log secret access entry.'));

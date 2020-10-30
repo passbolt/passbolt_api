@@ -37,7 +37,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertSuccess();
     }
 
@@ -54,7 +54,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -62,7 +62,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.april');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -70,14 +70,14 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(403, 'You do not have the permission to delete this resource.');
     }
 
     public function testResourcesDeleteErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertAuthenticationError();
     }
 }

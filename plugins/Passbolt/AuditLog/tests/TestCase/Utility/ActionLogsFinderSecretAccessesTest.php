@@ -35,6 +35,7 @@ class ActionLogsFinderSecretAccessesTest extends LogIntegrationTestCase
         'app.Base/Groups',
         'app.Base/GroupsUsers',
         'app.Base/Resources',
+        'app.Base/ResourceTypes',
         'app.Base/Permissions',
         'app.Base/Secrets',
         'app.Base/Favorites',
@@ -47,7 +48,7 @@ class ActionLogsFinderSecretAccessesTest extends LogIntegrationTestCase
         'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
-    public function testActionLogsFinderSecretAccessSingle()
+    public function testAuditLogsActionLogsFinderSecretAccessSingle()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateMultipleResourceGetWithSecrets($uac, [UuidFactory::uuid('resource.id.cakephp')]);
@@ -68,7 +69,7 @@ class ActionLogsFinderSecretAccessesTest extends LogIntegrationTestCase
      * Expected result: only the secret access log corresponding to the requested resource should be returned.
      * @throws \Exception
      */
-    public function testActionLogsFinderSecretAccessMultiple()
+    public function testAuditLogsActionLogsFinderSecretAccessMultiple()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateMultipleResourceGetWithSecrets($uac, [UuidFactory::uuid('resource.id.apache'), UuidFactory::uuid('resource.id.cakephp')]);

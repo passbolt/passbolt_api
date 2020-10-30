@@ -13,7 +13,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller;
+namespace Passbolt\Folders\Test\TestCase\Controller\FoldersRelations;
 
 use App\Model\Entity\Permission;
 use App\Test\Fixture\Base\AvatarsFixture;
@@ -187,7 +187,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         $this->assertError(404, 'The folder does not exist.');
     }
 
-    public function testUpdateResourcesError_NoAccessToFolder()
+    public function testFoldersRelationsUpdateResourcesError_NoAccessToFolder()
     {
         list($folderA, $folderB, $userAId) = $this->insertFixture_MoveFolder();
         $this->authenticateAs('dame');

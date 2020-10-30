@@ -84,26 +84,6 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testUsersRegisterPostApiV1Success()
-    {
-        $success = [
-            'legacy format' => [
-                'User' => [
-                    'username' => 'anna@passbolt.com',
-                ],
-                'Profile' => [
-                    'first_name' => 'Anna',
-                    'last_name' => 'Fisher',
-                ],
-            ],
-        ];
-
-        foreach ($success as $case => $data) {
-            $this->post('/users/register', $data);
-            $this->assertResponseSuccess();
-        }
-    }
-
     public function testUsersRegisterPostFailValidation()
     {
         $fails = [
@@ -152,7 +132,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
         ];
         foreach ($fails as $case => $data) {
-            $this->post('/users/register.json?api-version=v1', $data);
+            $this->post('/users/register.json?api-version=v2', $data);
             $result = json_decode($this->_getBodyAsString());
             $this->assertEquals('400', $result->header->code, 'Validation should fail when ' . $case);
             $this->assertResponseError();
@@ -179,7 +159,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
         ];
 
-        $this->post('/users/register.json?api-version=v1', $data);
+        $this->post('/users/register.json?api-version=v2', $data);
         $result = json_decode($this->_getBodyAsString());
         $this->assertEquals('400', $result->header->code, 'Validation should fail when the username already exists in db');
         $this->assertResponseError();

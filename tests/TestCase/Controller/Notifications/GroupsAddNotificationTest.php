@@ -35,7 +35,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.group.user.add', false);
 
         $this->authenticateAs('admin');
-        $this->postJson('/groups.json?api-version=v1', [
+        $this->postJson('/groups.json?api-version=v2', [
             'Group' => ['name' => 'Temp Group'],
             'GroupUsers' => [
                 ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
@@ -58,7 +58,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.group.user.add', true);
 
         $this->authenticateAs('admin');
-        $this->postJson('/groups.json?api-version=v1', [
+        $this->postJson('/groups.json?api-version=v2', [
             'Group' => ['name' => 'Temp Group'],
             'GroupUsers' => [
                 ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => true]],

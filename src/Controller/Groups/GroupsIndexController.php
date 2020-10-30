@@ -16,7 +16,12 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
+use App\Model\Table\GroupsTable;
+use Cake\Event\Event;
 
+/**
+ * @property GroupsTable Groups
+ */
 class GroupsIndexController extends AppController
 {
     /**
@@ -30,7 +35,13 @@ class GroupsIndexController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['modifier', 'modifier.profile', 'user', 'group_user', 'my_group_user'],
+            'contain' => [
+                'modifier', 'modifier.profile', 'my_group_user',
+                'users', 'groups_users', 'groups_users.user', 'groups_users.user.profile', 'groups_users.user.gpgkey',
+                // Deprecated contain use plural form
+                // @deprecated remove when v2 support is dropped
+                'user', 'group_user', 'group_user.user', 'group_user.user.profile', 'group_user.user.gpgkey',
+            ],
             'filter' => ['has-users', 'has-managers'],
             'order' => ['Group.name'],
         ];

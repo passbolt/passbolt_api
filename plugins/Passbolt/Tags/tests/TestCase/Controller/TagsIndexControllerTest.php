@@ -17,7 +17,7 @@ namespace Passbolt\Tags\Test\TestCase\Controller;
 use Cake\Utility\Hash;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class TagIndexControllerTest extends TagPluginIntegrationTestCase
+class TagsIndexControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',

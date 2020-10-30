@@ -20,15 +20,21 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\UsersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
+/**
+ * @property ResourcesTable Resources
+ * @property UsersTable Users
+ */
 class ResourcesDeleteController extends AppController
 {
     const DELETE_SUCCESS_EVENT_NAME = 'ResourcesDeleteController.delete.success';
@@ -45,7 +51,7 @@ class ResourcesDeleteController extends AppController
      * @throws InternalErrorException if the resource could not be saved for other reasons
      * @return void
      */
-    public function delete($id)
+    public function delete(string $id)
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
@@ -53,6 +59,7 @@ class ResourcesDeleteController extends AppController
         }
 
         $this->loadModel('Resources');
+        $this->loadModel('Users');
 
         // Retrieve the resource to delete.
         try {
@@ -63,9 +70,8 @@ class ResourcesDeleteController extends AppController
 
         // Get the list of users who have access to the resource
         // useful to do now to notify users later, since it wont be possible to after delete
-        $Users = TableRegistry::getTableLocator()->get('Users');
-        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
-        $users = $Users->findIndex(Role::USER, $options)->all();
+        $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
+        $users = $this->Users->findIndex(Role::USER, $options)->all();
 
         // Update the entity to delete=1 and drop associated permissions
         if (!$this->Resources->softDelete($this->User->id(), $resource)) {
@@ -80,12 +86,12 @@ class ResourcesDeleteController extends AppController
     /**
      * Manage delete errors.
      *
-     * @param \Cake\Datasource\EntityInterface $resource entity
+     * @param resource $resource entity
      * @throws NotFoundException
      * @throws ValidationException
      * @return void
      */
-    protected function _handleDeleteError($resource)
+    protected function _handleDeleteError(Resource $resource)
     {
         $errors = $resource->getErrors();
         if (empty($errors)) {
@@ -108,10 +114,10 @@ class ResourcesDeleteController extends AppController
      * Send email notification
      *
      * @param resource $resource Resource
-     * @param \Cake\Datasource\ResultSetInterface $users list of User entity who had access to the resource
+     * @param ResultSetInterface $users list of User entity who had access to the resource
      * @return void
      */
-    protected function _notifyUser(Resource $resource, \Cake\Datasource\ResultSetInterface $users)
+    protected function _notifyUser(Resource $resource, ResultSetInterface $users)
     {
         $event = new Event(static::DELETE_SUCCESS_EVENT_NAME, $this, [
             'resource' => $resource,

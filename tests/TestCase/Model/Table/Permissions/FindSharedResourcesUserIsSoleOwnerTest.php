@@ -21,7 +21,7 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
-class findSharedAcosByAroIsSoleOwnerTest extends AppTestCase
+class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
 {
     public $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Resources'];
 

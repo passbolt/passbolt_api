@@ -17,7 +17,7 @@ namespace Passbolt\Tags\Test\TestCase\Controller;
 use App\Utility\UuidFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class ResourceUpdateControllerTest extends TagPluginIntegrationTestCase
+class ResourcesUpdateControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',

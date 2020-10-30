@@ -20,9 +20,7 @@ use App\Utility\UuidFactory;
 
 class GpgkeysViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-    ];
+    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles'];
 
     public function testGpgkeysViewErrorNotAuthenticated()
     {
@@ -40,19 +38,6 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
         $this->assertGpgkeyAttributes($this->_responseJsonBody);
-    }
-
-    public function testGpgkeysViewGetApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uuid = UuidFactory::uuid('gpgkey.id.' . $userId);
-        $this->getJson('/gpgkeys/' . $uuid . '.json?api-version=v1');
-        $this->assertSuccess();
-        $this->assertNotNull($this->_responseJsonBody);
-
-        $this->assertObjectHasAttribute('Gpgkey', $this->_responseJsonBody);
-        $this->assertGpgkeyAttributes($this->_responseJsonBody->Gpgkey);
     }
 
     public function testGpgkeysViewInvalidIdError()

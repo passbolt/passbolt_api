@@ -17,13 +17,16 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
-use Aura\Intl\Exception;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 
+/**
+ * @property UsersTable Users
+ */
 class UsersRegisterController extends AppController
 {
     /**
@@ -41,7 +44,7 @@ class UsersRegisterController extends AppController
         } else {
             $msg = __('Registration is not opened to public. Please contact your administrator.');
             throw new NotFoundException($msg);
-        };
+        }
 
         $this->loadModel('Users');
 
@@ -84,7 +87,7 @@ class UsersRegisterController extends AppController
             throw new ForbiddenException(__('Only guest are allowed to register.'));
         }
 
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         try {
             $user = $this->Users->register($data);
             $this->viewBuilder()
@@ -106,33 +109,5 @@ class UsersRegisterController extends AppController
         } catch (InternalErrorException $exception) {
             throw $exception;
         }
-    }
-
-    /**
-     * Format request data formatted for API v1 to API v2 format
-     * Example:
-     * - API v1: ['User' => ['username' => 'ada@passbolt.com'], 'Profile' => ['first_name' => 'ada' ...]]
-     * - API v2: ['username' => 'ada@passbolt.com', 'profile' => ['first_name' => 'ada' ...]]
-     *
-     * @return null|array $data
-     */
-    protected function _formatRequestData()
-    {
-        $data = $this->request->getData();
-        $result = null;
-        if (isset($data['User'])) {
-            if (!empty($data)) {
-                foreach ($data['User'] as $property => $value) {
-                    $result[$property] = $value;
-                }
-                foreach ($data['Profile'] as $property => $value) {
-                    $result['profile'][$property] = $value;
-                }
-            }
-        } else {
-            $result = $data;
-        }
-
-        return $result;
     }
 }

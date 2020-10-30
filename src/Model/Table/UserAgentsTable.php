@@ -17,7 +17,7 @@ namespace App\Model\Table;
 use App\Utility\Purifier;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use UserAgentParser\Provider\DonatjUAParser;
+use donatj\UserAgent\UserAgentParser;
 
 /**
  * UserAgents Model
@@ -80,9 +80,9 @@ class UserAgentsTable extends Table
         }
         $browserName = 'undefined';
         try {
-            $provider = new DonatjUAParser();
+            $provider = new UserAgentParser();
             $userAgent = $provider->parse($ua);
-            $browserName = $userAgent->getBrowser()->getName();
+            $browserName = $userAgent->browser();
         } catch (\Exception $e) {
         }
 

@@ -40,7 +40,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
@@ -63,7 +63,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
@@ -88,7 +88,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
@@ -106,7 +106,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/kathleen@passbolt.com');
@@ -127,7 +127,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/kathleen@passbolt.com');
@@ -149,7 +149,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/jean@passbolt.com');
@@ -175,7 +175,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/jean@passbolt.com');
@@ -204,7 +204,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('ping');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/thelma@passbolt.com');
@@ -237,7 +237,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('ping');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/thelma@passbolt.com');

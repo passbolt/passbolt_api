@@ -17,6 +17,7 @@ namespace App\Controller;
 use App\Error\Exception\ExceptionWithErrorsDetailInterface;
 use App\Utility\UserAction;
 use Cake\Event\Event;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
 
 /**
@@ -76,8 +77,8 @@ class ErrorController extends AppController
 
             // render a legacy JSON view by default
             $apiVersion = $this->request->getQuery('api-version');
-            if (!isset($apiVersion) || $apiVersion === 'v1') {
-                $this->viewBuilder()->setClassName('LegacyJson');
+            if ($apiVersion === 'v1') {
+                throw new InternalErrorException(__('API v1 support is deprecated in this version.'));
             }
         }
         $this->viewBuilder()->setTemplatePath('Error');

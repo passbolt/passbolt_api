@@ -37,7 +37,7 @@ class QueryStringComponent extends Component
         $request = $this->getController()->getRequest();
         $query = $request->getQueryParams();
         $query = self::rewriteLegacyItems($query);
-        $query = self::extractQueryItems($query);
+        $query = self::extractQueryArrayItems($query);
         $query = self::unsetUnwantedQueryItems($query, $allowedQueryItems);
         $query = self::normalizeQueryItems($query);
         self::validateQueryItems($query, $allowedQueryItems, $filterValidators);
@@ -67,12 +67,16 @@ class QueryStringComponent extends Component
             $query['filter']['search'] = $query['filter']['keywords'];
             unset($query['filter']['keywords']);
         }
+        if (isset($query['contain']['LastLoggedIn'])) {
+            $query['contain']['last_logged_in'] = $query['contain']['LastLoggedIn'];
+            unset($query['contain']['LastLoggedIn']);
+        }
 
         return $query;
     }
 
     /**
-     * Additional normalization and array tranformations
+     * Additional normalization and array transformations
      *
      * @param array $query original query string items
      * @return array modified query
@@ -162,9 +166,12 @@ class QueryStringComponent extends Component
      * @param array $query original query string items
      * @return array $query the sanitized query
      */
-    public static function extractQueryItems(array $query)
+    public static function extractQueryArrayItems(array $query)
     {
         foreach ($query as $key => $items) {
+            if ($key === 'contain') {
+                continue;
+            }
             if (is_array($items)) {
                 foreach ($items as $subKey => $subItems) {
                     if (substr($subKey, -1) === 's' && is_scalar($query[$key][$subKey])) {

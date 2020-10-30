@@ -69,7 +69,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
         parent::setUp();
     }
 
-    public function testUsersDeleteSuccess_PersonalFolder()
+    public function testFoldersUsersDeleteSuccess_PersonalFolder()
     {
         list($folderA, $userAId) = $this->insertFixture_PersonalFolder();
         $this->authenticateAs('admin');
@@ -91,7 +91,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
         return [$folderA, $userAId];
     }
 
-    public function testUsersDeleteError_SoleOwnerFolder_FolderSharedWithUser()
+    public function testFoldersUsersDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
         $this->authenticateAs('admin');

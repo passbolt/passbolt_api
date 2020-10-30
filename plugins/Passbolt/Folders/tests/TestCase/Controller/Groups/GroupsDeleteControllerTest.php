@@ -13,7 +13,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller\Users;
+namespace Passbolt\Folders\Test\TestCase\Controller\Groups;
 
 use App\Model\Entity\Permission;
 use App\Test\Fixture\Base\AvatarsFixture;
@@ -71,7 +71,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
         parent::setUp();
     }
 
-    public function testGroupsDeleteSuccess_PersonalFolder()
+    public function testFoldersGroupsDeleteSuccess_PersonalFolder()
     {
         list($folderA, $g1, $userAId) = $this->insertFixture_PersonalFolder();
         $this->authenticateAs('admin');
@@ -100,7 +100,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
         return [$folderA, $g1, $userAId];
     }
 
-    public function testGroupsDeleteError_SoleOwnerFolder_FolderSharedWithUser()
+    public function testFoldersGroupsDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
         list($folderA, $g1, $userAId, $userBId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
         $this->authenticateAs('admin');

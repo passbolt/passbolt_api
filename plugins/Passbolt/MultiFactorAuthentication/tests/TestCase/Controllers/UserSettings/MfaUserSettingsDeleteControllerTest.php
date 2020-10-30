@@ -13,7 +13,7 @@
  * @since         2.12.0
  */
 
-namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettings;
+namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\UserSettings;
 
 use App\Test\Fixture\Alt0\GroupsUsersFixture;
 use App\Test\Fixture\Base\AuthenticationTokensFixture;
