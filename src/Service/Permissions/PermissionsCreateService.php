@@ -101,7 +101,7 @@ class PermissionsCreateService
      */
     private function buildPermissionEntity(UserAccessControl $uac, array $data = [])
     {
-        $operatorId = $uac->userId();
+        $operatorId = $uac->getId();
         $data = array_merge([
             'created_by' => $operatorId,
             'modified_by' => $operatorId,

@@ -16,22 +16,33 @@ namespace App\Controller\Setup;
 
 use App\Controller\AppController;
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\UserAgentsTable;
+use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Response;
 use Cake\Validation\Validation;
 
+/**
+ * @property AuthenticationTokensTable $AuthenticationTokens
+ * @property UsersTable $Users
+ * @property UserAgentsTable $UserAgents
+ */
 class SetupStartController extends AppController
 {
     /**
      * Before filter
      *
      * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow('start');
         $this->loadModel('AuthenticationTokens');
+        $this->loadModel('Users');
+        $this->loadModel('UserAgents');
 
         return parent::beforeFilter($event);
     }
@@ -48,13 +59,12 @@ class SetupStartController extends AppController
      * @param string $tokenId uuid of the token
      * @return void
      */
-    public function start($userId, $tokenId)
+    public function start(string $userId, string $tokenId)
     {
         // Check user id and token id are valid
         $this->_assertRequestSanity($userId, $tokenId);
 
         // Retrieve the user.
-        $this->loadModel('Users');
         $user = $this->Users->findSetup($userId);
         if (empty($user)) {
             $msg = __('The user does not exist or is already active or has been deleted.');
@@ -63,7 +73,6 @@ class SetupStartController extends AppController
         $this->set('user', $user);
 
         // Parse the user agent
-        $this->loadModel('UserAgents');
         $browserName = $this->UserAgents->browserName();
         $this->set('browserName', strtolower($browserName));
 
@@ -84,7 +93,7 @@ class SetupStartController extends AppController
      * @param string $tokenType register or recover
      * @return void
      */
-    protected function _assertRequestSanity($userId, $tokenId, $tokenType = AuthenticationToken::TYPE_REGISTER)
+    protected function _assertRequestSanity(string $userId, string $tokenId, $tokenType = AuthenticationToken::TYPE_REGISTER)
     {
         // Check request sanity
         if (!isset($userId)) {

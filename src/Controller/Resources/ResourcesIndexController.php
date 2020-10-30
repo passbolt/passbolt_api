@@ -18,12 +18,10 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Model\Table\ResourcesTable;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 
 /**
- * @property ResourcesTable Resources
+ * @property ResourcesTable $Resources
  */
 class ResourcesIndexController extends AppController
 {

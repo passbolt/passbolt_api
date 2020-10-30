@@ -34,8 +34,8 @@ use Cake\Validation\Validation;
 use Exception;
 
 /**
- * @property ResourcesTable Resources
- * @property UsersTable Users
+ * @property ResourcesTable $Resources
+ * @property UsersTable $Users
  */
 class ShareController extends AppController
 {

@@ -27,8 +27,8 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 
 /**
- * @property UsersTable Users
- * @property AuthenticationTokensTable AuthenticationTokens
+ * @property UsersTable $Users
+ * @property AuthenticationTokensTable $AuthenticationTokens
  */
 class UsersRecoverController extends AppController
 {

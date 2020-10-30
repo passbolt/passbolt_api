@@ -152,10 +152,10 @@ class OrganizationSettingsTable extends Table
             ->where($settingFinder)
             ->first();
         if ($settingItem) {
-            $settingValues['modified_by'] = $control->userId();
+            $settingValues['modified_by'] = $control->getId();
             $settingItem = $this->patchEntity($settingItem, $settingValues);
         } else {
-            $settingValues['created_by'] = $settingValues['modified_by'] = $control->userId();
+            $settingValues['created_by'] = $settingValues['modified_by'] = $control->getId();
             $settingItem = $this->newEntity(array_merge($settingFinder, $settingValues));
         }
         if ($settingItem->getErrors()) {

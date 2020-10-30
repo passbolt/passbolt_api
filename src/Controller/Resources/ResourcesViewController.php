@@ -17,11 +17,16 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Model\Entity\Resource;
+use App\Model\Table\ResourcesTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Exception;
 
+/**
+ * @property ResourcesTable $Resources
+ */
 class ResourcesViewController extends AppController
 {
     /**
@@ -32,7 +37,7 @@ class ResourcesViewController extends AppController
      * @throws NotFoundException if the resource does not exist
      * @return void
      */
-    public function view($id)
+    public function view(string $id)
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
@@ -48,6 +53,7 @@ class ResourcesViewController extends AppController
         $options = $this->QueryString->get($whitelist);
 
         // Retrieve the resource.
+        /** @var Resource $resource */
         $resource = $this->Resources->findView($this->User->id(), $id, $options)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
@@ -76,7 +82,7 @@ class ResourcesViewController extends AppController
                     ->getAssociation('Secrets')
                     ->getAssociation('SecretAccesses')
                     ->create($secret, $this->User->getAccessControl());
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw new InternalErrorException(__('Could not log secret access entry.'));
             }
         }

@@ -17,7 +17,6 @@ namespace App\Controller\Groups;
 
 use App\Controller\AppController;
 use App\Model\Table\GroupsTable;
-use Cake\Event\Event;
 
 /**
  * @property GroupsTable Groups

@@ -139,7 +139,7 @@ class GroupsUpdateDryRunService
         }
 
         // Only a group manager can add new members to a group.
-        $canAdd = $this->groupsUsersTable->isManager($uac->userId(), $group->id);
+        $canAdd = $this->groupsUsersTable->isManager($uac->getId(), $group->id);
         if (!$canAdd) {
             return [];
         }
@@ -274,7 +274,7 @@ class GroupsUpdateDryRunService
         $query = $this->secretsTable->find()
             ->where([
                 'resource_id IN' => $resourceIds,
-                'user_id' => $uac->userId(),
+                'user_id' => $uac->getId(),
             ])
             ->select(['resource_id', 'data'])
             ->distinct();

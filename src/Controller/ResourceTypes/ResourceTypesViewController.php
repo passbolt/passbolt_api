@@ -35,7 +35,7 @@ class ResourceTypesViewController extends AppController
      * @throws NotFoundException if the resource does not exist
      * @return void
      */
-    public function view($id)
+    public function view(string $id)
     {
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource id is not valid.'));

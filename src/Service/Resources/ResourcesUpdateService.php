@@ -125,7 +125,7 @@ class ResourcesUpdateService
     private function getResource(UserAccessControl $uac, string $id)
     {
         $permission = $this->permissionsTable
-            ->findHighestByAcoAndAro(PermissionsTable::RESOURCE_ACO, $id, $uac->userId())
+            ->findHighestByAcoAndAro(PermissionsTable::RESOURCE_ACO, $id, $uac->getId())
             ->first();
 
         if (empty($permission)) {
@@ -190,7 +190,7 @@ class ResourcesUpdateService
      */
     private function patchEntity(UserAccessControl $uac, Resource $resource, array $data)
     {
-        $data['modified_by'] = $uac->userId();
+        $data['modified_by'] = $uac->getId();
         // Force the modified field to be updated to ensure the field is updated even if no meta are. It's the case
         // when a user updates only the secret.
         $data['modified'] = new Time();
@@ -264,7 +264,7 @@ class ResourcesUpdateService
      */
     private function postResourceUpdate(UserAccessControl $uac, Resource $resource, array $data)
     {
-        $secrets = $this->secretsTable->findByResourcesUser([$resource->id], $uac->userId())->all()->toArray();
+        $secrets = $this->secretsTable->findByResourcesUser([$resource->id], $uac->getId())->all()->toArray();
         $resource['secrets'] = $secrets;
         $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
         $this->dispatchEvent(static::UPDATE_SUCCESS_EVENT_NAME, $eventData);

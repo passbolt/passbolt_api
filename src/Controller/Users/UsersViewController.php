@@ -15,10 +15,15 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Exception;
 
+/**
+ * @property UsersTable $Users
+ */
 class UsersViewController extends AppController
 {
     /**
@@ -42,7 +47,11 @@ class UsersViewController extends AppController
 
         // Retrieve the user
         $this->loadModel('Users');
-        $user = $this->Users->findView($id, $this->User->role())->first();
+        try {
+            $user = $this->Users->findView($id, $this->User->role())->first();
+        } catch (Exception $exception) {
+            throw new NotFoundException(__('The user does not exist.'));
+        }
         if (empty($user)) {
             throw new NotFoundException(__('The user does not exist.'));
         }

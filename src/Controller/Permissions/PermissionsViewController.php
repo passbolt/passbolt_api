@@ -16,10 +16,16 @@
 namespace App\Controller\Permissions;
 
 use App\Controller\AppController;
+use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property PermissionsTable $Permissions
+ * @property ResourcesTable $Resources
+ */
 class PermissionsViewController extends AppController
 {
     /**
@@ -33,12 +39,9 @@ class PermissionsViewController extends AppController
      * @throws NotFoundException If the target resource is soft deleted
      * @return void
      */
-    public function viewAcoPermissions($acoForeignKey = null)
+    public function viewAcoPermissions(string $acoForeignKey)
     {
         // Check request sanity
-        if (is_null($acoForeignKey)) {
-            throw new BadRequestException(__('The id is missing for model Resource.'));
-        }
         if (!Validation::uuid($acoForeignKey)) {
             throw new BadRequestException(__('The id is not valid for model Resource.'));
         }

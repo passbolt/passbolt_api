@@ -200,7 +200,7 @@ class PermissionsUpdatePermissionsService
             return $permission;
         }
 
-        $data['modified_by'] = $uac->userId();
+        $data['modified_by'] = $uac->getId();
 
         $patchEntityOptions = ['accessibleFields' => ['type' => true, 'modified_by' => true]];
         $permission = $this->permissionsTable->patchEntity($permission, $data, $patchEntityOptions);

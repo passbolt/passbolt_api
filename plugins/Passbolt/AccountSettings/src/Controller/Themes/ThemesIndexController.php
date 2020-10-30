@@ -15,7 +15,6 @@
 namespace Passbolt\AccountSettings\Controller\Themes;
 
 use App\Controller\AppController;
-use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 /**

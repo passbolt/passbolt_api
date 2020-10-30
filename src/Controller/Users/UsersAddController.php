@@ -20,6 +20,8 @@ use App\Model\Entity\Role;
 use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Response;
+use Exception;
 
 /**
  * @property UsersTable Users
@@ -30,7 +32,7 @@ class UsersAddController extends UsersRegisterController
      * Before filter
      *
      * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -43,6 +45,7 @@ class UsersAddController extends UsersRegisterController
      * User add action (admin only)
      *
      * @throws ValidationException if user data does not validate
+     * @throws Exception
      * @return void
      */
     public function addPost()

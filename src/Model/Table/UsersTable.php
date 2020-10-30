@@ -423,8 +423,8 @@ class UsersTable extends Table
 
         // Generate event data
         $eventData = ['user' => $user, 'token' => $token];
-        if (isset($control) && !is_null($control->userId())) {
-            $eventData['adminId'] = $control->userId();
+        if (isset($control) && !is_null($control->getId())) {
+            $eventData['adminId'] = $control->getId();
         }
         $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);

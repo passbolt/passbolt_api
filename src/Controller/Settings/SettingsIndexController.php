@@ -17,12 +17,16 @@ namespace App\Controller\Settings;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Response;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
-use Composer\Config;
 
+/**
+ * @property UsersTable $Users
+ */
 class SettingsIndexController extends AppController
 {
     /**
@@ -43,7 +47,7 @@ class SettingsIndexController extends AppController
      * Before filter
      *
      * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {

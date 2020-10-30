@@ -16,11 +16,16 @@
 namespace App\Controller\Favorites;
 
 use App\Controller\AppController;
+use App\Model\Entity\Favorite;
+use App\Model\Table\FavoritesTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property FavoritesTable $Favorites
+ */
 class FavoritesDeleteController extends AppController
 {
     /**
@@ -31,7 +36,7 @@ class FavoritesDeleteController extends AppController
      * @throws NotFoundException
      * @return void
      */
-    public function delete($id = null)
+    public function delete(string $id)
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
@@ -56,10 +61,10 @@ class FavoritesDeleteController extends AppController
     /**
      * Manage delete errors
      *
-     * @param \Cake\Datasource\EntityInterface $favorite favorite
+     * @param Favorite $favorite favorite
      * @return void
      */
-    private function _handleDeleteErrors($favorite)
+    private function _handleDeleteErrors(Favorite $favorite)
     {
         $errors = $favorite->getErrors();
         if (!empty($errors)) {

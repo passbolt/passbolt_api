@@ -15,7 +15,11 @@
 namespace App\Controller\Roles;
 
 use App\Controller\AppController;
+use App\Model\Table\RolesTable;
 
+/**
+ * @property RolesTable $Roles
+ */
 class RolesIndexController extends AppController
 {
     /**

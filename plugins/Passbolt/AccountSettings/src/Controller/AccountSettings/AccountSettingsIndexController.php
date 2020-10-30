@@ -15,7 +15,11 @@
 namespace Passbolt\AccountSettings\Controller\AccountSettings;
 
 use App\Controller\AppController;
+use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
+/**
+ * @property AccountSettingsTable $AccountSettings
+ */
 class AccountSettingsIndexController extends AppController
 {
     /**

@@ -17,12 +17,17 @@ namespace App\Controller\Secrets;
 
 use App\Controller\AppController;
 use App\Model\Entity\Secret;
+use App\Model\Table\SecretsTable;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Exception;
 
+/**
+ * @property SecretsTable $Secrets
+ */
 class SecretsViewController extends AppController
 {
     /**
@@ -33,7 +38,7 @@ class SecretsViewController extends AppController
      * @throws NotFoundException if the user does not have a secret for the resource
      * @return void
      */
-    public function view($resourceId)
+    public function view(string $resourceId)
     {
         // Check request sanity
         if (!Validation::uuid($resourceId)) {
@@ -43,7 +48,8 @@ class SecretsViewController extends AppController
 
         // Retrieve the secret.
         $uac = $this->User->getAccessControl();
-        $secret = $this->Secrets->findByResourceUser($resourceId, $uac->userId())->first();
+        /** @var Secret $secret */
+        $secret = $this->Secrets->findByResourceUser($resourceId, $uac->getId())->first();
         if (empty($secret)) {
             throw new NotFoundException(__('The secret does not exist.'));
         }
@@ -63,7 +69,7 @@ class SecretsViewController extends AppController
             if ($this->Secrets->hasAssociation('SecretAccesses')) {
                 $this->Secrets->getAssociation('SecretAccesses')->create($secret, $uac);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new InternalErrorException(__('Could not log secret access entry.'));
         }
     }

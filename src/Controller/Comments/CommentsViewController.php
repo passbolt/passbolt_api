@@ -21,30 +21,34 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 
+/**
+ * @property CommentsTable $Comments
+ */
 class CommentsViewController extends AppController
 {
     /**
      * Comments View action
      *
-     * @throws \InvalidArgumentException if the foreignModelName of foreignKey is not correct
+     * @throws InvalidArgumentException if the foreignModelName of foreignKey is not correct
      * @throws NotFoundException if the foreignKey can't be found
      * @throws InternalErrorException if the comments can't be retrieved
      * @param string $foreignModelName name of the foreign model used for the comment
      * @param string $foreignKey uuid Identifier of the model
      * @return void
      */
-    public function view($foreignModelName = null, $foreignKey = null)
+    public function view(string $foreignModelName, string $foreignKey)
     {
         $foreignModelName = ucfirst($foreignModelName);
         // Check model sanity.
         if (!in_array($foreignModelName, CommentsTable::ALLOWED_FOREIGN_MODELS)) {
-            throw new \InvalidArgumentException(__('Invalid model name'));
+            throw new InvalidArgumentException(__('Invalid model name'));
         }
 
         // Check uuid sanity.
         if (!Validation::uuid($foreignKey)) {
-            throw new \InvalidArgumentException(__('Invalid id'));
+            throw new InvalidArgumentException(__('Invalid id'));
         }
 
         // Retrieve and sanity the query options.

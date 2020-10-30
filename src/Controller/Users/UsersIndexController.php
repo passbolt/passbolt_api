@@ -20,6 +20,7 @@ use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\UsersTable;
 use Cake\Event\Event;
+use Cake\Http\Response;
 
 /**
  * @property UsersTable Users
@@ -30,7 +31,7 @@ class UsersIndexController extends AppController
      * Before filter
      *
      * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @return Response|null
      */
     public function beforeFilter(Event $event)
     {

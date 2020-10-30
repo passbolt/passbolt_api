@@ -15,11 +15,15 @@
 namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
+use App\Model\Table\GpgkeysTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property GpgkeysTable $Gpgkeys
+ */
 class GpgkeysViewController extends AppController
 {
     /**
@@ -28,7 +32,7 @@ class GpgkeysViewController extends AppController
      * @param string $id uuid of the gpgkey
      * @return void
      */
-    public function view($id)
+    public function view(string $id)
     {
         // Check request sanity
         if (!Validation::uuid($id)) {

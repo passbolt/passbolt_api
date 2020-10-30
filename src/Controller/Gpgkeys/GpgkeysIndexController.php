@@ -15,8 +15,11 @@
 namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
-use Cake\Event\Event;
+use App\Model\Table\GpgkeysTable;
 
+/**
+ * @property GpgkeysTable $Gpgkeys
+ */
 class GpgkeysIndexController extends AppController
 {
     /**

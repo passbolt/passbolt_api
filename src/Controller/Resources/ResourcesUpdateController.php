@@ -22,6 +22,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Exception;
 
 /**
  * @property ResourcesTable Resources
@@ -32,14 +33,14 @@ class ResourcesUpdateController extends AppController
      * Resource Update action
      *
      * @param string $id The identifier of the resource to update.
-     * @return void
      * @throws NotFoundException If the resource is soft deleted.
      * @throws NotFoundException If the user does not have access to the resource.
      * @throws BadRequestException If the resource id is not a valid uuid.
-     * @throws \Exception If an unexpected error occurred
+     * @throws Exception If an unexpected error occurred
      * @throws NotFoundException If the resource does not exist.
+     * @return void
      */
-    public function update($id)
+    public function update(string $id)
     {
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource id is not valid.'));
@@ -69,7 +70,6 @@ class ResourcesUpdateController extends AppController
      */
     protected function getData()
     {
-        $output = [];
         $data = $this->request->getData();
 
         if (isset($data['Resource'])) {

@@ -25,7 +25,7 @@ use Cake\Event\Event;
 use Exception;
 
 /**
- * @property ResourcesTable Resources
+ * @property ResourcesTable $Resources
  */
 class ResourcesAddController extends AppController
 {
