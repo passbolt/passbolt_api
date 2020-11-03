@@ -47,8 +47,7 @@
         "mobiledetect/mobiledetectlib": "2.*",
         "ramsey/uuid": "^3.7",
         "singpolyma/openpgp-php": "^0.3.0",
-        "thadafinser/user-agent-parser": "^2.0",
-        "donatj/phpuseragentparser": "^0.7.0",
+        "donatj/phpuseragentparser": "^1.1.0",
         "lorenzo/cakephp-email-queue": "^3.3.1",
         "burzum/cakephp-file-storage": "^2.1.0",
         "burzum/cakephp-imagine-plugin": "3.x-dev"

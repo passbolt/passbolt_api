@@ -17,7 +17,7 @@ namespace App\Controller\Component;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
-use UserAgentParser\Provider\DonatjUAParser;
+use donatj\UserAgent\UserAgentParser;
 
 /**
  * @property Component\AuthComponent Auth
@@ -95,10 +95,10 @@ class UserComponent extends Component
                 // For now we use the simple DonatjUAParser which allow only a basic parsing to retrieve
                 // browser information. Other parser are available, check out the project repository for more information:
                 // https://github.com/ThaDafinser/UserAgentParser
-                $provider = new DonatjUAParser();
+                $provider = new UserAgentParser();
                 $parser = $provider->parse($agent);
-                $this->_userAgent['Browser']['name'] = $parser->getBrowser()->getName();
-                $this->_userAgent['Browser']['version'] = $parser->getBrowser()->getVersion()->getComplete();
+                $this->_userAgent['Browser']['name'] = $parser->browser();
+                $this->_userAgent['Browser']['version'] = $parser->browserVersion();
             } catch (\Exception $e) {
                 // Failure is not an option
                 $this->_userAgent['Browser']['name'] = 'invalid';
