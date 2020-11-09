@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 namespace Passbolt\AccountSettings\Controller\Themes;
 
 use App\Controller\AppController;
-use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 /**
  * @property AccountSettingsTable AccountSettings

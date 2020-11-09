@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,20 +30,20 @@ use Cake\Validation\Validator;
  * AuthenticationTokens Model
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- *
- * @method \App\Model\Entity\AuthenticationToken get($primaryKey, $options = [])
- * @method \App\Model\Entity\AuthenticationToken newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\AuthenticationToken|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\AuthenticationToken[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \App\Model\Entity\AuthenticationToken get($primaryKey, ?array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken newEntity($data = null, ?array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, ?array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AuthenticationTokensTable extends Table
 {
-    /** @var \App\Utility\AuthToken\AuthTokenExpiry */
+    /**
+     * @var \App\Utility\AuthToken\AuthTokenExpiry
+     */
     private $authTokenExpiry;
 
     /**
@@ -50,7 +52,7 @@ class AuthenticationTokensTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -74,11 +76,11 @@ class AuthenticationTokensTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', null, 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->uuid('token')
@@ -115,10 +117,10 @@ class AuthenticationTokensTable extends Table
      */
     public function isValidAuthenticationTokenType(string $check, array $context)
     {
-        return(AuthenticationToken::TYPE_REGISTER === $check ||
-            AuthenticationToken::TYPE_RECOVER === $check ||
-            AuthenticationToken::TYPE_LOGIN === $check ||
-            AuthenticationToken::TYPE_MFA === $check);
+        return $check === AuthenticationToken::TYPE_REGISTER ||
+            $check === AuthenticationToken::TYPE_RECOVER ||
+            $check === AuthenticationToken::TYPE_LOGIN ||
+            $check === AuthenticationToken::TYPE_MFA;
     }
 
     /**
@@ -139,7 +141,7 @@ class AuthenticationTokensTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
@@ -157,9 +159,9 @@ class AuthenticationTokensTable extends Table
      *
      * @param string $userId uuid
      * @param string $type AuthenticationToken::TYPE_*
-     * @throws ValidationException is the user is not a valid uuid
-     * @throws ValidationException is the user is not found
-     * @throws ValidationException is the user is deleted
+     * @throws \App\Error\Exception\ValidationException is the user is not a valid uuid
+     * @throws \App\Error\Exception\ValidationException is the user is not found
+     * @throws \App\Error\Exception\ValidationException is the user is deleted
      * @return \App\Model\Entity\AuthenticationToken $token
      */
     public function generate(string $userId, string $type)
@@ -206,7 +208,7 @@ class AuthenticationTokensTable extends Table
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool true if it is valid
      */
-    public function isValid(string $tokenId, string $userId, string $type = null, $expiry = null)
+    public function isValid(string $tokenId, string $userId, ?string $type = null, $expiry = null)
     {
         // Are ids valid uuid?
         if (!Validation::uuid($tokenId) || !Validation::uuid($userId)) {
@@ -236,7 +238,7 @@ class AuthenticationTokensTable extends Table
     /**
      * Check if a token is expired
      *
-     * @param AuthenticationToken $token uuid
+     * @param \App\Model\Entity\AuthenticationToken $token uuid
      * @param string|int $expiry the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool

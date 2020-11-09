@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,6 +30,7 @@ abstract class AbstractHealthcheckService
 
     /**
     /**
+     *
      * @var array of Healthchecks
      */
     protected $checks;
@@ -36,9 +39,9 @@ abstract class AbstractHealthcheckService
      * Health check service constructor
      *
      * @param string $serviceName name
-     * @param string $serviceCategory serviceCategory
+     * @param string|null $serviceCategory serviceCategory
      */
-    public function __construct(string $serviceName, string $serviceCategory = null)
+    public function __construct(string $serviceName, ?string $serviceCategory = null)
     {
         $this->serviceName = $serviceName;
         if ($serviceCategory !== null) {
@@ -50,9 +53,9 @@ abstract class AbstractHealthcheckService
     /**
      * @param string $checkName health check name
      * @param bool $success optional
-     * @return Healthcheck
+     * @return \App\Utility\Healthchecks\Healthcheck
      */
-    protected function healthcheckFactory(string $checkName, bool $success = null)
+    protected function healthcheckFactory(string $checkName, ?bool $success = null): Healthcheck
     {
         return new Healthcheck($checkName, $this->serviceName, $success);
     }
@@ -60,7 +63,7 @@ abstract class AbstractHealthcheckService
     /**
      * @return array of Healthchecks
      */
-    abstract public function check();
+    abstract public function check(): array;
 
     // =======================================================
     // GETTERS
@@ -69,7 +72,7 @@ abstract class AbstractHealthcheckService
     /**
      * @return array[]
      */
-    protected function getHealthchecks()
+    protected function getHealthchecks(): array
     {
         if ($this->serviceCategory !== null) {
             return [$this->serviceCategory => $this->checks];
@@ -81,7 +84,7 @@ abstract class AbstractHealthcheckService
     /**
      * @return string name
      */
-    public function getServiceName()
+    public function getServiceName(): string
     {
         return $this->serviceName;
     }
@@ -89,7 +92,7 @@ abstract class AbstractHealthcheckService
     /**
      * @return string serviceCategory
      */
-    public function getServiceCategory()
+    public function getServiceCategory(): string
     {
         return $this->serviceCategory;
     }
@@ -100,9 +103,9 @@ abstract class AbstractHealthcheckService
 
     /**
      * @param string $serviceName name
-     * @return $this
+     * @return static
      */
-    public function setServiceName(string $serviceName)
+    public function setServiceName(string $serviceName): AbstractHealthcheckService
     {
         $this->serviceName = $serviceName;
 
@@ -111,9 +114,9 @@ abstract class AbstractHealthcheckService
 
     /**
      * @param string $serviceCategory serviceCategory
-     * @return $this
+     * @return static
      */
-    public function setCategory(string $serviceCategory)
+    public function setCategory(string $serviceCategory): AbstractHealthcheckService
     {
         $this->serviceCategory = $serviceCategory;
 

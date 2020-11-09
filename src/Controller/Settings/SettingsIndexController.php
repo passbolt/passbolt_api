@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,26 +19,26 @@ namespace App\Controller\Settings;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
-use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Http\Response;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 
 /**
- * @property UsersTable $Users
+ * @property \App\Model\Table\UsersTable $Users
  */
 class SettingsIndexController extends AppController
 {
     /**
      * Settings visibility key.
+     *
      * @var array
      */
-    const SETTINGS_VISIBILITY_KEY = 'settingsVisibility';
+    public const SETTINGS_VISIBILITY_KEY = 'settingsVisibility';
 
     /**
      * Keys that will be always whitelisted, in addition to the ones defined in config. (once logged in).
+     *
      * @var array
      */
     protected $alwaysWhiteListed = [
@@ -46,8 +48,8 @@ class SettingsIndexController extends AppController
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
-     * @return Response|null
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -87,7 +89,6 @@ class SettingsIndexController extends AppController
      * Get the list of settings that should be displayed publicly.
      *
      * @param string $role role of the user accessing the settings.
-     *
      * @return array
      */
     protected function _getSettings(string $role)
@@ -136,7 +137,6 @@ class SettingsIndexController extends AppController
      * Get plugin options that are white listed.
      *
      * @param bool $public for public visibility or not (require log in).
-     *
      * @return array list of
      */
     protected function _getPluginWhiteList($public = false)
@@ -167,7 +167,6 @@ class SettingsIndexController extends AppController
      * Get white listed config.
      *
      * @param array $whiteList white list options array
-     *
      * @return array white listed plugins configurations
      */
     protected function _getWhiteListedPluginConfig(array $whiteList)

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,16 +17,12 @@
 namespace App\Service\ResourceTypes;
 
 use App\Model\Table\ResourceTypesTable;
-use Cake\Collection\CollectionInterface;
-use Cake\Datasource\EntityInterface;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 class ResourceTypesFinderService
 {
     /**
-     * @var ResourceTypesTable
+     * @var \App\Model\Table\ResourceTypesTable
      */
     private $resourceTypesTable;
 
@@ -38,7 +36,8 @@ class ResourceTypesFinderService
 
     /**
      * Get resource types query
-     * @return array|Query
+     *
+     * @return array|\App\Service\ResourceTypes\Query
      */
     public function find()
     {
@@ -51,8 +50,8 @@ class ResourceTypesFinderService
      * Get a resource type by Id
      *
      * @param string $id uuid
-     * @throws RecordNotFoundException if resource type is not present
-     * @return array|EntityInterface
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException if resource type is not present
+     * @return array|\Cake\Datasource\EntityInterface
      */
     public function get(string $id)
     {

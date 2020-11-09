@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -30,7 +31,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     ];
     public $keyid;
 
-    /** @var OpenPGPBackend $gpg */
+    /**
+     * @var OpenPGPBackend $gpg
+     */
     public $gpg;
 
     // Keys ids used in this test. Set in _gpgSetup.
@@ -40,7 +43,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     public function testAuthLoginControllerUserLoginGetSuccess()
     {
         $this->get('/auth/login');
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('<div id="container" class="page login', $data);
     }
@@ -90,7 +93,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $data = $this->_getBodyAsString();
         $expect = 'An Internal Error Has Occurred';
         $this->assertContains($expect, $data);
-        $expect = 'The OpenPGP server key fingerprint defined in the config does not match the one associated with the key on file.';
+        $expect = 'The fingerprint does not match the one associated with the key on file.';
         $this->assertContains($expect, $data);
     }
 
@@ -156,7 +159,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             $this->assertNotEquals($headers['X-GPGAuth-Progress'], 'complete', 'The progress indicator should not be stage 2');
 
             if ($expectSuccess) {
-                $msg = (isset($headers['X-GPGAuth-Debug'])) ? $headers['X-GPGAuth-Debug'][0] . ': ' . $keyid :
+                $msg = isset($headers['X-GPGAuth-Debug']) ? $headers['X-GPGAuth-Debug'][0] . ': ' . $keyid :
                     'The fingerprint: ' . $keyid . ' should work';
                 $this->assertFalse(isset($headers['X-GPGAuth-Error']), $msg);
                 $this->assertFalse(isset($headers['X-GPGAuth-Verify-Response']));
@@ -190,7 +193,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         ];
 
         $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, "");
+        $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
         foreach ($fix as $token => $expectSuccess) {
             $msg = $this->gpg->encrypt($token);
             $this->post('/auth/verify', [
@@ -286,7 +289,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             $this->gpg->setDecryptKeyFromFingerprint($this->adaKeyId, ''),
             'CONFIG - It is not possible to use the key provided in the fixtures to decrypt.'
         );
-        $msg = (stripslashes(urldecode($headers['X-GPGAuth-User-Auth-Token'])));
+        $msg = stripslashes(urldecode($headers['X-GPGAuth-User-Auth-Token']));
         $signatureInfo = [];
         $this->gpg->setVerifyKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
         $plaintext = $this->gpg->decrypt($msg, true);
@@ -295,7 +298,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         // Decrypt and check if the token is in the right format
         $info = explode('|', $plaintext);
         $this->assertTrue((count($info) == 4), 'Decrypted User Auth Token: sections missing or wrong delimiters: ' . $plaintext);
-        list($version, $length, $uuid, $version2) = $info;
+        [$version, $length, $uuid, $version2] = $info;
         $this->assertTrue($version == $version2, 'Decrypted User Auth Token: version numbers don\'t match: ' . $plaintext);
         $this->assertTrue($version == 'gpgauthv1.3.0', 'Decrypted User Auth Token: wrong version number: ' . $plaintext);
         $this->assertTrue($version == Validation::uuid($uuid), 'Decrypted User Auth Token: not a UUID: ' . $plaintext);
@@ -337,6 +340,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
 
     /**
      * Setup GPG and import the keys to be used in the tests
+     *
      * @param string $name ada by default
      */
     protected function gpgSetup()

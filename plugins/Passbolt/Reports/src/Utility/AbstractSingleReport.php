@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,28 +18,27 @@ namespace Passbolt\Reports\Utility;
 
 abstract class AbstractSingleReport extends AbstractReport
 {
-    const SINGLE_REPORT_TEMPLATE = 'Passbolt/Reports.SingleReport';
-    const SINGLE_REPORT_TYPE = 'single';
+    public const SINGLE_REPORT_TEMPLATE = 'Passbolt/Reports.SingleReport';
+    public const SINGLE_REPORT_TYPE = 'single';
 
-    const STATUS_SUCCESS = 'success';
-    const STATUS_IN_PROGRESS = 'in-progress';
-    const STATUS_FAIL = 'fail';
+    public const STATUS_SUCCESS = 'success';
+    public const STATUS_IN_PROGRESS = 'in-progress';
+    public const STATUS_FAIL = 'fail';
 
     /**
      * Return the template associated to the generated report by the report generator.
      *
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->template ?? self::SINGLE_REPORT_TEMPLATE;
     }
 
     /**
      * @inheritDoc
-     * @return string the report type, "single" in this case
      */
-    public function getType()
+    public function getType(): string
     {
         return self::SINGLE_REPORT_TYPE;
     }

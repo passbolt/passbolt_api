@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,19 +18,23 @@
 namespace App\Controller\ResourceTypes;
 
 use App\Controller\AppController;
-use App\Model\Table\ResourceTypesTable;
 use App\Service\ResourceTypes\ResourceTypesFinderService;
-use Cake\ORM\TableRegistry;
+use Cake\Core\Configure;
+use Cake\Http\Exception\NotFoundException;
 
 class ResourceTypesIndexController extends AppController
 {
     /**
      * Resource Types Index action
      *
+     * @throws \Cake\Http\Exception\NotFoundException if plugin is disabled by admin
      * @return void
      */
     public function index()
     {
+        if (!Configure::read('passbolt.plugins.resourceTypes.enabled')) {
+            throw new NotFoundException();
+        }
         $resourceTypeFinderService = new ResourceTypesFinderService();
         $resourceTypes = $resourceTypeFinderService->find()->all();
         $this->success(__('The operation was successful.'), $resourceTypes);

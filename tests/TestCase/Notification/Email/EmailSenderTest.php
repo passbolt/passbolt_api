@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,11 +23,10 @@ use App\Notification\Email\EmailSenderException;
 use App\Utility\Purifier;
 use Cake\TestSuite\TestCase;
 use EmailQueue\Model\Table\EmailQueueTable;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class EmailSenderTest extends TestCase
 {
-    const APP_FULL_BASE_URL = 'http://full_base_url.com';
+    public const APP_FULL_BASE_URL = 'http://full_base_url.com';
 
     /**
      * @var EmailSender
@@ -85,7 +86,7 @@ class EmailSenderTest extends TestCase
             $expectedException = true;
         }
 
-        $this->assertTrue($expectedException, "sendEmail should have raised exception " . EmailSenderException::class);
+        $this->assertTrue($expectedException, 'sendEmail should have raised exception ' . EmailSenderException::class);
     }
 
     public function testThatSendEnqueueEmailWithOptionsWhenPurifySubjectIsDisabled()

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use Cake\Datasource\ConnectionManager;
 
 class DropTablesTask extends AppShell
 {
-
     /**
      * Gets the option parser instance and configures it.
      *

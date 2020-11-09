@@ -6,11 +6,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * AccountSettingsFixture
- *
  */
 class AccountSettingsFixture extends TestFixture
 {
-
     /**
      * Fields
      *

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,14 +21,15 @@ interface CombinedReportInterface
     /**
      * Add a report to the combined report list
      *
-     * @param ReportInterface $report report
-     * @return ReportInterface $this
+     * @param \Passbolt\Reports\Utility\ReportInterface $report report
+     * @return \Passbolt\Reports\Utility\ReportInterface $this
      */
-    public function addReport(ReportInterface $report);
+    public function addReport(ReportInterface $report): ReportInterface;
 
     /**
      * Get the sub reports list
+     *
      * @return array of ReportServiceInterface
      */
-    public function getReports();
+    public function getReports(): array;
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,14 +30,14 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'AN/user_recover';
+    public const TEMPLATE = 'AN/user_recover';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME,
@@ -43,16 +45,16 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = $event->getData('user');
-        /** @var AuthenticationToken $token */
+        /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = $event->getData('token');
 
         $emailCollection->addEmail($this->createAccountRecoveryEmail($user, $token));
@@ -61,13 +63,13 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param User $user User
-     * @param AuthenticationToken $token Token for recovery
-     * @return Email
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\AuthenticationToken $token Token for recovery
+     * @return \App\Notification\Email\Email
      */
     private function createAccountRecoveryEmail(User $user, AuthenticationToken $token)
     {
-        $subject = __("Your account recovery, {0}!", $user->profile->first_name);
+        $subject = __('Your account recovery, {0}!', $user->profile->first_name);
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
 
         return new Email($user->username, $subject, $data, self::TEMPLATE);

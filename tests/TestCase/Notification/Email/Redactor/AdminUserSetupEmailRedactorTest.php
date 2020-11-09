@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,6 @@ use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\Log\Model\Entity\ActionLog;
 use Passbolt\Log\Model\Entity\EntityHistory;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class AdminUserSetupEmailRedactorTest extends TestCase
 {
@@ -159,7 +160,7 @@ class AdminUserSetupEmailRedactorTest extends TestCase
             $this->assertContains(
                 $admin->username,
                 $emailRecipients,
-                sprintf("`%s` is an admin and should have an email created", $admin->username)
+                sprintf('`%s` is an admin and should have an email created', $admin->username)
             );
         }
     }

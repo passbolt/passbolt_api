@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -48,7 +50,7 @@ class FindLastLoggedInTest extends AppIntegrationTestCase
 
     public function testFindLastLoggedIn()
     {
-        list($actionLogAdaLogin1, $actionLogAdaLogin2, $userAId) = $this->insertFixture_FindLastLoggedIn();
+        [$actionLogAdaLogin1, $actionLogAdaLogin2, $userAId] = $this->insertFixture_FindLastLoggedIn();
 
         $userA = $this->usersTable->findById($userAId)->find('lastLoggedIn')->first();
         $this->assertNotEmpty($userA->last_logged_in);

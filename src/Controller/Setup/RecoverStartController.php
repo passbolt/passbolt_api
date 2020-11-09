@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,31 +16,27 @@
  */
 namespace App\Controller\Setup;
 
-use App\Controller\Setup\SetupStartController;
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Table\UserAgentsTable;
-use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
 
 /**
- * @property UsersTable $Users
- * @property UserAgentsTable $UserAgents
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\UserAgentsTable $UserAgents
  */
 class RecoverStartController extends SetupStartController
 {
     /**
      * Recover start
      *
-     * @throws BadRequestException if the user id is missing or not a uuid
-     * @throws BadRequestException if the token is missing or not a uuid
-     * @throws BadRequestException if the authentication token is expired or not valid for this user
-     * @throws BadRequestException if the user does not exist or is not active
-     *
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is missing or not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the token is missing or not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or not valid for this user
+     * @throws \Cake\Http\Exception\BadRequestException if the user does not exist or is not active
      * @param string $userId uuid of the user
      * @param string $tokenId uuid of the token
      * @return void
      */
-    public function start(string $userId, string $tokenId)
+    public function start(string $userId, string $tokenId): void
     {
         // Check user id and token id are valid
         $this->_assertRequestSanity($userId, $tokenId, AuthenticationToken::TYPE_RECOVER);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -35,26 +37,23 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasMany $Secrets
  * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasOne $Permissions
- *
- * @method \App\Model\Entity\Resource get($primaryKey, $options = [])
- * @method \App\Model\Entity\Resource newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Resource[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Resource|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Resource patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Resource[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Resource findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \App\Model\Entity\Resource get($primaryKey, ?array $options = [])
+ * @method \App\Model\Entity\Resource[] newEntities(array $data, ?array $options = [])
+ * @method \App\Model\Entity\Resource|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \App\Model\Entity\Resource patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Resource[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Resource findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ResourcesTable extends Table
 {
     use ResourcesFindersTrait;
 
-    const DESCRIPTION_MAX_LENGTH = 10000;
-    const NAME_MAX_LENGTH = 64;
-    const PASSWORD_MAX_LENGTH = 4096;
-    const URI_MAX_LENGTH = 1024;
-    const USERNAME_MAX_LENGTH = 64;
+    public const DESCRIPTION_MAX_LENGTH = 10000;
+    public const NAME_MAX_LENGTH = 64;
+    public const PASSWORD_MAX_LENGTH = 4096;
+    public const URI_MAX_LENGTH = 1024;
+    public const USERNAME_MAX_LENGTH = 64;
 
     /**
      * Initialize method
@@ -62,7 +61,7 @@ class ResourcesTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -109,7 +108,7 @@ class ResourcesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
@@ -117,23 +116,39 @@ class ResourcesTable extends Table
 
         $validator
             ->utf8Extended('name', __('The name is not a valid utf8 string.'))
-            ->maxLength('name', self::NAME_MAX_LENGTH, __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH))
+            ->maxLength(
+                'name',
+                self::NAME_MAX_LENGTH,
+                __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH)
+            )
             ->requirePresence('name', 'create', __('A name is required.'))
             ->allowEmptyString('name', __('The name cannot be empty.'), false);
 
         $validator
             ->utf8Extended('username', __('The username is not a valid utf8 string.'))
-            ->maxLength('username', self::USERNAME_MAX_LENGTH, __('The username length should be maximum {0} characters.', self::USERNAME_MAX_LENGTH))
+            ->maxLength(
+                'username',
+                self::USERNAME_MAX_LENGTH,
+                __('The username length should be maximum {0} characters.', self::USERNAME_MAX_LENGTH)
+            )
             ->allowEmptyString('username');
 
         $validator
             ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
-            ->maxLength('uri', self::URI_MAX_LENGTH, __('The uri length should be maximum {0} characters.', self::URI_MAX_LENGTH))
+            ->maxLength(
+                'uri',
+                self::URI_MAX_LENGTH,
+                __('The uri length should be maximum {0} characters.', self::URI_MAX_LENGTH)
+            )
             ->allowEmptyString('uri');
 
         $validator
             ->utf8Extended('description', __('The description is not a valid utf8 string.'))
-            ->maxLength('description', self::DESCRIPTION_MAX_LENGTH, __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH))
+            ->maxLength(
+                'description',
+                self::DESCRIPTION_MAX_LENGTH,
+                __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH)
+            )
             ->allowEmptyString('description');
 
         $validator
@@ -175,7 +190,7 @@ class ResourcesTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         // Create and Update rules
         $rules->add($rules->existsIn(['resource_type_id'], 'ResourceTypes'), 'resource_type_exists', [
@@ -213,11 +228,11 @@ class ResourcesTable extends Table
     /**
      * Validate that the entity has at least one owner
      *
-     * @param resource $entity The entity that will be created or updated.
-     * @param array $options options
+     * @param Resource $entity The entity that will be created or updated.
+     * @param array|null $options options
      * @return bool
      */
-    public function isOwnerPermissionProvidedRule(Resource $entity, array $options = [])
+    public function isOwnerPermissionProvidedRule(Resource $entity, ?array $options = [])
     {
         if (isset($entity->permissions)) {
             $found = Hash::extract($entity->permissions, '{n}[type=' . Permission::OWNER . ']');
@@ -232,23 +247,23 @@ class ResourcesTable extends Table
     /**
      * Validate that the a resource can be created only if the secret of the owner is provided.
      *
-     * @param resource $entity The entity that will be created.
-     * @param array $options options
+     * @param Resource $entity The entity that will be created.
+     * @param array|null $options options
      * @return bool
      */
-    public function isOwnerSecretProvidedRule(Resource $entity, array $options = [])
+    public function isOwnerSecretProvidedRule(Resource $entity, ?array $options = [])
     {
-        return ($entity->secrets[0]->user_id === $entity->created_by);
+        return $entity->secrets[0]->user_id === $entity->created_by;
     }
 
     /**
      * Validate that the secrets of all the allowed users are provided if the secret changed.
      *
-     * @param resource $entity The entity that will be created.
-     * @param array $options options
+     * @param Resource $entity The entity that will be created.
+     * @param array|null $options options
      * @return bool
      */
-    public function isSecretsProvidedRule(Resource $entity, array $options = [])
+    public function isSecretsProvidedRule(Resource $entity, ?array $options = [])
     {
         // Secrets are not required to update a resource, but if provided check that the list of secrets correspond
         // only to the users who have access to the resource.
@@ -282,11 +297,11 @@ class ResourcesTable extends Table
      * Soft delete a resource.
      *
      * @param string $userId The user who perform the delete.
-     * @param resource $resource The resource to delete.
+     * @param Resource $resource The resource to delete.
      * @throws \InvalidArgumentException if the user id is not a uuid
      * @return bool true if success
      */
-    public function softDelete(string $userId, Resource $resource)
+    public function softDelete(string $userId, Resource $resource): bool
     {
         // The softDelete will perform an update to the entity to soft delete it.
         if (!Validation::uuid($userId)) {
@@ -300,7 +315,8 @@ class ResourcesTable extends Table
             return false;
         }
 
-        if (!$this->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resource->id, $userId, Permission::UPDATE)) {
+        $acoType = PermissionsTable::RESOURCE_ACO;
+        if (!$this->Permissions->hasAccess($acoType, $resource->id, $userId, Permission::UPDATE)) {
             $resource->setError('id', [
                 'has_access' => __('The user cannot delete this resource.'),
             ]);
@@ -355,7 +371,7 @@ class ResourcesTable extends Table
      * @param array $usersId The list of users who lost access to the resource
      * @return void
      */
-    public function deleteLostAccessAssociatedData(string $resourceId, array $usersId = [])
+    public function deleteLostAccessAssociatedData(string $resourceId, array $usersId = []): void
     {
         if (empty($usersId)) {
             return;
@@ -375,7 +391,7 @@ class ResourcesTable extends Table
      * @param bool $cascade true
      * @return void
      */
-    public function softDeleteAll(array $resourceIds, bool $cascade = true)
+    public function softDeleteAll(array $resourceIds, bool $cascade = true): void
     {
         $this->updateAll(['deleted' => true], ['id IN' => $resourceIds]);
 
@@ -396,9 +412,9 @@ class ResourcesTable extends Table
      * Set it to the default
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int number of affected rows.
      */
-    public function cleanupMissingResourceTypeId(bool $dryRun = false)
+    public function cleanupMissingResourceTypeId(bool $dryRun = false): int
     {
         $condition = ['resource_type_id IS' => null];
         if ($dryRun) {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -52,9 +54,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEquals(UuidFactory::uuid('user.id.irene'), $comment->modified_by);
 
         // Assert that modified time is within one second from the test time.
-        $modifiedTime = strtotime($comment->modified);
-        $nowTime = strtotime(date('c'));
-        $this->assertTrue($nowTime - $modifiedTime < 1000);
+        $this->assertTrue($comment->modified->wasWithinLast('1 second'));
     }
 
     public function testCommentsUpdateErrorCsrfToken()

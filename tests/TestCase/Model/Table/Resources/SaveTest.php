@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -95,9 +97,7 @@ class SaveTest extends AppTestCase
         return $dummy;
     }
 
-    /* ************************************************************** */
     /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testValidationName()
     {
@@ -166,7 +166,7 @@ class SaveTest extends AppTestCase
         $entityData = array_merge($resource, ['permissions' => $permissions]);
         $entity = $this->Resources->newEntity($entityData, self::getEntityDefaultOptions());
         $save = $this->Resources->save($entity, ['checkRules' => false]);
-        $this->assertEquals(false, (bool)$save, __("The test for {0}:{1} = {2} is not expected to save data", 'permissions', 'hasAtMost', json_encode($permissions)));
+        $this->assertEquals(false, (bool)$save, __('The test for {0}:{1} = {2} is not expected to save data', 'permissions', 'hasAtMost', json_encode($permissions)));
     }
 
     public function testValidationSecrets()
@@ -205,7 +205,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $entityData = array_merge($resource, ['secrets' => $secrets]);
         $entity = $this->Resources->newEntity($entityData, self::getEntityDefaultOptions());
         $save = $this->Resources->save($entity, ['checkRules' => false]);
-        $this->assertEquals(false, (bool)$save, __("The test for {0}:{1} = {2} is not expected to save data", 'secrets', 'hasAtMost', json_encode($secrets)));
+        $this->assertEquals(false, (bool)$save, __('The test for {0}:{1} = {2} is not expected to save data', 'secrets', 'hasAtMost', json_encode($secrets)));
     }
 
     public function testValidationResourceTypeId()
@@ -217,9 +217,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertFieldFormatValidation($this->Resources, 'resource_type_id', $this->_getDummyResourceData(), self::getEntityDefaultOptions(), $testCases);
     }
 
-    /* ************************************************************** */
     /* LOGIC VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testSave()
     {

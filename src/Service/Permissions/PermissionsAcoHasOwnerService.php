@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,13 +18,12 @@
 namespace App\Service\Permissions;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\PermissionsTable;
 use Cake\ORM\TableRegistry;
 
 class PermissionsAcoHasOwnerService
 {
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 

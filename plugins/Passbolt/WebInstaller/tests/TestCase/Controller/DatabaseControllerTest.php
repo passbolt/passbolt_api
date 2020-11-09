@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -35,7 +37,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
     public function testWebInstallerDatabaseViewSuccess()
     {
         $this->get('/install/database');
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('Database configuration', $data);
     }
@@ -56,7 +58,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $postData = $this->getTestDatasourceFromConfig();
         $postData['port'] = 'invalid-port';
         $this->post('/install/database', $postData);
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('The data entered are not correct', $data);
     }
@@ -68,7 +70,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $postData = $this->getTestDatasourceFromConfig();
         $postData['username'] = 'invalid-username';
         $this->post('/install/database', $postData);
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('A connection could not be established with the credentials provided. Please verify the settings.', $data);
     }

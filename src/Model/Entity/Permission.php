@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace App\Model\Entity;
 
-use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
@@ -27,17 +28,17 @@ use Cake\ORM\Entity;
  * @property string $aro
  * @property string $aro_foreign_key
  * @property int $type
- * @property FrozenTime $created
- * @property FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  */
 class Permission extends Entity
 {
     /**
      * The types of permissions.
      */
-    const READ = 1;
-    const UPDATE = 7;
-    const OWNER = 15;
+    public const READ = 1;
+    public const UPDATE = 7;
+    public const OWNER = 15;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

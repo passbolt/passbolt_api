@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,24 +24,29 @@ class OptionController extends WebInstallerController
 {
     /**
      * Initialize.
+     *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->stepInfo['previous'] = 'install/email';
         $this->stepInfo['template'] = 'Pages/options';
-        $this->stepInfo['next'] = $this->webInstaller->getSettings('hasAdmin') ? 'install/installation' : 'install/account_creation';
+        $this->stepInfo['next'] = $this->webInstaller->getSettings('hasAdmin') ?
+            'install/installation' : 'install/account_creation';
     }
 
     /**
      * Index
+     *
      * @return void|mixed
      */
-    public function index()
+    public function index(): void
     {
         if ($this->request->is('post')) {
-            return $this->indexPost();
+            $this->indexPost();
+
+            return;
         }
 
         $fullBaseUrl = trim(Router::url('/', true), '/');
@@ -57,14 +64,17 @@ class OptionController extends WebInstallerController
 
     /**
      * Index post
+     *
      * @return void|mixed
      */
-    protected function indexPost()
+    protected function indexPost(): void
     {
         try {
             $data = $this->getAndValidateData();
         } catch (Exception $e) {
-            return $this->_error($e->getMessage());
+            $this->_error($e->getMessage());
+
+            return;
         }
 
         $this->webInstaller->setSettingsAndSave('options', $data);
@@ -73,6 +83,7 @@ class OptionController extends WebInstallerController
 
     /**
      * Validate data.
+     *
      * @return array
      */
     protected function getAndValidateData()

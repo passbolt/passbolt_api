@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,19 +16,17 @@
  */
 namespace Passbolt\WebInstaller\Utility;
 
-use App\Utility\Healthchecks;
 use Cake\Core\Configure;
-use Cake\Database\Exception as DatabaseException;
 
 class WebInstallerHealthchecks
 {
     /**
      * Run all databases health checks
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function all($checks = [])
+    public static function all(?array $checks = []): array
     {
         $checks = self::canWriteConfig($checks);
 
@@ -36,20 +36,22 @@ class WebInstallerHealthchecks
     /**
      * Check if application can write into the config folder
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function canWriteConfig($checks = [])
+    public static function canWriteConfig(?array $checks = []): array
     {
         $configFolderWritable = is_writable(CONFIG);
 
         $passboltConfigPath = CONFIG . 'passbolt.php';
-        $passboltConfigFileIsWritable = file_exists($passboltConfigPath) ? is_writable($passboltConfigPath) : $configFolderWritable;
+        $passboltConfigFileIsWritable = file_exists($passboltConfigPath) ?
+            is_writable($passboltConfigPath) : $configFolderWritable;
         $checks['webInstaller']['passboltConfigWritable'] = $passboltConfigFileIsWritable;
 
         if (Configure::read('passbolt.plugins.license')) {
             $passboltLicensePath = CONFIG . 'license';
-            $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ? is_writable($passboltLicensePath) : $configFolderWritable;
+            $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ?
+                is_writable($passboltLicensePath) : $configFolderWritable;
             $checks['webInstaller']['passboltLicenseWritable'] = $passboltLicenseFileIsWritable;
         }
 

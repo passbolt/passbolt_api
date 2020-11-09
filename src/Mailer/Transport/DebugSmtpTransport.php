@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer\Transport;
 
 /**
@@ -8,12 +10,14 @@ class DebugSmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
 {
     /**
      * Client / server communication trace.
+     *
      * @var array
      */
     protected $trace = [];
 
     /**
      * Extends _smtpSend by storing the communication trace.
+     *
      * @param null|string $data data to be sent
      * @param string $checkCode check code
      * @return null|string
@@ -28,6 +32,7 @@ class DebugSmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
 
     /**
      * Add trace in buffer.
+     *
      * @param string $data data sent
      * @param array $response response received
      * @return array
@@ -45,6 +50,7 @@ class DebugSmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
 
     /**
      * Get trace.
+     *
      * @return array
      */
     public function getTrace()

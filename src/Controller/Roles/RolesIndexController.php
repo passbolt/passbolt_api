@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,10 +17,9 @@
 namespace App\Controller\Roles;
 
 use App\Controller\AppController;
-use App\Model\Table\RolesTable;
 
 /**
- * @property RolesTable $Roles
+ * @property \App\Model\Table\RolesTable $Roles
  */
 class RolesIndexController extends AppController
 {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,9 +17,6 @@
 namespace App\Shell\Task;
 
 use App\Shell\AppShell;
-use App\Utility\Healthchecks;
-use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
 
 class MigrateTask extends AppShell
 {

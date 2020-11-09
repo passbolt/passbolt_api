@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,7 +33,7 @@ class ActionLogsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -62,15 +64,15 @@ class ActionLogsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->uuid('user_id', __('user_id should be a uuid'))
-            ->allowEmpty('user_id')
+            ->allowEmptyString('user_id')
             ->requirePresence('user_id', 'create', __('A user_id is required'));
 
         $validator
@@ -91,7 +93,8 @@ class ActionLogsTable extends Table
 
     /**
      * Check whether a given action is blacklisted from being logged.
-     * @param UserAction $userAction user action
+     *
+     * @param \App\Utility\UserAction $userAction user action
      * @return bool
      */
     private function isActionBlackListed(UserAction $userAction)
@@ -106,12 +109,11 @@ class ActionLogsTable extends Table
      *
      * Will not process blacklisted actions (see config).
      *
-     * @param UserAction $userAction user action
+     * @param \App\Utility\UserAction $userAction user action
      * @param int $status status
-     *
-     * @return ActionLog|bool
-     * @throws ValidationException
-     * @throws InternalErrorException
+     * @return \Passbolt\Log\Model\Entity\ActionLog|bool
+     * @throws \App\Error\Exception\ValidationException
+     * @throws \Cake\Http\Exception\InternalErrorException
      */
     public function create(UserAction $userAction, int $status)
     {
@@ -137,6 +139,7 @@ class ActionLogsTable extends Table
             throw new ValidationException(__('Could not validate action_log data.'), $log, $this);
         }
 
+        /** @var \Passbolt\Log\Model\Entity\ActionLog|bool $logSaved */
         $logSaved = $this->save($log);
 
         // Check for validation errors. (associated models too).
@@ -154,11 +157,11 @@ class ActionLogsTable extends Table
 
     /**
      * Return a action_log entity.
-     * @param array $data entity data
      *
-     * @return ActionLog
+     * @param array $data entity data
+     * @return \Passbolt\Log\Model\Entity\ActionLog
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): ActionLog
     {
         return $this->newEntity($data, [
             'accessibleFields' => [

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
-use Passbolt\Log\Model\Table\PermissionsHistoryTable;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\Log\Test\Lib\Traits\PermissionsHistoryTrait;
 use Passbolt\Log\Test\Lib\Traits\SecretsHistoryTrait;
@@ -29,7 +30,9 @@ class ShareControllerLogTest extends LogIntegrationTestCase
     use PermissionsHistoryTrait;
     use SecretsHistoryTrait;
 
-    /** @var PermissionsHistoryTable */
+    /**
+     * @var PermissionsHistoryTable
+     */
     protected $PermissionHistory;
 
     public $fixtures = [

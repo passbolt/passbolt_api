@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,27 +20,28 @@ namespace Passbolt\EmailNotificationSettings\Utility;
 use Cake\Event\EventListenerInterface;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
-use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ReadableEmailNotificationSettingsSourceInterface;
 
 interface EmailNotificationSettingsDefinitionInterface extends EventListenerInterface
 {
     /**
      * Allow to define new fields on the schema instance passed by the EmailNotificationSettingsForm
      * Use the default attribute from the field to add a default value.
-     * @param Schema $schema Schema instance
-     * @return Schema
+     *
+     * @param \Cake\Form\Schema $schema Schema instance
+     * @return \Cake\Form\Schema
      */
     public function buildSchema(Schema $schema);
 
     /**
      * Allow to define new rules on the validator instance passed by the EmailNotificationSettingsForm
-     * @param Validator $validator Validator instance
-     * @return Validator
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance
+     * @return \Cake\Validation\Validator
      */
     public function buildValidator(Validator $validator);
 
     /**
-     * @return ReadableEmailNotificationSettingsSourceInterface
+     * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ReadableEmailNotificationSettingsSourceInterface
      */
     public function getDefaultSettingsSource();
 }

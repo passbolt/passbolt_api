@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,14 +17,10 @@
 
 namespace App\Test\TestCase\Model\Table\Resources;
 
-use App\Model\Table\GpgkeysTable;
-use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
-use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -30,13 +28,19 @@ class UpdateTest extends AppTestCase
 {
     use FormatValidationTrait;
 
-    /** @var ResourcesTable */
+    /**
+     * @var ResourcesTable
+     */
     public $Resources;
 
-    /** @var GpgkeysTable */
+    /**
+     * @var GpgkeysTable
+     */
     public $Gpgkeys;
 
-    /** @var OpenPGPBackend gpg */
+    /**
+     * @var OpenPGPBackend gpg
+     */
     public $gpg;
 
     public $fixtures = [
@@ -68,7 +72,7 @@ class UpdateTest extends AppTestCase
         return $this->gpg->encrypt($text);
     }
 
-    protected function _getUpdatedDummydata($resource, $data = [])
+    protected function _getUpdatedDummydata($resource, ?array $data = [])
     {
         // Build the data to update.
         $defaultData = [
@@ -121,9 +125,7 @@ class UpdateTest extends AppTestCase
         ];
     }
 
-    /* ************************************************************** */
     /* LOGIC VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testResourceUpdate()
     {

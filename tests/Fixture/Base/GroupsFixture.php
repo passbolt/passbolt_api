@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * GroupsFixture
- *
  */
 class GroupsFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -50,6 +48,7 @@ class GroupsFixture extends TestFixture
 
     /**
      * Override this method to define different records for the fixture
+     *
      * @return array
      */
     protected function getRecords()

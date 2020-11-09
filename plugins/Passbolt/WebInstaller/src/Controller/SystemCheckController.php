@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,6 +25,7 @@ class SystemCheckController extends WebInstallerController
 {
     /**
      * Index
+     *
      * @return void
      */
     public function index()
@@ -48,6 +51,7 @@ class SystemCheckController extends WebInstallerController
 
     /**
      * Check if healthcheck values are good enough to continue installation.
+     *
      * @param array $checks checks
      * @return bool
      */

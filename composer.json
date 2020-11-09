@@ -35,6 +35,11 @@
             "type": "vcs",
             "url": "https://github.com/passbolt/passbolt_test_data.git",
             "no-api": true
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/passbolt/cakephp-codesniffer.git",
+          "no-api": true
         }
     ],
     "require": {
@@ -60,7 +65,7 @@
         "cakephp/debug_kit": "^3.22.4",
         "cakephp/bake": "^1.12.0",
         "phpunit/phpunit": "^6.5.14",
-        "cakephp/cakephp-codesniffer": "^3.3.0",
+        "passbolt/cakephp-codesniffer": "dev-master",
         "passbolt/passbolt_selenium_api": "^2.10.0",
         "passbolt/passbolt_test_data": "^2.14.1"
     },
@@ -103,8 +108,8 @@
             "@test",
             "@cs-check"
         ],
-        "cs-check": "phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP --ignore=*.js ./src ./tests ./plugins",
-        "cs-fix": "phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP --ignore=*.js ./src ./tests ./plugins",
+        "cs-check": "phpcs --colors -p --standard=vendor/passbolt/cakephp-codesniffer/CakePHP --ignore=*.js ./src ./tests ./plugins",
+        "cs-fix": "phpcbf --colors --standard=vendor/passbolt/cakephp-codesniffer/CakePHP --ignore=*.js ./src ./tests ./plugins",
         "test": "phpunit --colors=always"
     },
     "prefer-stable": true

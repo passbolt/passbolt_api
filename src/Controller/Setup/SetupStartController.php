@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,26 +18,22 @@ namespace App\Controller\Setup;
 
 use App\Controller\AppController;
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Table\AuthenticationTokensTable;
-use App\Model\Table\UserAgentsTable;
-use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Response;
 use Cake\Validation\Validation;
 
 /**
- * @property AuthenticationTokensTable $AuthenticationTokens
- * @property UsersTable $Users
- * @property UserAgentsTable $UserAgents
+ * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\UserAgentsTable $UserAgents
  */
 class SetupStartController extends AppController
 {
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
-     * @return Response|null
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -50,16 +48,15 @@ class SetupStartController extends AppController
     /**
      * Setup start
      *
-     * @throws BadRequestException if the user id is missing or not a uuid
-     * @throws BadRequestException if the token is missing or not a uuid
-     * @throws BadRequestException if the authentication token is expired or not valid for this user
-     * @throws BadRequestException if the user does not exist or is already active
-     *
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is missing or not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the token is missing or not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or not valid
+     * @throws \Cake\Http\Exception\BadRequestException if the user does not exist or is already active
      * @param string $userId uuid of the user
      * @param string $tokenId uuid of the token
      * @return void
      */
-    public function start(string $userId, string $tokenId)
+    public function start(string $userId, string $tokenId): void
     {
         // Check user id and token id are valid
         $this->_assertRequestSanity($userId, $tokenId);
@@ -85,15 +82,15 @@ class SetupStartController extends AppController
     /**
      * Assert that the setup start request is valid
      *
-     * @throws BadRequestException if the user id is missing or not a uuid
-     * @throws BadRequestException if the token is missing or not a uuid
-     * @throws BadRequestException if the authentication token is expired or not valid for this user
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is missing or not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the token is missing or not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or not valid for this user
      * @param string $userId uuid
      * @param string $tokenId uuid
-     * @param string $tokenType register or recover
+     * @param string|null $tokenType register or recover, default register
      * @return void
      */
-    protected function _assertRequestSanity(string $userId, string $tokenId, $tokenType = AuthenticationToken::TYPE_REGISTER)
+    protected function _assertRequestSanity(string $userId, string $tokenId, ?string $tokenType = null): void
     {
         // Check request sanity
         if (!isset($userId)) {
@@ -107,6 +104,9 @@ class SetupStartController extends AppController
         }
         if (!Validation::uuid($tokenId)) {
             throw new BadRequestException(__('The token is not valid. It should be a uuid.'));
+        }
+        if (!isset($tokenType)) {
+            $tokenType = AuthenticationToken::TYPE_REGISTER;
         }
 
         // Check that the token exists

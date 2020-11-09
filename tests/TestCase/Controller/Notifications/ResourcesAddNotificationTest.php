@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -86,7 +88,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
         $this->authenticateAs('ada');
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json", $data);
+        $this->postJson('/resources.json', $data);
         $this->assertSuccess();
 
         // check email notification
@@ -102,7 +104,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->authenticateAs('ada');
         $userId = UuidFactory::uuid('user.id.ada');
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json", $data);
+        $this->postJson('/resources.json', $data);
         $this->assertSuccess();
 
         // check email notification

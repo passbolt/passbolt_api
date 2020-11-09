@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,14 +19,13 @@ namespace App\Controller\Comments;
 
 use App\Controller\AppController;
 use App\Model\Entity\Comment;
-use App\Model\Table\CommentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property CommentsTable $Comments
+ * @property \App\Model\Table\CommentsTable $Comments
  */
 class CommentsDeleteController extends AppController
 {
@@ -32,8 +33,8 @@ class CommentsDeleteController extends AppController
      * Delete a comment.
      *
      * @param string $id The identifier of comment to delete.
-     * @throws BadRequestException
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\BadRequestException
+     * @throws \Cake\Http\Exception\NotFoundException
      * @return void
      */
     public function delete(string $id)
@@ -60,7 +61,8 @@ class CommentsDeleteController extends AppController
 
     /**
      * Manage delete errors
-     * @param Comment $comment comment
+     *
+     * @param \App\Model\Entity\Comment $comment comment
      * @return void
      */
     private function _handleDeleteErrors(Comment $comment)

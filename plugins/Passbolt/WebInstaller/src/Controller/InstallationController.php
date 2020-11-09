@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,24 +16,14 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use App\Error\Exception\CustomValidationException;
-use App\Model\Entity\AuthenticationToken;
-use App\Model\Entity\Role;
-use App\Model\Entity\User;
-use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
-use Cake\Datasource\ConnectionManager;
-use Migrations\Migrations;
-use Passbolt\WebInstaller\Utility\DatabaseConnection;
-use Passbolt\WebInstaller\Utility\Gpg;
-
 class InstallationController extends WebInstallerController
 {
     /**
      * Initialize.
+     *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->stepInfo['previous'] = 'install/options';
@@ -41,6 +33,7 @@ class InstallationController extends WebInstallerController
 
     /**
      * Index.
+     *
      * @return void
      */
     public function index()
@@ -52,6 +45,7 @@ class InstallationController extends WebInstallerController
 
     /**
      * Install passbolt.
+     *
      * @return void
      */
     public function install()

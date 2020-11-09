@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,16 +21,15 @@ use Cake\Utility\Hash;
 
 trait TableCleanupTrait
 {
-
     /**
      * Delete all association records where associated model entities are soft deleted
      *
      * @param string $modelName model
-     * @param bool $dryRun false
-     * @param query $query custom query to replace the default find if any
-     * @return number of affected records
+     * @param bool|null $dryRun false
+     * @param \Cake\ORM\Query|null $query custom query to replace the default find if any
+     * @return int of affected records
      */
-    public function cleanupSoftDeleted(string $modelName, $dryRun = false, Query $query = null)
+    public function cleanupSoftDeleted(string $modelName, ?bool $dryRun = false, ?Query $query = null): int
     {
         if (!isset($query)) {
             $query = $this->query()
@@ -51,11 +52,11 @@ trait TableCleanupTrait
      * Delete all association records where associated model entities are deleted
      *
      * @param string $modelName model
-     * @param bool $dryRun false
-     * @param query $query custom query to replace the default find if any
-     * @return number of affected records
+     * @param bool|null $dryRun false
+     * @param \Cake\ORM\Query|null $query custom query to replace the default find if any
+     * @return int of affected records
      */
-    public function cleanupHardDeleted(string $modelName, $dryRun = false, Query $query = null)
+    public function cleanupHardDeleted(string $modelName, ?bool $dryRun = false, ?Query $query = null): int
     {
         if (!isset($query)) {
             $query = $this->query()

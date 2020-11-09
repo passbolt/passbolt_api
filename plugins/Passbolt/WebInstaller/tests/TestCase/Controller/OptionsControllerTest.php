@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
     public function testWebInstallerOptionViewSuccess()
     {
         $this->get('/install/options');
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('Options', $data);
     }
@@ -71,7 +73,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
             'force_ssl' => 0,
         ];
         $this->post('/install/options', $postData);
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('The data entered are not correct', $data);
         $this->assertSession(null, 'webinstaller.options');

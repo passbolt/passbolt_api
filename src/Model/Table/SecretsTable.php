@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace App\Model\Table;
 
-use App\Error\Exception\CustomValidationException;
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\PermissionsCleanupTrait;
@@ -32,15 +33,13 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsTo $Resources
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- *
- * @method \App\Model\Entity\Secret get($primaryKey, $options = [])
- * @method \App\Model\Entity\Secret newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Secret[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Secret|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Secret patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Secret[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Secret findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \App\Model\Entity\Secret get($primaryKey, ?array $options = [])
+ * @method \App\Model\Entity\Secret newEntity($data = null, ?array $options = [])
+ * @method \App\Model\Entity\Secret[] newEntities(array $data, ?array $options = [])
+ * @method \App\Model\Entity\Secret|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \App\Model\Entity\Secret patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Secret[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Secret findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class SecretsTable extends Table
@@ -56,7 +55,7 @@ class SecretsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -76,21 +75,21 @@ class SecretsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->uuid('resource_id')
             ->requirePresence('resource_id', 'create')
-            ->notEmpty('resource_id');
+            ->notEmptyString('resource_id');
 
         $validator
             ->uuid('user_id')
             ->requirePresence('user_id', 'create')
-            ->notEmpty('user_id');
+            ->notEmptyString('user_id');
 
         $validator
             ->ascii('data', __('The message is not a valid armored gpg message.'))
@@ -99,7 +98,7 @@ class SecretsTable extends Table
                 'message' => __('The message is not a valid armored gpg message.'),
             ])
             ->requirePresence('data', 'create', __('A message is required.'))
-            ->notEmpty('data', __('The message cannot be empty.'));
+            ->notEmptyString('data', __('The message cannot be empty.'));
 
         return $validator;
     }
@@ -141,7 +140,7 @@ class SecretsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->addCreate(
             $rules->isUnique(

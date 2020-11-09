@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,28 +20,25 @@ use App\Model\Entity\Role;
 use App\Model\Table\RolesTable;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
-use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 
 class RolesHealthcheckService extends AbstractHealthcheckService
 {
-    const CATEGORY = 'data';
-    const NAME = 'Roles';
-    const CHECK_VALIDATES = 'Can validate';
+    public const CATEGORY = 'data';
+    public const NAME = 'Roles';
+    public const CHECK_VALIDATES = 'Can validate';
 
     /**
-     * @var RolesTable
+     * @var \App\Model\Table\RolesTable
      */
     private $table;
 
     /**
      * Roles Healthcheck constructor.
      *
-     * @param OpenPGPBackend $gpg gpg backend to use
-     * @param RolesTable $table secret table
+     * @param \App\Model\Table\RolesTable|null $table secret table
      */
-    public function __construct($gpg = null, $table = null)
+    public function __construct(?RolesTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Roles');
@@ -49,7 +48,7 @@ class RolesHealthcheckService extends AbstractHealthcheckService
     /**
      * @inheritDoc
      */
-    public function check()
+    public function check(): array
     {
         $records = $this->table->find()->all();
         if (count($records) != 4) {
@@ -66,17 +65,17 @@ class RolesHealthcheckService extends AbstractHealthcheckService
     /**
      * Validates
      *
-     * @param Role $role role
+     * @param \App\Model\Entity\Role $role role
      * @return void
      */
-    private function canValidate(Role $role)
+    private function canValidate(Role $role): void
     {
         $copy = $this->table->newEntity($role->toArray());
         $error = $copy->getErrors();
 
         if (count($error)) {
-            $this->checks[self::CHECK_VALIDATES]->fail()
-            ->addDetail(__('Validation failed for role {0}. {1}', $role->id, json_encode($copy->getErrors())), Healthcheck::STATUS_ERROR);
+            $msg = __('Validation failed for role {0}. {1}', $role->id, json_encode($copy->getErrors()));
+            $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         } else {
             $this->checks[self::CHECK_VALIDATES]
                 ->addDetail(__('Validation success for role {0}', $role->id), Healthcheck::STATUS_SUCCESS);

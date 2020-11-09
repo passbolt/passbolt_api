@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Passbolt\WebInstaller\Form\AccountCreationForm;
 
@@ -22,9 +23,10 @@ class AccountCreationController extends WebInstallerController
 {
     /**
      * Initialize.
+     *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->stepInfo['next'] = 'install/installation';
@@ -33,6 +35,7 @@ class AccountCreationController extends WebInstallerController
 
     /**
      * Index
+     *
      * @return void|mixed
      */
     public function index()
@@ -47,6 +50,7 @@ class AccountCreationController extends WebInstallerController
 
     /**
      * Index post
+     *
      * @return void|mixed
      */
     protected function indexPost()
@@ -63,7 +67,8 @@ class AccountCreationController extends WebInstallerController
 
     /**
      * Get and validate the posted data.
-     * @throws Exception If the user is not valid
+     *
+     * @throws \Cake\Core\Exception\Exception If the user is not valid
      * @return array
      */
     protected function getAndValidateData()

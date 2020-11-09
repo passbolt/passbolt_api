@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -80,9 +82,9 @@ hcciUFw5
 
         // Update memberships.
         // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
         // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-nancy"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
@@ -112,7 +114,7 @@ hcciUFw5
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userAId = UuidFactory::uuid("user.id.ada");
+        $userAId = UuidFactory::uuid('user.id.ada');
         $userCId = UuidFactory::uuid('user.id.carol');
         $userFId = UuidFactory::uuid('user.id.frances');
         $resourceCId = UuidFactory::uuid('resource.id.chai');
@@ -193,11 +195,11 @@ hcciUFw5
 
         // Remove users from the group
         // Remove Kathleen who has access to the group resources only because of her membership.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
 
         // Remove a user who has its own access to the same resource the group has.
         // Remove lynne who has a direct access to the resource chai.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-lynne"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-lynne'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
@@ -233,7 +235,7 @@ hcciUFw5
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userAId = UuidFactory::uuid("user.id.ada");
+        $userAId = UuidFactory::uuid('user.id.ada');
         $userCId = UuidFactory::uuid('user.id.carol');
         $userFId = UuidFactory::uuid('user.id.frances');
         $userJId = UuidFactory::uuid('user.id.jean');
@@ -253,17 +255,17 @@ hcciUFw5
 
         // Update memberships.
         // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
         // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-nancy"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
 
         // Remove users from the group
         // Remove Kathleen who has access to the group resources only because of her membership.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
 
         // Remove a user who has its own access to the same resource the group has.
         // Remove lynne who has a direct access to the resource chai.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-lynne"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-lynne'), 'delete' => true];
 
         // Add a user who has not access to the group resources before adding it to the group.
         // Add Frances.
@@ -385,9 +387,9 @@ hcciUFw5
 
         // Update memberships.
         // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
         // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-nancy"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
 
         // Update the group users.
         $this->authenticateAs('admin');
@@ -428,11 +430,11 @@ hcciUFw5
 
         // Remove users from the group
         // Remove Kathleen who has access to the group resources only because of her membership.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
 
         // Remove a user who has its own access to the same resource the group has.
         // Remove lynne who has a direct access to the resource chai.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-lynne"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-lynne'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('admin');
@@ -474,9 +476,9 @@ hcciUFw5
 
         // Update memberships.
         // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
         // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-nancy"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
 
         // Try to add the user frances.
         $data = [
@@ -538,7 +540,7 @@ hcciUFw5
         $changes = [];
 
         // Delete irene from the group developer
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-lynne"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-lynne'), 'delete' => true];
 
         // Update the group.
         $this->authenticateAs('admin');
@@ -563,7 +565,7 @@ hcciUFw5
 
         // Remove users from the group
         // Remove Kathleen who has access to the group resources only because of her membership.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
 
         // Update the group name.
         $this->authenticateAs('admin');

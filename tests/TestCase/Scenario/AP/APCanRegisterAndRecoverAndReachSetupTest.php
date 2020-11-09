@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,8 +17,6 @@
 namespace App\Test\TestCase\Scenario\AP;
 
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Table\AuthenticationTokensTable;
-use App\Model\Table\UsersTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;

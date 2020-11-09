@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,9 @@ class GnupgTest extends TestCase
 
     public $originalErrorSettings;
 
-    /** @var Gnupg */
+    /**
+     * @var Gnupg
+     */
     public $gnupg;
 
     public function setup()
@@ -76,7 +80,6 @@ class GnupgTest extends TestCase
 
     public function testGnupgSetEncryptKeyError_InvalidArmoredKey()
     {
-        ini_set('error_reporting', 0);
         $this->expectException(Exception::class);
         $invalidKey = '-----BEGIN PGP PRIVATE KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org

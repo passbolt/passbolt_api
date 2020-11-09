@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,7 +23,6 @@ use Cake\Utility\Hash;
 
 class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddleware
 {
-
     /**
      * Checks and sets the CSRF token depending on the HTTP verb.
      *

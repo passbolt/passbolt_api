@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,27 +20,26 @@ namespace App\Controller\Comments;
 use App\Controller\AppController;
 use App\Model\Table\CommentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
 
 /**
- * @property CommentsTable $Comments
+ * @property \App\Model\Table\CommentsTable $Comments
  */
 class CommentsViewController extends AppController
 {
     /**
      * Comments View action
      *
-     * @throws InvalidArgumentException if the foreignModelName of foreignKey is not correct
-     * @throws NotFoundException if the foreignKey can't be found
-     * @throws InternalErrorException if the comments can't be retrieved
+     * @throws \InvalidArgumentException if the foreignModelName of foreignKey is not correct
+     * @throws \Cake\Http\Exception\NotFoundException if the foreignKey can't be found
+     * @throws \Cake\Http\Exception\InternalErrorException if the comments can't be retrieved
      * @param string $foreignModelName name of the foreign model used for the comment
      * @param string $foreignKey uuid Identifier of the model
      * @return void
      */
-    public function view(string $foreignModelName, string $foreignKey)
+    public function view(string $foreignModelName, string $foreignKey): void
     {
         $foreignModelName = ucfirst($foreignModelName);
         // Check model sanity.
@@ -59,7 +60,12 @@ class CommentsViewController extends AppController
 
         $this->loadModel('Comments');
         try {
-            $comments = $this->Comments->findViewForeignComments($this->User->id(), $foreignModelName, $foreignKey, $options);
+            $comments = $this->Comments->findViewForeignComments(
+                $this->User->id(),
+                $foreignModelName,
+                $foreignKey,
+                $options
+            );
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('Could not find comments for the requested model.'));
         }

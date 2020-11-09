@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,7 +33,7 @@ class EntitiesHistoryTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -75,41 +77,41 @@ class EntitiesHistoryTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->uuid('action_log_id', __('action_log_id should be a uuid'))
-            ->notEmpty('action_log_id', __('action_log_id should not be empty'))
+            ->notEmptyString('action_log_id', __('action_log_id should not be empty'))
             ->requirePresence('action_log_id', 'create', __('action_log_id is required'));
 
         $validator
             ->ascii('foreign_model', __('foreign_model should be ascii'))
             ->maxLength('foreign_model', 36, __('foreign_model should not exceed 255 characters'))
             ->requirePresence('foreign_model', 'create', __('foreign_model is required'))
-            ->notEmpty('foreign_model', __('foreign_model should not be empty'));
+            ->notEmptyString('foreign_model', __('foreign_model should not be empty'));
 
         $validator
             ->uuid('foreign_key', __('foreign_key should be a uuid'))
-            ->notEmpty('foreign_key', __('foreign_key should not be empty'))
+            ->notEmptyString('foreign_key', __('foreign_key should not be empty'))
             ->requirePresence('foreign_key', 'create', __('foreign_key is required'));
 
         $validator
             ->inList('crud', EntityHistory::CRUD, __('The crud provided is not supported'))
             ->requirePresence('crud', 'create', __('crud is required'))
-            ->notEmpty('crud', __('crud should not be empty'));
+            ->notEmptyString('crud', __('crud should not be empty'));
 
         return $validator;
     }
 
     /**
      * Return a entity_history entity.
-     * @param array $data entity data
      *
-     * @return EntityHistory
+     * @param array $data entity data
+     * @return \Passbolt\Log\Model\Entity\EntityHistory
      */
     public function buildEntity(array $data)
     {
@@ -144,11 +146,10 @@ class EntitiesHistoryTable extends Table
      * Create a new entity_history.
      *
      * @param array $data the data: foreign_key and foreign_model
-     * @param UserAction $userAction userAction object
-     *
-     * @return UserAction|bool
-     * @throws ValidationException
-     * @throws InternalErrorException
+     * @param \App\Utility\UserAction $userAction userAction object
+     * @return \App\Utility\UserAction|bool
+     * @throws \App\Error\Exception\ValidationException
+     * @throws \Cake\Http\Exception\InternalErrorException
      */
     public function create(array $data, UserAction $userAction)
     {

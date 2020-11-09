@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -44,6 +46,7 @@ class EmailPreview
 
     /**
      * Return the generated content of the email
+     *
      * @return string
      */
     public function getContent()
@@ -53,6 +56,7 @@ class EmailPreview
 
     /**
      * Return the headers used to send the email
+     *
      * @return string
      */
     public function getHeaders()

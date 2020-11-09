@@ -1,16 +1,13 @@
 <?php
 namespace App\Test\Fixture\Base;
 
-use App\Utility\UuidFactory;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * OrganizationSettingsFixture
- *
  */
 class OrganizationSettingsFixture extends TestFixture
 {
-
     /**
      * Fields
      *

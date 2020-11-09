@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,23 +21,22 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
-use App\Model\Table\ResourcesTable;
 use App\Model\Table\ResourceTypesTable;
+use Cake\Core\Configure;
 use Cake\Event\Event;
-use Exception;
 
 /**
- * @property ResourcesTable $Resources
+ * @property \App\Model\Table\ResourcesTable $Resources
  */
 class ResourcesAddController extends AppController
 {
-    const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
+    public const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
 
     /**
      * Resource Add action
      *
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function add()
     {
@@ -70,7 +71,7 @@ class ResourcesAddController extends AppController
      * Build the resource entity from user input
      *
      * @param array $data Array of data
-     * @return resource resource entity
+     * @return Resource
      */
     protected function _buildAndValidateEntity(array $data)
     {
@@ -89,11 +90,12 @@ class ResourcesAddController extends AppController
             $data['secrets'][0]['user_id'] = $this->User->id();
         }
 
-        if (!isset($data['resource_type_id'])) {
+        if (!isset($data['resource_type_id']) || !Configure::read('passbolt.plugins.resourceTypes.enabled')) {
             $data['resource_type_id'] = ResourceTypesTable::getDefaultTypeId();
         }
 
         // Build entity and perform basic check
+        /** @var Resource $resource */
         $resource = $this->Resources->newEntity($data, [
             'accessibleFields' => [
                 'name' => true,
@@ -135,8 +137,8 @@ class ResourcesAddController extends AppController
     /**
      * Manage validation errors.
      *
-     * @param resource $resource resource
-     * @throws ValidationException if the resource validation failed
+     * @param Resource $resource resource
+     * @throws \App\Error\Exception\ValidationException if the resource validation failed
      * @return void
      */
     protected function _handleValidationError(Resource $resource)
@@ -149,7 +151,8 @@ class ResourcesAddController extends AppController
 
     /**
      * Trigger the after resource create event.
-     * @param resource $resource The created resource
+     *
+     * @param Resource $resource The created resource
      * @param array $data The request data.
      * @return void
      */

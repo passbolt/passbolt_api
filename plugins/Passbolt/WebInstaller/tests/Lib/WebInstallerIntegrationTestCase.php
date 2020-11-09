@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -85,7 +87,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
         return $config;
     }
 
-    public function initWebInstallerSession(array $options = [])
+    public function initWebInstallerSession(?array $options = [])
     {
         $session = ['initialized' => true] + $options;
         $this->session(['webinstaller' => $session]);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
@@ -62,7 +63,7 @@ class SessionPreventExtensionMiddleware
     /**
      * Check if the session should not be extented for a given request.
      *
-     * @param ServerRequest $request The request.
+     * @param \Cake\Http\ServerRequest $request The request.
      * @return bool
      */
     protected function shouldSessionExtensionPrevented(ServerRequest $request)
@@ -71,6 +72,6 @@ class SessionPreventExtensionMiddleware
         $controller = Hash::get($params, 'controller');
         $action = Hash::get($params, 'action');
 
-        return $controller === "AuthIsAuthenticated" && $action === "isAuthenticated";
+        return $controller === 'AuthIsAuthenticated' && $action === 'isAuthenticated';
     }
 }

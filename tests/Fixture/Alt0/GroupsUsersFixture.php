@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * GroupsUsersFixture
- *
  */
 class GroupsUsersFixture extends TestFixture
 {
-
     /**
      * Fields
      *

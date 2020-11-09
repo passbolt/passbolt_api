@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 namespace Passbolt\AccountSettings\Model\Table\Traits;
 
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
@@ -38,7 +39,7 @@ trait ThemeSettingsTrait
         $validator
             ->add('value', ['isValidTheme' => [
                 'on' => function ($context) {
-                    return (isset($context['data']['property']) && $context['data']['property'] === 'theme');
+                    return isset($context['data']['property']) && $context['data']['property'] === 'theme';
                 },
                 'rule' => [$this, 'isValidTheme'],
                 'message' => __('This theme is not supported.'),
@@ -54,9 +55,9 @@ trait ThemeSettingsTrait
      * @param array $context not in use
      * @return bool
      */
-    public function isValidTheme(string $value, array $context = null)
+    public function isValidTheme(string $value, ?array $context = null)
     {
-        return in_array($value, Hash::extract($this->findAllThemes(), "{n}.name"));
+        return in_array($value, Hash::extract($this->findAllThemes(), '{n}.name'));
     }
 
     /**
@@ -84,7 +85,7 @@ trait ThemeSettingsTrait
      */
     public function findAllThemes()
     {
-        $defaultCssFileName = Configure::read('passbolt.plugins.accountSettings.themes.css');
+        $defaultCssFileName = 'api_main.min.css';
         $themesPath = WWW_ROOT . 'css' . DS . 'themes';
 
         $dir = new Folder($themesPath);
@@ -106,7 +107,8 @@ trait ThemeSettingsTrait
                     'preview' => Router::url('/img/themes/' . $defaultPreviewImageName, true),
                 ];
             } else {
-                $msg = __('ThemesIndexController: Could not load theme {0}, the main css file or preview image is missing', $dir);
+                $msg = __('ThemesIndexController: Could not load theme {0}.', $dir) . ' ';
+                $msg .= __('The main css file or preview image is missing');
                 Log::error($msg);
             }
         }

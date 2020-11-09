@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -90,7 +92,7 @@ class CleanupTask extends AppShell
      * @return void
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->loadModel('Users');
@@ -159,7 +161,8 @@ class CleanupTask extends AppShell
 
         if ($totalErrorCount) {
             if ($dryRun) {
-                $this->out(__('{0} issues detected, please run the same command without --dry-run to fix them.', $totalErrorCount));
+                $msg = __('{0} issues detected, please re-run without --dry-run to fix.', $totalErrorCount);
+                $this->out($msg);
             } else {
                 $this->out(__('{0} issues fixed!', $totalErrorCount));
             }

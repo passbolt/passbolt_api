@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -137,7 +139,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     public function testFilterIsSharedWithMeSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = "filter[is-shared-with-me]=1";
+        $urlParameter = 'filter[is-shared-with-me]=1';
         $this->getJson("/resources.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');

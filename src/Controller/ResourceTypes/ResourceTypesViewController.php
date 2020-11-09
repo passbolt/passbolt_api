@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,7 @@
 namespace App\Controller\ResourceTypes;
 
 use App\Controller\AppController;
-use App\Model\Table\ResourceTypesTable;
+use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
@@ -31,12 +33,16 @@ class ResourceTypesViewController extends AppController
      * Resource Types View action
      *
      * @param string $id uuid Identifier of the resource type
-     * @throws BadRequestException if the resource id is not a uuid
-     * @throws NotFoundException if the resource does not exist
+     * @throws \Cake\Http\Exception\NotFoundException if plugin is disabled by admin
+     * @throws \Cake\Http\Exception\BadRequestException if the resource id is not a uuid
+     * @throws \Cake\Http\Exception\NotFoundException if the resource does not exist
      * @return void
      */
     public function view(string $id)
     {
+        if (!Configure::read('passbolt.plugins.resourceTypes.enabled')) {
+            throw new NotFoundException();
+        }
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource id is not valid.'));
         }

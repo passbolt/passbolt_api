@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,12 +26,12 @@ use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefiniti
 class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificationSettingsSourceInterface
 {
     /**
-     * @var Schema
+     * @var \Cake\Form\Schema
      */
     private $schema;
 
     /**
-     * @param Schema $schema Schema to use to build notification settings
+     * @param \Cake\Form\Schema $schema Schema to use to build notification settings
      */
     public function __construct(Schema $schema)
     {
@@ -38,18 +40,20 @@ class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificatio
 
     /**
      * Return a new instance of DefaultEmailNotificationSettingsSource from a Cake Form instance
-     * @param CakeForm $form An instance of Cake form
-     * @return DefaultEmailNotificationSettingsSource
+     *
+     * @param \Cake\Form\Form $form An instance of Cake form
+     * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource
      */
     public static function fromCakeForm(CakeForm $form)
     {
-        return new static(($form)->schema());
+        return new static($form->schema());
     }
 
     /**
      * Return a new instance of DefaultEmailNotificationSettingsSource from a EmailNotificationSettingsDefinitionInterface instance
-     * @param EmailNotificationSettingsDefinitionInterface $formDefinition Form definition
-     * @return DefaultEmailNotificationSettingsSource
+     *
+     * @param \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface $formDefinition Form definition
+     * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource
      */
     public static function fromSettingsFormDefinition(EmailNotificationSettingsDefinitionInterface $formDefinition)
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,31 +20,25 @@ use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Entity\Gpgkey;
-use App\Model\Entity\User;
-use App\Model\Table\AuthenticationTokensTable;
-use App\Model\Table\GpgkeysTable;
-use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Http\Response;
 use Cake\Validation\Validation;
 
 /**
- * @property AuthenticationTokensTable $AuthenticationTokens
- * @property GpgkeysTable $Gpgkeys
- * @property UsersTable $Users
+ * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * @property \App\Model\Table\GpgkeysTable $Gpgkeys
+ * @property \App\Model\Table\UsersTable $Users
  */
 class SetupCompleteController extends AppController
 {
-    const COMPLETE_SUCCESS_EVENT_NAME = 'SetupCompleteController.complete.success';
+    public const COMPLETE_SUCCESS_EVENT_NAME = 'SetupCompleteController.complete.success';
 
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
-     * @return Response|null
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -59,14 +55,13 @@ class SetupCompleteController extends AppController
      * Setup completion
      * Save the user gpg public key and set the account to active
      *
-     * @throws BadRequestException if the user id is not a valid uuid
-     * @throws BadRequestException if the user was deleted, is already active or does not exist
-     * @throws BadRequestException if no authentication token was provided
-     * @throws BadRequestException if the authentication token is not a uuid
-     * @throws BadRequestException if the authentication token is expired or invalid
-     * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
-     * @throws InternalErrorException if something went wrong when updating the data
-     *
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a valid uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the user was deleted, is already active or does not exist
+     * @throws \Cake\Http\Exception\BadRequestException if no authentication token was provided
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
+     * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
+     * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
      * @param string $userId uuid of the user
      * @return void
      */
@@ -112,10 +107,10 @@ class SetupCompleteController extends AppController
      *
      * @param string $userId the user uuid the token belongs to
      * @param string $tokenType AuthenticationToken::TYPE_*
-     * @throws BadRequestException if no authentication token was provided
-     * @throws BadRequestException if the authentication token is not a uuid
-     * @throws BadRequestException if the authentication token is expired or invalid
-     * @return AuthenticationToken
+     * @throws \Cake\Http\Exception\BadRequestException if no authentication token was provided
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
+     * @return \App\Model\Entity\AuthenticationToken
      */
     protected function _getAndAssertToken(string $userId, string $tokenType)
     {
@@ -131,7 +126,7 @@ class SetupCompleteController extends AppController
             throw new BadRequestException(__('The authentication token is not valid or has expired.'));
         }
 
-        /** @var AuthenticationToken $token */
+        /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = $this->AuthenticationTokens->getByToken($tokenId);
 
         return $token;
@@ -141,9 +136,9 @@ class SetupCompleteController extends AppController
      * Return the user for matching the requesting id
      *
      * @param string $userId the user uuid
-     * @throws BadRequestException if the user id is not a valid uuid
-     * @throws BadRequestException if the user was deleted, is already active or does not exist
-     * @return User user entity
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a valid uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the user was deleted, is already active or does not exist
+     * @return \App\Model\Entity\User user entity
      */
     protected function _getAndAssertUser(string $userId)
     {
@@ -163,8 +158,8 @@ class SetupCompleteController extends AppController
      * Return the gpg key entity for matching the requesting id
      *
      * @param string $userId the user uuid
-     * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
-     * @return Gpgkey entity
+     * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
+     * @return \App\Model\Entity\Gpgkey entity
      */
     protected function _getAndAssertGpgkey(string $userId)
     {

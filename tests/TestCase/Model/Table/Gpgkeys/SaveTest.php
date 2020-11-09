@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -76,8 +78,6 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationFingerprint()
     {
         $fails = [
-            'integer' => 3,
-            'floats' => 3.5,
             'short string' => 'AF',
             'out of range char' => '03F60E958F4CB29723ACDF761353B5B15D9B054Z',
             'out of range emoji' => '03F60E958F4CB29723ACDF761353B5B15D9B054🔥',
@@ -96,8 +96,6 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationKeyId()
     {
         $fails = [
-            'integer' => 3,
-            'floats' => 3.5,
             'short string' => 'AF',
             'out of range char' => '03F60E9Z',
             'out of range emoji' => '03F60EE🔥',
@@ -115,8 +113,6 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationKeyType()
     {
         $fails = [
-            'integer' => 3,
-            'floats' => 3.5,
             'short string' => 'AFZ',
             'short string emoji' => '🔥🔥🔥',
         ];
@@ -139,8 +135,6 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationUidEmail()
     {
         $fails = [
-            'integer' => 3,
-            'floats' => 3.5,
             'short string' => 'AFZ',
             'email contains emoji' => 'uid (comment) <🔥@nope.com>',
         ];

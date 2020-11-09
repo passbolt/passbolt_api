@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,31 +19,29 @@ namespace Passbolt\Reports\Controller\Reports;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
-use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Exception;
 use InvalidArgumentException;
 use Passbolt\Reports\Service\ReportViewService;
 use Passbolt\Reports\Utility\ReportInterface;
 
 /**
- * @property UsersTable $Users
+ * @property \App\Model\Table\UsersTable $Users
  */
 class ReportsViewController extends AppController
 {
-    const DEFAULT_LAYOUT = 'Passbolt/Reports.Reports/ReportsLayout';
+    public const DEFAULT_LAYOUT = 'Passbolt/Reports.Reports/ReportsLayout';
 
     /**
-     * @var ReportViewService
+     * @var \Passbolt\Reports\Service\ReportViewService
      */
     private $reportViewService;
 
     /**
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->reportViewService = new ReportViewService();
@@ -50,8 +50,8 @@ class ReportsViewController extends AppController
 
     /**
      * @param string $reportSlug Slug of the report to retrieve
-     * @throws Exception
-     * @throws BadRequestException If the requested report does not exist
+     * @throws \Exception
+     * @throws \Cake\Http\Exception\BadRequestException If the requested report does not exist
      * @return void
      */
     public function view(string $reportSlug)
@@ -89,12 +89,14 @@ class ReportsViewController extends AppController
      * Format request data
      * Get supported options from report service and extract / validate them using QueryString component
      *
-     * @param FindIndexOptions $supportedOptions allowed options
-     * @return FindIndexOptions
+     * @param \App\Model\Table\Dto\FindIndexOptions $supportedOptions allowed options
+     * @return \App\Model\Table\Dto\FindIndexOptions
      */
     private function formatRequestData(FindIndexOptions $supportedOptions)
     {
-        $query = $this->QueryString->get($supportedOptions->getAllowedOptions(), $supportedOptions->getFilterValidators());
+        $allowedOptions = $supportedOptions->getAllowedOptions();
+        $validators = $supportedOptions->getFilterValidators();
+        $query = $this->QueryString->get($allowedOptions, $validators);
 
         return FindIndexOptions::createFromArray($query);
     }
@@ -102,7 +104,7 @@ class ReportsViewController extends AppController
     /**
      * Set view variables, theme and template for html render
      *
-     * @param ReportInterface $report Instance of Report to render
+     * @param \Passbolt\Reports\Utility\ReportInterface $report Instance of Report to render
      * @return void
      */
     private function renderReportInHtml(ReportInterface $report)
