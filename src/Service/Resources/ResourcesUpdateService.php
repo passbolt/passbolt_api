@@ -150,7 +150,7 @@ class ResourcesUpdateService
         $defaultType = ResourceTypesTable::getDefaultTypeId();
         if (!isset($meta['resource_type_id'])) {
             $meta['resource_type_id'] = $defaultType;
-        } elseif (!Configure::read('passbolt.plugin.resourceTypes.enabled')) {
+        } elseif (!Configure::read('passbolt.plugins.resourceTypes.enabled')) {
             if ($meta['resource_type_id'] !== $defaultType) {
                 throw new BadRequestException(__('Additional resource types are not enabled on this server.'));
             }
