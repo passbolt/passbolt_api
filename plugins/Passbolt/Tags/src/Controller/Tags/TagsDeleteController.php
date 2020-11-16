@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,8 +23,6 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
-use Passbolt\Tags\Model\Entity\Tag;
-use Passbolt\Tags\Model\Table\TagsTable;
 
 /**
  * @property TagsTable Tags
@@ -37,7 +37,7 @@ class TagsDeleteController extends AppController
      * @param string|null $id Id of the tag to delete
      * @return void
      */
-    public function delete(string $id = null)
+    public function delete(?string $id = null)
     {
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The tag id is not valid.'));
@@ -47,7 +47,7 @@ class TagsDeleteController extends AppController
         $this->loadModel('Passbolt/Tags.ResourcesTags');
 
         try {
-            /** @var Tag $tag */
+            /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
             $tag = $this->Tags->get($id, [
                 'contain' => ['ResourcesTags'],
             ]);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,18 +20,18 @@ namespace Passbolt\Folders\EventListener;
 use App\Model\Table\ResourcesTable;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Table;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 
 /**
  * Add the folderizable behavior at runtime to the core or other plugins table classes.
  *
  * Class AddFolderizableBehavior
+ *
  * @package Passbolt\Folders\EventListener
  */
 class AddFolderizableBehavior implements EventListenerInterface
 {
-    const TABLES_TO_ADD = [
+    public const TABLES_TO_ADD = [
         ResourcesTable::class,
     ];
 
@@ -44,14 +46,14 @@ class AddFolderizableBehavior implements EventListenerInterface
     }
 
     /**
-     * @param EventInterface $event Event
+     * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
     public function __invoke(EventInterface $event)
     {
         foreach (static::TABLES_TO_ADD as $allowed) {
             if ($event->getSubject() instanceof $allowed) {
-                /** @var Table $table */
+                /** @var \Cake\ORM\Table $table */
                 $table = $event->getSubject();
                 $table->addBehavior(FolderizableBehavior::class);
 

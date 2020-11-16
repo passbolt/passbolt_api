@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,24 +17,20 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
-use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Response;
-use Exception;
 
 /**
- * @property UsersTable Users
+ * @property \App\Model\Table\UsersTable Users
  */
 class UsersAddController extends UsersRegisterController
 {
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
-     * @return Response|null
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -44,8 +42,8 @@ class UsersAddController extends UsersRegisterController
     /**
      * User add action (admin only)
      *
-     * @throws ValidationException if user data does not validate
-     * @throws Exception
+     * @throws \App\Error\Exception\ValidationException if user data does not validate
+     * @throws \Exception
      * @return void
      */
     public function addPost()

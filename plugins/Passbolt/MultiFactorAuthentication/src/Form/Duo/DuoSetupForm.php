@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,7 +23,6 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupForm extends DuoVerifyForm
 {
-
     /**
      * Form post validation treatment
      * Add DUO as verified provider

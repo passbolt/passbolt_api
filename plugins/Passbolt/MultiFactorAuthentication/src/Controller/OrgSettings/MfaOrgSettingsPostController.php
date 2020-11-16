@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\OrgSettings;
 
-use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
@@ -27,9 +28,9 @@ class MfaOrgSettingsPostController extends MfaController
     /**
      * Handle Org Settings POST request
      *
-     * @throws CustomValidationException if the user provided data do not validate
-     * @throws ForbiddenException if the user is not an admin
-     * @throws BadRequestException if the request is not made using Ajax/Json
+     * @throws \App\Error\Exception\CustomValidationException if the user provided data do not validate
+     * @throws \Cake\Http\Exception\ForbiddenException if the user is not an admin
+     * @throws \Cake\Http\Exception\BadRequestException if the request is not made using Ajax/Json
      * @return void
      */
     public function post()
@@ -42,8 +43,10 @@ class MfaOrgSettingsPostController extends MfaController
         }
         // Allow some flexibility in inputs names
         $data = $this->request->getData();
-        if (isset($data[MfaSettings::PROVIDER_DUO]['hostname'])) {
-            $data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME] = $data[MfaSettings::PROVIDER_DUO]['hostname'];
+        $provider = MfaSettings::PROVIDER_DUO;
+        $hostname = MfaOrgSettings::DUO_HOSTNAME;
+        if (isset($data[$provider]['hostname'])) {
+            $data[$provider][$hostname] = $data[$provider]['hostname'];
         }
 
         $orgSettings = $this->mfaSettings->getOrganizationSettings();

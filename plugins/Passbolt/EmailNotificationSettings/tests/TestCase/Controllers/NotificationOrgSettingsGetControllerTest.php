@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,10 +16,8 @@
  */
 namespace Passbolt\EmailNotificationSettings\Test\TestCase\Controllers;
 
-use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
-use Cake\Event\EventManager;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 

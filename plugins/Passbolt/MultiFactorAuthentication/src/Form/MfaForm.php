@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,14 +23,14 @@ use Cake\Form\Form;
 class MfaForm extends Form
 {
     /**
-     * @var UserAccessControl
+     * @var \App\Utility\UserAccessControl
      */
     protected $uac;
 
     /**
      * TotpSettingsForm constructor.
      *
-     * @param UserAccessControl $uac access control
+     * @param \App\Utility\UserAccessControl $uac access control
      */
     public function __construct(UserAccessControl $uac)
     {

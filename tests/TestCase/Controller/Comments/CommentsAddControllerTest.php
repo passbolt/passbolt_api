@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,20 +17,21 @@
 
 namespace App\Test\TestCase\Controller\Comments;
 
-use App\Model\Entity\Role;
 use App\Model\Table\CommentsTable;
-use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 
 class CommentsAddControllerTest extends AppIntegrationTestCase
 {
-    /** @var CommentsTable Comments */
+    /**
+     * @var CommentsTable Comments
+     */
     public $Comments;
 
-    /** @var ResourcesTable Resources */
+    /**
+     * @var ResourcesTable Resources
+     */
     public $Resources;
 
     public $fixtures = [

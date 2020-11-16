@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -98,7 +100,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
         $tagId = UuidFactory::uuid('tag.id.hotel');
         $this->delete("/tags/$tagId.json?api-version=v2");
         $this->assertResponseCode(403);
-        $result = ($this->_getBodyAsString());
+        $result = $this->_getBodyAsString();
         $this->assertContains('Missing CSRF token cookie', $result);
     }
 

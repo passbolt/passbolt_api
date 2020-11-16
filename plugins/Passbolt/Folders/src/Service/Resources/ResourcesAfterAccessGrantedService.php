@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,14 +18,12 @@
 namespace Passbolt\Folders\Service\Resources;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\GroupsUsersTable;
+use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourcesTable;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
-use Exception;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService;
@@ -31,17 +31,17 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeS
 class ResourcesAfterAccessGrantedService
 {
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @var ResourcesTable
+     * @var \App\Model\Table\ResourcesTable
      */
     private $resourcesTable;
 
     /**
-     * @var FoldersRelationsAddItemToUserTreeService
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService
      */
     private $foldersRelationsAddItemToUserTree;
 
@@ -58,12 +58,12 @@ class ResourcesAfterAccessGrantedService
     /**
      * Handle a granted access on a resource.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Permission $permission The granted permission
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \App\Model\Entity\Permission $permission The granted permission
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    public function afterAccessGranted(UserAccessControl $uac, Permission $permission)
+    public function afterAccessGranted(UserAccessControl $uac, Permission $permission): void
     {
         $resource = $this->getResource($uac, $permission->aco_foreign_key);
 
@@ -77,12 +77,12 @@ class ResourcesAfterAccessGrantedService
     /**
      * Retrieve the resource.
      *
-     * @param UserAccessControl $uac UserAccessControl updating the resource
+     * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
      * @param string $resourceId The resource identifier to retrieve.
      * @return \App\Model\Entity\Resource
-     * @throws NotFoundException If the resource does not exist.
+     * @throws \Cake\Http\Exception\NotFoundException If the resource does not exist.
      */
-    private function getResource(UserAccessControl $uac, string $resourceId)
+    private function getResource(UserAccessControl $uac, string $resourceId): Resource
     {
         try {
             return $this->resourcesTable->get($resourceId, [
@@ -97,13 +97,13 @@ class ResourcesAfterAccessGrantedService
     /**
      * Add a resource to a group of users trees.
      *
-     * @param UserAccessControl $uac The operator
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param string $groupId The target group
      * @return void
-     * @throws Exception If something wrong occurred
+     * @throws \Exception If something wrong occurred
      */
-    private function addResourceToGroupUsersTrees(UserAccessControl $uac, \App\Model\Entity\Resource $resource, string $groupId)
+    private function addResourceToGroupUsersTrees(UserAccessControl $uac, Resource $resource, string $groupId): void
     {
         $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
@@ -114,14 +114,15 @@ class ResourcesAfterAccessGrantedService
     /**
      * Add a resource to a user tree.
      *
-     * @param UserAccessControl $uac The operator
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param string $userId The target user
      * @return void
-     * @throws Exception If something wrong occurred
+     * @throws \Exception If something wrong occurred
      */
-    private function addResourceToUserTree(UserAccessControl $uac, \App\Model\Entity\Resource $resource, string $userId)
+    private function addResourceToUserTree(UserAccessControl $uac, Resource $resource, string $userId): void
     {
-        $this->foldersRelationsAddItemToUserTree->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $userId);
+        $foreignModel = FoldersRelation::FOREIGN_MODEL_RESOURCE;
+        $this->foldersRelationsAddItemToUserTree->addItemToUserTree($uac, $foreignModel, $resource->id, $userId);
     }
 }

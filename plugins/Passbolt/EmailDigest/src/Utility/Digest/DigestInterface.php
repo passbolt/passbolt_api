@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace Passbolt\EmailDigest\Utility\Digest;
 
 use Cake\ORM\Entity;
-use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
  * The emails grouped together following rules defined in what we call a digest.
@@ -33,21 +34,24 @@ interface DigestInterface
 {
     /**
      * Add some email entities to digest.
-     * @param Entity $emailQueueEntity An email entity to add to the digest
-     * @return DigestInterface
+     *
+     * @param \Cake\ORM\Entity $emailQueueEntity An email entity to add to the digest
+     * @return \Passbolt\EmailDigest\Utility\Digest\DigestInterface
      */
     public function addEmailEntity(Entity $emailQueueEntity);
 
     /**
      * Return a list of emails. Even if the digest return one, the digest must be in an array.
      * This function contains the strategy for the digest to use to compose the final emails
-     * @return EmailDigestInterface[]
+     *
+     * @return \Passbolt\EmailDigest\Utility\Digest\EmailDigestInterface[]
      */
     public function marshalEmails();
 
     /**
      * Return a boolean indicating if the digest can handle the given email entity from email queue and marshal it into an email digest.
-     * @param Entity $emailQueueEntity An instance of EmailDigest
+     *
+     * @param \Cake\ORM\Entity $emailQueueEntity An instance of EmailDigest
      * @return bool
      */
     public function canAddToDigest(Entity $emailQueueEntity);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -60,7 +62,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUpdateSuccess_UpdateName()
     {
-        list($folderA, $userAId) = $this->insertFixture_UpdateName();
+        [$folderA, $userAId] = $this->insertFixture_UpdateName();
 
         $data = ['name' => 'A updated'];
         $this->authenticateAs('ada');
@@ -93,9 +95,9 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUpdateError_ValidationErrors()
     {
-        list($folderA, $userAId) = $this->insertFixture_UpdateName();
+        [$folderA, $userAId] = $this->insertFixture_UpdateName();
         $this->authenticateAs('ada');
-        $data = ['name' => ""];
+        $data = ['name' => ''];
         $this->putJson("/folders/$folderA->id.json?api-version=2", $data);
         $this->assertError(400, 'Could not validate folder data.');
     }
@@ -111,7 +113,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesUpdateError_InsufficientPermission()
     {
-        list($folderA, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $data = [
             'name' => ['A updated'],
         ];
@@ -150,7 +152,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUpdateResourcesError_NoAccessToFolder()
     {
-        list($folderA, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $this->authenticateAs('dame');
         $data = ['name' => 'A updated'];
         $this->putJson("/folders/$folderA->id.json", $data);

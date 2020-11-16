@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,7 +19,6 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ResourcesUpdateNotificationTest extends AppIntegrationTestCase
@@ -71,16 +72,10 @@ W3AI8+rWjK8MGH2T88hCYI/6
         return $data;
     }
 
-    /**
-     * @var ResourcesTable
-     */
-    private $resourcesTable;
-
     public function setUp()
     {
         parent::setUp();
         $this->loadNotificationSettings();
-        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function tearDown()

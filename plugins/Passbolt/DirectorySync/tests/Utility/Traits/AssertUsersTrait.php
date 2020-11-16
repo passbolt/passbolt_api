@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -18,7 +20,7 @@ use Cake\ORM\TableRegistry;
 
 trait AssertUsersTrait
 {
-    public function assertUserExist($id, $where = null)
+    public function assertUserExist($id, ?array $where = null)
     {
         $where['id'] = $id;
         $Users = TableRegistry::getTableLocator()->get('Users');
@@ -26,7 +28,7 @@ trait AssertUsersTrait
         $this->assertEquals(1, count($results), __('The user does not exist'));
     }
 
-    public function assertUserNotExist($where = null)
+    public function assertUserNotExist(?array $where = null)
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $results = $Users->find()->where($where)->all()->toArray();

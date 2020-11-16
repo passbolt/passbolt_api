@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,18 +29,18 @@ use Cake\Validation\Validator;
 
 /**
  * Class OrganizationSettingsTable
+ *
  * @package App\Model\Table
  */
 class OrganizationSettingsTable extends Table
 {
-
     /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -55,17 +57,17 @@ class OrganizationSettingsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('property')
             ->maxLength('property', 256)
             ->requirePresence('property', 'create')
-            ->notEmpty('property')
+            ->notEmptyString('property')
             ->add('property', ['isValidProperty' => [
                 'rule' => [$this, 'isValidProperty'],
                 'message' => __('This setting is not supported.'),
@@ -74,13 +76,13 @@ class OrganizationSettingsTable extends Table
         $validator
             ->uuid('property_id')
             ->requirePresence('property_id', 'create')
-            ->notEmpty('property_id');
+            ->notEmptyString('property_id');
 
         $validator
             ->utf8Extended('value')
             ->maxLength('property', 10240)
             ->requirePresence('value', 'create')
-            ->notEmpty('value');
+            ->notEmptyString('value');
 
         return $validator;
     }
@@ -92,10 +94,10 @@ class OrganizationSettingsTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function isValidProperty(string $value, array $context = null)
+    public function isValidProperty(string $value, ?array $context = null)
     {
         // Format should always be camel case, without numbers. Only points are allowed as special characters.
-        return (preg_match('/^[a-zA-Z][a-zA-Z.]+[a-z]$/', $value) === 1);
+        return preg_match('/^[a-zA-Z][a-zA-Z.]+[a-z]$/', $value) === 1;
     }
 
     /**
@@ -105,7 +107,7 @@ class OrganizationSettingsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         // Add rule
         $rules->add($rules->isUnique(['property_id']), 'uniquePropertyId', [
@@ -136,8 +138,8 @@ class OrganizationSettingsTable extends Table
      *
      * @param string $property The property name
      * @param mixed $value The property value
-     * @param UserAccessControl $control user access control object
-     * @return OrganizationSetting
+     * @param \App\Utility\UserAccessControl $control user access control object
+     * @return \App\Model\Entity\OrganizationSetting
      */
     public function createOrUpdateSetting(string $property, string $value, UserAccessControl $control)
     {
@@ -172,7 +174,7 @@ class OrganizationSettingsTable extends Table
      * Delete an organization setting
      *
      * @param string $property The property name
-     * @param UserAccessControl $control user access control object
+     * @param \App\Utility\UserAccessControl $control user access control object
      * @return void
      */
     public function deleteSetting(string $property, UserAccessControl $control)
@@ -194,8 +196,8 @@ class OrganizationSettingsTable extends Table
 
     /**
      * Get settings property id
-     * @param string $property property name
      *
+     * @param string $property property name
      * @return string (uuid) property id
      */
     protected function _getSettingPropertyId(string $property)

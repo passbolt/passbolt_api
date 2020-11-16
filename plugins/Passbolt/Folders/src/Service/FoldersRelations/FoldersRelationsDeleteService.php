@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,7 +22,7 @@ use Cake\ORM\TableRegistry;
 class FoldersRelationsDeleteService
 {
     /**
-     * @var FoldersRelationsTable
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsTable
      */
     private $foldersRelationsTable;
 
@@ -34,6 +36,7 @@ class FoldersRelationsDeleteService
 
     /**
      * Delete a folder relation
+     *
      * @param string $userId The target user
      * @param string $foreignId The target item
      * @return void

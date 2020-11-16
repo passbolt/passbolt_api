@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * ActionLogsFixture
- *
  */
 class ActionLogsFixture extends TestFixture
 {
-
     /**
      * Fields
      *

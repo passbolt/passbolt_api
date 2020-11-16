@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -42,8 +44,6 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
 
-    private $Permissions;
-
     public $fixtures = [
         AvatarsFixture::class,
         FavoritesFixture::class,
@@ -71,7 +71,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUsersDeleteSuccess_PersonalFolder()
     {
-        list($folderA, $userAId) = $this->insertFixture_PersonalFolder();
+        [$folderA, $userAId] = $this->insertFixture_PersonalFolder();
         $this->authenticateAs('admin');
 
         $this->deleteJson("/users/$userAId.json?api-version=v2");
@@ -93,7 +93,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUsersDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
         $this->authenticateAs('admin');
 
         $this->deleteJson("/users/$userAId.json?api-version=v2");

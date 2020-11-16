@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -18,18 +20,21 @@ interface DirectoryInterface
 {
     /**
      * Get users.
+     *
      * @return mixed
      */
     public function getUsers();
 
     /**
      * Get groups.
+     *
      * @return mixed
      */
     public function getGroups();
 
     /**
      * Get filtered directory results.
+     *
      * @return mixed
      */
     public function getFilteredDirectoryResults();

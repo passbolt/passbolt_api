@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,25 +19,23 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
-use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Response;
 
 /**
- * @property UsersTable Users
+ * @property \App\Model\Table\UsersTable Users
  */
 class UsersRegisterController extends AppController
 {
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
-     * @throws NotFoundException if registration is not set to public
-     * @return Response|null
+     * @param \Cake\Event\Event $event An Event instance
+     * @throws \Cake\Http\Exception\NotFoundException if registration is not set to public
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -56,7 +56,7 @@ class UsersRegisterController extends AppController
      * Register user action GET
      * Display a registration form
      *
-     * @throws ForbiddenException if the current user is logged in
+     * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
      * @return void
      */
     public function registerGet()
@@ -78,7 +78,7 @@ class UsersRegisterController extends AppController
     /**
      * Register user action POST
      *
-     * @throws ForbiddenException if the current user is logged in
+     * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
      * @return void
      */
     public function registerPost()

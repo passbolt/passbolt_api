@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,11 +18,6 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationException;
-use App\Model\Table\GroupsTable;
-use App\Model\Table\GroupsUsersTable;
-use App\Model\Table\ResourcesTable;
-use App\Model\Table\SecretsTable;
 use App\Service\Groups\GroupsUpdateDryRunService;
 use App\Service\Groups\GroupsUpdateService;
 use App\Utility\UserAccessControl;
@@ -28,24 +25,22 @@ use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Response;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use Exception;
 
 /**
- * @property GroupsTable $Groups
- * @property GroupsUsersTable $GroupsUsers
- * @property ResourcesTable $Resources
- * @property SecretsTable $Secrets
+ * @property \App\Model\Table\GroupsTable $Groups
+ * @property \App\Model\Table\GroupsUsersTable $GroupsUsers
+ * @property \App\Model\Table\ResourcesTable $Resources
+ * @property \App\Model\Table\SecretsTable $Secrets
  */
 class GroupsUpdateController extends AppController
 {
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
-     * @return Response|null
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -62,9 +57,9 @@ class GroupsUpdateController extends AppController
      *
      * @param string $id The group identifier.
      * @return void
-     * @throws ForbiddenException If the user is not an admin
-     * @throws ValidationException If an error occurred when patching or saving the group
-     * @throws Exception If an unexpected error occurred
+     * @throws \Cake\Http\Exception\ForbiddenException If the user is not an admin
+     * @throws \App\Error\Exception\ValidationException If an error occurred when patching or saving the group
+     * @throws \Exception If an unexpected error occurred
      */
     public function update(string $id)
     {
@@ -94,11 +89,11 @@ class GroupsUpdateController extends AppController
     /**
      * Assert the request parameter.
      *
-     * @param UserAccessControl $uac The operator
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param string $id group uuid
      * @return void
-     * @throws ForbiddenException If the operator is not a group manager or an admin
-     * @throws BadRequestException if the group uuid id invalid
+     * @throws \Cake\Http\Exception\ForbiddenException If the operator is not a group manager or an admin
+     * @throws \Cake\Http\Exception\BadRequestException if the group uuid id invalid
      */
     protected function assertRequestParameter(UserAccessControl $uac, string $id)
     {
@@ -152,9 +147,9 @@ class GroupsUpdateController extends AppController
      *
      * @param string $id The identifier of the group to update.
      * @return void
-     * @throws ForbiddenException If the user is not an admin
-     * @throws ValidationException If an error occurred when patching or saving the group
-     * @throws Exception If something unexpected occurred
+     * @throws \Cake\Http\Exception\ForbiddenException If the user is not an admin
+     * @throws \App\Error\Exception\ValidationException If an error occurred when patching or saving the group
+     * @throws \Exception If something unexpected occurred
      */
     public function dryRun(string $id)
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,48 +26,56 @@ abstract class DirectoryEntry implements ArrayAccess
 {
     /**
      * id
+     *
      * @var string
      */
     public $id;
 
     /**
      * DN (directory name)
+     *
      * @var string
      */
     public $dn;
 
     /**
      * created date.
+     *
      * @var string.
      */
     public $created;
 
     /**
      * modified date.
+     *
      * @var string.
      */
     public $modified;
 
     /**
      * Object type.
+     *
      * @var null
      */
     public $type = null;
 
     /**
      * Corresponding ldap object.
+     *
      * @var null
      */
     private $ldapObject = null;
 
     /**
      * Mapping rules.
+     *
      * @var null
      */
     private $mappingRules = null;
 
     /**
      * Validation errors.
+     *
      * @var
      */
     private $errors = [];
@@ -73,9 +83,9 @@ abstract class DirectoryEntry implements ArrayAccess
     /**
      * DirectoryEntry constructor.
      *
-     * @param array $data data
+     * @param array|null $data data
      */
-    public function __construct(array $data = [])
+    public function __construct(?array $data = [])
     {
         if (!empty($data)) {
             $this->buildFromArray($data);
@@ -83,7 +93,7 @@ abstract class DirectoryEntry implements ArrayAccess
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function offsetSet($offset, $value)
     {
@@ -93,7 +103,7 @@ abstract class DirectoryEntry implements ArrayAccess
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function offsetExists($offset)
     {
@@ -101,7 +111,7 @@ abstract class DirectoryEntry implements ArrayAccess
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function offsetUnset($offset)
     {
@@ -109,15 +119,16 @@ abstract class DirectoryEntry implements ArrayAccess
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function offsetGet($offset)
     {
-        return isset($this->{$offset}) ? $this->{$offset} : null;
+        return $this->{$offset} ?? null;
     }
 
     /**
      * Check if entry is a group.
+     *
      * @return bool true or false
      */
     public function isGroup()
@@ -127,6 +138,7 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Check if entry is a user.
+     *
      * @return bool true or false
      */
     public function isUser()
@@ -136,8 +148,8 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Get field value.
-     * @param string $fieldName field name
      *
+     * @param string $fieldName field name
      * @return mixed field value
      * @throws \Exception if the corresponding field name cannot be found.
      */
@@ -148,10 +160,10 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Get ldap object field value.
-     * @param LdapObject $ldapObject ldap object.
+     *
+     * @param \LdapTools\Object\LdapObject $ldapObject ldap object.
      * @param string $fieldName field name.
      * @param array $mappingRules mapping rules.
-     *
      * @return mixed field value
      * @throws \Exception
      */
@@ -170,8 +182,8 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Build entry from array.
-     * @param array $data array of data
      *
+     * @param array $data array of data
      * @return $this
      */
     public function buildFromArray(array $data)
@@ -189,9 +201,9 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Build entry from a ldap object.
-     * @param LdapObject $ldapObject ldap object
-     * @param array $mappingRules mapping rules
      *
+     * @param \LdapTools\Object\LdapObject $ldapObject ldap object
+     * @param array $mappingRules mapping rules
      * @return $this
      * @throws \Exception
      */
@@ -218,6 +230,7 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Validate a DirectoryEntry object and populate errors accordingly.
+     *
      * @return bool
      */
     protected function _validate()
@@ -264,6 +277,7 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Return validation errors. an empty array if none.
+     *
      * @return array validation errors.
      */
     public function errors()
@@ -273,11 +287,12 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Return errors as a single string.
+     *
      * @return string validation errors as a single string.
      */
     public function getErrorsAsString()
     {
-        $str = "";
+        $str = '';
         foreach ($this->errors as $field => $errors) {
             foreach ($errors as $errorMsg) {
                 $str .= "$field: $errorMsg\n";
@@ -289,6 +304,7 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Check if Directory entry has validation errors.
+     *
      * @return bool true if errors, false otherwise.
      */
     public function hasErrors()
@@ -298,6 +314,7 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Transform entry to a simple array.
+     *
      * @return array
      */
     public function toArray()
@@ -319,6 +336,7 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Get entry type.
+     *
      * @return mixed|null entry type
      */
     public function getType()
@@ -328,17 +346,17 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Build from array.
-     * @param array $data data
      *
+     * @param array $data data
      * @return mixed DirectoryEntry
      */
     abstract public static function fromArray(array $data);
 
     /**
      * Build from ldap object.
-     * @param LdapObject $ldapObject ldap object.
-     * @param array $mappingRules mapping rules.
      *
+     * @param \LdapTools\Object\LdapObject $ldapObject ldap object.
+     * @param array $mappingRules mapping rules.
      * @return mixed DirectoryEntry
      */
     abstract public static function fromLdapObject(LdapObject $ldapObject, array $mappingRules);

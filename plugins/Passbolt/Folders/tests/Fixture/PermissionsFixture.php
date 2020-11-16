@@ -18,11 +18,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * PermissionsFixture
- *
  */
 class PermissionsFixture extends TestFixture
 {
-
     /**
      * Fields
      *

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -106,7 +108,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         foreach ($success as $case => $data) {
             $userId = UuidFactory::uuid('user.id.ada');
             $this->authenticateAs('ada');
-            $this->postJson("/resources.json?api-version=2", $data);
+            $this->postJson('/resources.json?api-version=2', $data);
             $this->assertSuccess();
 
             // Check the server response.
@@ -155,7 +157,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
         $data = $this->_getDummyPostData();
-        $this->post("/resources.json", $data);
+        $this->post('/resources.json', $data);
         $this->assertResponseCode(403);
         $data = $this->_getBodyAsString();
         $expect = 'Missing CSRF token cookie';
@@ -216,7 +218,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
         foreach ($errors as $caseLabel => $case) {
             $this->authenticateAs('ada');
-            $this->postJson("/resources.json?api-version=v2", $case['data']);
+            $this->postJson('/resources.json?api-version=v2', $case['data']);
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $error = Hash::get($arr, $case['errorField']);
@@ -228,7 +230,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
     public function testResourcesAddErrorNotAuthenticated()
     {
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->postJson('/resources.json?api-version=v2', $data);
         $this->assertAuthenticationError();
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -28,7 +30,7 @@ class ResourcesAddControllerTest extends TagPluginIntegrationTestCase
         'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
     ];
 
-    protected function _getDummyPostData($data = [])
+    protected function _getDummyPostData(?array $data = [])
     {
         $defaultData = [
             'name' => 'new resource name',
@@ -67,7 +69,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
     {
         $data = $this->_getDummyPostData();
         $this->authenticateAs('admin');
-        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->postJson('/resources.json?api-version=v2', $data);
         $this->assertSuccess();
 
         // Check the resource attributes.

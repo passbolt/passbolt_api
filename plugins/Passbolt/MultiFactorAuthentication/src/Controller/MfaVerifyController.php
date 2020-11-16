@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class MfaVerifyController extends MfaController
     /**
      * Trigger a redirect if MFA verification is not required
      *
-     * @throws BadRequestException if valid Verification token is already present in cookie
+     * @throws \Cake\Http\Exception\BadRequestException if valid Verification token is already present in cookie
      * @return void
      */
     protected function _handleVerifiedNotRequired()
@@ -46,8 +48,8 @@ class MfaVerifyController extends MfaController
     /**
      * Trigger an error if current MFA settings do not allow verify for the given provider
      *
-     * @throws InternalErrorException if there is no MFA settings for the user
-     * @throws BadRequestException if there is no MFA settings for this provider
+     * @throws \Cake\Http\Exception\InternalErrorException if there is no MFA settings for the user
+     * @throws \Cake\Http\Exception\BadRequestException if there is no MFA settings for this provider
      * @param string $provider name of the provider
      * @return void
      */

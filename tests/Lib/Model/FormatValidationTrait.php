@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
@@ -21,10 +22,10 @@ use Cake\Utility\Hash;
 
 trait FormatValidationTrait
 {
-
     /**
      * Defines a field that is not provided.
      * When used in assertFieldFormatValidation, the field will be removed from the entity before validation.
+     *
      * @var string
      */
     public static $FIELD_NOT_PROVIDED = '__NOT_PROVIDED__';
@@ -32,6 +33,7 @@ trait FormatValidationTrait
     /**
      * Defines a field that is left empty.
      * When used in assertFieldFormatValidation, the field will be set to '' before validation.
+     *
      * @var string
      */
     public static $FIELD_EMPTY = '__FIELD_EMPTY__';
@@ -39,6 +41,7 @@ trait FormatValidationTrait
     /**
      * Defines a field that is not scalar.
      * When used in assertFieldFormatValidation, the field will be set to [] before validation.
+     *
      * @var string
      */
     public static $FIELD_NOT_SCALAR = '__FIELD_NOT_SCALAR__';
@@ -48,8 +51,8 @@ trait FormatValidationTrait
      * This function will mainly process special fields such as FIELD_NOT_PROVIDED,
      * FIELD_EMPTY and FIELD_NOT_SCALAR and replace the value with what it should be.
      * for instance, FIELD_NOT_PROVIDED will be unset from the data array.
-     * @param $entityData
      *
+     * @param $entityData
      * @return mixed
      */
     private function _adjustEntityData($entityData)
@@ -113,14 +116,14 @@ trait FormatValidationTrait
                 $save = $entityTable->save($entity, ['checkRules' => false]);
 
                 if ($expectedResult == true) {
-                    $this->assertEquals(true, (bool)$save, __("The test for {0}:{1} = {2} is expected to save data", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(true, (bool)$save, __('The test for {0}:{1} = {2} is expected to save data', $fieldName, $testCaseName, $testCaseData));
                 } else {
-                    $this->assertEquals(false, (bool)$save, __("The test for {0}:{1} = {2} is not expected to save data", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(false, (bool)$save, __('The test for {0}:{1} = {2} is not expected to save data', $fieldName, $testCaseName, $testCaseData));
                     $errors = $entity->getErrors();
-                    $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertNotEmpty($errors, __('The test {0}:{1} = {2} should have returned an error.', $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
-                        __("The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.", $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
+                        __('The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.', $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
                     );
                 }
             }
@@ -163,14 +166,14 @@ trait FormatValidationTrait
                 $validate = $form->validate($formData);
 
                 if ($expectedResult == true) {
-                    $this->assertEquals(true, (bool)$validate, __("The test for {0}:{1} = {2} is expected to validate", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(true, (bool)$validate, __('The test for {0}:{1} = {2} is expected to validate', $fieldName, $testCaseName, $testCaseData));
                 } else {
-                    $this->assertEquals(false, (bool)$validate, __("The test for {0}:{1} = {2} is not expected to not validate", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(false, (bool)$validate, __('The test for {0}:{1} = {2} is not expected to not validate', $fieldName, $testCaseName, $testCaseData));
                     $errors = $form->getErrors();
-                    $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertNotEmpty($errors, __('The test {0}:{1} = {2} should have returned an error.', $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
-                        __("The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.", $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
+                        __('The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.', $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
                     );
                 }
             }
@@ -188,14 +191,14 @@ trait FormatValidationTrait
                 $save = $entityTable->save($entity, ['checkRules' => false]);
 
                 if ($expectedResult == true) {
-                    $this->assertEquals(true, (bool)$save, __("The test for {0}:{1} = {2} is expected to save data", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(true, (bool)$save, __('The test for {0}:{1} = {2} is expected to save data', $fieldName, $testCaseName, $testCaseData));
                 } else {
-                    $this->assertEquals(false, (bool)$save, __("The test for {0}:{1} = {2} is not expected to save data", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(false, (bool)$save, __('The test for {0}:{1} = {2} is not expected to save data', $fieldName, $testCaseName, $testCaseData));
                     $errors = $entity->getErrors();
-                    $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertNotEmpty($errors, __('The test {0}:{1} = {2} should have returned an error.', $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
-                        __("The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.", $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
+                        __('The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.', $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
                     );
                 }
             }
@@ -338,7 +341,7 @@ trait FormatValidationTrait
      * @param int $length default 255
      * @return array
      */
-    public static function getUtf8TestCases($length = 255)
+    public static function getUtf8TestCases(int $length = 255): array
     {
         $test = [
             'rule_name' => '_required',

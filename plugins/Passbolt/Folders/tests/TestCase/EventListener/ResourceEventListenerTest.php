@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace Passbolt\Folders\Test\TestCase\EventListener;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\EmailQueueFixture;
@@ -49,6 +50,7 @@ use Passbolt\Log\Test\Fixture\Base\PermissionsHistoryFixture;
 
 /**
  * \Passbolt\Folders\EventListener\ResourcesEventListener Test Case
+ *
  * @covers \Passbolt\Folders\EventListener\ResourcesEventListener
  */
 class ResourceEventListenerTest extends FoldersIntegrationTestCase
@@ -95,7 +97,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesEventListenerSuccess_AfterResourceAdded()
     {
-        list($userId, $folder) = $this->insertFixture_AfterResourceAdded();
+        [$userId, $folder] = $this->insertFixture_AfterResourceAdded();
         $data = [
             'name' => 'R1',
             'folder_parent_id' => $folder->id,
@@ -103,7 +105,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         ];
 
         $this->authenticateAs('ada');
-        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->postJson('/resources.json?api-version=v2', $data);
         $this->assertSuccess();
 
         $resource = $this->_responseJsonBody;
@@ -121,7 +123,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesEventListenerSuccess_AfterResourceSoftDeleted()
     {
-        list($userId, $resource) = $this->insertFixture_AfterResourceSoftDeleted();
+        [$userId, $resource] = $this->insertFixture_AfterResourceSoftDeleted();
         $data = $resource->toArray();
         $data['folder_parent_id'] = null;
 
@@ -143,7 +145,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesEventListenerSuccess_AfterAccessGranted()
     {
-        list($folder, $resource, $userAId, $userBId) = $this->insertFixture_AfterAccessGranted();
+        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_AfterAccessGranted();
 
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $data['secrets'][] = ['user_id' => $userBId, 'data' => Hash::get($this->getDummySecretData(), 'data')];
@@ -169,7 +171,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesEventListenerSuccess_AfterAccessRevoked()
     {
-        list($folder, $resource, $userAId, $userBId) = $this->insertFixture_AfterAccessRevoked();
+        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_AfterAccessRevoked();
 
         $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($resource->id, $userBId)->first();
         $data['permissions'][] = ['id' => $permission->id, 'delete' => true];

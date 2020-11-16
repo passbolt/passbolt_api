@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,7 +26,7 @@ use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper
 class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
 {
     /**
-     * @param ControllerFindIndexOptionsBeforeMarshal $event Event
+     * @param \App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal $event Event
      * @return void
      */
     public function __invoke(ControllerFindIndexOptionsBeforeMarshal $event)
@@ -38,7 +40,9 @@ class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
         $options->allowFilter(IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME);
         $options->allowContain(MfaEntityMapper::IS_MFA_ENABLED_PROPERTY);
         $options->addFilterValidator(IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME, function ($value) {
-            return QueryStringComponent::validateFilterBoolean($value, IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME);
+            $filterName = IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME;
+
+            return QueryStringComponent::validateFilterBoolean($value, $filterName);
         });
     }
 

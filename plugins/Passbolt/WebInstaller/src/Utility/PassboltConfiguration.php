@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace Passbolt\WebInstaller\Utility;
 
-use App\Utility\Healthchecks;
 use Cake\View\ViewVarsTrait;
 
 class PassboltConfiguration
@@ -23,6 +24,7 @@ class PassboltConfiguration
 
     /**
      * Render the passbolt configuration file.
+     *
      * @param array $settings The webinstaller settings.
      * @return string
      */
@@ -43,6 +45,7 @@ class PassboltConfiguration
     /**
      * Sanitize all entries of a settings array.
      * Sanitize = we escape the characters ' and \
+     *
      * @param mixed $settings An array of settings or a scalar to sanitize.
      * @return mixed
      */

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,11 +18,9 @@ namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Table\AuthenticationTokensTable;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Auth\DefaultPasswordHasher;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 class MfaVerifiedToken
@@ -28,15 +28,19 @@ class MfaVerifiedToken
     /**
      * Build and save an AuthenticationToken entity of type mfa
      *
-     * @throws ValidationException if data are not valid (for example user does not exist)
-     * @param UserAccessControl $uac user access control
+     * @throws \App\Error\Exception\ValidationException if data are not valid (for example user does not exist)
+     * @param \App\Utility\UserAccessControl $uac user access control
      * @param string $provider provider name
      * @param string $sessionId Session ID
      * @param bool $remember Remember flag
      * @return string token
      */
-    public static function get(UserAccessControl $uac, string $provider, string $sessionId, bool $remember = false)
-    {
+    public static function get(
+        UserAccessControl $uac,
+        string $provider,
+        string $sessionId,
+        ?bool $remember = false
+    ): string {
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $entityData = [
             'user_id' => $uac->getId(),
@@ -70,22 +74,24 @@ class MfaVerifiedToken
     /**
      * Check if a mfa verified token is legit
      *
-     * @param UserAccessControl $uac user access control
-     * @param string $token token
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param string $tokenString token
      * @param string $sessionId Session ID
      * @return bool
      */
-    public static function check(UserAccessControl $uac, string $token, string $sessionId)
+    public static function check(UserAccessControl $uac, string $tokenString, string $sessionId): bool
     {
         // Baseline validity check
-        /** @var AuthenticationTokensTable $auth */
+        /** @var \App\Model\Table\AuthenticationTokensTable $auth */
         $auth = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        if (!$auth->isValid($token, $uac->getId(), AuthenticationToken::TYPE_MFA, MfaVerifiedCookie::MAX_DURATION)) {
+        $type = AuthenticationToken::TYPE_MFA;
+        $duration = MfaVerifiedCookie::MAX_DURATION;
+        if (!$auth->isValid($tokenString, $uac->getId(), $type, $duration)) {
             return false;
         }
 
-        /** @var AuthenticationToken $token */
-        $token = $auth->getByToken($token);
+        /** @var \App\Model\Entity\AuthenticationToken $token */
+        $token = $auth->getByToken($tokenString);
         $data = json_decode($token->data);
 
         // Check for issue when decoding data
@@ -122,7 +128,7 @@ class MfaVerifiedToken
     /**
      * Set all token as inactive
      *
-     * @param UserAccessControl $uac user access control
+     * @param \App\Utility\UserAccessControl $uac user access control
      * @return void
      */
     public static function setAllInactive(UserAccessControl $uac)

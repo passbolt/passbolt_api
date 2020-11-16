@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -73,7 +75,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     {
         foreach ($this->fails as $case => $data) {
             $this->post('/users/recover', $data['form-data']);
-            $result = ($this->_getBodyAsString());
+            $result = $this->_getBodyAsString();
             $this->assertContains($data['error'], $result, 'Error case not respected: ' . $case);
         }
     }
@@ -83,7 +85,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->disableCsrfToken();
         $this->post('/users/recover');
         $this->assertResponseCode(403);
-        $result = ($this->_getBodyAsString());
+        $result = $this->_getBodyAsString();
         $this->assertContains('Missing CSRF token cookie', $result);
     }
 
@@ -91,7 +93,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     {
         foreach ($this->successes as $case => $data) {
             $this->post('/users/recover', $data['form-data']);
-            $result = ($this->_getBodyAsString());
+            $result = $this->_getBodyAsString();
             $success = 'Email sent!';
             $this->assertContains($success, $result, 'Success case not respected: ' . $case);
         }

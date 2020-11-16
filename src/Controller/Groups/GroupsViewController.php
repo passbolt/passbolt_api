@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,23 +18,20 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use App\Model\Table\GroupsTable;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
 /**
- * @property GroupsTable Groups
+ * @property \App\Model\Table\GroupsTable Groups
  */
 class GroupsViewController extends AppController
 {
     /**
      * Group View action
      *
-     * @throws BadRequestException if the group id is not a uuid
-     * @throws NotFoundException if the group does not exist
+     * @throws \Cake\Http\Exception\BadRequestException if the group id is not a uuid
+     * @throws \Cake\Http\Exception\NotFoundException if the group does not exist
      * @param string $id uuid Identifier of the group
      * @return void
      */

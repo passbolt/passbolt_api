@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -39,7 +41,7 @@ class FoldersRelationsMoveController extends AppController
             throw new BadRequestException(__('The foreign model is not valid.'));
         }
         if (!Validation::uuid($foreignId)) {
-            throw new BadRequestException(__("The {0} id is not valid.", strtolower($foreignModel)));
+            throw new BadRequestException(__('The {0} id is not valid.', strtolower($foreignModel)));
         }
 
         $moveItemInUserTree = new FoldersRelationsMoveItemInUserTreeService();
@@ -48,16 +50,16 @@ class FoldersRelationsMoveController extends AppController
         $folderParentId = $this->getAndValidateFolderParentId($this->getRequest()->getParsedBody());
         $moveItemInUserTree->move($uac, $foreignModel, $foreignId, $folderParentId);
 
-        $this->success(__("The {0} has been moved successfully.", strtolower($foreignModel)));
+        $this->success(__('The {0} has been moved successfully.', strtolower($foreignModel)));
     }
 
     /**
      * Get and validate the folder parent id from the data.
      *
-     * @param array $data The data
+     * @param array|null $data The data
      * @return string
      */
-    private function getAndValidateFolderParentId(array $data = [])
+    private function getAndValidateFolderParentId(?array $data = [])
     {
         if (!array_key_exists('folder_parent_id', $data)) {
             $errors = ['folder_parent_id' => ['_required' => 'A folder parent id is required.']];
@@ -79,7 +81,7 @@ class FoldersRelationsMoveController extends AppController
      *
      * @param array $errors The errors
      * @return void
-     * @throws CustomValidationException If errors
+     * @throws \App\Error\Exception\CustomValidationException If errors
      */
     private function handleValidationErrors(array $errors)
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
-use App\Utility\UuidFactory;
 use Cake\Cache\Cache;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
@@ -28,7 +29,7 @@ class ActionsTable extends Table
     /**
      * Used as key for query cache.
      */
-    const CACHE_KEY = 'table.actions.all';
+    public const CACHE_KEY = 'table.actions.all';
 
     /**
      * Initialize method
@@ -36,7 +37,7 @@ class ActionsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -56,11 +57,11 @@ class ActionsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->ascii('name', __('name should be ascii'))
@@ -71,8 +72,8 @@ class ActionsTable extends Table
 
     /**
      * Return a action entity.
-     * @param array $data entity data
      *
+     * @param array $data entity data
      * @return \Cake\ORM\Entity Action
      */
     public function buildEntity(array $data)
@@ -90,10 +91,9 @@ class ActionsTable extends Table
      *
      * @param string $id action id
      * @param string $name name of the action
-     *
      * @return \App\Model\Entity\Action|bool
-     * @throws ValidationException
-     * @throws InternalErrorException
+     * @throws \App\Error\Exception\ValidationException
+     * @throws \Cake\Http\Exception\InternalErrorException
      */
     public function create(string $id, string $name)
     {
@@ -125,6 +125,7 @@ class ActionsTable extends Table
 
     /**
      * Get cached actions.
+     *
      * @return \Cake\Datasource\ResultSetInterface
      */
     public function getCachedActions()
@@ -138,6 +139,7 @@ class ActionsTable extends Table
 
     /**
      * Clear table cache.
+     *
      * @return void
      */
     public function clearCache()
@@ -148,6 +150,7 @@ class ActionsTable extends Table
     /**
      * Find or create an action.
      * The find method uses a cache.
+     *
      * @param string $id id of the action
      * @param string $name name of the action
      * @return \Cake\Orm\Entity $action the action

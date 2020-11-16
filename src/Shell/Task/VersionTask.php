@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -42,7 +44,8 @@ class VersionTask extends AppShell
      */
     public function main()
     {
-        $v = 'Passbolt ' . strtoupper(Configure::read('passbolt.edition')) . ' ' . Configure::read('passbolt.version') . "\n" . 'Cakephp ' . Configure::version();
+        $v = 'Passbolt ' . strtoupper(Configure::read('passbolt.edition')) . ' ';
+        $v .= Configure::read('passbolt.version') . "\n" . 'Cakephp ' . Configure::version();
         $this->out($v);
 
         return true;

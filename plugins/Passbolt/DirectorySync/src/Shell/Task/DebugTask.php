@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -20,7 +22,6 @@ use Passbolt\DirectorySync\Utility\LdapDirectory;
 
 class DebugTask extends AppShell
 {
-
     protected $DirectoryEntries;
     protected $Groups;
     protected $Users;

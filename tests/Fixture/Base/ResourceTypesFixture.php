@@ -61,45 +61,45 @@ class ResourceTypesFixture extends TestFixture
                 'name' => 'Simple password',
                 'description' => 'The original passbolt resource type, where only the password is encrypted.',
                 'definition' => json_encode([
-                    "resource" => [
-                        "name" => [
-                            "type" => "string",
-                            "maxLength" => 64,
+                    'resource' => [
+                        'name' => [
+                            'type' => 'string',
+                            'maxLength' => 64,
                         ],
-                        "username" => [
-                            "anyOf" => [[
-                                "type" => "string",
-                                "maxLength" => 64,
+                        'username' => [
+                            'anyOf' => [[
+                                'type' => 'string',
+                                'maxLength' => 64,
                             ], [
-                                "type" => "null",
+                                'type' => 'null',
                             ]],
                         ],
-                        "uri" => [
-                            "anyOf" => [[
-                                "type" => "string",
-                                "maxLength" => 1024,
+                        'uri' => [
+                            'anyOf' => [[
+                                'type' => 'string',
+                                'maxLength' => 1024,
                             ], [
-                                "type" => "null",
+                                'type' => 'null',
                             ]],
                         ],
-                        "description" => [
-                            "anyOf" => [[
-                                "type" => "string",
-                                "maxLength" => 10000,
+                        'description' => [
+                            'anyOf' => [[
+                                'type' => 'string',
+                                'maxLength' => 10000,
                             ], [
-                                "type" => "null",
+                                'type' => 'null',
                             ]],
                         ],
                     ],
-                    "secret" => [
-                        "type" => "object",
-                        "required" => [
-                            "password",
+                    'secret' => [
+                        'type' => 'object',
+                        'required' => [
+                            'password',
                         ],
-                        "properties" => [
-                            "password" => [
-                                "type" => "string",
-                                "maxLength" => 4064,
+                        'properties' => [
+                            'password' => [
+                                'type' => 'string',
+                                'maxLength' => 4064,
                             ],
                         ],
                     ],
@@ -113,44 +113,44 @@ class ResourceTypesFixture extends TestFixture
                 'name' => 'Password with description',
                 'description' => 'A resource with the password and the description encrypted.',
                 'definition' => json_encode([
-                    "resource" => [
-                        "name" => [
-                            "type" => "string",
-                            "maxLength" => 64,
+                    'resource' => [
+                        'name' => [
+                            'type' => 'string',
+                            'maxLength' => 64,
                         ],
-                        "username" => [
-                            "anyOf" => [[
-                                "type" => "string",
-                                "maxLength" => 64,
+                        'username' => [
+                            'anyOf' => [[
+                                'type' => 'string',
+                                'maxLength' => 64,
                             ], [
-                                "type" => "null",
+                                'type' => 'null',
                             ]],
                         ],
-                        "uri" => [
-                            "anyOf" => [[
-                                "type" => "string",
-                                "maxLength" => 1024,
+                        'uri' => [
+                            'anyOf' => [[
+                                'type' => 'string',
+                                'maxLength' => 1024,
                             ], [
-                                "type" => "null",
+                                'type' => 'null',
                             ]],
                         ],
                     ],
-                    "secret" => [
-                        "type" => "object",
-                        "required" => [
-                            "password",
+                    'secret' => [
+                        'type' => 'object',
+                        'required' => [
+                            'password',
                         ],
-                        "properties" => [
-                            "password" => [
-                                "type" => "string",
-                                "maxLength" => 4064,
+                        'properties' => [
+                            'password' => [
+                                'type' => 'string',
+                                'maxLength' => 4064,
                             ],
-                            "description" => [
-                                "anyOf" => [[
-                                    "type" => "string",
-                                    "maxLength" => 10000,
+                            'description' => [
+                                'anyOf' => [[
+                                    'type' => 'string',
+                                    'maxLength' => 10000,
                                 ], [
-                                    "type" => "null",
+                                    'type' => 'null',
                                 ]],
                             ],
                         ],

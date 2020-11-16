@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -15,11 +17,11 @@
 namespace Passbolt\DirectorySync\Actions\Reports;
 
 use Cake\I18n\FrozenTime;
-use InvalidArgumentException;
 use Passbolt\DirectorySync\Utility\Alias;
 
 /**
  * Directory factory class
+ *
  * @package App\Utility
  */
 class ActionReport implements \Serializable
@@ -39,7 +41,7 @@ class ActionReport implements \Serializable
      * @param string $action see Alias::ACTION_*
      * @param string $status see Alias::STATUS_*
      * @param mixed $data Array or Entity, Exception
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct(string $message, string $model, string $action, string $status, $data)
     {
@@ -81,6 +83,7 @@ class ActionReport implements \Serializable
 
     /**
      * Unserialize.
+     *
      * @param string $serialized serialized
      * @return void
      */
@@ -96,6 +99,7 @@ class ActionReport implements \Serializable
 
     /**
      * Transform ActionReport to array.
+     *
      * @return array the action report transformed.
      */
     public function toArray()
@@ -179,7 +183,7 @@ class ActionReport implements \Serializable
      */
     public static function isValidAction(string $action)
     {
-        return ($action === Alias::ACTION_CREATE || $action === Alias::ACTION_UPDATE || $action === Alias::ACTION_DELETE);
+        return $action === Alias::ACTION_CREATE || $action === Alias::ACTION_UPDATE || $action === Alias::ACTION_DELETE;
     }
 
     /**
@@ -190,7 +194,10 @@ class ActionReport implements \Serializable
      */
     public static function isValidStatus(string $status)
     {
-        return ($status === Alias::STATUS_SUCCESS || $status === Alias::STATUS_ERROR || $status === Alias::STATUS_IGNORE || $status === Alias::STATUS_SYNC);
+        return $status === Alias::STATUS_SUCCESS
+            || $status === Alias::STATUS_ERROR
+            || $status === Alias::STATUS_IGNORE
+            || $status === Alias::STATUS_SYNC;
     }
 
     /**
@@ -201,7 +208,10 @@ class ActionReport implements \Serializable
      */
     public static function isValidModel(string $model)
     {
-        return ($model === Alias::MODEL_USERS || $model === Alias::MODEL_GROUPS || $model === Alias::MODEL_GROUPS_USERS || $model === SyncAction::MEMBERS);
+        return $model === Alias::MODEL_USERS
+            || $model === Alias::MODEL_GROUPS
+            || $model === Alias::MODEL_GROUPS_USERS
+            || $model === SyncAction::MEMBERS;
     }
 
     /**

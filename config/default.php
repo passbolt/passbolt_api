@@ -178,8 +178,11 @@ return [
             ]
         ],
 
-        // Wich plugins are enabled
+        // Which plugins are enabled
         'plugins' => [
+            'resourceTypes' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_RESOURCE_TYPES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
             'import' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_IMPORT_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],

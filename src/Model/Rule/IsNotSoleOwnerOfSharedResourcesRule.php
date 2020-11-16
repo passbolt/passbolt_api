@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,8 +31,9 @@ class IsNotSoleOwnerOfSharedResourcesRule
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
+        /** @var \App\Model\Table\PermissionsTable $Permissions */
         $Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $checkGroupsUsers = false;
 
@@ -39,10 +42,19 @@ class IsNotSoleOwnerOfSharedResourcesRule
             $checkGroupsUsers = true;
         }
 
-        $check = $Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $entity->id, ['checkGroupsUsers' => $checkGroupsUsers])->count();
+        $check = $Permissions
+            ->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $entity->id, [
+                'checkGroupsUsers' => $checkGroupsUsers,
+            ])
+            ->count();
 
         if (Configure::read('passbolt.plugins.folders.enabled')) {
-            $check += $Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $entity->id, ['checkGroupsUsers' => $checkGroupsUsers])->count();
+            $check += $Permissions
+                ->findSharedAcosByAroIsSoleOwner(
+                    PermissionsTable::FOLDER_ACO,
+                    $entity->id,
+                    ['checkGroupsUsers' => $checkGroupsUsers]
+                )->count();
         }
 
         return $check === 0;

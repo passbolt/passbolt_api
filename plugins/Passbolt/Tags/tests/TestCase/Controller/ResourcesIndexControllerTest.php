@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -63,7 +65,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=alpha');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
-        $resources = Hash::extract($response->body, "{n}.name");
+        $resources = Hash::extract($response->body, '{n}.name');
         $expected = ['apache', 'april', 'chai'];
         $this->assertEquals($resources, $expected);
 
@@ -80,7 +82,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=alpha');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
-        $resources = Hash::extract($response->body, "{n}.name");
+        $resources = Hash::extract($response->body, '{n}.name');
         $expected = ['chai'];
         $this->assertEquals($resources, $expected);
     }
@@ -93,7 +95,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
         $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tag]=alpha');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
-        $resources = Hash::extract($response->body, "{n}.name");
+        $resources = Hash::extract($response->body, '{n}.name');
         $expected = ['apache', 'april', 'chai'];
         $this->assertEquals($resources, $expected);
 
@@ -110,7 +112,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
         $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tag]=%23bravo');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
-        $resources = Hash::extract($response->body, "{n}.name");
+        $resources = Hash::extract($response->body, '{n}.name');
         $expected = ['apache', 'april'];
         $this->assertEquals($resources, $expected);
     }

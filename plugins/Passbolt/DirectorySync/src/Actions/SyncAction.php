@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -26,6 +28,7 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
  * Directory factory class
+ *
  * @package App\Utility
  */
 class SyncAction
@@ -46,7 +49,7 @@ class SyncAction
     protected $directoryOrgSettings;
 
     /**
-     * @var \Passbolt\DirectorySync\Test\Utility\TestDirectory|LdapDirectory
+     * @var \Passbolt\DirectorySync\Test\Utility\TestDirectory|\Passbolt\DirectorySync\Actions\LdapDirectory
      */
     protected $directory;
 
@@ -85,7 +88,7 @@ class SyncAction
     protected $dryRun = false;
 
     /**
-     * @var ActionReportCollection
+     * @var \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection
      */
     protected $summary;
 
@@ -93,10 +96,11 @@ class SyncAction
 
     /**
      * SyncAction constructor.
+     *
      * @param string $parentId parent id
      * @throws \Exception if no directory configuration is present
      */
-    public function __construct($parentId = null)
+    public function __construct(?string $parentId = null)
     {
         $this->directoryOrgSettings = DirectoryOrgSettings::get();
         $this->directory = DirectoryFactory::get($this->directoryOrgSettings);
@@ -124,7 +128,7 @@ class SyncAction
      * - Create all entities that can be created
      * - Generate report
      *
-     * @return ActionReportCollection
+     * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection
      */
     public function execute()
     {
@@ -163,6 +167,7 @@ class SyncAction
 
     /**
      * Get directory.
+     *
      * @return \Passbolt\DirectorySync\Utility\DirectoryInterface
      */
     public function getDirectory()
@@ -173,7 +178,7 @@ class SyncAction
     /**
      * Report back on a sync action
      *
-     * @param ActionReport $reportItem report item
+     * @param \Passbolt\DirectorySync\Actions\Reports\ActionReport $reportItem report item
      * @return void
      */
     public function addReportItem(ActionReport $reportItem)
@@ -185,7 +190,7 @@ class SyncAction
     /**
      * Get the summary of all reports
      *
-     * @return ActionReportCollection
+     * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection
      */
     public function getSummary()
     {
@@ -194,6 +199,7 @@ class SyncAction
 
     /**
      * Get default admin.
+     *
      * @return array|\Cake\Datasource\EntityInterface|mixed|null
      */
     public function getDefaultAdmin()
@@ -220,6 +226,7 @@ class SyncAction
 
     /**
      * Set Dryrun
+     *
      * @param bool $dryRun dry run value
      * @return void
      */
@@ -230,6 +237,7 @@ class SyncAction
 
     /**
      * Get dryRun
+     *
      * @return bool
      */
     public function isDryRun()

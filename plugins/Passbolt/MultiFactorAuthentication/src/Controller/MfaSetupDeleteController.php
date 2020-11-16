@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,15 +16,13 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
-use Cake\Http\Exception\ForbiddenException;
-
 class MfaSetupDeleteController extends MfaController
 {
     /**
      * Delete a provider setting
      *
      * @param string $provider provider name
-     * @throws ForbiddenException if mfa cookie is missing or invalid
+     * @throws \Cake\Http\Exception\ForbiddenException if mfa cookie is missing or invalid
      * @return void
      */
     protected function _handleDelete(string $provider)

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -20,7 +22,6 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\View\ViewVarsTrait;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
-use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
@@ -120,7 +121,8 @@ class DirectorySettingsController extends DirectoryController
         try {
             $outputData['tree'] = $this->_toArray($filteredDirectoryResults->getTree());
         } catch (\Exception $e) {
-            throw new BadRequestException('The directory structure cannot be retrieved. ' . $e->getMessage());
+            $msg = __('The directory structure cannot be retrieved.');
+            throw new BadRequestException($msg . ' ' . $e->getMessage());
         }
 
         try {
@@ -128,7 +130,8 @@ class DirectorySettingsController extends DirectoryController
             $invalidObjects = array_merge($invalidObjects, $filteredDirectoryResults->getInvalidUsers());
             $outputData['errors'] = $this->_toArray($invalidObjects);
         } catch (\Exception $e) {
-            throw new BadRequestException('There was an issue while retrieving the invalid entries. ' . $e->getMessage());
+            $msg = __('There was an issue while retrieving the invalid entries.');
+            throw new BadRequestException($msg . ' ' . $e->getMessage());
         }
 
         $this->success(__('The operation was successful.'), $outputData);

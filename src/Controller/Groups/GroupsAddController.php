@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,24 +18,21 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationException;
-use App\Model\Table\GroupsTable;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Hash;
 
 /**
- * @property GroupsTable $Groups
+ * @property \App\Model\Table\GroupsTable $Groups
  */
 class GroupsAddController extends AppController
 {
     /**
      * Group Add action
      *
-     * @throws InternalErrorException If an unexpected error occurred when saving the group
-     * @throws ForbiddenException If the user is not an admin
-     * @throws ValidationException if the group validation failed
-     * @throws InternalErrorException if the group can't be saved for some reason
+     * @throws \Cake\Http\Exception\InternalErrorException If an unexpected error occurred when saving the group
+     * @throws \Cake\Http\Exception\ForbiddenException If the user is not an admin
+     * @throws \App\Error\Exception\ValidationException if the group validation failed
+     * @throws \Cake\Http\Exception\InternalErrorException if the group can't be saved for some reason
      * @return void
      */
     public function addPost()

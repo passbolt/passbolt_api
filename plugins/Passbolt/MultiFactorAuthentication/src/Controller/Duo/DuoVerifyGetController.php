@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -25,9 +26,9 @@ class DuoVerifyGetController extends MfaVerifyController
     /**
      * Duo Verify Get
      *
-     * @throws InternalErrorException if there is no MFA settings for the user
-     * @throws BadRequestException if valid Verification token is already present in cookie
-     * @throws BadRequestException if there is no MFA settings for this provider
+     * @throws \Cake\Http\Exception\InternalErrorException if there is no MFA settings for the user
+     * @throws \Cake\Http\Exception\BadRequestException if valid Verification token is already present in cookie
+     * @throws \Cake\Http\Exception\BadRequestException if there is no MFA settings for this provider
      * @return void
      */
     public function get()

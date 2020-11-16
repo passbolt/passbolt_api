@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -134,7 +136,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
             'slug' => 'brave',
         ]);
         $this->assertResponseCode(403);
-        $result = ($this->_getBodyAsString());
+        $result = $this->_getBodyAsString();
         $this->assertContains('Missing CSRF token cookie', $result);
     }
 
@@ -366,9 +368,9 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      * @param array $data resource data
      * @return mixed ID of the new resource
      */
-    protected function _addTestResource(array $data = [])
+    protected function _addTestResource(?array $data = [])
     {
-        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->postJson('/resources.json?api-version=v2', $data);
 
         return $this->_responseJsonBody;
     }
@@ -377,10 +379,10 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      * Add a test tag
      *
      * @param string $resourceId ID of the resource where tag is to be added
-     * @param array $tags List of tags to be added
+     * @param array|null $tags List of tags to be added
      * @return Object List of tags
      */
-    protected function _addTestTag(string $resourceId, array $tags = [])
+    protected function _addTestTag(string $resourceId, ?array $tags = [])
     {
         $data = ['Tags' => $tags];
         $this->postJson('/tags/' . $resourceId . '.json?api-version=v2', $data);

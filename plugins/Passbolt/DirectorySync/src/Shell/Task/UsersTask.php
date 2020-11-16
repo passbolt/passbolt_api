@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -14,11 +16,7 @@
  */
 namespace Passbolt\DirectorySync\Shell\Task;
 
-use App\Error\Exception\ValidationException;
-use App\Shell\AppShell;
-use Cake\Routing\Router;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
-use Passbolt\DirectorySync\Utility\SyncAction;
 
 class UsersTask extends SyncTask
 {

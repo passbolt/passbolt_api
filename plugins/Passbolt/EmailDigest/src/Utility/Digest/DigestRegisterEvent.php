@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,9 +20,7 @@ use Cake\Event\Event;
 use InvalidArgumentException;
 
 /**
- * @method DigestsPool getSubject()
- *
- * Event triggered to add new digest. It contains the DigestsPool, so it can be manipulated to add
+ * @method \Passbolt\EmailDigest\Utility\Digest\DigestsPool getSubject() Event triggered to add new digest. It contains the DigestsPool, so it can be manipulated to add
  * new digest at runtime in the digest pool.
  */
 class DigestRegisterEvent extends Event
@@ -28,7 +28,7 @@ class DigestRegisterEvent extends Event
     /**
      * Name of the event dispatched when registration of digests is run.
      */
-    const EVENT_NAME = 'email_digest.digests.register';
+    public const EVENT_NAME = 'email_digest.digests.register';
 
     /**
      * @param string $name Name of the event
@@ -45,8 +45,8 @@ class DigestRegisterEvent extends Event
     }
 
     /**
-     * @param DigestsPool $digestsPool Digests Pool
-     * @return DigestRegisterEvent
+     * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsPool Digests Pool
+     * @return \Passbolt\EmailDigest\Utility\Digest\DigestRegisterEvent
      */
     public static function create(DigestsPool $digestsPool)
     {
@@ -54,7 +54,7 @@ class DigestRegisterEvent extends Event
     }
 
     /**
-     * @return DigestsPool
+     * @return \Passbolt\EmailDigest\Utility\Digest\DigestsPool
      */
     public function getEmailDigestsPool()
     {

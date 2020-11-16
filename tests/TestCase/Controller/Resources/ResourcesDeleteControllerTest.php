@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,7 +19,6 @@ namespace App\Test\TestCase\Controller\Resources;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase

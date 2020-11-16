@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,22 +17,21 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 use Exception;
 
 /**
- * @property UsersTable $Users
+ * @property \App\Model\Table\UsersTable $Users
  */
 class UsersViewController extends AppController
 {
     /**
      * User View action
      *
-     * @throws BadRequestException if the user id is not a uuid or 'me'
-     * @throws NotFoundException if the user does not exist
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a uuid or 'me'
+     * @throws \Cake\Http\Exception\NotFoundException if the user does not exist
      * @param string $id uuid|me
      * @return void
      */

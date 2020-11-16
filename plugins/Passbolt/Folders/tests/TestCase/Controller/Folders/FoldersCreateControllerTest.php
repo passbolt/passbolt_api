@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -138,7 +140,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400, 'Could not validate folder data.');
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'name');
-        $this->assertNotNull($error, "The test should return an error of the given field.");
+        $this->assertNotNull($error, 'The test should return an error of the given field.');
         $this->assertEquals('The name cannot be empty.', $error['_empty']);
     }
 
@@ -153,7 +155,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400, 'Could not validate folder data');
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'folder_parent_id');
-        $this->assertNotNull($error, "The test should return an error of the given field.");
+        $this->assertNotNull($error, 'The test should return an error of the given field.');
         $this->assertEquals('The folder parent must exist.', $error['folder_exists']);
     }
 
@@ -169,7 +171,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->postJson('/folders.json?api-version=2', $data);
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'folder_parent_id');
-        $this->assertNotNull($error, "The test should return an error of the given field.");
+        $this->assertNotNull($error, 'The test should return an error of the given field.');
         $this->assertEquals('You are not allowed to create content into the parent folder.', $error['has_folder_access']);
     }
 

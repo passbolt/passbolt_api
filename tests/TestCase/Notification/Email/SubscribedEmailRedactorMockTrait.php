@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,10 +31,14 @@ trait SubscribedEmailRedactorMockTrait
         {
             use SubscribedEmailRedactorTrait;
 
-            /** @var string */
+            /**
+             * @var string
+             */
             private $subscribedEvents;
 
-            /** @var Email */
+            /**
+             * @var Email
+             */
             private $email;
 
             public function __construct(array $subscribedEvents, Email $email)
@@ -41,12 +47,12 @@ trait SubscribedEmailRedactorMockTrait
                 $this->email = $email;
             }
 
-            public function onSubscribedEvent(Event $event)
+            public function onSubscribedEvent(Event $event): EmailCollection
             {
                 return new EmailCollection([$this->email]);
             }
 
-            public function getSubscribedEvents()
+            public function getSubscribedEvents(): array
             {
                 return $this->subscribedEvents;
             }

@@ -19,11 +19,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * TagsFixture
- *
  */
 class TagsFixture extends TestFixture
 {
-
     /**
      * Fields
      *

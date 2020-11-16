@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
-use Passbolt\Folders\Model\Table\FoldersTable;
 
 /**
  * @property FoldersTable Folders
@@ -31,8 +32,8 @@ class FoldersViewController extends AppController
      *
      * @param string $id uuid Identifier of the folder
      * @return void
-     * @throws NotFoundException if the folder does not exist
-     * @throws BadRequestException if the folder id is not a uuid
+     * @throws \Cake\Http\Exception\NotFoundException if the folder does not exist
+     * @throws \Cake\Http\Exception\BadRequestException if the folder id is not a uuid
      */
     public function view(string $id)
     {

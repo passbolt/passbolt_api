@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -33,8 +35,8 @@ class TotpSetupForm extends MfaForm
     /**
      * Build form schema
      *
-     * @param Schema $schema schema
-     * @return $this|Schema
+     * @param \Cake\Form\Schema $schema schema
+     * @return $this|\Cake\Form\Schema
      */
     protected function _buildSchema(Schema $schema)
     {
@@ -46,8 +48,8 @@ class TotpSetupForm extends MfaForm
     /**
      * Build form validation
      *
-     * @param Validator $validator validator
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
     protected function _buildValidator(Validator $validator)
     {
@@ -91,7 +93,6 @@ class TotpSetupForm extends MfaForm
     }
 
     /**
-     *
      * Custom validation rule to validate otp provisioning uri
      *
      * @param string $value otp provisioning uri

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -102,7 +104,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
         // Remove Kathleen.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
@@ -123,7 +125,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
         // Remove Kathleen.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
@@ -143,9 +145,9 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
         // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
         // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-nancy"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
@@ -169,9 +171,9 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
         // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
         // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-nancy"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
@@ -198,9 +200,9 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $changes[] = ['user_id' => $userAId, 'is_admin' => true];
         $changes[] = ['user_id' => $userBId, 'is_admin' => false];
         // Update memberships
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.human_resource-wang"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-wang'), 'is_admin' => true];
         // Remove users
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.human_resource-ursula"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-ursula'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('ping');
@@ -231,9 +233,9 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $changes[] = ['user_id' => $userAId, 'is_admin' => true];
         $changes[] = ['user_id' => $userBId, 'is_admin' => false];
         // Update memberships
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.human_resource-wang"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-wang'), 'is_admin' => true];
         // Remove users
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.human_resource-ursula"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-ursula'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('ping');

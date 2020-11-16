@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,10 +31,10 @@ use Cake\ORM\Entity;
  */
 class Role extends Entity
 {
-    const GUEST = 'guest';
-    const USER = 'user';
-    const ADMIN = 'admin';
-    const ROOT = 'root';
+    public const GUEST = 'guest';
+    public const USER = 'user';
+    public const ADMIN = 'admin';
+    public const ROOT = 'root';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

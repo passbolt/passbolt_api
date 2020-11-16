@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,8 +19,6 @@ namespace Passbolt\Folders\Test\TestCase\Service\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourcesTable;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\AvatarsFixture;
@@ -37,8 +37,6 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
@@ -46,8 +44,6 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
-use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 use Passbolt\Folders\Service\Folders\FoldersDeleteService;
@@ -99,26 +95,6 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     private $service;
 
     /**
-     * @var FoldersTable
-     */
-    private $Folders;
-
-    /**
-     * @var PermissionsTable
-     */
-    private $Permissions;
-
-    /**
-     * @var FoldersRelationsTable
-     */
-    private $FoldersRelations;
-
-    /**
-     * @var ResourcesTable
-     */
-    private $Resources;
-
-    /**
      * setUp method
      *
      * @return void
@@ -126,17 +102,8 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Folders') ? [] : ['className' => FoldersTable::class];
-        $this->Folders = TableRegistry::getTableLocator()->get('Folders', $config);
-        $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
-        $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
-        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
-        $config = TableRegistry::getTableLocator()->exists('Resources') ? [] : ['className' => ResourcesTable::class];
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
-
         $this->service = new FoldersDeleteService();
-
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->loadNotificationSettings();
         EventManager::instance()->on(new FolderNotificationSettingsDefinition());
         EventManager::instance()->on(new FoldersEmailRedactorPool());
@@ -149,11 +116,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $this->unloadNotificationSettings();
     }
 
-    /* ************************************************************** */
     /* COMMON & VALIDATION */
-    /* ************************************************************** */
 
-    public function testDeleteFolder_CommonError1_FolderNotExist()
+    public function testFolderDelete_CommonError1_FolderNotExist()
     {
         $userAId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userAId);
@@ -162,7 +127,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $this->service->delete($uac, UuidFactory::uuid());
     }
 
-    public function testDeleteFolder_CommonError2_NoAccess()
+    public function testFolderDelete_CommonError2_NoAccess()
     {
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
@@ -173,9 +138,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $this->service->delete($uac, $folder->id);
     }
 
-    public function testDeleteFolder_CommonSuccess2_NotifyUsersAfterDelete()
+    public function testFolderDelete_CommonSuccess2_NotifyUsersAfterDelete()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertSharedSuccess2Fixture();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertSharedSuccess2Fixture();
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $this->service->delete($uac, $folderA->id);
@@ -189,9 +154,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $this->assertResponseContains('deleted the folder');
     }
 
-    /* ************************************************************** */
     /* PERSONAL FOLDER */
-    /* ************************************************************** */
 
     private function insertPersoSuccess1Fixture()
     {
@@ -204,7 +167,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         return $folderA;
     }
 
-    public function testDeleteFolder_PersoSuccess1_DeleteFolder()
+    public function testFolderDelete_PersoSuccess1_DeleteFolder()
     {
         $folder = $this->insertPersoSuccess1Fixture();
 
@@ -214,9 +177,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $this->assertFolderNotExist($folder->id);
     }
 
-    public function testDeleteFolder_PersoSuccess2_NoCascadeMoveChildrenToRoot()
+    public function testFolderDelete_PersoSuccess2_NoCascadeMoveChildrenToRoot()
     {
-        list($parentFolder, $folder) = $this->insertPersoSuccess2Fixture();
+        [$parentFolder, $folder] = $this->insertPersoSuccess2Fixture();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -241,9 +204,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         return [$folderA, $folderB];
     }
 
-    public function testDeleteFolder_PersoSuccess3_CascadeDelete()
+    public function testFolderDelete_PersoSuccess3_CascadeDelete()
     {
-        list ($folderA, $resource1, $folderB, $resource2) = $this->insertPersoSuccess3Fixture();
+        [$folderA, $resource1, $folderB, $resource2] = $this->insertPersoSuccess3Fixture();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -277,9 +240,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         return [$folderA, $resource1, $folderB, $resource2];
     }
 
-    public function testDeleteFolder_PersoSuccess4_CascadeDeleteContentMoveToRootWhenInsufficientPermission()
+    public function testFolderDelete_PersoSuccess4_CascadeDeleteContentMoveToRootWhenInsufficientPermission()
     {
-        list ($folderA, $resource1) = $this->insertPersoSuccess4Fixture();
+        [$folderA, $resource1] = $this->insertPersoSuccess4Fixture();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -312,13 +275,11 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         return [$folderA, $resource1];
     }
 
-    /* ************************************************************** */
     /* SHARED FOLDER */
-    /* ************************************************************** */
 
-    public function testDeleteFolder_SharedError1_InsufficientPermission()
+    public function testFolderDelete_SharedError1_InsufficientPermission()
     {
-        list ($folderA) = $this->insertSharedErrorFixture();
+        [$folderA] = $this->insertSharedErrorFixture();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -339,9 +300,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         return [$folderA];
     }
 
-    public function testDeleteFolder_SharedSuccess1_DeleteSharedFolder()
+    public function testFolderDelete_SharedSuccess1_DeleteSharedFolder()
     {
-        list ($folderA) = $this->insertSharedSuccess1Fixture();
+        [$folderA] = $this->insertSharedSuccess1Fixture();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -370,9 +331,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         return [$folderA];
     }
 
-    public function testDeleteFolder_SharedSuccess2_NoCascadeMoveChildrenToRoot()
+    public function testFolderDelete_SharedSuccess2_NoCascadeMoveChildrenToRoot()
     {
-        list($folderA, $folderB) = $this->insertSharedSuccess2Fixture();
+        [$folderA, $folderB] = $this->insertSharedSuccess2Fixture();
 
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
@@ -403,9 +364,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $userAId, $userBId];
     }
 
-    public function testDeleteFolder_SharedSuccess3_CascadeDelete()
+    public function testFolderDelete_SharedSuccess3_CascadeDelete()
     {
-        list ($folderA, $resource1, $folderB, $resource2) = $this->insertSharedSucces3Fixture();
+        [$folderA, $resource1, $folderB, $resource2] = $this->insertSharedSucces3Fixture();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -444,9 +405,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         return [$folderA, $resource1, $folderB, $resource2];
     }
 
-    public function testDeleteFolder_SharedSuccess4_CascadeDeleteContentMoveToRootWhenInsufficientPermission()
+    public function testFolderDelete_SharedSuccess4_CascadeDeleteContentMoveToRootWhenInsufficientPermission()
     {
-        list ($folderA, $resource1, $folderB, $resource2, $folderC) = $this->insertSharedSuccess4Fixture();
+        [$folderA, $resource1, $folderB, $resource2, $folderC] = $this->insertSharedSuccess4Fixture();
 
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -44,7 +46,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         GroupsUsersFixture::class,
     ];
 
-    const TESTED_ROUTE = '/mfa/setup/%s.json?api-version=v2';
+    public const TESTED_ROUTE = '/mfa/setup/%s.json?api-version=v2';
 
     public function testMfaUserSettingsDeleteNeedsAuthenticatedUser()
     {

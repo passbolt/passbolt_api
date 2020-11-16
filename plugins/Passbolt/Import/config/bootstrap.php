@@ -1,4 +1,5 @@
 <?php
+
 use Cake\Core\Configure;
 
 $importPluginEnabled = Configure::read('passbolt.plugins.import.enabled');

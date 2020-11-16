@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,21 +17,19 @@
 
 namespace Passbolt\Folders\Service\FoldersRelations;
 
-use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Utility\Tarjan;
 
 class FoldersRelationsDetectStronglyConnectedComponents
 {
     /**
-     * @var FoldersRelationsTable
+     * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
     private $foldersRelationsTable;
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
@@ -64,7 +64,10 @@ class FoldersRelationsDetectStronglyConnectedComponents
 
         foreach ($usersIds as $firstUserId) {
             foreach ($usersIdsToCompareWith as $secondUserId) {
-                $foldersRelations = array_merge($usersFoldersRelations[$firstUserId], $usersFoldersRelations[$secondUserId]);
+                $foldersRelations = array_merge(
+                    $usersFoldersRelations[$firstUserId],
+                    $usersFoldersRelations[$secondUserId]
+                );
                 $scc = $this->detectInFoldersRelations($foldersRelations);
                 if (!empty($scc)) {
                     return $scc;
@@ -110,7 +113,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
      *   ...
      * ]
      */
-    private function getUsersFoldersRelationsGroupedByUser(array $usersIds, bool $includePersonal = false)
+    private function getUsersFoldersRelationsGroupedByUser(array $usersIds, ?bool $includePersonal = false)
     {
         $result = array_fill_keys($usersIds, []);
 
@@ -136,6 +139,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
 
     /**
      * Return the first detected strongly components set
+     *
      * @param array $foldersRelations The folders relation to test formatted as following
      * [
      *   [
@@ -150,7 +154,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
     {
         $result = [];
 
-        list ($graph, $graphForeignIdsMap) = $this->formatFoldersRelationInAdjacencyGraph($foldersRelations);
+        [$graph, $graphForeignIdsMap] = $this->formatFoldersRelationInAdjacencyGraph($foldersRelations);
         $stronglyConnectedComponentsSets = Tarjan::detect($graph);
         if (!empty($stronglyConnectedComponentsSets)) {
             $nodes = explode('|', $stronglyConnectedComponentsSets[0]);

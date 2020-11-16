@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -30,11 +32,11 @@ class GroupDigests implements EventListenerInterface
 {
     use DigestRegisterTrait;
 
-    const GROUP_USERS_CHANGES_TEMPLATE = 'LU/group_users_change';
-    const GROUPS_DELETE_TEMPLATE = 'LU/groups_delete';
+    public const GROUP_USERS_CHANGES_TEMPLATE = 'LU/group_users_change';
+    public const GROUPS_DELETE_TEMPLATE = 'LU/groups_delete';
 
     /**
-     * @param DigestsPool $digestsPool Instance of the digest pool
+     * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsPool Instance of the digest pool
      * @return void
      */
     public function addDigestsPool(DigestsPool $digestsPool)
@@ -44,12 +46,12 @@ class GroupDigests implements EventListenerInterface
     }
 
     /**
-     * @return Digest
+     * @return \Passbolt\EmailDigest\Utility\Digest\Digest
      */
     private function createGroupMembershipDigest()
     {
         return new Digest(
-            __("{0} updated your memberships in several groups", "{0}"),
+            __('{0} updated your memberships in several groups', '{0}'),
             [
                 GroupUserAddEmailRedactor::TEMPLATE,
                 GroupUserUpdateEmailRedactor::TEMPLATE,
@@ -71,12 +73,12 @@ class GroupDigests implements EventListenerInterface
     }
 
     /**
-     * @return Digest
+     * @return \Passbolt\EmailDigest\Utility\Digest\Digest
      */
     private function createGroupDeleteDigest()
     {
         return new Digest(
-            __("{0} deleted several groups", "{0}"),
+            __('{0} deleted several groups', '{0}'),
             [
                 GroupUserDeleteEmailRedactor::TEMPLATE,
             ],

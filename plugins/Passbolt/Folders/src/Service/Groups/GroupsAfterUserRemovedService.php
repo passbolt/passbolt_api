@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,23 +21,22 @@ use App\Model\Entity\GroupsUser;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use Cake\ORM\TableRegistry;
-use Exception;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
 
 class GroupsAfterUserRemovedService
 {
     /**
-     * @var FoldersRelationsRemoveItemFromUserTreeService
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService
      */
     private $foldersRelationsRemoveItemFromUserTree;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
     /**
-     * @var UserHasPermissionService
+     * @var \App\Service\Permissions\UserHasPermissionService
      */
     private $userHasPermissionService;
 
@@ -52,9 +53,9 @@ class GroupsAfterUserRemovedService
     /**
      * Handle a user removed from a group.
      *
-     * @param GroupsUser $groupUser The deleted group user.
+     * @param \App\Model\Entity\GroupsUser $groupUser The deleted group user.
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function afterUserRemoved(GroupsUser $groupUser)
     {

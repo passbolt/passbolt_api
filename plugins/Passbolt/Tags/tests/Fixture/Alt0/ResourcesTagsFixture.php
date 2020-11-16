@@ -6,11 +6,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * ResourcesTagsFixture
- *
  */
 class ResourcesTagsFixture extends TestFixture
 {
-
     /**
      * Fields
      *

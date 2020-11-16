@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -15,13 +17,13 @@
 namespace Passbolt\DirectorySync\Actions;
 
 use Cake\ORM\TableRegistry;
-use Passbolt\DirectorySync\Actions\Reports\ActionReportCollection;
 
 class AllSyncAction
 {
     /**
      * Synchronize users.
-     * @return ActionReportCollection reports collection
+     *
+     * @return \Passbolt\DirectorySync\Actions\ActionReportCollection reports collection
      */
     public function syncUsers()
     {
@@ -33,7 +35,8 @@ class AllSyncAction
 
     /**
      * Synchronize groups.
-     * @return ActionReportCollection reports collection
+     *
+     * @return \Passbolt\DirectorySync\Actions\ActionReportCollection reports collection
      */
     public function syncGroups()
     {
@@ -45,6 +48,7 @@ class AllSyncAction
 
     /**
      * Synchronize all (users and groups).
+     *
      * @return array array reports collection for each item
      */
     public function syncAll()
@@ -61,11 +65,11 @@ class AllSyncAction
 
     /**
      * Execute.
-     * @param bool $dryRun whether to do it in dry run mode.
      *
+     * @param bool $dryRun whether to do it in dry run mode.
      * @return array reports collection.
      */
-    public function execute(bool $dryRun = false)
+    public function execute(?bool $dryRun = false)
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $reports = [];

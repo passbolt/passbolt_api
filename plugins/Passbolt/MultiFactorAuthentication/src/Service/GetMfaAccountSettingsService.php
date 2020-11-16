@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,20 +20,19 @@ namespace Passbolt\MultiFactorAuthentication\Service;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use Exception;
-use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 
 class GetMfaAccountSettingsService
 {
     /**
-     * @param User $user User to get MfaSettings
-     * @return MfaAccountSettings
-     * @throws Exception
+     * @param \App\Model\Entity\User $user User to get MfaSettings
+     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
+     * @throws \Exception
      */
     public function getSettingsForUser(User $user)
     {
-        /** @var AccountSetting $mfaSettings */
+        /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting $mfaSettings */
         $mfaSettings = $user->get(MfaEntityMapper::MFA_SETTINGS_PROPERTY) ?? false;
         if (!$mfaSettings) {
             throw new Exception('Unable to retrieve MFA settings for user');

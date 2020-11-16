@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,14 +29,15 @@ use Yubikey\Validate;
 class YubikeyVerifyForm extends MfaForm
 {
     /**
-     * @var MfaSettings
+     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
     protected $settings;
 
     /**
      * VerifyForm constructor.
-     * @param UserAccessControl $uac access control
-     * @param MfaSettings $settings settings
+     *
+     * @param \App\Utility\UserAccessControl $uac access control
+     * @param \Passbolt\MultiFactorAuthentication\Utility\MfaSettings $settings settings
      */
     public function __construct(UserAccessControl $uac, MfaSettings $settings)
     {
@@ -45,8 +48,8 @@ class YubikeyVerifyForm extends MfaForm
     /**
      * Build form schema
      *
-     * @param Schema $schema schema
-     * @return $this|Schema
+     * @param \Cake\Form\Schema $schema schema
+     * @return $this|\Cake\Form\Schema
      */
     protected function _buildSchema(Schema $schema)
     {
@@ -57,8 +60,8 @@ class YubikeyVerifyForm extends MfaForm
     /**
      * Build form validation
      *
-     * @param Validator $validator validator
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
     protected function _buildValidator(Validator $validator)
     {
@@ -91,7 +94,7 @@ class YubikeyVerifyForm extends MfaForm
      */
     public function isValidModHex(string $value)
     {
-        return (Validation::custom($value, '/^[cbdefghijklnrtuv]{44}$/'));
+        return Validation::custom($value, '/^[cbdefghijklnrtuv]{44}$/');
     }
 
     /**
@@ -109,7 +112,7 @@ class YubikeyVerifyForm extends MfaForm
             return false;
         }
 
-        return ($yubikeyId === $yubikeyIdInSettings);
+        return $yubikeyId === $yubikeyIdInSettings;
     }
 
     /**

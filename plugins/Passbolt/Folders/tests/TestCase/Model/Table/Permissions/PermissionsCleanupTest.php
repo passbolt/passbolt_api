@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace Passbolt\Folders\Test\TestCase\Model\Table\Permissions;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\ResourcesTable;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\ResourceTypesFixture;
 use App\Test\Fixture\Base\SecretsFixture;
@@ -24,7 +25,6 @@ use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Fixture\PermissionsFixture;
@@ -63,11 +63,6 @@ class PermissionsCleanupTest extends FoldersTestCase
     private $foldersTable;
 
     /**
-     * @var ResourcesTable
-     */
-    private $resourcesTables;
-
-    /**
      * setUp method
      *
      * @return void
@@ -76,7 +71,6 @@ class PermissionsCleanupTest extends FoldersTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
-        $this->resourcesTables = TableRegistry::getTableLocator()->get('Resources');
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
     }
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -22,21 +24,23 @@ use Passbolt\DirectorySync\Utility\Alias;
 
 trait SyncTrait
 {
-
     /**
      * Store entities (users or groups) to ignore.
+     *
      * @var array|mixed
      */
     public $entitiesToIgnore;
 
     /**
      * Store directoryEntries to ignore.
+     *
      * @var array|mixed
      */
     public $entriesToIgnore;
 
     /**
      * Initialize data to perform the job.
+     *
      * @param string $modelType type of model
      * @return void
      */
@@ -62,6 +66,7 @@ trait SyncTrait
      * Format directoryData to be compatible with the expected format.
      *
      * Mainly modify the dates format to the expected format FrozenTime.
+     *
      * @return void
      */
     public function formatDirectoryData()
@@ -185,8 +190,8 @@ trait SyncTrait
      * Get entity name.
      * For a user it will return the username
      * For a group it will return the group name
-     * @param Entity $entity entity
      *
+     * @param \Cake\ORM\Entity $entity entity
      * @return mixed
      */
     protected function getEntityName(Entity $entity)
@@ -202,23 +207,23 @@ trait SyncTrait
      * Get name of group or user from directory data.
      * For a user it will return the username
      * For a group it will return the group name
-     * @param array $data data
      *
+     * @param array $data data
      * @return mixed
      */
     protected function getNameFromData(array $data)
     {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
-            return isset($data['group']['name']) ? $data['group']['name'] : 'undefined';
+            return $data['group']['name'] ?? 'undefined';
         }
 
-        return isset($data['user']['username']) ? $data['user']['username'] : 'undefined';
+        return $data['user']['username'] ?? 'undefined';
     }
 
     /**
      * Get entity from data.
-     * @param array $data data
      *
+     * @param array $data data
      * @return mixed
      */
     protected function getEntityFromData(array $data)

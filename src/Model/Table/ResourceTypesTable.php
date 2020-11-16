@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,10 +17,8 @@
 
 namespace App\Model\Table;
 
-use App\Model\Entity\ResourceType;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -27,22 +27,20 @@ use Cake\Validation\Validator;
  * ResourceTypes Model
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $Resources
- *
- * @method \App\Model\Entity\ResourceType get($primaryKey, $options = [])
- * @method \App\Model\Entity\ResourceType newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ResourceType[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ResourceType|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ResourceType patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ResourceType[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ResourceType findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \App\Model\Entity\ResourceType get($primaryKey, ?array $options = [])
+ * @method \App\Model\Entity\ResourceType newEntity($data = null, ?array $options = [])
+ * @method \App\Model\Entity\ResourceType[] newEntities(array $data, ?array $options = [])
+ * @method \App\Model\Entity\ResourceType|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \App\Model\Entity\ResourceType patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \App\Model\Entity\ResourceType[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \App\Model\Entity\ResourceType findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ResourceTypesTable extends Table
 {
-    const NAME_MAX_LENGTH = 64;
-    const SLUG_MAX_LENGTH = 64;
-    const DESCRIPTION_MAX_LENGTH = 255;
+    public const NAME_MAX_LENGTH = 64;
+    public const SLUG_MAX_LENGTH = 64;
+    public const DESCRIPTION_MAX_LENGTH = 255;
 
     /**
      * Initialize method
@@ -50,7 +48,7 @@ class ResourceTypesTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -69,7 +67,7 @@ class ResourceTypesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
@@ -78,18 +76,30 @@ class ResourceTypesTable extends Table
         $validator
             ->utf8('name')
             ->requirePresence('name', 'create')
-            ->maxLength('name', self::NAME_MAX_LENGTH, __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH))
+            ->maxLength(
+                'name',
+                self::NAME_MAX_LENGTH,
+                __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH)
+            )
             ->notEmptyString('name', __('The name can not be empty'));
 
         $validator
             ->utf8('slug')
             ->requirePresence('slug', 'create')
-            ->maxLength('slug', self::SLUG_MAX_LENGTH, __('The slug length should be maximum {0} characters.', self::SLUG_MAX_LENGTH))
+            ->maxLength(
+                'slug',
+                self::SLUG_MAX_LENGTH,
+                __('The slug length should be maximum {0} characters.', self::SLUG_MAX_LENGTH)
+            )
             ->notEmptyString('slug', __('The slug can not be empty'));
 
         $validator
             ->utf8('description')
-            ->maxLength('name', self::DESCRIPTION_MAX_LENGTH, __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH))
+            ->maxLength(
+                'name',
+                self::DESCRIPTION_MAX_LENGTH,
+                __('The description length should be maximum {0} characters.', self::DESCRIPTION_MAX_LENGTH)
+            )
             ->allowEmptyString('description');
 
         $validator
@@ -123,7 +133,7 @@ class ResourceTypesTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->addCreate(
             $rules->isUnique(
@@ -145,6 +155,7 @@ class ResourceTypesTable extends Table
 
     /**
      * Get the default resource type id
+     *
      * @return string uuid
      */
     public static function getDefaultTypeId()

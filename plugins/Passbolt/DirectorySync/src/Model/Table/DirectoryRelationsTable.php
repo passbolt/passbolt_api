@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace Passbolt\DirectorySync\Model\Table;
 
-use App\Model\Entity\Group;
 use App\Model\Entity\GroupsUser;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use Cake\ORM\Table;
@@ -68,7 +69,7 @@ class DirectoryRelationsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->scalar('id')
@@ -92,10 +93,11 @@ class DirectoryRelationsTable extends Table
      * Cleanup orphan DirectoryRelations
      * An orphan directoryRelations is a directoryRelation that doesn't have a corresponding userGroup.
      * It means that userGroup has been deleted manually.
+     *
      * @param array $entryIds entry ids
-     * @return mixed
+     * @return int number of deleted records
      */
-    public function cleanupHardDeletedUserGroups(array $entryIds)
+    public function cleanupHardDeletedUserGroups(array $entryIds): int
     {
         $conditions = [
             'GroupUser.id IS NULL',
@@ -114,20 +116,32 @@ class DirectoryRelationsTable extends Table
         if (count($records) > 0) {
             return $this->deleteAll(['id IN' => $records]);
         }
+
+        return 0;
     }
 
     /**
      * Create group from user
-     * @param GroupsUser $groupUser groupUser
      *
+     * @param \App\Model\Entity\GroupsUser $groupUser groupUser
      * @return bool|\Cake\Datasource\EntityInterface|false|mixed|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
      * @throws \Exception
      */
     public function createFromGroupUser(GroupsUser $groupUser)
     {
         $DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
-        $groupEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $groupUser->group_id])->first();
-        $userEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => Alias::MODEL_USERS, 'foreign_key' => $groupUser->user_id])->first();
+
+        $groupEntry = $DirectoryEntries
+            ->find()
+            ->select('id')
+            ->where(['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $groupUser->group_id])
+            ->first();
+
+        $userEntry = $DirectoryEntries
+            ->find()
+            ->select('id')
+            ->where(['foreign_model' => Alias::MODEL_USERS, 'foreign_key' => $groupUser->user_id])
+            ->first();
 
         if (!$groupEntry || !$userEntry) {
             throw new \Exception('Relation creation error: Could not retrieve corresponding entries');
@@ -144,8 +158,8 @@ class DirectoryRelationsTable extends Table
 
     /**
      * Create or update.
-     * @param array $data data
      *
+     * @param array $data data
      * @return bool|\Cake\Datasource\EntityInterface|false|mixed|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
      */
     public function createOrUpdate(array $data)
@@ -163,8 +177,8 @@ class DirectoryRelationsTable extends Table
 
     /**
      * Return a directory relation matching the groupUser provided.
-     * @param GroupsUser $groupUser groupUser
      *
+     * @param \App\Model\Entity\GroupsUser $groupUser groupUser
      * @return array|\Cake\Datasource\EntityInterface|null
      */
     public function lookupByGroupUser(GroupsUser $groupUser)
@@ -176,6 +190,7 @@ class DirectoryRelationsTable extends Table
 
     /**
      * Create a directory Relation
+     *
      * @param array $data data
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
      */

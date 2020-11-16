@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,17 +33,17 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'GM/group_user_update';
+    public const TEMPLATE = 'GM/group_user_update';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param UsersTable $usersTable Users Table
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
      */
-    public function __construct(UsersTable $usersTable = null)
+    public function __construct(?UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
@@ -51,7 +53,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME,
@@ -59,15 +61,14 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
     }
 
     /**
-     * @param Event $event User delete event
-     *
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
-        /** @var Group $resource */
+        /** @var \App\Model\Entity\Group $resource */
         $group = $event->getData('group');
         $addedGroupsUsers = $event->getData('addedGroupsUsers');
         $updatedGroupsUsers = $event->getData('updatedGroupsUsers');
@@ -127,14 +128,13 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
 
     /**
      * @param string $emailRecipient Email recipient
-     * @param Group $group Group
+     * @param \App\Model\Entity\Group $group Group
      * @param array $addedUsers List of added users
      * @param array $updatedUsers List of updated users
      * @param array $removedUsers List of removed users
      * @param array $whoIsAdmin List of users
-     * @param User $modifiedBy User who modified
-     *
-     * @return Email
+     * @param \App\Model\Entity\User $modifiedBy User who modified
+     * @return \App\Notification\Email\Email
      */
     private function createSummaryEmail(
         string $emailRecipient,
@@ -144,8 +144,8 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
         array $removedUsers,
         array $whoIsAdmin,
         User $modifiedBy
-    ) {
-        $subject = __("{0} updated the group {1}", $modifiedBy->profile->first_name, $group->name);
+    ): Email {
+        $subject = __('{0} updated the group {1}', $modifiedBy->profile->first_name, $group->name);
         $data = [
             'body' => [
                 'admin' => $modifiedBy,
@@ -165,10 +165,9 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
      * Retrieve the information of a list of users that will be used in the summary email.
      *
      * @param array $usersIds The list of users to retrieve the information for.
-     *
      * @return array
      */
-    private function _getSummaryUser(array $usersIds = [])
+    private function _getSummaryUser(array $usersIds = []): array
     {
         if (empty($usersIds)) {
             return [];
@@ -184,12 +183,11 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
     /**
      * Get a list of groupo managers
      *
-     * @param Group $group Group
+     * @param \App\Model\Entity\Group $group Group
      * @param array $excludeUsersIds ID of the users to exclude from the managers to retrieve
-     *
-     * @return User[]
+     * @return \App\Model\Entity\User[]
      */
-    private function getGroupManagers(Group $group, array $excludeUsersIds)
+    private function getGroupManagers(Group $group, array $excludeUsersIds): array
     {
         return $this->usersTable->find()
             ->select(['Users.username'])

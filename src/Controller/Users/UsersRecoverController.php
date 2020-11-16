@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,28 +19,25 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
-use App\Model\Entity\User;
-use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Response;
 
 /**
- * @property UsersTable $Users
- * @property AuthenticationTokensTable $AuthenticationTokens
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  */
 class UsersRecoverController extends AppController
 {
-    const RECOVER_SUCCESS_EVENT_NAME = 'UsersRecoverController.recoverPost.success';
+    public const RECOVER_SUCCESS_EVENT_NAME = 'UsersRecoverController.recoverPost.success';
 
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
-     * @return Response|null
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -76,8 +75,8 @@ class UsersRecoverController extends AppController
     /**
      * Register user action POST
      *
-     * @throws BadRequestException if the username is not provided
-     * @throws BadRequestException if the username is not valid
+     * @throws \Cake\Http\Exception\BadRequestException if the username is not provided
+     * @throws \Cake\Http\Exception\BadRequestException if the username is not valid
      * @return void
      */
     public function recoverPost()
@@ -144,9 +143,9 @@ class UsersRecoverController extends AppController
     /**
      * Assert some username data is provided
      *
-     * @throws BadRequestException if the username is not provided
-     * @throws BadRequestException if the username is not valid
-     * @return User user entity
+     * @throws \Cake\Http\Exception\BadRequestException if the username is not provided
+     * @throws \Cake\Http\Exception\BadRequestException if the username is not valid
+     * @return \App\Model\Entity\User user entity
      */
     protected function _assertValidation()
     {
@@ -169,7 +168,7 @@ class UsersRecoverController extends AppController
     /**
      * Assert the user can actually perform a recovery on their account
      *
-     * @throws BadRequestException if the user does not exist or has been deleted
+     * @throws \Cake\Http\Exception\BadRequestException if the user does not exist or has been deleted
      * @return mixed
      */
     protected function _assertRules()

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,6 +16,7 @@
  */
 namespace App\Test\Lib\Model;
 
+use App\Model\Entity\GroupsUser;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -22,11 +25,11 @@ trait GroupsUsersModelTrait
     /**
      * Add a dummy group user.
      *
-     * @param array $data The group user data
-     * @param array $options The entity options
-     * @return Group
+     * @param array|null $data The group user data
+     * @param array|null $options The entity options
+     * @return GroupsUser
      */
-    public function addGroupUser($data = [], $options = [])
+    public function addGroupUser(?array $data = [], ?array $options = []): GroupsUser
     {
         $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $groupUser = self::getDummyGroupUserEntity($data, $options);
@@ -39,11 +42,11 @@ trait GroupsUsersModelTrait
     /**
      * Get a new group user entity
      *
-     * @param array $data The group user data.
-     * @param array $options The new entity options.
-     * @return Resouce
+     * @param array|null $data The group user data.
+     * @param array|null $options The new entity options.
+     * @return GroupsUser
      */
-    public function getDummyGroupUserEntity($data = [], $options = [])
+    public function getDummyGroupUserEntity(?array $data = [], ?array $options = []): GroupsUser
     {
         $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $defaultOptions = [
@@ -94,6 +97,7 @@ trait GroupsUsersModelTrait
 
     /**
      * Assert a user is member of a group.
+     *
      * @param string $groupId The target group
      * @param string $userId The target user
      * @param bool $isAdmin Is the member also admin of the group
@@ -112,6 +116,7 @@ trait GroupsUsersModelTrait
 
     /**
      * Assert a user is not member of a group.
+     *
      * @param string $groupId The target group
      * @param string $userId The target user
      * @return bool
@@ -128,6 +133,7 @@ trait GroupsUsersModelTrait
 
     /**
      * Assert a user is admin of a group.
+     *
      * @param string $groupId
      * @param string $userId
      */
@@ -139,6 +145,7 @@ trait GroupsUsersModelTrait
 
     /**
      * Assert a user is not admin of group a group.
+     *
      * @param string $groupId
      * @param string $userId
      */

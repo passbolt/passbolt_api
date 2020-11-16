@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,8 +27,8 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
     use EmailNotificationSettingsDefinitionTrait;
 
     /**
-     * @param Schema $schema An instance of schema
-     * @return Schema
+     * @param \Cake\Form\Schema $schema An instance of schema
+     * @return \Cake\Form\Schema
      */
     public function buildSchema(Schema $schema)
     {
@@ -55,8 +57,8 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
     }
 
     /**
-     * @param Validator $validator An instance of validator
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator An instance of validator
+     * @return \Cake\Validation\Validator
      */
     public function buildValidator(Validator $validator)
     {

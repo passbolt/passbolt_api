@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,10 +18,9 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use App\Model\Table\GroupsTable;
 
 /**
- * @property GroupsTable Groups
+ * @property \App\Model\Table\GroupsTable Groups
  */
 class GroupsIndexController extends AppController
 {

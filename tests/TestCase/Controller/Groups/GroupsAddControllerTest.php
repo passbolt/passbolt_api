@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace App\Test\TestCase\Controller\Groups;
 
-use App\Model\Entity\Role;
 use App\Model\Table\GroupsTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
@@ -88,7 +89,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 
         foreach ($success as $case => $data) {
             $this->authenticateAs('admin');
-            $this->postJson('/groups.json?api-version=v2', $data);
+            $this->postJson('/groups.json', $data);
             $this->assertResponseSuccess();
 
             // Check that the groups and its sub-models are saved as expected.
@@ -188,7 +189,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 
         foreach ($errors as $caseLabel => $case) {
             $this->authenticateAs('admin');
-            $this->postJson('/groups.json?api-version=v2', $case['data']);
+            $this->postJson('/groups.json', $case['data']);
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $this->assertEquals($case['errorMessage'], Hash::get($arr, $case['errorField']));
@@ -204,14 +205,14 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $postData = [];
-        $this->postJson("/groups.json?api-version=v2", $postData);
+        $this->postJson('/groups.json', $postData);
         $this->assertForbiddenError();
     }
 
     public function testGroupsAddErrorNotAuthenticated()
     {
         $postData = [];
-        $this->postJson("/groups.json?api-version=v2", $postData);
+        $this->postJson('/groups.json', $postData);
         $this->assertAuthenticationError();
     }
 
@@ -219,7 +220,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
     {
         $this->disableCsrfToken();
         $this->authenticateAs('admin');
-        $this->post("/groups.json?api-version=v2");
+        $this->post('/groups.json?api-version=2');
         $this->assertResponseCode(403);
     }
 }

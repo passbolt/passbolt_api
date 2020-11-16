@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,7 +19,6 @@ namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
 use Cake\Utility\Hash;
-use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Service\Folders\FoldersCreateService;
 
 class FoldersCreateController extends AppController
@@ -34,7 +35,7 @@ class FoldersCreateController extends AppController
         $data = $this->getData();
         $folderCreateService = new FoldersCreateService();
 
-        /** @var Folder $folder */
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = $folderCreateService->create($uac, $data);
 
         // Retrieve and sanity the query options.

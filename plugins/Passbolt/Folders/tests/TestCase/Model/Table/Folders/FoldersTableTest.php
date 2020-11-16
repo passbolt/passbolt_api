@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -118,9 +120,7 @@ class FoldersTableTest extends FoldersTestCase
         $this->assertFieldFormatValidation($this->Folders, 'name', self::getDummyFolderData(), self::getDummyFolderEntityDefaultOptions(), $testCases);
     }
 
-    /* ************************************************************** */
     /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
 
     /**
      * Get default folder entity options.
@@ -135,9 +135,7 @@ class FoldersTableTest extends FoldersTestCase
         ];
     }
 
-    /* ************************************************************** */
     /* CONTAINS TESTS */
-    /* ************************************************************** */
 
     public function testFindView_ContainChildrenFolders()
     {
@@ -205,9 +203,7 @@ class FoldersTableTest extends FoldersTestCase
         $this->assertEquals(false, $folderB->personal);
     }
 
-    /* ************************************************************** */
     /* FINDER TESTS */
-    /* ************************************************************** */
 
     public function testFindIndex_FilterByParentId()
     {
@@ -227,7 +223,7 @@ class FoldersTableTest extends FoldersTestCase
         foreach ($expectedFoldersForParentId as $parentIdToFilter => $expectedFolderIds) {
             $folders = $this->Folders->filterQueryByParentIds($this->Folders->find(), [$parentIdToFilter]);
             $resultFolderIds = Hash::extract($folders->toArray(), '{n}.id');
-            $this->assertEquals(asort($expectedFolderIds), asort($resultFolderIds), "List of folders returned does not contain expected folders.");
+            $this->assertEquals(asort($expectedFolderIds), asort($resultFolderIds), 'List of folders returned does not contain expected folders.');
         }
 
         // Multiple parents should retrieve the children of all parents once
@@ -236,7 +232,7 @@ class FoldersTableTest extends FoldersTestCase
 
         $folders = $this->Folders->filterQueryByParentIds($this->Folders->find(), $parentIdsToFilter);
         $resultFolderIds = Hash::extract($folders->toArray(), '{n}.id');
-        $this->assertSame(asort($expectedFolderIds), asort($resultFolderIds), "List of folders returned does not contain expected folders. Filtering with multiple parent ids should return all children.");
+        $this->assertSame(asort($expectedFolderIds), asort($resultFolderIds), 'List of folders returned does not contain expected folders. Filtering with multiple parent ids should return all children.');
     }
 
     private function insertTestCase1()
@@ -293,7 +289,7 @@ class FoldersTableTest extends FoldersTestCase
 
         foreach ($matchingNames as $matchingName) {
             $folders = $this->Folders->filterQueryBySearch($query, $matchingName);
-            $this->assertCount(1, $folders, sprintf("FoldersTable::findAllByName() should match the given input: `%s`", $matchingName));
+            $this->assertCount(1, $folders, sprintf('FoldersTable::findAllByName() should match the given input: `%s`', $matchingName));
         }
 
         $nonMatchingNames = [
@@ -303,7 +299,7 @@ class FoldersTableTest extends FoldersTestCase
 
         foreach ($nonMatchingNames as $nonMatchingName) {
             $folders = $this->Folders->filterQueryBySearch($query, $nonMatchingName);
-            $this->assertCount(0, $folders, sprintf("FoldersTable::findAllByName() should not match the given input: `%s`", $nonMatchingName));
+            $this->assertCount(0, $folders, sprintf('FoldersTable::findAllByName() should not match the given input: `%s`', $nonMatchingName));
         }
     }
 
@@ -334,6 +330,6 @@ class FoldersTableTest extends FoldersTestCase
         $folders = $this->Folders->filterByIds($this->Folders->find(), $expectedFolderIds);
         $folderIds = Hash::extract($folders->toArray(), '{n}.id');
 
-        $this->assertSame($folderIds, $expectedFolderIds, "List of folders returned does not contain expected folders.");
+        $this->assertSame($folderIds, $expectedFolderIds, 'List of folders returned does not contain expected folders.');
     }
 }

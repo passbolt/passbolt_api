@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,11 +17,7 @@
 
 namespace App\Controller;
 
-use App\Controller\Component\EmailSubscriptionComponent;
-use App\Controller\Component\QueryStringComponent;
-use App\Controller\Component\UserComponent;
 use App\Utility\UserAction;
-use Cake\Controller\Component\AuthComponent;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -33,11 +31,10 @@ use Cake\Routing\Router;
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
  *
- * @property UserComponent              $User
- * @property QueryStringComponent       $QueryString
- * @property AuthComponent              $Auth
- * @property EmailSubscriptionComponent $EmailSubscription
- *
+ * @property \App\Controller\Component\UserComponent $User
+ * @property \App\Controller\Component\QueryStringComponent $QueryString
+ * @property \Cake\Controller\Component\AuthComponent $Auth
+ * @property \App\Controller\EmailSubscriptionComponent $EmailSubscription
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller
@@ -49,7 +46,7 @@ class AppController extends Controller
      * @return void
      * @throws \Exception If a component class cannot be found.
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->loadComponent('RequestHandler', [
@@ -94,7 +91,7 @@ class AppController extends Controller
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
+     * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
@@ -116,7 +113,7 @@ class AppController extends Controller
      */
     protected function success($message = null, $body = null)
     {
-        $prefix = strtolower($this->request->getParam('prefix'));
+        $prefix = $this->request->getParam('prefix') ?? strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
 
         $this->set([
@@ -149,7 +146,7 @@ class AppController extends Controller
         if ($errorCode !== 200) {
             $this->response = $this->response->withStatus($errorCode);
         }
-        $prefix = strtolower($this->request->getParam('prefix'));
+        $prefix = $this->request->getParam('prefix') ?? strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
 
         $this->set([

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,24 +24,28 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
  * Class DirectoryResults
+ *
  * @package Passbolt\DirectorySync\Utility\DirectoryEntry
  */
 class DirectoryResults
 {
     /**
      * Raw ldap groups as returned by ldap directory.
+     *
      * @var array
      */
     private $ldapGroups;
 
     /**
      * Raw ldap users as returned by ldap directory.
+     *
      * @var array
      */
     private $ldapUsers;
 
     /**
      * mapping rules
+     *
      * @var array
      */
     private $mappingRules;
@@ -51,24 +57,28 @@ class DirectoryResults
 
     /**
      * Groups
+     *
      * @var array
      */
     private $groups;
 
     /**
      * Users
+     *
      * @var array
      */
     private $users;
 
     /**
      * Invalid users which will be ignored.
+     *
      * @var
      */
     private $invalidUsers;
 
     /**
      * Invalid groups which will be ignored.
+     *
      * @var
      */
     private $invalidGroups;
@@ -77,13 +87,13 @@ class DirectoryResults
      * DirectoryResults constructor.
      *
      * @param array $mappingRules mapping rules
-     * @param DirectoryOrgSettings $settings settings. If null, will retrieve settings through standard way.
+     * @param \Passbolt\DirectorySync\Utility\DirectoryOrgSettings $settings settings. If null, will retrieve settings through standard way.
      * @return void
      */
-    public function __construct(array $mappingRules, DirectoryOrgSettings $settings = null)
+    public function __construct(array $mappingRules, ?DirectoryOrgSettings $settings = null)
     {
         $this->mappingRules = $mappingRules;
-        $this->directorySettings = $settings !== null ? $settings : DirectoryOrgSettings::get();
+        $this->directorySettings = $settings ?? DirectoryOrgSettings::get();
         $this->ldapUsers = [];
         $this->ldapGroups = [];
         $this->users = [];
@@ -94,8 +104,9 @@ class DirectoryResults
 
     /**
      * Initialize results with results returned from ldap directory.
-     * @param LdapObjectCollection $ldapUsers ldap users
-     * @param LdapObjectCollection $ldapGroups ldap groups
+     *
+     * @param \LdapTools\Object\LdapObjectCollection $ldapUsers ldap users
+     * @param \LdapTools\Object\LdapObjectCollection $ldapGroups ldap groups
      * @return void
      * @throws \Exception
      */
@@ -119,6 +130,7 @@ class DirectoryResults
     /**
      * Initialize results with list of entries.
      * This function is mainly available for testing.
+     *
      * @param array $userEntries user entries
      * @param array $groupEntries group entries
      * @return void
@@ -147,6 +159,7 @@ class DirectoryResults
 
     /**
      * Transform ldap users.
+     *
      * @return void
      */
     public function transformLdapUsers()
@@ -158,6 +171,7 @@ class DirectoryResults
 
     /**
      * Transform ldap groups.
+     *
      * @return void
      */
     public function transformLdapGroups()
@@ -170,9 +184,9 @@ class DirectoryResults
     /**
      * Transform one ldap group.
      * Add a uuid if not present (based on cn)
-     * @param LdapObject $ldapGroup ldap group
      *
-     * @return LdapObject ldap object
+     * @param \LdapTools\Object\LdapObject $ldapGroup ldap group
+     * @return \LdapTools\Object\LdapObject ldap object
      */
     public function transformLdapGroup(LdapObject $ldapGroup)
     {
@@ -185,9 +199,9 @@ class DirectoryResults
      * Transform one ldap user.
      * Add a uuid if not present (based on cn)
      * Build an email if defined in the configuration.
-     * @param LdapObject $ldapUser ldap user
      *
-     * @return LdapObject ldap object
+     * @param \LdapTools\Object\LdapObject $ldapUser ldap user
+     * @return \LdapTools\Object\LdapObject ldap object
      */
     public function transformLdapUser(LdapObject $ldapUser)
     {
@@ -199,7 +213,8 @@ class DirectoryResults
 
     /**
      * Transform ldap object email based on provided configuration.
-     * @param LdapObject $ldapUser ldap user
+     *
+     * @param \LdapTools\Object\LdapObject $ldapUser ldap user
      * @return void
      */
     protected function _transformEmail(LdapObject $ldapUser)
@@ -217,9 +232,9 @@ class DirectoryResults
 
     /**
      * Adds a uuid to the ldap object if not present and if a dn exists.
-     * @param LdapObject $ldapObject ldap object
      *
-     * @return LdapObject ldap object
+     * @param \LdapTools\Object\LdapObject $ldapObject ldap object
+     * @return \LdapTools\Object\LdapObject ldap object
      */
     protected function _transformId(LdapObject $ldapObject)
     {
@@ -233,6 +248,7 @@ class DirectoryResults
 
     /**
      * Populate groups list from Ldap results.
+     *
      * @return void
      * @throws \Exception
      */
@@ -253,6 +269,7 @@ class DirectoryResults
     /**
      * Get invalid groups.
      * Invalid groups are groups that do not match the expected format and that will be ignored.
+     *
      * @return array
      */
     public function getInvalidGroups()
@@ -270,6 +287,7 @@ class DirectoryResults
     /**
      * get invalid users.
      * Invalid users are users that do not match the expected format and that will be ignored.
+     *
      * @return array
      */
     public function getInvalidUsers()
@@ -286,6 +304,7 @@ class DirectoryResults
 
     /**
      * Populate users from Ldap results.
+     *
      * @return void
      * @throws \Exception
      */
@@ -305,6 +324,7 @@ class DirectoryResults
 
     /**
      * Populate Group users details for all groups.
+     *
      * @return void
      */
     private function _populateAllGroupsUsersDetails()
@@ -316,9 +336,9 @@ class DirectoryResults
 
     /**
      * Populate Group users details for the given group.
-     * @param GroupEntry $group group
      *
-     * @return GroupEntry returned group populated with groups users
+     * @param \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry $group group
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry returned group populated with groups users
      */
     private function _populateGroupGroupsUserDetails(GroupEntry $group)
     {
@@ -344,10 +364,11 @@ class DirectoryResults
 
     /**
      * Get users.
+     *
      * @param bool $validOnly whether to return only valid users (without validation errors)
      * @return array
      */
-    public function getUsers(bool $validOnly = false)
+    public function getUsers(?bool $validOnly = false)
     {
         if (!$validOnly) {
             return $this->users;
@@ -365,10 +386,11 @@ class DirectoryResults
 
     /**
      * Get groups.
+     *
      * @param bool $validOnly whether to return only valid groups (without validation errors)
      * @return array
      */
-    public function getGroups(bool $validOnly = false)
+    public function getGroups(?bool $validOnly = false)
     {
         if (!$validOnly) {
             return $this->groups;
@@ -386,17 +408,18 @@ class DirectoryResults
 
     /**
      * Check if results are populated (at least users or groups should be available).
+     *
      * @return bool true or false
      */
     public function isEmpty()
     {
-        return (empty($this->users) && empty($this->groups));
+        return empty($this->users) && empty($this->groups);
     }
 
     /**
      * Check if a directory name is a group.
-     * @param string $memberDN the directory name
      *
+     * @param string $memberDN the directory name
      * @return bool
      */
     public function isGroup(string $memberDN)
@@ -406,8 +429,8 @@ class DirectoryResults
 
     /**
      * Check if a directory name is a group.
-     * @param string $memberDN the directory name
      *
+     * @param string $memberDN the directory name
      * @return bool
      */
     public function isUser(string $memberDN)
@@ -417,10 +440,10 @@ class DirectoryResults
 
     /**
      * Get recursively the group members for a given group and type.
-     * @param string $objectType type of object to be returned (Group or User).
-     * @param GroupEntry $group the group to work on.
-     * @param array $membersList members list
      *
+     * @param string $objectType type of object to be returned (Group or User).
+     * @param \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry $group the group to work on.
+     * @param array $membersList members list
      * @return array
      */
     private function _getGroupMembersRecursive(string $objectType, GroupEntry $group, array &$membersList)
@@ -457,9 +480,7 @@ class DirectoryResults
      *
      * @param string $objectType type of member (user or group)
      * @param string $groupName name of the group
-     *
-     * @return DirectoryResults the list of members
-     *
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults the list of members
      * @throws \Exception
      */
     public function getRecursivelyFromParentGroup(string $objectType, string $groupName)
@@ -487,6 +508,7 @@ class DirectoryResults
 
     /**
      * Get all groups without parents.
+     *
      * @return array list of groups.
      */
     private function _getRootGroups()
@@ -507,6 +529,7 @@ class DirectoryResults
 
     /**
      * Get all users without parents.
+     *
      * @return array list of users.
      */
     private function _getRootUsers()
@@ -527,9 +550,9 @@ class DirectoryResults
 
     /**
      * Build the recursive tree of children for a given group.
-     * @param GroupEntry $group group
      *
-     * @return GroupEntry $group GroupEntry populated with groups and users recursively.
+     * @param \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry $group group
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry $group GroupEntry populated with groups and users recursively.
      */
     private function _getChildrenRecursive(GroupEntry $group)
     {
@@ -553,6 +576,7 @@ class DirectoryResults
 
     /**
      * Get nested tree of groups and users.
+     *
      * @return array nested tree.
      */
     public function getTree()
@@ -571,7 +595,8 @@ class DirectoryResults
 
     /**
      * Get flattened list of children for a given group.
-     * @param GroupEntry $group the group
+     *
+     * @param \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry $group the group
      * @param array $flatTree flat tree array
      * @param int $level the current level
      * @return void
@@ -595,6 +620,7 @@ class DirectoryResults
 
     /**
      * Get flattened tree representation of tree.
+     *
      * @return array the flattened tree.
      */
     public function getFlattenedTree()
@@ -619,8 +645,8 @@ class DirectoryResults
 
     /**
      * Get users for a list of groups.
-     * @param array $groups a list of GroupEntry
      *
+     * @param array $groups a list of GroupEntry
      * @return array a list of User entries.
      */
     private function _getUsersForGroups(array $groups)
@@ -636,8 +662,8 @@ class DirectoryResults
 
     /**
      * Get users for a given group.
-     * @param GroupEntry $group group entry
      *
+     * @param \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry $group group entry
      * @return array a list of UserEntry users.
      */
     private function _getUsersForGroup(GroupEntry $group)
@@ -652,8 +678,8 @@ class DirectoryResults
 
     /**
      * Lookup for a group by its case insensitive name.
-     * @param string $name group name
      *
+     * @param string $name group name
      * @return array|null the corresponding GroupEntry
      */
     public function lookupGroupByGroupName(string $name)
@@ -669,10 +695,11 @@ class DirectoryResults
 
     /**
      * Return the list of valid users in a simple array format.
+     *
      * @param bool $validOnly whether to return only valid users (without validation errors)
      * @return array array of users.
      */
-    public function getUsersAsArray(bool $validOnly = false)
+    public function getUsersAsArray(?bool $validOnly = false)
     {
         $results = [];
         $validUsers = $this->getUsers($validOnly);
@@ -685,10 +712,11 @@ class DirectoryResults
 
     /**
      * Return the list of valid groups in a simple array format.
+     *
      * @param bool $validOnly whether to return only valid groups (without validation errors)
      * @return array array of groups.
      */
-    public function getGroupsAsArray(bool $validOnly = false)
+    public function getGroupsAsArray(?bool $validOnly = false)
     {
         $results = [];
         $validGroups = $this->getGroups($validOnly);

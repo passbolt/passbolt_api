@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * RolesFixture
- *
  */
 class RolesFixture extends TestFixture
 {
-
     /**
      * Fields
      *

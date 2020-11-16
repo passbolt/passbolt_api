@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * EmailQueueFixture
- *
  */
 class EmailQueueFixture extends TestFixture
 {
-
     /**
      * Table name
      *

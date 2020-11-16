@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,10 +25,11 @@ class AccountCreationForm extends Form
 {
     /**
      * Account creation schema.
-     * @param Schema $schema schema
-     * @return Schema
+     *
+     * @param \Cake\Form\Schema $schema schema
+     * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('first_name', 'string')
@@ -36,38 +39,56 @@ class AccountCreationForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator validator
-     * @return Validator
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    protected function _buildValidator(Validator $validator): Validator
     {
         $validator
             ->requirePresence('first_name', 'create', __('A first name is required'))
-            ->notEmpty('first_name')
+            ->notEmptyString('first_name')
             ->utf8('first_name', __('First name should be a valid utf8 string.'))
-            ->maxLength('first_name', 255, __('The first name length should be maximum 254 characters.'));
+            ->maxLength(
+                'first_name',
+                255,
+                __('The first name length should be maximum 254 characters.')
+            );
 
         $validator
             ->requirePresence('last_name', 'create', __('A last name is required'))
-            ->notEmpty('last_name')
+            ->notEmptyString('last_name')
             ->utf8('last_name', __('Last name should be a valid utf8 string.'))
-            ->maxLength('last_name', 255, __('The last name length should be maximum 254 characters.'));
+            ->maxLength(
+                'last_name',
+                255,
+                __('The last name length should be maximum 254 characters.')
+            );
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
-            ->notEmpty('username', __('A username is required.'))
-            ->maxLength('username', 255, __('The username length should be maximum {0} characters.', 255))
-            ->email('username', Configure::read('passbolt.email.validate.mx'), __('The username should be a valid email address.'));
+            ->notEmptyString('username', __('A username is required.'))
+            ->maxLength(
+                'username',
+                255,
+                __('The username length should be maximum {0} characters.', 255)
+            )
+            ->email(
+                'username',
+                Configure::read('passbolt.email.validate.mx'),
+                __('The username should be a valid email address.')
+            );
 
         return $validator;
     }
 
     /**
      * Execute implementation.
+     *
      * @param array $data form data
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         return true;
     }

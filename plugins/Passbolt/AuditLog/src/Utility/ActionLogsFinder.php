@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,9 +29,9 @@ class ActionLogsFinder
 {
     /**
      * Get base query
-     * @param array $options options
      *
-     * @return Query
+     * @param array $options options
+     * @return \Cake\ORM\Query
      */
     protected function _getBaseQuery(array $options = [])
     {
@@ -152,10 +154,10 @@ class ActionLogsFinder
 
     /**
      * Filter query by resource id
-     * @param Query $query query
-     * @param string $resourceId resource id
      *
-     * @return Query
+     * @param \Cake\ORM\Query $query query
+     * @param string $resourceId resource id
+     * @return \Cake\ORM\Query
      */
     protected function _filterQueryByResourceId(Query $query, string $resourceId)
     {
@@ -178,9 +180,10 @@ class ActionLogsFinder
 
     /**
      * Filter a query by folder id
-     * @param Query $query The target query
+     *
+     * @param \Cake\ORM\Query $query The target query
      * @param string $folderId The target folder
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     protected function _filterQueryByFolderId(Query $query, string $folderId)
     {
@@ -201,9 +204,9 @@ class ActionLogsFinder
 
     /**
      * Paginate results as per the pagination options provided.
-     * @param Query $query query
-     * @param array $options options
      *
+     * @param \Cake\ORM\Query $query query
+     * @param array $options options
      * @return mixed
      */
     protected function _paginate(Query $query, array $options)
@@ -216,7 +219,8 @@ class ActionLogsFinder
 
     /**
      * Check if a given user has access to a resource.
-     * @param UserAccessControl $uac user
+     *
+     * @param \App\Utility\UserAccessControl $uac user
      * @param string $resourceId resource id
      * @return bool whether or not he has access to the resource
      */
@@ -233,13 +237,13 @@ class ActionLogsFinder
 
     /**
      * find action logs for a given resource.
-     * @param UserAccessControl $user user
+     *
+     * @param \App\Utility\UserAccessControl $user user
      * @param string $resourceId resource id
      * @param array $options options array
-     *
      * @return array
      */
-    public function findForResource(UserAccessControl $user, string $resourceId, array $options = [])
+    public function findForResource(UserAccessControl $user, string $resourceId, ?array $options = [])
     {
         // Check that user can access to resource.
         $this->_checkUserCanAccessResource($user, $resourceId);
@@ -259,13 +263,13 @@ class ActionLogsFinder
 
     /**
      * find action logs for a given folder.
-     * @param UserAccessControl $user user
+     *
+     * @param \App\Utility\UserAccessControl $user user
      * @param string $folderId resource id
      * @param array $options options array
-     *
      * @return array
      */
-    public function findForFolder(UserAccessControl $user, string $folderId, array $options = [])
+    public function findForFolder(UserAccessControl $user, string $folderId, ?array $options = [])
     {
         if (!Configure::read('passbolt.plugins.folders.enabled')) {
             return [];

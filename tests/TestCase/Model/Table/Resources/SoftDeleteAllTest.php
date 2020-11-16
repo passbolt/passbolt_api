@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -18,7 +20,6 @@ namespace App\Test\TestCase\Model\Table\Resources;
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SoftDeleteAllTest extends AppTestCase

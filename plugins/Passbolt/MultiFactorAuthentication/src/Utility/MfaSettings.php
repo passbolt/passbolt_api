@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,40 +23,43 @@ use Cake\Routing\Router;
 
 class MfaSettings
 {
-    const MFA = 'mfa';
-    const PROVIDERS = 'providers';
-    const PROVIDER_TOTP = 'totp';
-    const PROVIDER_DUO = 'duo';
-    const PROVIDER_YUBIKEY = 'yubikey';
+    public const MFA = 'mfa';
+    public const PROVIDERS = 'providers';
+    public const PROVIDER_TOTP = 'totp';
+    public const PROVIDER_DUO = 'duo';
+    public const PROVIDER_YUBIKEY = 'yubikey';
 
-    const ORG_SETTINGS = 'MfaOrganizationSettings';
-    const ACCOUNT_SETTINGS = 'MfaAccountSettings';
+    public const ORG_SETTINGS = 'MfaOrganizationSettings';
+    public const ACCOUNT_SETTINGS = 'MfaAccountSettings';
 
     /**
-     * @var MfaAccountSettings
+     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
      */
     protected $accountSettings;
 
     /**
-     * @var MfaOrgSettings
+     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings
      */
     protected $orgSettings;
 
     /**
-     * @var UserAccessControl
+     * @var \App\Utility\UserAccessControl
      */
     protected $uac;
 
     /**
      * MfaSettings constructor.
      *
-     * @param MfaOrgSettings $orgSettings organization settings
-     * @param MfaAccountSettings|null $accountSettings account settings
-     * @param UserAccessControl $uac user access control
+     * @param \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings $orgSettings organization settings
+     * @param \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings|null $accountSettings account settings
+     * @param \App\Utility\UserAccessControl $uac user access control
      * @return void
      */
-    public function __construct(MfaOrgSettings $orgSettings, MfaAccountSettings $accountSettings = null, UserAccessControl $uac)
-    {
+    public function __construct(
+        MfaOrgSettings $orgSettings,
+        ?MfaAccountSettings $accountSettings,
+        UserAccessControl $uac
+    ) {
         $this->accountSettings = $accountSettings;
         $this->orgSettings = $orgSettings;
         $this->uac = $uac;
@@ -63,8 +68,8 @@ class MfaSettings
     /**
      * Get MfaSettings singleton
      *
-     * @param UserAccessControl $uac access control
-     * @return MfaSettings
+     * @param \App\Utility\UserAccessControl $uac access control
+     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
     public static function get(UserAccessControl $uac)
     {
@@ -163,16 +168,16 @@ class MfaSettings
     {
         $providers = $this->getEnabledProviders();
 
-        return (array_search($provider, $providers) !== false);
+        return array_search($provider, $providers) !== false;
     }
 
     /**
      * Get account settings
      *
-     * @param bool $refresh if a new table find is required
-     * @return MfaAccountSettings
+     * @param bool|null $refresh if a new table find is required
+     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
      */
-    public function getAccountSettings(bool $refresh = false)
+    public function getAccountSettings(?bool $refresh = false)
     {
         if ($this->accountSettings === null || $refresh) {
             try {
@@ -188,7 +193,7 @@ class MfaSettings
     /**
      * Get organization settings
      *
-     * @return MfaOrgSettings
+     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings
      */
     public function getOrganizationSettings()
     {
@@ -199,10 +204,10 @@ class MfaSettings
      * Get the list of verification url by enabled providers
      * Example: ['totp' => 'BASE_URL/verify/totp']
      *
-     * @param bool $json if json extension required
+     * @param bool|null $json if json extension required
      * @return array
      */
-    public function getProvidersVerifyUrls(bool $json = true)
+    public function getProvidersVerifyUrls(?bool $json = true)
     {
         $providers = $this->getEnabledProviders();
         $data = [];
@@ -216,10 +221,10 @@ class MfaSettings
     /**
      * Get default provider verification url
      *
-     * @param bool $json if json extension required
+     * @param bool|null $json if json extension required
      * @return string
      */
-    public function getDefaultVerifyUrl(bool $json = true)
+    public function getDefaultVerifyUrl(?bool $json = true)
     {
         $providers = $this->getEnabledProviders();
 
@@ -230,10 +235,10 @@ class MfaSettings
      * Return a given provider verification url
      *
      * @param string $provider provider name
-     * @param bool $json if json extension required
+     * @param bool|null $json if json extension required
      * @return string
      */
-    public function getProviderVerifyUrl(string $provider, bool $json = true)
+    public function getProviderVerifyUrl(string $provider, ?bool $json = true)
     {
         if ($json) {
             $json = '.json';

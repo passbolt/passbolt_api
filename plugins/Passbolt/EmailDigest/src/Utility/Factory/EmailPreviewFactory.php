@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,6 +28,7 @@ use Passbolt\EmailDigest\Utility\Mailer\EmailPreview;
  * It allow to render an email with or without a layout in what is called an EmailPreview.
  * The email is rendered exactly as it would be send.
  * The produced EmailPreview also contains the headers as it would have been sent.
+ *
  * @see EmailPreview
  *
  * It can:
@@ -36,11 +39,12 @@ class EmailPreviewFactory
 {
     /**
      * Create a snapshot of the email as it would be rendered from an email digest.
-     * @param EmailDigestInterface $emailDigest Email digest to get a snapshot of
+     *
+     * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest Email digest to get a snapshot of
      * @param string|bool $layout Layout file to use to render the email. No layout is used by default.
-     * @return EmailPreview
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview
      */
-    public function renderEmailPreviewFromDigest(EmailDigestInterface $emailDigest, $layout = false)
+    public function renderEmailPreviewFromDigest(EmailDigestInterface $emailDigest, ?bool $layout = false)
     {
         $email = $this->mapEmailDigestToMailerEmail(new Email('default'), $emailDigest);
 
@@ -51,11 +55,12 @@ class EmailPreviewFactory
 
     /**
      * Create a snapshot of the email as it would be rendered from an email.
-     * @param Entity $emailData Email data to get a snapshot of
+     *
+     * @param \Cake\ORM\Entity $emailData Email data to get a snapshot of
      * @param string|bool $layout Layout file to use to render the email. No layout is used by default.
-     * @return EmailPreview
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview
      */
-    public function renderEmailPreviewFromEmailEntity(Entity $emailData, $layout = false)
+    public function renderEmailPreviewFromEmailEntity(Entity $emailData, ?bool $layout = false)
     {
         $configName = $emailData->config;
         $theme = empty($emailData->theme) ? '' : (string)$emailData->theme;
@@ -74,8 +79,8 @@ class EmailPreviewFactory
      * The trick is to attach a Debug transport which do not send the email but which gives us instead an
      * opportunity to retrieve the content and the headers of the email as it would be send.
      *
-     * @param Email $email A Mailer email
-     * @return EmailPreview
+     * @param \Cake\Mailer\Email $email A Mailer email
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview
      * @see Email::send()
      * @see DebugTransport::send()
      */
@@ -90,13 +95,14 @@ class EmailPreviewFactory
 
     /**
      * Configure the email view for a Mailer email, theme, template, layout can be changed.
-     * @param Email $email An Email
+     *
+     * @param \Cake\Mailer\Email $email An Email
      * @param string $template Template
      * @param string|null $layout Layout
      * @param string|null $theme Theme
      * @return void
      */
-    private function configureEmailView(Email $email, string $template, string $layout = null, string $theme = null)
+    private function configureEmailView(Email $email, string $template, ?string $layout = null, ?string $theme = null)
     {
         $email->viewBuilder()
             ->setVar('title', 'Email digest preview')
@@ -107,9 +113,10 @@ class EmailPreviewFactory
 
     /**
      * Map an instance of EmailDigest to an instance of Email, so it can be send.
-     * @param Email $email An instance of Email
-     * @param EmailDigestInterface $emailDigest An instance of EmailDigest
-     * @return Email
+     *
+     * @param \Cake\Mailer\Email $email An instance of Email
+     * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest An instance of EmailDigest
+     * @return \Cake\Mailer\Email
      */
     private function mapEmailDigestToMailerEmail(Email $email, EmailDigestInterface $emailDigest)
     {
@@ -126,9 +133,10 @@ class EmailPreviewFactory
 
     /**
      * Map an instance of Emailqueue email to an instance of Email, so it can be send.
-     * @param Email $email  An instance of Email
-     * @param Entity $emailData An instance of Emailqueue email
-     * @return Email
+     *
+     * @param \Cake\Mailer\Email $email An instance of Email
+     * @param \Cake\ORM\Entity $emailData An instance of Emailqueue email
+     * @return \Cake\Mailer\Email
      * @see \EmailQueue\Model\Table\EmailQueueTable
      */
     private function mapEmailEntityToMailerEmail(Email $email, Entity $emailData)

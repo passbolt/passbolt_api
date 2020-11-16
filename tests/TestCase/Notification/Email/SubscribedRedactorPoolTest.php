@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,7 +22,6 @@ use App\Notification\Email\CollectSubscribedEmailRedactorEvent;
 use App\Notification\Email\EmailSubscriptionManager;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use Cake\TestSuite\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class SubscribedRedactorPoolTest extends TestCase
 {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 
 class FoldersUpdateController extends AppController
@@ -42,7 +43,7 @@ class FoldersUpdateController extends AppController
 
         $data = $this->getData();
 
-        /** @var Folder $folder */
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = $foldersUpdateService->update($uac, $id, $data);
 
         // Retrieve and sanity the query options.

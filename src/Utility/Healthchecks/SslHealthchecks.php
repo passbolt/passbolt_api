@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,10 +24,10 @@ class SslHealthchecks
     /**
      * Run all SSL healthchecks
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function all($checks = [])
+    public static function all(?array $checks = []): array
     {
         $checks['ssl'] = [
             'peerValid' => false,
@@ -49,10 +51,10 @@ class SslHealthchecks
     /**
      * Check if peer is valid
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function peerValid($checks = [])
+    public static function peerValid(?array $checks = []): array
     {
         $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
         try {
@@ -73,10 +75,10 @@ class SslHealthchecks
     /**
      * Check if the host is valid
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function hostValid($checks = [])
+    public static function hostValid(?array $checks = []): array
     {
         $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
         try {
@@ -97,10 +99,10 @@ class SslHealthchecks
     /**
      * Check that the certificate is not self signed
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function notSelfSigned($checks = [])
+    public static function notSelfSigned(?array $checks = []): array
     {
         $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
         try {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -106,7 +108,7 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersDeleteFolder_PersoSuccess3_CascadeDelete()
     {
-        list($folderA, $folderB) = $this->insertPersoSuccess3Fixture();
+        [$folderA, $folderB] = $this->insertPersoSuccess3Fixture();
 
         $this->authenticateAs('ada');
         $this->deleteJson("/folders/{$folderA->id}.json?cascade=1&api-version=2");
@@ -132,7 +134,7 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersDeleteFolder_PersoSuccess2_NoCascadeMoveChildrenToRoo()
     {
-        list($folderA, $folderB) = $this->insertPersoSuccess2Fixture();
+        [$folderA, $folderB] = $this->insertPersoSuccess2Fixture();
 
         $this->authenticateAs('ada');
         $this->deleteJson("/folders/{$folderA->id}.json?api-version=2");

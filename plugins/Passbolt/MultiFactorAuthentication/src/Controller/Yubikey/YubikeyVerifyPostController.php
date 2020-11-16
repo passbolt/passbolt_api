@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,20 +17,17 @@
 namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
 use App\Error\Exception\CustomValidationException;
-use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeyVerifyForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeyVerifyPostController extends MfaVerifyController
 {
-
     /**
      * Yubikey verify post
      *
-     * @throws InternalErrorException
-     * @throws BadRequestException
+     * @throws \Cake\Http\Exception\InternalErrorException
+     * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
     public function post()

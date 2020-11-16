@@ -25,12 +25,12 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
 {
     use EmailNotificationSettingsDefinitionTrait;
 
-    const FOLDER_CREATE = 'send_folder_create';
-    const FOLDER_DELETE = 'send_folder_delete';
-    const FOLDER_UPDATE = 'send_folder_update';
-    const FOLDER_SHARE = 'send_folder_share';
+    public const FOLDER_CREATE = 'send_folder_create';
+    public const FOLDER_DELETE = 'send_folder_delete';
+    public const FOLDER_UPDATE = 'send_folder_update';
+    public const FOLDER_SHARE = 'send_folder_share';
 
-    const FIELDS = [
+    public const FIELDS = [
         self::FOLDER_DELETE,
         self::FOLDER_CREATE,
         self::FOLDER_UPDATE,
@@ -38,8 +38,8 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
     ];
 
     /**
-     * @param Schema $schema An instance of schema
-     * @return Schema
+     * @param \Cake\Form\Schema $schema An instance of schema
+     * @return \Cake\Form\Schema
      */
     public function buildSchema(Schema $schema)
     {
@@ -51,8 +51,8 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
     }
 
     /**
-     * @param Validator $validator An instance of validator
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator An instance of validator
+     * @return \Cake\Validation\Validator
      */
     public function buildValidator(Validator $validator)
     {

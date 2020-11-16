@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,7 +19,6 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Model\Entity\Resource;
-use App\Model\Table\ResourcesTable;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -26,7 +27,7 @@ use Cake\Validation\Validation;
 use Exception;
 
 /**
- * @property ResourcesTable $Resources
+ * @property \App\Model\Table\ResourcesTable $Resources
  */
 class ResourcesViewController extends AppController
 {
@@ -34,11 +35,11 @@ class ResourcesViewController extends AppController
      * Resource View action
      *
      * @param string $id uuid Identifier of the resource
-     * @throws BadRequestException if the resource id is not a uuid
-     * @throws NotFoundException if the resource does not exist
+     * @throws \Cake\Http\Exception\BadRequestException if the resource id is not a uuid
+     * @throws \Cake\Http\Exception\NotFoundException if the resource does not exist
      * @return void
      */
-    public function view(string $id)
+    public function view(string $id): void
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
@@ -59,7 +60,7 @@ class ResourcesViewController extends AppController
         $options = $this->QueryString->get($whitelist);
 
         // Retrieve the resource.
-        /** @var Resource $resource */
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = $this->Resources->findView($this->User->id(), $id, $options)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
@@ -73,21 +74,22 @@ class ResourcesViewController extends AppController
 
     /**
      * Log secrets accesses in secretAccesses table.
-     * @param resource $resource resource
+     *
+     * @param Resource $resource resource
      * @return void
      */
-    protected function _logSecretAccesses(Resource $resource)
+    protected function _logSecretAccesses(Resource $resource): void
     {
-        if (!isset($resource->secrets) || !$this->Resources->getAssociation('Secrets')->hasAssociation('SecretAccesses')) {
+        $Secrets = $this->Resources->getAssociation('Secrets');
+        if (!isset($resource->secrets) || !$Secrets->hasAssociation('SecretAccesses')) {
             return;
         }
 
         foreach ($resource->secrets as $secret) {
             try {
-                $this->Resources
-                    ->getAssociation('Secrets')
-                    ->getAssociation('SecretAccesses')
-                    ->create($secret, $this->User->getAccessControl());
+                /** @var \Passbolt\Log\Model\Table\SecretAccessesTable $SecretAccesses */
+                $SecretAccesses = $Secrets->getAssociation('SecretAccesses');
+                $SecretAccesses->create($secret, $this->User->getAccessControl());
             } catch (Exception $e) {
                 throw new InternalErrorException(__('Could not log secret access entry.'));
             }

@@ -5,7 +5,6 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * SecretsFixture
- *
  */
 class SecretAccessesFixture extends TestFixture
 {

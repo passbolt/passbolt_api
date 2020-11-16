@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,7 +22,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 class GetMfaOrgSettingsService
 {
     /**
-     * @return MfaOrgSettings
+     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings
      */
     public function get()
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace Passbolt\Tags\Test\Lib\Model;
 
 use Cake\ORM\TableRegistry;
-use Passbolt\Tags\Model\Entity\Tag;
 
 trait TagsModelTrait
 {
@@ -51,7 +52,7 @@ trait TagsModelTrait
      * @param array $options The entity options
      * @return Tag
      */
-    public function addTag(array $data = [], array $options = [])
+    public function addTag(array $data = [], ?array $options = [])
     {
         $tagsTable = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
         $tag = self::getDummyTagEntity($data, $options);
@@ -68,7 +69,7 @@ trait TagsModelTrait
      * @param array $options The new entity options.
      * @return Tag
      */
-    public function getDummyTagEntity(array $data = [], array $options = [])
+    public function getDummyTagEntity(array $data = [], ?array $options = [])
     {
         $tagsTable = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
         $defaultOptions = [
@@ -103,6 +104,7 @@ trait TagsModelTrait
 
     /**
      * Assert a tag exists for a given user
+     *
      * @param string $resourceId The resource id
      * @param string $tagId The tag id
      * @param string $userId The user id
@@ -121,6 +123,7 @@ trait TagsModelTrait
 
     /**
      * Assert a tag does not exist for a given user
+     *
      * @param string $resourceId The resource id
      * @param string $tagId The tag id
      * @param string $userId The user id

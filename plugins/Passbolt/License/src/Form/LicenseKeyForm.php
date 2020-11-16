@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,9 +33,9 @@ class LicenseKeyForm extends Form
     /**
      * LicenseKeyForm constructor.
      *
-     * @param EventManager|null $eventManager event manager
+     * @param \Cake\Event\EventManager|null $eventManager event manager
      */
-    public function __construct(EventManager $eventManager = null)
+    public function __construct(?EventManager $eventManager = null)
     {
         $this->_gpg = OpenPGPBackendFactory::get();
 
@@ -42,8 +44,9 @@ class LicenseKeyForm extends Form
 
     /**
      * License key schema.
-     * @param Schema $schema schema
-     * @return Schema
+     *
+     * @param \Cake\Form\Schema $schema schema
+     * @return \Cake\Form\Schema
      */
     protected function _buildSchema(Schema $schema)
     {
@@ -53,8 +56,9 @@ class LicenseKeyForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator validator
-     * @return Validator
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
     protected function _buildValidator(Validator $validator)
     {
@@ -82,7 +86,7 @@ class LicenseKeyForm extends Form
      * @param array $context not in use
      * @return bool
      */
-    public function checkLicenseFormat(string $value, array $context = null)
+    public function checkLicenseFormat(string $value, ?array $context = null)
     {
         try {
             $this->getArmoredSignedLicense($value);
@@ -100,7 +104,7 @@ class LicenseKeyForm extends Form
      * @param array|null $context not in use
      * @return string|bool
      */
-    public function checkSignature(string $value, array $context = null)
+    public function checkSignature(string $value, ?array $context = null)
     {
         try {
             $this->parse($value);
@@ -115,11 +119,10 @@ class LicenseKeyForm extends Form
      * Parse the license.
      *
      * @param string $keyAscii key in ascii.
-     *
      * @return array The license info. On failure, this function returns FALSE.
      * @throws \Exception If the license format is not valid
      */
-    public function parse(string $keyAscii = null)
+    public function parse(?string $keyAscii = null)
     {
         if (empty($keyAscii) && !empty($this->getData('key_ascii'))) {
             $keyAscii = $this->getData('key_ascii');
@@ -185,6 +188,7 @@ class LicenseKeyForm extends Form
 
     /**
      * Execute implementation.
+     *
      * @param array $data formdata
      * @return bool
      */

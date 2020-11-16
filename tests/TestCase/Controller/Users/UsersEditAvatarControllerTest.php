@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace App\Test\TestCase\Controller\Users;
 
-use App\Model\Table\AvatarsTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -25,7 +26,9 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
     public $localFileStorageListener = null;
     public $imageProcessingListener = null;
 
-    /** @var AvatarsTable $Avatars */
+    /**
+     * @var AvatarsTable $Avatars
+     */
     public $Avatars;
 
     public $fixtures = [
@@ -115,7 +118,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validUploadedFile);
 
         $avatarCountsAfter = $this->Avatars->find()->count();
-        $this->assertEquals($avatarCountsBefore, $avatarCountsAfter, "The number of avatars in db should be same before and after the test");
+        $this->assertEquals($avatarCountsBefore, $avatarCountsAfter, 'The number of avatars in db should be same before and after the test');
     }
 
     public function testUsersEditAvatarNoDataProvided()

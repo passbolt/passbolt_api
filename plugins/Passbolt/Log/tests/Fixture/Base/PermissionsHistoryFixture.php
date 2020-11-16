@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * PermissionsHistoryFixture
- *
  */
 class PermissionsHistoryFixture extends TestFixture
 {
-
     /**
      * Table name
      *

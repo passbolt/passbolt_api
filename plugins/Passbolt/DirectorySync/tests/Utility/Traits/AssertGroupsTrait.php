@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -18,7 +20,7 @@ use Cake\ORM\TableRegistry;
 
 trait AssertGroupsTrait
 {
-    public function assertGroupExist($id = null, $where = [])
+    public function assertGroupExist(?string $id = null, ?array $where = [])
     {
         if ($id !== null) {
             $where['id'] = $id;
@@ -30,7 +32,7 @@ trait AssertGroupsTrait
         return $results[0];
     }
 
-    public function assertGroupNotExist($id = null, $where = [])
+    public function assertGroupNotExist(?string $id = null, ?array $where = [])
     {
         if ($id !== null) {
             $where['id'] = $id;

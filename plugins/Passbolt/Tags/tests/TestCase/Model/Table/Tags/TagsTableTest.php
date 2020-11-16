@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -17,7 +19,6 @@ namespace Passbolt\Tags\Test\TestCase\Model\Table\Tags;
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Passbolt\Tags\Model\Table\TagsTable;
 use Passbolt\Tags\Test\Lib\TagTestCase;
 
 /**
@@ -25,7 +26,6 @@ use Passbolt\Tags\Test\Lib\TagTestCase;
  */
 class TagsTableTest extends TagTestCase
 {
-
     /**
      * Test subject
      *
@@ -53,8 +53,7 @@ class TagsTableTest extends TagTestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Tags') ? [] : ['className' => TagsTable::class];
-        $this->Tags = TableRegistry::getTableLocator()->get('Tags', $config);
+        $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
     }
 
     /**

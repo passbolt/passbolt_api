@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,13 +18,9 @@ namespace App\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
-use App\Model\Table\AuthenticationTokensTable;
-use App\Model\Table\RolesTable;
-use App\Model\Table\UsersTable;
 use App\Shell\AppShell;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
@@ -41,7 +39,7 @@ class RegisterUserTask extends AppShell
      * @return void
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->loadModel('Users');
@@ -132,7 +130,7 @@ class RegisterUserTask extends AppShell
                 $this->_displayValidationError($exception->getErrors());
             } catch (InternalErrorException $exception) {
                 $this->out(__('Something went wrong when trying to save the user, please try again.'));
-            };
+            }
         }
 
         if (!isset($user)) {
@@ -214,7 +212,7 @@ class RegisterUserTask extends AppShell
     /**
      * Notify the user by trigerring a registerPost event
      *
-     * @param User $user Entity User
+     * @param \App\Shell\Task\User $user Entity User
      * @return void
      */
     protected function _notifyUser(User $user)

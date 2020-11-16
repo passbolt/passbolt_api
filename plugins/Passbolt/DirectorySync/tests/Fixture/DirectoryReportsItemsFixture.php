@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * DirectoryReportsItemsFixture
- *
  */
 class DirectoryReportsItemsFixture extends TestFixture
 {
-
     /**
      * Fields
      *

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -44,7 +46,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
                 'data' => Hash::get(self::getDummySecretData(), 'data'),
             ]],
         ];
-        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->postJson('/resources.json?api-version=v2', $data);
         $this->assertSuccess();
 
         // Check the server response.

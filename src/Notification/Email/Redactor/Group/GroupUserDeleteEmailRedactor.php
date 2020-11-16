@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,17 +33,17 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/group_user_delete';
+    public const TEMPLATE = 'LU/group_user_delete';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param UsersTable|null $usersTable Users Table
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
      */
-    public function __construct(UsersTable $usersTable = null)
+    public function __construct(?UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
@@ -51,7 +53,7 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME,
@@ -59,14 +61,14 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
-        /** @var Group $resource */
+        /** @var \App\Model\Entity\Group $resource */
         $group = $event->getData('group');
         $removedGroupsUsers = $event->getData('removedGroupsUsers');
         $modifiedBy = $this->usersTable->findFirstForEmail($event->getData('userId'));
@@ -83,9 +85,9 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * Send group update email to the new members
      *
-     * @param Group $group the affected group
+     * @param \App\Model\Entity\Group $group the affected group
      * @param array $removedGroupsUsers List of removed users
-     * @param User $modifiedBy person who did the change
+     * @param \App\Model\Entity\User $modifiedBy person who did the change
      * @return array
      */
     public function createGroupUserAddedUpdateEmails(Group $group, array $removedGroupsUsers, User $modifiedBy)
@@ -112,13 +114,13 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param string $emailRecipient Email recipient
-     * @param User $admin Admin
-     * @param Group $group Group
-     * @return Email
+     * @param \App\Model\Entity\User $admin Admin
+     * @param \App\Model\Entity\Group $group Group
+     * @return \App\Notification\Email\Email
      */
     private function createGroupUserDeleteEmail(string $emailRecipient, User $admin, Group $group)
     {
-        $subject = __("{0} removed you from the group {1}", $admin->profile->first_name, $group->name);
+        $subject = __('{0} removed you from the group {1}', $admin->profile->first_name, $group->name);
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
 
         return new Email($emailRecipient, $subject, $data, self::TEMPLATE);

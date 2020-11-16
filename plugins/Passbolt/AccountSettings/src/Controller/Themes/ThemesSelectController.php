@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,11 +19,9 @@ namespace Passbolt\AccountSettings\Controller\Themes;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use Cake\Http\Exception\BadRequestException;
-use Cake\ORM\TableRegistry;
-use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 /**
- * @property AccountSettingsTable $AccountSettings
+ * @property \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings
  */
 class ThemesSelectController extends AppController
 {
@@ -37,7 +37,7 @@ class ThemesSelectController extends AppController
             throw new BadRequestException(__('A value for the theme must be provided.'));
         }
 
-        /** @var AccountSettingsTable $AccountSettings */
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
         $this->loadModel('Passbolt/AccountSettings.AccountSettings');
         try {
             $setting = $this->AccountSettings->createOrUpdateSetting($this->User->id(), 'theme', $theme);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -14,14 +16,11 @@
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
-use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Cake\Validation\Validation;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class DirectoryOrgSettingsTest extends AppTestCase
@@ -107,7 +106,7 @@ class DirectoryOrgSettingsTest extends AppTestCase
         $directoryOrgSettings->save($uac);
 
         // Merge with default config.
-        $defaultSettings = require(PLUGINS . 'Passbolt' . DS . 'DirectorySync' . DS . 'config' . DS . 'config.php');
+        $defaultSettings = require PLUGINS . 'Passbolt' . DS . 'DirectorySync' . DS . 'config' . DS . 'config.php';
         $settings = Hash::merge(Hash::get($defaultSettings, 'passbolt.plugins.directorySync'), $settings);
 
         $settings = array_merge(['source' => 'db'], $settings);

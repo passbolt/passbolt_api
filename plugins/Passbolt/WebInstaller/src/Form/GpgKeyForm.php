@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,10 +27,11 @@ class GpgKeyForm extends Form
 {
     /**
      * GpgKey generate configuration schema.
-     * @param Schema $schema schema
-     * @return Schema
+     *
+     * @param \Cake\Form\Schema $schema schema
+     * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('public_key_armored', 'string')
@@ -38,55 +41,57 @@ class GpgKeyForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator validator
-     * @return Validator
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    protected function _buildValidator(Validator $validator): Validator
     {
         $validator
             ->requirePresence('public_key_armored', 'create', __('A public key is required.'))
-            ->notEmpty('public_key_armored', __('A public key is required.'))
+            ->notEmptyString('public_key_armored', __('A public key is required.'))
             ->ascii('public_key_armored', __('The public key is not a valid ascii string.'))
             ->add('public_key_armored', 'is_public_key', [
                 'rule' => [$this, 'checkIsPublicKey'],
-                'message' => 'The key is not a valid public key',
+                'message' => __('The key is not a valid public key'),
             ])
             ->add('public_key_armored', 'has_no_expiry', [
                 'rule' => [$this, 'checkHasNoExpiry'],
-                'message' => 'The key cannot have an expiry date',
+                'message' => __('The key cannot have an expiry date'),
             ])
             ->add('public_key_armored', 'can_encrypt', [
                 'last' => true,
                 'rule' => [$this, 'checkCanEncrypt'],
-                'message' => 'The public key cannot be used to encrypt.',
+                'message' => __('The public key cannot be used to encrypt.'),
             ]);
 
         $validator
             ->requirePresence('private_key_armored', 'create', __('A private key is required.'))
-            ->notEmpty('private_key_armored', __('A private key is required.'))
+            ->notEmptyString('private_key_armored', __('A private key is required.'))
             ->ascii('private_key_armored', __('The private key is not a valid ascii string.'))
             ->add('private_key_armored', 'is_private_key', [
                 'rule' => [$this, 'checkIsPrivateKey'],
-                'message' => 'The key is not a valid private key',
+                'message' => __('The key is not a valid private key'),
             ])
             ->add('private_key_armored', 'has_no_expiry', [
                 'rule' => [$this, 'checkHasNoExpiry'],
-                'message' => 'The key cannot have an expiry date',
+                'message' => __('The key cannot have an expiry date'),
             ])
             ->add('private_key_armored', 'can_decrypt', [
                 'last' => true,
                 'rule' => [$this, 'checkCanDecrypt'],
-                'message' => 'The private key cannot be used to decrypt. Please note that passbolt does not support GPG key protected with a secret.',
+                'message' => __('The private key cannot be used to decrypt.') . ' ' .
+                    __('Please note that passbolt does not support GPG key protected with a secret.'),
             ]);
 
         $validator
             ->requirePresence('fingerprint', 'create', __('A fingerprint is required.'))
-            ->notEmpty('fingerprint', __('A fingerprint is required.'))
+            ->notEmptyString('fingerprint', __('A fingerprint is required.'))
             ->alphaNumeric('fingerprint', __('The fingerprint is not a valid ascii string.'))
             ->add('fingerprint', 'match_public_private_fingerprints', [
                 'last' => true,
                 'rule' => [$this, 'checkPublicPrivateFingerprints'],
-                'message' => 'The fingerprint does not match the public and the private keys fingerprints.',
+                'message' => __('The fingerprint does not match the public and the private keys fingerprints.'),
             ]);
 
         return $validator;
@@ -99,7 +104,7 @@ class GpgKeyForm extends Form
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function checkIsPublicKey($check, array $context)
+    public function checkIsPublicKey(string $check, array $context): bool
     {
         $gpg = OpenPGPBackendFactory::get();
         if (!$gpg->isParsableArmoredPublicKey($check)) {
@@ -121,7 +126,7 @@ class GpgKeyForm extends Form
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function checkIsPrivateKey($check, array $context)
+    public function checkIsPrivateKey(string $check, array $context): bool
     {
         $gpg = OpenPGPBackendFactory::get();
         if (!$gpg->isParsableArmoredPrivateKey($check)) {
@@ -143,7 +148,7 @@ class GpgKeyForm extends Form
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function checkHasNoExpiry($check, array $context)
+    public function checkHasNoExpiry(string $check, array $context): bool
     {
         $gpg = OpenPGPBackendFactory::get();
         try {
@@ -166,7 +171,7 @@ class GpgKeyForm extends Form
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function checkCanEncrypt($check, array $context)
+    public function checkCanEncrypt(string $check, array $context): bool
     {
         $gpg = OpenPGPBackendFactory::get();
         try {
@@ -188,7 +193,7 @@ class GpgKeyForm extends Form
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function checkCanDecrypt($check, array $context)
+    public function checkCanDecrypt(string $check, array $context): bool
     {
         $gpg = OpenPGPBackendFactory::get();
         try {
@@ -218,7 +223,7 @@ class GpgKeyForm extends Form
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function checkPublicPrivateFingerprints($check, array $context)
+    public function checkPublicPrivateFingerprints(string $check, array $context): bool
     {
         $gpg = OpenPGPBackendFactory::get();
         $privateKeyArmored = Hash::get($context, 'data.private_key_armored');
@@ -227,7 +232,8 @@ class GpgKeyForm extends Form
         if ($privateKeyArmored === null || $publicKeyArmored === null) {
             return false;
         }
-        if (!$gpg->isParsableArmoredPrivateKey($privateKeyArmored) || !$gpg->isParsableArmoredPublicKey($publicKeyArmored)) {
+        $parsablePrivateKey = $gpg->isParsableArmoredPrivateKey($privateKeyArmored);
+        if (!$parsablePrivateKey || !$gpg->isParsableArmoredPublicKey($publicKeyArmored)) {
             return false;
         }
 
@@ -240,15 +246,16 @@ class GpgKeyForm extends Form
             return false;
         }
 
-        return ($publicKeyFingerprint == $check) && ($privateKeyFingerprint == $check);
+        return ($publicKeyFingerprint === $check) && ($privateKeyFingerprint === $check);
     }
 
     /**
      * Execute.
+     *
      * @param array $data form data
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         return true;
     }

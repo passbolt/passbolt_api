@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,8 +24,9 @@ class OptionsConfigurationForm extends Form
 {
     /**
      * Options configuration schema.
-     * @param Schema $schema schema
-     * @return Schema
+     *
+     * @param \Cake\Form\Schema $schema schema
+     * @return \Cake\Form\Schema
      */
     protected function _buildSchema(Schema $schema)
     {
@@ -35,24 +38,23 @@ class OptionsConfigurationForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator validator
-     * @return Validator
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
     protected function _buildValidator(Validator $validator)
     {
         $validator
             ->requirePresence('full_base_url', 'create', __('A full base url is required.'))
-            ->notEmpty('full_base_url', __('A full base url is required.'))
+            ->notEmptyString('full_base_url', __('A full base url is required.'))
             ->utf8('full_base_url', __('The full base url is not a valid utf8 string.'));
 
         $validator
             ->requirePresence('public_registration', 'create', __('A public registration value is required.'))
-            ->notEmpty('public_registration', __('A public registration value is required.'))
             ->boolean('public_registration');
 
         $validator
             ->requirePresence('force_ssl', 'create', __('A force ssl value is required.'))
-            ->notEmpty('force_ssl', __('A force ssl value is required.'))
             ->boolean('force_ssl');
 
         return $validator;
@@ -60,6 +62,7 @@ class OptionsConfigurationForm extends Form
 
     /**
      * Execute implementation.
+     *
      * @param array $data form data
      * @return bool
      */

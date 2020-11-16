@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Controller\Component\QueryStringComponent;
 use Cake\Controller\ComponentRegistry;
 use Cake\Core\Exception\Exception;
 use Cake\TestSuite\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class QueryStringComponentTest extends TestCase
 {

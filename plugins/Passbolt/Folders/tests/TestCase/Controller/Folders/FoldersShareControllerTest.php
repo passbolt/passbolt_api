@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,8 +18,6 @@
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -27,12 +27,9 @@ use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
@@ -79,9 +76,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
 //        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    /* ************************************************************** */
     /* COMMON & VALIDATION */
-    /* ************************************************************** */
 
     public function testFoldersShareFolder_CommonError1_DoesNotExist()
     {
@@ -125,13 +120,9 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    /* ************************************************************** */
     /* PERSONAL */
-    /* ************************************************************** */
 
-    /* ************************************************************** */
     /* SHARED */
-    /* ************************************************************** */
 
     public function testFoldersShareFolder_SharedError1_InsufficientPermission()
     {

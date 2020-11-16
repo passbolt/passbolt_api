@@ -18,11 +18,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * DirectoryEntriesFixture
- *
  */
 class DirectoryEntriesFixture extends TestFixture
 {
-
     /**
      * Fields
      *

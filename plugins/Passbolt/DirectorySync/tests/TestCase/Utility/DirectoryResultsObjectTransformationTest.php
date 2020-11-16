@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -27,7 +29,6 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationTestCase
 {
-
     public function setUp()
     {
         parent::setUp();
@@ -35,6 +36,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
 
     /**
      * Assert that entry ids are generated on the fly if not provided by the directory.
+     *
      * @throws \Exception
      */
     public function testUserEntryIdProvidedIsNotTransformed()
@@ -70,6 +72,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
 
     /**
      * Assert that entry ids are generated on the fly if not provided by the directory.
+     *
      * @throws \Exception
      */
     public function testUserEntryTransformNoId()
@@ -104,6 +107,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
 
     /**
      * Assert that emails are transformed on the fly if the configuration dictates it.
+     *
      * @throws \Exception
      */
     public function testUserEntryTransformEmail()

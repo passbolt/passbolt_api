@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,19 +20,18 @@ namespace App\Controller\Share;
 use App\Controller\AppController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
-use App\Model\Table\GroupsTable;
-use App\Model\Table\UsersTable;
 use Cake\Collection\Collection;
 use Cake\ORM\Query;
 
 /**
- * @property UsersTable $Users
- * @property GroupsTable $Groups
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\GroupsTable $Groups
  */
 class ShareSearchController extends AppController
 {
     /**
      * Share search potential user or group to share with
+     *
      * @return void
      */
     public function searchArosToShareWith()
@@ -56,10 +57,10 @@ class ShareSearchController extends AppController
     /**
      * Search groups.
      *
-     * @param array $options The find options
-     * @return Query
+     * @param array|null $options The find options
+     * @return \Cake\ORM\Query
      */
-    private function _searchGroups(array $options = [])
+    private function _searchGroups(?array $options = []): Query
     {
         $options['contain']['user_count'] = true;
 
@@ -69,10 +70,10 @@ class ShareSearchController extends AppController
     /**
      * Search the users.
      *
-     * @param array $options The find options
-     * @return Query
+     * @param array|null $options The find options
+     * @return \Cake\ORM\Query
      */
-    private function _searchUsers(array $options = [])
+    private function _searchUsers(?array $options = []): Query
     {
         $options['filter']['is-active'] = true;
 
@@ -82,8 +83,8 @@ class ShareSearchController extends AppController
     /**
      * Format the result alphabetically.
      *
-     * @param Collection $aros The collection of groups and users to sort.
-     * @return Collection
+     * @param \Cake\Collection\Collection $aros The collection of groups and users to sort.
+     * @return \Cake\Collection\Collection
      */
     private function _formatResult(Collection $aros)
     {

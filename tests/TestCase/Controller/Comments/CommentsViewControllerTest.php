@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -85,7 +87,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
     public function testCommentsViewErrorWrongUuidParameter()
     {
         $this->authenticateAs('ada');
-        $this->getJson("/comments/resource/wrong-uuid.json?api-version=v2");
+        $this->getJson('/comments/resource/wrong-uuid.json?api-version=v2');
         $this->assertError(500, 'Invalid id');
     }
 

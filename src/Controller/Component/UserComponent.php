@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,18 +23,17 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use donatj\UserAgent\UserAgentParser;
 use Exception;
-use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 /**
  * @property Component\AuthComponent Auth
  */
 class UserComponent extends Component
 {
-
     public $components = ['Auth'];
 
     /**
      * User agent cache to avoid parsing multiple times per request
+     *
      * @var null
      */
     protected $_userAgent = null;
@@ -83,7 +84,7 @@ class UserComponent extends Component
     }
 
     /**
-     * @return UserAccessControl
+     * @return \App\Utility\UserAccessControl
      */
     public function getAccessControl()
     {
@@ -94,7 +95,7 @@ class UserComponent extends Component
      * Get user agent details from name defined in environment variable
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public function agent()
     {
@@ -128,7 +129,7 @@ class UserComponent extends Component
     {
         $defaultTheme = 'default';
         if (Configure::read('passbolt.plugins.accountSettings')) {
-            /** @var AccountSettingsTable $AccountSettings */
+            /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
             $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
             $theme = $AccountSettings->getTheme($this->id());
             if (!$theme) {

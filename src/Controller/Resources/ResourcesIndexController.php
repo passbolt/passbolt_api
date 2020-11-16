@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,12 +18,11 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
-use App\Model\Table\ResourcesTable;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 
 /**
- * @property ResourcesTable $Resources
+ * @property \App\Model\Table\ResourcesTable $Resources
  */
 class ResourcesIndexController extends AppController
 {
@@ -61,6 +62,7 @@ class ResourcesIndexController extends AppController
 
     /**
      * Log secrets accesses in secretAccesses table.
+     *
      * @param array $resources resources
      * @return void
      */

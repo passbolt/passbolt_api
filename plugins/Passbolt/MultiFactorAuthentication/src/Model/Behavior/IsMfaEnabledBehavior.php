@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,21 +18,18 @@
 namespace Passbolt\MultiFactorAuthentication\Model\Behavior;
 
 use App\Model\Event\TableFindIndexBefore;
-use App\Model\Table\UsersTable;
 use Cake\ORM\Behavior;
 use Passbolt\MultiFactorAuthentication\Model\Query\IsMfaEnabledQueryDecorator;
-use Passbolt\MultiFactorAuthentication\Service\GetMfaAccountSettingsService;
-use Passbolt\MultiFactorAuthentication\Service\GetMfaOrgSettingsService;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaEnabledService;
 use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
 
 /**
- * @method UsersTable getTable()
+ * @method \App\Model\Table\UsersTable getTable()
  */
 class IsMfaEnabledBehavior extends Behavior
 {
     /**
-     * @var IsMfaEnabledQueryDecorator
+     * @var \Passbolt\MultiFactorAuthentication\Model\Query\IsMfaEnabledQueryDecorator
      */
     private $isMfaEnabledQueryDecorator;
 
@@ -50,8 +49,7 @@ class IsMfaEnabledBehavior extends Behavior
      */
     public function initialize(array $config)
     {
-        $isMfaEnabledService = new IsMfaEnabledService(new GetMfaOrgSettingsService(), new GetMfaAccountSettingsService());
-
+        $isMfaEnabledService = new IsMfaEnabledService();
         $this->isMfaEnabledQueryDecorator = new IsMfaEnabledQueryDecorator(
             $this->getTable(),
             new MfaEntityMapper($isMfaEnabledService)
@@ -61,7 +59,7 @@ class IsMfaEnabledBehavior extends Behavior
     }
 
     /**
-     * @param TableFindIndexBefore $event Event
+     * @param \App\Model\Event\TableFindIndexBefore $event Event
      * @return void
      */
     public function addIsMfaEnabledBehavior(TableFindIndexBefore $event)

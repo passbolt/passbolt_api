@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -67,6 +69,7 @@ class ActionLogsFinderSecretAccessesTest extends LogIntegrationTestCase
      * Test retrieving secret access logs when multiple access to a secret were done during a single operation.
      * This can be the case when a multiple share occurs.
      * Expected result: only the secret access log corresponding to the requested resource should be returned.
+     *
      * @throws \Exception
      */
     public function testAuditLogsActionLogsFinderSecretAccessMultiple()

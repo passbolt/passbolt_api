@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * AuthenticationTokensFixture
- *
  */
 class AuthenticationTokensFixture extends TestFixture
 {
-
     /**
      * Fields
      *

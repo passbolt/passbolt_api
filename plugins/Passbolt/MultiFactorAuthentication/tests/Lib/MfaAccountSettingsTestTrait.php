@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,8 +17,6 @@
 namespace Passbolt\MultiFactorAuthentication\Test\Lib;
 
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -26,6 +28,7 @@ use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
 /**
  * Directory factory class
+ *
  * @package App\Utility
  */
 class LdapDirectory implements DirectoryInterface
@@ -38,7 +41,8 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * LdapDirectory constructor.
-     * @param DirectoryOrgSettings $settings The directory settings
+     *
+     * @param \Passbolt\DirectorySync\Utility\DirectoryOrgSettings $settings The directory settings
      * @throws \Exception if connection cannot be established
      */
     public function __construct(DirectoryOrgSettings $settings)
@@ -66,33 +70,37 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Used to map fields and specify the object class names that we'll need.
+     *
      * @return void
      */
     public function customizeSchema()
     {
-        $this->ldap->getEventDispatcher()->addListener(Event::LDAP_SCHEMA_LOAD, function (LdapObjectSchemaEvent $event) {
-            $schema = $event->getLdapObjectSchema();
+        $this->ldap->getEventDispatcher()->addListener(
+            Event::LDAP_SCHEMA_LOAD,
+            function (LdapObjectSchemaEvent $event) {
+                $schema = $event->getLdapObjectSchema();
 
-            // Only modify the 'user' schema type, ignore the others for this listener...
-            if ($schema->getObjectType() !== LdapObjectType::GROUP && $schema->getObjectType() !== LdapObjectType::USER) {
-                return;
-            }
+                // Only modify the 'user' schema type, ignore the others for this listener...
+                $objectType = $schema->getObjectType();
+                if ($objectType !== LdapObjectType::GROUP && $objectType !== LdapObjectType::USER) {
+                    return;
+                }
 
-            // Set custom object class if configured.
-            $objectType = $schema->getObjectType();
-            $customClass = $this->directorySettings->getObjectClass($objectType);
-            $connectionType = $this->ldap->getConnection()->getConfig()->getLdapType();
-            if (isset($customClass) && $connectionType == LdapConnection::TYPE_OPENLDAP) {
-                $schema->setObjectClass($customClass);
-                $schema->getFilter()->setValue($customClass);
+                // Set custom object class if configured.
+                $customClass = $this->directorySettings->getObjectClass($objectType);
+                $connectionType = $this->ldap->getConnection()->getConfig()->getLdapType();
+                if (isset($customClass) && $connectionType == LdapConnection::TYPE_OPENLDAP) {
+                    $schema->setObjectClass($customClass);
+                    $schema->getFilter()->setValue($customClass);
+                }
             }
-        });
+        );
     }
 
     /**
      * Get DN Full Path as per configuration.
-     * @param string $ldapObjectType ldap object type (user or group)
      *
+     * @param string $ldapObjectType ldap object type (user or group)
      * @return string
      */
     public function getDNFullPath(string $ldapObjectType)
@@ -106,6 +114,7 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Get directory type.
+     *
      * @return string
      */
     public function getDirectoryType()
@@ -121,6 +130,7 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Get mapping rules.
+     *
      * @return mixed
      * @throws \Exception
      */
@@ -137,7 +147,8 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Set directory results.
-     * @param DirectoryResults $results results
+     *
+     * @param \Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults $results results
      * @return void
      */
     public function setDirectoryResults(DirectoryResults $results)
@@ -147,7 +158,8 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Get directory results.
-     * @return DirectoryResults|null
+     *
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults|null
      */
     public function getDirectoryResults()
     {
@@ -156,7 +168,8 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Get directory results with filtered applied (as per filters defined in the config).
-     * @return DirectoryResults directory results
+     *
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults directory results
      * @throws \Exception
      */
     public function getFilteredDirectoryResults()
@@ -227,7 +240,8 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Fetch directory data and cache it.
-     * @return DirectoryResults|null
+     *
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults|null
      * @throws \Exception
      */
     public function fetchDirectoryData()
@@ -277,6 +291,7 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Get a list of groups and filter them according to the configured filters.
+     *
      * @return array list of groups formatted as entries.
      * @throws \Exception
      */
@@ -290,9 +305,9 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Customize users query as per configuration (if available).
-     * @param LdapQueryBuilder $query query
      *
-     * @return LdapQueryBuilder
+     * @param \LdapTools\Query\LdapQueryBuilder $query query
+     * @return \LdapTools\Query\LdapQueryBuilder
      */
     private function _customizeUsersQuery(LdapQueryBuilder $query)
     {
@@ -306,9 +321,9 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Customize groups query as per configuration (if available).
-     * @param LdapQueryBuilder $query query
      *
-     * @return LdapQueryBuilder
+     * @param \LdapTools\Query\LdapQueryBuilder $query query
+     * @return \LdapTools\Query\LdapQueryBuilder
      */
     private function _customizeGroupsQuery(LdapQueryBuilder $query)
     {
@@ -322,6 +337,7 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Return filters used to retrieve users as a string, in ldapsearch format.
+     *
      * @return string
      * @throws \Exception
      */
@@ -334,6 +350,7 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Return filters used to retrieve groups as a string, in ldapsearch format.
+     *
      * @return string
      * @throws \Exception
      */

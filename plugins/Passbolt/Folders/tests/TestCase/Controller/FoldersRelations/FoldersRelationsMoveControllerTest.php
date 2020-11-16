@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -70,7 +72,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersRelationsMoveSuccess_MoveFolder()
     {
-        list ($folderA, $folderB, $userAId) = $this->insertFixture_MoveFolder();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder();
         $this->authenticateAs('ada');
         $data['folder_parent_id'] = $folderA->id;
         $this->putJson("/move/folder/$folderB->id.json?api-version=2", $data);
@@ -101,7 +103,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersRelationsMoveSuccess_MoveResource()
     {
-        list ($folderA, $r1, $userAId) = $this->insertFixture_MoveResource();
+        [$folderA, $r1, $userAId] = $this->insertFixture_MoveResource();
         $this->authenticateAs('ada');
         $data['folder_parent_id'] = $folderA->id;
         $this->putJson("/move/resource/$r1->id.json?api-version=2", $data);
@@ -148,7 +150,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersRelationsMoveError_ValidationErrors_FolderParentIdRequired()
     {
-        list($folderA, $folderB, $userAId) = $this->insertFixture_MoveFolder();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder();
         $this->authenticateAs('ada');
         $this->putJson("/move/folder/$folderA->id.json?api-version=2");
         $this->assertError(400, 'Could not validate move data.');
@@ -189,7 +191,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersRelationsUpdateResourcesError_NoAccessToFolder()
     {
-        list($folderA, $folderB, $userAId) = $this->insertFixture_MoveFolder();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder();
         $this->authenticateAs('dame');
         $data = ['folder_parent_id' => FoldersRelation::ROOT];
         $this->putJson("/move/folder/$folderA->id.json", $data);

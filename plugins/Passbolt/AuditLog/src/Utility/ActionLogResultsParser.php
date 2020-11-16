@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,20 +31,20 @@ class ActionLogResultsParser
     protected $entries = [];
     protected $filters = [];
 
-    const TYPE_PERMISSIONS_UPDATED = 'Permissions.updated';
-    const TYPE_SECRETS_READ = 'Resource.Secrets.read';
-    const TYPE_SECRETS_UPDATED = 'Resource.Secrets.updated';
-    const TYPE_RESOURCE_CREATED = 'Resources.created';
-    const TYPE_RESOURCE_UPDATED = 'Resources.updated';
-    const TYPE_RESOURCE_DELETED = 'Resources.deleted';
-    const TYPE_FOLDER_CREATED = 'Folders.created';
-    const TYPE_FOLDER_UPDATED = 'Folders.updated';
-    const TYPE_FOLDER_DELETED = 'Folders.deleted';
+    public const TYPE_PERMISSIONS_UPDATED = 'Permissions.updated';
+    public const TYPE_SECRETS_READ = 'Resource.Secrets.read';
+    public const TYPE_SECRETS_UPDATED = 'Resource.Secrets.updated';
+    public const TYPE_RESOURCE_CREATED = 'Resources.created';
+    public const TYPE_RESOURCE_UPDATED = 'Resources.updated';
+    public const TYPE_RESOURCE_DELETED = 'Resources.deleted';
+    public const TYPE_FOLDER_CREATED = 'Folders.created';
+    public const TYPE_FOLDER_UPDATED = 'Folders.updated';
+    public const TYPE_FOLDER_DELETED = 'Folders.deleted';
 
     /**
      * ActionLogResultsParser constructor.
      *
-     * @param ResultSet $actionLogs action logs
+     * @param \Cake\ORM\ResultSet $actionLogs action logs
      * @param array $filters list of filters
      *   - array resources is the one currently supported. It should contain a list of ids.
      * @return void
@@ -55,6 +57,7 @@ class ActionLogResultsParser
 
     /**
      * Parse action logs
+     *
      * @return array list of entries
      */
     public function parse()
@@ -68,10 +71,10 @@ class ActionLogResultsParser
 
     /**
      * Add an entry in the entries list
+     *
      * @param string $type type
      * @param array $data data
-     * @param ActionLog $actionLog actionLog object
-     *
+     * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog actionLog object
      * @return array corresponding entry
      */
     protected function _addEntry(string $type, array $data, ActionLog $actionLog)
@@ -95,8 +98,8 @@ class ActionLogResultsParser
      * One action log can produce several entries. It is necessary that we can identify each entry
      * with a unique id.
      * An entry id is a uuid made of action_log_id + its position in the list of entries for the given action log.s
-     * @param array $entry entry
      *
+     * @param array $entry entry
      * @return string entry id
      */
     protected function getEntryId(array $entry)
@@ -116,7 +119,8 @@ class ActionLogResultsParser
 
     /**
      * Process resources crud operations.
-     * @param ActionLog $actionLog action log
+     *
+     * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
     protected function _processResourcesCrudOperations(ActionLog $actionLog)
@@ -148,7 +152,8 @@ class ActionLogResultsParser
 
     /**
      * Process folders crud operations.
-     * @param ActionLog $actionLog action log
+     *
+     * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
     protected function _processFoldersCrudOperations(ActionLog $actionLog)
@@ -180,7 +185,8 @@ class ActionLogResultsParser
 
     /**
      * Process secrets update operations
-     * @param ActionLog $actionLog action log
+     *
+     * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
     protected function _processSecretsUpdateOperations(ActionLog $actionLog)
@@ -208,7 +214,8 @@ class ActionLogResultsParser
 
     /**
      * Process secret accesses operations
-     * @param ActionLog $actionLog action log
+     *
+     * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
     protected function _processSecretAccessesOperations(ActionLog $actionLog)
@@ -237,7 +244,8 @@ class ActionLogResultsParser
 
     /**
      * Process permissions update operations
-     * @param ActionLog $actionLog action log
+     *
+     * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
     protected function _processPermissionsUpdateOperations(ActionLog $actionLog)
@@ -306,8 +314,8 @@ class ActionLogResultsParser
 
     /**
      * Get the corresponding user object with its profile and avatar from a user id.
-     * @param string $userId user id.
      *
+     * @param string $userId user id.
      * @return array|\Cake\Datasource\EntityInterface|null user object
      */
     protected function _getUserObject(string $userId)
@@ -327,7 +335,8 @@ class ActionLogResultsParser
 
     /**
      * Add entries corresponding to a given action log.
-     * @param ActionLog $actionLog action log
+     *
+     * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
     public function addEntries(ActionLog $actionLog)
@@ -343,6 +352,7 @@ class ActionLogResultsParser
 
     /**
      * Get entries.
+     *
      * @return array entries
      */
     public function getEntries()

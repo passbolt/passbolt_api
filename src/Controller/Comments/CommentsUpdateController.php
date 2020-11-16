@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,7 +20,6 @@ namespace App\Controller\Comments;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Comment;
-use App\Model\Table\CommentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
@@ -27,7 +28,7 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property CommentsTable Comments
+ * @property \App\Model\Table\CommentsTable Comments
  */
 class CommentsUpdateController extends AppController
 {
@@ -35,9 +36,9 @@ class CommentsUpdateController extends AppController
      * Update a comment.
      *
      * @param string $commentId The identifier of the comment to update
-     * @throws ForbiddenException
-     * @throws BadRequestException
-     * @throws ValidationException
+     * @throws \Cake\Http\Exception\ForbiddenException
+     * @throws \Cake\Http\Exception\BadRequestException
+     * @throws \App\Error\Exception\ValidationException
      * @return void
      */
     public function update(string $commentId)
@@ -58,9 +59,10 @@ class CommentsUpdateController extends AppController
 
     /**
      * Manage validation errors.
-     * @param Comment $comment comment
-     * @throws ForbiddenException
-     * @throws ValidationException
+     *
+     * @param \App\Model\Entity\Comment $comment comment
+     * @throws \Cake\Http\Exception\ForbiddenException
+     * @throws \App\Error\Exception\ValidationException
      * @return void
      */
     protected function _handleValidationErrors(Comment $comment)
@@ -78,7 +80,7 @@ class CommentsUpdateController extends AppController
      * Patch and validate comment entity from user input.
      *
      * @param string $commentId The comment id.
-     * @return Comment $comment comment entity
+     * @return \App\Model\Entity\Comment $comment comment entity
      */
     protected function _patchAndValidateCommentEntity(string $commentId)
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,7 +22,6 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 trait MfaYubikeySettingsTestTrait
 {
-
     /**
      * @param string $user
      * @param string $case

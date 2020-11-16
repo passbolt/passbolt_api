@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -92,8 +94,7 @@ class LicenseCheckTask extends AppShell
     /**
      * Display info for a valid license.
      *
-     * @param LicenseKey $license the license object
-     *
+     * @param \Passbolt\License\Utility\LicenseKey $license the license object
      * @return void
      * @throws \Exception
      */
@@ -103,19 +104,19 @@ class LicenseCheckTask extends AppShell
         $users = TableRegistry::getTableLocator()->get('Users');
 
         echo $this->nl();
-        $this->out(__("Thanks for choosing Passbolt Pro"));
-        $this->out(__("Below are your subscription key details"));
+        $this->out(__('Thanks for choosing Passbolt Pro'));
+        $this->out(__('Below are your subscription key details'));
         echo $this->nl();
 
         // Customer id output.
-        $customerIdStr = __("<error>Not Available</error>");
+        $customerIdStr = __('<error>Not Available</error>');
         if (isset($data['customer_id'])) {
             $customerIdStr = "<info>{$data['customer_id']}</info>";
         }
         $this->out(__("Customer id:\t{0}", $customerIdStr));
 
         // Users quantity output.
-        $usersQtyStr = __("<error>Not Available</error>");
+        $usersQtyStr = __('<error>Not Available</error>');
         if (isset($data['users'])) {
             try {
                 // Should not break in case of database exception.
@@ -126,9 +127,9 @@ class LicenseCheckTask extends AppShell
             }
 
             if ($usersQty > $data['users']) {
-                $usersQtyStr = __("<error>{0} (currently: {1}) - Exceeded</error>", $data['users'], $usersQty);
+                $usersQtyStr = __('<error>{0} (currently: {1}) - Exceeded</error>', $data['users'], $usersQty);
             } else {
-                $usersQtyStr = __("<info>{0} (currently: {1})</info>", $data['users'], $usersQty);
+                $usersQtyStr = __('<info>{0} (currently: {1})</info>', $data['users'], $usersQty);
             }
         }
         $this->out(__("Users limit:\t{0}", $usersQtyStr));
@@ -147,32 +148,35 @@ class LicenseCheckTask extends AppShell
                 $this->out(__("Expires on:\t<error>{0} (expired)</error>", $date->toFormattedDateString()));
             } else {
                 $diffDays = $date->diffInDays(new Date());
-                $this->out(__("Expires on:\t<info>{0} (in {1} days)</info>", $date->toFormattedDateString(), $diffDays));
+                $msg = __("Expires on:\t<info>{0} (in {1} days)</info>", $date->toFormattedDateString(), $diffDays);
+                $this->out($msg);
             }
         }
     }
 
     /**
      * Display valid footer.
+     *
      * @return void
      */
     protected function _displayValidFooter()
     {
         echo $this->nl();
-        $this->out(__("For any question / feedback / subscription renewal,"));
-        $this->out(__("kindly contact us at <info>sales@passbolt.com</info>"));
+        $this->out(__('For any question / feedback / subscription renewal,'));
+        $this->out(__('kindly contact us at <info>sales@passbolt.com</info>'));
         echo $this->nl();
     }
 
     /**
      * Display error footer.
+     *
      * @return void
      */
     protected function _displayErrorFooter()
     {
         echo $this->nl();
-        $this->_error(__("It looks like you could use some help."));
-        $this->_error(__("We are here for you. You can contact us at sales@passbolt.com"));
+        $this->_error(__('It looks like you could use some help.'));
+        $this->_error(__('We are here for you. You can contact us at sales@passbolt.com'));
         echo $this->nl();
     }
 }

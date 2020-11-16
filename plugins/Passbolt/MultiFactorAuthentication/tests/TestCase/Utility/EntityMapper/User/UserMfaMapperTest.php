@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,7 +20,6 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility\EntityMapper\
 use App\Model\Entity\User;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaEnabledService;
 use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class UserMfaMapperTest extends TestCase

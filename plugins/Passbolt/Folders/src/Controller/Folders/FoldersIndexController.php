@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
-use Passbolt\Folders\Model\Table\FoldersTable;
 
 /**
  * @property FoldersTable Folders

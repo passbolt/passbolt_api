@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 namespace Passbolt\MultiFactorAuthentication\Form\Duo;
 
 use App\Utility\UserAccessControl;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 use Duo\Web;
@@ -25,14 +26,15 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class DuoVerifyForm extends MfaForm
 {
     /**
-     * @var MfaSettings
+     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
     protected $settings;
 
     /**
      * VerifyForm constructor.
-     * @param UserAccessControl $uac user access control
-     * @param MfaSettings $settings settings
+     *
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param \Passbolt\MultiFactorAuthentication\Utility\MfaSettings $settings settings
      */
     public function __construct(UserAccessControl $uac, MfaSettings $settings)
     {
@@ -43,8 +45,8 @@ class DuoVerifyForm extends MfaForm
     /**
      * Build form schema
      *
-     * @param Schema $schema schema
-     * @return $this|Schema
+     * @param \Cake\Form\Schema $schema schema
+     * @return $this|\Cake\Form\Schema
      */
     protected function _buildSchema(Schema $schema)
     {
@@ -55,8 +57,8 @@ class DuoVerifyForm extends MfaForm
     /**
      * Build form validation
      *
-     * @param Validator $validator validator
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
     protected function _buildValidator(Validator $validator)
     {
@@ -85,13 +87,13 @@ class DuoVerifyForm extends MfaForm
         $integrationKey = $orgSettings->getDuoIntegrationKey();
         $sigRequest = Web::verifyResponse($integrationKey, $secretKey, $salt, $value);
 
-        return ($sigRequest === $this->uac->getUsername());
+        return $sigRequest === $this->uac->getUsername();
     }
 
     /**
      * Get a duo signature request using Org settings conf
      *
-     * @throws RecordNotFoundException if OrgSettings are not complete
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException if OrgSettings are not complete
      * @return string
      */
     public function getSigRequest()

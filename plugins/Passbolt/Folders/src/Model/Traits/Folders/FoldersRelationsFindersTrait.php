@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,8 +25,8 @@ trait FoldersRelationsFindersTrait
     /**
      * Filter out personal folders from a query.
      *
-     * @param Query $query The folders relations query to decorate
-     * @return Query
+     * @param \Cake\ORM\Query $query The folders relations query to decorate
+     * @return \Cake\ORM\Query
      */
     public function filterQueryByIsNotPersonalFolder(Query $query)
     {
@@ -54,7 +56,7 @@ trait FoldersRelationsFindersTrait
      *
      * @param string $userId The user id
      * @param string $folderId The folder id
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findUserFolderRelation(string $userId, string $folderId)
     {
@@ -68,9 +70,9 @@ trait FoldersRelationsFindersTrait
     /**
      * Filter a query by users ids
      *
-     * @param Query $query The query to decorate
+     * @param \Cake\ORM\Query $query The query to decorate
      * @param array $usersIds The list of users ids
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function filterByUsersIds(Query $query, array $usersIds)
     {
@@ -82,9 +84,9 @@ trait FoldersRelationsFindersTrait
     /**
      * Filter a query by foreign model
      *
-     * @param Query $query The query to decorate
+     * @param \Cake\ORM\Query $query The query to decorate
      * @param string $foreignModel The foreign model to filter on
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function filterByForeignModel(Query $query, string $foreignModel)
     {
@@ -97,7 +99,7 @@ trait FoldersRelationsFindersTrait
      * Returns a query that retrieves all the users having access to a given item.
      *
      * @param string $foreignId The target folder
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findUsersIdsHavingAccessToItem(string $foreignId)
     {
@@ -108,7 +110,7 @@ trait FoldersRelationsFindersTrait
     /**
      * Returns a query that retrieves all the relations that have a deleted folder parent.
      *
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findByDeletedFolderParent()
     {

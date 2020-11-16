@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -72,7 +74,7 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
 
     public function testResourcesAfterCreateServiceSuccess_CreateToRoot()
     {
-        list($resource, $userAId) = $this->insertFixture_CreateToRoot();
+        [$resource, $userAId] = $this->insertFixture_CreateToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->afterCreate($uac, $resource);
@@ -92,7 +94,7 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
 
     public function testResourcesAfterCreateServiceSuccess_CreateIntoFolder()
     {
-        list($folder, $resource, $userAId) = $this->insertFixture_CreateIntoFolder();
+        [$folder, $resource, $userAId] = $this->insertFixture_CreateIntoFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['folder_parent_id'] = $folder->id;
@@ -114,7 +116,7 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
 
     public function testResourcesAfterCreateServiceError_FolderParentNotExist()
     {
-        list($resource, $userAId) = $this->insertFixture_CreateToRoot();
+        [$resource, $userAId] = $this->insertFixture_CreateToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data['folder_parent_id'] = UuidFactory::uuid();
 
@@ -124,7 +126,7 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
 
     public function testResourcesAfterCreateServiceError_FolderParentNotAllowed()
     {
-        list($folder, $resource, $userAId, $userBId) = $this->insertFixture_FolderParentNotAllowed();
+        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_FolderParentNotAllowed();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data['folder_parent_id'] = $folder->id;
 

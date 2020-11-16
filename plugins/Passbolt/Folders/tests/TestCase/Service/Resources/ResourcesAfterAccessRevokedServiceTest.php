@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,7 +19,6 @@ namespace Passbolt\Folders\Test\TestCase\Service\Resources;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
@@ -77,7 +78,7 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
 
     public function testResourceAfterAccessRevokedSuccess_UserPermissionRevoked()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_UserPermissionRevoked();
+        [$r1, $userAId, $userBId] = $this->insertFixture_UserPermissionRevoked();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->id, $userBId)->first();
@@ -102,7 +103,7 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
 
     public function testResourceAfterAccessRevokedSuccess_GroupPermissionRevoked()
     {
-        list($r1, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_GroupPermissionRevoked();
+        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_GroupPermissionRevoked();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->id, $g1->id)->first();

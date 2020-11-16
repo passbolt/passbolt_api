@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -19,6 +21,7 @@ use Cake\ORM\Entity;
 
 /**
  * Directory factory class
+ *
  * @package App\Utility
  */
 class SyncError implements \Serializable
@@ -30,10 +33,10 @@ class SyncError implements \Serializable
     /**
      * SyncError constructor.
      *
-     * @param Entity|null $entity entity
+     * @param \Cake\ORM\Entity|null $entity entity
      * @param \Exception|null $exception exception
      */
-    public function __construct(Entity $entity = null, \Exception $exception = null)
+    public function __construct(?Entity $entity = null, ?\Exception $exception = null)
     {
         if (!isset($data) && !isset($entity) && !isset($exception)) {
             throw new InternalErrorException(__('This is not a valid SyncError, no data provided'));
@@ -44,7 +47,8 @@ class SyncError implements \Serializable
 
     /**
      * Get entity
-     * @return Entity|null
+     *
+     * @return \Cake\ORM\Entity|null
      */
     public function getEntity()
     {
@@ -53,6 +57,7 @@ class SyncError implements \Serializable
 
     /**
      * Get Exception.
+     *
      * @return \Exception|null
      */
     public function getException()
@@ -62,6 +67,7 @@ class SyncError implements \Serializable
 
     /**
      * Get data.
+     *
      * @return mixed
      */
     public function getData()
@@ -71,6 +77,7 @@ class SyncError implements \Serializable
 
     /**
      * Serialize.
+     *
      * @return string
      */
     public function serialize()
@@ -83,6 +90,7 @@ class SyncError implements \Serializable
 
     /**
      * Unserialize.
+     *
      * @param string $serialized serialized
      * @return void
      */

@@ -18,11 +18,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * DirectoryEntriesFixture
- *
  */
 class DirectoryIgnoreFixture extends TestFixture
 {
-
     public $table = 'directory_ignore';
 
     /**

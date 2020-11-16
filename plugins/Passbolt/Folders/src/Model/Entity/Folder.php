@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 namespace Passbolt\Folders\Model\Entity;
 
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
 
 /**
  * Folder Entity
@@ -29,7 +30,7 @@ use Cake\ORM\TableRegistry;
  */
 class Folder extends Entity
 {
-    const ROOT_ID = false;
+    public const ROOT_ID = false;
 
     /**
      * List of property names that should **not** be included in JSON or Array

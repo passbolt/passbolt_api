@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -44,7 +46,7 @@ class GroupsEventListener implements EventListenerInterface
     /**
      * Handle a group after user added event.
      *
-     * @param Event $event The event.
+     * @param \Cake\Event\Event $event The event.
      * @return void
      * @throws \Exception
      */
@@ -59,7 +61,7 @@ class GroupsEventListener implements EventListenerInterface
     /**
      * Handle a group after user removed event.
      *
-     * @param Event $event The event.
+     * @param \Cake\Event\Event $event The event.
      * @return void
      * @throws \Exception
      */

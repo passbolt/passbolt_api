@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -100,9 +102,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         ];
     }
 
-    /* ************************************************************** */
     /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testFoldersRelationsValidationForeignModel()
     {
@@ -167,9 +167,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         );
     }
 
-    /* ************************************************************** */
     /* BUILD RULES TESTS */
-    /* ************************************************************** */
 
     public function testFoldersRelationsErrorBuildRuleCreate_FolderRelationUnique()
     {

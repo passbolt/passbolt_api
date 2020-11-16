@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace Passbolt\Folders\Test\TestCase\Model\Table\Users;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\UsersTable;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -65,7 +66,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteSuccess_PersonalFolder()
     {
-        list ($folderA, $userAId) = $this->insertFixture_PersonalFolder();
+        [$folderA, $userAId] = $this->insertFixture_PersonalFolder();
         $user = $this->usersTable->get($userAId);
 
         $this->assertTrue($this->usersTable->softDelete($user));
@@ -89,7 +90,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
-        list ($folderA, $userAId, $userBId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
         $user = $this->usersTable->get($userAId);
         $this->usersTable->softDelete($user);
 
@@ -119,7 +120,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteSuccess_NotSoleOwnerFolder_FolderSharedWithUser()
     {
-        list ($folderA, $userAId, $userBId) = $this->insertFixture_NotSoleOwnerFolder_FolderSharedWithUser();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_NotSoleOwnerFolder_FolderSharedWithUser();
         $user = $this->usersTable->get($userAId);
         $result = $this->usersTable->softDelete($user);
         $this->assertTrue($result);
@@ -146,7 +147,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteSuccess_NotOwnerFolder_FolderSharedWithUser()
     {
-        list ($folderA, $userAId, $userBId) = $this->insertFixture_NotOwnerFolder_FolderSharedWithUser();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_NotOwnerFolder_FolderSharedWithUser();
         $user = $this->usersTable->get($userAId);
         $result = $this->usersTable->softDelete($user);
         $this->assertTrue($result);
@@ -173,7 +174,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteError_SoleOwnerFolder_FolderSharedWithGroup_UserIsOnlyGroupMember()
     {
-        list ($folderA, $g1, $userAId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup_UserIsOnlyGroupMember();
+        [$folderA, $g1, $userAId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup_UserIsOnlyGroupMember();
         $user = $this->usersTable->get($userAId);
 
         $result = $this->usersTable->softDelete($user);
@@ -206,7 +207,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteError_SoleOwnerFolder_FolderSharedWithGroup()
     {
-        list ($folderA, $g1, $userAId, $userBId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup();
+        [$folderA, $g1, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup();
         $user = $this->usersTable->get($userAId);
         $this->usersTable->softDelete($user);
 
@@ -243,7 +244,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteError_GroupIsSoleOwnerFolder_UserIsOnlyGroupMember()
     {
-        list ($folderA, $g1, $userAId) = $this->insertFixture_GroupIsSoleOwnerFolder_UserIsOnlyGroupMember();
+        [$folderA, $g1, $userAId] = $this->insertFixture_GroupIsSoleOwnerFolder_UserIsOnlyGroupMember();
         $user = $this->usersTable->get($userAId);
 
         $result = $this->usersTable->softDelete($user);

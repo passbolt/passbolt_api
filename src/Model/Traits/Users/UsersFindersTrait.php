@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 namespace App\Model\Traits\Users;
 
 use App\Model\Entity\Role;
-use App\Model\Entity\User;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
@@ -25,14 +26,12 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use Composer\EventDispatcher\EventDispatcher;
 use Exception;
 use InvalidArgumentException;
-use Passbolt\Log\Model\Table\ActionLogsTable;
 
 /**
- * @method EventDispatcher getEventManager()
- * @property ActionLogsTable $ActionLogs
+ * @method \Composer\EventDispatcher\EventDispatcher getEventManager()
+ * @property \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs
  */
 trait UsersFindersTrait
 {
@@ -94,7 +93,7 @@ trait UsersFindersTrait
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param string $resourceId The resource the users must have access.
-     * @throws InvalidArgumentException if the ressourceId is not a valid uuid
+     * @throws \InvalidArgumentException if the ressourceId is not a valid uuid
      * @return \Cake\ORM\Query $query
      */
     private function _filterQueryByResourceAccess(\Cake\ORM\Query $query, string $resourceId)
@@ -175,7 +174,7 @@ trait UsersFindersTrait
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param string $resourceId The resource to search potential users for.
-     * @throws InvalidArgumentException if the resource id is not a valid uuid
+     * @throws \InvalidArgumentException if the resource id is not a valid uuid
      * @return \Cake\ORM\Query $query
      */
     private function _filterQueryByHasNotPermission(Query $query, string $resourceId)
@@ -200,16 +199,16 @@ trait UsersFindersTrait
      *
      * @param string $role name
      * @param array $options filters
-     * @throws InvalidArgumentException if no role is specified
-     * @return Query
+     * @throws \InvalidArgumentException if no role is specified
+     * @return \Cake\ORM\Query
      */
-    public function findIndex(string $role, array $options = [])
+    public function findIndex(string $role, ?array $options = [])
     {
         $query = $this->find();
 
         $event = TableFindIndexBefore::create($query, FindIndexOptions::createFromArray($options), $this);
 
-        /** @var TableFindIndexBefore $event */
+        /** @var \App\Model\Event\TableFindIndexBefore $event */
         $this->getEventManager()->dispatch($event);
 
         $query = $event->getQuery();
@@ -302,9 +301,9 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @throws InvalidArgumentException if the role name or user id are not valid
-     * @throws Exception
-     * @return Query
+     * @throws \InvalidArgumentException if the role name or user id are not valid
+     * @throws \Exception
+     * @return \Cake\ORM\Query
      */
     public function findView(string $userId, string $roleName)
     {
@@ -324,8 +323,8 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @throws InvalidArgumentException if the role name or user id are not valid
-     * @return Query
+     * @throws \InvalidArgumentException if the role name or user id are not valid
+     * @return \Cake\ORM\Query
      */
     public function findDelete(string $userId, string $roleName)
     {
@@ -342,9 +341,9 @@ trait UsersFindersTrait
     /**
      * Build the query that fetches the user data during authentication
      *
-     * @param Query $query a query instance
+     * @param \Cake\ORM\Query $query a query instance
      * @param array $options options
-     * @throws Exception if fingerprint id is not set
+     * @throws \Exception if fingerprint id is not set
      * @return \Cake\ORM\Query
      */
     public function findAuth(Query $query, array $options)
@@ -367,10 +366,10 @@ trait UsersFindersTrait
      *
      * @param string $username email of user to retrieve
      * @param array $options options
-     * @throws InvalidArgumentException if the username is not an email
-     * @return Query
+     * @throws \InvalidArgumentException if the username is not an email
+     * @return \Cake\ORM\Query
      */
-    public function findRecover(string $username, array $options = [])
+    public function findRecover(string $username, ?array $options = [])
     {
         if (!Validation::email($username, Configure::read('passbolt.email.validate.mx'))) {
             throw new InvalidArgumentException(__('The username should be a valid email.'));
@@ -390,8 +389,8 @@ trait UsersFindersTrait
      * Build the query that fetches data for user setup start
      *
      * @param string $userId uuid
-     * @throws InvalidArgumentException if the user id is not a uuid
-     * @return User $user entity
+     * @throws \InvalidArgumentException if the user id is not a uuid
+     * @return \App\Model\Entity\User $user entity
      */
     public function findSetup(string $userId)
     {
@@ -400,7 +399,7 @@ trait UsersFindersTrait
         }
 
         // show active first and do not count deleted ones
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = $this->find()
             ->contain(['Roles', 'Profiles', 'Roles'])
             ->where([
@@ -417,8 +416,8 @@ trait UsersFindersTrait
      * Build the query that checks data for user setup start/completion
      *
      * @param string $userId uuid
-     * @throws InvalidArgumentException if the user id is not a uuid
-     * @return User $user entity
+     * @throws \InvalidArgumentException if the user id is not a uuid
+     * @return \App\Model\Entity\User $user entity
      */
     public function findSetupRecover(string $userId)
     {
@@ -427,7 +426,7 @@ trait UsersFindersTrait
         }
 
         // show active first and do not count deleted ones
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = $this->find()
             ->contain(['Roles', 'Profiles', 'Roles'])
             ->where([
@@ -444,8 +443,8 @@ trait UsersFindersTrait
      * Get a user info for an email notification context
      *
      * @param string $userId uuid
-     * @throws InvalidArgumentException if the user id is not a valid uuid
-     * @return User
+     * @throws \InvalidArgumentException if the user id is not a valid uuid
+     * @return \App\Model\Entity\User
      */
     public function findFirstForEmail(string $userId)
     {
@@ -453,7 +452,7 @@ trait UsersFindersTrait
             throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = $this->find()
             ->where(['Users.id' => $userId])
             ->contain([
@@ -468,11 +467,11 @@ trait UsersFindersTrait
     /**
      * Get a user info for an email notification context
      *
-     * @return User
+     * @return \App\Model\Entity\User
      */
     public function findFirstAdmin()
     {
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = $this->find()
             ->where([
                 'Users.deleted' => false,
@@ -488,7 +487,8 @@ trait UsersFindersTrait
 
     /**
      * Return a list of admin users (active, non soft-deleted) with their role attached
-     * @return Query
+     *
+     * @return \Cake\ORM\Query
      */
     public function findAdmins()
     {
@@ -507,7 +507,7 @@ trait UsersFindersTrait
     /**
      * Get all active users.
      *
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findActive()
     {
@@ -523,8 +523,8 @@ trait UsersFindersTrait
     /**
      * Retrieve users' last logged in date.
      *
-     * @param Query $query query
-     * @return Query
+     * @param \Cake\ORM\Query $query query
+     * @return \Cake\ORM\Query
      */
     public function findlastLoggedIn(Query $query)
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,9 +28,9 @@ class PermissionsCleanupBehavior extends Behavior
      * Delete all records where associated folders are deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \Passbolt\Folders\Model\Behavior\number of affected records
      */
-    public function cleanupHardDeletedFolders(bool $dryRun = false)
+    public function cleanupHardDeletedFolders(?bool $dryRun = false)
     {
         return $this->_table->cleanupHardDeletedAco('Folders', $dryRun);
     }

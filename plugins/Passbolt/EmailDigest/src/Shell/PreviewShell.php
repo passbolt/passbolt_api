@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,10 +17,8 @@
 
 namespace Passbolt\EmailDigest\Shell;
 
-use Cake\Console\ConsoleOptionParser;
 use Cake\Console\Shell;
 use Cake\Core\Configure;
-use Exception;
 use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 
 class PreviewShell extends Shell
@@ -28,7 +28,7 @@ class PreviewShell extends Shell
      *
      * By overriding this method you can configure the ConsoleOptionParser before returning it.
      *
-     * @return ConsoleOptionParser
+     * @return \Cake\Console\ConsoleOptionParser
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
      */
     public function getOptionParser()
@@ -41,7 +41,7 @@ class PreviewShell extends Shell
                 [
                     'short' => 'l',
                     'help' => 'How many emails should be in this batch?',
-                    'default' => Configure::read('passbolt.plugins.EmailDigest.batchSizeLimit'),
+                    'default' => Configure::read('passbolt.plugins.emailDigest.batchSizeLimit'),
                 ]
             )
             ->addOption(
@@ -58,7 +58,7 @@ class PreviewShell extends Shell
 
     /**
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function main()
     {
@@ -76,6 +76,7 @@ class PreviewShell extends Shell
 
     /**
      * Return a parameter passed to the command line
+     *
      * @param string $name Name of the parameter
      * @return int|null
      */

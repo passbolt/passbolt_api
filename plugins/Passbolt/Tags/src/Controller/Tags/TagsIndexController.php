@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -18,7 +20,6 @@ use App\Controller\AppController;
 
 class TagsIndexController extends AppController
 {
-
     /**
      * Tag Index action
      *

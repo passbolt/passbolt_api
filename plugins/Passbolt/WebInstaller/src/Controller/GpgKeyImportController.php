@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Utility\Hash;
 use Passbolt\WebInstaller\Form\GpgKeyForm;
@@ -23,9 +24,10 @@ class GpgKeyImportController extends WebInstallerController
 {
     /**
      * Initialize.
+     *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->stepInfo['previous'] = 'install/database';
@@ -36,6 +38,7 @@ class GpgKeyImportController extends WebInstallerController
 
     /**
      * Index
+     *
      * @return mixed
      */
     public function index()
@@ -50,6 +53,7 @@ class GpgKeyImportController extends WebInstallerController
 
     /**
      * Index post
+     *
      * @return mixed
      */
     protected function indexPost()
@@ -67,8 +71,9 @@ class GpgKeyImportController extends WebInstallerController
 
     /**
      * Validate data.
+     *
      * @param array $data request data
-     * @throws Exception The key is not valid
+     * @throws \Cake\Core\Exception\Exception The key is not valid
      * @return void
      */
     protected function validateData($data)

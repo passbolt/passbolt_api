@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Service\Folders\FoldersShareService;
 
 class FoldersShareController extends AppController
@@ -29,7 +30,7 @@ class FoldersShareController extends AppController
      *
      * @param string $id The identifier of the folder.
      * @return void
-     * @throws BadRequestException If the folder id is not valid
+     * @throws \Cake\Http\Exception\BadRequestException If the folder id is not valid
      * @throws \Exception If an unexpected error occurred.
      */
     public function share(string $id)
@@ -43,7 +44,7 @@ class FoldersShareController extends AppController
 
         $data = $this->getData();
 
-        /** @var Folder $folder */
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = $foldersUpdatePermissionsService->share($uac, $id, $data);
 
         $this->success(__('The folder `{0}` has been updated successfully.', $folder->name), $folder);

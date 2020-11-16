@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -26,7 +28,8 @@ trait SyncDeleteTrait
 {
     /**
      * Handle ignored entries.
-     * @param DirectoryEntry $entry entry
+     *
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
      * @return void
      */
     protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
@@ -50,7 +53,8 @@ trait SyncDeleteTrait
 
     /**
      * Handle ignored entities.
-     * @param DirectoryEntry $entry entry
+     *
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
      * @return void
      */
     protected function handleDeletedIgnoredEntity(DirectoryEntry $entry)
@@ -75,7 +79,8 @@ trait SyncDeleteTrait
 
     /**
      * Handle deleted entity.
-     * @param DirectoryEntry $entry entry
+     *
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
      * @return void
      */
     protected function handleDeletedEntry(DirectoryEntry $entry)
@@ -99,7 +104,8 @@ trait SyncDeleteTrait
 
     /**
      * Handle delete when it's not possible to delete.
-     * @param DirectoryEntry $entry entry
+     *
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
      * @return void
      */
     protected function handleNotPossibleDelete(DirectoryEntry $entry)
@@ -119,12 +125,14 @@ trait SyncDeleteTrait
             );
         }
         $data = new SyncError($entry, new ValidationException($msg, $entity));
-        $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
+        $r = new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data);
+        $this->addReportItem($r);
     }
 
     /**
      * Handle a successful delete.
-     * @param DirectoryEntry $entry entry
+     *
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
      * @return void
      */
     protected function handleSuccessfulDelete(DirectoryEntry $entry)
@@ -146,8 +154,9 @@ trait SyncDeleteTrait
 
     /**
      * Handle an internal error delete.
-     * @param DirectoryEntry $entry entry
-     * @param InternalErrorException $exception exception
+     *
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
+     * @param \Cake\Http\Exception\InternalErrorException $exception exception
      * @return void
      */
     protected function handleInternalErrorDelete(DirectoryEntry $entry, InternalErrorException $exception)

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,14 +20,13 @@ namespace Passbolt\Folders\Test\Lib\Model;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use PHPUnit\Framework\Assert;
 
 /**
  * @mixin Assert
  */
 trait FoldersRelationsModelTrait
 {
-    public static function addFolderRelation($data = [], $options = [])
+    public static function addFolderRelation(?array $data = [], ?array $options = [])
     {
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $folderRelation = $foldersRelationsTable->findByForeignIdAndUserId($data['foreign_id'], $data['user_id'])->first();
@@ -37,7 +38,7 @@ trait FoldersRelationsModelTrait
         $foldersRelationsTable->saveOrFail($folderRelation, ['checkRules' => false]);
     }
 
-    public static function getDummyFolderRelationEntity($data = [], $options = [])
+    public static function getDummyFolderRelationEntity(?array $data = [], ?array $options = [])
     {
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $defaultOptions = [
@@ -59,7 +60,7 @@ trait FoldersRelationsModelTrait
      * @return array
      * @throws \Exception
      */
-    public static function getDummyFolderRelation($data = [])
+    public static function getDummyFolderRelation(?array $data = [])
     {
         $entityContent = [
             'foreign_model' => PermissionsTable::FOLDER_ACO,
@@ -75,12 +76,13 @@ trait FoldersRelationsModelTrait
 
     /**
      * Assert a user has an item in their graph.
+     *
      * @param string $foreignId
      * @param string $foreignModel
      * @param string $userId
      * @param string $folderParentId
      */
-    protected function assertFolderRelation(string $foreignId, string $foreignModel, string $userId, string $folderParentId = null)
+    protected function assertFolderRelation(string $foreignId, string $foreignModel, string $userId, ?string $folderParentId = null)
     {
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $folderRelationQuery = $foldersRelationsTable->find()->where([
@@ -99,11 +101,12 @@ trait FoldersRelationsModelTrait
 
     /**
      * Assert a user has an item in their graph.
+     *
      * @param string $foreignId
      * @param string $userId
      * @param string $folderParentId
      */
-    protected function assertFolderRelationNotExist(string $foreignId, string $userId, string $folderParentId = null)
+    protected function assertFolderRelationNotExist(string $foreignId, string $userId, ?string $folderParentId = null)
     {
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $folderRelationQuery = $foldersRelationsTable->find()->where([
@@ -121,8 +124,9 @@ trait FoldersRelationsModelTrait
 
     /**
      * Assert the item is visible in a number of trees.
+     *
      * @param string $foreignId
-     * @param integer $count
+     * @param int $count
      */
     protected function assertItemIsInTrees(string $foreignId, int $count)
     {
@@ -133,6 +137,7 @@ trait FoldersRelationsModelTrait
 
     /**
      * Assert a user has an item in their graph.
+     *
      * @param string $foreignId
      * @param string $userId
      */
@@ -147,7 +152,7 @@ trait FoldersRelationsModelTrait
         $this->assertEquals(0, $folderRelationQuery->count());
     }
 
-    protected function assertObjectHasFolderParentIdAttribute($object, string $expectedParentId = null)
+    protected function assertObjectHasFolderParentIdAttribute($object, ?string $expectedParentId = null)
     {
         $this->assertObjectHasAttribute('folder_parent_id', $object);
         $this->assertEquals($expectedParentId, $object->folder_parent_id);

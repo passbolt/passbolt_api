@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -65,13 +67,13 @@ class InstallTask extends AppShell
                 'boolean' => true,
             ])
             ->addOption('admin-username', [
-                'help' => __('Admin\' username (email). If interactive mode enabled, and no-admin not set, it will be requested'),
+                'help' => __('Admin\' username (email). Will be requested in interactive mode.'),
             ])
             ->addOption('admin-first-name', [
-                'help' => __('Admin\' first name. If interactive mode enabled, and no-admin not set, it will be requested'),
+                'help' => __('Admin\' first name. Will be requested in interactive mode.'),
             ])
             ->addOption('admin-last-name', [
-                'help' => __('Admin\' last name. If interactive mode enabled, and no-admin not set, it will be requested'),
+                'help' => __('Admin\' last name. Will be requested in interactive mode.'),
             ]);
 
         return $parser;
@@ -184,7 +186,7 @@ class InstallTask extends AppShell
             }
             $cmd = $this->_formatCmd($cmd);
 
-            return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
+            return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
         }
 
         return true;
@@ -250,7 +252,7 @@ class InstallTask extends AppShell
             $this->_keyringInit();
             $cmd = $this->_formatCmd('passbolt mysql_export --clear-previous');
 
-            return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
+            return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
         }
 
         return true;
@@ -268,7 +270,7 @@ class InstallTask extends AppShell
         $this->hr();
         $cmd = $this->_formatCmd('passbolt drop_tables');
 
-        return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
+        return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
     }
 
     /**
@@ -283,7 +285,7 @@ class InstallTask extends AppShell
         $this->hr();
         $cmd = $this->_formatCmd('migrations migrate --no-lock');
 
-        return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
+        return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
     }
 
     /**
@@ -299,7 +301,7 @@ class InstallTask extends AppShell
         $this->hr();
         $cmd = $this->_formatCmd('passbolt keyring_init');
 
-        return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
+        return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
     }
 
     /**
@@ -321,7 +323,8 @@ class InstallTask extends AppShell
             // Check application url config
             $checks = Healthchecks::core();
             if (!$checks['core']['fullBaseUrl'] && !$checks['core']['validFullBaseUrl']) {
-                throw new Exception(__('The fullBaseUrl is not set or not valid. {0}', $checks['core']['info']['fullBaseUrl']));
+                $msg = __('The fullBaseUrl is not set or not valid. {0}', $checks['core']['info']['fullBaseUrl']);
+                throw new Exception($msg);
             }
 
             // Check that a GPG configuration id is provided
@@ -341,23 +344,27 @@ class InstallTask extends AppShell
             if (!Configure::read('debug')) {
                 if (!$checks['gpg']['gpgKeyNotDefault']) {
                     $msg = __('Default GnuPG server key cannot be used in production.');
-                    $msg .= ' ' . __('Please change the values of passbolt.gpg.server in config/passbolt.php with your server key information.');
-                    $msg .= ' ' . __('If you do not have yet a server key, please generate one, take a look at the install documentation.');
+                    $msg .= ' ' . __('Please change the values of passbolt.gpg.server in config/passbolt.php.');
+                    $msg .= ' ' . __('If you do not have yet a server key, please generate one.');
+                    $msg .= ' ' . __('Take a look at the install documentation for more information.');
                     throw new Exception($msg);
                 }
             }
 
             // Check that there is a public and private key found at the given path
             if (!$checks['gpg']['gpgKeyPublicReadable']) {
-                throw new Exception(__('No public key found at the given path {0}', Configure::read('GPG.serverKey.public')));
+                $msg = 'No public key found at the given path {0}';
+                throw new Exception(__($msg, Configure::read('GPG.serverKey.public')));
             }
             if (!$checks['gpg']['gpgKeyPrivateReadable']) {
-                throw new Exception(__('No private key found at the given path {0}', Configure::read('GPG.serverKey.private')));
+                $msg = 'No private key found at the given path {0}';
+                throw new Exception(__($msg, Configure::read('GPG.serverKey.private')));
             }
 
             // Check that the public and private key match the fingerprint
             if (!$checks['gpg']['gpgKeyPrivateFingerprint'] || !$checks['gpg']['gpgKeyPublicFingerprint']) {
-                throw new Exception(__('The server key fingerprint does not match the fingerprint mentioned in config/passbolt.php'));
+                $msg = __('The server key fingerprint does not match the fingerprint mentioned in config/passbolt.php');
+                throw new Exception($msg);
             }
             if (!$checks['gpg']['gpgKeyPublicEmail']) {
                 throw new Exception(__('The server public key should have an email id.'));
@@ -379,7 +386,9 @@ class InstallTask extends AppShell
         }
         if ($checks['database']['tablesCount']) {
             if (!$this->param('force')) {
-                $this->_error(__('Some tables are already present in the database, a new installation would override existing data.'));
+                $msg = __('Some tables are already present in the database.') . ' ';
+                $msg .= __('A new installation would override existing data.');
+                $this->_error($msg);
                 $this->_error(__('Please use --force to proceed anyway.'));
 
                 return false;

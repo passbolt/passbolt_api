@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,23 +17,22 @@
 namespace Passbolt\WebInstaller\Controller;
 
 use App\Model\Entity\Role;
-use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Cake\Datasource\ConnectionManager;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
 /**
- * @property UsersTable $Users
+ * @property \App\Model\Table\UsersTable $Users
  */
 class DatabaseController extends WebInstallerController
 {
     /**
      * Initialize.
+     *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         if (Configure::read('passbolt.plugins.license')) {
@@ -45,12 +46,15 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Index
+     *
      * @return void|mixed
      */
-    public function index()
+    public function index(): void
     {
         if ($this->request->is('post')) {
-            return $this->indexPost();
+            $this->indexPost();
+
+            return;
         }
 
         $databaseSettings = $this->webInstaller->getSettings('database');
@@ -66,9 +70,10 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Index post
-     * @return void|mixed
+     *
+     * @return void
      */
-    protected function indexPost()
+    protected function indexPost(): void
     {
         $data = $this->request->getData();
         try {
@@ -77,7 +82,9 @@ class DatabaseController extends WebInstallerController
             DatabaseConfiguration::setDefaultConfig($data);
             $hasAdmin = $this->hasAdmin();
         } catch (Exception $e) {
-            return $this->_error($e->getMessage());
+            $this->_error($e->getMessage());
+
+            return;
         }
 
         $this->webInstaller->setSettings('database', $data);
@@ -89,10 +96,11 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Check if the database has already administrator.
-     * @throws Exception If the database schema does not validate
+     *
+     * @throws \Cake\Core\Exception\Exception If the database schema does not validate
      * @return bool
      */
-    protected function hasAdmin()
+    protected function hasAdmin(): bool
     {
         $tables = DatabaseConfiguration::getTables();
         if (!count($tables)) {
@@ -111,27 +119,31 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Test the connection to the database
+     *
      * @param array $data The database configuration to test
-     * @throws Exception A connection could not be established with the provided data
+     * @throws \Cake\Core\Exception\Exception A connection could not be established with the provided data
      * @return void
      */
-    protected function testConnection($data)
+    protected function testConnection(array $data): void
     {
         $config = DatabaseConfiguration::buildConfig($data);
         $this->webInstaller->setSettings('database', $config);
         $this->webInstaller->initDatabaseConnection();
         if (!DatabaseConfiguration::testConnection()) {
-            throw new Exception(__('A connection could not be established with the credentials provided. Please verify the settings.'));
+            $msg = __('A connection could not be established with the credentials provided.') . ' ';
+            $msg .= __('Please verify the settings.');
+            throw new Exception($msg);
         }
     }
 
     /**
      * Validate data.
+     *
      * @param array $data request data
-     * @throws Exception The data does not validate
+     * @throws \Cake\Core\Exception\Exception The data does not validate
      * @return void
      */
-    protected function validateData($data)
+    protected function validateData(array $data): void
     {
         $form = new DatabaseConfigurationForm();
         $this->set('formExecuteResult', $form);
