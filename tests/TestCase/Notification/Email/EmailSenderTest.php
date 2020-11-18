@@ -141,6 +141,36 @@ class EmailSenderTest extends TestCase
         $sut->sendEmail($email);
     }
 
+    public function testThatSendEnqueueEmailWithSubjectExceedingMaximumLength()
+    {
+        $sut = new EmailSender(
+            $this->emailQueueMock,
+            self::APP_FULL_BASE_URL,
+            true
+        );
+
+        $subject = 'Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long su';
+        $email = new Email('test', $subject, [], '');
+
+        $options = [
+            'template' => $email->getTemplate(),
+            'subject' => $this->getSubject($email->getSubject(), true),
+            'format' => 'html',
+            'config' => 'default',
+            'headers' => ['Auto-Submitted' => 'auto-generated'],
+        ];
+
+        $data = $email->getData();
+        $data['body']['fullBaseUrl'] = self::APP_FULL_BASE_URL;
+
+        $this->emailQueueMock->expects($this->once())
+            ->method('enqueue')
+            ->with($email->getRecipient(), $data, $options)
+            ->willReturn(true);
+
+        $sut->sendEmail($email);
+    }
+
     public function testThatSendEmailAddFullBaseUrlToBodyAndMergeData()
     {
         $expectedData = ['body' => ['some_data' => 'test']];
