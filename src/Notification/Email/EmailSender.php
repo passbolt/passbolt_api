@@ -104,6 +104,8 @@ class EmailSender
         if ($this->purifySubject) {
             $subject = Purifier::clean($subject);
         }
+        // The subject column of the email_queue table is limited to 255 characters.
+        $subject = substr($subject, 0, 255);
 
         return $subject;
     }
