@@ -21,6 +21,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Traits\Folders\FoldersRelationsFindersTrait;
@@ -128,7 +129,9 @@ class FoldersRelationsHistoryTable extends Table
      */
     public function buildEntity(array $data): FoldersRelation
     {
-        return $this->newEntity($data, [
+        $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+
+        return $foldersRelationsTable->newEntity($data, [
             'accessibleFields' => [
                 'id' => true,
                 'foreign_model' => true,
@@ -143,11 +146,11 @@ class FoldersRelationsHistoryTable extends Table
      * Create a new FoldersRelationHistory.
      *
      * @param array $data the data
-     * @return \Passbolt\Folders\Model\Table\FolderRelationsHistory
+     * @return \Passbolt\Folders\Model\Entity\FoldersRelation
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(array $data)
+    public function create(array $data): FoldersRelation
     {
         // Check validation rules.
         $folderRelationHistory = $this->buildEntity($data);
