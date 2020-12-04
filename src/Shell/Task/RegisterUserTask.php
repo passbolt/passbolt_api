@@ -18,6 +18,7 @@ namespace App\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Shell\AppShell;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
@@ -212,7 +213,7 @@ class RegisterUserTask extends AppShell
     /**
      * Notify the user by trigerring a registerPost event
      *
-     * @param \App\Shell\Task\User $user Entity User
+     * @param \App\Model\Entity\User $user Entity User
      * @return void
      */
     protected function _notifyUser(User $user)
