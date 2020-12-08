@@ -26,7 +26,6 @@ module.exports = function(grunt) {
    */
   var paths = {
     node_modules: 'node_modules/',
-    node_modules_appjs: 'node_modules/passbolt-appjs/',
     node_modules_styleguide: 'node_modules/passbolt-styleguide/',
     webroot: 'webroot/',
     img: 'webroot/img/',
@@ -43,22 +42,15 @@ module.exports = function(grunt) {
   /**
    * Load baseline NPM tasks
    */
-  var root = path.resolve('node_modules');
-  var pkgfile = path.join(root, 'grunt-browser-sync', 'package.json');
-  if (grunt.file.exists(pkgfile)) {
-    grunt.loadNpmTasks('grunt-browser-sync');
-  }
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   /**
    * Register project specific grunt tasks
    */
-  grunt.registerTask('default', ['dependencies-update', 'styleguide-update', 'appjs-update']);
-  grunt.registerTask('appjs-update', 'copy:appjs');
-  grunt.registerTask('appjs-watch', ['watch:node-modules-appjs']);
-  grunt.registerTask('appjs-watch-browser-sync', ['browserSync:appjs', 'watch:node-modules-appjs']);
+  grunt.registerTask('default', ['dependencies-update', 'styleguide-update']);
   grunt.registerTask('styleguide-update', 'copy:styleguide');
+  grunt.registerTask('styleguide-watch', ['watch:node-modules-styleguide']);
   grunt.registerTask('dependencies-update', 'copy:dependencies');
 
   /**
@@ -66,20 +58,6 @@ module.exports = function(grunt) {
    */
   grunt.initConfig({
     pkg: pkg,
-
-    browserSync: {
-      appjs: {
-        bsFiles: {
-          src: paths.js + 'app/**/*'
-        },
-        options: {
-          localOnly: true,
-          watchTask: true,
-          host: 'passbolt.dev',
-          browser: 'google chrome'
-        }
-      }
-    },
 
     copy: {
       dependencies: {
@@ -94,19 +72,6 @@ module.exports = function(grunt) {
           cwd: paths.node_modules + 'jquery/dist',
           src: ['jquery.min.js'],
           dest: paths.js + 'vendors',
-          expand: true
-        }]
-      },
-      appjs: {
-        files: [{
-          cwd: paths.node_modules + 'babel-polyfill/dist',
-          src: ['polyfill.min.js'],
-          dest: paths.js + 'app',
-          expand: true
-        }, {
-          cwd: paths.node_modules_appjs + 'dist',
-          src: ['steal.production.js', 'bundles/passbolt-appjs/passbolt.js'],
-          dest: paths.js + 'app',
           expand: true
         }]
       },
@@ -179,14 +144,19 @@ module.exports = function(grunt) {
           src: ['api_login.min.css'],
           dest: paths.webroot + 'css/themes/anew',
           expand: true
+        }, {
+          cwd: paths.node_modules_styleguide + 'build/js/dist',
+          src: ['api-app.js', 'api-vendors.js'],
+          dest: paths.js + 'app',
+          expand: true
         }]
       }
     },
 
     watch: {
-      'node-modules-appjs': {
-        files: [paths.node_modules_appjs + 'dist/**/*'],
-        tasks: ['appjs-update']
+      'node-modules-styleguide': {
+        files: [paths.node_modules_styleguide + 'build/**/*'],
+        tasks: ['styleguide-update']
       }
     }
    });
