@@ -20,7 +20,9 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
+use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Exception\BadRequestException;
 
 class AuthLoginController extends AppController
 {
@@ -53,14 +55,12 @@ class AuthLoginController extends AppController
             $this->redirect('/'); // user is already logged in
         }
 
-        $this->viewBuilder()
-            ->setLayout('login')
-            ->setTemplatePath('/Auth')
-            ->setTemplate('login');
+        $this->set('title', Configure::read('passbolt.meta.description'));
 
-        // used to display chrome or firefox image feedback
-        $this->set('userAgent', $this->User->agent());
-        $this->success();
+        $this->viewBuilder()
+            ->setLayout('default')
+            ->setTemplatePath('/Auth')
+            ->setTemplate('triage');
     }
 
     /**
@@ -70,6 +70,10 @@ class AuthLoginController extends AppController
      */
     public function loginPost()
     {
+        if (!$this->request->is('json')) {
+            throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
+        }
+
         $user = $this->Auth->identify();
         $gpgAuth = $this->Auth->getAuthenticate('Gpg');
         $this->response = $gpgAuth->getUpdatedResponse();
@@ -82,21 +86,12 @@ class AuthLoginController extends AppController
             ));
             $this->success(__('You are successfully logged in.'), $user);
         } else {
-            // Login failure, same as GET
-            if (!$this->request->is('JSON')) {
-                $this->set('userAgent', $this->User->agent());
-                $this->viewBuilder()
-                    ->setLayout('login')
-                    ->setTemplatePath('/Auth')
-                    ->setTemplate('login');
-            } else {
-                $message = 'The authentication failed.';
-                $debug = $this->response->getHeader('X-GPGAuth-Debug');
-                if (isset($debug) && count($debug) === 1) {
-                    $message .= ' ' . $debug[0];
-                }
-                $this->error($message);
+            $message = 'The authentication failed.';
+            $debug = $this->response->getHeader('X-GPGAuth-Debug');
+            if (isset($debug) && count($debug) === 1) {
+                $message .= ' ' . $debug[0];
             }
+            $this->error($message);
         }
     }
 }

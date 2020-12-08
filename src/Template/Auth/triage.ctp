@@ -22,6 +22,6 @@ $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true, 'id' => 'js_
 $this->start('scriptBottom');
 // Load the javascript application.
 echo $this->Html->script('/js/app/api-vendors.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
-echo $this->Html->script('/js/app/api-setup.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
+echo $this->Html->script('/js/app/api-triage.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
 $this->end();
 ?>

@@ -17,12 +17,11 @@ declare(strict_types=1);
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 
 /**
@@ -65,14 +64,12 @@ class UsersRegisterController extends AppController
         if ($this->User->role() !== Role::GUEST) {
             throw new ForbiddenException(__('Only guest are allowed to register.'));
         }
-        $this->viewBuilder()
-            ->setTemplatePath('/Users')
-            ->setLayout('login')
-            ->setTemplate('register');
 
-        $user = $this->Users->newEntity([]);
-        $this->set('user', $user);
-        $this->success();
+        $this->set('title', Configure::read('passbolt.meta.description'));
+        $this->viewBuilder()
+            ->setTemplatePath('/Auth')
+            ->setLayout('default')
+            ->setTemplate('triage');
     }
 
     /**
@@ -83,32 +80,17 @@ class UsersRegisterController extends AppController
      */
     public function registerPost()
     {
+        if (!$this->request->is('json')) {
+            throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
+        }
+
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
             throw new ForbiddenException(__('Only guest are allowed to register.'));
         }
 
         $data = $this->request->getData();
-        try {
-            $user = $this->Users->register($data);
-            $this->viewBuilder()
-                ->setTemplatePath('/Users')
-                ->setLayout('login')
-                ->setTemplate('register_thank_you');
-            $this->success(__('The operation was successful.'), $user);
-        } catch (ValidationException $exception) {
-            if ($this->request->is('json')) {
-                throw $exception;
-            }
-            // By default users see the register form again
-            // if something goes wrong they can try again
-            $this->set('user', $exception->getEntity());
-            $this->viewBuilder()
-                ->setTemplatePath('/Users')
-                ->setLayout('login')
-                ->setTemplate('register');
-        } catch (InternalErrorException $exception) {
-            throw $exception;
-        }
+        $user = $this->Users->register($data);
+        $this->success(__('The operation was successful.'), $user);
     }
 }

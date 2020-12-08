@@ -22,11 +22,11 @@ use Cake\Core\Configure;
 class HomeController extends AppController
 {
     /**
-     * Password workspace page action
+     * This entry point serves the API javascript application.
      *
      * @return void
      */
-    public function view()
+    public function home()
     {
         $this->viewBuilder()
             ->setLayout('default')
@@ -35,7 +35,24 @@ class HomeController extends AppController
 
         $this->set('theme', $this->User->theme());
         $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
+
+        $this->success();
+    }
+
+    /**
+     * This entry point serves an empty page with the splash screen.
+     *
+     * @return void
+     */
+    public function empty()
+    {
+        $this->viewBuilder()
+            ->setLayout('default')
+            ->setTemplatePath('/Home')
+            ->setTemplate('empty');
+
+        $this->set('theme', $this->User->theme());
+        $this->set('title', Configure::read('passbolt.meta.description'));
 
         $this->success();
     }

@@ -34,14 +34,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
             'form-data' => ['username' => 'notanemail'],
             'error' => 'Please provide a valid email address.',
         ],
-        'cannot recover a user that does not exist' => [
-            'form-data' => ['username' => 'notauser@passbolt.com'],
-            'error' => 'This user does not exist or has been deleted.',
-        ],
-        'cannot recover a user that has been deleted' => [
-            'form-data' => ['username' => 'sofia@passbolt.com'],
-            'error' => 'This user does not exist or has been deleted.',
-        ],
     ];
 
     public $successes = [
@@ -74,28 +66,38 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     public function testRecoverPostErrors()
     {
         foreach ($this->fails as $case => $data) {
-            $this->post('/users/recover', $data['form-data']);
+            $this->postJson('/users/recover.json', $data['form-data']);
             $result = $this->_getBodyAsString();
             $this->assertContains($data['error'], $result, 'Error case not respected: ' . $case);
         }
     }
 
-    public function testRecoverPostError_MissingCsrfTokenError()
+    public function testRecoverPostError_UserDeleted()
     {
-        $this->disableCsrfToken();
-        $this->post('/users/recover');
-        $this->assertResponseCode(403);
+        $data = ['username' => 'sofia@passbolt.com'];
+        $error = 'This user does not exist or has been deleted.';
+        $this->postJson('/users/recover.json', $data);
+        $this->assertResponseCode(404);
         $result = $this->_getBodyAsString();
-        $this->assertContains('Missing CSRF token cookie', $result);
+        $this->assertContains($error, $result);
+    }
+
+    public function testRecoverPostError_UserNotExist()
+    {
+        $data = ['username' => 'notauser@passbolt.com'];
+        $error = 'This user does not exist or has been deleted.';
+        $this->postJson('/users/recover.json', $data);
+        $this->assertResponseCode(404);
+        $result = $this->_getBodyAsString();
+        $this->assertContains($error, $result);
     }
 
     public function testRecoverPostSuccess()
     {
         foreach ($this->successes as $case => $data) {
-            $this->post('/users/recover', $data['form-data']);
+            $this->postJson('/users/recover.json', $data['form-data']);
             $result = $this->_getBodyAsString();
-            $success = 'Email sent!';
-            $this->assertContains($success, $result, 'Success case not respected: ' . $case);
+            $this->assertResponseSuccess('Recovery process started, check your email.');
         }
     }
 

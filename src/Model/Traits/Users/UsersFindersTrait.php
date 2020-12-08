@@ -401,7 +401,10 @@ trait UsersFindersTrait
         // show active first and do not count deleted ones
         /** @var \App\Model\Entity\User $user */
         $user = $this->find()
-            ->contain(['Roles', 'Profiles', 'Roles'])
+            ->contain([
+                'Roles',
+                'Profiles' => AvatarsTable::addContainAvatar(),
+            ])
             ->where([
                 'Users.id' => $userId,
                 'Users.deleted' => false, // forbid deleted users to start setup
@@ -428,7 +431,10 @@ trait UsersFindersTrait
         // show active first and do not count deleted ones
         /** @var \App\Model\Entity\User $user */
         $user = $this->find()
-            ->contain(['Roles', 'Profiles', 'Roles'])
+            ->contain([
+                'Roles',
+                'Profiles' => AvatarsTable::addContainAvatar(),
+            ])
             ->where([
                 'Users.id' => $userId,
                 'Users.deleted' => false, // forbid deleted users to start setup

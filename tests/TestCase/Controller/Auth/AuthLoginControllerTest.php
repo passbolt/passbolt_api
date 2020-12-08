@@ -40,20 +40,12 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     protected $adaKeyId;
     protected $serverKeyId;
 
-    public function testAuthLoginControllerUserLoginGetSuccess()
-    {
-        $this->get('/auth/login');
-        $data = $this->_getBodyAsString();
-        $this->assertResponseOk();
-        $this->assertContains('<div id="container" class="page login', $data);
-    }
-
     /**
      * Test getting login started with deleted account
      */
     public function testAuthLoginControllerUserLoginAsDeletedUserError()
     {
-        $this->post('/auth/login', [
+        $this->postJson('/auth/login.json', [
             'data' => [
                 'gpg_auth' => [
                     'keyid' => '252B91CB28A96C6D67E8FC139020576F08D8B763',
@@ -71,13 +63,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     public function testAuthLoginControllerLoginServerKeyFingerprintMissing()
     {
         Configure::delete('passbolt.gpg.serverKey.fingerprint');
-        $this->post('/auth/login');
-        $this->assertResponseFailure();
-        $data = $this->_getBodyAsString();
-        $expect = 'An Internal Error Has Occurred';
-        $this->assertContains($expect, $data);
-        $expect = 'The GnuPG config for the server is not available or incomplete';
-        $this->assertContains($expect, $data);
+        $this->postJson('/auth/login.json');
+        $this->assertResponseCode(500);
+        $this->assertResponseFailure('The GnuPG config for the server is not available or incomplete.');
     }
 
     /**
@@ -88,13 +76,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     {
         $fingerprint = '0000000000000000000000000000000000000000';
         Configure::write('passbolt.gpg.serverKey.fingerprint', $fingerprint);
-        $this->post('/auth/login');
-        $this->assertResponseFailure();
-        $data = $this->_getBodyAsString();
-        $expect = 'An Internal Error Has Occurred';
-        $this->assertContains($expect, $data);
-        $expect = 'The fingerprint does not match the one associated with the key on file.';
-        $this->assertContains($expect, $data);
+        $this->postJson('/auth/login.json');
+        $this->assertResponseCode(500);
+        $this->assertResponseFailure('The OpenPGP server key defined in the config cannot be used to decrypt. There is an issue with the OpenPGP server key. The fingerprint does not match the one associated with the key on file.');
     }
 
     /**
@@ -115,7 +99,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginControllerGetHeadersPost()
     {
-        $this->post('/auth/login', [
+        $this->postJson('/auth/login.json', [
             'data' => [
                 'gpg_auth' => [
                     'keyid' => 'testid',
@@ -144,7 +128,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         ];
 
         foreach ($fix as $keyid => $expectSuccess) {
-            $this->post('/auth/login', [
+            $this->postJson('/auth/login.json', [
                 'data' => [
                     'gpg_auth' => [
                         'keyid' => $keyid,
@@ -196,7 +180,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
         foreach ($fix as $token => $expectSuccess) {
             $msg = $this->gpg->encrypt($token);
-            $this->post('/auth/verify', [
+            $this->postJson('/auth/verify.json', [
                 'data' => [
                     'gpg_auth' => [
                         'keyid' => $this->adaKeyId, // Ada's key
@@ -268,7 +252,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     public function testAuthLoginControllerStage1UserToken()
     {
         $this->gpgSetup();
-        $this->post('/auth/login', [
+        $this->postJson('/auth/login.json', [
             'data' => [
                 'gpg_auth' => [
                     'keyid' => $this->adaKeyId, // Ada's key

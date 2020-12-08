@@ -39,6 +39,19 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
      */
     protected $AuthenticationTokens;
 
+    public function setUp()
+    {
+        // The setup/recover requires a supported user agent.
+        $_ENV['HTTP_USER_AGENT'] = 'Firefox';
+        parent::setUp();
+    }
+
+    public function tearDown()
+    {
+        $_ENV['HTTP_USER_AGENT'] = null;
+        parent::tearDown();
+    }
+
     /**
      * Given that I am an anonymous user
      * When I register
@@ -52,8 +65,8 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         // Register using signup form
         $email = 'integration@passbolt.com';
         $data = ['username' => $email, 'profile' => ['first_name' => 'integration', 'last_name' => 'test']];
-        $this->post('/users/register', $data);
-        $this->assertResponseContains('class="page register thank-you"');
+        $this->postJson('/users/register.json', $data);
+        $this->assertResponseSuccess();
 
         // Get and check user
         $this->Users = TableRegistry::getTableLocator()->get('Users');
@@ -73,8 +86,8 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $this->assertResponseContains($url);
 
         // Recover to get another token
-        $this->post('/users/recover', ['username' => $email]);
-        $this->assertResponseContains('class="page recover thank-you"');
+        $this->post('/users/recover.json', ['username' => $email]);
+        $this->assertResponseSuccess();
 
         // There should be two valid auth tokens
         $tokens = $this->AuthenticationTokens
@@ -98,9 +111,8 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 
         // Try to start setup with other token
         // Url should not work since user is already signed up
-        $url = Router::url('/setup/install/' . $user->id . '/' . $tokens[1]['token']);
-        $this->get($url);
+        $url = Router::url('/setup/install/' . $user->id . '/' . $tokens[1]['token'] . '.json');
+        $this->getJson($url);
         $this->assertResponseCode(400);
-        $this->assertResponseContains('The user does not exist or is already active or has been deleted');
     }
 }

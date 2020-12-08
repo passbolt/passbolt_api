@@ -25,7 +25,7 @@ use Cake\ORM\TableRegistry;
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
+        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
         'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
         'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue',
     ];
@@ -63,7 +63,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         ];
 
         foreach ($success as $case => $data) {
-            $this->post('/users/register', $data);
+            $this->postJson('/users/register.json', $data);
             $this->assertResponseSuccess();
 
             // Check user was saved
@@ -203,7 +203,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
         ];
 
-        $this->post('/users/register', $data);
+        $this->postJson('/users/register.json', $data);
         $this->assertResponseSuccess();
 
         $users = TableRegistry::getTableLocator()->get('Users');
