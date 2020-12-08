@@ -35,7 +35,6 @@ class HomeController extends AppController
 
         $this->set('theme', $this->User->theme());
         $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
 
         $this->success();
     }

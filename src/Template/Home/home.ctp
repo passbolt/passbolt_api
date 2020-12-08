@@ -10,7 +10,6 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
  */
 use Cake\Core\Configure;
 
@@ -21,19 +20,9 @@ $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true, 'id' => 'js_
 
 // See. fetch('scriptBottom')
 $this->start('scriptBottom');
-    // Load the javascript application.
-    echo $this->Html->script('/js/app/polyfill.min.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
-    echo $this->Html->script('/js/app/steal.production.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
-
-    // If debug, connect to browserSync service.
-    // @see Grunt task appjs-watch
-    if($jsBuildMode === 'development') :
-        echo $this->Html->script('http://localhost:3000/browser-sync/browser-sync-client.js?v=2.18.13', [
-            'async' => 'async',
-            'id' => '__bs_script__'
-        ]);
-    endif;
+// Load the javascript application.
+echo $this->Html->script('/js/app/api-vendors.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
+echo $this->Html->script('/js/app/api-app.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
 $this->end();
+echo $this->element('Loader/splash');
 ?>
-<?php echo $this->element('Loader/splash'); ?>
-<div id="js_app_controller"></div>
