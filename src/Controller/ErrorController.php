@@ -60,14 +60,11 @@ class ErrorController extends AppController
                 $body = $error->getErrors();
             }
 
-            $prefix = strtolower($this->request->getParam('prefix'));
-            $action = $this->request->getParam('action');
             $this->set([
                 'header' => [
                     'id' => UserAction::getInstance()->getUserActionId(),
                     'status' => 'error',
                     'servertime' => time(),
-                    'title' => 'app_' . $prefix . '_' . $action . '_error',
                     'action' => UserAction::getInstance()->getActionId(),
                     'message' => $this->viewVars['message'],
                     'url' => Router::url(),
