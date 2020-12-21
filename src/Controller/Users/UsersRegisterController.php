@@ -70,7 +70,7 @@ class UsersRegisterController extends AppController
             ->setLayout('login')
             ->setTemplate('register');
 
-        $user = $this->Users->newEntity();
+        $user = $this->Users->newEntity([]);
         $this->set('user', $user);
         $this->success();
     }
