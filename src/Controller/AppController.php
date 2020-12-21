@@ -34,7 +34,6 @@ use Cake\Routing\Router;
  * @property \App\Controller\Component\UserComponent $User
  * @property \App\Controller\Component\QueryStringComponent $QueryString
  * @property \Cake\Controller\Component\AuthComponent $Auth
- * @property \App\Controller\EmailSubscriptionComponent $EmailSubscription
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller
@@ -73,14 +72,7 @@ class AppController extends Controller
 
         // Init user action.
         UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
-
-        /*
-         * Enable the following components for recommended CakePHP security settings.
-         * see http://book.cakephp.org/3.0/en/controllers/components/security.html
-         */
-        // $this->loadComponent('Security');
-        // $this->loadComponent('Csrf');
-
+        
         // Tell the browser to force HTTPS use
         if (Configure::read('passbolt.ssl.force')) {
             $this->response = $this->response
