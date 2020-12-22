@@ -329,9 +329,16 @@ class ResourcesTable extends Table
             'deleted' => true,
             'modified_by' => $userId,
             'secrets' => [],
+            // cleanup sensitive data
+            'username' => null,
+            'uri' => null,
+            'description' => null,
         ];
         $patchOptions = [
             'accessibleFields' => [
+                'username' => true,
+                'uri' => true,
+                'description' => true,
                 'deleted' => true,
                 'secrets' => true,
                 'modified' => true,
