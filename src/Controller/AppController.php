@@ -146,15 +146,12 @@ class AppController extends Controller
         if ($errorCode !== 200) {
             $this->response = $this->response->withStatus($errorCode);
         }
-        $prefix = strtolower($this->request->getParam('prefix'));
-        $action = $this->request->getParam('action');
 
         $this->set([
             'header' => [
                 'id' => UserAction::getInstance()->getUserActionId(),
                 'status' => 'error',
                 'servertime' => time(),
-                'title' => 'app_' . $prefix . '_' . $action . '_success',
                 'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
