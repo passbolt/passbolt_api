@@ -67,7 +67,7 @@ class UsersRecoverController extends AppController
             ->setLayout('login')
             ->setTemplate('recover');
 
-        $user = $this->Users->newEntity();
+        $user = $this->Users->newEntity([]);
         $this->set('user', $user);
         $this->success();
     }
@@ -86,7 +86,7 @@ class UsersRecoverController extends AppController
             throw new ForbiddenException(__('Only guest are allowed to recover an account. Please logout first.'));
         }
 
-        $user = $this->Users->newEntity();
+        $user = $this->Users->newEntity([]);
         try {
             $this->_assertValidation();
             $user = $this->_assertRules();
