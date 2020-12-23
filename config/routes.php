@@ -124,10 +124,10 @@ Router::scope('/comments', function ($routes) {
 Router::scope('/gpgkeys', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['prefix' => 'gpgkeys', 'controller' => 'GpgkeysIndex', 'action' => 'index'])
+    $routes->connect('/', ['prefix' => 'Gpgkeys', 'controller' => 'GpgkeysIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/:id', ['prefix' => 'gpgkeys', 'controller' => 'GpgkeysView', 'action' => 'view'])
+    $routes->connect('/:id', ['prefix' => 'Gpgkeys', 'controller' => 'GpgkeysView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
 });
@@ -171,10 +171,10 @@ Router::prefix('/groups', function ($routes) {
 Router::scope('/healthcheck', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/status', ['prefix' => 'healthcheck', 'controller' => 'HealthcheckStatus', 'action' => 'status'])
+    $routes->connect('/status', ['prefix' => 'Healthcheck', 'controller' => 'HealthcheckStatus', 'action' => 'status'])
         ->setMethods(['GET']);
 
-    $routes->connect('/', ['prefix' => 'healthcheck', 'controller' => 'HealthcheckIndex', 'action' => 'index'])
+    $routes->connect('/', ['prefix' => 'Healthcheck', 'controller' => 'HealthcheckIndex', 'action' => 'index'])
         ->setPass(['id'])
         ->setMethods(['GET']);
 });
