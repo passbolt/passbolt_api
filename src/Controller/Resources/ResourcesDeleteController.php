@@ -64,6 +64,7 @@ class ResourcesDeleteController extends AppController
         // Retrieve the resource to delete.
         try {
             $resource = $this->Resources->get($id);
+            $originalResource = clone $resource;
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
@@ -73,13 +74,13 @@ class ResourcesDeleteController extends AppController
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
         $users = $this->Users->findIndex(Role::USER, $options)->all();
 
-        // Update the entity to delete=1 and drop associated permissions
+        // Update the entity to delete=1, clear uri/desc/username and drop associated permissions
         if (!$this->Resources->softDelete($this->User->id(), $resource)) {
             $this->_handleDeleteError($resource);
             throw new InternalErrorException(__('Could not delete the resource. Please try again later.'));
         }
 
-        $this->_notifyUser($resource, $users);
+        $this->_notifyUser($originalResource, $users);
         $this->success(__('The resource was deleted'));
     }
 

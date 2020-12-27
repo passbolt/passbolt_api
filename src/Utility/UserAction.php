@@ -117,8 +117,8 @@ class UserAction
         }
 
         // Extract action name.
-        $controller = $request->getParam('controller');
-        $action = $request->getParam('action');
+        $controller = $request->getParam('controller', null) ?? 'Error';
+        $action = $request->getParam('action', null) ?? 'error';
         $actionName = "$controller.$action";
 
         // Extract url.

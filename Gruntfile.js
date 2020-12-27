@@ -99,6 +99,8 @@ module.exports = function(grunt) {
             'logo/icon-48_white.png', 'logo/icon-48.png',
             'logo/logo.png', 'logo/logo@2x.png', 'logo/logo.svg', 'logo/logo_white.svg', 'logo/logo_white.png',
             // Image for inputs and controls
+            'controls/check_black.svg',
+            'controls/check_white.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
             'controls/dot_black.svg',
@@ -111,14 +113,17 @@ module.exports = function(grunt) {
             'illustrations/birds3_850.png',
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
-            'third_party/ChromeWebStore.png',
+            'third_party/FirefoxAMO_black.svg',
+            'third_party/FirefoxAMO_white.svg',
+            'third_party/ChromeWebStore_black.png',
+            'third_party/ChromeWebStore_white.png',
             'third_party/gnupg_logo_disabled.png',
             'third_party/gnupg_logo.png',
             'third_party/duo.svg',
             'third_party/google-authenticator.svg',
             'third_party/yubikey.svg',
-            // Chosen images
-            'third_party/chosen-sprite@2x.png', 'third_party/chosen-sprite.png',
+            // Setup
+            'illustrations/email.png',
             // Themes preview
             'themes/*.png',
             // Background images for error pages for ex
@@ -129,7 +134,7 @@ module.exports = function(grunt) {
         }, {
           // CSS
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
-          src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css'],
+          src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css', 'api_authentication.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
         }, {
@@ -139,17 +144,12 @@ module.exports = function(grunt) {
           dest: paths.webroot + 'css/themes/midgar',
           expand: true
         }, {
-          // A new css theme
-          cwd: paths.node_modules_styleguide + 'build/css/themes/anew',
-          src: ['api_login.min.css'],
-          dest: paths.webroot + 'css/themes/anew',
-          expand: true
-        }, {
+          // Javascript applications
           cwd: paths.node_modules_styleguide + 'build/js/dist',
-          src: ['api-app.js', 'api-vendors.js'],
+          src: ['api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js'],
           dest: paths.js + 'app',
           expand: true
-        }]
+        },]
       }
     },
 

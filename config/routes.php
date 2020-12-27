@@ -40,10 +40,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 Router::scope('/', function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/home', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view'])
+    $routes->connect('/', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'empty'])
         ->setMethods(['GET']);
 });
 
@@ -175,7 +172,6 @@ Router::scope('/healthcheck', function ($routes) {
         ->setMethods(['GET']);
 
     $routes->connect('/', ['prefix' => 'Healthcheck', 'controller' => 'HealthcheckIndex', 'action' => 'index'])
-        ->setPass(['id'])
         ->setMethods(['GET']);
 });
 
@@ -276,19 +272,15 @@ Router::scope('/users', function ($routes) {
         ->setMethods(['POST']);
 
     $routes->connect('/register', ['prefix' => 'Users', 'controller' => 'UsersRegister', 'action' => 'registerGet'])
-        ->setPass(['id'])
         ->setMethods(['GET']);
 
     $routes->connect('/register', ['prefix' => 'Users', 'controller' => 'UsersRegister', 'action' => 'registerPost'])
-        ->setPass(['id'])
         ->setMethods(['POST']);
 
     $routes->connect('/recover', ['prefix' => 'Users', 'controller' => 'UsersRecover', 'action' => 'recoverGet'])
-        ->setPass(['id'])
         ->setMethods(['GET']);
 
     $routes->connect('/recover', ['prefix' => 'Users', 'controller' => 'UsersRecover', 'action' => 'recoverPost'])
-        ->setPass(['id'])
         ->setMethods(['POST']);
 
     $routes->connect('/:id', ['prefix' => 'Users', 'controller' => 'UsersView', 'action' => 'view'])
@@ -306,6 +298,9 @@ Router::scope('/users', function ($routes) {
     $routes->connect('/:id', ['prefix' => 'Users', 'controller' => 'UsersDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
+
+    $routes->connect('/csrf-token', ['prefix' => 'Users', 'controller' => 'GetCsrfToken', 'action' => 'get'])
+        ->setMethods(['GET']);
 
     $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])
@@ -374,5 +369,7 @@ Router::scope('/setup', function ($routes) {
  * Appjs routes
  */
 Router::scope('/app', function ($routes) {
-    $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view']);
+    $routes->connect('/administration/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'home']);
+    $routes->connect('/settings/mfa', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'home']);
+    $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'empty']);
 });

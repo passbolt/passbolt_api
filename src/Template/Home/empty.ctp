@@ -15,13 +15,7 @@ use Cake\Core\Configure;
 
 $this->assign('title', $title);
 $version = Configure::read('passbolt.version');
-$themePath = "themes/default/api_authentication.min.css?v=$version";
+$themePath = "themes/$theme/api_main.min.css?v=$version";
 $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true, 'id' => 'js_css_theme']);
-
-// See. fetch('scriptBottom')
-$this->start('scriptBottom');
-// Load the javascript application.
-echo $this->Html->script('/js/app/api-vendors.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
-echo $this->Html->script('/js/app/api-setup.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
-$this->end();
+echo $this->element('Loader/splash');
 ?>

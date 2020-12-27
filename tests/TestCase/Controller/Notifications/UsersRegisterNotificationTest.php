@@ -23,13 +23,14 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens', 'app.Base/EmailQueue', 'app.Base/Avatars'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
+        'app.Base/EmailQueue', 'app.Base/Avatars', 'app.Base/OrganizationSettings'];
 
     public function testUserRegisterNotificationDisabled()
     {
         $this->setEmailNotificationSetting('send.user.create', false);
 
-        $this->post('/users/register', [
+        $this->postJson('/users/register.json', [
             'username' => 'aurore@passbolt.com',
             'profile' => [
                 'first_name' => 'Aurore',
@@ -48,7 +49,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
     {
         $this->setEmailNotificationSetting('send.user.create', true);
 
-        $this->post('/users/register', [
+        $this->postJson('/users/register.json', [
             'username' => 'aurore@passbolt.com',
             'profile' => [
                 'first_name' => 'Aurore',

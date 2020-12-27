@@ -114,6 +114,9 @@ class SettingsIndexController extends AppController
                     'legal' => Configure::read('passbolt.legal'),
                     'edition' => Configure::read('passbolt.edition'),
                     'plugins' => $this->_getWhiteListedPluginConfig($this->_getPluginWhiteList(false)),
+                    'registration' => [
+                        'public' => Configure::read('passbolt.registration.public'),
+                    ],
                 ],
             ];
         } else {
@@ -126,6 +129,9 @@ class SettingsIndexController extends AppController
                     'legal' => Configure::read('passbolt.legal'),
                     'edition' => Configure::read('passbolt.edition'),
                     'plugins' => $this->_getWhiteListedPluginConfig($this->_getPluginWhiteList(true)),
+                    'registration' => [
+                        'public' => Configure::read('passbolt.registration.public'),
+                    ],
                 ],
             ];
         }

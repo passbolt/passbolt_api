@@ -28,14 +28,14 @@ class HomeControllerTest extends AppIntegrationTestCase
 
     public function testHomeNotLoggedInError()
     {
-        $this->get('/home');
-        $this->assertRedirect('/auth/login?redirect=%2Fhome');
+        $this->get('/app/passwords');
+        $this->assertRedirect('/auth/login?redirect=%2Fapp%2Fpasswords');
     }
 
     public function testHomeSuccess()
     {
         $this->authenticateAs('ada');
-        $this->get('/home');
+        $this->get('/app/passwords');
         $this->assertResponseOk();
         $this->assertResponseContains('loading');
     }

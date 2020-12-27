@@ -19,6 +19,7 @@ namespace App\Model\Table;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Traits\AuthenticationTokens\AuthenticationTokensFindersTrait;
 use App\Utility\AuthToken\AuthTokenExpiry;
 use App\Utility\UuidFactory;
 use Cake\ORM\RulesChecker;
@@ -41,6 +42,8 @@ use Cake\Validation\Validator;
  */
 class AuthenticationTokensTable extends Table
 {
+    use AuthenticationTokensFindersTrait;
+
     /**
      * @var \App\Utility\AuthToken\AuthTokenExpiry
      */

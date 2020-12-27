@@ -347,9 +347,16 @@ class ResourcesTable extends Table
             'deleted' => true,
             'modified_by' => $userId,
             'secrets' => [],
+            // cleanup sensitive data
+            'username' => null,
+            'uri' => null,
+            'description' => null,
         ];
         $patchOptions = [
             'accessibleFields' => [
+                'username' => true,
+                'uri' => true,
+                'description' => true,
                 'deleted' => true,
                 'secrets' => true,
                 'modified' => true,
@@ -429,7 +436,17 @@ class ResourcesTable extends Table
      */
     public function softDeleteAll(array $resourceIds, bool $cascade = true): void
     {
-        $this->updateAll(['deleted' => true], ['id IN' => $resourceIds]);
+        // CakePHP will return an error on the coming query if $resourceIds is empty
+        if (empty($resourceIds)) {
+            return;
+        }
+
+        $this->updateAll([
+            'deleted' => true,
+            'username' => null,
+            'uri' => null,
+            'description' => null,
+        ], ['id IN' => $resourceIds]);
 
         if ($cascade) {
             $Favorites = TableRegistry::getTableLocator()->get('Favorites');

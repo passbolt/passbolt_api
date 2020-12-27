@@ -60,6 +60,12 @@ class SoftDeleteTest extends AppTestCase
         // Check that the resource is well soft deleted.
         $resource = $this->Resources->get($resourceId);
         $this->assertTrue($resource->deleted);
+
+        // Description, username and URI are empty
+        $this->assertEmpty($resource->username);
+        $this->assertEmpty($resource->uri);
+        $this->assertEmpty($resource->description);
+
         // No favorites in db.
         $favorites = $this->Resources->getAssociation('Favorites')
             ->find()->where(['Favorites.foreign_key' => $resource->id])->toArray();
