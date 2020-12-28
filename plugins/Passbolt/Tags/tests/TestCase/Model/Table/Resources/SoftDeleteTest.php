@@ -48,7 +48,7 @@ class SoftDeleteTest extends TagTestCase
         parent::tearDown();
     }
 
-    public function testResourceSoftDeleteAlsoDeletePersonalTagsSuccess()
+    public function testTagsResourcesoftDeleteAlsoDeletePersonalTagsSuccess()
     {
         $r = $this->Resources->get(UuidFactory::uuid('resource.id.apache'));
         $this->Resources->softDelete(UuidFactory::uuid('user.id.ada'), $r);
@@ -66,7 +66,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags->get(UuidFactory::uuid('tag.id.fox-trot'));
     }
 
-    public function testResourceSoftDeleteAlsoDeleteSharedTagsSuccess()
+    public function testTagsResourcesoftDeleteAlsoDeleteSharedTagsSuccess()
     {
         $r = $this->Resources->get(UuidFactory::uuid('resource.id.apache'));
         $this->Resources->softDelete(UuidFactory::uuid('user.id.ada'), $r);
@@ -76,7 +76,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags->get(UuidFactory::uuid('tag.id.#echo'));
     }
 
-    public function testResourceSoftDeleteAlsoDeleteSharedTagsViaGroupSuccess()
+    public function testTagsResourcesoftDeleteAlsoDeleteSharedTagsViaGroupSuccess()
     {
         $r = $this->Resources->get(UuidFactory::uuid('resource.id.cakephp'));
         $this->Resources->softDelete(UuidFactory::uuid('user.id.ada'), $r);

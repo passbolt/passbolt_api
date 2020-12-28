@@ -115,7 +115,7 @@ class TagsTableTest extends TagTestCase
         $this->assertFalse($tag->is_shared);
     }
 
-    public function testDeleteAllUnusedTags()
+    public function testTagsDeleteAllUnusedTags()
     {
         // unused and #unused
         $r = $this->Tags->deleteAllUnusedTags();

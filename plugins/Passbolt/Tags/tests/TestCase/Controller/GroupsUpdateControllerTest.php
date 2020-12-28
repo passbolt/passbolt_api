@@ -62,7 +62,7 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
         parent::tearDown();
     }
 
-    public function testGroupsUpdateControllerSuccess_RemoveTagWhenUserLoseAccess()
+    public function testTagsGroupsUpdateControllerSuccess_RemoveTagWhenUserLoseAccess()
     {
         [$r1, $t1, $g1, $userAId, $userBId] = $this->insertFixture_RemoveTagWhenUserLoseAccess();
 
