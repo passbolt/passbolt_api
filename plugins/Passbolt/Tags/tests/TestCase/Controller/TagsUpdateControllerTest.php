@@ -384,7 +384,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     protected function _addTestTag(string $resourceId, ?array $tags = [])
     {
-        $data = ['Tags' => $tags];
+        $data = ['tags' => $tags];
         $this->postJson('/tags/' . $resourceId . '.json?api-version=v2', $data);
 
         return $this->_responseJsonBody;

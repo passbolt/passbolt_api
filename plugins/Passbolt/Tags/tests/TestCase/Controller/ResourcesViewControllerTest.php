@@ -28,7 +28,7 @@ class ResourcesViewControllerTest extends TagPluginIntegrationTestCase
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
-    public function testTagResourcesViewContainSuccess()
+    public function testTagsResourcesViewContainSuccess()
     {
         $this->authenticateAs('ada');
         $expected = ['alpha', '#echo', '#bravo', 'fox-trot'];

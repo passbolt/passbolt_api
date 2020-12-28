@@ -30,7 +30,7 @@ class ResourcesUpdateControllerTest extends TagPluginIntegrationTestCase
         'app.Base/EmailQueue',
     ];
 
-    public function testResourcesUpdateSuccess()
+    public function testTagsResourcesUpdateSuccess()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');

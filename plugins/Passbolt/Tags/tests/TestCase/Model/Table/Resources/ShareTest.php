@@ -72,7 +72,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    public function testLostAccessAssociatedDataDeleted()
+    public function testTagsLostAccessAssociatedDataDeleted()
     {
         $resourceAId = UuidFactory::uuid('resource.id.apache');
         $userAId = UuidFactory::uuid('user.id.ada');

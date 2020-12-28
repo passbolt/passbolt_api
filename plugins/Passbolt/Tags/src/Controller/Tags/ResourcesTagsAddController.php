@@ -48,7 +48,7 @@ class ResourcesTagsAddController extends AppController
         $this->loadModel('Resources');
         $this->loadModel('Passbolt/Tags.Tags');
         $userId = $this->User->id();
-        $data = $this->request->getData('Tags', []);
+        $data = $this->_formatRequestData();
 
         $options = ['contain' => ['all_tags' => 1, 'permission' => 1]];
         $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
@@ -66,6 +66,27 @@ class ResourcesTagsAddController extends AppController
         } else {
             throw new InternalErrorException(__('The tags could not be saved. Try again later.'));
         }
+    }
+
+    /**
+     * Get and format the request data.
+     *
+     * @return array
+     */
+    protected function _formatRequestData()
+    {
+        $data = $this->request->getData();
+
+        // Data given in V1 format.
+        // @deprecated with v2
+        if (isset($data['Tags'])) {
+            return $data['Tags'];
+        }
+        if (isset($data['tags'])) {
+            return $data['tags'];
+        }
+
+        return [];
     }
 
     /**

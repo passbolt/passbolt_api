@@ -44,7 +44,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
     }
 
-    public function testUsersSoftDeleteAlsoDeletePersonalTagsSuccess()
+    public function testTagsUsersSoftDeleteAlsoDeletePersonalTagsSuccess()
     {
         $ada = $this->Users->get(UuidFactory::uuid('user.id.ada'));
         $this->Users->softDelete($ada, ['checkRules' => false]);
@@ -62,7 +62,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags->get(UuidFactory::uuid('tag.id.fox-trot'));
     }
 
-    public function testUsersSoftDeleteAlsoDeleteSharedTagsSuccess()
+    public function testTagsUsersSoftDeleteAlsoDeleteSharedTagsSuccess()
     {
         $ada = $this->Users->get(UuidFactory::uuid('user.id.ada'));
         $this->Users->softDelete($ada, ['checkRules' => false]);
@@ -72,7 +72,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags->get(UuidFactory::uuid('tag.id.#echo'));
     }
 
-    public function testUsersSoftDeleteAlsoDeletePersonalTagsSuccess2()
+    public function testTagsUsersSoftDeleteAlsoDeletePersonalTagsSuccess2()
     {
         //Deleting Betty and Ada should delete alpha
         $ada = $this->Users->get(UuidFactory::uuid('user.id.ada'));
