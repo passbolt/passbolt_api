@@ -195,7 +195,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupStart
      */
-    public function testSetupStart_RegenerateTokenAndRedirect_TokenExpired()
+    public function testSetupStart_BadRequestError_TokenExpired()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
         $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);

@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
-use App\Controller\Users\UsersRecoverController;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
@@ -111,8 +110,8 @@ class RecoverStartController extends AppController
     {
         $finderOptions = ['userId' => $user->id, 'token' => $token];
         /** @var \App\Model\Entity\AuthenticationToken $token */
-        $token = $this->AuthenticationTokens->find('userRecoveryToken', $finderOptions)->first();
-        if (empty($token) || !$token->active) {
+        $token = $this->AuthenticationTokens->find('activeUserRecoveryToken', $finderOptions)->first();
+        if (empty($token)) {
             throw new BadRequestException(__('The authentication token is not valid'));
         }
 
@@ -131,7 +130,6 @@ class RecoverStartController extends AppController
     {
         $isExpired = $this->AuthenticationTokens->isExpired($token);
         if ($isExpired) {
-            $this->regenerateRecoveryToken($user);
             $error = [
                 'token' => [
                     'expired' => 'The token is expired.',
@@ -139,21 +137,6 @@ class RecoverStartController extends AppController
             ];
             throw new CustomValidationException(__('The token is expired.'), $error);
         }
-    }
-
-    /**
-     * Regenerate a recovery token for the user
-     *
-     * @param \App\Model\Entity\User $user The user
-     * @return void
-     */
-    private function regenerateRecoveryToken(User $user): void
-    {
-        $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
-        $eventType = UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME;
-        $options = ['user' => $user, 'token' => $token];
-        $event = new Event($eventType, $this, $options);
-        $this->getEventManager()->dispatch($event);
     }
 
     /**

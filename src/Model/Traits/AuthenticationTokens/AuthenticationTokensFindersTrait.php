@@ -24,38 +24,40 @@ use Cake\Utility\Hash;
 trait AuthenticationTokensFindersTrait
 {
     /**
-     * Find a user registration token.
+     * Find an active user registration token.
      *
      * @param \Cake\ORM\Query $query The query to decorate
      * @param array $options The finder options
      *   [userId: string, token: string]
      * @return \Cake\ORM\Query
      */
-    public function findUserRegistrationToken(Query $query, array $options): Query
+    public function findActiveUserRegistrationToken(Query $query, array $options): Query
     {
         $where = [
             'type' => AuthenticationToken::TYPE_REGISTER,
             'token' => Hash::get($options, 'token'),
             'user_id' => Hash::get($options, 'userId'),
+            'active' => true,
         ];
 
         return $query->where($where);
     }
 
     /**
-     * Find a user recovery token.
+     * Find an active user recovery token.
      *
      * @param \Cake\ORM\Query $query The query to decorate
      * @param array $options The finder options
      *   [userId: string, token: string]
      * @return \Cake\ORM\Query
      */
-    public function findUserRecoveryToken(Query $query, array $options): Query
+    public function findActiveUserRecoveryToken(Query $query, array $options): Query
     {
         $where = [
             'type' => AuthenticationToken::TYPE_RECOVER,
             'token' => Hash::get($options, 'token'),
             'user_id' => Hash::get($options, 'userId'),
+            'active' => true,
         ];
 
         return $query->where($where);

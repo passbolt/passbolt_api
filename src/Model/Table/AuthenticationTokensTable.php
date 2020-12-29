@@ -232,6 +232,10 @@ class AuthenticationTokensTable extends Table
 
         // Is it expired
         if ($this->isExpired($token, $expiry)) {
+            // update the token to inactive
+            $token->active = false;
+            $this->save($token);
+
             return false;
         }
 
@@ -251,16 +255,9 @@ class AuthenticationTokensTable extends Table
         if ($expiry === null) {
             $expiry = $this->authTokenExpiry->getExpirationForTokenType($token->type);
         }
-        $valid = $token->created->wasWithinLast($expiry);
-        if (!$valid) {
-            // update the token to inactive
-            $token->active = false;
-            $this->save($token);
+        $isNotExpired = $token->created->wasWithinLast($expiry);
 
-            return true;
-        }
-
-        return false;
+        return !$isNotExpired;
     }
 
     /**
