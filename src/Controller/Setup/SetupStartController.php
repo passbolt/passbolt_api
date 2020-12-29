@@ -20,7 +20,6 @@ use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
-use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -111,8 +110,8 @@ class SetupStartController extends AppController
     {
         $finderOptions = ['userId' => $user->id, 'token' => $token];
         /** @var \App\Model\Entity\AuthenticationToken $token */
-        $token = $this->AuthenticationTokens->find('userRegistrationToken', $finderOptions)->first();
-        if (empty($token) || !$token->active) {
+        $token = $this->AuthenticationTokens->find('activeUserRegistrationToken', $finderOptions)->first();
+        if (empty($token)) {
             throw new BadRequestException(__('The authentication token is not valid'));
         }
 
@@ -131,7 +130,6 @@ class SetupStartController extends AppController
     {
         $isExpired = $this->AuthenticationTokens->isExpired($token);
         if ($isExpired) {
-            $this->regenerateRegistrationToken($user);
             $error = [
                 'token' => [
                     'expired' => 'The token is expired.',
@@ -139,21 +137,6 @@ class SetupStartController extends AppController
             ];
             throw new CustomValidationException(__('The token is expired.'), $error);
         }
-    }
-
-    /**
-     * Regenerate a registration token for the user
-     *
-     * @param \App\Model\Entity\User $user The user
-     * @return void
-     */
-    private function regenerateRegistrationToken(User $user): void
-    {
-        $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
-        $eventType = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
-        $options = ['user' => $user, 'token' => $token];
-        $event = new Event($eventType, $this, $options);
-        $this->getEventManager()->dispatch($event);
     }
 
     /**

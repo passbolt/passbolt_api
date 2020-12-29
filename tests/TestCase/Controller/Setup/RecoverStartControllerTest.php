@@ -198,7 +198,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group recoverStart
      */
-    public function testRecoverStart_RegenerateTokenAndRedirect_TokenExpired()
+    public function testRecoverStart_BadRequestError_TokenExpired()
     {
         $userId = UuidFactory::uuid('user.id.admin');
         $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
