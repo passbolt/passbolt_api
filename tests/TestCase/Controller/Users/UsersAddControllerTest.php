@@ -26,7 +26,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
-        'app.Base/Profiles', 'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue',
+        'app.Base/Profiles', 'app.Base/Avatars',
     ];
 
     public function testUsersAddNotLoggedInError()

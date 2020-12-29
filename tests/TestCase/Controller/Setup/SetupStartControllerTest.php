@@ -27,8 +27,10 @@ class SetupStartControllerTest extends AppIntegrationTestCase
 {
     use AuthenticationTokenModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Avatars', 'app.Base/AuthenticationTokens'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/Avatars',
+    ];
     public $AuthenticationTokens;
     private $Users;
 

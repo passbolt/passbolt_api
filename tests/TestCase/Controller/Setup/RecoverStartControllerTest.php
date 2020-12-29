@@ -29,7 +29,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Avatars', 'app.Base/AuthenticationTokens',
+        'app.Base/Avatars',
     ];
     public $AuthenticationTokens;
     private $Users;

@@ -21,7 +21,6 @@ use App\Model\Entity\Role;
 use App\Test\Fixture\Alt0\GroupsUsersFixture;
 use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
@@ -43,7 +42,6 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     use UserAccessControlTrait;
 
     public $fixtures = [
-        OrganizationSettingsFixture::class,
         AccountSettingsFixture::class,
         UsersFixture::class,
         ProfilesFixture::class,

@@ -20,12 +20,10 @@ namespace Passbolt\Folders\Test\TestCase\EventListener;
 use App\Model\Entity\Permission;
 use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\AvatarsFixture;
-use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
@@ -38,15 +36,9 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
-use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
-use Passbolt\Log\Test\Fixture\Base\EntitiesHistoryFixture;
-use Passbolt\Log\Test\Fixture\Base\PermissionsHistoryFixture;
 
 /**
  * \Passbolt\Folders\EventListener\ResourcesEventListener Test Case
@@ -61,19 +53,12 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
     use SecretsModelTrait;
 
     public $fixtures = [
-        ActionsFixture::class,
-        ActionLogsFixture::class,
-        EntitiesHistoryFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsUsersFixture::class,
         GroupsFixture::class,
         PermissionsFixture::class,
-        PermissionsHistoryFixture::class,
         ProfilesFixture::class,
         UsersFixture::class,
-        EmailQueueFixture::class,
         AvatarsFixture::class,
         FavoritesFixture::class,
         RolesFixture::class,
@@ -81,7 +66,6 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         ProfilesFixture::class,
         ResourcesFixture::class,
         ResourceTypesFixture::class,
-        OrganizationSettingsFixture::class,
     ];
 
     /**

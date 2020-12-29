@@ -30,9 +30,6 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
-use Passbolt\Folders\Test\Fixture\ResourcesFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -52,12 +49,9 @@ class FoldersRelationsCleanupTest extends FoldersTestCase
      * @var array
      */
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
-        ResourcesFixture::class,
         RolesFixture::class,
         SecretsFixture::class,
         UsersFixture::class,

@@ -31,9 +31,8 @@ class MfaSettingsTest extends MfaIntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/OrganizationSettings',
         'plugin.Passbolt/AccountSettings.AccountSettings',
-        'app.Base/AuthenticationTokens', 'app.Base/Users',
+        'app.Base/Users',
         'app.Base/Roles',
     ];
 

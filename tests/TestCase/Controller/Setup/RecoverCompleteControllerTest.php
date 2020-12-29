@@ -26,7 +26,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
 {
     use AuthenticationTokenModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',];
     public $AuthenticationTokens;
 
     public function setUp()

@@ -26,7 +26,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
-        'app.Base/Users', 'app.Base/Secrets', 'app.Base/OrganizationSettings',
+        'app.Base/Users', 'app.Base/Secrets',
     ];
 
     public function setUp()

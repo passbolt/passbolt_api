@@ -39,7 +39,6 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
         'app.Base/Resources', 'app.Base/Favorites',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-        'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
     ];
 
     public $GroupsUsers;

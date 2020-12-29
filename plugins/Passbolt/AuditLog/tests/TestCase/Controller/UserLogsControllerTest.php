@@ -34,13 +34,6 @@ class UserLogsControllerTest extends LogIntegrationTestCase
         'app.Base/Permissions',
         'app.Base/Secrets',
         'app.Base/Favorites',
-        'app.Base/EmailQueue',
-        'plugin.Passbolt/Log.Base/Actions',
-        'plugin.Passbolt/Log.Base/ActionLogs',
-        'plugin.Passbolt/Log.Base/EntitiesHistory',
-        'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretAccesses',
-        'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
     public function testAuditLogUserLogsControllerViewByResourceEmpty()

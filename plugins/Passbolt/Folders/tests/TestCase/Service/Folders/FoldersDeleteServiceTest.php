@@ -22,7 +22,6 @@ use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\AvatarsFixture;
-use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -47,13 +46,9 @@ use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 use Passbolt\Folders\Service\Folders\FoldersDeleteService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
-use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 
 /**
  * Passbolt\Folders\Service\FoldersDeleteService Test Case
@@ -71,12 +66,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     use ResourcesModelTrait;
 
     public $fixtures = [
-        ActionsFixture::class,
-        ActionLogsFixture::class,
         AvatarsFixture::class,
-        EmailQueueFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,

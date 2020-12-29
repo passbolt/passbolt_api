@@ -33,8 +33,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     use UserAccessControlTrait;
 
     public $fixtures = [
-        'app.Base/OrganizationSettings',
-        'app.Base/AuthenticationTokens', 'app.Base/Users',
+        'app.Base/Users',
         'app.Base/Roles',
     ];
 

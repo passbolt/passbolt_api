@@ -41,8 +41,6 @@ use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -67,8 +65,6 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,

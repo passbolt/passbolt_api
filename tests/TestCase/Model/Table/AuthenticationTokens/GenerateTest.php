@@ -30,7 +30,7 @@ class GenerateTest extends AppTestCase
 
     public $AuthenticationTokens;
 
-    public $fixtures = ['app.Base/AuthenticationTokens', 'app.Base/Users'];
+    public $fixtures = [ 'app.Base/Users'];
 
     public function setUp()
     {

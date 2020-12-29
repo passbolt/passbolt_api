@@ -23,7 +23,6 @@ use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Fixture\Base\AvatarsFixture;
-use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -48,8 +47,6 @@ use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 use Passbolt\Folders\Service\Folders\FoldersShareService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -70,9 +67,6 @@ class FoldersShareServiceTest extends FoldersTestCase
 
     public $fixtures = [
         AvatarsFixture::class,
-        EmailQueueFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,

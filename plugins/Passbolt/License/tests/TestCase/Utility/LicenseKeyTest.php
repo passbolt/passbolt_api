@@ -26,13 +26,6 @@ class LicenseKeyTest extends TestCase
 {
     protected $baseTestPath;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
-        'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
-
     /**
      * setUp method
      *

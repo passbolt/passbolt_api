@@ -25,10 +25,6 @@ use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
-use Passbolt\Folders\Test\Fixture\PermissionsFixture;
-use Passbolt\Folders\Test\Fixture\ResourcesFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -48,11 +44,7 @@ class PermissionsCleanupTest extends FoldersTestCase
      * @var array
      */
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GroupsFixture::class,
-        PermissionsFixture::class,
-        ResourcesFixture::class,
         ResourceTypesFixture::class,
         SecretsFixture::class,
     ];

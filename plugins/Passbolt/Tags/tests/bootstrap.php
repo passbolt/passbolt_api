@@ -27,6 +27,8 @@ chdir($root);
 if (file_exists($root . '/config/bootstrap.php')) {
     require $root . '/config/bootstrap.php';
 
+    \CakephpTestMigrator\Migrator::migrate();
+
     return;
 }
 require $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';

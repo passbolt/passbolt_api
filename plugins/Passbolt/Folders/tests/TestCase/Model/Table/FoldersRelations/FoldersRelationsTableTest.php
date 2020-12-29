@@ -46,21 +46,6 @@ class FoldersRelationsTableTest extends FoldersTestCase
     public $FoldersRelations;
 
     /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = [
-        'plugin.Passbolt/Folders.Folders',
-        'plugin.Passbolt/Folders.FoldersRelations',
-        'app.Base/Groups',
-        'app.Base/ResourceTypes',
-        'app.Base/Resources',
-        'app.Base/Users',
-        'app.Base/Permissions',
-    ];
-
-    /**
      * setUp method
      *
      * @return void

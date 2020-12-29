@@ -30,9 +30,6 @@ use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UuidFactory;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
-use Passbolt\Folders\Test\Fixture\PermissionsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -47,12 +44,9 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
     public $fixtures = [
         AvatarsFixture::class,
         FavoritesFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
-        PermissionsFixture::class,
         ProfilesFixture::class,
         RolesFixture::class,
         SecretsFixture::class,

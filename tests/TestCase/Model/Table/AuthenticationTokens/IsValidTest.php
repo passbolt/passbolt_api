@@ -28,7 +28,7 @@ class IsValidTest extends AppTestCase
     use AuthenticationTokenModelTrait;
 
     public $AuthenticationTokens;
-    public $fixtures = ['app.Base/AuthenticationTokens', 'app.Base/Users'];
+    public $fixtures = [ 'app.Base/Users'];
 
     public function setUp()
     {

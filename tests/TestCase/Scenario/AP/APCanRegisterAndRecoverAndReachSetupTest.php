@@ -25,8 +25,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
-        //'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Secrets',
-        'app.Base/Gpgkeys', 'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue',
+        'app.Base/Gpgkeys', 'app.Base/Avatars',
     ];
 
     /**

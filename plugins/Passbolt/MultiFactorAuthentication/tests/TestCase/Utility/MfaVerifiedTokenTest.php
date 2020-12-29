@@ -34,7 +34,6 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/AuthenticationTokens',
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles',
     ];
 

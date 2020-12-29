@@ -28,7 +28,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/AuthenticationTokens',
     ];
     public $AuthenticationTokens;
 
