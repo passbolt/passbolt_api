@@ -26,7 +26,7 @@ use Cake\Validation\Validation;
 class AuthLoginControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
         'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Avatars',
     ];
     public $keyid;

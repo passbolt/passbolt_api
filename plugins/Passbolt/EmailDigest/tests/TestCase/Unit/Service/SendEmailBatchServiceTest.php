@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Test\TestCase\Unit\Service;
 
-use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Mailer\Email;
 use Cake\Mailer\TransportFactory;
@@ -32,10 +31,6 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
 {
     use EmailDigestMockTestTrait;
     use EmailTrait;
-
-    public $fixtures = [
-        EmailQueueFixture::class,
-    ];
 
     /**
      * @var SendEmailBatchService

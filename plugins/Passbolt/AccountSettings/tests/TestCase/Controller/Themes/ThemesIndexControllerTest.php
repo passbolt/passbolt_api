@@ -26,7 +26,6 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'plugin.Passbolt/AccountSettings.AccountSettings',
-        'app.Base/OrganizationSettings',
     ];
 
     public function setUp()

@@ -22,8 +22,6 @@ use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
-use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
 
 class FindLastLoggedInTest extends AppIntegrationTestCase
@@ -31,8 +29,6 @@ class FindLastLoggedInTest extends AppIntegrationTestCase
     use ActionLogsTrait;
 
     public $fixtures = [
-        ActionsFixture::class,
-        ActionLogsFixture::class,
         UsersFixture::class,
     ];
 
