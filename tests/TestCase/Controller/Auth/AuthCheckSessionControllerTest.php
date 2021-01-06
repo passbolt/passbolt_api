@@ -20,8 +20,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class AuthCheckSessionControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
-        'app.Base/OrganizationSettings'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
 
     public function testCheckSessionNotLoggedIn()
     {

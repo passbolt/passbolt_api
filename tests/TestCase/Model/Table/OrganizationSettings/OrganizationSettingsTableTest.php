@@ -40,15 +40,6 @@ class OrganizationSettingsTableTest extends AppTestCase
     public $OrganizationSettings;
 
     /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/OrganizationSettings',
-    ];
-
-    /**
      * Get test settings.
      *
      * @return array sample settings.

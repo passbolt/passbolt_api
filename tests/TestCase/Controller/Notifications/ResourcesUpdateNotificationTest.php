@@ -27,8 +27,8 @@ class ResourcesUpdateNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Gpgkeys',
-        'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/OrganizationSettings',
+        'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Roles',
+        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars',
     ];
 
     protected function _getGpgMessage()

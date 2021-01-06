@@ -27,7 +27,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
         'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
-        'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue',
+         'app.Base/Avatars',
     ];
 
     public function testUsersRegisterGetSuccess()

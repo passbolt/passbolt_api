@@ -25,7 +25,10 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindViewTest extends AppTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers',
+        'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Permissions',
+    ];
 
     /**
      * Test subject
