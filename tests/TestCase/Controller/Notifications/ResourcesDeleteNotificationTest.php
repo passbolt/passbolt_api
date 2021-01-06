@@ -26,7 +26,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
     use EmailNotificationSettingsTestTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/ResourceTypes', 'app.Base/Secrets',
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets',
         'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Roles',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Gpgkeys',
     ];
@@ -48,7 +48,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.password.delete', false);
 
         $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v2');
+        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
         $this->assertSuccess();
 
         // check email notification
@@ -62,7 +62,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.password.delete', true);
 
         $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v2');
+        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
         $this->assertSuccess();
 
         // check email notification
