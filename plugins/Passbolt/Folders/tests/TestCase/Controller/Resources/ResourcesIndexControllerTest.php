@@ -37,8 +37,7 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers',
-        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars',
-        'plugin.Passbolt/Folders.Folders', 'plugin.Passbolt/Folders.FoldersRelations',
+        'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars',
     ];
 
     /**

@@ -29,10 +29,6 @@ abstract class DirectorySyncConsoleIntegrationTestCase
     use MockDirectoryTrait;
     use UserAccessControlTrait;
 
-    public $fixtures = [
-        'app.Base/OrganizationSettings',
-    ];
-
     public function setUp()
     {
         //parent::setUp();

@@ -24,8 +24,6 @@ class AuthVerifyControllerTest extends AppIntegrationTestCase
 {
     use IntegrationTestTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
-
     public function testAuthVerifyControllerUserGetSuccess()
     {
         $this->get('/auth/verify.json');

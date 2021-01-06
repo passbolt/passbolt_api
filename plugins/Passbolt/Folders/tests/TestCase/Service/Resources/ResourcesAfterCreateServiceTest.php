@@ -32,8 +32,6 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Resources\ResourcesAfterCreateService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -51,8 +49,6 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
     use ResourcesModelTrait;
 
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GroupsUsersFixture::class,
         GroupsFixture::class,
         PermissionsFixture::class,

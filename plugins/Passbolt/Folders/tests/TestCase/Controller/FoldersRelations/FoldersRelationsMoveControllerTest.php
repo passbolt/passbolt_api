@@ -33,13 +33,9 @@ use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
-use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 
 /**
  * Passbolt\Folders\Controller\FoldersRelations\FoldersRelationsMoveController Test Case
@@ -54,11 +50,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        ActionsFixture::class,
-        ActionLogsFixture::class,
         AvatarsFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,

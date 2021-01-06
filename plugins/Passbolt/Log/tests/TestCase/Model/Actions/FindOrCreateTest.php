@@ -22,8 +22,6 @@ use Cake\ORM\TableRegistry;
 
 class FindOrCreateTest extends AppTestCase
 {
-    public $fixtures = ['plugin.Passbolt/Log.Base/Actions'];
-
     public function setUp()
     {
         parent::setUp();

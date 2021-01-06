@@ -26,8 +26,6 @@ use Cake\ORM\TableRegistry;
 
 class ActionLogsTest extends AppTestCase
 {
-    public $fixtures = ['plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs'];
-
     /**
      * @var ActionsTable
      */

@@ -29,7 +29,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/EmailQueue', 'app.Base/Avatars',
+         'app.Base/Avatars',
     ];
 
     public function setUp()

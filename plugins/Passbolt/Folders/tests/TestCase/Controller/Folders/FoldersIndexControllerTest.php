@@ -34,8 +34,6 @@ use App\Utility\UuidFactory;
 use Burzum\FileStorage\Test\Fixture\FileStorageFixture;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -52,8 +50,6 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,

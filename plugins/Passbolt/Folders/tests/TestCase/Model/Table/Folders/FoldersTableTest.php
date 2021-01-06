@@ -19,12 +19,6 @@ namespace Passbolt\Folders\Test\TestCase\Model\Table\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
@@ -33,8 +27,6 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -48,22 +40,6 @@ class FoldersTableTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
     use FormatValidationTrait;
     use PermissionsModelTrait;
-
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        UsersFixture::class,
-    ];
 
     /**
      * @var FoldersTable

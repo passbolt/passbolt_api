@@ -35,8 +35,6 @@ use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -55,8 +53,6 @@ class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
