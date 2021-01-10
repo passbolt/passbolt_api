@@ -36,7 +36,7 @@ $this->assign('page_classes', 'setup start');
                     <p>
                         <?= __('Choose this option if you want to configure passbolt step by step manually following the documentation.') ?>
                     </p>
-                    <a href="https://help.passbolt.com/hosting/install" target="_blank" rel="noopener" class="dim button">
+                    <a href="https://help.passbolt.com/hosting/install" target="_blank" rel="noopener noreferrer" class="dim button">
                         <i class="fa fa-cogs fa-fw"></i>  <?= __('Follow the documentation') ?>
                     </a>
                 </div>
