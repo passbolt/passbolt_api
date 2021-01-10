@@ -23,15 +23,16 @@ class HomeController extends AppController
 {
     /**
      * This entry point serves the API javascript application.
+     * Display a skeleton of an app in the background at first
      *
      * @return void
      */
-    public function home()
+    public function apiApp()
     {
         $this->viewBuilder()
             ->setLayout('default')
             ->setTemplatePath('/Home')
-            ->setTemplate('home');
+            ->setTemplate('api-app');
 
         $this->set('theme', $this->User->theme());
         $this->set('title', Configure::read('passbolt.meta.description'));
@@ -40,16 +41,17 @@ class HomeController extends AppController
     }
 
     /**
-     * This entry point serves an empty page with the splash screen.
+     * This entry point serves a page with no script so that the extension can take over
+     * Display a skeleton of an app in the background
      *
      * @return void
      */
-    public function empty()
+    public function apiExtApp()
     {
         $this->viewBuilder()
             ->setLayout('default')
             ->setTemplatePath('/Home')
-            ->setTemplate('empty');
+            ->setTemplate('api-ext-app');
 
         $this->set('theme', $this->User->theme());
         $this->set('title', Configure::read('passbolt.meta.description'));

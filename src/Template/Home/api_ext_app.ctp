@@ -10,17 +10,12 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
  */
+use Cake\Core\Configure;
+
+$this->assign('title', $title);
+$version = Configure::read('passbolt.version');
+$themePath = "themes/$theme/api_main.min.css?v=$version";
+$this->Html->css($themePath, ['block' => 'css', 'fullBase' => true, 'id' => 'js_css_theme']);
+echo $this->element('Loader/skeleton');
 ?>
-<div class="launching-screen">
-    <div class="launching-screen-holder">
-        <div class="logo no-img">
-            <h1><span>Passbolt</span></h1>
-        </div>
-        <div class="progress-bar-wrapper">
-            <span class="progress-bar big infinite"><span class="progress "></span></span>
-        </div>
-        <p class="details"><?= __('loading, please wait...'); ?></p>
-    </div>
-</div>

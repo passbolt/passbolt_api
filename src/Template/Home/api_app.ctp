@@ -17,5 +17,12 @@ $this->assign('title', $title);
 $version = Configure::read('passbolt.version');
 $themePath = "themes/$theme/api_main.min.css?v=$version";
 $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true, 'id' => 'js_css_theme']);
-echo $this->element('Loader/splash');
+
+// See. fetch('scriptBottom')
+$this->start('scriptBottom');
+// Load the javascript application.
+echo $this->Html->script('/js/app/api-vendors.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
+echo $this->Html->script('/js/app/api-app.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
+$this->end();
+echo $this->element('Loader/skeleton');
 ?>
