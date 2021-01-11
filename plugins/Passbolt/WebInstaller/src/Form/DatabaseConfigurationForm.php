@@ -23,6 +23,12 @@ use Cake\Validation\Validator;
 class DatabaseConfigurationForm extends Form
 {
     /**
+     * Path of the ini config file.
+     * An ini config file can be placed in tmp and used to pre-populate the database configuration form.
+     */
+    public const CONFIG_FILE_PATH = TMP . 'db_credentials.ini';
+
+    /**
      * Database configuration schema.
      *
      * @param \Cake\Form\Schema $schema shchema
