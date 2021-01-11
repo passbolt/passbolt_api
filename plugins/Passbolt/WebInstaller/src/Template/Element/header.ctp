@@ -1,6 +1,6 @@
 <?php
 use Cake\Core\Configure;
-$this->Html->css('themes/default/api_setup.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('themes/default/api_webinstaller.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
 $this->assign('page_classes', 'setup install');
 ?>
 <!-- first header -->

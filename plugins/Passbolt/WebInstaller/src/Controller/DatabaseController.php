@@ -17,16 +17,41 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use App\Model\Entity\Role;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * Class DatabaseController
+ *
+ * @package Passbolt\WebInstaller\Controller
  */
 class DatabaseController extends WebInstallerController
 {
+    /**
+     * Default password to use in the UI in case the config is provided through a .ini config file.
+     */
+    private $defaultPassword = null;
+
+    /**
+     * Ini config file content (if ini file provided).
+     *
+     * @var array
+     */
+    private $configFile = [];
+
+    /**
+     * Default config to use  when a ini config file is provided.
+     *
+     * @var string[]
+     */
+    private $configFileDefault = [
+        'type' => 'mysql',
+        'host' => '127.0.0.1',
+    ];
+
     /**
      * Initialize.
      *
@@ -35,6 +60,7 @@ class DatabaseController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
+
         if (Configure::read('passbolt.plugins.license')) {
             $this->stepInfo['previous'] = 'install/license_key';
         } else {
@@ -42,6 +68,19 @@ class DatabaseController extends WebInstallerController
         }
         $this->stepInfo['next'] = 'install/gpg_key';
         $this->stepInfo['template'] = 'Pages/database';
+
+        if (
+            file_exists(DatabaseConfigurationForm::CONFIG_FILE_PATH)
+            && is_readable(DatabaseConfigurationForm::CONFIG_FILE_PATH)
+        ) {
+            $iniFileContent = parse_ini_file(DatabaseConfigurationForm::CONFIG_FILE_PATH);
+            if (!$iniFileContent) {
+                return;
+            }
+            $this->configFile = $iniFileContent;
+            $this->stepInfo['defaultConfig'] = array_merge($this->configFileDefault, $this->configFile);
+            $this->defaultPassword = UuidFactory::uuid('__default_password__');
+        }
     }
 
     /**
@@ -57,6 +96,19 @@ class DatabaseController extends WebInstallerController
             return;
         }
 
+        // Load default config file values if present.
+        if (isset($this->stepInfo['defaultConfig']) && !empty($this->stepInfo['defaultConfig'])) {
+            foreach ($this->stepInfo['defaultConfig'] as $key => $databaseSetting) {
+                // We override the default password with a default value that will be replace while saving.
+                // This is to avoid a sensitive information leakage through the webinstaller.
+                if ($key === 'password') {
+                    $databaseSetting = $this->defaultPassword;
+                }
+                $this->request = $this->request->withData($key, $databaseSetting);
+            }
+        }
+
+        // Then, load previously saved database values if present (will override default values).
         $databaseSettings = $this->webInstaller->getSettings('database');
         if (!empty($databaseSettings)) {
             foreach ($databaseSettings as $key => $databaseSetting) {
@@ -76,6 +128,11 @@ class DatabaseController extends WebInstallerController
     protected function indexPost(): void
     {
         $data = $this->request->getData();
+
+        if (!empty($this->configFile) && $data['password'] === $this->defaultPassword) {
+            $data['password'] = $this->configFile['password'];
+        }
+
         try {
             $this->validateData($data);
             $this->testConnection($data);
