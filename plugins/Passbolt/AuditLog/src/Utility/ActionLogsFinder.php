@@ -28,6 +28,19 @@ use Cake\ORM\TableRegistry;
 class ActionLogsFinder
 {
     /**
+     * @var \Passbolt\Log\Model\Table\ActionLogsTable
+     */
+    private $ActionLogs;
+
+    /**
+     * ActionLogsFinder constructor.
+     */
+    public function __construct()
+    {
+        $this->ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+    }
+
+    /**
      * Get base query
      *
      * @param array $options options
@@ -39,7 +52,6 @@ class ActionLogsFinder
         $query = $ActionLog->find();
         $query->group([
             'ActionLogs.id',
-            'EntitiesHistory.created',
         ]);
 
         $query->contain(['Actions' => [
@@ -153,6 +165,144 @@ class ActionLogsFinder
     }
 
     /**
+     * Find ActionLog ids for a given PermissionsHistory resource id
+     *
+     * @param string $resourceId resource id
+     * @return array|\Cake\ORM\Query query
+     */
+    protected function _findActionLogIdsForPermissionHistoryResources(string $resourceId)
+    {
+        $q = $this->ActionLogs
+            ->find()
+            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->contain(['EntitiesHistory.PermissionsHistory'])
+            ->innerJoinWith('EntitiesHistory.PermissionsHistory')
+            ->contain(['EntitiesHistory.PermissionsHistory.PermissionsHistoryResources'])
+            ->innerJoinWith('EntitiesHistory.PermissionsHistory.PermissionsHistoryResources')
+            ->where([
+                'PermissionsHistoryResources.id' => $resourceId,
+                'ActionLogs.status' => 1,
+            ])
+            ->group('ActionLogs.id');
+
+        return $q;
+    }
+
+    /**
+     * Find ActionLog ids for a given resource id
+     *
+     * @param string $resourceId resource id
+     * @return array|\Cake\ORM\Query query
+     */
+    protected function _findActionLogIdsForResources(string $resourceId)
+    {
+        $q = $this->ActionLogs
+            ->find()
+            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->contain(['EntitiesHistory.Resources'])
+            ->innerJoinWith('EntitiesHistory.Resources')
+            ->where([
+                'Resources.id' => $resourceId,
+                'ActionLogs.status' => 1,
+            ])
+            ->group('ActionLogs.id');
+
+        return $q;
+    }
+
+    /**
+     * Find ActionLog ids for a given SecretAccess resource id
+     *
+     * @param string $resourceId resource id
+     * @return array|\Cake\ORM\Query query
+     */
+    protected function _findActionLogIdsForResourcesSecretAccesses(string $resourceId)
+    {
+        $q = $this->ActionLogs
+            ->find()
+            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->contain(['EntitiesHistory.SecretAccesses'])
+            ->innerJoinWith('EntitiesHistory.SecretAccesses')
+            ->where([
+                'SecretAccesses.resource_id' => $resourceId,
+                'ActionLogs.status' => 1,
+            ])
+            ->group('ActionLogs.id');
+
+        return $q;
+    }
+
+    /**
+     * Find ActionLog ids for a given Secret History resource id
+     *
+     * @param string $resourceId resource id
+     * @return array|\Cake\ORM\Query query
+     */
+    protected function _findActionLogIdsForResourcesSecretHistory(string $resourceId)
+    {
+        $q = $this->ActionLogs
+            ->find()
+            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->contain(['EntitiesHistory.SecretsHistory'])
+            ->innerJoinWith('EntitiesHistory.SecretsHistory')
+            ->contain(['EntitiesHistory.SecretsHistory.SecretsHistoryResources'])
+            ->innerJoinWith('EntitiesHistory.SecretsHistory.SecretsHistoryResources')
+            ->where([
+                'SecretsHistoryResources.id' => $resourceId,
+                'ActionLogs.status' => 1,
+            ])
+            ->group('ActionLogs.id');
+
+        return $q;
+    }
+
+    /**
+     * Find ActionLog ids for a given FolderHistory folder id
+     *
+     * @param string $folderId folder id
+     * @return array|\Cake\ORM\Query query
+     */
+    protected function _findActionLogIdsForFolders(string $folderId)
+    {
+        $q = $this->ActionLogs
+            ->find()
+            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->contain(['EntitiesHistory.FoldersHistory'])
+            ->innerJoinWith('EntitiesHistory.FoldersHistory')
+            ->where([
+                'FoldersHistory.folder_id' => $folderId,
+                'ActionLogs.status' => 1,
+            ])
+            ->group('ActionLogs.id');
+
+        return $q;
+    }
+
+    /**
+     * Find ActionLog ids for a given PermissionHistory folder id
+     *
+     * @param string $folderId folder id
+     * @return array|\Cake\ORM\Query query
+     */
+    protected function _findActionLogIdsForPermissionsHistoryFolders(string $folderId)
+    {
+        $q = $this->ActionLogs
+            ->find()
+            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->contain(['EntitiesHistory.PermissionsHistory'])
+            ->innerJoinWith('EntitiesHistory.PermissionsHistory')
+            ->contain(['EntitiesHistory.PermissionsHistory.PermissionsHistoryFolders'])
+            ->innerJoinWith('EntitiesHistory.PermissionsHistory.PermissionsHistoryFolders')
+            ->where([
+                'PermissionsHistoryFolders.id' => $folderId,
+                'ActionLogs.status' => 1,
+            ])
+            ->group('ActionLogs.id');
+
+        return $q;
+    }
+
+    /**
      * Filter query by resource id
      *
      * @param \Cake\ORM\Query $query query
@@ -161,18 +311,22 @@ class ActionLogsFinder
      */
     protected function _filterQueryByResourceId(Query $query, string $resourceId)
     {
-        $query->where([
-            'OR' => [
-                'PermissionsHistoryResources.id' => $resourceId,
-                'Resources.id' => $resourceId,
-                'SecretAccesses.resource_id' => $resourceId,
-                'SecretsHistoryResources.id' => $resourceId,
+        $subQuery = $this->_findActionLogIdsForPermissionHistoryResources($resourceId)
+            ->union($this->_findActionLogIdsForResources($resourceId))
+            ->union($this->_findActionLogIdsForResourcesSecretAccesses($resourceId))
+            ->union($this->_findActionLogIdsForResourcesSecretHistory($resourceId));
+
+        $query->join([
+            'resourceActionLogs' => [
+                'table' => $subQuery,
+                'alias' => 'resourceActionLogs',
+                'type' => 'INNER',
+                'conditions' => ['resourceActionLogs.ActionLogs__id = ActionLogs.id'],
             ],
         ]);
 
         $query->order([
             'ActionLogs.created' => 'DESC',
-            'EntitiesHistory.created' => 'DESC',
         ]);
 
         return $query;
@@ -187,16 +341,20 @@ class ActionLogsFinder
      */
     protected function _filterQueryByFolderId(Query $query, string $folderId)
     {
-        $query->where([
-            'OR' => [
-                'PermissionsHistoryFolders.id' => $folderId,
-                'FoldersHistory.folder_id' => $folderId,
+        $subQuery = $this->_findActionLogIdsForFolders($folderId)
+            ->union($this->_findActionLogIdsForPermissionsHistoryFolders($folderId));
+
+        $query->join([
+            'folderActionLogs' => [
+                'table' => $subQuery,
+                'alias' => 'folderActionLogs',
+                'type' => 'INNER',
+                'conditions' => ['folderActionLogs.ActionLogs__id = ActionLogs.id'],
             ],
         ]);
 
         $query->order([
             'ActionLogs.created' => 'DESC',
-            'EntitiesHistory.created' => 'DESC',
         ]);
 
         return $query;
