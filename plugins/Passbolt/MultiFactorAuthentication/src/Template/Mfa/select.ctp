@@ -40,16 +40,15 @@
                         <img src="<?= Router::url('img/third_party/google-authenticator.svg', true); ?>" />
                         <span>Google Authenticator</span>
                     </a>
-                    <div class="input toggle-switch">
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['totp']) : ?>
-                        <label for="ga_switch"><?= __('Enabled'); ?></label>
-                        <input class="toggle-switch-checkbox checkbox" id="ga_switch" type="checkbox" checked="checked" disabled="disabled">
-                    <?php else: ?>
-                        <label for="ga_switch"><?= __('Disabled'); ?></label>
-                        <input class="toggle-switch-checkbox checkbox" id="ga_switch" type="checkbox" disabled="disabled">
-                    <?php endif; ?>
-                        <label class="toggle-switch-button" for="ga_switch"></label>
+                    <div class="mfa-provider-status enabled">
+                        Enabled
                     </div>
+                    <?php else: ?>
+                    <div class="mfa-provider-status disabled">
+                        Disabled
+                    </div>
+                    <?php endif; ?>
                 </li>
                 <?php endif; ?>
                 <?php if ($body[MfaSettings::ORG_SETTINGS]['duo']) : ?>
@@ -58,16 +57,15 @@
                         <img src="<?= Router::url('img/third_party/duo.svg', true); ?>" />
                         <span>Duo MFA</span>
                     </a>
-                    <div class="input toggle-switch">
-                        <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['duo']) : ?>
-                            <label for="ga_switch"><?= __('Enabled'); ?></label>
-                            <input class="toggle-switch-checkbox checkbox" id="duo_switch" type="checkbox" checked="checked" disabled="disabled">
-                        <?php else: ?>
-                            <label for="ga_switch"><?= __('Disabled'); ?></label>
-                            <input class="toggle-switch-checkbox checkbox" id="duo_switch" type="checkbox" disabled="disabled">
-                        <?php endif; ?>
-                        <label class="toggle-switch-button" for="duo_switch"></label>
+                    <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['duo']) : ?>
+                    <div class="mfa-provider-status enabled">
+                        Enabled
                     </div>
+                    <?php else: ?>
+                    <div class="mfa-provider-status disabled">
+                        Disabled
+                    </div>
+                    <?php endif; ?>
                 </li>
                 <?php endif; ?>
                 <?php if ($body[MfaSettings::ORG_SETTINGS]['yubikey']) : ?>
@@ -76,16 +74,15 @@
                         <img src="<?= Router::url('img/third_party/yubikey.svg', true); ?>" />
                         <span>Yubikey OTP</span>
                     </a>
-                    <div class="input toggle-switch">
-                        <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['yubikey']) : ?>
-                            <label for="ga_switch"><?= __('Enabled'); ?></label>
-                            <input class="toggle-switch-checkbox checkbox" id="yubikey_switch" type="checkbox" checked="checked"  disabled="disabled">
-                        <?php else: ?>
-                            <label for="ga_switch"><?= __('Disabled'); ?></label>
-                            <input class="toggle-switch-checkbox checkbox" id="yubikey_switch" type="checkbox" disabled="disabled">
-                        <?php endif; ?>
-                        <label class="toggle-switch-button" for="yubikey_switch"></label>
+                    <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['yubikey']) : ?>
+                    <div class="mfa-provider-status enabled">
+                        Enabled
                     </div>
+                    <?php else: ?>
+                    <div class="mfa-provider-status disabled">
+                        Disabled
+                    </div>
+                    <?php endif; ?>
                 </li>
                 <?php endif; ?>
             </ul>
