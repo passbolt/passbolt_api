@@ -23,9 +23,11 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Session;
+use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Migrations\Migrations;
+use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 
 class WebInstaller
 {
@@ -57,7 +59,7 @@ class WebInstaller
      */
     public function isInitialized(): bool
     {
-        return $this->getSettings('initialized') ?? false;
+        return $this->getSettings('initialized');
     }
 
     /**
@@ -104,6 +106,29 @@ class WebInstaller
     }
 
     /**
+     * Delete temporary files.
+     *
+     * @throws \Exception
+     * @return void
+     */
+    public function deleteTmpFiles(): void
+    {
+        if (file_exists(DatabaseConfigurationForm::CONFIG_FILE_PATH)) {
+            try {
+                unlink(DatabaseConfigurationForm::CONFIG_FILE_PATH);
+            } catch (\Exception $e) {
+                Log::write(
+                    'error',
+                    sprintf(
+                        'Could not delete temporary database configuration file %s',
+                        DatabaseConfigurationForm::CONFIG_FILE_PATH
+                    )
+                );
+            }
+        }
+    }
+
+    /**
      * Set a setting and store the settings in session.
      *
      * @param string $key The setting key.
@@ -133,6 +158,7 @@ class WebInstaller
         $this->saveSettings();
         $this->changeConfigFolderPermission();
         $this->flushSettings();
+        $this->deleteTmpFiles();
     }
 
     /**

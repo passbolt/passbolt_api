@@ -15,15 +15,15 @@
 ?>
 <h3><?= __('We ♥ open source'); ?></h3>
 <p><?= __('Passbolt is open source and {0}respects your privacy{1}.',
-    '<a href="https://www.passbolt.com/privacy" target="_blank" rel="noopener">', '</a>') ?>
+    '<a href="https://www.passbolt.com/privacy" target="_blank" rel="noopener noreferrer">', '</a>') ?>
     <?= __('It uses {1}OpenPGP.js{0}, {2}CanJS{0}, {3}Cakephp{0} and many more! Get involved!',
     '</a>',
-    '<a href="https://openpgpjs.org/" target="_blank" rel="nofollow noopener">',
-    '<a href="https://canjs.com/" target="_blank" rel="nofollow noopener">',
-    '<a href="http://cakephp.org" target="_blank" rel="nofollow noopener">') ?>
+    '<a href="https://openpgpjs.org/" target="_blank" rel="nofollow noopener noreferrer">',
+    '<a href="https://canjs.com/" target="_blank" rel="nofollow noopener noreferrer">',
+    '<a href="http://cakephp.org" target="_blank" rel="nofollow noopener noreferrer">') ?>
 </p>
 <p>
-    <a href="http://github.com/passbolt" class="button dim github" target="_blank" rel="noopener">
+    <a href="http://github.com/passbolt" class="button dim github" target="_blank" rel="noopener noreferrer">
         <i class="fa fa-fw fa-github"></i>
         <span>Github</span>
     </a>

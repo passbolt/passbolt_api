@@ -40,7 +40,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 Router::scope('/', function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'empty'])
+    $routes->connect('/', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiExtApp'])
         ->setMethods(['GET']);
 });
 
@@ -369,7 +369,7 @@ Router::scope('/setup', function ($routes) {
  * Appjs routes
  */
 Router::scope('/app', function ($routes) {
-    $routes->connect('/administration/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'home']);
-    $routes->connect('/settings/mfa', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'home']);
-    $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'empty']);
+    $routes->connect('/administration/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
+    $routes->connect('/settings/mfa', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
+    $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiExtApp']);
 });

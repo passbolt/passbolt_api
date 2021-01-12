@@ -119,6 +119,8 @@ module.exports = function(grunt) {
             'third_party/ChromeWebStore_white.png',
             'third_party/gnupg_logo_disabled.png',
             'third_party/gnupg_logo.png',
+            'third_party/chosen-sprite.png',
+            'third_party/chosen-sprite@2x.png',
             'third_party/duo.svg',
             'third_party/google-authenticator.svg',
             'third_party/yubikey.svg',
@@ -134,7 +136,7 @@ module.exports = function(grunt) {
         }, {
           // CSS
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
-          src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css', 'api_authentication.min.css'],
+          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
         }, {

@@ -10,14 +10,19 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         3.0.0
  */
 ?>
-<h3><?= __('Passbolt Pro'); ?></h3>
-<p><?= __('Passbolt Pro provides premium features, and our team will help you setup and support your install.'); ?></p>
-<p>
-    <a href="https://www.passbolt.com/services/pro?pk_campaign=selfhosted&pk_kwd=cta_login" class="button dim passboltpro" target="_blank" rel="noopener noreferrer">
-        <i class="fa fa-fw fa-cubes"></i>
-        <span><?= __('read more'); ?></span>
-    </a>
-</p>
+<div class="temporary skeleton">
+    <div id="container" class="page password">
+        <div class="header first">
+            <nav><div class="primary navigation top"></div></nav>
+        </div>
+        <div class="header second"></div>
+        <div class="header third"></div>
+        <div class="panel main"></div>
+    </div>
+    <footer>
+        <div class="footer"></div>
+    </footer>
+</div>
