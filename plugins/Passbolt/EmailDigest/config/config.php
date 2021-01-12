@@ -17,7 +17,7 @@ return [
         'plugins' => [
             'emailDigest' => [
                 'version' => '1.0.0',
-                'enabled' => true,
+                'enabled' => env('PASSBOLT_PLUGINS_EMAIL_DIGEST_ENABLED', true),
                 'batchSizeLimit' => filter_var(
                     env('PASSBOLT_PLUGINS_EMAIL_DIGEST_BATCH_SIZE_LIMIT', 100),
                     FILTER_VALIDATE_INT
