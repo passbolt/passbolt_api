@@ -114,9 +114,7 @@ class WebInstaller
     public function deleteTmpFiles(): void
     {
         if (file_exists(DatabaseConfigurationForm::CONFIG_FILE_PATH)) {
-            try {
-                unlink(DatabaseConfigurationForm::CONFIG_FILE_PATH);
-            } catch (\Exception $e) {
+            if (!is_writable(DatabaseConfigurationForm::CONFIG_FILE_PATH)) {
                 Log::write(
                     'error',
                     sprintf(
@@ -124,7 +122,11 @@ class WebInstaller
                         DatabaseConfigurationForm::CONFIG_FILE_PATH
                     )
                 );
+
+                return;
             }
+
+            unlink(DatabaseConfigurationForm::CONFIG_FILE_PATH);
         }
     }
 
@@ -156,9 +158,9 @@ class WebInstaller
         $this->writeLicenseFile();
         $this->createFirstUser();
         $this->saveSettings();
+        $this->deleteTmpFiles();
         $this->changeConfigFolderPermission();
         $this->flushSettings();
-        $this->deleteTmpFiles();
     }
 
     /**
