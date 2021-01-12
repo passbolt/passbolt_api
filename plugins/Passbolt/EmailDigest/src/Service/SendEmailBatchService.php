@@ -49,7 +49,7 @@ class SendEmailBatchService
      * @param \EmailQueue\Model\Table\EmailQueueTable|null $table An instance of EmailQueueTable
      * @param \Passbolt\EmailDigest\Service\EmailDigestService|null $emailDigestService digest service
      */
-    public function __construct(?EmailQueueTable $table, ?EmailDigestService $emailDigestService)
+    public function __construct(?EmailQueueTable $table = null, ?EmailDigestService $emailDigestService = null)
     {
         $options = ['className' => EmailQueueTable::class];
         $this->emailQueueTable = $table ?? TableRegistry::getTableLocator()->get('EmailQueue', $options);

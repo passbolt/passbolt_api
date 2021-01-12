@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+DIR="$(cd "$(dirname "$0")" && pwd)"
 
-./bin/cake passbolt version
+$DIR/cake passbolt version
 uname -a
 php --version | grep -m1 ""
 mysql --version
