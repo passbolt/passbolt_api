@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,7 +26,6 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Groups\GroupsUpdateService;
-use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -33,17 +34,17 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/group_user_add';
+    public const TEMPLATE = 'LU/group_user_add';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param UsersTable|null $usersTable Users Table
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
      */
-    public function __construct(UsersTable $usersTable = null)
+    public function __construct(?UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
@@ -53,7 +54,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             GroupsTable::GROUP_CREATE_SUCCESS_EVENT_NAME,
@@ -62,23 +63,23 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
         switch ($event->getName()) {
             case GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME:
-                /** @var Group $resource */
+                /** @var \App\Model\Entity\Group $resource */
                 $group = $event->getData('group');
                 $addedGroupsUsers = $event->getData('addedGroupsUsers'); // the list of added groups users
                 $modifiedBy = $this->usersTable->findFirstForEmail($event->getData('userId'));
                 $emails = $this->createGroupUserAddedUpdateEmails($group, $addedGroupsUsers, $modifiedBy);
                 break;
             default:
-                /** @var Group $resource */
+                /** @var \App\Model\Entity\Group $resource */
                 $group = $event->getData('group');
                 $emails = $this->createGroupCreatedEmail($group);
                 break;
@@ -95,7 +96,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      * Return a list of user ids
      *
      * @param array $userIds List of user ids
-     * @return ResultSetInterface
+     * @return \Cake\Datasource\ResultSetInterface
      */
     private function getUserNames(array $userIds)
     {
@@ -105,8 +106,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Group $group Group which was created
-     *
+     * @param \App\Model\Entity\Group $group Group which was created
      * @return array
      */
     private function createGroupCreatedEmail(Group $group)
@@ -123,7 +123,8 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
                 continue;
             }
 
-            $emails[] = $this->createGroupUserAddEmail($userNames[$group_user->user_id], $admin, $group, $group_user->is_admin);
+            $recipient = $userNames[$group_user->user_id];
+            $emails[] = $this->createGroupUserAddEmail($recipient, $admin, $group, $group_user->is_admin);
         }
 
         return $emails;
@@ -132,9 +133,9 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * Send group update email to the new members
      *
-     * @param Group $group the affected group
+     * @param \App\Model\Entity\Group $group the affected group
      * @param array $addedGroupsUsers Users added to the group
-     * @param User  $modifiedBy person who did the change
+     * @param \App\Model\Entity\User $modifiedBy person who did the change
      * @return array
      */
     public function createGroupUserAddedUpdateEmails(Group $group, array $addedGroupsUsers, User $modifiedBy)
@@ -159,17 +160,17 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param string $emailRecipient Email recipient
-     * @param User   $admin Admin
-     * @param Group  $group Group
-     * @param bool   $isAdmin Is user admin
-     * @return Email
+     * @param string $recipient Email recipient
+     * @param \App\Model\Entity\User $admin Admin
+     * @param \App\Model\Entity\Group $group Group
+     * @param bool $isAdmin Is user admin
+     * @return \App\Notification\Email\Email
      */
-    private function createGroupUserAddEmail(string $emailRecipient, User $admin, Group $group, bool $isAdmin)
+    private function createGroupUserAddEmail(string $recipient, User $admin, Group $group, bool $isAdmin): Email
     {
-        $subject = __("{0} added you to the group {1}", $admin->profile->first_name, $group->name);
+        $subject = __('{0} added you to the group {1}', $admin->profile->first_name, $group->name);
         $data = ['body' => ['isAdmin' => $isAdmin, 'admin' => $admin, 'group' => $group], 'title' => $subject];
 
-        return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

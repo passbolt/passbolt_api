@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,7 +20,6 @@ use Cake\Utility\Hash;
 
 trait EntityTrait
 {
-
     /**
      * Asserts that an entity has a specified error.
      *

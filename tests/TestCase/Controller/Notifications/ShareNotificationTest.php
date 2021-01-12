@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,8 +25,8 @@ class ShareNotificationTest extends ShareControllerTest
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
-        'app.Base/EmailQueue', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/OrganizationSettings',
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
+        'app.Base/Secrets', 'app.Base/Avatars', 'app.Base/Favorites',
     ];
 
     public function testShareNotificationSuccess()

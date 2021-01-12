@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,23 +33,23 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'GM/group_user_request';
+    public const TEMPLATE = 'GM/group_user_request';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @param UsersTable            $usersTable Users Table
-     * @param GroupsUsersTable|null $groupsUsersTable Groups Users Table
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
+     * @param \App\Model\Table\GroupsUsersTable|null $groupsUsersTable Groups Users Table
      */
-    public function __construct(UsersTable $usersTable = null, GroupsUsersTable $groupsUsersTable = null)
+    public function __construct(?UsersTable $usersTable = null, ?GroupsUsersTable $groupsUsersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         $this->groupsUsersTable = $groupsUsersTable ?? TableRegistry::getTableLocator()->get('GroupsUsers');
@@ -58,7 +60,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             'Model.Groups.requestGroupUsers.success',
@@ -66,14 +68,14 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
-        /** @var Group $resource */
+        /** @var \App\Model\Entity\Group $resource */
         $group = $event->getData('group');
         $accessControl = $event->getData('requester');
         $requestedGroupUsers = $event->getData('groupUsers');
@@ -84,7 +86,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
 
         // Get group managers of group.
         $groupManagers = $this->getGroupManagers($group->id);
-        $admin = $this->usersTable->findFirstForEmail($accessControl->userId());
+        $admin = $this->usersTable->findFirstForEmail($accessControl->getId());
 
         // Send to all group managers.
         foreach ($groupManagers as $groupManager) {
@@ -98,39 +100,42 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
 
     /**
      * @param string $groupId Group for which to get group managers
-     * @return ResultSetInterface
+     * @return \Cake\Datasource\ResultSetInterface
      */
-    private function getGroupManagers(string $groupId)
+    private function getGroupManagers(string $groupId): ResultSetInterface
     {
-        return $this->groupsUsersTable->find()->where(['group_id' => $groupId, 'is_admin' => true])->contain(['Users'])->all();
+        return $this->groupsUsersTable->find()
+            ->where(['group_id' => $groupId, 'is_admin' => true])
+            ->contain(['Users'])
+            ->all();
     }
 
     /**
-     * @param string $emailRecipient Email of the group manager to send the notification to
-     * @param User   $admin the admin that requested the action
-     * @param Group  $group the group on which to add groupUsers
-     * @param array  $requestedGroupUsers the list of groupUsers entity to request to add
-     * @return Email
+     * @param string $recipient Email of the group manager to send the notification to
+     * @param \App\Model\Entity\User $admin the admin that requested the action
+     * @param \App\Model\Entity\Group $group the group on which to add groupUsers
+     * @param array  $groupUsers the list of groupUsers entity to request to add
+     * @return \App\Notification\Email\Email
      */
-    private function createGroupUserAddEmail(string $emailRecipient, User $admin, Group $group, array $requestedGroupUsers)
+    private function createGroupUserAddEmail(string $recipient, User $admin, Group $group, array $groupUsers): Email
     {
-        $subject = __("{0} requested you to add members to {1}", $admin->profile->first_name, $group->name);
+        $subject = __('{0} requested you to add members to {1}', $admin->profile->first_name, $group->name);
         $data = ['body' => [
             'admin' => $admin,
             'group' => $group,
-            'groupUsers' => $requestedGroupUsers,
+            'groupUsers' => $groupUsers,
         ], 'title' => $subject];
 
-        return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 
     /**
      * Retrieve the information of a list of users that will be used in the summary email.
      *
-     * @param array $usersIds The list of users to retrieve the information for.
+     * @param array|null $usersIds The list of users to retrieve the information for.
      * @return array
      */
-    private function _getSummaryUser(array $usersIds = [])
+    private function _getSummaryUser(?array $usersIds = []): array
     {
         return !empty($usersIds)
             ? $this->usersTable->find()

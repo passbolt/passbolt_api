@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,8 +20,6 @@ namespace App\Service\Groups;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\GroupsUser;
-use App\Model\Entity\Permission;
-use App\Model\Table\GroupsUsersTable;
 use App\Service\GroupsUsers\GroupsUsersCreateService;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
@@ -28,12 +28,12 @@ use Cake\Utility\Hash;
 class GroupsUpdateGroupUsersService
 {
     /**
-     * @var GroupsUsersCreateService
+     * @var \App\Service\GroupsUsers\GroupsUsersCreateService
      */
     private $groupsUsersCreateService;
 
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
@@ -49,9 +49,9 @@ class GroupsUpdateGroupUsersService
     /**
      * Update groups users of a group.
      *
-     * @param UserAccessControl $uac The current user
+     * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $groupId The target group
-     * @param array $changes The list of permissions changes to apply
+     * @param array|null $changes The list of permissions changes to apply
      * @return array
      * [
      *   added => <array> List of added group users
@@ -60,16 +60,18 @@ class GroupsUpdateGroupUsersService
      * ]
      * @throws \Exception
      */
-    public function updateGroupUsers(UserAccessControl $uac, string $groupId, array $changes = [])
+    public function updateGroupUsers(UserAccessControl $uac, string $groupId, ?array $changes = []): array
     {
         $addedGroupsUsers = [];
         $updatedGroupsUsers = [];
         $removedGroupsUsers = [];
 
-        $this->groupsUsersTable->getConnection()->transactional(function () use ($uac, $groupId, $changes, &$addedGroupsUsers, &$updatedGroupsUsers, &$removedGroupsUsers) {
-            list($addedGroupsUsers, $updatedGroupsUsers, $removedGroupsUsers) = $this->update($uac, $groupId, $changes);
-            $this->assertAtLeastOneGroupManager($groupId);
-        });
+        $this->groupsUsersTable->getConnection()->transactional(
+            function () use ($uac, $groupId, $changes, &$addedGroupsUsers, &$updatedGroupsUsers, &$removedGroupsUsers) {
+                [$addedGroupsUsers, $updatedGroupsUsers, $removedGroupsUsers] = $this->update($uac, $groupId, $changes);
+                $this->assertAtLeastOneGroupManager($groupId);
+            }
+        );
 
         return [
             'added' => $addedGroupsUsers,
@@ -81,9 +83,9 @@ class GroupsUpdateGroupUsersService
     /**
      * Internal function that update the group users of a group.
      *
-     * @param UserAccessControl $uac The current user
+     * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $groupId The target group
-     * @param array $changes The list of permissions changes to apply
+     * @param array|null $changes The list of permissions changes to apply
      * @return array
      * [
      *   0 => <array> List of added group users
@@ -92,7 +94,7 @@ class GroupsUpdateGroupUsersService
      * ]
      * @throws \Exception
      */
-    private function update(UserAccessControl $uac, string $groupId, array $changes = [])
+    private function update(UserAccessControl $uac, string $groupId, ?array $changes = []): array
     {
         $addedGroupsUsers = [];
         $updatedGroupsUsers = [];
@@ -123,14 +125,14 @@ class GroupsUpdateGroupUsersService
     /**
      * Add a group user to a group.
      *
-     * @param UserAccessControl $uac The operator
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param int $rowIndexRef The row index in the request data
      * @param string $groupId The target group
      * @param array $data The group user data
-     * @return GroupsUser
+     * @return \App\Model\Entity\GroupsUser
      * @throws \Exception
      */
-    private function addGroupUser(UserAccessControl $uac, int $rowIndexRef, string $groupId, array $data)
+    private function addGroupUser(UserAccessControl $uac, int $rowIndexRef, string $groupId, array $data): GroupsUser
     {
         $permissionData = [
             'group_id' => $groupId,
@@ -151,12 +153,13 @@ class GroupsUpdateGroupUsersService
      *
      * @param array $errors The list of errors
      * @return void
-     * @throws ValidationException If the provided data does not validate.
+     * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
-    private function handleValidationErrors(array $errors = [])
+    private function handleValidationErrors(array $errors = []): void
     {
         if (!empty($errors)) {
-            throw new CustomValidationException(__('Could not validate group user data.'), $errors, $this->groupsUsersTable);
+            $msg = __('Could not validate group user data.');
+            throw new CustomValidationException($msg, $errors, $this->groupsUsersTable);
         }
     }
 
@@ -166,13 +169,13 @@ class GroupsUpdateGroupUsersService
      * @param int $rowIndexRef The row index in the request data
      * @param string $groupId The target group
      * @param string $groupUserId The target group user
-     * @return Permission
+     * @return \App\Model\Entity\GroupsUser
      */
-    private function getGroupUser(int $rowIndexRef, string $groupId, string $groupUserId)
+    private function getGroupUser(int $rowIndexRef, string $groupId, string $groupUserId): GroupsUser
     {
         $groupUser = $this->groupsUsersTable->findByIdAndGroupId($groupUserId, $groupId)->first();
         if (!$groupUser) {
-            $errors = [$rowIndexRef => ['id' => ['exists' => 'The group user does not exist.']]];
+            $errors = [$rowIndexRef => ['id' => ['exists' => __('The group user does not exist.')]]];
             $this->handleValidationErrors($errors);
         }
 
@@ -182,10 +185,10 @@ class GroupsUpdateGroupUsersService
     /**
      * Delete a group user.
      *
-     * @param GroupsUser $groupsUser The target group user
-     * @return GroupsUser
+     * @param \App\Model\Entity\GroupsUser $groupsUser The target group user
+     * @return \App\Model\Entity\GroupsUser
      */
-    private function deleteGroupUser(GroupsUser $groupsUser)
+    private function deleteGroupUser(GroupsUser $groupsUser): GroupsUser
     {
         $this->groupsUsersTable->delete($groupsUser);
 
@@ -195,21 +198,25 @@ class GroupsUpdateGroupUsersService
     /**
      * Update a group user.
      *
-     * @param UserAccessControl $uac The operator
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param int $rowIndexRef The row index in the request data
-     * @param GroupsUser $groupUser The target group user
+     * @param \App\Model\Entity\GroupsUser $groupUser The target group user
      * @param array $data The group user data.
-     * @return GroupsUser
+     * @return \App\Model\Entity\GroupsUser
      */
-    private function updateGroupUser(UserAccessControl $uac, int $rowIndexRef, GroupsUser $groupUser, array $data)
-    {
+    private function updateGroupUser(
+        UserAccessControl $uac,
+        int $rowIndexRef,
+        GroupsUser $groupUser,
+        array $data
+    ): GroupsUser {
         // If role of the user doesn't change, nothing to do.
         $updatedIsAdmin = Hash::get($data, 'is_admin');
         if ($groupUser->is_admin === $updatedIsAdmin) {
             return $groupUser;
         }
 
-        $data['modified_by'] = $uac->userId();
+        $data['modified_by'] = $uac->getId();
 
         $patchEntityOptions = ['accessibleFields' => ['is_admin' => true, 'modified_by' => true]];
         $groupUser = $this->groupsUsersTable->patchEntity($groupUser, $data, $patchEntityOptions);
@@ -232,9 +239,9 @@ class GroupsUpdateGroupUsersService
      *
      * @param string $groupId The target group
      * @return void
-     * @throws CustomValidationException If the group doesn't have at least one group manager.
+     * @throws \App\Error\Exception\CustomValidationException If the group doesn't have at least one group manager.
      */
-    private function assertAtLeastOneGroupManager(string $groupId)
+    private function assertAtLeastOneGroupManager(string $groupId): void
     {
         $groupManagersCount = $this->groupsUsersTable->find()
             ->where([
@@ -244,7 +251,7 @@ class GroupsUpdateGroupUsersService
             ->count();
 
         if ($groupManagersCount < 1) {
-            $errors = ['at_least_one_group_manager' => 'At least one group manager must be provided.'];
+            $errors = ['at_least_one_group_manager' => __('At least one group manager must be provided.')];
             $this->handleValidationErrors($errors);
         }
     }

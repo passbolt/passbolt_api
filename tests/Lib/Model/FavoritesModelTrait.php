@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,15 +20,14 @@ use App\Utility\UuidFactory;
 
 trait FavoritesModelTrait
 {
-
     /**
      * Get a dummy favorite with test data.
      * The comment returned passes a default validation.
      *
-     * @param array $data Custom data that will be merged with the default content.
-     * @return array Comment data
+     * @param array|null $data Custom data that will be merged with the default content.
+     * @return array data
      */
-    public static function getDummyFavorite($data = [])
+    public static function getDummyFavorite(?array $data = [])
     {
         $entityContent = [
             'user_id' => UuidFactory::uuid('user.id.dame'),

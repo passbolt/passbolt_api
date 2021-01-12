@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,11 +21,11 @@ use Cake\ORM\Entity;
 
 /**
  * Class Action
+ *
  * @package Passbolt\Log\Model\Entity
  */
 class Action extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

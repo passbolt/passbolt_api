@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,13 +18,12 @@ namespace Passbolt\Reports\Utility;
 
 use App\Model\Entity\User;
 use App\Model\Table\Dto\FindIndexOptions;
-use InvalidArgumentException;
 
 interface ReportInterface
 {
     /**
      * @param string $name report name
-     * @return ReportInterface $this
+     * @return \Passbolt\Reports\Utility\ReportInterface $this
      */
     public function setName(string $name);
 
@@ -30,7 +31,7 @@ interface ReportInterface
      * Set the report slug
      *
      * @param string $slug report slug
-     * @return ReportInterface $this
+     * @return \Passbolt\Reports\Utility\ReportInterface $this
      */
     public function setSlug(string $slug);
 
@@ -38,7 +39,7 @@ interface ReportInterface
      * Set the report description
      *
      * @param string $description report description
-     * @return ReportInterface $this
+     * @return \Passbolt\Reports\Utility\ReportInterface $this
      */
     public function setDescription(string $description);
 
@@ -46,22 +47,22 @@ interface ReportInterface
      * Set the report template
      *
      * @param string $template report template (for html rendering)
-     * @return ReportInterface $this
+     * @return \Passbolt\Reports\Utility\ReportInterface $this
      */
     public function setTemplate(string $template);
 
     /**
      * Set options to be used to get the data if needed
      *
-     * @param FindIndexOptions $options options to be used in getData
-     * @return ReportInterface $this
+     * @param \App\Model\Table\Dto\FindIndexOptions $options options to be used in getData
+     * @return \Passbolt\Reports\Utility\ReportInterface $this
      */
     public function setOptions(FindIndexOptions $options);
 
     /**
      * Set user to be used as 'created by'
      *
-     * @param User $creator creator
+     * @param \App\Model\Entity\User $creator creator
      * @return mixed
      */
     public function setCreator(User $creator);
@@ -106,28 +107,28 @@ interface ReportInterface
      * Each report service has a different set of options since filters are bound to the data
      * generated in the report and each report uses different data.
      *
-     * @return FindIndexOptions
+     * @return \App\Model\Table\Dto\FindIndexOptions
      */
     public function getSupportedOptions();
 
     /**
      * Return options to be used when fetching data
      *
-     * @return FindIndexOptions
+     * @return \App\Model\Table\Dto\FindIndexOptions
      */
     public function getOptions();
 
     /**
      * Return the creator if any
      *
-     * @return User|null
+     * @return \App\Model\Entity\User|null
      */
     public function getCreator();
 
     /**
      * Generate and return a report object from the provided data.
      *
-     * @throws InvalidArgumentException if the parameters provided in data are not supported.
+     * @throws \InvalidArgumentException if the parameters provided in data are not supported.
      * @return array
      */
     public function createReport();
@@ -135,7 +136,7 @@ interface ReportInterface
     /**
      * Generate and return a report object from the provided data.
      *
-     * @throws InvalidArgumentException if the parameters provided in data are not supported.
+     * @throws \InvalidArgumentException if the parameters provided in data are not supported.
      * @return array
      */
     public function getData();

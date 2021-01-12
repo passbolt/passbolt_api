@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,19 +21,23 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 class RecoverStartControllerTest extends AppIntegrationTestCase
 {
     use AuthenticationTokenModelTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/Avatars',
     ];
     public $AuthenticationTokens;
+    private $Users;
 
     public function setUp()
     {
         $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
         parent::setUp();
     }
 
@@ -40,7 +46,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverStart
      */
-    public function testRecoverStartUrlParametersMissingError()
+    public function testRecoverStart_NotFoundError_MissingUrlParameters()
     {
         $fails = [
             'no parameter given' => '/setup/recover/nope',
@@ -61,22 +67,18 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverStart
      */
-    public function testRecoverStartBadRequestError()
+    public function testRecoverStartJson_NotFoundError_MissingUrlParameters()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_RECOVER);
         $fails = [
-            'user not a uuid' => '/setup/recover/start/nope/nope',
-            'user not a uuid with legacy url' => '/setup/recover/nope/nope',
-            'token not a uuid' => '/setup/recover/start/' . UuidFactory::uuid('user.id.ruth') . '/nope',
-            'token not a uuid with legacy url' => '/setup/recover/' . UuidFactory::uuid('user.id.ruth') . '/nope',
-            'both not a uuid' => '/setup/recover/nope/nope',
-            'user does not exist' => '/setup/recover/start/' . UuidFactory::uuid('user.id.nope') . '/' . $t->token,
-            'token does not exist' => '/setup/recover/start/' . UuidFactory::uuid('user.id.ruth') . '/' . UuidFactory::uuid(),
-            'token from other user' => '/setup/recover/start/' . UuidFactory::uuid('user.id.ada') . '/' . $t->token,
+            'no parameter given' => '/setup/recover/nope.json',
+            // Add when legacy urls removed (/setup/recover/nope/nope get called instead of 404)
+            //'only one parameter given' => '/setup/recover/start/' . UuidFactory::uuid(),
+            'no parameter given on legacy url' => '/setup/recover.json',
+            'only one parameter given on legacy url' => '/setup/recover/' . UuidFactory::uuid() . '.json',
         ];
         foreach ($fails as $case => $url) {
             $this->get($url);
-            $this->assertResponseCode(400, 'Setup start should fail with 400 on case: ' . $case);
+            $this->assertResponseCode(404, 'Setup start should fail with 404 on case: ' . $case);
             $this->_response = null; // Free the memory usage.
         }
     }
@@ -86,83 +88,144 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverStart
      */
-    public function testRecoverStartBadRequestErrorExpiredToken()
+    public function testRecoverStartJson_BadRequestError_InvalidParameters()
+    {
+        $fails = [
+            'user not a uuid' => '/setup/recover/start/nope/nope.json',
+            'user not a uuid with legacy url' => '/setup/recover/nope/nope.json',
+            'token not a uuid' => '/setup/recover/start/' . UuidFactory::uuid('user.id.ruth') . '/nope.json',
+            'token not a uuid with legacy url' => '/setup/recover/' . UuidFactory::uuid('user.id.ruth') . '/nope.json',
+            'both not a uuid' => '/setup/recover/nope/nope.json',
+        ];
+        foreach ($fails as $case => $url) {
+            $this->getJson($url);
+            $this->assertResponseCode(400, 'Setup start should fail with 400 on case: ' . $case);
+            $this->_response = null; // Free the memory usage.
+        }
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group recoverStart
+     */
+    public function testRecoverStartJson_BadRequestError_UserInactive()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'expired');
-        $url = '/setup/install/' . $userId . '/' . $token;
-        $this->get($url);
-        $this->assertResponseCode(400, 'Setup start should fail with 400 when token was expired');
+        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
+        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(400);
     }
 
     /**
      * @group AN
-     * @group recover
+     * @group setup
      * @group recoverStart
      */
-    public function testRecoverStartBadRequestErrorInactiveToken()
+    public function testRecoverStartJson_BadRequestError_UserNotExist()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'inactive');
-        $url = '/setup/recover/' . $userId . '/' . $token;
-        $this->get($url);
-        $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');
+        $userId = UuidFactory::uuid();
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.admin'), AuthenticationToken::TYPE_RECOVER);
+        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(400);
     }
 
     /**
      * @group AN
-     * @group recover
+     * @group setup
      * @group recoverStart
      */
-    public function testRecoverStartBadRequestErrorInactiveAndExpiredToken()
+    public function testRecoverStart_BadRequestError_UserDeleted()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'expired_inactive');
-        $url = '/setup/recover/start/' . $userId . '/' . $token;
-        $this->get($url);
-        $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');
+        $userId = UuidFactory::uuid('user.id.admin');
+        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
+        $user = $this->Users->findById($userId)->first();
+        $user->deleted = 1;
+        $this->Users->save($user);
+        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(400);
     }
 
     /**
      * @group AN
-     * @group recover
+     * @group setup
      * @group recoverStart
      */
-    public function testRecoverStartBadRequestErrorInactiveUser()
+    public function testRecoverStart_BadRequestError_TokenDoesntExist()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER);
-        $url = '/setup/recover/start/' . $userId . '/' . $token;
-        $this->get($url);
-        $this->assertResponseCode(400, 'Setup start should fail with 400 when user has not completed setup.');
+        $userId = UuidFactory::uuid('user.id.admin');
+        $token = UuidFactory::uuid();
+        $url = "/setup/recover/{$userId}/{$token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(400);
     }
 
     /**
      * @group AN
-     * @group recover
+     * @group setup
      * @group recoverStart
      */
-    public function testRecoverStartBadRequestErrorDeletedUser()
+    public function testRecoverStart_BadRequestError_WrongTokenType()
     {
-        $userId = UuidFactory::uuid('user.id.sofia');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER);
-        $url = '/setup/recover/start/' . $userId . '/' . $token;
-        $this->get($url);
-        $this->assertResponseCode(400, 'Setup start should fail with 400 when user has been deleted.');
+        $userId = UuidFactory::uuid('user.id.admin');
+        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
+        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(400);
     }
 
     /**
      * @group AN
-     * @group recover
+     * @group setup
      * @group recoverStart
      */
-    public function testRecoverStartSuccess()
+    public function testRecoverStart_BadRequestError_TokenAlreadyConsumed()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER);
-        $url = '/setup/recover/start/' . $userId . '/' . $token;
-        $this->get($url);
+        $userId = UuidFactory::uuid('user.id.admin');
+        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
+        $t->active = false;
+        $this->AuthenticationTokens->save($t);
+        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(400);
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group recoverStart
+     */
+    public function testRecoverStart_BadRequestError_TokenExpired()
+    {
+        $userId = UuidFactory::uuid('user.id.admin');
+        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
+        $t->created = '2020-01-01 00:00:00';
+        $this->AuthenticationTokens->save($t);
+        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(400);
+        $arr = json_decode(json_encode($this->_responseJsonBody), true);
+        $error = Hash::get($arr, 'token');
+        $this->assertNotNull($error, 'The test should return an error for the given field.');
+        $this->assertEquals('The token is expired.', $error['expired']);
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group recoverStart
+     */
+    public function testRecoverStartJson_Success()
+    {
+        $userId = UuidFactory::uuid('user.id.admin');
+        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
+        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $this->getJson($url);
         $this->assertResponseOk();
-        $this->assertResponseContains('Account recovery: let\'s take 5 min to reconfigure your plugin!<');
+        $this->assertNotNull($this->_responseJsonBody->user);
+        $this->assertUserAttributes($this->_responseJsonBody->user);
     }
 }

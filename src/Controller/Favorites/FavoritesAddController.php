@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,23 +19,27 @@ namespace App\Controller\Favorites;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Favorite;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\FavoritesTable $Favorites
+ */
 class FavoritesAddController extends AppController
 {
     /**
      * Mark a resource as favorite.
      *
      * @param string $foreignKey The identifier of the instance to mark as favorite.
-     * @throws BadRequestException If the resource id is not valid
-     * @throws NotFoundException If the resource does not exist
-     * @throws NotFoundException If the resource is soft deleted
-     * @throws NotFoundException If the user does not have access to the resource
+     * @throws \Cake\Http\Exception\BadRequestException If the resource id is not valid
+     * @throws \Cake\Http\Exception\NotFoundException If the resource does not exist
+     * @throws \Cake\Http\Exception\NotFoundException If the resource is soft deleted
+     * @throws \Cake\Http\Exception\NotFoundException If the user does not have access to the resource
      * @return void
      */
-    public function add($foreignKey = null)
+    public function add(string $foreignKey)
     {
         // Check request sanity
         if (!Validation::uuid($foreignKey)) {
@@ -55,9 +61,9 @@ class FavoritesAddController extends AppController
      * Build and validate favorite entity from user input.
      *
      * @param string $foreignKey The identifier of the instance to mark as favorite.
-     * @return \Cake\Datasource\EntityInterface $favorite favorite entity
+     * @return \App\Model\Entity\Favorite $favorite favorite entity
      */
-    protected function _buildAndValidateFavorite($foreignKey = null)
+    protected function _buildAndValidateFavorite(string $foreignKey)
     {
         // Build entity and perform basic check.
         $favorite = $this->Favorites->newEntity(
@@ -84,13 +90,13 @@ class FavoritesAddController extends AppController
     /**
      * Manage validation errors.
      *
-     * @param \Cake\Datasource\EntityInterface $favorite favorite
-     * @throws BadRequestException if the record is already marked as favorite
-     * @throws NotFoundException if the resource does not exist
-     * @throws ValidationException if validation failed
+     * @param \App\Model\Entity\Favorite $favorite favorite
+     * @throws \Cake\Http\Exception\BadRequestException if the record is already marked as favorite
+     * @throws \Cake\Http\Exception\NotFoundException if the resource does not exist
+     * @throws \App\Error\Exception\ValidationException if validation failed
      * @return void
      */
-    protected function _handleValidationError($favorite)
+    protected function _handleValidationError(Favorite $favorite)
     {
         $errors = $favorite->getErrors();
         if (!empty($errors)) {

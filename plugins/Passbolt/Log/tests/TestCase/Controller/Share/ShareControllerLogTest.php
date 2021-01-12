@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
-use Passbolt\Log\Model\Table\PermissionsHistoryTable;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\Log\Test\Lib\Traits\PermissionsHistoryTrait;
 use Passbolt\Log\Test\Lib\Traits\SecretsHistoryTrait;
@@ -29,16 +30,15 @@ class ShareControllerLogTest extends LogIntegrationTestCase
     use PermissionsHistoryTrait;
     use SecretsHistoryTrait;
 
-    /** @var PermissionsHistoryTable */
+    /**
+     * @var PermissionsHistoryTable
+     */
     protected $PermissionHistory;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles',
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
-        'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
-        'plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs',
-        'plugin.Passbolt/Log.Base/EntitiesHistory', 'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretsHistory',
+        'app.Base/Favorites',
     ];
 
     public function setUp()

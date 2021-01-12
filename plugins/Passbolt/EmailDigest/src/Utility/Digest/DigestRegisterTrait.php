@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -35,13 +37,13 @@ trait DigestRegisterTrait
     /**
      * A class registering digests must implement this method
      *
-     * @param DigestsPool $digestsPool digest pool
+     * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsPool digest pool
      * @return mixed
      */
     abstract public function addDigestsPool(DigestsPool $digestsPool);
 
     /**
-     * @param DigestRegisterEvent $event An instance of the event
+     * @param \Passbolt\EmailDigest\Utility\Digest\DigestRegisterEvent $event An instance of the event
      * @return void
      */
     public function __invoke(DigestRegisterEvent $event)

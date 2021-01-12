@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,13 +27,13 @@ trait CleanupTrait
      * @param string $modelName model to call
      * @param string $checkName function to call to cleanup
      * @param int $expectedCount expected number of records after the cleanup
-     * @param array $options
+     * @param array|null $options
      * [
      *   bool $isDeleteCleanup Does the cleanup delete record. Default true. Some cleanup add records, false for them.
      *   int $cleanupCount The number of records the cleanup will treat. Default 1.
      * ]
      */
-    protected function runCleanupChecks(string $modelName, string $checkName, int $expectedCount, array $options = [])
+    protected function runCleanupChecks(string $modelName, string $checkName, int $expectedCount, ?array $options = [])
     {
         $isDeleteCleanup = Hash::get($options, 'isDeleteCleanup', true);
         $cleanupCount = Hash::get($options, 'cleanupCount', 1);

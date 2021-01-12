@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,31 +23,35 @@ use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\ResourcesTable Resources
+ * @property \App\Model\Table\UsersTable Users
+ */
 class ResourcesDeleteController extends AppController
 {
-    const DELETE_SUCCESS_EVENT_NAME = 'ResourcesDeleteController.delete.success';
+    public const DELETE_SUCCESS_EVENT_NAME = 'ResourcesDeleteController.delete.success';
 
     /**
      * Resource Delete action
      *
      * @param string $id The identifier of the resource to delete.
-     * @throws NotFoundException If the resource does not exist.
-     * @throws NotFoundException If the resource is soft deleted.
-     * @throws NotFoundException If the user does not have access to the resource.
-     * @throws ForbiddenException If the user does not have the permission to delete the resource.
-     * @throws BadRequestException If the resource id is not a valid uuid.
-     * @throws InternalErrorException if the resource could not be saved for other reasons
+     * @throws \Cake\Http\Exception\NotFoundException If the resource does not exist.
+     * @throws \Cake\Http\Exception\NotFoundException If the resource is soft deleted.
+     * @throws \Cake\Http\Exception\NotFoundException If the user does not have access to the resource.
+     * @throws \Cake\Http\Exception\ForbiddenException If the user does not have the permission to delete the resource.
+     * @throws \Cake\Http\Exception\BadRequestException If the resource id is not a valid uuid.
+     * @throws \Cake\Http\Exception\InternalErrorException if the resource could not be saved for other reasons
      * @return void
      */
-    public function delete($id)
+    public function delete(string $id): void
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
@@ -53,39 +59,40 @@ class ResourcesDeleteController extends AppController
         }
 
         $this->loadModel('Resources');
+        $this->loadModel('Users');
 
         // Retrieve the resource to delete.
         try {
             $resource = $this->Resources->get($id);
+            $originalResource = clone $resource;
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
 
         // Get the list of users who have access to the resource
         // useful to do now to notify users later, since it wont be possible to after delete
-        $Users = TableRegistry::getTableLocator()->get('Users');
-        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
-        $users = $Users->findIndex(Role::USER, $options)->all();
+        $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
+        $users = $this->Users->findIndex(Role::USER, $options)->all();
 
-        // Update the entity to delete=1 and drop associated permissions
+        // Update the entity to delete=1, clear uri/desc/username and drop associated permissions
         if (!$this->Resources->softDelete($this->User->id(), $resource)) {
             $this->_handleDeleteError($resource);
             throw new InternalErrorException(__('Could not delete the resource. Please try again later.'));
         }
 
-        $this->_notifyUser($resource, $users);
+        $this->_notifyUser($originalResource, $users);
         $this->success(__('The resource was deleted'));
     }
 
     /**
      * Manage delete errors.
      *
-     * @param \Cake\Datasource\EntityInterface $resource entity
-     * @throws NotFoundException
-     * @throws ValidationException
+     * @param Resource $resource entity
+     * @throws \Cake\Http\Exception\NotFoundException
+     * @throws \App\Error\Exception\ValidationException
      * @return void
      */
-    protected function _handleDeleteError($resource)
+    protected function _handleDeleteError(Resource $resource): void
     {
         $errors = $resource->getErrors();
         if (empty($errors)) {
@@ -96,7 +103,8 @@ class ResourcesDeleteController extends AppController
         }
         if (isset($errors['id']['has_access'])) {
             // If the user has a read access return a 403, otherwise return a 404 to avoid data leak.
-            if ($this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resource->id, $this->User->id())) {
+            $acoType = PermissionsTable::RESOURCE_ACO;
+            if ($this->Resources->Permissions->hasAccess($acoType, $resource->id, $this->User->id())) {
                 throw new ForbiddenException(__('You do not have the permission to delete this resource.'));
             }
             throw new NotFoundException(__('The resource does not exist.'));
@@ -107,11 +115,11 @@ class ResourcesDeleteController extends AppController
     /**
      * Send email notification
      *
-     * @param resource $resource Resource
+     * @param Resource $resource Resource
      * @param \Cake\Datasource\ResultSetInterface $users list of User entity who had access to the resource
      * @return void
      */
-    protected function _notifyUser(Resource $resource, \Cake\Datasource\ResultSetInterface $users)
+    protected function _notifyUser(Resource $resource, ResultSetInterface $users): void
     {
         $event = new Event(static::DELETE_SUCCESS_EVENT_NAME, $this, [
             'resource' => $resource,

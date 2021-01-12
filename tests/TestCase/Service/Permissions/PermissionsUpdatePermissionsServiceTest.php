@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,8 +20,6 @@ namespace App\Test\TestCase\Service\Permissions;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
@@ -62,13 +62,11 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
         $this->service = new PermissionsUpdatePermissionsService();
     }
 
-    /* ************************************************************** */
     /* UPDATE PERMISSION */
-    /* ************************************************************** */
 
     public function testUpdatePermissionsSuccess_UpdateUserPermissions()
     {
-        list($resource1, $userAId, $userBId) = $this->insertFixture_UpdatePermissionsSuccess_UpdateUserPermissions();
+        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdatePermissionsSuccess_UpdateUserPermissions();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$userBId"), 'type' => Permission::READ],
@@ -95,7 +93,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsSuccess_UpdateGroupPermissions()
     {
-        list($resource1, $userAId, $groupAId) = $this->insertFixture_UpdatePermissionsSuccess_UpdateGroupPermissions();
+        [$resource1, $userAId, $groupAId] = $this->insertFixture_UpdatePermissionsSuccess_UpdateGroupPermissions();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$groupAId"), 'type' => Permission::READ],
@@ -121,7 +119,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsError_UpdateUserPermission_CannotUpdateNotExistingPermission()
     {
-        list($resource1, $userAId) = $this->insertFixture_UpdatePermissionsSuccess_UpdateUserPermissions();
+        [$resource1, $userAId] = $this->insertFixture_UpdatePermissionsSuccess_UpdateUserPermissions();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid(), 'type' => Permission::OWNER],
@@ -137,14 +135,14 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     private function assertUpdatePermissionsValidationException(CustomValidationException $e, string $errorFieldName)
     {
-        $this->assertEquals("Could not validate permissions data.", $e->getMessage());
+        $this->assertEquals('Could not validate permissions data.', $e->getMessage());
         $error = Hash::get($e->getErrors(), $errorFieldName);
         $this->assertNotNull($error, "Expected error not found : {$errorFieldName}. Errors: " . json_encode($e->getErrors()));
     }
 
     public function testUpdatePermissionsError_UpdateUserPermission_CannotUpdateOtherResourcePermission()
     {
-        list($resource1, $resource2, $userAId) = $this->insertFixture_UpdatePermissionsError_UpdateUserPermission_CannotUpdateOtherResourcePermission();
+        [$resource1, $resource2, $userAId] = $this->insertFixture_UpdatePermissionsError_UpdateUserPermission_CannotUpdateOtherResourcePermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid("permission.id.{$resource2->id}-$userAId"), 'type' => Permission::OWNER],
@@ -170,7 +168,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsError_UpdateUserPermission_CannotLetResourceWithoutOwner()
     {
-        list($resource1, $userAId) = $this->insertFixture_UpdateUserPermission_CannotLetResourceWithoutOwner();
+        [$resource1, $userAId] = $this->insertFixture_UpdateUserPermission_CannotLetResourceWithoutOwner();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$userAId"), 'type' => Permission::READ],
@@ -196,7 +194,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsError_UpdateUserPermission_PermissionValidationExceptions()
     {
-        list($resource1, $userAId, $userBId) = $this->insertFixture_UpdateUserPermission_PermissionValidationExceptions();
+        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateUserPermission_PermissionValidationExceptions();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         // Type is tested
@@ -221,13 +219,11 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
         return [$resource1, $userAId, $userBId];
     }
 
-    /* ************************************************************** */
     /* DELETE PERMISSION */
-    /* ************************************************************** */
 
     public function testUpdatePermissionsSuccess_DeleteUserPermissions()
     {
-        list($resource1, $userAId, $userBId) = $this->insertFixture_UpdatePermissionsSuccess_DeleteUserPermissions();
+        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdatePermissionsSuccess_DeleteUserPermissions();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$userBId"), 'delete' => true],
@@ -252,7 +248,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsSuccess_DeleteGroupPermissions()
     {
-        list($resource1, $userAId, $groupAId) = $this->insertFixture_UpdatePermissionsSuccess_DeleteGroupPermissions();
+        [$resource1, $userAId, $groupAId] = $this->insertFixture_UpdatePermissionsSuccess_DeleteGroupPermissions();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$groupAId"), 'delete' => true],
@@ -277,7 +273,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsError_DeleteUserPermission_CannotUpdateNotExistingPermission()
     {
-        list($resource1, $userAId) = $this->insertFixture_UpdatePermissionsSuccess_DeleteUserPermissions();
+        [$resource1, $userAId] = $this->insertFixture_UpdatePermissionsSuccess_DeleteUserPermissions();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid(), 'delete' => true],
@@ -293,7 +289,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsError_DeleteUserPermission_CannotUpdateOtherResourcePermission()
     {
-        list($resource1, $resource2, $userAId) = $this->insertFixture_UpdatePermissionsError_DeleteUserPermission_CannotUpdateOtherResourcePermission();
+        [$resource1, $resource2, $userAId] = $this->insertFixture_UpdatePermissionsError_DeleteUserPermission_CannotUpdateOtherResourcePermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid("permission.id.{$resource2->id}-$userAId"), 'delete' => true],
@@ -319,7 +315,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsError_DeleteUserPermission_CannotLetResourceWithoutOwner()
     {
-        list($resource1, $userAId) = $this->insertFixture_DeleteUserPermission_CannotLetResourceWithoutOwner();
+        [$resource1, $userAId] = $this->insertFixture_DeleteUserPermission_CannotLetResourceWithoutOwner();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['id' => UuidFactory::uuid("permission.id.{$resource1->id}-$userAId"), 'delete' => true],
@@ -343,13 +339,11 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
         return [$resource1, $userAId, $userBId];
     }
 
-    /* ************************************************************** */
     /* ADD PERMISSION */
-    /* ************************************************************** */
 
     public function testUpdatePermissionsSuccess_AddUserPermissions()
     {
-        list($resource1, $userAId) = $this->insertFixture_UpdatePermissionsSuccess_AddUserPermissions();
+        [$resource1, $userAId] = $this->insertFixture_UpdatePermissionsSuccess_AddUserPermissions();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userBId = UuidFactory::uuid('user.id.betty');
         $data = [
@@ -375,7 +369,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsSuccess_AddGroupPermissions()
     {
-        list($resource1, $userAId) = $this->insertFixture_UpdatePermissionsSuccess_AddGroupPermissions();
+        [$resource1, $userAId] = $this->insertFixture_UpdatePermissionsSuccess_AddGroupPermissions();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $groupAId = UuidFactory::uuid('group.id.accounting');
         $data = [
@@ -401,7 +395,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
 
     public function testUpdatePermissionsError_AddUserPermission_PermissionValidationExceptions()
     {
-        list($resource1, $userAId) = $this->insertFixture_AddUserPermission_PermissionValidationExceptions();
+        [$resource1, $userAId] = $this->insertFixture_AddUserPermission_PermissionValidationExceptions();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userBId = UuidFactory::uuid('user.id.betty');
 

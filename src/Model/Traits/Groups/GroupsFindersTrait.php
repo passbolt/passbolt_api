@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -36,12 +38,12 @@ trait GroupsFindersTrait
     private function _filterQueryByHasNotPermission(Query $query, string $resourceId)
     {
         $permissionQuery = $this->getAssociation('Permissions')
-                                ->find()
-                                ->select(['Permissions.aro_foreign_key'])
-                                ->where([
-                                    'Permissions.aro' => 'Group',
-                                    'Permissions.aco_foreign_key' => $resourceId,
-                                ]);
+            ->find()
+            ->select(['Permissions.aro_foreign_key'])
+            ->where([
+                'Permissions.aro' => 'Group',
+                'Permissions.aco_foreign_key' => $resourceId,
+            ]);
 
         // Filter on the groups that do not have yet a permission.
         return $query->where(['Groups.id NOT IN' => $permissionQuery]);
@@ -71,10 +73,10 @@ trait GroupsFindersTrait
     /**
      * Build the query that fetches data for group index
      *
-     * @param array $options options
+     * @param array|null $options options
      * @return \Cake\ORM\Query
      */
-    public function findIndex(array $options = [])
+    public function findIndex(?array $options = [])
     {
         $query = $this->find();
 
@@ -88,8 +90,13 @@ trait GroupsFindersTrait
             $query->contain('Modifier.Profiles');
         }
 
-        // If contains user.
-        if (isset($options['contain']['user'])) {
+        // If contains users
+        // contain.user is deprecated, should be users
+        if (
+            (isset($options['contain']['users']) && $options['contain']['users'])
+            // @deprecated when v2 support is dropped
+            || (isset($options['contain']['user']) && $options['contain']['user'])
+        ) {
             $query->contain('Users');
         }
 
@@ -100,23 +107,46 @@ trait GroupsFindersTrait
             });
         }
 
-        // If contains group_user.
-        if (isset($options['contain']['group_user'])) {
+        // If contains groups_users.
+        $contain_groups_users = (isset($options['contain']['groups_users'])
+                && $options['contain']['groups_users'])
+            // @deprecated when v2 support is dropped: contain[group_user] should be plural
+            || (isset($options['contain']['group_user'])
+                && $options['contain']['group_user']);
+
+        $contain_groups_users_user = (isset($options['contain']['groups_users.user'])
+                && $options['contain']['groups_users.user'])
+            // @deprecated when v2 support is dropped
+            || (isset($options['contain']['group_user.user'])
+                && $options['contain']['group_user.user']);
+
+        $contain_groups_users_user_profile = (isset($options['contain']['groups_users.user.profile'])
+                && $options['contain']['groups_users.user.profile'])
+            // @deprecated when v2 support is dropped
+            || (isset($options['contain']['group_user.user.profile'])
+                && $options['contain']['group_user.user.profile']);
+
+        $contain_groups_users_user_gpgkey = (isset($options['contain']['groups_users.user.gpgkey'])
+                && $options['contain']['groups_users.user.gpgkey'])
+            // @deprecated when v2 support is dropped
+            || (isset($options['contain']['group_user.user.gpgkey'])
+                && $options['contain']['group_user.user.gpgkey']);
+
+        $contain_groups_users_user = $contain_groups_users_user
+            || $contain_groups_users_user_gpgkey
+            || $contain_groups_users_user_profile;
+        $contain_groups_users = $contain_groups_users || $contain_groups_users_user;
+
+        if ($contain_groups_users) {
             $query->contain('GroupsUsers');
         }
-
-        // If contains group_user user.
-        if (isset($options['contain']['group_user.user'])) {
+        if ($contain_groups_users_user) {
             $query->contain('GroupsUsers.Users');
         }
-
-        // If contains user profile.
-        if (isset($options['contain']['group_user.user.profile'])) {
+        if ($contain_groups_users_user_profile) {
             $query->contain('GroupsUsers.Users.Profiles');
         }
-
-        // If contains user gpgkey.
-        if (isset($options['contain']['group_user.user.gpgkey'])) {
+        if ($contain_groups_users_user_gpgkey) {
             $query->contain('GroupsUsers.Users.Gpgkeys');
         }
 
@@ -166,12 +196,10 @@ trait GroupsFindersTrait
     {
         // Count the members of the groups in a subquery.
         $subQuery = $this->getAssociation('GroupsUsers')->find();
-        $subQuery->select(['count' => $subQuery->func()->count('*')])
-                 ->where(['GroupsUsers.group_id = Groups.id']);
+        $subQuery->select(['count' => $subQuery->func()->count('*')])->where(['GroupsUsers.group_id = Groups.id']);
 
         // Add the user_count field to the Groups query.
-        $query->select(['user_count' => $subQuery])
-              ->enableAutoFields();
+        $query->select(['user_count' => $subQuery])->enableAutoFields();
 
         return $query;
     }
@@ -181,10 +209,10 @@ trait GroupsFindersTrait
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param array <string> $usersIds The users to filter the query on.
-     * @param bool $areManager (optional) Should the users be managers ? Default false.
+     * @param bool|null $areManager (optional) Should the users be managers ? Default false.
      * @return \Cake\ORM\Query
      */
-    private function _filterQueryByGroupsUsers(Query $query, array $usersIds, bool $areManager = false)
+    private function _filterQueryByGroupsUsers(Query $query, array $usersIds, ?bool $areManager = false): Query
     {
         // If there is only one user use a left join
         if (count($usersIds) == 1) {
@@ -201,23 +229,22 @@ trait GroupsFindersTrait
         // Find all the groups that have the given users.
         $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $subQuery = $GroupsUsers->find()
-                                ->select([
-                                    'GroupsUsers.group_id',
-                                    'count' => $query->func()->count('GroupsUsers.group_id'),
-                                ])
-                                ->where([
-                                    'GroupsUsers.user_id IN' => $usersIds,
-                                ])
-                                ->group('GroupsUsers.group_id')
-                                ->having(['count' => count($usersIds)]);
+            ->select([
+                'GroupsUsers.group_id',
+                'count' => $query->func()->count('GroupsUsers.group_id'),
+            ])
+            ->where([
+                'GroupsUsers.user_id IN' => $usersIds,
+            ])
+            ->group('GroupsUsers.group_id')
+            ->having(['count' => count($usersIds)]);
 
         // If we want to retrieve only managers.
         if ($areManager) {
             $subQuery->where(['GroupsUsers.is_admin' => true]);
         }
 
-        $matchingGroupsIds = $subQuery->extract('group_id')
-                                      ->toArray();
+        $matchingGroupsIds = $subQuery->extract('group_id')->toArray();
 
         // Filter the query.
         if (empty($matchingGroupsIds)) {
@@ -234,29 +261,27 @@ trait GroupsFindersTrait
      * Build the query that fetches data for group view
      *
      * @param string $groupId The group to retrieve
-     * @param array $options options
+     * @param array|null $options options
      * @throws \InvalidArgumentException if the groupId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
-    public function findView(string $groupId, array $options = [])
+    public function findView(string $groupId, ?array $options = []): Query
     {
         if (!Validation::uuid($groupId)) {
             throw new \InvalidArgumentException(__('The parameter groupId should be a valid uuid.'));
         }
 
-        return $this->findIndex($options)
-                    ->where(['Groups.id' => $groupId]);
+        return $this->findIndex($options)->where(['Groups.id' => $groupId]);
     }
 
     /**
      * Get a list of groups matching a given list of group ids
      *
      * @param array $groupsIds array of groups uuids
-     * @param array $options array of options
-     *
+     * @param array|null $options array of options
      * @return \Cake\ORM\Query
      */
-    public function findAllByIds(array $groupsIds, array $options = [])
+    public function findAllByIds(array $groupsIds, ?array $options = []): Query
     {
         if (empty($groupsIds)) {
             throw new \InvalidArgumentException(__('The parameter groupIds cannot be empty.'));
@@ -267,7 +292,6 @@ trait GroupsFindersTrait
             }
         }
 
-        return $this->findIndex($options)
-            ->where(['Groups.id IN' => $groupsIds]);
+        return $this->findIndex($options)->where(['Groups.id IN' => $groupsIds]);
     }
 }

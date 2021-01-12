@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -63,9 +65,7 @@ class CreateTest extends AppTestCase
         return $entityOptions;
     }
 
-    /* ************************************************************** */
     /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testValidationUserId()
     {
@@ -128,9 +128,7 @@ class CreateTest extends AppTestCase
         $this->assertFieldFormatValidation($this->Comments, 'created_by', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
     }
 
-    /* ************************************************************** */
     /* LOGIC VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testErrorUserDoesNotExist()
     {

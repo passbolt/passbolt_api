@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Passbolt\Log\Model\Entity\SecretAccess;
 
 class SecretAccessesTable extends Table
 {
@@ -29,7 +30,7 @@ class SecretAccessesTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -65,7 +66,7 @@ class SecretAccessesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
@@ -91,9 +92,9 @@ class SecretAccessesTable extends Table
 
     /**
      * Return a secret_access entity.
-     * @param array $data entity data
      *
-     * @return SecretAccess
+     * @param array $data entity data
+     * @return \Passbolt\Log\Model\Table\SecretAccess
      */
     public function buildEntity(array $data)
     {
@@ -109,14 +110,14 @@ class SecretAccessesTable extends Table
 
     /**
      * Create a new SecretAccess
-     * @param Secret $secret the secret entity
-     * @param UserAccessControl $uac user access control object
      *
+     * @param \App\Model\Entity\Secret $secret the secret entity
+     * @param \App\Utility\UserAccessControl $uac user access control object
      * @return bool|\Cake\Datasource\EntityInterface|false|mixed
      */
     public function create(Secret $secret, UserAccessControl $uac)
     {
-        $userId = $uac->userId();
+        $userId = $uac->getId();
 
         $data = [
             'user_id' => $userId,

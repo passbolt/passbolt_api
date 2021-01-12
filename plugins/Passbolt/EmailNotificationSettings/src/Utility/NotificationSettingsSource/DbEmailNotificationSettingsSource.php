@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,21 +17,19 @@
 
 namespace Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource;
 
-use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Exception;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use function json_decode;
 
-class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSettingsSourceInterface, WriteableEmailNotificationSettingsSourceInterface
+class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSettingsSourceInterface, WriteableEmailNotificationSettingsSourceInterface // phpcs:ignore
 {
-    const NAMESPACE = 'emailNotification';
+    public const NAMESPACE = 'emailNotification';
 
     /**
-     * @var OrganizationSettingsTable
+     * @var \App\Model\Table\OrganizationSettingsTable
      */
     private $organizationSettingsTable;
 
@@ -43,7 +43,7 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
 
     /**
      * @param array $notificationSettingsData Notification settings data
-     * @param UserAccessControl $uac Instance of user access control
+     * @param \App\Utility\UserAccessControl $uac Instance of user access control
      * @return void
      */
     public function write(array $notificationSettingsData, UserAccessControl $uac)
@@ -65,8 +65,8 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
      * Get config setting from the database
      *
      * @return array
-     * @throws RecordNotFoundException If a matching DB config doesn't exist
-     * @throws InternalErrorException If the DB config is not valid json string
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException If a matching DB config doesn't exist
+     * @throws \Cake\Http\Exception\InternalErrorException If the DB config is not valid json string
      */
     public function read()
     {
@@ -85,6 +85,7 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
      * Check if the table exists with a simple query to the database.
      * This check must be done before using this notification settings source to avoid
      * DB exception raised during installation because of queries run against the table when it does exist .
+     *
      * @return bool
      */
     public function isAvailable()

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -62,7 +64,7 @@ class WebInstallerMiddleware
         try {
             $connection = ConnectionManager::get('default')->config();
 
-            return (!empty($connection) && !empty($connection['database']));
+            return !empty($connection) && !empty($connection['database']);
         } catch (MissingDatasourceConfigException $exception) {
             return false;
         }

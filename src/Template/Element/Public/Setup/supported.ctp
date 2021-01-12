@@ -18,7 +18,7 @@
     <div class="plugin-check <?= $browserName; ?> error">
         <p class="message">
             <?php echo __('A web extension is required to use passbolt.'); ?><br>
-            <a href="https://www.passbolt.com/download/<?= $browserName; ?>" target="_blank" rel="noopener">
+            <a href="https://www.passbolt.com/download/<?= $browserName; ?>" target="_blank" rel="noopener noreferrer">
                 <?php echo __('Download it here'); ?>
             </a>.
         </p>

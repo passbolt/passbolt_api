@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+DIR="$(cd "$(dirname "$0")" && pwd)"
+USER="$2"
+if [ -z "$USER" ];
+then
+    USER="www-data"
+fi
+
+$DIR/versions
+sudo -H -u $USER bash -c "$DIR/cake passbolt healthcheck"
+sudo -H -u $USER bash -c "$DIR/cake passbolt cleanup --dry-run"
+sudo -H -u $USER bash -c "$DIR/cake passbolt datacheck --hide-success-details"
+cat $DIR/../logs/error.log

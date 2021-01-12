@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use Cake\Routing\Router;
 
 /**
  * Profile Entity
@@ -31,7 +32,6 @@ use Cake\Routing\Router;
  */
 class Profile extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

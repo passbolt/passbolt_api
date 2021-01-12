@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,18 +19,21 @@ namespace App\Controller\Component;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
-use UserAgentParser\Provider\DonatjUAParser;
+use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
+use donatj\UserAgent\UserAgentParser;
+use Exception;
 
 /**
  * @property Component\AuthComponent Auth
  */
 class UserComponent extends Component
 {
-
     public $components = ['Auth'];
 
     /**
      * User agent cache to avoid parsing multiple times per request
+     *
      * @var null
      */
     protected $_userAgent = null;
@@ -41,6 +46,16 @@ class UserComponent extends Component
     public function id()
     {
         return $this->Auth->user('id');
+    }
+
+    /**
+     * Return the current username if the user is identified
+     *
+     * @return string|null
+     */
+    public function username()
+    {
+        return $this->Auth->user('username');
     }
 
     /**
@@ -69,19 +84,18 @@ class UserComponent extends Component
     }
 
     /**
-     * @return UserAccessControl
+     * @return \App\Utility\UserAccessControl
      */
     public function getAccessControl()
     {
-        return new UserAccessControl($this->role(), $this->id());
+        return new UserAccessControl($this->role(), $this->id(), $this->username());
     }
 
     /**
      * Get user agent details from name defined in environment variable
      *
      * @return array
-     * @throws Exception
-     * @throws ValidationException
+     * @throws \Exception
      */
     public function agent()
     {
@@ -90,16 +104,13 @@ class UserComponent extends Component
             try {
                 $agent = env('HTTP_USER_AGENT');
                 if ($agent === null) {
-                    throw new \Exception(__('undefined user agent'));
+                    throw new Exception(__('undefined user agent'));
                 }
-                // For now we use the simple DonatjUAParser which allow only a basic parsing to retrieve
-                // browser information. Other parser are available, check out the project repository for more information:
-                // https://github.com/ThaDafinser/UserAgentParser
-                $provider = new DonatjUAParser();
+                $provider = new UserAgentParser();
                 $parser = $provider->parse($agent);
-                $this->_userAgent['Browser']['name'] = $parser->getBrowser()->getName();
-                $this->_userAgent['Browser']['version'] = $parser->getBrowser()->getVersion()->getComplete();
-            } catch (\Exception $e) {
+                $this->_userAgent['Browser']['name'] = $parser->browser();
+                $this->_userAgent['Browser']['version'] = $parser->browserVersion();
+            } catch (Exception $e) {
                 // Failure is not an option
                 $this->_userAgent['Browser']['name'] = 'invalid';
                 $this->_userAgent['Browser']['version'] = 'invalid';
@@ -107,5 +118,27 @@ class UserComponent extends Component
         }
 
         return $this->_userAgent;
+    }
+
+    /**
+     * Get the user theme
+     *
+     * @return string
+     */
+    public function theme()
+    {
+        $defaultTheme = 'default';
+        if (Configure::read('passbolt.plugins.accountSettings')) {
+            /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
+            $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
+            $theme = $AccountSettings->getTheme($this->id());
+            if (!$theme) {
+                $theme = $defaultTheme;
+            }
+
+            return $theme;
+        }
+
+        return $defaultTheme;
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,9 +22,9 @@ use InvalidArgumentException;
 use Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm;
 
 /**
- * @method EmailNotificationSettingsForm getSubject()
- *
- * Event triggered to add new email notification settings definition. It contains the EmailNotificationSettingsForm, so it can be manipulated to add
+ * @method \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm getSubject()
+ *  Event triggered to add new email notification settings definition.
+ *  It contains the EmailNotificationSettingsForm, so it can be manipulated to add
  * new digest email notification settings definition at runtime.
  */
 class EmailNotificationSettingsDefinitionRegisterEvent extends Event
@@ -30,7 +32,7 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
     /**
      * Name of the event dispatched when registration of notification settings definition is run.
      */
-    const EVENT_NAME = 'email_notification_settings.definitions.register';
+    public const EVENT_NAME = 'email_notification_settings.definitions.register';
 
     /**
      * @param string $name Name of the event
@@ -40,14 +42,15 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
     public function __construct($name, $subject = null, $data = null)
     {
         if (!$subject instanceof EmailNotificationSettingsForm) {
-            throw new InvalidArgumentException('`subject` must be an instance of ' . EmailNotificationSettingsForm::class);
+            $msg = '`subject` must be an instance of ' . EmailNotificationSettingsForm::class;
+            throw new InvalidArgumentException($msg);
         }
 
         parent::__construct($name, $subject, $data);
     }
 
     /**
-     * @param EmailNotificationSettingsForm $emailNotificationSettingsForm An instance of EmailNotificationSettingsForm
+     * @param \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm $emailNotificationSettingsForm An instance of EmailNotificationSettingsForm
      * @return $this
      */
     public static function create(EmailNotificationSettingsForm $emailNotificationSettingsForm)
@@ -56,7 +59,7 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
     }
 
     /**
-     * @return EmailNotificationSettingsForm
+     * @return \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm
      */
     public function getEmailNotificationSettingsForm()
     {

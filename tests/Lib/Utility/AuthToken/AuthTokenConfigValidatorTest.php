@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Test\Lib\Utility\AuthToken;
 
@@ -23,7 +24,7 @@ class AuthTokenConfigValidatorTest extends TestCase
      */
     public function testThatAuthTokenConfigValidatorReturnNullIfValidationFailed($value)
     {
-        $this->assertNull(call_user_func($this->sut, value));
+        $this->assertNull(call_user_func($this->sut, $value));
     }
 
     /**

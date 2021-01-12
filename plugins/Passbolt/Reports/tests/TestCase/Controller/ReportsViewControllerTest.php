@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,8 +18,8 @@
 namespace Passbolt\Reports\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Reports\Service\ReportPool;
 use Passbolt\Reports\Utility\AbstractSingleReport;
-use Passbolt\Reports\Utility\ReportPool;
 
 class ReportsViewControllerTest extends AppIntegrationTestCase
 {
@@ -90,7 +92,7 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
     {
         $ReportClass = new class extends AbstractSingleReport
         {
-            public function __construct(string $arg1 = null)
+            public function __construct(?string $arg1 = null)
             {
             }
 

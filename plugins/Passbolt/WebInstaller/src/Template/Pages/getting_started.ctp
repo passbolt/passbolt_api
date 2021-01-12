@@ -16,7 +16,7 @@ use Cake\Routing\Router;
 use Cake\Core\Configure;
 
 $this->assign('title',	__('Passbolt is not configured.'));
-$this->Html->css('themes/default/api_setup.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('themes/default/api_webinstaller.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
 
 $this->assign('page_classes', 'setup start');
 ?>
@@ -26,32 +26,13 @@ $this->assign('page_classes', 'setup start');
         <div class="row">
             <div class="col12 last intro">
                 <h1><?= __('Passbolt is not configured yet!') ?></h1>
-                <h2><?= __('If you see this page, it means that passbolt is present on your server but not configured. You can configure it using one of the two methods below.') ?></h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col6">
-                <div class="big-choice">
-                    <h3><?= __('Manual configuration') ?></h3>
-                    <p>
-                        <?= __('Choose this option if you want to configure passbolt step by step manually following the documentation.') ?>
-                    </p>
-                    <a href="https://help.passbolt.com/hosting/install" target="_blank" rel="noopener" class="dim button">
-                        <i class="fa fa-cogs fa-fw"></i>  <?= __('Follow the documentation') ?>
+                <h2><?= __('If you see this page, it means that passbolt is present on your server but not configured. Click on "Get Started" to launch the configuration wizard.') ?></h2>
+                <p>&nbsp;</p>
+                <p>
+                    <a href="<?= Router::url('install/system_check') ?>" class="button primary big">
+                        <i class="fa fa-magic fa-fw"></i> <?= __('Get Started') ?>
                     </a>
-                </div>
-            </div>
-            <div class="col6 last">
-                <div class="big-choice">
-                    <div class="ribbon"><span><?= __('POPULAR') ?></span></div>
-                    <h3><?= __('Wizard configuration') ?></h3>
-                    <p>
-                        <?= __('Choose this option if you want to be guided by the configuration wizard and get started in no time.') ?>
-                    </p>
-                    <a href="<?= Router::url('install/system_check') ?>" class="button primary">
-                        <i class="fa fa-magic fa-fw"></i> <?= __('Start the wizard') ?>
-                    </a>
-                </div>
+                </p>
             </div>
         </div>
     </div>

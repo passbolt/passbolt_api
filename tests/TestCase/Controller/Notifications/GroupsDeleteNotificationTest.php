@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
     public $Groups;
 
     public $fixtures = [
-        'app.Base/Groups', 'app.Base/Users', 'app.Base/Resources', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/EmailQueue',
+        'app.Base/Groups', 'app.Base/Users', 'app.Base/Resources', 'app.Base/Profiles', 'app.Base/Roles',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Gpgkeys', 'app.Base/Secrets',
     ];
 

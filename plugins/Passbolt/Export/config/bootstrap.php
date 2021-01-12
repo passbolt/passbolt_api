@@ -1,4 +1,5 @@
 <?php
+
 use Cake\Core\Configure;
 
 $exportPluginEnabled = Configure::read('passbolt.plugins.export.enabled');

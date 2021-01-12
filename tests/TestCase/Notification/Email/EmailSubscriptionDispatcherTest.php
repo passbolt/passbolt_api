@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,9 +28,7 @@ use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\TestSuite\TestCase;
 use Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
-use stdClass;
 
 class EmailSubscriptionDispatcherTest extends TestCase
 {
@@ -76,7 +76,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
         parent::setUp();
     }
 
-    public function testThatEmailSubscriptionDispatcherCanBeInvokedAsEventListener()
+    public function testEmailSubscriptionDispatcherCanBeInvokedAsEventListener()
     {
         $this->emailSubscriptionManagerMock->expects($this->once())
             ->method('getSubscribedEvents')
@@ -97,7 +97,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
      * @param array $subscribedRedactors
      * @param array $subscribedRedactorEmails
      */
-    public function testThatDispatchCreateAndSendEmailForEachRedactorSubscribedOnEvent(
+    public function testEmailSubscriptionDispatcherCreateAndSendEmailForEachRedactorSubscribedOnEvent(
         array $subscribedRedactors,
         array $subscribedRedactorEmails
     ) {
@@ -116,7 +116,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $this->sut->dispatch($event);
     }
 
-    public function testThatCollectDispatchCollectEvent()
+    public function testCollectDispatchCollectEvent()
     {
         $this->eventManagerMock->expects($this->once())
             ->method('dispatch')
@@ -129,7 +129,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $this->assertEquals($this->sut, $this->sut->collectSubscribedEmailRedactors());
     }
 
-    public function testThatDispatchDoesNotSendEmailIfCollectionIsEmpty()
+    public function testEmailSubscriptionDispatcherDoesNotSendEmailIfCollectionIsEmpty()
     {
         $eventName = 'test_event';
         $event = new Event($eventName);
@@ -151,7 +151,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $this->sut->dispatch($event);
     }
 
-    public function testThatDispatchSendEmailForEachEmailInCollection()
+    public function testEmailSubscriptionDispatcherSendEmailForEachEmailInCollection()
     {
         $eventName = 'test_event';
         $event = new Event($eventName);
@@ -178,28 +178,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $this->sut->dispatch($event);
     }
 
-    public function testThatDispatchThrowInvalidArgumentExceptionIfOnSubscribedDoesNotReturnAnEmailCollection()
-    {
-        $eventName = 'test_event';
-        $event = new Event($eventName);
-        $subscribedRedactorMock = $this->createMock(SubscribedEmailRedactorInterface::class);
-        $subscribedRedactors = [$subscribedRedactorMock];
-
-        $subscribedRedactorMock->expects($this->once())
-            ->method('onSubscribedEvent')
-            ->willReturn(new stdClass());
-
-        $this->emailSubscriptionManagerMock->expects($this->once())
-            ->method('getSubscriptionsForEvent')
-            ->with($event)
-            ->willReturn($subscribedRedactors);
-
-        $this->expectException(\InvalidArgumentException::class);
-
-        $this->sut->dispatch($event);
-    }
-
-    public function testThatDispatchCatchEmailQueueExceptionAndLogError()
+    public function testEmailSubscriptionDispatcherCatchEmailQueueExceptionAndLogError()
     {
         $eventName = 'test_event';
         $event = new Event($eventName);

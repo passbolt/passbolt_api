@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,22 +18,26 @@
 namespace App\Controller\Favorites;
 
 use App\Controller\AppController;
+use App\Model\Entity\Favorite;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\FavoritesTable $Favorites
+ */
 class FavoritesDeleteController extends AppController
 {
     /**
      * Unmark a resource as favorite.
      *
      * @param string $id The identifier of favorite to delete.
-     * @throws BadRequestException
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\BadRequestException
+     * @throws \Cake\Http\Exception\NotFoundException
      * @return void
      */
-    public function delete($id = null)
+    public function delete(string $id)
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
@@ -56,10 +62,10 @@ class FavoritesDeleteController extends AppController
     /**
      * Manage delete errors
      *
-     * @param \Cake\Datasource\EntityInterface $favorite favorite
+     * @param \App\Model\Entity\Favorite $favorite favorite
      * @return void
      */
-    private function _handleDeleteErrors($favorite)
+    private function _handleDeleteErrors(Favorite $favorite)
     {
         $errors = $favorite->getErrors();
         if (!empty($errors)) {

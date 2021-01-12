@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,12 +17,9 @@
 
 namespace App\Test\TestCase\Model\Table\GroupsUsers;
 
-use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
-use PassboltTestData\Lib\PermissionMatrix;
 
 class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
 {

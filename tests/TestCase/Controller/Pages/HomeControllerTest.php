@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,19 +21,22 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class HomeControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'plugin.Passbolt/AccountSettings.AccountSettings',
+    ];
 
     public function testHomeNotLoggedInError()
     {
-        $this->get('/home');
-        $this->assertRedirect('/auth/login?redirect=%2Fhome');
+        $this->get('/app/passwords');
+        $this->assertRedirect('/auth/login?redirect=%2Fapp%2Fpasswords');
     }
 
     public function testHomeSuccess()
     {
         $this->authenticateAs('ada');
-        $this->get('/home');
+        $this->get('/app/passwords');
         $this->assertResponseOk();
-        $this->assertResponseContains('loading');
+        $this->assertResponseContains('skeleton');
     }
 }

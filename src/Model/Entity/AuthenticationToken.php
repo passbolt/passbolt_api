@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -32,10 +34,10 @@ use Cake\ORM\Entity;
  */
 class AuthenticationToken extends Entity
 {
-    const TYPE_RECOVER = 'recover';
-    const TYPE_REGISTER = 'register';
-    const TYPE_MFA = 'mfa';
-    const TYPE_LOGIN = 'login';
+    public const TYPE_RECOVER = 'recover';
+    public const TYPE_REGISTER = 'register';
+    public const TYPE_MFA = 'mfa';
+    public const TYPE_LOGIN = 'login';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

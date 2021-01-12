@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,10 +20,11 @@ class Purifier
 {
     /**
      * Purify a html string
+     *
      * @param mixed $html html to clean
      * @return mixed
      */
-    public static function clean(string $html = null)
+    public static function clean(?string $html = null)
     {
         if (is_null($html)) {
             return null;

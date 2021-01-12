@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,12 +20,12 @@ namespace App\Model\Table;
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\HasValidParentRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
-use App\Model\Table\AvatarsTable;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -35,15 +37,13 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
- *
- * @method \App\Model\Entity\Comment get($primaryKey, $options = [])
- * @method \App\Model\Entity\Comment newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Comment[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Comment|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Comment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Comment[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Comment findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \App\Model\Entity\Comment get($primaryKey, ?array $options = [])
+ * @method \App\Model\Entity\Comment newEntity($data = null, ?array $options = [])
+ * @method \App\Model\Entity\Comment[] newEntities(array $data, ?array $options = [])
+ * @method \App\Model\Entity\Comment|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \App\Model\Entity\Comment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Comment[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Comment findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CommentsTable extends Table
@@ -55,7 +55,7 @@ class CommentsTable extends Table
     /**
      * List of allowed foreign models on which Comments can be plugged.
      */
-    const ALLOWED_FOREIGN_MODELS = [
+    public const ALLOWED_FOREIGN_MODELS = [
         'Resource',
     ];
 
@@ -65,7 +65,7 @@ class CommentsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -101,7 +101,7 @@ class CommentsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
@@ -132,7 +132,11 @@ class CommentsTable extends Table
             ->requirePresence('content', __('A content is required'))
             ->allowEmptyString('content', __('The content should not be empty'), false)
             ->utf8Extended('content', __('The content is not a valid utf8 string (emoticons excluded)'))
-            ->lengthBetween('content', [1, 255], __('The content length should be between {0} and {1} characters.', 1, 255));
+            ->lengthBetween(
+                'content',
+                [1, 255],
+                __('The content length should be between {0} and {1} characters.', 1, 255)
+            );
 
         $validator
             ->uuid('created_by', __('created_by should be a uuid'))
@@ -154,7 +158,7 @@ class CommentsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->addCreate($rules->existsIn('foreign_key', 'Resources'), 'resource_exists');
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_soft_deleted', [
@@ -205,12 +209,16 @@ class CommentsTable extends Table
      * @param string $userId The id of the user that tries to retrieve comments.
      * @param string $foreignModelName The foreign model name to find comments for (example: 'Resource')
      * @param string $foreignKey The foreign model uuid to find comments for
-     * @param array $options options
+     * @param array|null $options options
      * @throws \InvalidArgumentException if the groupId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
-    public function findViewForeignComments(string $userId, string $foreignModelName, string $foreignKey, array $options = [])
-    {
+    public function findViewForeignComments(
+        string $userId,
+        string $foreignModelName,
+        string $foreignKey,
+        ?array $options = []
+    ): Query {
         // Check model sanity.
         if (!in_array($foreignModelName, self::ALLOWED_FOREIGN_MODELS)) {
             throw new \InvalidArgumentException(__('The foreign model provided is not supported'));
@@ -259,11 +267,11 @@ class CommentsTable extends Table
      * Validate that the comment belongs to the associated user.
      *
      * @param \App\Model\Entity\Comment $entity The entity that will be deleted.
-     * @param array $options options
+     * @param array|null $options options
      *   Comments.user_id should be provided so that the check can be done.
      * @return bool
      */
-    public function ruleIsOwner(\App\Model\Entity\Comment $entity, array $options = [])
+    public function ruleIsOwner(\App\Model\Entity\Comment $entity, ?array $options = []): bool
     {
         if (!isset($options['Comments.user_id'])) {
             throw new BadRequestException(__('The parameter Comments.user_id should be provided'));

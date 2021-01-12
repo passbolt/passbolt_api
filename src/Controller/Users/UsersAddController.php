@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,17 +17,19 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 
+/**
+ * @property \App\Model\Table\UsersTable Users
+ */
 class UsersAddController extends UsersRegisterController
 {
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
+     * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
@@ -38,7 +42,8 @@ class UsersAddController extends UsersRegisterController
     /**
      * User add action (admin only)
      *
-     * @throws ValidationException if user data does not validate
+     * @throws \App\Error\Exception\ValidationException if user data does not validate
+     * @throws \Exception
      * @return void
      */
     public function addPost()
@@ -46,7 +51,7 @@ class UsersAddController extends UsersRegisterController
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('Only administrators can add new users.'));
         }
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         $user = $this->Users->register($data, $this->User->getAccessControl());
         $user = $this->Users->findView($user->id, Role::ADMIN)->first();
         $msg = __('The user was successfully added. This user now need to complete the setup.');

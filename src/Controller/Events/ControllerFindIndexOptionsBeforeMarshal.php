@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,15 +23,15 @@ use Cake\Event\Event;
 
 class ControllerFindIndexOptionsBeforeMarshal extends Event
 {
-    const EVENT_NAME = 'Controller.findIndexOptions.beforeMarshal';
+    public const EVENT_NAME = 'Controller.findIndexOptions.beforeMarshal';
 
     /**
-     * @var Controller
+     * @var \Cake\Controller\Controller
      */
     private $controller;
 
     /**
-     * @var FindIndexOptions
+     * @var \App\Model\Table\Dto\FindIndexOptions
      */
     private $options;
 
@@ -47,9 +49,9 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     }
 
     /**
-     * @param FindIndexOptions $options Options
-     * @param Controller $controller Table
-     * @return ControllerFindIndexOptionsBeforeMarshal
+     * @param \App\Model\Table\Dto\FindIndexOptions $options Options
+     * @param \Cake\Controller\Controller $controller Table
+     * @return \App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal
      */
     public static function create(FindIndexOptions $options, Controller $controller)
     {
@@ -59,7 +61,7 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     }
 
     /**
-     * @param Controller $controller Instance of Controller
+     * @param \Cake\Controller\Controller $controller Instance of Controller
      * @return $this
      */
     private function setController(Controller $controller)
@@ -70,7 +72,7 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     }
 
     /**
-     * @param FindIndexOptions $options Instance of FindIndexOptions
+     * @param \App\Model\Table\Dto\FindIndexOptions $options Instance of FindIndexOptions
      * @return $this
      */
     private function setOptions(FindIndexOptions $options)
@@ -82,7 +84,8 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
 
     /**
      * Return an instance of Table
-     * @return Controller
+     *
+     * @return \Cake\Controller\Controller
      */
     public function getController()
     {
@@ -90,7 +93,7 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     }
 
     /**
-     * @return FindIndexOptions
+     * @return \App\Model\Table\Dto\FindIndexOptions
      */
     public function getOptions()
     {

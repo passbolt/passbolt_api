@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,13 +29,13 @@ class EmailController extends WebInstallerController
      * Transport class to be used for testing.
      * We use our own DebugSmtp that will get the server communication trace.
      */
-    const TRANSPORT_CLASS = 'DebugSmtp';
+    public const TRANSPORT_CLASS = 'DebugSmtp';
 
     /**
      * Name of the transport configuration that we'll use.
      * (will be created on the fly).
      */
-    const TRANSPORT_CONFIG_NAME = 'debugEmail';
+    public const TRANSPORT_CONFIG_NAME = 'debugEmail';
 
     /**
      * Contains the email class.
@@ -42,9 +44,10 @@ class EmailController extends WebInstallerController
 
     /**
      * Initialize.
+     *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->stepInfo['previous'] = 'install/gpg_key';
@@ -54,6 +57,7 @@ class EmailController extends WebInstallerController
 
     /**
      * Index
+     *
      * @return void|mixed
      */
     public function index()
@@ -75,6 +79,7 @@ class EmailController extends WebInstallerController
 
     /**
      * Index post
+     *
      * @return void|mixed
      */
     protected function indexPost()
@@ -97,8 +102,9 @@ class EmailController extends WebInstallerController
 
     /**
      * Validate data.
+     *
      * @param array $data request data
-     * @throws Exception The data does not validate
+     * @throws \Cake\Core\Exception\Exception The data does not validate
      * @return void
      */
     protected function validateData($data)
@@ -112,6 +118,7 @@ class EmailController extends WebInstallerController
 
     /**
      * Send test email.
+     *
      * @param array $data request data
      * @return void
      */
@@ -144,6 +151,7 @@ class EmailController extends WebInstallerController
     /**
      * Set a custom transport class name.
      * In the context of this debugger, we'll use our own class name.
+     *
      * @param string $customTransportClassName name of the custom transport class to use
      * @param array $data request data
      * @return void
@@ -163,12 +171,13 @@ class EmailController extends WebInstallerController
 
     /**
      * Get default message (email content).
+     *
      * @return string
      */
     protected function _getDefaultMessage()
     {
-        $message = __("Congratulations!") . "\n" .
-            __("If you receive this email, it means that your passbolt smtp configuration is working fine.");
+        $message = __('Congratulations!') . "\n" .
+            __('If you receive this email, it means that your passbolt smtp configuration is working fine.');
 
         return $message;
     }

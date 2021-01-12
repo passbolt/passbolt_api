@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,12 +19,14 @@ namespace Passbolt\WebInstaller\Controller;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Response;
 use Passbolt\WebInstaller\Utility\WebInstaller;
 
 /**
  * Class WebInstallerController
  * This is the main controller for the web installer plugin. All the other controllers
  * will inherit from this one.
+ *
  * @package Passbolt\WebInstaller\Controller
  */
 class WebInstallerController extends Controller
@@ -36,6 +40,7 @@ class WebInstallerController extends Controller
 
     /**
      * Step information. Will be set by each controller.
+     *
      * @var array
      */
     protected $stepInfo = [
@@ -47,9 +52,10 @@ class WebInstallerController extends Controller
 
     /**
      * Initialize implementation.
+     *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->stepInfo['current'] = $this->request->getRequestTarget();
@@ -61,10 +67,11 @@ class WebInstallerController extends Controller
      * Before filter.
      * Do not let the user proceed if the configuration is not found in the session.
      * Instead redirect him to the first step.
-     * @param Event $event event
+     *
+     * @param \Cake\Event\Event $event event
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(Event $event): ?Response
     {
         parent::beforeFilter($event);
 
@@ -76,14 +83,17 @@ class WebInstallerController extends Controller
 
             return $this->redirect('install/system_check');
         }
+
+        return null;
     }
 
     /**
      * Before render.
-     * @param Event $event event
+     *
+     * @param \Cake\Event\Event $event event
      * @return void
      */
-    public function beforeRender(Event $event)
+    public function beforeRender(Event $event): void
     {
         parent::beforeRender($event);
         $this->set('stepInfo', $this->stepInfo);
@@ -92,9 +102,10 @@ class WebInstallerController extends Controller
 
     /**
      * Return the navigation items.
+     *
      * @return array
      */
-    protected function getNavigationSections()
+    protected function getNavigationSections(): array
     {
         $pluginLicenseEnabled = !empty(Configure::read('passbolt.plugins.license'));
         $hasAdmin = $this->webInstaller->getSettings('hasAdmin');
@@ -119,10 +130,11 @@ class WebInstallerController extends Controller
 
     /**
      * Error handler.
+     *
      * @param string $message error message
      * @return void
      */
-    protected function _error($message)
+    protected function _error(string $message): void
     {
         $this->Flash->error($message);
         $this->render($this->stepInfo['template']);
@@ -130,9 +142,10 @@ class WebInstallerController extends Controller
 
     /**
      * Success handler.
+     *
      * @return void
      */
-    protected function goToNextStep()
+    protected function goToNextStep(): void
     {
         $this->redirect($this->stepInfo['next']);
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,10 +21,7 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use EmailQueue\Model\Table\EmailQueueTable;
-use Exception;
-use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
-use Passbolt\EmailDigest\Utility\Mailer\EmailPreview;
 
 /**
  * Class PreviewEmailBatchService allows to preview how the next batch would be rendered.
@@ -32,37 +31,45 @@ use Passbolt\EmailDigest\Utility\Mailer\EmailPreview;
  */
 class PreviewEmailBatchService
 {
-    /** @var EmailQueueTable */
+    /**
+     * @var \EmailQueue\Model\Table\EmailQueueTable
+     */
     private $emailQueueTable;
 
-    /** @var EmailPreviewFactory */
+    /**
+     * @var \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory
+     */
     private $emailPreviewFactory;
 
-    /** @var EmailDigestService */
+    /**
+     * @var \Passbolt\EmailDigest\Service\EmailDigestService
+     */
     private $emailDigestsService;
 
     /**
-     * @param EmailQueueTable $emailQueueTable Email Queue Table
-     * @param EmailDigestService $emailDigestsService Emails Digests Service
-     * @param EmailPreviewFactory $emailPreviewFactory Email Preview Factory
+     * @param \EmailQueue\Model\Table\EmailQueueTable|null $emailQueueTable Email Queue Table
+     * @param \Passbolt\EmailDigest\Service\EmailDigestService|null $emailDigestsService Emails Digests Service
+     * @param \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory|null $emailPreviewFactory Email Preview Factory
      */
     public function __construct(
-        EmailQueueTable $emailQueueTable = null,
-        EmailDigestService $emailDigestsService = null,
-        EmailPreviewFactory $emailPreviewFactory = null
+        ?EmailQueueTable $emailQueueTable = null,
+        ?EmailDigestService $emailDigestsService = null,
+        ?EmailPreviewFactory $emailPreviewFactory = null
     ) {
-        $this->emailQueueTable = $emailQueueTable ?? TableRegistry::getTableLocator()->get('EmailQueue', ['className' => EmailQueueTable::class]);
+        $options = ['className' => EmailQueueTable::class];
+        $this->emailQueueTable = $emailQueueTable ?? TableRegistry::getTableLocator()->get('EmailQueue', $options);
         $this->emailDigestsService = $emailDigestsService ?? new EmailDigestService();
         $this->emailPreviewFactory = $emailPreviewFactory ?? new EmailPreviewFactory();
     }
 
     /**
      * Get and send the next emails batch from the email queue. The size of the email batch is determined by $limit.
+     *
      * @param int $limit Size of the emails batch.
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
-    public function previewNextEmailsBatch($limit = 10)
+    public function previewNextEmailsBatch(int $limit = 10): array
     {
         Configure::write('App.baseUrl', '/');
 
@@ -80,11 +87,12 @@ class PreviewEmailBatchService
 
     /**
      * Preview a collection of emails as emails digests
+     *
      * @param array $emails An array of emails entities
-     * @return EmailPreview[]
-     * @throws UnsupportedEmailDigestDataException
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview[]
+     * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */
-    public function getPreviewsOfEmailsAsDigests(array $emails)
+    public function getPreviewsOfEmailsAsDigests(array $emails): array
     {
         $emailDigests = $this->emailDigestsService->createDigests($emails);
         $previews = [];

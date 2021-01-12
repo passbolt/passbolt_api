@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\View\Helper;
 
@@ -9,7 +10,7 @@ use Cake\View\Helper;
 class AvatarHelper extends Helper
 {
     /**
-     * @param Avatar $avatar Avatar instance
+     * @param \App\Model\Entity\Avatar $avatar Avatar instance
      * @param string $format Format of the avatar
      * @return string
      */

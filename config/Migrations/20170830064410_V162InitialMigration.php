@@ -60,7 +60,7 @@ class V162InitialMigration extends AbstractMigration
         }
 
         // Reset the collation just in case
-        $this->execute('ALTER DATABASE ' . $databaseName . ' COLLATE utf8mb4_unicode_ci');
+        $this->execute('ALTER DATABASE `' . $databaseName . '` COLLATE utf8mb4_unicode_ci');
 
         // If this is an upgrade from v1
         if ($tableCount > 0) {

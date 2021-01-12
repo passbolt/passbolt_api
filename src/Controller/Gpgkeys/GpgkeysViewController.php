@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,11 +17,13 @@
 namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\GpgkeysTable $Gpgkeys
+ */
 class GpgkeysViewController extends AppController
 {
     /**
@@ -28,7 +32,7 @@ class GpgkeysViewController extends AppController
      * @param string $id uuid of the gpgkey
      * @return void
      */
-    public function view($id)
+    public function view(string $id)
     {
         // Check request sanity
         if (!Validation::uuid($id)) {

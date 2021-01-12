@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,17 +26,17 @@ use Throwable;
 class UnsupportedEmailDigestDataException extends Exception
 {
     /**
-     * @var Entity
+     * @var \Cake\ORM\Entity
      */
-    private $unsupportedEmail;
+    public $unsupportedEmail;
 
     /**
-     * @param Entity $emailData The unsupported email
+     * @param \Cake\ORM\Entity $emailData The unsupported email
      * @param string $message Message
      * @param int $code Code
-     * @param Throwable|null $previous Previous exception
+     * @param \Throwable|null $previous Previous exception
      */
-    public function __construct(Entity $emailData, $message = "", $code = 0, Throwable $previous = null)
+    public function __construct(Entity $emailData, $message = '', $code = 0, ?Throwable $previous = null)
     {
         $this->unsupportedEmail = $emailData;
         parent::__construct($message, $code, $previous);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,13 +16,10 @@
  */
 namespace Passbolt\WebInstaller\Test\Lib;
 
-use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
-use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
 trait DatabaseTrait
 {
-
     /**
      * Truncate the database tables.
      */

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,28 +20,25 @@ use App\Model\Entity\Comment;
 use App\Model\Table\CommentsTable;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
-use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 
 class CommentsHealthcheckService extends AbstractHealthcheckService
 {
-    const CATEGORY = 'data';
-    const NAME = 'Comments';
-    const CHECK_VALIDATES = 'Can validate';
+    public const CATEGORY = 'data';
+    public const NAME = 'Comments';
+    public const CHECK_VALIDATES = 'Can validate';
 
     /**
-     * @var CommentsTable
+     * @var \App\Model\Table\CommentsTable
      */
     private $table;
 
     /**
      * Comments Healthcheck constructor.
      *
-     * @param OpenPGPBackend $gpg gpg backend to use
-     * @param CommentsTable $table secret table
+     * @param \App\Model\Table\CommentsTable|null $table secret table
      */
-    public function __construct($gpg = null, $table = null)
+    public function __construct(?CommentsTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Comments');
@@ -49,7 +48,7 @@ class CommentsHealthcheckService extends AbstractHealthcheckService
     /**
      * @inheritDoc
      */
-    public function check()
+    public function check(): array
     {
         $records = $this->table->find()->all();
 
@@ -63,20 +62,20 @@ class CommentsHealthcheckService extends AbstractHealthcheckService
     /**
      * Validates
      *
-     * @param Comment $comment comment
+     * @param \App\Model\Entity\Comment $comment comment
      * @return void
      */
-    private function canValidate(Comment $comment)
+    private function canValidate(Comment $comment): void
     {
         $copy = $this->table->newEntity($comment->toArray());
         $error = $copy->getErrors();
 
         if (count($error)) {
-            $this->checks[self::CHECK_VALIDATES]->fail()
-            ->addDetail(__('Validation failed for comment {0}. {1}', $comment->id, json_encode($copy->getErrors())), Healthcheck::STATUS_ERROR);
+            $msg = __('Validation failed for comment {0}. {1}', $comment->id, json_encode($copy->getErrors()));
+            $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         } else {
-            $this->checks[self::CHECK_VALIDATES]
-                ->addDetail(__('Validation success for comment {0}', $comment->id), Healthcheck::STATUS_SUCCESS);
+            $msg = __('Validation success for comment {0}', $comment->id);
+            $this->checks[self::CHECK_VALIDATES]->addDetail($msg, Healthcheck::STATUS_SUCCESS);
         }
     }
 }

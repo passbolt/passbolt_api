@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,9 +27,8 @@ class ValidationException extends Exception implements
     ExceptionWithErrorsDetailInterface,
     ExceptionWithTableDetailInterface
 {
-
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_defaultCode = 400;
 
@@ -41,7 +42,7 @@ class ValidationException extends Exception implements
     /**
      * The table that throw the validation exception.
      *
-     * @var Table
+     * @var \Cake\ORM\Table
      */
     protected $_table = null;
 
@@ -49,24 +50,29 @@ class ValidationException extends Exception implements
      * Constructor.
      *
      * @param string $message The error message
-     * @param Entity|null $entity The validation errors.
-     * @param Table $table The table that is the source of the validation errors.
-     * @param int $code The code of the error, is also the HTTP status code for the error.
+     * @param \Cake\ORM\Entity|null $entity The validation errors.
+     * @param \Cake\ORM\Table|null $table The table that is the source of the validation errors.
+     * @param int|null $code The code of the error, is also the HTTP status code for the error.
      * @param \Exception|null $previous the previous exception.
      */
-    public function __construct(string $message, Entity $entity = null, Table $table = null, int $code = null, \Exception $previous = null)
-    {
+    public function __construct(
+        string $message,
+        ?Entity $entity = null,
+        ?Table $table = null,
+        ?int $code = null,
+        ?\Exception $previous = null
+    ) {
         parent::__construct($message, $code, $previous);
         $this->_entity = $entity;
         $this->_table = $table;
     }
 
     /**
-     * Get the validation errors
+     * Get the entity
      *
-     * @return array
+     * @return \Cake\ORM\Entity|null
      */
-    public function getEntity()
+    public function getEntity(): ?Entity
     {
         return $this->_entity;
     }
@@ -76,17 +82,21 @@ class ValidationException extends Exception implements
      *
      * @return array
      */
-    public function getErrors()
+    public function getErrors(): ?array
     {
-        return $this->_entity->getErrors();
+        if (isset($this->_entity)) {
+            return $this->_entity->getErrors();
+        }
+
+        return null;
     }
 
     /**
      * Get the table
      *
-     * @return Table
+     * @return \Cake\ORM\Table|null
      */
-    public function getTable()
+    public function getTable(): ?Table
     {
         return $this->_table;
     }

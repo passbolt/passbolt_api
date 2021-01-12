@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,19 +26,22 @@ interface EmailDigestInterface extends EmailInterface
 {
     /**
      * An array of data composed with email queue format
-     * @param Entity $emailQueueEntity An email entity
+     *
+     * @param \Cake\ORM\Entity $emailQueueEntity An email entity
      * @return $this
      */
     public function addEmailData(Entity $emailQueueEntity);
 
     /**
      * Return the emails entity associated to the email digest
-     * @return Entity[]
+     *
+     * @return \Cake\ORM\Entity[]
      */
     public function getEmailsData();
 
     /**
      * Render the content of the email digest.
+     *
      * @return string
      */
     public function getContent();
@@ -44,6 +49,7 @@ interface EmailDigestInterface extends EmailInterface
     /**
      * A digest must be able to return the ids of the emails which compose the digest.
      * Return the list of email ids associated with the digest.
+     *
      * @return string[]
      */
     public function getEmailIds();

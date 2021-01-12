@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -40,6 +42,7 @@ class User extends Entity
 {
     /**
      * last_logged_in virtual field.
+     *
      * @var array
      */
     protected $_virtual = ['last_logged_in'];

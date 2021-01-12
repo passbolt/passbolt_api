@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,13 +19,12 @@ namespace Passbolt\EmailNotificationSettings\Utility;
 
 use Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm;
 use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource;
-use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ReadableEmailNotificationSettingsSourceInterface;
 
 trait EmailNotificationSettingsDefinitionTrait
 {
     /**
      * @see EmailNotificationSettingsDefinitionInterface::getDefaultSettingsSource()
-     * @return ReadableEmailNotificationSettingsSourceInterface
+     * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ReadableEmailNotificationSettingsSourceInterface
      */
     public function getDefaultSettingsSource()
     {
@@ -32,6 +33,7 @@ trait EmailNotificationSettingsDefinitionTrait
 
     /**
      * Return the event to listen on to register the current notification settings definition
+     *
      * @return array
      */
     public function implementedEvents()
@@ -43,7 +45,8 @@ trait EmailNotificationSettingsDefinitionTrait
 
     /**
      * An email notification settings definition must implement this method to register its definition into the EmailNotificationSettingsForm.
-     * @param EmailNotificationSettingsForm $emailNotificationSettingsForm An instance instance of EmailNotificationSettingsForm.
+     *
+     * @param \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm $emailNotificationSettingsForm An instance instance of EmailNotificationSettingsForm.
      * @return void
      */
     public function addEmailNotificationSettingsDefinition(EmailNotificationSettingsForm $emailNotificationSettingsForm)
@@ -52,7 +55,7 @@ trait EmailNotificationSettingsDefinitionTrait
     }
 
     /**
-     * @param EmailNotificationSettingsDefinitionRegisterEvent $event An instance of the event
+     * @param \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionRegisterEvent $event An instance of the event
      * @return void
      */
     public function __invoke(EmailNotificationSettingsDefinitionRegisterEvent $event)

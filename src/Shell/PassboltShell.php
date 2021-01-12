@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,8 +15,6 @@
  * @since         2.0.0
  */
 namespace App\Shell;
-
-use Cake\Core\Configure;
 
 class PassboltShell extends AppShell
 {
@@ -33,6 +33,7 @@ class PassboltShell extends AppShell
         'MysqlImport',
         'RegisterUser',
         'SendTestEmail',
+        'Version',
     ];
 
     /**
@@ -77,7 +78,7 @@ class PassboltShell extends AppShell
         ]);
 
         $parser->addSubcommand('healthcheck', [
-            'help' => __d('cake_console', 'Check the configuration of the passbolt installation and associated environment.'),
+            'help' => __d('cake_console', 'Run a healthcheck for this passbolt instance.'),
             'parser' => $this->Healthcheck->getOptionParser(),
         ]);
 
@@ -112,13 +113,18 @@ class PassboltShell extends AppShell
         ]);
 
         $parser->addSubcommand('send_test_email', [
-            'help' => __d('cake_console', 'Test the email configuration by trying to send an email and display the client / server communication trace.'),
+            'help' => __d('cake_console', 'Try to send a test email and display debug information.'),
             'parser' => $this->SendTestEmail->getOptionParser(),
         ]);
 
         $parser->addSubcommand('datacheck', [
             'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
             'parser' => $this->Datacheck->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('version', [
+            'help' => __d('cake_console', 'Provide version number'),
+            'parser' => $this->Version->getOptionParser(),
         ]);
 
         return $parser;

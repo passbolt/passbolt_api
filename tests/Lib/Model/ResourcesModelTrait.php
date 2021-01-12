@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,11 +27,11 @@ trait ResourcesModelTrait
     /**
      * Add a dummy resource.
      *
-     * @param array $data The resource data
-     * @param array $options The entity options
+     * @param array|null $data The resource data
+     * @param array|null $options The entity options
      * @return Resource
      */
-    public function addResource($data = [], $options = [])
+    public function addResource(?array $data = [], ?array $options = []): Resource
     {
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $resource = self::getDummyResourceEntity($data, $options);
@@ -41,6 +43,7 @@ trait ResourcesModelTrait
 
     /**
      * Add folders for the given users
+     *
      * @param array $data Data
      * @param array $users List of user to add a resource for. The first element should refer to a user id.
      * @param array $groups List of groups to add a resource for.
@@ -107,11 +110,11 @@ trait ResourcesModelTrait
     /**
      * Get a new resource entity
      *
-     * @param array $data The resource data.
-     * @param array $options The new entity options.
-     * @return Resouce
+     * @param array|null $data The resource data.
+     * @param array|null $options The new entity options.
+     * @return Resource
      */
-    public function getDummyResourceEntity($data = [], $options = [])
+    public function getDummyResourceEntity(?array $data = [], ?array $options = []): Resource
     {
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $defaultOptions = [
@@ -142,6 +145,7 @@ trait ResourcesModelTrait
             'username' => 'username@domain.com',
             'uri' => 'https://www.domain.com',
             'description' => 'New resource description',
+            'resource_type_id' => UuidFactory::uuid('resource-types.id.password-string'),
             'created_by' => $userId,
             'modified_by' => $userId,
         ];
@@ -163,6 +167,7 @@ trait ResourcesModelTrait
 
     /**
      * Assert that a user has not access to a or multiple resources
+     *
      * @param string $userId
      * @param array $resourcesIds
      */
@@ -185,6 +190,7 @@ trait ResourcesModelTrait
 
     /**
      * Assert that a user has access to a or multiple resources
+     *
      * @param string $userId
      * @param array $resourcesIds
      */

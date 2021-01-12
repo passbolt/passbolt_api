@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -48,6 +50,7 @@ class Avatar extends ImageStorage
 
     /**
      * Url virtual field implementation.
+     *
      * @return array
      */
     protected function _getUrl()
@@ -66,12 +69,13 @@ class Avatar extends ImageStorage
 
     /**
      * Get avatar url for a specific size.
+     *
      * @param \App\Model\Entity\Avatar $avatar the avatar entity
-     * @param string $version image version (small or medium)
-     * @param array $options options
+     * @param string|null $version image version (small or medium)
+     * @param array|null $options options
      * @return bool|string
      */
-    private function getAvatarUrl(Avatar $avatar, string $version = 'small', array $options = [])
+    private function getAvatarUrl(Avatar $avatar, ?string $version = 'small', ?array $options = [])
     {
         // Default options.
         $defaultOptions = ['version' => 'small'];

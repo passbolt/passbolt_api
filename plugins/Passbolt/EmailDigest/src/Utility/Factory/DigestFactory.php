@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -35,12 +37,7 @@ class DigestFactory
     private static $instance;
 
     /**
-     * @var EmailPreviewFactory
-     */
-    private $emailPreviewFactory;
-
-    /**
-     * @var DigestsPool
+     * @var \Passbolt\EmailDigest\Utility\Digest\DigestsPool
      */
     private $digestsPool;
 
@@ -50,21 +47,19 @@ class DigestFactory
     private $isDigestRegisterEventDispatched;
 
     /**
-     * @param EmailPreviewFactory|null $emailPreviewFactory Factory
-     * @param DigestsPool|null $digestsPool DigestPool
+     * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool|null $digestsPool DigestPool
      */
     private function __construct(
-        EmailPreviewFactory $emailPreviewFactory = null,
-        DigestsPool $digestsPool = null
+        ?DigestsPool $digestsPool = null
     ) {
         $this->isDigestRegisterEventDispatched = false;
-        $this->emailPreviewFactory = $emailPreviewFactory ?? new EmailPreviewFactory();
         $this->digestsPool = $digestsPool ?? DigestsPool::getInstance();
     }
 
     /**
      * Return a singleton of the DigestsPool
-     * @return DigestFactory
+     *
+     * @return \Passbolt\EmailDigest\Utility\Factory\DigestFactory
      */
     public static function getInstance()
     {
@@ -78,7 +73,7 @@ class DigestFactory
     /**
      * Factory method for DigestsCollection
      *
-     * @return SingleDigest
+     * @return \Passbolt\EmailDigest\Utility\Digest\SingleDigest
      */
     public function createSingleDigest()
     {
@@ -88,7 +83,7 @@ class DigestFactory
     /**
      * Factory method for DigestsCollection
      *
-     * @return DigestsCollection
+     * @return \Passbolt\EmailDigest\Utility\Digest\DigestsCollection
      */
     public function createDigestsCollection()
     {

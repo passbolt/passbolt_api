@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,21 +17,50 @@
 namespace Passbolt\WebInstaller\Controller;
 
 use App\Model\Entity\Role;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Cake\Datasource\ConnectionManager;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
+/**
+ * Class DatabaseController
+ *
+ * @package Passbolt\WebInstaller\Controller
+ */
 class DatabaseController extends WebInstallerController
 {
     /**
+     * Default password to use in the UI in case the config is provided through a .ini config file.
+     */
+    private $defaultPassword = null;
+
+    /**
+     * Ini config file content (if ini file provided).
+     *
+     * @var array
+     */
+    private $configFile = [];
+
+    /**
+     * Default config to use  when a ini config file is provided.
+     *
+     * @var string[]
+     */
+    private $configFileDefault = [
+        'type' => 'mysql',
+        'host' => '127.0.0.1',
+    ];
+
+    /**
      * Initialize.
+     *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
+
         if (Configure::read('passbolt.plugins.license')) {
             $this->stepInfo['previous'] = 'install/license_key';
         } else {
@@ -37,18 +68,47 @@ class DatabaseController extends WebInstallerController
         }
         $this->stepInfo['next'] = 'install/gpg_key';
         $this->stepInfo['template'] = 'Pages/database';
+
+        if (
+            file_exists(DatabaseConfigurationForm::CONFIG_FILE_PATH)
+            && is_readable(DatabaseConfigurationForm::CONFIG_FILE_PATH)
+        ) {
+            $iniFileContent = parse_ini_file(DatabaseConfigurationForm::CONFIG_FILE_PATH);
+            if (!$iniFileContent) {
+                return;
+            }
+            $this->configFile = $iniFileContent;
+            $this->stepInfo['defaultConfig'] = array_merge($this->configFileDefault, $this->configFile);
+            $this->defaultPassword = UuidFactory::uuid('__default_password__');
+        }
     }
 
     /**
      * Index
+     *
      * @return void|mixed
      */
-    public function index()
+    public function index(): void
     {
         if ($this->request->is('post')) {
-            return $this->indexPost();
+            $this->indexPost();
+
+            return;
         }
 
+        // Load default config file values if present.
+        if (isset($this->stepInfo['defaultConfig']) && !empty($this->stepInfo['defaultConfig'])) {
+            foreach ($this->stepInfo['defaultConfig'] as $key => $databaseSetting) {
+                // We override the default password with a default value that will be replace while saving.
+                // This is to avoid a sensitive information leakage through the webinstaller.
+                if ($key === 'password') {
+                    $databaseSetting = $this->defaultPassword;
+                }
+                $this->request = $this->request->withData($key, $databaseSetting);
+            }
+        }
+
+        // Then, load previously saved database values if present (will override default values).
         $databaseSettings = $this->webInstaller->getSettings('database');
         if (!empty($databaseSettings)) {
             foreach ($databaseSettings as $key => $databaseSetting) {
@@ -62,18 +122,26 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Index post
-     * @return void|mixed
+     *
+     * @return void
      */
-    protected function indexPost()
+    protected function indexPost(): void
     {
         $data = $this->request->getData();
+
+        if (!empty($this->configFile) && $data['password'] === $this->defaultPassword) {
+            $data['password'] = $this->configFile['password'];
+        }
+
         try {
             $this->validateData($data);
             $this->testConnection($data);
             DatabaseConfiguration::setDefaultConfig($data);
             $hasAdmin = $this->hasAdmin();
         } catch (Exception $e) {
-            return $this->_error($e->getMessage());
+            $this->_error($e->getMessage());
+
+            return;
         }
 
         $this->webInstaller->setSettings('database', $data);
@@ -85,10 +153,11 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Check if the database has already administrator.
-     * @throws Exception If the database schema does not validate
+     *
+     * @throws \Cake\Core\Exception\Exception If the database schema does not validate
      * @return bool
      */
-    protected function hasAdmin()
+    protected function hasAdmin(): bool
     {
         $tables = DatabaseConfiguration::getTables();
         if (!count($tables)) {
@@ -107,27 +176,31 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Test the connection to the database
+     *
      * @param array $data The database configuration to test
-     * @throws Exception A connection could not be established with the provided data
+     * @throws \Cake\Core\Exception\Exception A connection could not be established with the provided data
      * @return void
      */
-    protected function testConnection($data)
+    protected function testConnection(array $data): void
     {
         $config = DatabaseConfiguration::buildConfig($data);
         $this->webInstaller->setSettings('database', $config);
         $this->webInstaller->initDatabaseConnection();
         if (!DatabaseConfiguration::testConnection()) {
-            throw new Exception(__('A connection could not be established with the credentials provided. Please verify the settings.'));
+            $msg = __('A connection could not be established with the credentials provided.') . ' ';
+            $msg .= __('Please verify the settings.');
+            throw new Exception($msg);
         }
     }
 
     /**
      * Validate data.
+     *
      * @param array $data request data
-     * @throws Exception The data does not validate
+     * @throws \Cake\Core\Exception\Exception The data does not validate
      * @return void
      */
-    protected function validateData($data)
+    protected function validateData(array $data): void
     {
         $form = new DatabaseConfigurationForm();
         $this->set('formExecuteResult', $form);

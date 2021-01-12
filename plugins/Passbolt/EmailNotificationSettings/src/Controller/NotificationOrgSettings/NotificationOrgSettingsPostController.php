@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,7 +33,7 @@ class NotificationOrgSettingsPostController extends AppController
      *
      * @return void
      */
-    public function post()
+    public function post(): void
     {
         $payload = $this->_validateRequestData();
 
@@ -49,17 +51,18 @@ class NotificationOrgSettingsPostController extends AppController
 
         $flatten = Hash::flatten($updatedNotificationSettings);
 
-        $this->success(__('The notification settings for the organization were updated.'), $this->_formatForOutput($flatten));
+        $msg = __('The notification settings for the organization were updated.');
+        $this->success($msg, $this->_formatForOutput($flatten));
     }
 
     /**
      * Validate the request body
      *
      * @return array if the request body is valid
-     * @throws ForbiddenException If the user making request is not admin
-     * @throws BadRequestException If the request is not a Ajax/Json type
+     * @throws \Cake\Http\Exception\ForbiddenException If the user making request is not admin
+     * @throws \Cake\Http\Exception\BadRequestException If the request is not a Ajax/Json type
      */
-    private function _validateRequestData()
+    private function _validateRequestData(): array
     {
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('You are not allowed to access this location.'));
@@ -93,7 +96,7 @@ class NotificationOrgSettingsPostController extends AppController
      * @param array $data The data to Format
      * @return array the formatted array
      */
-    private function _formatForOutput(array $data = [])
+    private function _formatForOutput(array $data): array
     {
         $output = [];
 
