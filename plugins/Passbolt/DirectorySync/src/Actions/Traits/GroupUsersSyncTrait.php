@@ -318,7 +318,8 @@ trait GroupUsersSyncTrait
         // Calculate groupUsers to remove.
         // We remove group users that are in directoryRelations but not in group data
         foreach ($directoryRelations as $directoryRelation) {
-            if (!in_array($directoryRelation['user_directory_entry']['id'], $directoryGroupUserEntryIds)) {
+            if (!isset($directoryRelation['user_directory_entry']['id']) ||
+                !in_array($directoryRelation['user_directory_entry']['id'], $directoryGroupUserEntryIds)) {
                 $toRemove[] = $directoryRelation['id'];
             }
         }
