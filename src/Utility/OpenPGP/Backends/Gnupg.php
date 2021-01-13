@@ -350,7 +350,8 @@ class Gnupg extends OpenPGPBackend
         }
 
         $unarmored = $this->unarmor($armored, self::MESSAGE_MARKER);
-        return ($unarmored !== false);
+
+        return $unarmored !== false;
     }
 
     /**
@@ -665,24 +666,32 @@ class Gnupg extends OpenPGPBackend
     }
 
     /**
-     * @param $text
-     * @param string $header
+     * Forked from OpenPGP::unarmor
+     * Fail if key doesn't contain CRC instead of triggering error
+     *
+     * @param string $text key
+     * @param string $header header
      * @return false|string
      */
     private function unarmor(string $text, string $header = 'PGP PUBLIC KEY BLOCK')
     {
+        // @codingStandardsIgnoreStart
         $header = OpenPGP::header($header);
-        $text = str_replace(array("\r\n", "\r"), array("\n", ''), $text);
-        if (($pos1 = strpos($text, $header)) !== false &&
-            ($pos1 = strpos($text, "\n\n", $pos1 += strlen($header))) !== false) {
+        $text = str_replace(["\r\n", "\r"], ["\n", ''], $text);
+        if (
+            ($pos1 = strpos($text, $header)) !== false &&
+            ($pos1 = strpos($text, "\n\n", $pos1 += strlen($header))) !== false
+        ) {
             $pos2 = strpos($text, "\n=", $pos1 += 2);
             if ($pos2 === false) {
                 // no CRC, consider the key invalid
                 return false;
             }
+
             return base64_decode($text = substr($text, $pos1, $pos2 - $pos1));
         }
 
         return false;
+        // @codingStandardsIgnoreEnd
     }
 }
