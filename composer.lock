@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7397ec40f5daf42c97d17aff709250ef",
+    "content-hash": "5b3680b150b6058ae95ca0aba0f43f3c",
     "packages": [
         {
             "name": "aura/intl",
@@ -238,16 +238,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "3.9.3",
+            "version": "3.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "74f60e2e1f15c8fd27653db2ee835d426b59ee83"
+                "reference": "bdb86a1773fcc634af9f5d76208add8bc58b1b8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/74f60e2e1f15c8fd27653db2ee835d426b59ee83",
-                "reference": "74f60e2e1f15c8fd27653db2ee835d426b59ee83",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/bdb86a1773fcc634af9f5d76208add8bc58b1b8f",
+                "reference": "bdb86a1773fcc634af9f5d76208add8bc58b1b8f",
                 "shasum": ""
             },
             "require": {
@@ -257,7 +257,7 @@
                 "ext-mbstring": "*",
                 "laminas/laminas-diactoros": "^1.4.0",
                 "paragonie/random_compat": "^1.4|^2.0|9.99.99",
-                "php": ">=5.6.0",
+                "php": ">=5.6.0,<8.0.0",
                 "psr/log": "^1.0.0",
                 "psr/simple-cache": "^1.0.0"
             },
@@ -332,7 +332,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2020-10-06T01:21:56+00:00"
+            "time": "2020-12-29T02:11:56+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -1594,28 +1594,29 @@
         },
         {
             "name": "singpolyma/openpgp-php",
-            "version": "0.4.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/singpolyma/openpgp-php.git",
-                "reference": "67aba786991e3cb3e555025b6d357779ab32a0ab"
+                "reference": "c961eca13df86a4e9af6ef1ebd9da7d3858d75c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/singpolyma/openpgp-php/zipball/67aba786991e3cb3e555025b6d357779ab32a0ab",
-                "reference": "67aba786991e3cb3e555025b6d357779ab32a0ab",
+                "url": "https://api.github.com/repos/singpolyma/openpgp-php/zipball/c961eca13df86a4e9af6ef1ebd9da7d3858d75c8",
+                "reference": "c961eca13df86a4e9af6ef1ebd9da7d3858d75c8",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6 || ^7.0",
+                "php": "^5.6 || ^7.0 || ^8.0",
                 "phpseclib/phpseclib": "^2.0 !=2.0.8"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.0"
+                "phpunit/phpunit": "^9.0"
             },
             "suggest": {
                 "ext-mcrypt": "required if you use encryption cast5"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -1639,9 +1640,23 @@
             "description": "Pure-PHP implementation of the OpenPGP Message Format (RFC 4880)",
             "support": {
                 "issues": "https://github.com/singpolyma/openpgp-php/issues",
-                "source": "https://github.com/singpolyma/openpgp-php/tree/0.4.0"
+                "source": "https://github.com/singpolyma/openpgp-php/tree/master"
             },
-            "time": "2019-08-01T18:11:09+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/singpolyma",
+                    "type": "github"
+                },
+                {
+                    "url": "https://liberapay.com/singpolyma",
+                    "type": "liberapay"
+                },
+                {
+                    "url": "https://www.patreon.com/singpolyma",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2020-12-30T04:05:35+00:00"
         },
         {
             "name": "symfony/config",
@@ -6393,6 +6408,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "singpolyma/openpgp-php": 20,
         "psy/psysh": 0,
         "passbolt/cakephp-codesniffer": 20
     },

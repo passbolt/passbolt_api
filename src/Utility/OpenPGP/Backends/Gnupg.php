@@ -262,8 +262,8 @@ class Gnupg extends OpenPGPBackend
         }
 
         // If we don't manage to unarmor the key, we consider it's not a valid one.
-        $keyUnarmored = OpenPGP::unarmor($armoredKey, self::PUBLIC_KEY_MARKER);
-        if ($keyUnarmored === false) {
+        $keyUnarmored = $this->unarmor($armoredKey, self::PUBLIC_KEY_MARKER);
+        if ($keyUnarmored === false || $keyUnarmored === null) {
             return false;
         }
 
@@ -296,8 +296,8 @@ class Gnupg extends OpenPGPBackend
         }
 
         // If we don't manage to unarmor the key, we consider it's not a valid one.
-        $keyUnarmored = OpenPGP::unarmor($armoredKey, self::PRIVATE_KEY_MARKER);
-        if ($keyUnarmored == false) {
+        $keyUnarmored = $this->unarmor($armoredKey, self::PRIVATE_KEY_MARKER);
+        if ($keyUnarmored === false) {
             return false;
         }
 
@@ -348,9 +348,10 @@ class Gnupg extends OpenPGPBackend
         } catch (Exception $e) {
             return false;
         }
-        $unarmored = OpenPGP::unarmor($armored, self::MESSAGE_MARKER);
 
-        return !($unarmored === false || $unarmored === null);
+        $unarmored = $this->unarmor($armored, self::MESSAGE_MARKER);
+
+        return $unarmored !== false;
     }
 
     /**
@@ -391,7 +392,7 @@ class Gnupg extends OpenPGPBackend
      */
     public function getKeyInfo(string $armoredKey)
     {
-        $keyUnarmored = OpenPGP::unarmor($armoredKey, $this->getGpgMarker($armoredKey));
+        $keyUnarmored = $this->unarmor($armoredKey, $this->getGpgMarker($armoredKey));
         if ($keyUnarmored === false) {
             throw new Exception(__('Invalid key. No public key package found.'));
         }
@@ -662,5 +663,35 @@ class Gnupg extends OpenPGPBackend
     {
         $this->_encryptKeyFingerprint = null;
         $this->_gpg->clearencryptkeys();
+    }
+
+    /**
+     * Forked from OpenPGP::unarmor
+     * Fail if key doesn't contain CRC instead of triggering error
+     *
+     * @param string $text key
+     * @param string $header header
+     * @return false|string
+     */
+    private function unarmor(string $text, string $header = 'PGP PUBLIC KEY BLOCK')
+    {
+        // @codingStandardsIgnoreStart
+        $header = OpenPGP::header($header);
+        $text = str_replace(["\r\n", "\r"], ["\n", ''], $text);
+        if (
+            ($pos1 = strpos($text, $header)) !== false &&
+            ($pos1 = strpos($text, "\n\n", $pos1 += strlen($header))) !== false
+        ) {
+            $pos2 = strpos($text, "\n=", $pos1 += 2);
+            if ($pos2 === false) {
+                // no CRC, consider the key invalid
+                return false;
+            }
+
+            return base64_decode($text = substr($text, $pos1, $pos2 - $pos1));
+        }
+
+        return false;
+        // @codingStandardsIgnoreEnd
     }
 }
