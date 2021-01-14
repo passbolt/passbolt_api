@@ -2,7 +2,7 @@
 # This script is executed as part of a cronjob task
 # is already run as www-data or any other web user.
 
-set -exuo pipefail
+set -euo pipefail
 
 DIGEST_ENABLED=${PASSBOLT_PLUGINS_EMAIL_DIGEST_ENABLED:-0}
 
