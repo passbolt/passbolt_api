@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-DIR="$(cd "$(dirname "$0")" && pwd)"
 
-$DIR/cake passbolt version
+set -euo pipefail
+
+DIR=$(dirname "$(readlink -f "$0")")
+
+"$DIR"/cake passbolt version
 uname -a
 php --version | grep -m1 ""
 mysql --version
 gpg --version | grep -m2 ""
-composer --version
+composer --version -n
