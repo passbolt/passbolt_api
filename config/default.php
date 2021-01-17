@@ -53,6 +53,9 @@ return [
                 AuthenticationToken::TYPE_LOGIN => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_LOGIN_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
+                AuthenticationToken::TYPE_MOBILE_TRANSFER => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_MOBILE_TRANSFER_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
             ]
         ],
 
@@ -182,6 +185,9 @@ return [
             ],
             'export' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_EXPORT_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'mobile' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
         ],
 

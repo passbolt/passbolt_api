@@ -123,7 +123,8 @@ class AuthenticationTokensTable extends Table
         return $check === AuthenticationToken::TYPE_REGISTER ||
             $check === AuthenticationToken::TYPE_RECOVER ||
             $check === AuthenticationToken::TYPE_LOGIN ||
-            $check === AuthenticationToken::TYPE_MFA;
+            $check === AuthenticationToken::TYPE_MFA ||
+            $check === AuthenticationToken::TYPE_MOBILE_TRANSFER;
     }
 
     /**

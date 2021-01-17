@@ -205,6 +205,7 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Passbolt/Mobile', ['bootstrap' => true, 'routes' => true]);
 
         if (!WebInstallerMiddleware::isConfigured()) {
             $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);

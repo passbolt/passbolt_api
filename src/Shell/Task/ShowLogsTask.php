@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace App\Shell\Task;
 
 use App\Shell\AppShell;
-use Cake\Filesystem\File;
 
 class ShowLogsTask extends AppShell
 {
@@ -37,8 +36,13 @@ class ShowLogsTask extends AppShell
         return $parser;
     }
 
-    public function main()  
+    /**
+     * Main
+     *
+     * @return void
+     */
+    public function main()
     {
-      $this->out(LOGS.'error.log');
+        $this->out(LOGS . 'error.log');
     }
 }
