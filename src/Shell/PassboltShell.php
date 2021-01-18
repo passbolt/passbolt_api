@@ -25,11 +25,12 @@ class PassboltShell extends AppShell
      */
     public $tasks = [
         'Cleanup',
-        'DropTables',
         'Datacheck',
+        'DropTables',
         'Healthcheck',
         'Install',
         'KeyringInit',
+        'ShowLogs',
         'Migrate',
         'MysqlExport',
         'MysqlImport',
@@ -145,6 +146,11 @@ class PassboltShell extends AppShell
         $parser->addSubcommand('datacheck', [
             'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
             'parser' => $this->Datacheck->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('show_logs', [
+            'help' => __d('cake_console', 'Show application logs.'),
+            'parser' => $this->ShowLogs->getOptionParser(),
         ]);
 
         $parser->addSubcommand('version', [
