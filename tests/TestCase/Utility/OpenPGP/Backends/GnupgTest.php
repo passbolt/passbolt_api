@@ -266,4 +266,29 @@ gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
         $this->expectException(Exception::class);
         $this->gnupg->sign($messageToSign);
     }
+
+    public function testGnupgParsePublicECCKey()
+    {
+        // ECDH (Encrypt only) - curve25519
+        // Algorithm 22?
+        $this->markTestSkipped();
+        $pkey = '-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: Mailvelope v4.4.0
+Comment: https://www.mailvelope.com
+
+xjMEX/6JgRYJKwYBBAHaRw8BAQdAvRfrNkvv+hzj95mnAKKb572W8Fw5tSsu
+ypTpEJn2HWHNJEVDQyBUZXN0IEtleSA8ZWNjLXRlc3RAcGFzc2JvbHQuY29t
+PsJ3BBAWCgAfBQJf/omBBgsJBwgDAgQVCAoCAxYCAQIZAQIbAwIeAQAKCRCP
+jtZ79Q2PWxz5AQDOnJ6Ux9lYC9RqN/Xxf6yM+PD0WczVZ2PI/6ICsnVEugD/
+RO44leGb/at6kXdMi+yGb8fDbP3QN/YbGTJe0H3XIQ3OOARf/omBEgorBgEE
+AZdVAQUBAQdABJrhHd7yhXF2x/UAJ1f7incWdMLpbaQdNLFK/VvNOTQDAQgH
+wmEEGBYIAAkFAl/+iYECGwwACgkQj47We/UNj1vKUAD9Gc9XF0mHXDn8E4TW
+VUbjxe+FtEFWymo5j0tGExtgBasA/182NTNv+mjJUjH4+l7WzdZzv7icliZ8
+kr4WH0WH9ycL
+=nkep
+-----END PGP PUBLIC KEY BLOCK-----
+';
+        $parsable = $this->gnupg->isParsableArmoredPublicKey($pkey);
+        $this->assertTrue($parsable);
+    }
 }
