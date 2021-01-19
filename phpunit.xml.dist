@@ -24,7 +24,6 @@
             <directory>./plugins/Passbolt/EmailNotificationSettings/tests/TestCase</directory>
             <directory>./plugins/Passbolt/EmailDigest/tests/TestCase</directory>
             <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
-            <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
         </testsuite>
         <testsuite name="WebInstaller Test Suite">
             <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
