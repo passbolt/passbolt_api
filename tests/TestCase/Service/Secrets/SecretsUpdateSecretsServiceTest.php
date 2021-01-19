@@ -235,7 +235,7 @@ URIWI7R+VCewqviRfmezc4M=
 
         try {
             $this->service->updateSecrets($uac, $resource1->id, $data);
-        } catch(CustomValidationException $validationException) {
+        } catch (CustomValidationException $validationException) {
             $data = json_encode($data);
             $errors = json_encode($validationException->getErrors());
             $this->fail(__("Failed to update secret.\nData {0}\nErrors {1}", $data, $errors));
