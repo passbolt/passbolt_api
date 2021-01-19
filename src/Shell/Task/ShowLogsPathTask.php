@@ -36,6 +36,9 @@ class ShowLogsPathTask extends AppShell
         return $parser;
     }
 
+    /**
+     * @return void
+     */
     public function main()
     {
         $this->out(LOGS . 'error.log');
