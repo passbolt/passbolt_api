@@ -570,6 +570,9 @@ class QueryStringComponent extends Component
      */
     public static function normalizeBoolean($str)
     {
+        if (is_bool($str)) {
+            return $str;
+        }
         if (!is_scalar($str)) {
             return false;
         }
