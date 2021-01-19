@@ -249,6 +249,12 @@ case "$deb_action" in
 
   configure)
 
+    # Run the migrations process on upgrade
+    if is_upgrade; then
+      su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
+      exit 0
+    fi
+
     get_mysql_values
     get_nginx_values
 
@@ -265,11 +271,6 @@ case "$deb_action" in
     configure_nginx
     info_message
     db_stop
-
-    # Run the migrations process on upgrade
-    if is_upgrade; then
-      su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
-    fi
 esac
 
 #DEBHELPER#
