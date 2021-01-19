@@ -25,6 +25,8 @@
             <directory>./plugins/Passbolt/EmailNotificationSettings/tests/TestCase</directory>
             <directory>./plugins/Passbolt/Folders/tests/TestCase</directory>
             <directory>./plugins/Passbolt/EmailDigest/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/EmailNotificationSettings/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/Log/tests/TestCase</directory>
             <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
         </testsuite>
         <testsuite name="WebInstaller Test Suite">
@@ -55,7 +57,10 @@
             <directory suffix=".php">./plugins/EmailNotificationSettings/src/</directory>
             <directory suffix=".php">./plugins/Folders/src/</directory>
             <directory suffix=".php">./plugins/EmailDigest/src/</directory>
+            <directory suffix=".php">./plugins/EmailNotificationSettings/src/</directory>
+            <directory suffix=".php">./plugins/Log/src/</directory>
             <directory suffix=".php">./plugins/Reports/src/</directory>
+            <directory suffix=".php">./plugins/WebInstaller/src/</directory>
         </whitelist>
     </filter>
 </phpunit>
