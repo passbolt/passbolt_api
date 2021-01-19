@@ -35,18 +35,28 @@ trait TransfersModelTrait
     }
 
     /**
+     * @param string|null $user
+     * @param string|null $status
+     * @param int|null $currentPage
+     * @param int|null $totalPages
      * @return array
      */
-    public function getDummyTransfer(): array
-    {
+    public function getDummyTransfer(
+        ?string $user = 'ada',
+        ?string $status = Transfer::TRANSFER_STATUS_IN_PROGRESS,
+        ?int $currentPage = 1,
+        ?int $totalPages = 2
+    ): array {
+        $userId = UuidFactory::uuid("user.id.$user");
+
         return [
-            'user_id' => UuidFactory::uuid('user.id.ada'),
-            'current_page' => 1,
-            'status' => Transfer::TRANSFER_STATUS_IN_PROGRESS,
-            'total_pages' => 2,
+            'user_id' => $userId,
+            'current_page' => $currentPage,
+            'status' => $status,
+            'total_pages' => $totalPages,
             'hash' => Security::hash('test', 'sha256', true),
             'authentication_token' => [
-                'user_id' => UuidFactory::uuid('user.id.ada'),
+                'user_id' => $userId,
                 'token' => UuidFactory::uuid(),
                 'active' => true,
                 'type' => AuthenticationToken::TYPE_MOBILE_TRANSFER,
@@ -64,7 +74,20 @@ trait TransfersModelTrait
     public function insertTransferFixture(?array $data = []): Transfer
     {
         $transfersTable = $transfersTable ?? TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
-        $transfer = $transfersTable->newEntity($data, [
+        $transfer = $transfersTable->newEntity($data, $this->getTransferEntityAccessibleFields());
+
+        /** @var Transfer $transfer */
+        $transfersTable->save($transfer, ['checkRules' => false]);
+
+        return $transfer;
+    }
+
+    /**
+     * @return array accessibleFields
+     */
+    protected function getTransferEntityAccessibleFields()
+    {
+        return [
             'accessibleFields' => [
                 'id' => false,
                 'user_id' => true,
@@ -81,15 +104,11 @@ trait TransfersModelTrait
                         'token' => true,
                         'active' => true,
                         'type' => true,
+                        'created' => true,
                     ],
                 ],
             ],
-        ]);
-
-        /** @var Transfer $transfer */
-        $transfer = $transfersTable->save($transfer);
-
-        return $transfer;
+        ];
     }
 
     /**

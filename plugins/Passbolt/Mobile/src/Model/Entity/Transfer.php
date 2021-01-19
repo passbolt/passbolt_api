@@ -9,7 +9,7 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.1.0
@@ -22,6 +22,14 @@ use Cake\ORM\Entity;
 /**
  * Class Transfer
  *
+ * @property string $id
+ * @property string $user_id
+ * @property int $current_page
+ * @property int $total_pages
+ * @property string $hash
+ * @property string $status
+ * @property \DateTimeInterface $created
+ * @property \DateTimeInterface $modified
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\AuthenticationToken $authentication_token
  * @package Passbolt\Mobile\Model\Entity
@@ -30,7 +38,7 @@ class Transfer extends Entity
 {
     public const TRANSFER_STATUS_START = 'start';
     public const TRANSFER_STATUS_IN_PROGRESS = 'in progress';
-    public const TRANSFER_STATUS_COMPLETE = 'error';
+    public const TRANSFER_STATUS_COMPLETE = 'complete';
     public const TRANSFER_STATUS_CANCEL = 'cancel';
     public const TRANSFER_STATUS_ERROR = 'error';
 

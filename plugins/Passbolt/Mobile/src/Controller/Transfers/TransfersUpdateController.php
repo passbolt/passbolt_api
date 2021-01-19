@@ -9,7 +9,7 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.1.0
@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\Mobile\Controller\Transfers;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
+use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\UnauthorizedException;
@@ -24,7 +26,6 @@ use Cake\Validation\Validation;
 use Passbolt\Mobile\Service\Transfers\TransfersUpdateService;
 
 /**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  * @property \Passbolt\Mobile\Model\Table\TransfersTable $Transfers
  */
 class TransfersUpdateController extends AppController
@@ -42,8 +43,7 @@ class TransfersUpdateController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Auth->allow('update');
-        $this->loadModel('AuthenticationTokens');
+        $this->Auth->allow('updateNoSession');
         $this->loadModel('Passbolt/Mobile.Transfers');
 
         return parent::beforeFilter($event);
@@ -90,15 +90,17 @@ class TransfersUpdateController extends AppController
     protected function main(string $id, ?string $authToken = null): void
     {
         $this->assertRequestData($id);
+        $this->transfer = $this->Transfers->get($id, ['contain' => ['AuthenticationTokens', 'Users']]);
         if (isset($authToken)) {
-            $this->assertAuthToken($authToken);
+            $uac = $this->assertAuthToken($authToken);
         } else {
-            $this->assertCorrectUser();
+            $uac = $this->User->getAccessControl();
         }
 
         $updateService = new TransfersUpdateService($this->Transfers);
-        $updatedTransfer = $updateService->update($this->transfer, $this->request->getData());
-        $this->success(__('The operation was successful.', $updatedTransfer));
+        $updateService->update($this->transfer, $this->request->getData(), $uac);
+        $updatedTransfer = $this->Transfers->get($id); // make sure no assoc info is sent back
+        $this->success(__('The operation was successful.'), $updatedTransfer);
     }
 
     /**
@@ -106,7 +108,6 @@ class TransfersUpdateController extends AppController
      *
      * @param string $id uuid
      * @throws \Cake\Http\Exception\BadRequestException if transfer id is invalid or data is not set
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException if transfer does not exist
      * @throws \Cake\Http\Exception\UnauthorizedException if transfer auth token is expired
      * @return void
      */
@@ -115,18 +116,10 @@ class TransfersUpdateController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The transfer id is not valid.'));
         }
+
         $data = $this->request->getData();
         if (!isset($data) || empty($data) || !is_array($data)) {
             throw new BadRequestException(__('Information about the transfer is required.'));
-        }
-
-        // Fetch the transfer
-        $this->transfer = $this->Transfers->get($id, ['contain' => ['AuthenticationTokens']]);
-        if (
-            !isset($this->transfer->authentication_token)
-            || $this->AuthenticationTokens->isExpired($this->transfer->authentication_token)
-        ) {
-            throw new UnauthorizedException(__('The transfer window is closed.'));
         }
     }
 
@@ -135,31 +128,19 @@ class TransfersUpdateController extends AppController
      *
      * @param string $authToken uuid
      * @throws \Cake\Http\Exception\BadRequestException if no authentication token is expired or invalid
-     * @return void
+     * @return \App\Utility\UserAccessControl
      */
-    protected function assertAuthToken(string $authToken): void
+    protected function assertAuthToken(string $authToken): UserAccessControl
     {
         if (!Validation::uuid($authToken)) {
-            throw new BadRequestException(__('The authentication token should be a valid uuid.'));
+            throw new UnauthorizedException(__('The authentication token should be a valid uuid.'));
         }
         if ($this->transfer->authentication_token->token !== $authToken) {
-            throw new BadRequestException(__('The authentication token is invalid.'));
+            throw new UnauthorizedException(__('The authentication token is invalid.'));
         }
-    }
 
-    /**
-     * Assert the logged in user is the one defined in the transfer and auth token
-     *
-     * @return void
-     */
-    protected function assertCorrectUser(): void
-    {
-        $userId = $this->User->id();
-        if ($this->transfer->authentication_token->user_id !== $userId) {
-            throw new UnauthorizedException(__('The authentication token is invalid.'));
-        }
-        if ($this->transfer->user_id !== $userId) {
-            throw new UnauthorizedException(__('The authentication token is invalid.'));
-        }
+        $userId = $this->transfer->authentication_token->user_id;
+
+        return new UserAccessControl(Role::USER, $userId);
     }
 }

@@ -9,7 +9,7 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.1.0
@@ -83,17 +83,12 @@ class TransfersTable extends Table
 
         $validator
             ->ascii('hash', __('The hash should be an ascii string.'))
-            ->minLength(
+            ->lengthBetween(
                 'hash',
-                Transfer::TRANSFER_HASH_SIZE,
+                [Transfer::TRANSFER_HASH_SIZE, Transfer::TRANSFER_HASH_SIZE],
                 __('The hash should be {0} characters in length.', Transfer::TRANSFER_HASH_SIZE)
             )
-            ->maxLength(
-                'hash',
-                Transfer::TRANSFER_HASH_SIZE,
-                __('The hash should be {0} characters in length.', Transfer::TRANSFER_HASH_SIZE)
-            )
-            ->requirePresence('hash');
+            ->requirePresence('hash', 'create', __('The data transfer hash is required.'));
 
         $validator
             ->nonNegativeInteger('current_page', __('The current page should be a non negative integer.'))

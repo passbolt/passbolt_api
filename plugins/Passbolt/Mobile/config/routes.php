@@ -29,7 +29,7 @@ Router::plugin('Passbolt/Mobile', ['path' => '/mobile'], function (RouteBuilder 
     // update transfer
     $routes
         ->connect('/transfers/:id', [
-            'prefix' => 'Transfers', 'controller' => 'TransfersUpdate', 'action' => 'updateNoSession',
+            'prefix' => 'Transfers', 'controller' => 'TransfersUpdate', 'action' => 'update',
         ])
         ->setMethods(['POST', 'PUT'])
         ->setPass(['id']);
@@ -37,7 +37,7 @@ Router::plugin('Passbolt/Mobile', ['path' => '/mobile'], function (RouteBuilder 
     // without authToken
     $routes
         ->connect('/transfers/:id/:authToken', [
-            'prefix' => 'Transfers', 'controller' => 'TransfersUpdate', 'action' => 'update',
+            'prefix' => 'Transfers', 'controller' => 'TransfersUpdate', 'action' => 'updateNoSession',
         ])
         ->setMethods(['POST', 'PUT'])
         ->setPass(['id', 'authToken']);

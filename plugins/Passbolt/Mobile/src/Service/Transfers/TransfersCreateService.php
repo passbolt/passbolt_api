@@ -9,7 +9,7 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.1.0
@@ -40,7 +40,7 @@ class TransfersCreateService
      */
     public function __construct(?TransfersTable $transfersTable = null)
     {
-        $this->transfersTable = $transfersTable ?? TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
+        $this->Transfers = $transfersTable ?? TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
     }
 
     /**
@@ -62,7 +62,7 @@ class TransfersCreateService
         }
 
         // Save and check for build rules errors.
-        $transferSaved = $this->transfersTable->save($transfer);
+        $transferSaved = $this->Transfers->save($transfer);
         if (!empty($transfer->getErrors())) {
             $msg = __('Could not validate the transfer data.');
             throw new ValidationException($msg, $transfer, $this->transfersTable);
@@ -95,7 +95,7 @@ class TransfersCreateService
             'type' => AuthenticationToken::TYPE_MOBILE_TRANSFER,
         ];
 
-        return $this->transfersTable->newEntity($data, [
+        return $this->Transfers->newEntity($data, [
             'accessibleFields' => [
                 'id' => false,
                 'user_id' => true,
