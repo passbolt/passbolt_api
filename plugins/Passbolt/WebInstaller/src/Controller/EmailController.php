@@ -50,8 +50,8 @@ class EmailController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = 'install/gpg_key';
-        $this->stepInfo['next'] = 'install/options';
+        $this->stepInfo['previous'] = '/install/gpg_key';
+        $this->stepInfo['next'] = '/install/options';
         $this->stepInfo['template'] = 'Pages/email';
     }
 

@@ -57,7 +57,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
             ];
             $this->post('/install/license_key', $postData);
             $this->assertResponseCode(302);
-            $this->assertRedirectContains('install/database');
+            $this->assertRedirectContains('/install/database');
             $this->assertSession($postData, 'webinstaller.license');
         }
         $this->assertTrue(true);

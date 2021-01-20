@@ -26,9 +26,9 @@ class InstallationController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = 'install/options';
+        $this->stepInfo['previous'] = '/install/options';
         $this->stepInfo['template'] = 'Pages/email';
-        $this->stepInfo['install'] = 'install/installation/do_install';
+        $this->stepInfo['install'] = '/install/installation/do_install';
     }
 
     /**

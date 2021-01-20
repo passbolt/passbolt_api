@@ -22,6 +22,7 @@ use Cake\Datasource\Exception\MissingDatasourceConfigException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use Cake\Routing\Router;
 
 class WebInstallerMiddleware
 {
@@ -41,7 +42,7 @@ class WebInstallerMiddleware
         if (!self::isConfigured() && !$targetInstallPage) {
             return $response
                 ->withStatus(302)
-                ->withLocation('/install');
+                ->withLocation(Router::url('/install', true));
         }
         if (self::isConfigured() && $targetInstallPage) {
             throw new ForbiddenException();

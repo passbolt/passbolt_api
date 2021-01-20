@@ -29,8 +29,8 @@ class LicenseKeyController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = 'install';
-        $this->stepInfo['next'] = 'install/database';
+        $this->stepInfo['previous'] = '/install';
+        $this->stepInfo['next'] = '/install/database';
         $this->stepInfo['template'] = 'Pages/license_key';
     }
 
