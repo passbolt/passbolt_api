@@ -30,10 +30,10 @@ class OptionController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = 'install/email';
+        $this->stepInfo['previous'] = '/install/email';
         $this->stepInfo['template'] = 'Pages/options';
         $this->stepInfo['next'] = $this->webInstaller->getSettings('hasAdmin') ?
-            'install/installation' : 'install/account_creation';
+            'install/installation' : '/install/account_creation';
     }
 
     /**
