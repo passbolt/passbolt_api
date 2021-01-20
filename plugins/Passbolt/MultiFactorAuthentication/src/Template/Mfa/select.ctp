@@ -37,7 +37,7 @@
 
                     <?php $start = !$body[MfaSettings::ACCOUNT_SETTINGS]['totp'] ? 'start' : ''; ?>
                     <a href="<?= Router::url("/mfa/setup/totp/$start", true); ?>">
-                        <img src="<?= Router::url('img/third_party/google-authenticator.svg', true); ?>" />
+                        <img src="<?= Router::url('/img/third_party/google-authenticator.svg', true); ?>" />
                         <span>Google Authenticator</span>
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['totp']) : ?>
@@ -54,7 +54,7 @@
                 <?php if ($body[MfaSettings::ORG_SETTINGS]['duo']) : ?>
                 <li>
                     <a role="button" href="<?= Router::url('/mfa/setup/duo', true); ?>">
-                        <img src="<?= Router::url('img/third_party/duo.svg', true); ?>" />
+                        <img src="<?= Router::url('/img/third_party/duo.svg', true); ?>" />
                         <span>Duo MFA</span>
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['duo']) : ?>
@@ -71,7 +71,7 @@
                 <?php if ($body[MfaSettings::ORG_SETTINGS]['yubikey']) : ?>
                 <li>
                     <a role="button" href="<?= Router::url('/mfa/setup/yubikey', true); ?>">
-                        <img src="<?= Router::url('img/third_party/yubikey.svg', true); ?>" />
+                        <img src="<?= Router::url('/img/third_party/yubikey.svg', true); ?>" />
                         <span>Yubikey OTP</span>
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['yubikey']) : ?>

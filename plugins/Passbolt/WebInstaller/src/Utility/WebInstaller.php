@@ -59,7 +59,7 @@ class WebInstaller
      */
     public function isInitialized(): bool
     {
-        return $this->getSettings('initialized');
+        return $this->getSettings('initialized') ?? false;
     }
 
     /**
