@@ -154,11 +154,11 @@ configure_mysql() {
   $MYSQL "CREATE DATABASE IF NOT EXISTS ${sql_values[db_passbolt_dbname]} \
          DEFAULT CHARACTER SET utf8 COLLATE utf8_bin ;"
 
-  $MYSQL "CREATE USER IF NOT EXISTS '${sql_values[db_passbolt_username]}'@'127.0.0.1' \
+  $MYSQL "CREATE USER IF NOT EXISTS '${sql_values[db_passbolt_username]}'@'localhost' \
          IDENTIFIED BY '${sql_values[db_passbolt_password]}' ;"
 
   $MYSQL "GRANT ALL PRIVILEGES ON ${sql_values[db_passbolt_dbname]}.* \
-         TO '${sql_values[db_passbolt_username]}'@'127.0.0.1' ;"
+         TO '${sql_values[db_passbolt_username]}'@'localhost' ;"
 }
 
 
