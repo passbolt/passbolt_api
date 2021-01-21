@@ -62,11 +62,11 @@ class DatabaseController extends WebInstallerController
         parent::initialize();
 
         if (Configure::read('passbolt.plugins.license')) {
-            $this->stepInfo['previous'] = 'install/license_key';
+            $this->stepInfo['previous'] = '/install/license_key';
         } else {
-            $this->stepInfo['previous'] = 'install';
+            $this->stepInfo['previous'] = '/install';
         }
-        $this->stepInfo['next'] = 'install/gpg_key';
+        $this->stepInfo['next'] = '/install/gpg_key';
         $this->stepInfo['template'] = 'Pages/database';
 
         if (

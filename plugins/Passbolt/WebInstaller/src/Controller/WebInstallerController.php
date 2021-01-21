@@ -20,6 +20,7 @@ use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Response;
+use Cake\Routing\Router;
 use Passbolt\WebInstaller\Utility\WebInstaller;
 
 /**
@@ -81,7 +82,7 @@ class WebInstallerController extends Controller
         if (!$this->webInstaller->isInitialized() && !$onSystemCheckPage) {
             $this->Flash->error(__('The session has expired. Please start the configuration again.'));
 
-            return $this->redirect('install/system_check');
+            return $this->redirect(Router::url('/install/system_check', true));
         }
 
         return null;
@@ -147,6 +148,6 @@ class WebInstallerController extends Controller
      */
     protected function goToNextStep(): void
     {
-        $this->redirect($this->stepInfo['next']);
+        $this->redirect(Router::url($this->stepInfo['next'], true));
     }
 }

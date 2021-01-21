@@ -29,7 +29,7 @@ class AccountCreationController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['next'] = 'install/installation';
+        $this->stepInfo['next'] = '/install/installation';
         $this->stepInfo['template'] = 'Pages/account_creation';
     }
 

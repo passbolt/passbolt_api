@@ -23,11 +23,12 @@ class PassboltShell extends AppShell
      */
     public $tasks = [
         'Cleanup',
-        'DropTables',
         'Datacheck',
+        'DropTables',
         'Healthcheck',
         'Install',
         'KeyringInit',
+        'ShowLogsPath',
         'Migrate',
         'MysqlExport',
         'MysqlImport',
@@ -43,6 +44,11 @@ class PassboltShell extends AppShell
      */
     protected function _welcome()
     {
+        $skipWelcome = ['show_logs_path'];
+        if (in_array($this->command, $skipWelcome)) {
+            return;
+        }
+
         $this->out();
         $this->out('     ____                  __          ____  ');
         $this->out('    / __ \____  _____ ____/ /_  ____  / / /_ ');
@@ -120,6 +126,11 @@ class PassboltShell extends AppShell
         $parser->addSubcommand('datacheck', [
             'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
             'parser' => $this->Datacheck->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('show_logs_path', [
+            'help' => __d('cake_console', 'Show application logs.'),
+            'parser' => $this->ShowLogsPath->getOptionParser(),
         ]);
 
         $parser->addSubcommand('version', [

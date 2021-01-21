@@ -44,7 +44,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         ];
         $this->post('/install/options', $postData);
         $this->assertResponseCode(302);
-        $this->assertRedirectContains('install/account_creation');
+        $this->assertRedirectContains('/install/account_creation');
 
         // The full base url last / should be trimed.
         //$expectedSessionSettings = $postData;
@@ -62,7 +62,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         ];
         $this->post('/install/options', $postData);
         $this->assertResponseCode(302);
-        $this->assertRedirectContains('install/installation');
+        $this->assertRedirectContains('/install/installation');
     }
 
     public function testWebInstallerOptionPostError_InvalidData()

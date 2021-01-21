@@ -30,10 +30,10 @@ class GpgKeyImportController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = 'install/database';
-        $this->stepInfo['next'] = 'install/email';
+        $this->stepInfo['previous'] = '/install/database';
+        $this->stepInfo['next'] = '/install/email';
         $this->stepInfo['template'] = 'Pages/gpg_key_import';
-        $this->stepInfo['generate_key_cta'] = 'install/gpg_key';
+        $this->stepInfo['generate_key_cta'] = '/install/gpg_key';
     }
 
     /**

@@ -9,4 +9,4 @@
 PATH=/bin:/usr/local/bin:/usr/bin
 PASSBOLT_BASE_DIR=/usr/share/php/passbolt
 
-* * * * * www-data $PASSBOLT_BASE_DIR/bin/cake EmailQueue.sender
+* * * * * www-data $PASSBOLT_BASE_DIR/bin/cron
