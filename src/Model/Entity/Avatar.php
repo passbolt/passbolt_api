@@ -75,27 +75,22 @@ class Avatar extends ImageStorage
      * @param array|null $options options
      * @return bool|string
      */
-    private function getAvatarUrl(Avatar $avatar, ?string $version = 'small', ?array $options = [])
+    private function getAvatarUrl(Avatar $avatar, ?string $version = null, ?array $options = [])
     {
         // Default options.
         $defaultOptions = ['version' => 'small'];
         $options = array_merge($options, $defaultOptions);
+        $version = $version ?? 'small';
 
         // If image is empty, we return the default avatar.
-        if (empty($avatar) || empty($avatar->id)) {
+        if (empty($avatar) || empty($avatar->id) || empty($avatar->model)) {
             return $this->getFallbackUrl($version);
         }
 
-        $hash = null;
-        if (!empty($version)) {
-            $hash = Configure::read('FileStorage.imageHashes.' . $avatar->model . '.' . $version);
-            if (empty($hash)) {
-                if (empty($avatar->model) || !isset($avatar->model)) {
-                    $avatar->model = 'undefined';
-                }
-                $msg = __('No valid version key ({0} {1}) passed!', $avatar->model, $version);
-                throw new \InvalidArgumentException($msg);
-            }
+        // If configuration is broken, we return the default avatar.
+        $hash = Configure::read('FileStorage.imageHashes.' . $avatar->model . '.' . $version);
+        if (empty($hash)) {
+            return $this->getFallbackUrl($version);
         }
 
         $params = [
@@ -108,14 +103,17 @@ class Avatar extends ImageStorage
         $this->getEventManager()->dispatch($event);
 
         if ($event->isStopped()) {
+            $publicPath = Configure::read('ImageStorage.publicPath');
             $path = $event->getData('path');
-            if ($path === null) {
-                throw new InternalErrorException('Could not find image data path.');
+            if ($path === null || $publicPath === null) {
+                // If configuration is broken...
+                return $this->getFallbackUrl($version);
             }
 
             return Configure::read('ImageStorage.publicPath') . $this->normalizePath($path);
         }
 
+        // If event is not plugged properly, guess what
         return $this->getFallbackUrl($version);
     }
 
