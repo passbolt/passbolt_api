@@ -1,5 +1,5 @@
 .build-template:
-  stage: test
+  stage: package-build
   variables:
     BRANCH: release
   script:
