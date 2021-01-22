@@ -51,18 +51,6 @@
       - $CI_COMMIT_MESSAGE =~ /skip-unit/
 
 
-php7.4-mariadb10.6:
-  variables:
-    PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: "mariadb:10.6"
-  extends: .test-template
-  except:
-    variables:
-      - $TEST_DISABLED
-  only:
-    - develop
-    - master
-
 php7.4-mariadb10.5:
   variables:
     PHP_VERSION: "7.4"

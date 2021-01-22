@@ -4,7 +4,7 @@ services:
 .rules:
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^(feature\/debian\_*|master|release)/ || ($CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE == "schedule")'
-      when: always
+      when: on_success
 
 .dependencies:
   extends: .rules
@@ -14,7 +14,7 @@ services:
     paths:
       - $PACKAGE_MANAGER_PATH
     expire_in: 1 days
-    when: always
+    when: on_success
   cache:
     paths:
       - $PACKAGE_MANAGER_PATH
@@ -41,12 +41,15 @@ build-debian:
       - '*.buildinfo'
       - '*.changes'
     expire_in: 1 week
-    when: always
+    when: on_success
   script:
     - |
       apt-get update
-      apt-get install -y devscripts apt-utils debconf-utils fakeroot equivs cdbs
+      apt-get install -y git-buildpackage devscripts apt-utils debconf-utils fakeroot equivs cdbs
       make -f debian/rules debian/control
+      if [[ $CI_COMMIT_BRANCH =~ ^(develop|feature\/debian\_*) ]]; then
+        gbp dch --snapshot --snapshot-number=$(date +%s) --ignore-branch
+      fi
       mk-build-deps -irt'apt-get --no-install-recommends -yV' debian/control
       dpkg-checkbuilddeps
       debuild --preserve-envvar PASSBOLT_FLAVOUR -us -uc -b -i -I
@@ -79,15 +82,12 @@ debian-testing:
   dependencies:
     - build-debian
   variables:
-    DISTRIBUTION: testing
+    DISTRIBUTION: buster
     COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/debian
-  script:
-    - |
-      echo "Executing:  $DISTRIBUTION $COMPONENT $PREFIX"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: always
+      when: on_success
 
 debian-stable:
   extends: .publish
@@ -97,7 +97,7 @@ debian-stable:
     PREFIX: $PASSBOLT_FLAVOUR/debian
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
-      when: always
+      when: on_success
 
 debian-fs:
   extends: .kitchen-test
