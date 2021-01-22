@@ -1,3 +1,10 @@
+passbolt-ce-server (3.0.0-1) buster; urgency=medium
+  * Cron job executes bin/cron script.
+  * Add cake passbolt show_logs command to display error.log path.
+  * Add bin/utils.sh script.
+
+ -- Daniel Del Rio <daniel@passbolt.com>  Fri, 22 Jan 2020 18:15:00 +0000
+
 passbolt-ce-server (2.13.0-1) stretch; urgency=medium
   * PB-1168 Add baseline code and tests for Debian package build
   * PB-1067 As a user I can receive digest emails when creating a lot of resources
