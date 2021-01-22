@@ -1,9 +1,15 @@
 services:
   - docker:19.03.0-dind
 
+.rules:
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^(feature\/debian\_*|master|release)/ || ($CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE == "schedule")'
+      when: always
+
 .dependencies:
+  extends: .rules
   image: $PACKAGE_MANAGER_IMAGE
-  stage: deps
+  stage: package-deps
   artifacts:
     paths:
       - $PACKAGE_MANAGER_PATH
@@ -12,10 +18,6 @@ services:
   cache:
     paths:
       - $PACKAGE_MANAGER_PATH
-  only:
-    - develop
-    - release
-    - master
 
 composer:
   extends: .dependencies
@@ -27,8 +29,9 @@ composer:
       composer install --prefer-dist -o --no-dev --ignore-platform-reqs --no-interaction
 
 build-debian:
+  extends: .rules
   image: debian:stable-slim
-  stage: build
+  stage: package-build
   dependencies:
     - composer
   artifacts:
@@ -51,27 +54,17 @@ build-debian:
       cp ../*.build .
       cp ../*.buildinfo .
       cp ../*.changes .
-  only:
-    - develop
-    - release
-    - master
 
 .kitchen-test:
+  extends: .rules
   image: chef/chefdk:latest
-  stage: test
+  stage: package-test
   dependencies:
     - composer
     - build-debian
   script:
     - gem install bundler:2.1.2
     - kitchen verify $KITCHEN_JOB -t tests/integration
-  only:
-    - develop
-    - release
-    - master
-  except:
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /skip-integration/
 
 .publish:
   image: registry.gitlab.com/passbolt/passbolt-ops/passbolt-aptly
@@ -80,16 +73,31 @@ build-debian:
     - build-debian
   script:
     - /publisher.sh
-  only:
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /publish-package/
 
-dist-debian:
+debian-testing:
+  extends: .publish
+  dependencies:
+    - build-debian
+  variables:
+    DISTRIBUTION: testing
+    COMPONENT: testing
+    PREFIX: $PASSBOLT_FLAVOUR/debian
+  script:
+    - |
+      echo "Executing:  $DISTRIBUTION $COMPONENT $PREFIX"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+
+debian-stable:
   extends: .publish
   variables:
     DISTRIBUTION: buster
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/debian
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+      when: always
 
 debian-fs:
   extends: .kitchen-test
