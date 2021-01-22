@@ -19,7 +19,6 @@ namespace App\Model\Entity;
 use Burzum\FileStorage\Model\Entity\ImageStorage;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Http\Exception\InternalErrorException;
 
 class Avatar extends ImageStorage
 {
