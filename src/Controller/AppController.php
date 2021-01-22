@@ -105,15 +105,11 @@ class AppController extends Controller
      */
     protected function success($message = null, $body = null)
     {
-        $prefix = $this->request->getParam('prefix') ?? strtolower($this->request->getParam('prefix'));
-        $action = $this->request->getParam('action');
-
         $this->set([
             'header' => [
                 'id' => UserAction::getInstance()->getUserActionId(),
                 'status' => 'success',
                 'servertime' => time(),
-                'title' => 'app_' . $prefix . '_' . $action . '_success',
                 'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
