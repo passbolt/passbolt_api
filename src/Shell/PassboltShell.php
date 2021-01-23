@@ -28,7 +28,7 @@ class PassboltShell extends AppShell
         'Healthcheck',
         'Install',
         'KeyringInit',
-        'ShowLogs',
+        'ShowLogsPath',
         'Migrate',
         'MysqlExport',
         'MysqlImport',
@@ -44,6 +44,11 @@ class PassboltShell extends AppShell
      */
     protected function _welcome()
     {
+        $skipWelcome = ['show_logs_path'];
+        if (in_array($this->command, $skipWelcome)) {
+            return;
+        }
+
         $this->out();
         $this->out('     ____                  __          ____  ');
         $this->out('    / __ \____  _____ ____/ /_  ____  / / /_ ');
@@ -123,9 +128,9 @@ class PassboltShell extends AppShell
             'parser' => $this->Datacheck->getOptionParser(),
         ]);
 
-        $parser->addSubcommand('show_logs', [
+        $parser->addSubcommand('show_logs_path', [
             'help' => __d('cake_console', 'Show application logs.'),
-            'parser' => $this->ShowLogs->getOptionParser(),
+            'parser' => $this->ShowLogsPath->getOptionParser(),
         ]);
 
         $parser->addSubcommand('version', [

@@ -1,5 +1,5 @@
 .test-template:
-  stage: test
+  stage: unit-test
   variables:
     # MySQL services variables
     MYSQL_USER: user
@@ -51,9 +51,33 @@
       - $CI_COMMIT_MESSAGE =~ /skip-unit/
 
 
+php7.4-mariadb10.5:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "mariadb:10.5"
+  extends: .test-template
+  except:
+    variables:
+      - $TEST_DISABLED
+  only:
+    - develop
+    - master
+
 php7.4-mariadb10.4:
   variables:
     PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "mariadb:10.4"
+  extends: .test-template
+  except:
+    variables:
+      - $TEST_DISABLED
+  only:
+    - develop
+    - master
+
+php7.3-mariadb10.4:
+  variables:
+    PHP_VERSION: "7.3"
     DATABASE_ENGINE_VERSION: "mariadb:10.4"
   extends: .test-template
   except:
@@ -68,37 +92,6 @@ php7.4-mariadb10.3:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "mariadb:10.3"
   extends: .test-template
-  except:
-    variables:
-      - $TEST_DISABLED
-  only:
-    - develop
-    - master
-
-php7.4-mysql8.0:
-  variables:
-    PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: "mysql:8.0"
-  extends: .test-template
-  except:
-    variables:
-      - $TEST_DISABLED
-  only:
-    - develop
-    - master
-  allow_failure: true
-
-php7.3-mariadb10.4:
-  variables:
-    PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: "mariadb:10.4"
-  extends: .test-template
-  except:
-    variables:
-      - $TEST_DISABLED
-  only:
-    - develop
-    - master
 
 php7.3-mysql5.7:
   variables:

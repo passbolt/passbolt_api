@@ -18,7 +18,7 @@ namespace App\Shell\Task;
 
 use App\Shell\AppShell;
 
-class ShowLogsTask extends AppShell
+class ShowLogsPathTask extends AppShell
 {
     /**
      * Gets the option parser instance and configures it.
@@ -37,8 +37,6 @@ class ShowLogsTask extends AppShell
     }
 
     /**
-     * Main
-     *
      * @return void
      */
     public function main()

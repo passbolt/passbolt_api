@@ -40,12 +40,12 @@
         <whitelist>
             <directory suffix=".php">./src/</directory>
             <directory suffix=".php">./plugins/AccountSettings/src/</directory>
-            <directory suffix=".php">./plugins/WebInstaller/src/</directory>
-            <directory suffix=".php">./plugins/Log/src/</directory>
-            <directory suffix=".php">./plugins/EmailNotificationSettings/src/</directory>
             <directory suffix=".php">./plugins/EmailDigest/src/</directory>
+            <directory suffix=".php">./plugins/EmailNotificationSettings/src/</directory>
+            <directory suffix=".php">./plugins/Log/src/</directory>
             <directory suffix=".php">./plugins/Reports/src/</directory>
             <directory suffix=".php">./plugins/Mobile/src/</directory>
+            <directory suffix=".php">./plugins/WebInstaller/src/</directory>
         </whitelist>
     </filter>
 </phpunit>
