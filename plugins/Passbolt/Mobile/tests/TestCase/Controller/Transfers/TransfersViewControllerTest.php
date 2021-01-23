@@ -33,7 +33,7 @@ class TransfersViewControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users',
         'app.Base/Profiles',
-        'app.Base/Avatars'
+        'app.Base/Avatars',
     ];
 
     public function testMobileTransfersViewController_Success()

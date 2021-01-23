@@ -106,7 +106,7 @@ class TransfersUpdateController extends AppController
         $options = $this->QueryString->get($whitelist);
         $contain = empty($options['contain']['user']) ? [] : ['Users'];
         $contain = empty($options['contain']['user.profile']) ? $contain : [
-            'Users.Profiles' => AvatarsTable::addContainAvatar()
+            'Users.Profiles' => AvatarsTable::addContainAvatar(),
         ];
 
         $updatedTransfer = $this->Transfers->get($id, ['contain' => $contain]);
