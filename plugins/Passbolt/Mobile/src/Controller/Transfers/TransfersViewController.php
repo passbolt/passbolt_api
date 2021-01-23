@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Mobile\Controller\Transfers;
 
 use App\Controller\AppController;
+use App\Model\Table\AvatarsTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
 
@@ -41,8 +42,16 @@ class TransfersViewController extends AppController
         }
 
         $this->loadModel('Passbolt/Mobile.Transfers');
-        $transfer = $this->Transfers->get($id);
 
+        // Contain options
+        $whitelist = ['contain' => ['user', 'user.profile']];
+        $options = $this->QueryString->get($whitelist);
+        $contain = empty($options['contain']['user']) ? [] : ['Users'];
+        $contain = empty($options['contain']['user.profile']) ? $contain : [
+            'Users.Profiles' => AvatarsTable::addContainAvatar()
+        ];
+
+        $transfer = $this->Transfers->get($id, ['contain' => $contain]);
         $this->success(__('The operation was successful.'), $transfer);
     }
 }

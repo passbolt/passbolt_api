@@ -18,6 +18,7 @@ namespace Passbolt\Mobile\Controller\Transfers;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use App\Model\Table\AvatarsTable;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -99,7 +100,16 @@ class TransfersUpdateController extends AppController
 
         $updateService = new TransfersUpdateService($this->Transfers);
         $updateService->update($this->transfer, $this->request->getData(), $uac);
-        $updatedTransfer = $this->Transfers->get($id); // make sure no assoc info is sent back
+
+        // Contain options
+        $whitelist = ['contain' => ['user', 'user.profile']];
+        $options = $this->QueryString->get($whitelist);
+        $contain = empty($options['contain']['user']) ? [] : ['Users'];
+        $contain = empty($options['contain']['user.profile']) ? $contain : [
+            'Users.Profiles' => AvatarsTable::addContainAvatar()
+        ];
+
+        $updatedTransfer = $this->Transfers->get($id, ['contain' => $contain]);
         $this->success(__('The operation was successful.'), $updatedTransfer);
     }
 

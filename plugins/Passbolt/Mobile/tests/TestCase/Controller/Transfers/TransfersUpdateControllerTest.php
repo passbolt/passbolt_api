@@ -19,6 +19,9 @@ namespace Passbolt\Mobile\Test\TestCase\Controller\Transfers;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
+use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Test\Lib\Model\ProfilesModelTrait;
+use App\Test\Lib\Model\UsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenDate;
 use Cake\Utility\Security;
@@ -29,9 +32,14 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
 {
     use TransfersModelTrait;
     use AuthenticationTokenModelTrait;
+    use UsersModelTrait;
+    use ProfilesModelTrait;
+    use AvatarsModelTrait;
 
     public $fixtures = [
         'app.Base/Users',
+        'app.Base/Profiles',
+        'app.Base/Avatars',
     ];
 
     public function testMobileTransfersUpdateController_Success()
@@ -46,7 +54,26 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $this->postJson("/mobile/transfers/$id.json", $data);
         $this->assertSuccess();
         $this->assertTransferAttributes($this->_responseJsonBody);
-        $this->assertTrue(!isset($this->_responseJsonBody->authentication_token));
+        $this->assertFalse(isset($this->_responseJsonBody->authentication_token));
+        $this->assertFalse(isset($this->_responseJsonBody->user));
+    }
+
+    public function testMobileTransfersUpdateController_SuccessWithContainAvatar()
+    {
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $id = $transfer->id;
+        $data = [
+            'status' => Transfer::TRANSFER_STATUS_COMPLETE,
+            'current_page' => 2,
+        ];
+        $this->authenticateAs('ada');
+        $this->postJson("/mobile/transfers/$id.json?contain[user.profile]=1", $data);
+        $this->assertSuccess();
+        $this->assertTransferAttributes($this->_responseJsonBody);
+        $this->assertFalse(isset($this->_responseJsonBody->authentication_token));
+        $this->assertUserAttributes($this->_responseJsonBody->user);
+        $this->assertProfileAttributes($this->_responseJsonBody->user->profile);
+        $this->assertAvatarAttributes($this->_responseJsonBody->user->profile->avatar);
     }
 
     public function testMobileTransfersUpdateController_ErrorNoData()

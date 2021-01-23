@@ -17,15 +17,23 @@ declare(strict_types=1);
 namespace Passbolt\Mobile\Test\TestCase\Controller\Transfers;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Test\Lib\Model\ProfilesModelTrait;
+use App\Test\Lib\Model\UsersModelTrait;
 use App\Utility\UuidFactory;
 use Passbolt\Mobile\Test\Lib\Model\TransfersModelTrait;
 
 class TransfersViewControllerTest extends AppIntegrationTestCase
 {
     use TransfersModelTrait;
+    use UsersModelTrait;
+    use ProfilesModelTrait;
+    use AvatarsModelTrait;
 
     public $fixtures = [
         'app.Base/Users',
+        'app.Base/Profiles',
+        'app.Base/Avatars'
     ];
 
     public function testMobileTransfersViewController_Success()
@@ -36,6 +44,35 @@ class TransfersViewControllerTest extends AppIntegrationTestCase
         $this->getJson("/mobile/transfers/$id.json");
         $this->assertSuccess();
         $this->assertTransferAttributes($this->_responseJsonBody);
+        $this->assertFalse(isset($this->_responseJsonBody->user));
+        $this->assertFalse(isset($this->_responseJsonBody->user->profile));
+        $this->assertFalse(isset($this->_responseJsonBody->user->profile->avatar));
+    }
+
+    public function testMobileTransfersViewController_SuccessWithContainUser()
+    {
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $id = $transfer->id;
+        $this->authenticateAs('ada');
+        $this->getJson("/mobile/transfers/$id.json?contain[user]=1");
+        $this->assertSuccess();
+        $this->assertTransferAttributes($this->_responseJsonBody);
+        $this->assertUserAttributes($this->_responseJsonBody->user);
+        $this->assertFalse(isset($this->_responseJsonBody->user->profile));
+        $this->assertFalse(isset($this->_responseJsonBody->user->profile->avatar));
+    }
+
+    public function testMobileTransfersViewController_SuccessWithContainProfileAvatar()
+    {
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $id = $transfer->id;
+        $this->authenticateAs('ada');
+        $this->getJson("/mobile/transfers/$id.json?contain[user]=1&contain[user.profile]=1");
+        $this->assertSuccess();
+        $this->assertTransferAttributes($this->_responseJsonBody);
+        $this->assertUserAttributes($this->_responseJsonBody->user);
+        $this->assertProfileAttributes($this->_responseJsonBody->user->profile);
+        $this->assertAvatarAttributes($this->_responseJsonBody->user->profile->avatar);
     }
 
     public function testMobileTransfersViewController_ErrorNotFound()
