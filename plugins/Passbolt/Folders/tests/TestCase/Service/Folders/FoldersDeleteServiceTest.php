@@ -21,7 +21,6 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Fixture\Alt0\SecretsFixture;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -66,8 +65,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     use ResourcesModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
-        GpgkeysFixture::class,
+    GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,

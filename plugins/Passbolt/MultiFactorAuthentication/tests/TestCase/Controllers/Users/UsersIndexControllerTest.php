@@ -19,7 +19,6 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Users;
 
 use App\Model\Entity\Role;
 use App\Test\Fixture\Alt0\GroupsUsersFixture;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
@@ -48,7 +47,6 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         GpgkeysFixture::class,
         RolesFixture::class,
         GroupsUsersFixture::class,
-        AvatarsFixture::class,
     ];
 
     /**

@@ -34,7 +34,6 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Utility\UuidFactory;
-use Burzum\FileStorage\Test\Fixture\FileStorageFixture;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -75,7 +74,6 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         ResourceTypesFixture::class,
         GroupsFixture::class,
         ProfilesFixture::class,
-        FileStorageFixture::class,
     ];
 
     /**

@@ -30,7 +30,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/ResourceTypes',
         'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Groups', 'app.Alt0/GroupsUsers',
         'app.Alt0/Permissions', 'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-        'app.Base/Groups', 'app.Base/Avatars', 'app.Base/Favorites',
+        'app.Base/Groups', 'app.Base/Favorites',
     ];
 
     public function setUp()

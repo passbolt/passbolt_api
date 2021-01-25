@@ -31,7 +31,6 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
-use Burzum\FileStorage\Test\Fixture\FileStorageFixture;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
@@ -59,7 +58,6 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         ResourceTypesFixture::class,
         SecretsFixture::class,
         GroupsFixture::class,
-        FileStorageFixture::class,
     ];
 
     public function setUp()

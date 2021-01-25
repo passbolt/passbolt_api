@@ -67,9 +67,7 @@ class ActionLogsFinder
                     'queryBuilder' => AvatarsTable::addContainAvatar()['Avatars'],
                     'fields' => [
                         'Avatars.id',
-                        'Avatars.model',
-                        'Avatars.extension',
-                        'Avatars.path',
+                        'Avatars.profile_id',
                     ],
                 ],
                 'fields' => [

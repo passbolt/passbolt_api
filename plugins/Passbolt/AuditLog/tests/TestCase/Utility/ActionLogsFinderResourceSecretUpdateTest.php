@@ -33,7 +33,6 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
         'app.Base/Users',
         'app.Base/Gpgkeys',
         'app.Base/Profiles',
-        'app.Base/Avatars',
         'app.Base/Roles',
         'app.Base/Groups',
         'app.Base/GroupsUsers',

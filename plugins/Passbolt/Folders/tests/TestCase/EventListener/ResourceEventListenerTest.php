@@ -19,7 +19,6 @@ namespace Passbolt\Folders\Test\TestCase\EventListener;
 
 use App\Model\Entity\Permission;
 use App\Test\Fixture\Alt0\SecretsFixture;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -59,8 +58,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         PermissionsFixture::class,
         ProfilesFixture::class,
         UsersFixture::class,
-        AvatarsFixture::class,
-        FavoritesFixture::class,
+    FavoritesFixture::class,
         RolesFixture::class,
         SecretsFixture::class,
         ProfilesFixture::class,

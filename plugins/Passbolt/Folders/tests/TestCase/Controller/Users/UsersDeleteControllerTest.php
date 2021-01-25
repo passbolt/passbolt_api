@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -42,8 +41,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
-        FavoritesFixture::class,
+    FavoritesFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,

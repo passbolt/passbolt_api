@@ -41,7 +41,6 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
         'app.Base/Resources',
         'app.Alt0/GroupsUsers',
         'app.Alt0/Permissions',
-        'app.Base/Avatars',
         'app.Base/Favorites',
         'app.Base/Gpgkeys',
     ];
