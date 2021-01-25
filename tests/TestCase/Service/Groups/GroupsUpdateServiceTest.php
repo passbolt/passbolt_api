@@ -38,7 +38,7 @@ class GroupsUpdateServiceTest extends AppTestCase
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Favorites', 'app.Base/Avatars',
+        'app.Base/Favorites',
     ];
 
     /**

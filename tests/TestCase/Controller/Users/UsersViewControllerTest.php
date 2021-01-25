@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
@@ -25,13 +27,19 @@ class UsersViewControllerTest extends AppIntegrationTestCase
 {
     use GroupsUsersModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/GroupsUsers'];
+    public function setUp()
+    {
+        parent::setUp();
+
+        RoleFactory::make()->guest()->persist();
+    }
 
     public function testUsersViewGetSuccess()
     {
-        $this->authenticateAs('ursula');
-        $uuid = UuidFactory::uuid('user.id.ursula');
-        $this->getJson('/users/' . $uuid . '.json?api-version=2');
+        $user = UserFactory::make()->user()->with('Profiles.Avatars')->persist();
+        $this->logInAs($user);
+
+        $this->getJson('/users/' . $user->id . '.json?api-version=2');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
@@ -50,14 +58,15 @@ class UsersViewControllerTest extends AppIntegrationTestCase
 
     public function testUsersViewGetMeSuccess()
     {
-        $this->authenticateAs('ada');
-        $uuid = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
+
         $this->getJson('/users/me.json?api-version=v2');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
         $this->assertUserAttributes($this->_responseJsonBody);
-        $this->assertEquals($this->_responseJsonBody->id, $uuid);
+        $this->assertEquals($this->_responseJsonBody->id, $user->id);
     }
 
     public function testUsersViewNotLoggedInError()

@@ -17,6 +17,11 @@ declare(strict_types=1);
 
 namespace App\Test\Lib\Model;
 
+use App\Model\Entity\Avatar;
+use App\Test\Factory\ProfileFactory;
+use Cake\ORM\TableRegistry;
+use Laminas\Diactoros\UploadedFile;
+
 trait AvatarsModelTrait
 {
     /**
@@ -26,7 +31,63 @@ trait AvatarsModelTrait
      */
     protected function assertAvatarAttributes($avatar)
     {
-        $this->assertObjectHasAttributes(['url'], $avatar);
-        $this->assertObjectHasAttributes(['small', 'medium'], $avatar->url);
+        $this->assertObjectHasAttributes(['data'], $avatar);
+    }
+
+    /**
+     * @param \App\Model\Entity\Avatar|null $avatar
+     * @return \App\Model\Entity\Avatar
+     * @throws \Exception
+     */
+    public function createAvatar(?Avatar $avatar = null)
+    {
+        $profileId = $avatar->profile_id ?? ProfileFactory::make()->persist()->id;
+
+        $data = [
+            'file' => $this->createUploadFile(),
+            'profile_id' => $profileId,
+        ];
+
+        $AvatarsTable = TableRegistry::getTableLocator()->get('Avatars');
+        if ($avatar) {
+            $avatar = $AvatarsTable->patchEntity($avatar, $data);
+        } else {
+            $avatar = $AvatarsTable->newEntity($data);
+        }
+
+        return $AvatarsTable->saveOrFail($avatar);
+    }
+
+    public function destroyDir(string $dir)
+    {
+        if (!is_dir($dir) || is_link($dir)) {
+            return unlink($dir);
+        }
+        foreach (scandir($dir) as $file) {
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
+            $this->destroyDir($dir . DIRECTORY_SEPARATOR . $file);
+        }
+
+        return rmdir($dir);
+    }
+
+    /**
+     * Create a dummy upload file
+     *
+     * @return UploadedFile
+     */
+    public function createUploadFile()
+    {
+        $adaAvatar = FIXTURES . 'Avatar' . DS . 'ada.png';
+
+        return new UploadedFile(
+            $adaAvatar,
+            filesize($adaAvatar),
+            \UPLOAD_ERR_OK,
+            $adaAvatar,
+            'image/png'
+        );
     }
 }

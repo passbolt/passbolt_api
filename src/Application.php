@@ -171,15 +171,12 @@ class Application extends BaseApplication
     /**
      * Add vendor plugins
      * - EmailQueue
-     * - FileStorage
      *
      * @return $this
      */
     protected function addVendorPlugins()
     {
         $this->addPlugin('EmailQueue');
-        $this->addPlugin('Burzum/FileStorage');
-        $this->addPlugin('Burzum/Imagine');
 
         return $this;
     }
@@ -257,6 +254,7 @@ class Application extends BaseApplication
     {
         try {
             Application::addPlugin('Bake');
+            $this->addPlugin('CakephpFixtureFactories');
         } catch (MissingPluginException $e) {
             // Do not halt if the plugin is missing
         }

@@ -308,6 +308,15 @@ Router::scope('/users', function ($routes) {
 });
 
 /**
+ * Avatars prefixed routes
+ */
+Router::scope('/avatars', function (RouteBuilder $routes) {
+    $routes->connect('/view/:id/:format', ['prefix' => 'Avatars', 'controller' => 'AvatarsView', 'action' => 'view'])
+        ->setPass(['id', 'format'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Secrets prefixed routes
  */
 Router::scope('/secrets', function ($routes) {

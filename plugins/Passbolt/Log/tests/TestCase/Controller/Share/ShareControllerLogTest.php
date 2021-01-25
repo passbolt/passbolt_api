@@ -36,7 +36,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
     protected $PermissionHistory;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles',
+        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles',
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
         'app.Base/Favorites',
     ];

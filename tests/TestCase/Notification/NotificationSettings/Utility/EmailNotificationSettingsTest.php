@@ -46,7 +46,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments',
-        'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Profiles',
+        'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Profiles',
          'app.Base/Gpgkeys',
     ];
 

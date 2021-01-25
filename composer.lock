@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7bd6e761eb2f0d6a08a7aee80ea8c9e",
+    "content-hash": "c2e39e2a79396bbdbd0cf9a7274c52be",
     "packages": [
         {
             "name": "aura/intl",
@@ -220,130 +220,6 @@
                 }
             ],
             "time": "2020-08-18T23:57:15+00:00"
-        },
-        {
-            "name": "burzum/cakephp-file-storage",
-            "version": "2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/burzum/cakephp-file-storage.git",
-                "reference": "e0cc17e262ad314a904cf57069f619b9561b48e9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/burzum/cakephp-file-storage/zipball/e0cc17e262ad314a904cf57069f619b9561b48e9",
-                "reference": "e0cc17e262ad314a904cf57069f619b9561b48e9",
-                "shasum": ""
-            },
-            "require": {
-                "cakephp/cakephp": "^3.6.0",
-                "cakephp/migrations": "^2.0.0",
-                "cakephp/plugin-installer": "^1.0.0",
-                "knplabs/gaufrette": "^0.7.0|^0.8.0",
-                "php": ">=7.0.0"
-            },
-            "require-dev": {
-                "burzum/cakephp-imagine-plugin": "3.x-dev",
-                "cakephp/cakephp-codesniffer": "^3.0.0",
-                "league/flysystem": "^1.0.0",
-                "phpunit/phpunit": "^5.7.14|^6.0"
-            },
-            "suggest": {
-                "burzum/cakephp-imagine-plugin": "Required if you want to use the image processing feature of FileStorage",
-                "league/flysystem": "Alternative for Gaufrette, see the docs how to configure it."
-            },
-            "type": "cakephp-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Burzum\\FileStorage\\": "src",
-                    "Burzum\\FileStorage\\Test\\Fixture\\": "tests\\Fixture"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Florian Krämer",
-                    "homepage": "http://florian-kraemer.net"
-                },
-                {
-                    "name": "Other contributors",
-                    "homepage": "https://github.com/burzum/cakephp-file-storage/graphs/contributors",
-                    "role": "Contributors"
-                }
-            ],
-            "description": "This plugin is giving you the possibility to store files in virtually any kind of storage backend. This plugin is wrapping the Gaufrette library (https://github.com/KnpLabs/Gaufrette) library in a CakePHP fashion and provides a simple way to use the storage adapters through the StorageManager class.",
-            "homepage": "http://github.com/burzum/cakephp-file-storage-plugin",
-            "keywords": [
-                "abstraction",
-                "cakephp",
-                "file",
-                "filesystem",
-                "media",
-                "storage",
-                "upload"
-            ],
-            "support": {
-                "issues": "https://github.com/burzum/cakephp-file-storage/issues",
-                "source": "https://github.com/burzum/cakephp-file-storage/tree/2.1"
-            },
-            "time": "2019-04-11T08:54:21+00:00"
-        },
-        {
-            "name": "burzum/cakephp-imagine-plugin",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/burzum/cakephp-imagine-plugin.git",
-                "reference": "3ef5969d1dd660e93c03674ed9efc066b8f785ea"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/burzum/cakephp-imagine-plugin/zipball/3ef5969d1dd660e93c03674ed9efc066b8f785ea",
-                "reference": "3ef5969d1dd660e93c03674ed9efc066b8f785ea",
-                "shasum": ""
-            },
-            "require": {
-                "cakephp/cakephp": "^3.7",
-                "cakephp/plugin-installer": "*",
-                "imagine/imagine": "0.6.*"
-            },
-            "require-dev": {
-                "cakephp/cakephp-codesniffer": "dev-master",
-                "phpunit/phpunit": "^6.0"
-            },
-            "type": "cakephp-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Burzum\\Imagine\\": "src",
-                    "Burzum\\Imagine\\Test\\Fixture\\": "tests\\Fixture"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Florian Krämer",
-                    "homepage": "http://florian-kraemer.net"
-                }
-            ],
-            "description": "Imagine Plugin for CakePHP",
-            "homepage": "https://github.com/burzum/cakephp-imagine-plugin",
-            "keywords": [
-                "cakephp",
-                "image",
-                "image-processing",
-                "media"
-            ],
-            "support": {
-                "issues": "https://github.com/burzum/cakephp-imagine-plugin/issues",
-                "source": "https://github.com/burzum/cakephp-imagine-plugin/tree/3.x"
-            },
-            "time": "2019-05-06T07:10:01+00:00"
         },
         {
             "name": "cakephp/cakephp",
@@ -824,23 +700,24 @@
         },
         {
             "name": "imagine/imagine",
-            "version": "v0.6.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/avalanche123/Imagine.git",
-                "reference": "149041d2a1b517107bfe270ca2b1a17aa341715d"
+                "reference": "d2e18be6e930ca169e4f921ef73ebfc061bf55d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/149041d2a1b517107bfe270ca2b1a17aa341715d",
-                "reference": "149041d2a1b517107bfe270ca2b1a17aa341715d",
+                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/d2e18be6e930ca169e4f921ef73ebfc061bf55d8",
+                "reference": "d2e18be6e930ca169e4f921ef73ebfc061bf55d8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "require-dev": {
-                "sami/sami": "dev-master"
+                "friendsofphp/php-cs-fixer": "^2.2",
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4 || ^9.3"
             },
             "suggest": {
                 "ext-gd": "to use the GD implementation",
@@ -854,8 +731,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Imagine": "lib/"
+                "psr-4": {
+                    "Imagine\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -879,102 +756,9 @@
             ],
             "support": {
                 "issues": "https://github.com/avalanche123/Imagine/issues",
-                "source": "https://github.com/avalanche123/Imagine/tree/v0.6.3"
+                "source": "https://github.com/avalanche123/Imagine/tree/1.2.4"
             },
-            "time": "2015-09-19T16:54:05+00:00"
-        },
-        {
-            "name": "knplabs/gaufrette",
-            "version": "v0.8.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/KnpLabs/Gaufrette.git",
-                "reference": "1d44b7ac74256a240704b0fb16d2d66360511a07"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/Gaufrette/zipball/1d44b7ac74256a240704b0fb16d2d66360511a07",
-                "reference": "1d44b7ac74256a240704b0fb16d2d66360511a07",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "conflict": {
-                "microsoft/windowsazure": "<0.4.3"
-            },
-            "require-dev": {
-                "akeneo/phpspec-skip-example-extension": "^4.0",
-                "amazonwebservices/aws-sdk-for-php": "1.5.*",
-                "aws/aws-sdk-php": "^2.4.12||~3",
-                "doctrine/dbal": ">=2.3",
-                "dropbox-php/dropbox-php": "*",
-                "google/apiclient": "~1.1.3",
-                "league/flysystem": "~1.0",
-                "microsoft/azure-storage-blob": "^1.0",
-                "mikey179/vfsstream": "~1.2.0",
-                "mongodb/mongodb": "^1.1",
-                "phpseclib/phpseclib": "^2.0",
-                "phpspec/phpspec": "~5.1",
-                "phpunit/phpunit": "~7.5",
-                "rackspace/php-opencloud": "^1.9.2"
-            },
-            "suggest": {
-                "ext-curl": "*",
-                "ext-fileinfo": "This extension is used to automatically detect the content-type of a file in the AwsS3, OpenCloud, AzureBlogStorage and GoogleCloudStorage adapters",
-                "ext-mbstring": "*",
-                "gaufrette/aws-s3-adapter": "to use AwsS3 adapter (supports SDK v2 and v3)",
-                "gaufrette/azure-blob-storage-adapter": "to use AzureBlobStorage adapter",
-                "gaufrette/doctrine-dbal-adapter": "to use DBAL adapter",
-                "gaufrette/flysystem-adapter": "to use Flysystem adapter",
-                "gaufrette/ftp-adapter": "to use Ftp adapter",
-                "gaufrette/gridfs-adapter": "to use GridFS adapter",
-                "gaufrette/in-memory-adapter": "to use InMemory adapter",
-                "gaufrette/local-adapter": "to use Local adapter",
-                "gaufrette/opencloud-adapter": "to use Opencloud adapter",
-                "gaufrette/phpseclib-sftp-adapter": "to use PhpseclibSftp adapter",
-                "gaufrette/zip-adapter": "to use Zip adapter",
-                "google/apiclient": "to use GoogleCloudStorage adapter",
-                "knplabs/knp-gaufrette-bundle": "to use with Symfony2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.9.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Gaufrette": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "The contributors",
-                    "homepage": "http://github.com/knplabs/Gaufrette/contributors"
-                },
-                {
-                    "name": "KnpLabs Team",
-                    "homepage": "http://knplabs.com"
-                }
-            ],
-            "description": "PHP library that provides a filesystem abstraction layer",
-            "homepage": "http://knplabs.com",
-            "keywords": [
-                "abstraction",
-                "file",
-                "filesystem",
-                "media"
-            ],
-            "support": {
-                "issues": "https://github.com/KnpLabs/Gaufrette/issues",
-                "source": "https://github.com/KnpLabs/Gaufrette/tree/v0.8.3"
-            },
-            "time": "2019-06-06T09:56:58+00:00"
+            "time": "2020-11-03T22:35:03+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -1118,6 +902,146 @@
                 }
             ],
             "time": "2020-09-14T14:23:00+00:00"
+        },
+        {
+            "name": "league/flysystem",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem.git",
+                "reference": "1d68c2325a56b6b847f3a40b9564cabfa7bb2594"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/1d68c2325a56b6b847f3a40b9564cabfa7bb2594",
+                "reference": "1d68c2325a56b6b847f3a40b9564cabfa7bb2594",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "league/mime-type-detection": "^1.0.0",
+                "php": "^7.2 || ^8.0"
+            },
+            "conflict": {
+                "guzzlehttp/ringphp": "<1.1.1"
+            },
+            "require-dev": {
+                "async-aws/s3": "^1.5",
+                "async-aws/simple-s3": "^1.0",
+                "aws/aws-sdk-php": "^3.132.4",
+                "composer/semver": "^3.0",
+                "ext-fileinfo": "*",
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "google/cloud-storage": "^1.23",
+                "phpseclib/phpseclib": "^2.0",
+                "phpstan/phpstan": "^0.12.26",
+                "phpunit/phpunit": "^8.5 || ^9.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "File storage abstraction for PHP",
+            "keywords": [
+                "WebDAV",
+                "aws",
+                "cloud",
+                "file",
+                "files",
+                "filesystem",
+                "filesystems",
+                "ftp",
+                "s3",
+                "sftp",
+                "storage"
+            ],
+            "support": {
+                "issues": "https://github.com/thephpleague/flysystem/issues",
+                "source": "https://github.com/thephpleague/flysystem/tree/2.0.2"
+            },
+            "funding": [
+                {
+                    "url": "https://offset.earth/frankdejonge",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/league/flysystem",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-12-28T17:02:23+00:00"
+        },
+        {
+            "name": "league/mime-type-detection",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/mime-type-detection.git",
+                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
+                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.18",
+                "phpstan/phpstan": "^0.12.68",
+                "phpunit/phpunit": "^8.5.8 || ^9.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\MimeTypeDetection\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "Mime-type detection for Flysystem",
+            "support": {
+                "issues": "https://github.com/thephpleague/mime-type-detection/issues",
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/league/flysystem",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-01-18T20:58:21+00:00"
         },
         {
             "name": "ldaptools/ldaptools",
@@ -4300,6 +4224,58 @@
             "time": "2020-11-10T18:47:58+00:00"
         },
         {
+            "name": "fakerphp/faker",
+            "version": "v1.13.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FakerPHP/Faker.git",
+                "reference": "ab3f5364d01f2c2c16113442fb987d26e4004913"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/ab3f5364d01f2c2c16113442fb987d26e4004913",
+                "reference": "ab3f5364d01f2c2c16113442fb987d26e4004913",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "conflict": {
+                "fzaninotto/faker": "*"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.4.1",
+                "ext-intl": "*",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.8 || ^9.4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "support": {
+                "issues": "https://github.com/FakerPHP/Faker/issues",
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.13.0"
+            },
+            "time": "2020-12-18T16:50:48+00:00"
+        },
+        {
             "name": "jasny/twig-extensions",
             "version": "v1.2.0",
             "source": {
@@ -6923,6 +6899,66 @@
             "time": "2016-03-12T16:36:32+00:00"
         },
         {
+            "name": "vierge-noire/cakephp-fixture-factories",
+            "version": "dev-cake3_next",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vierge-noire/cakephp-fixture-factories.git",
+                "reference": "8008ca60f35fca84a8a6b7831cc3ec23ab9a027b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/8008ca60f35fca84a8a6b7831cc3ec23ab9a027b",
+                "reference": "8008ca60f35fca84a8a6b7831cc3ec23ab9a027b",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^3.7",
+                "fakerphp/faker": "^1.13",
+                "php": ">=7.1.0",
+                "vierge-noire/cakephp-test-suite-light": "^1.1"
+            },
+            "require-dev": {
+                "cakephp/bake": "^1.5",
+                "josegonzalez/dotenv": "dev-master",
+                "phpstan/phpstan": "0.12.x-dev",
+                "phpunit/phpunit": "^6.1",
+                "vierge-noire/cakephp-test-migrator": "^1.1"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "CakephpFixtureFactories\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Masson",
+                    "email": "nicolas@b-projects.tech"
+                },
+                {
+                    "name": "Juan Pablo Ramìrez",
+                    "email": "pabloelcolombiano@gmail.com"
+                }
+            ],
+            "description": "CakePHP Dynamic Fixtures",
+            "keywords": [
+                "cakephp",
+                "dynamic",
+                "fixtures",
+                "tests"
+            ],
+            "support": {
+                "issues": "https://github.com/vierge-noire/cakephp-fixture-factories/issues",
+                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/cake3_next"
+            },
+            "time": "2021-01-23T18:47:50+00:00"
+        },
+        {
             "name": "vierge-noire/cakephp-test-migrator",
             "version": "v1.1.1",
             "source": {
@@ -7143,7 +7179,8 @@
     "stability-flags": {
         "singpolyma/openpgp-php": 20,
         "psy/psysh": 0,
-        "passbolt/cakephp-codesniffer": 20
+        "passbolt/cakephp-codesniffer": 20,
+        "vierge-noire/cakephp-fixture-factories": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -7155,7 +7192,8 @@
         "ext-mbstring": "*",
         "ext-gnupg": "*",
         "ext-ldap": "*",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "ext-gd": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
