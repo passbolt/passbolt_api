@@ -17,6 +17,7 @@
 
 use App\Model\Entity\User;
 use App\Utility\Purifier;
+use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
 use Passbolt\Folders\Model\Entity\Folder;
 
@@ -29,7 +30,7 @@ $user = $body['user'];
 $folder = $body['folder'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => Router::url(DS . $user->profile->avatar->url['small'], true),
+    'url' =>  AvatarHelper::getAvatarUrl($user->profile->avatar),
     'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($user->username),
         'first_name' => Purifier::clean($user->profile->first_name),
