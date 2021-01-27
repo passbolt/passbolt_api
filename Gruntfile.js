@@ -131,7 +131,7 @@ module.exports = function(grunt) {
         }, {
           // CSS
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
-          src: ['api_login.min.css', 'api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css'],
+          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
         }, {
