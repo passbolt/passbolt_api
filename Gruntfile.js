@@ -108,17 +108,12 @@ module.exports = function(grunt) {
             'controls/loading_light.svg',
             'controls/loading_dark.svg',
             'controls/overlay-opacity-50.png',
-            // Background images for error pages for ex
-            'illustrations/birds6_850.png',
-            'illustrations/birds3_850.png',
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
             'third_party/FirefoxAMO_black.svg',
             'third_party/FirefoxAMO_white.svg',
             'third_party/ChromeWebStore_black.png',
             'third_party/ChromeWebStore_white.png',
-            'third_party/gnupg_logo_disabled.png',
-            'third_party/gnupg_logo.png',
             'third_party/chosen-sprite.png',
             'third_party/chosen-sprite@2x.png',
             'third_party/duo.svg',
