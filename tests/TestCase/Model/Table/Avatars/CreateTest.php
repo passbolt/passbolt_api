@@ -68,10 +68,7 @@ class CreateTest extends AppTestCase
         }
 
         $avatar = $this->createAvatar($avatar);
-
-        $this->assertTrue(file_exists($this->Avatars->getCacheDirectory()));
-        $this->assertTrue(file_exists($this->Avatars->getSmallAvatarFileName($avatar)));
-        $this->assertTrue(file_exists($this->Avatars->getMediumAvatarFileName($avatar)));
+        
         $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar)));
         $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'medium')));
         $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'whateverFormatWillReturnSmall')));
