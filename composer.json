@@ -22,10 +22,10 @@
     },
     "require": {
         "ext-json" : "*",
-        "cakephp/cakephp": "^3.7"
+        "cakephp/cakephp": "^4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7|^6.0"
+        "phpunit/phpunit": "^8.5 || ^9.3"
     },
     "autoload": {
         "psr-4": {
