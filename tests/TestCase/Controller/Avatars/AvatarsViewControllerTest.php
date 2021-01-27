@@ -42,12 +42,13 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars' . DS);
+        $this->assertFileExists($this->Avatars->getCacheDirectory());
+        $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars');
     }
 
     public function tearDown()
     {
-        $this->destroyDir($this->Avatars->getCacheDirectory());
+//        $this->destroyDir($this->Avatars->getCacheDirectory());
         unset($this->Avatars);
         parent::tearDown();
     }
@@ -83,7 +84,9 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     {
         $avatar = $this->createAvatar();
 
-        $expectedFileName = $this->Avatars->getAvatarCacheDirectory($avatar) . $format . '.jpg';
+        $expectedFileName =
+            $this->Avatars->getCacheDirectory() .
+            $this->Avatars->getAvatarDirectory($avatar) . $format . '.jpg';
 
         $this->get('avatars/view/' . $avatar->id . '/' . $format);
         $this->assertFileResponse($expectedFileName);

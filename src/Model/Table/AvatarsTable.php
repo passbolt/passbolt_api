@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Entity\Avatar;
+use App\Utility\Filesystem\FilesystemTrait;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -29,6 +30,8 @@ use Psr\Http\Message\UploadedFileInterface;
 
 class AvatarsTable extends Table
 {
+    use FilesystemTrait;
+
     public const JPEG_QUALITY = 100;
     public const FORMAT_SMALL = 'small';
     public const FORMAT_MEDIUM = 'medium';
@@ -164,23 +167,24 @@ class AvatarsTable extends Table
     }
 
     /**
-     * Returns the name of the file in cache.
+     * Returns the full path to the file in cache.
+     * If the cache does not exist, tries to create it.
      * If no data is in the avatar, returns the default
      * avatar image.
      *
      * @param \App\Model\Entity\Avatar $avatar The avatar concerned.
-     * @param string $format The mormat to recover.
-     * @return string
+     * @param string $format The format to recover.
+     * @return string The full path to the filename.
      */
     public function readFromCache(Avatar $avatar, string $format = self::FORMAT_SMALL): string
     {
         $fileName = $this->getAvatarFileName($avatar, $format);
 
-        if (!file_exists($fileName)) {
+        if (!$this->getFilesystem()->fileExists($fileName)) {
             $this->storeInCache($avatar);
         }
 
-        return $fileName;
+        return $this->getCacheDirectory() . $fileName;
     }
 
     /**
@@ -195,17 +199,17 @@ class AvatarsTable extends Table
             return;
         }
 
-        file_put_contents($this->getMediumAvatarFileName($avatar), $avatar->get('data'));
+        $this->getFilesystem()->write($this->getMediumAvatarFileName($avatar), $avatar->get('data'));
 
-        $this->getImagine()
-            ->open($this->getMediumAvatarFileName($avatar))
+        $smallImage = $this->getImagine()
+            ->load($avatar->get('data'))
             ->resize(new Box(
                 Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.width'),
                 Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.height'),
             ))
-            ->save($this->getSmallAvatarFileName($avatar), [
-                'quality' => self::JPEG_QUALITY,
-            ]);
+            ->get('jpeg');
+
+        $this->getFilesystem()->write($this->getSmallAvatarFileName($avatar), $smallImage);
     }
 
     /**
@@ -268,32 +272,25 @@ class AvatarsTable extends Table
      */
     public function setCacheDirectory(string $cacheDirectory): void
     {
-        $this->createDirectoryIfNotExists($cacheDirectory);
-        $this->cacheDirectory = $cacheDirectory;
-    }
-
-    /**
-     * @param string $directoryPath Nam of the directory.
-     * @return string
-     */
-    public function createDirectoryIfNotExists(string $directoryPath): string
-    {
-        if (!file_exists($directoryPath)) {
-            mkdir($directoryPath, 0777, true);
+        if (substr($cacheDirectory, -1) !== DS) {
+            $cacheDirectory .= DS;
         }
-
-        return $directoryPath;
+        $this->cacheDirectory = $cacheDirectory;
+        $this->setFilesystem($cacheDirectory);
     }
 
     /**
+     * Get the relative directory name of a given avatar.
+     *
      * @param \App\Model\Entity\Avatar $avatar Avatar
      * @return string
      */
-    public function getAvatarCacheDirectory(Avatar $avatar): string
+    public function getAvatarDirectory(Avatar $avatar): string
     {
-        $avatarCacheDirectory = $this->getCacheDirectory() . DS . $avatar->get('id') . DS;
+        $avatarCacheDirectory = $avatar->get('id') . DS;
+        $this->getFilesystem()->createDirectory($avatarCacheDirectory);
 
-        return $this->createDirectoryIfNotExists($avatarCacheDirectory);
+        return $avatarCacheDirectory;
     }
 
     /**
@@ -326,7 +323,7 @@ class AvatarsTable extends Table
      */
     public function getSmallAvatarFileName(Avatar $avatar): string
     {
-        return $this->getAvatarCacheDirectory($avatar) . self::FORMAT_SMALL . '.jpg';
+        return $this->getAvatarDirectory($avatar) . self::FORMAT_SMALL . '.jpg';
     }
 
     /**
@@ -335,7 +332,7 @@ class AvatarsTable extends Table
      */
     public function getMediumAvatarFileName(Avatar $avatar): string
     {
-        return $this->getAvatarCacheDirectory($avatar) . self::FORMAT_MEDIUM . '.jpg';
+        return $this->getAvatarDirectory($avatar) . self::FORMAT_MEDIUM . '.jpg';
     }
 
     /**

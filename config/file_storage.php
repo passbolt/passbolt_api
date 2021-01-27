@@ -2,14 +2,13 @@
 
 use App\Model\Table\AvatarsTable;
 use Cake\Core\Configure;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 
 // File storage and images
-Configure::write('ImageStorage.adapter', 'Local');
+Configure::write('ImageStorage.adapter', LocalFilesystemAdapter::class);
 Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public' . DS);
 Configure::write('ImageStorage.publicPath', 'img' . DS . 'public' . DS);
 Configure::write('FileStorage', [
-    // Configure the `basePath` for the Local adapter, not needed when not using it
-    'basePath' => APP . 'FileStorage' . DS,
     'imageDefaults' => [
         'Avatar' => [
             AvatarsTable::FORMAT_MEDIUM =>  'img' . DS . 'avatar' . DS . 'user_medium.png',
