@@ -17,14 +17,12 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Exception\Exception;
-use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
 {
-    public $components = ['Flash'];
-
     /**
      * Transport class to be used for testing.
      * We use our own DebugSmtp that will get the server communication trace.
@@ -124,7 +122,7 @@ class EmailController extends WebInstallerController
      */
     protected function sendTestEmail($data)
     {
-        $this->email = new Email('default');
+        $this->email = new Mailer('default');
         $this->_setTransport(self::TRANSPORT_CLASS, $data);
 
         try {

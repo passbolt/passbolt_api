@@ -27,7 +27,7 @@ class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
        'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }

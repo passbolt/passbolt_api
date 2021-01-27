@@ -31,14 +31,14 @@ class CreateTest extends AppTestCase
      */
     public $Avatars;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
         $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars' . DS);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->destroyDir($this->Avatars->getCacheDirectory());
         unset($this->Avatars);
@@ -68,7 +68,7 @@ class CreateTest extends AppTestCase
         }
 
         $avatar = $this->createAvatar($avatar);
-        
+
         $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar)));
         $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'medium')));
         $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'whateverFormatWillReturnSmall')));

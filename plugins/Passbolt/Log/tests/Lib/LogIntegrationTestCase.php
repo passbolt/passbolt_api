@@ -58,7 +58,7 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
      */
     protected $ActionLogs;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.tags.enabled', true);
@@ -95,7 +95,7 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         ]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         // Remove dynamically added associations
         TableRegistry::getTableLocator()->clear();

@@ -29,7 +29,7 @@ abstract class DirectorySyncConsoleIntegrationTestCase
     use MockDirectoryTrait;
     use UserAccessControlTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         //parent::setUp();
         Configure::load('Passbolt/DirectorySync.config', 'default', true);

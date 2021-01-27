@@ -40,7 +40,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         'app.Base/Gpgkeys',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];

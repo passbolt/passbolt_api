@@ -27,7 +27,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
 {
     use GroupsUsersModelTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

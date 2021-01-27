@@ -38,7 +38,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
      */
     public $Avatars;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
@@ -46,7 +46,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
         $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
 //        $this->destroyDir($this->Avatars->getCacheDirectory());
         unset($this->Avatars);

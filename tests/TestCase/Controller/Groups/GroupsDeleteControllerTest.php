@@ -35,7 +35,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
@@ -67,7 +67,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.creative');
         $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
         $this->assertError(400);
-        $this->assertContains(
+        $this->assertStringContainsString(
             'You need to transfer the ownership for the shared content',
             $this->_responseJsonHeader->message
         );
@@ -185,7 +185,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $this->deleteJson("/groups/$groupId.json?api-version=v2");
         $this->assertError(400);
         $this->assertGroupIsNotSoftDeleted($groupId);
-        $this->assertContains('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
+        $this->assertStringContainsString('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertEquals(1, count($errors->resources->sole_owner));

@@ -31,7 +31,7 @@ class LicenseKeyTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadPlugins(['Passbolt/License']);
@@ -85,7 +85,7 @@ class LicenseKeyTest extends TestCase
             try {
                 $license->getData();
             } catch (\Exception $e) {
-                $this->assertContains('The license format is not valid.', $e->getMessage());
+                $this->assertStringContainsString('The license format is not valid.', $e->getMessage());
             }
         }
     }
@@ -97,7 +97,7 @@ class LicenseKeyTest extends TestCase
         try {
             $license->getData();
         } catch (\Exception $e) {
-            $this->assertContains('The license cannot be verified.', $e->getMessage());
+            $this->assertStringContainsString('The license cannot be verified.', $e->getMessage());
         }
     }
 

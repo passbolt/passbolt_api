@@ -30,7 +30,7 @@ class FindViewTest extends AppTestCase
      */
     public $Users;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Users') ? [] : ['className' => UsersTable::class];
@@ -38,7 +38,7 @@ class FindViewTest extends AppTestCase
         RoleFactory::make()->guest()->persist();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Users);
     }

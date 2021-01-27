@@ -46,7 +46,7 @@ class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificatio
      */
     public static function fromCakeForm(CakeForm $form)
     {
-        return new static($form->schema());
+        return new static($form->getSchema());
     }
 
     /**

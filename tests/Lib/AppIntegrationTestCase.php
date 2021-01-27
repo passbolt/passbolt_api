@@ -78,7 +78,7 @@ abstract class AppIntegrationTestCase extends TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->enableCsrfToken();
@@ -91,7 +91,7 @@ abstract class AppIntegrationTestCase extends TestCase
     /**
      * Tear down
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->clearPlugins();
         parent::tearDown();

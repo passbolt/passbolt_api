@@ -18,21 +18,21 @@ declare(strict_types=1);
 namespace App\Test\TestCase\View\Helper;
 
 use App\Model\Table\AvatarsTable;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \App\View\Helper\AvatarHelper
  */
-class AvatarHelperTest extends TestCase
+class AvatarHelperTest extends AppIntegrationTestCase
 {
     use AvatarsModelTrait;
 
     public const FULL_BASE_URL = 'http://mydomain.com';
 
-    public function setUp()
+    public function setUp(): void
     {
         Configure::write('App.fullBaseUrl', self::FULL_BASE_URL);
     }
@@ -61,9 +61,16 @@ class AvatarHelperTest extends TestCase
     public function testGetExistingAvatarUrl()
     {
         $avatar = $this->createAvatar();
+        $expectedUrl = self::FULL_BASE_URL . '/avatars/view/' . $avatar->get('id') . '/' . AvatarsTable::FORMAT_SMALL;
 
+        // We are performing a unit test here. But the routes are loaded in the Middleware in CakePHP4
+        // Therefore an application needs to be build, which is here made using a call to a dummy url (an avatar one)
+        $this->get($expectedUrl);
+        $this->assertResponseOk();
+
+        // We now test the AvatarHelper as such.
         $this->assertSame(
-            self::FULL_BASE_URL . '/avatars/view/' . $avatar->get('id') . '/' . AvatarsTable::FORMAT_SMALL,
+            $expectedUrl,
             AvatarHelper::getAvatarUrl($avatar)
         );
     }

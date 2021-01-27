@@ -33,7 +33,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         'app.Base/Groups', 'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Passbolt/Tags.ResourcesTags') ? [] : ['className' => ResourcesTagsTable::class];
@@ -136,7 +136,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         ]);
         $this->assertResponseCode(403);
         $result = $this->_getBodyAsString();
-        $this->assertContains('Missing CSRF token cookie', $result);
+        $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
     }
 
     /**

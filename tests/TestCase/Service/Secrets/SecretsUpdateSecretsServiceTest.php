@@ -50,7 +50,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');

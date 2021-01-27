@@ -30,7 +30,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
      */
     public $Avatars;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');

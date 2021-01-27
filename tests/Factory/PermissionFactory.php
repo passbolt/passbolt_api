@@ -29,7 +29,7 @@ class PermissionFactory extends CakephpBaseFactory
      *
      * @return void
      */
-    protected function setDefaultTemplate()
+    protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
             return [

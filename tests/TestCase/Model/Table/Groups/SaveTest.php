@@ -37,14 +37,14 @@ class SaveTest extends AppTestCase
         'app.Base/Resources', 'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Groups') ? [] : ['className' => GroupsTable::class];
         $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Groups);
 

@@ -151,7 +151,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($user->id, $userId);
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
-        $this->assertTrue($user->created->gt(FrozenTime::create($date)));
+        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersAddSuccessEmail()

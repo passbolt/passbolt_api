@@ -55,7 +55,7 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
      */
     protected $action;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         if (file_exists(CONFIG . 'ldap.php')) {

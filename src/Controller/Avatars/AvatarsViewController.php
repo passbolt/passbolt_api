@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Controller\Avatars;
 
 use App\Controller\AppController;
-use Cake\Event\Event;
 use Cake\Http\Response;
 
 /**
@@ -15,14 +14,11 @@ use Cake\Http\Response;
 class AvatarsViewController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow('view');
+        $this->Authentication->allowUnauthenticated(['view']);
 
         return parent::beforeFilter($event);
     }

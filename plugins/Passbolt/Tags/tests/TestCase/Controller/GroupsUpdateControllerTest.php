@@ -45,7 +45,7 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
     public $Resources;
     public $ResourcesTags;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
@@ -53,7 +53,7 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->GroupsUsers);
         unset($this->Resources);

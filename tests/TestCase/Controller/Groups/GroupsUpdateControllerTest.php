@@ -35,7 +35,7 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
         'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');

@@ -34,7 +34,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         'app.Base/Resources', 'app.Base/Permissions',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');

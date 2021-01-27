@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace App\Shell\Task;
 
 use App\Shell\AppShell;
-use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Utility\Hash;
 
@@ -38,19 +38,14 @@ class SendTestEmailTask extends AppShell
     /**
      * Instance of the Email component.
      *
-     * @var \App\Shell\Task\Cake /Mailer/Email Email
+     * @var \Cake\Mailer\Mailer Email
      */
     public $email = null;
 
     /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * @inheritDoc
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
         $parser->setDescription(__('Debug Email shell for the passbolt application.'));
@@ -78,7 +73,7 @@ class SendTestEmailTask extends AppShell
 
         $this->_displayConfiguration();
 
-        $this->email = new Email('default');
+        $this->email = new Mailer('default');
         $this->_setCustomTransportClassName(self::TRANSPORT_CLASS);
 
         $this->_sendEmail(
@@ -103,7 +98,7 @@ class SendTestEmailTask extends AppShell
      */
     protected static function _getEmailFromAsString()
     {
-        $config = Email::getConfig('default');
+        $config = Mailer::getConfig('default');
         $from = $config['from'] ?? '';
         if (is_array($from)) {
             $emailFrom = key($from);
@@ -163,7 +158,7 @@ class SendTestEmailTask extends AppShell
      */
     protected function _sendEmail($to, $subject, $message)
     {
-        $config = Email::getConfig('default');
+        $config = Mailer::getConfig('default');
         try {
             $this->email
                 ->setFrom($config['from'])
@@ -282,7 +277,7 @@ class SendTestEmailTask extends AppShell
      */
     protected function _checkFromIsSet()
     {
-        $emailConfig = Email::getConfig('default');
+        $emailConfig = Mailer::getConfig('default');
         $from = Hash::get($emailConfig, 'from');
         if (empty($from)) {
             $this->_error(__('Your email configuration doesn\'t define a default "from"'));

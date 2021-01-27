@@ -50,7 +50,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
          'app.Base/Gpgkeys',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -63,7 +63,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
             ->on(new CoreNotificationSettingsDefinition());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         EmailNotificationSettings::flushCache();

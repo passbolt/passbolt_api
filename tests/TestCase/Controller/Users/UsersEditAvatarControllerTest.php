@@ -32,7 +32,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
      */
     public $Avatars;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
@@ -41,7 +41,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         RoleFactory::make()->guest()->persist();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->destroyDir($this->Avatars->getCacheDirectory());
         unset($this->Avatars);

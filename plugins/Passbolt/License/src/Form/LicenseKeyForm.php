@@ -48,7 +48,7 @@ class LicenseKeyForm extends Form
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('key_ascii', 'text');
@@ -60,11 +60,11 @@ class LicenseKeyForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('key_ascii', 'create', __('A subscription key is required.'))
-            ->notEmpty('key_ascii', __('A subscription key is required.'))
+            ->notEmptyString('key_ascii', __('A subscription key is required.'))
             ->add('key_ascii', 'is_valid_license_format', [
                 'last' => true,
                 'rule' => [$this, 'checkLicenseFormat'],
@@ -192,7 +192,7 @@ class LicenseKeyForm extends Form
      * @param array $data formdata
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         return true;
     }

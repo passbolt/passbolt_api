@@ -29,7 +29,7 @@ class LicenseKeyDataForm extends Form
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('customer_id', 'string')
@@ -45,24 +45,24 @@ class LicenseKeyDataForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('users', 'create', __('A users quantity is required.'))
-            ->notEmpty('users', __('A users quantity is required.'))
+            ->notEmptyString('users', __('A users quantity is required.'))
             ->add('users', 'is_within_range', [
                 'last' => true,
                 'rule' => [$this, 'checkUsersLimitIsInRange'],
                 'message' => 'The users limit is exceeded.',
             ])
             ->requirePresence('created', 'create', __('A creation date is required.'))
-            ->notEmpty('created', __('A creation date is required.'))
+            ->notEmptyDateTime('created', __('A creation date is required.'))
             ->add('created', 'is_created_in_past', [
                 'rule' => [$this, 'checkCreatedInPast'],
                 'message' => 'The key should have been created in the past.',
             ])
             ->requirePresence('expiry', 'create', __('An expiry date is required.'))
-            ->notEmpty('expiry', __('An expiry date is required.'))
+            ->notEmptyDate('expiry', __('An expiry date is required.'))
             ->add('expiry', 'is_not_expired', [
                 'last' => true,
                 'rule' => [$this, 'checkNotExpired'],
@@ -79,7 +79,7 @@ class LicenseKeyDataForm extends Form
      * @param array $context not in use
      * @return bool
      */
-    public function checkUsersLimitIsInRange(string $value, ?array $context = null)
+    public function checkUsersLimitIsInRange($value, ?array $context = null)
     {
         try {
             $users = TableRegistry::getTableLocator()->get('Users');
@@ -135,7 +135,7 @@ class LicenseKeyDataForm extends Form
      * @param array $data form data
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         return true;
     }

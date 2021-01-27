@@ -66,7 +66,7 @@ class ResourcesShareServiceTest extends AppTestCase
         'app.Base/GroupsUsers', 'app.Base/Groups',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
@@ -76,7 +76,7 @@ class ResourcesShareServiceTest extends AppTestCase
         $this->service = new ResourcesShareService();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Resources);
         unset($this->Permissions);

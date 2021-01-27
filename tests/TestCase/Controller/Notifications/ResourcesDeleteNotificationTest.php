@@ -31,13 +31,13 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Gpgkeys',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadNotificationSettings();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->unloadNotificationSettings();
         parent::tearDown();

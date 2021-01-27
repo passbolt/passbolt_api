@@ -30,7 +30,7 @@ class DuoSetupForm extends DuoVerifyForm
      * @param array $data user submited data
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         try {
             MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_DUO, []);

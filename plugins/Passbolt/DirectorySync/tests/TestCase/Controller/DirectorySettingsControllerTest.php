@@ -37,7 +37,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         'app.Base/Roles',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.directorySync.test', 'Nested');

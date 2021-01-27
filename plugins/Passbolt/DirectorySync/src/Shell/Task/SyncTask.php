@@ -45,7 +45,7 @@ abstract class SyncTask extends AppShell
         foreach ($created as $i => $report) {
             $this->_displayReport($report);
         }
-        $this->out();
+        $this->out('');
         $this->out(__('Deleted:'));
         $deleted = $reports->getByAction(Alias::ACTION_DELETE);
         if (!count($deleted)) {
@@ -54,14 +54,14 @@ abstract class SyncTask extends AppShell
         foreach ($deleted as $i => $report) {
             $this->_displayReport($report);
         }
-        $this->out();
+        $this->out('');
         $this->info(
             __(
                 'For more explanation on sync error messages, see: {0}',
                 ['https://help.passbolt.com/configure/ldap/ldap-common-sync-error-messages']
             )
         );
-        $this->out();
+        $this->out('');
     }
 
     /**

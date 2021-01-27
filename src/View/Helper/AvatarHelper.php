@@ -22,6 +22,7 @@ class AvatarHelper extends Helper
             return self::getAvatarFallBackUrl($format);
         } else {
             return Router::url([
+                'plugin' => null,
                 'prefix' => 'Avatars',
                 'controller' => 'AvatarsView',
                 'action' => 'view',

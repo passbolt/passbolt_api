@@ -28,7 +28,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         parent::setUp();

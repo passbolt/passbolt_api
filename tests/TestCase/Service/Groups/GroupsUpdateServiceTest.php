@@ -56,7 +56,7 @@ class GroupsUpdateServiceTest extends AppTestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');

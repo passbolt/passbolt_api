@@ -20,7 +20,6 @@ use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
@@ -35,14 +34,11 @@ class SetupCompleteController extends AppController
     public const COMPLETE_SUCCESS_EVENT_NAME = 'SetupCompleteController.complete.success';
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow('complete');
+        $this->Authentication->allowUnauthenticated(['complete']);
 
         $this->loadModel('Gpgkeys');
         $this->loadModel('AuthenticationTokens');

@@ -72,7 +72,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');

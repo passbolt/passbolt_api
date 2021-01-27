@@ -45,7 +45,7 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);

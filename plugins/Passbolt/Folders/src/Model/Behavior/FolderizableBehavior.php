@@ -91,7 +91,7 @@ class FolderizableBehavior extends Behavior
      * @return array
      * @uses handleEvent()
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return array_fill_keys(array_keys($this->_config['events']), 'handleEvent');
     }
@@ -100,7 +100,7 @@ class FolderizableBehavior extends Behavior
      * @param array $config Config
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         parent::initialize($config);

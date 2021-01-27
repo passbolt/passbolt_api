@@ -41,7 +41,7 @@ class DirectorySyncShell extends AppShell
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -72,10 +72,10 @@ class DirectorySyncShell extends AppShell
      *
      * @return \Cake\Console\ConsoleOptionParser
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
-        $this->_io->styles('fail', ['text' => 'red', 'blink' => false]);
-        $this->_io->styles('success', ['text' => 'green', 'blink' => false]);
+        $this->_io->setStyle('fail', ['text' => 'red', 'blink' => false]);
+        $this->_io->setStyle('success', ['text' => 'green', 'blink' => false]);
 
         $parser = parent::getOptionParser();
         $parser->setDescription(__('The directory shell offer synchronizations tasks from the CLI.'));

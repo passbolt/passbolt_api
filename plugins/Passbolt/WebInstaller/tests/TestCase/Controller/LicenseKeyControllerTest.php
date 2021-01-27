@@ -21,7 +21,7 @@ use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
@@ -45,7 +45,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/license_key');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Passbolt Pro activation.', $data);
+        $this->assertStringContainsString('Passbolt Pro activation.', $data);
     }
 
     public function testWebInstallerLicenseKeyPostSuccess()
@@ -73,7 +73,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
             $this->post('/install/license_key', $postData);
             $data = $this->_getBodyAsString();
             $this->assertResponseOk();
-            $this->assertContains('The license format is not valid', $data);
+            $this->assertStringContainsString('The license format is not valid', $data);
         }
         $this->assertTrue(true);
     }
@@ -88,8 +88,8 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
             $this->post('/install/license_key', $postData);
             $data = $this->_getBodyAsString();
             $this->assertResponseOk();
-            $this->assertContains('The license is not valid', $data);
-            $this->assertContains('The license is expired', $data);
+            $this->assertStringContainsString('The license is not valid', $data);
+            $this->assertStringContainsString('The license is expired', $data);
         }
         $this->assertTrue(true);
     }

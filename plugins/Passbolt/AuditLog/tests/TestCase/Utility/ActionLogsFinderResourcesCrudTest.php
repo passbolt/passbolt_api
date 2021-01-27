@@ -44,7 +44,7 @@ class ActionLogsFinderResourcesCrudTest extends LogIntegrationTestCase
         'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Users = TableRegistry::getTableLocator()->get('Users');

@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\EmailDigest\Service;
 
 use Cake\Core\Configure;
-use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
 use Cake\Network\Exception\SocketException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\EmailTrait;
@@ -84,7 +84,7 @@ class SendEmailBatchService
     {
         $emailDigest->addLayoutVar('title', $emailDigest->getSubject());
 
-        $email = $this->mapEmailDigestToMailerEmail(new Email('default'), $emailDigest);
+        $email = $this->mapEmailDigestToMailerEmail(new Mailer('default'), $emailDigest);
 
         try {
             $email->send();
@@ -103,11 +103,11 @@ class SendEmailBatchService
     /**
      * Configure the view for the email as it should be send with layout, theme and template from the digest.
      *
-     * @param \Cake\Mailer\Email $email An instance of Mailer email
+     * @param \Cake\Mailer\Mailer $email An instance of Mailer email
      * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $digest An instace of email digest
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
-    private function prepareEmailToBeSend(Email $email, EmailDigestInterface $digest): Email
+    private function prepareEmailToBeSend(Mailer $email, EmailDigestInterface $digest): Mailer
     {
         $email->viewBuilder()
             ->setLayout('default')
@@ -147,11 +147,11 @@ class SendEmailBatchService
     /**
      * Map an instance of EmailDigest to an instance of Email, so it can be send.
      *
-     * @param \Cake\Mailer\Email $email An instance of Email
+     * @param \Cake\Mailer\Mailer $email An instance of Email
      * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest An instance of EmailDigest
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
-    private function mapEmailDigestToMailerEmail(Email $email, EmailDigestInterface $emailDigest)
+    private function mapEmailDigestToMailerEmail(Mailer $email, EmailDigestInterface $emailDigest)
     {
         $email
             ->setTo($emailDigest->getEmailRecipient())

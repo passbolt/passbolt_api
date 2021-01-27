@@ -56,7 +56,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -93,7 +93,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400);
         $this->assertUserIsNotSoftDeleted($userAId);
         $this->assertFolder($folderA->id);
-        $this->assertContains('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
+        $this->assertStringContainsString('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertEquals(1, count($errors->folders->sole_owner));

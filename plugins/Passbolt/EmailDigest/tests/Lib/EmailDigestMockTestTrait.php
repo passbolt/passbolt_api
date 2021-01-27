@@ -69,7 +69,7 @@ trait EmailDigestMockTestTrait
             'id' => 1,
             'subject' => 'Subject of the email',
             'email' => 'email_queue_recipient@passbolt.com',
-            'template' => 'LU/emailQueueTemplate.ctp',
+            'template' => 'LU/emailQueueTemplate.php',
             'template_vars' => [
                 'body' => array_merge([
                     'owner' => new User(),

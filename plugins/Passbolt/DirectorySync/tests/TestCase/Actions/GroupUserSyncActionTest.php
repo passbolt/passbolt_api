@@ -38,7 +38,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     use AssertGroupUsersTrait;
     use EmailNotificationSettingsTestTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->initAction();
@@ -48,7 +48,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->unloadNotificationSettings();

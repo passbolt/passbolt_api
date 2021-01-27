@@ -28,7 +28,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
 {
     use AssertUsersTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->action = new UserSyncAction();

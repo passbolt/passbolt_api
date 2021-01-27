@@ -32,7 +32,7 @@ class ShareControllerTest extends AppIntegrationTestCase
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');

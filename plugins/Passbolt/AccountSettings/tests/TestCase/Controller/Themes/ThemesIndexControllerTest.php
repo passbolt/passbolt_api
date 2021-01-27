@@ -28,7 +28,7 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
         'plugin.Passbolt/AccountSettings.AccountSettings',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings');

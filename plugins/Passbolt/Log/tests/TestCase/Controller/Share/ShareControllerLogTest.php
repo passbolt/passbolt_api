@@ -41,7 +41,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');

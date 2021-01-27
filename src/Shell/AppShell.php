@@ -34,7 +34,7 @@ class AppShell extends Shell
      * @return void
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         AppShellBootstrap::init();
@@ -45,9 +45,9 @@ class AppShell extends Shell
      *
      * @return void
      */
-    protected function _welcome()
+    protected function _welcome(): void
     {
-        $this->out();
+        $this->out('');
     }
 
     /**

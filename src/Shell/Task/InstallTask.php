@@ -24,14 +24,9 @@ use Cake\Core\Exception\Exception;
 class InstallTask extends AppShell
 {
     /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * @inheritDoc
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
         $parser
@@ -167,7 +162,7 @@ class InstallTask extends AppShell
             $firstName = $this->param('admin-first-name');
             $lastName = $this->param('admin-last-name');
 
-            $this->out();
+            $this->out('');
             $this->out(__('Registering the admin user'));
             $this->hr();
 
@@ -202,7 +197,7 @@ class InstallTask extends AppShell
     {
         $data = $this->param('data');
         if (isset($data)) {
-            $this->out();
+            $this->out('');
             $this->out(__('Installing additional data'));
             $this->hr();
             $cmd = $this->_formatCmd('passbolt data ' . $data);
@@ -246,7 +241,7 @@ class InstallTask extends AppShell
     protected function _quickBackup()
     {
         if ($this->param('backup')) {
-            $this->out();
+            $this->out('');
             $this->out(__('Backup data for next quick reinstall.'));
             $this->hr();
             $this->_keyringInit();
@@ -265,7 +260,7 @@ class InstallTask extends AppShell
      */
     protected function _schemaCleanup()
     {
-        $this->out();
+        $this->out('');
         $this->out(__('Cleaning up existing tables if any.'));
         $this->hr();
         $cmd = $this->_formatCmd('passbolt drop_tables');
@@ -280,7 +275,7 @@ class InstallTask extends AppShell
      */
     protected function _schema()
     {
-        $this->out();
+        $this->out('');
         $this->out(__('Install the schema and default data.'));
         $this->hr();
         $cmd = $this->_formatCmd('migrations migrate --no-lock');
@@ -296,7 +291,7 @@ class InstallTask extends AppShell
      */
     protected function _keyringInit()
     {
-        $this->out();
+        $this->out('');
         $this->out(__('Import the server private key in the keyring'));
         $this->hr();
         $cmd = $this->_formatCmd('passbolt keyring_init');
@@ -311,7 +306,7 @@ class InstallTask extends AppShell
      */
     protected function _healthchecks()
     {
-        $this->out();
+        $this->out('');
         $this->out(__('Running baseline checks, please wait...'));
         try {
             // Make sure the baseline config files are present

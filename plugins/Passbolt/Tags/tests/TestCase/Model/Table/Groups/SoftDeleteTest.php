@@ -37,7 +37,7 @@ class SoftDeleteTest extends TagTestCase
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');

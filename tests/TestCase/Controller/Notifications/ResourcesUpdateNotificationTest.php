@@ -72,13 +72,13 @@ W3AI8+rWjK8MGH2T88hCYI/6
         return $data;
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadNotificationSettings();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->unloadNotificationSettings();
         parent::tearDown();
