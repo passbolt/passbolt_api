@@ -18,17 +18,17 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Avatars;
 
 use App\Model\Table\AvatarsTable;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
-use Cake\TestSuite\TestCase;
 
 /**
  * App\Controller\AvatarsController Test Case
  *
  * @uses \App\Controller\AvatarsController
  */
-class AvatarsViewControllerTest extends TestCase
+class AvatarsViewControllerTest extends AppIntegrationTestCase
 {
     use AvatarsModelTrait;
     use IntegrationTestTrait;
