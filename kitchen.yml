@@ -26,7 +26,7 @@ platforms:
       ports:
         - '127.0.0.1:8080:8080'
   - name: ubuntu-18.04
-  - name: ubuntu-19.10
+  - name: ubuntu-20.04
 
 suites:
   - name: filesystem-benchmarks

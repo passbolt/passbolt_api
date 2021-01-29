@@ -29,7 +29,7 @@ declare -A sql_values
 declare -A nginx_values
 
 # We want to extract php version in the form: "php7.x"
-PHP_MAJOR_MINOR="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[0-3]\).*:\1:')"
+PHP_MAJOR_MINOR="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[2-4]\).*:\1:')"
 PHP_VERSION="php${PHP_MAJOR_MINOR}"
 
 NGINX_CONF_EXAMPLE="/usr/share/passbolt/examples/nginx-passbolt.conf"
