@@ -252,6 +252,7 @@ case "$deb_action" in
     # Run the migrations process on upgrade
     if is_upgrade; then
       su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
+      su -c '/usr/share/php/passbolt/bin/cake cache clear_all' -s /bin/bash www-data
       exit 0
     fi
 
