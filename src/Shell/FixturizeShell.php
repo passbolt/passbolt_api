@@ -14,9 +14,9 @@
  */
 namespace PassboltTestData\Shell;
 
+use Cake\Console\ConsoleOptionParser;
 use Cake\Console\Shell;
 use Cake\Core\Configure;
-use Cake\Datasource\ConnectionManager;
 
 /**
  * Fixturize shell command.
@@ -106,7 +106,7 @@ class FixturizeShell extends Shell
      * @return \Cake\Console\ConsoleOptionParser
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
      */
-    public function getOptionParser()
+    public function getOptionParser(): ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
         $parser->addArgument('scenario', [

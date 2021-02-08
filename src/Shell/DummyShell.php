@@ -15,6 +15,7 @@
 namespace PassboltTestData\Shell;
 
 use App\Shell\AppShell;
+use Cake\Console\ConsoleOptionParser;
 
 /**
  * Dummy shell command.
@@ -33,7 +34,7 @@ class DummyShell extends AppShell
      *
      * @return \Cake\Console\ConsoleOptionParser
      */
-    public function getOptionParser()
+    public function getOptionParser(): ConsoleOptionParser
     {
         $this->_io->styles('fail', ['text' => 'red', 'blink' => false]);
         $this->_io->styles('success', ['text' => 'green', 'blink' => false]);
