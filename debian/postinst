@@ -167,7 +167,7 @@ configure_mysql() {
 ###########################################
 
 configure_nginx_config_file() {
-  if [ -d "$NGINX_SITES_AVAILABLE" ] && [ -d "$NGINX_SITES_ENABLED" ]; then
+  if [ -d "$NGINX_SITES_AVAILABLE" ] && [ -d "$NGINX_SITES_ENABLED" ] && [ ! -f "$NGINX_CONF" ]; then
     _echo "nginx: activating http configuration file"
 
     # install passbolt virtual host configuration
@@ -253,6 +253,8 @@ case "$deb_action" in
     if is_upgrade; then
       su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
       su -c '/usr/share/php/passbolt/bin/cake cache clear_all' -s /bin/bash www-data
+      db_purge
+      db_stop
       exit 0
     fi
 
