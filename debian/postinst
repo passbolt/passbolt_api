@@ -29,7 +29,7 @@ declare -A sql_values
 declare -A nginx_values
 
 # We want to extract php version in the form: "php7.x"
-PHP_MAJOR_MINOR="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[0-3]\).*:\1:')"
+PHP_MAJOR_MINOR="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[2-4]\).*:\1:')"
 PHP_VERSION="php${PHP_MAJOR_MINOR}"
 
 NGINX_CONF_EXAMPLE="/usr/share/passbolt/examples/nginx-passbolt.conf"
@@ -167,7 +167,7 @@ configure_mysql() {
 ###########################################
 
 configure_nginx_config_file() {
-  if [ -d "$NGINX_SITES_AVAILABLE" ] && [ -d "$NGINX_SITES_ENABLED" ]; then
+  if [ -d "$NGINX_SITES_AVAILABLE" ] && [ -d "$NGINX_SITES_ENABLED" ] && [ ! -f "$NGINX_CONF" ]; then
     _echo "nginx: activating http configuration file"
 
     # install passbolt virtual host configuration
@@ -252,6 +252,9 @@ case "$deb_action" in
     # Run the migrations process on upgrade
     if is_upgrade; then
       su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
+      su -c '/usr/share/php/passbolt/bin/cake cache clear_all' -s /bin/bash www-data
+      db_purge
+      db_stop
       exit 0
     fi
 
