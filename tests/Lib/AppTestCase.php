@@ -28,6 +28,7 @@ use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 
 abstract class AppTestCase extends TestCase
@@ -50,9 +51,22 @@ abstract class AppTestCase extends TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.tags.enabled', false);
+        Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
+        Configure::write('passbolt.plugins.log.enabled', false);
+        Configure::write('passbolt.plugins.folders.enabled', false);
+    }
+
+    /**
+     * Tear dow
+     */
+    public function tearDown(): void
+    {
+        $this->clearPlugins();
+        parent::tearDown();
     }
 
     /**

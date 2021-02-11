@@ -28,7 +28,7 @@ trait ObjectTrait
      * @param object $object
      * @param string $message
      */
-    public static function assertObjectHasAttribute($attributeName, $object, $message = '')
+    public static function assertObjectHasAttribute(string $attributeName, $object, string $message = ''): void
     {
         if (is_a($object, 'Cake\ORM\Entity')) {
             $objectProperties = $object->toArray();
@@ -48,7 +48,7 @@ trait ObjectTrait
      * @param object $object
      * @param string $message
      */
-    public static function assertObjectNotHasAttribute($attributeName, $object, $message = '')
+    public static function assertObjectNotHasAttribute(string $attributeName, $object, string $message = ''): void
     {
         if (is_a($object, 'Cake\ORM\Entity')) {
             $objectProperties = $object->toArray();

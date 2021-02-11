@@ -275,7 +275,7 @@ class GroupsUpdateDryRunService
         $query = $this->secretsTable->find()
             ->where([
                 'resource_id IN' => $resourceIds,
-                'user_id' => $uac->getId(),
+                'user_id' => $uac->getId() ?? '',
             ])
             ->select(['resource_id', 'data'])
             ->distinct();

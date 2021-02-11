@@ -28,7 +28,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/GroupsUsers', 'app.Base/Avatars',
+        'app.Base/GroupsUsers',
     ];
 
     public function testUsersIndexGetSuccess()
@@ -138,11 +138,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $this->getJson('/users.json?order[]=Users.modified');
-        $this->assertResponseError(400);
+        $this->assertBadRequestError('Invalid order. "Users.modified" is not in the list of allowed order.');
         $this->getJson('/users.json?order[]=User.modified RAND');
-        $this->assertResponseError(400);
+        $this->assertBadRequestError('Invalid order. "User.modified RAND" is not a valid order.');
         $this->getJson('/users.json?order[]=');
-        $this->assertResponseError(400);
+        $this->assertBadRequestError('Invalid order. "" is not a valid order.');
     }
 
     public function testUsersIndexFilterByGroupsSuccess()

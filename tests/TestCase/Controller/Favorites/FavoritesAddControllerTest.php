@@ -37,7 +37,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         'app.Base/Favorites', 'app.Base/Permissions',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Favorites') ? [] : ['className' => FavoritesTable::class];

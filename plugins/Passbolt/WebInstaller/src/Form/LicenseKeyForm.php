@@ -29,7 +29,7 @@ class LicenseKeyForm extends Form
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('license_key', 'text');
@@ -41,7 +41,7 @@ class LicenseKeyForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('license_key', 'create', __('A subscription key is required.'))
@@ -104,7 +104,7 @@ class LicenseKeyForm extends Form
      * @param array $data formdata
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         return true;
     }

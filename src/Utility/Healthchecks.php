@@ -286,10 +286,10 @@ class Healthchecks
         // List of tables for passbolt v1.
         $tables = [
             'authentication_tokens',
+            'avatars',
             'comments',
             'email_queue',
             'favorites',
-            'file_storage',
             'gpgkeys',
             'groups',
             'groups_users',

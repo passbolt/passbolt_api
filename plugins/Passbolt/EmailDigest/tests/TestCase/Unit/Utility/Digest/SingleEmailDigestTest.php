@@ -37,7 +37,7 @@ class SingleEmailDigestTest extends TestCase
      */
     private $emailPreviewFactoryMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->emailPreviewFactoryMock = $this->createMock(EmailPreviewFactory::class);
         $this->sut = new SingleDigest($this->emailPreviewFactoryMock);

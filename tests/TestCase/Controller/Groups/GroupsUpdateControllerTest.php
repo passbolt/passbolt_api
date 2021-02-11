@@ -29,12 +29,13 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
 
-    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
+    public $fixtures = [
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Favorites', 'app.Base/Avatars',
+        'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');

@@ -29,16 +29,16 @@ class FindViewForeignCommentsTest extends AppTestCase
 
     public $Comments;
 
-    public $fixtures = ['app.Base/Resources', 'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Comments', 'app.Base/Avatars'];
+    public $fixtures = ['app.Base/Resources', 'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Comments',];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
         $this->Comments = TableRegistry::getTableLocator()->get('Comments', $config);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Comments);
 

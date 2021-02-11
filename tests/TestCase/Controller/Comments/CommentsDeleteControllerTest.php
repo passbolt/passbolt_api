@@ -23,7 +23,10 @@ use Cake\ORM\TableRegistry;
 
 class CommentsDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
+        'app.Base/Secrets', 'app.Base/Comments',
+    ];
 
     public function testCommentsDeleteSuccess()
     {

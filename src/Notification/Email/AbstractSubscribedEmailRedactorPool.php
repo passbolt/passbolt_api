@@ -34,7 +34,7 @@ abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInter
     /**
      * @return array
      */
-    final public function implementedEvents()
+    final public function implementedEvents(): array
     {
         return [
             CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this,

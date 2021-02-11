@@ -19,6 +19,7 @@ namespace App\Error;
 
 use App\Error\Exception\ExceptionWithErrorsDetailInterface;
 use Cake\Error\ExceptionRenderer;
+use Psr\Http\Message\ResponseInterface;
 
 class AppExceptionRenderer extends ExceptionRenderer
 {
@@ -29,7 +30,7 @@ class AppExceptionRenderer extends ExceptionRenderer
      * @see \App\Controller\ErrorController
      * @return \Cake\Http\Response The response to be sent.
      */
-    public function render()
+    public function render(): ResponseInterface
     {
         if ($this->error instanceof ExceptionWithErrorsDetailInterface) {
             $this->controller->set(['body' => $this->error]);

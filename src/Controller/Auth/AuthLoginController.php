@@ -21,20 +21,16 @@ use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 
 class AuthLoginController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow([
+        $this->Authentication->allowUnauthenticated([
             'loginGet',
             'loginPost',
         ]);
@@ -59,7 +55,7 @@ class AuthLoginController extends AppController
 
         $this->viewBuilder()
             ->setLayout('default')
-            ->setTemplatePath('/Auth')
+            ->setTemplatePath('Auth')
             ->setTemplate('triage');
     }
 
@@ -74,12 +70,10 @@ class AuthLoginController extends AppController
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
         }
 
-        $user = $this->Auth->identify();
-        $gpgAuth = $this->Auth->getAuthenticate('Gpg');
-        $this->response = $gpgAuth->getUpdatedResponse();
+        $user = $this->Authentication->getIdentity();
 
         if ($user) {
-            $this->Auth->setUser($user);
+            $this->Authentication->setIdentity(new \ArrayObject($user));
             UserAction::getInstance()->setUserAccessControl(new UserAccessControl(
                 $user['role']['name'],
                 $user['id']

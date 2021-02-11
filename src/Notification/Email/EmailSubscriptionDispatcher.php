@@ -96,7 +96,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     /**
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return array_fill_keys($this->emailSubscriptionManager->getSubscribedEvents(), $this);
     }

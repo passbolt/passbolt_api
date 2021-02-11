@@ -58,12 +58,16 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
      */
     protected $ActionLogs;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.tags.enabled', true);
         Configure::write('passbolt.plugins.log.enabled', true);
 
         UserAction::destroy();
+        TableRegistry::getTableLocator()->clear();
+
+        TableRegistry::getTableLocator()->clear();
 
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
@@ -89,5 +93,11 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         $this->SecretAccesses->belongsTo('Passbolt/Log.EntitiesHistory', [
             'foreignKey' => 'foreign_key',
         ]);
+    }
+
+    public function tearDown(): void
+    {
+        // Remove dynamically added associations
+        TableRegistry::getTableLocator()->clear();
     }
 }

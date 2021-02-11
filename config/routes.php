@@ -62,14 +62,6 @@ Router::scope('/auth', function (RouteBuilder $routes) {
     $routes->connect('/verify', ['prefix' => 'Auth', 'controller' => 'AuthLogin', 'action' => 'loginPost'])
         ->setMethods(['POST']);
 
-    // @deprecated since v2.11.0. It extends the user session. Use /auth/is-authenticated instead.
-    $routes->connect('/checksession', ['prefix' => 'Auth', 'controller' => 'AuthCheckSession', 'action' => 'checkSessionGet'])
-        ->setMethods(['GET']);
-
-    // @deprecated since v2.11.0. It extends the user session. Use /auth/is-authenticated instead.
-    $routes->connect('/checkSession', ['prefix' => 'Auth', 'controller' => 'AuthCheckSession', 'action' => 'checkSessionGet'])
-        ->setMethods(['GET']);
-
     $routes->connect('/is-authenticated', ['prefix' => 'Auth', 'controller' => 'AuthIsAuthenticated', 'action' => 'isAuthenticated'])
         ->setMethods(['GET']);
 
@@ -305,6 +297,15 @@ Router::scope('/users', function ($routes) {
     $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
+});
+
+/**
+ * Avatars prefixed routes
+ */
+Router::scope('/avatars', function (RouteBuilder $routes) {
+    $routes->connect('/view/:id/:format', ['prefix' => 'Avatars', 'controller' => 'AvatarsView', 'action' => 'view'])
+        ->setPass(['id', 'format'])
+        ->setMethods(['GET']);
 });
 
 /**

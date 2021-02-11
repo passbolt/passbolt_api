@@ -25,7 +25,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
-        'app.Base/Gpgkeys', 'app.Base/Avatars',
+        'app.Base/Gpgkeys',
     ];
 
     /**
@@ -38,14 +38,14 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
      */
     protected $AuthenticationTokens;
 
-    public function setUp()
+    public function setUp(): void
     {
         // The setup/recover requires a supported user agent.
         $_ENV['HTTP_USER_AGENT'] = 'Firefox';
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $_ENV['HTTP_USER_AGENT'] = null;
         parent::tearDown();

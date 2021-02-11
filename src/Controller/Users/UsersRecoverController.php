@@ -35,15 +35,11 @@ class UsersRecoverController extends AppController
     public const RECOVER_SUCCESS_EVENT_NAME = 'UsersRecoverController.recoverPost.success';
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow('recoverGet');
-        $this->Auth->allow('recoverPost');
+        $this->Authentication->allowUnauthenticated(['recoverGet', 'recoverPost']);
         $this->loadModel('Users');
         $this->loadModel('AuthenticationTokens');
 
@@ -60,12 +56,12 @@ class UsersRecoverController extends AppController
     {
         // Do not allow logged in user to recover
         if ($this->User->role() !== Role::GUEST) {
-            $this->Auth->logout();
+            $this->Authentication->logout();
         }
 
         $this->set('title', Configure::read('passbolt.meta.description'));
         $this->viewBuilder()
-            ->setTemplatePath('/Auth')
+            ->setTemplatePath('Auth')
             ->setLayout('default')
             ->setTemplate('triage');
         $this->success();

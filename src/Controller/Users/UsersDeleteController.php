@@ -43,12 +43,9 @@ class UsersDeleteController extends AppController
     public const DELETE_SUCCESS_EVENT_NAME = 'UsersDeleteController.delete.success';
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         $this->loadModel('Users');
         $this->loadModel('Groups');

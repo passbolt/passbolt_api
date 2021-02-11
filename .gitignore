@@ -114,3 +114,6 @@ debian/passbolt-api-ce/
 debian/passbolt-api-pro/
 debian/*debhelper*
 debian/*substvars*
+
+# PHPUNIT generated file
+.phpunit.result.cache

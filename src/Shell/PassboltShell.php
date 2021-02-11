@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Shell;
 
+use Cake\Core\Configure;
+
 class PassboltShell extends AppShell
 {
     /**
@@ -38,18 +40,34 @@ class PassboltShell extends AppShell
     ];
 
     /**
+     * Initializes the Shell
+     * acts as constructor for subclasses
+     * allows configuration of tasks prior to shell execution
+     *
+     * @return void
+     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
+     */
+    public function initialize(): void
+    {
+        if (Configure::read('passbolt.plugins.license')) {
+            $this->tasks[] = 'Passbolt/License.LicenseCheck';
+        }
+        parent::initialize();
+    }
+
+    /**
      * Display the passbolt ascii banner
      *
      * @return void
      */
-    protected function _welcome()
+    protected function _welcome(): void
     {
         $skipWelcome = ['show_logs_path'];
         if (in_array($this->command, $skipWelcome)) {
             return;
         }
 
-        $this->out();
+        $this->out('');
         $this->out('     ____                  __          ____  ');
         $this->out('    / __ \____  _____ ____/ /_  ____  / / /_ ');
         $this->out('   / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/ ');
@@ -61,14 +79,12 @@ class PassboltShell extends AppShell
     }
 
     /**
-     * Get command options parser
-     *
-     * @return \Cake\Console\ConsoleOptionParser
+     * @inheritDoc
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
-        $this->_io->styles('fail', ['text' => 'red', 'blink' => false]);
-        $this->_io->styles('success', ['text' => 'green', 'blink' => false]);
+        $this->_io->setStyle('fail', ['text' => 'red', 'blink' => false]);
+        $this->_io->setStyle('success', ['text' => 'green', 'blink' => false]);
 
         $parser = parent::getOptionParser();
         $parser->setDescription(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'));
@@ -98,9 +114,16 @@ class PassboltShell extends AppShell
             'parser' => $this->KeyringInit->getOptionParser(),
         ]);
 
+        if (Configure::read('passbolt.plugins.license')) {
+            $parser->addSubcommand('license_check', [
+                'help' => __d('cake_console', 'Check the license.'),
+                'parser' => $this->LicenseCheck->getOptionParser(),
+            ]);
+        }
+
         $parser->addSubcommand('migrate', [
             'help' => __d('cake_console', 'Run database migrations.'),
-            'parser' => $this->Install->getOptionParser(),
+            'parser' => $this->Migrate->getOptionParser(),
         ]);
 
         $parser->addSubcommand('mysql_export', [

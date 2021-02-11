@@ -16,3 +16,4 @@ require dirname(__DIR__) . '/config/bootstrap.php';
 $_SERVER['PHP_SELF'] = '/';
 
 Migrator::migrate();
+\CakephpTestSuiteLight\Sniffer\SnifferRegistry::get('test')->markAllTablesAsDirty();

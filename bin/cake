@@ -28,7 +28,7 @@ canonicalize() {
     while [ -h "$NAME" ]; do
         DIR=$(dirname -- "$NAME")
         SYM=$(readlink "$NAME")
-        NAME=$(cd "$DIR" > /dev/null && cd $(dirname -- "$SYM") > /dev/null && pwd)/$(basename -- "$SYM")
+        NAME=$(cd "$DIR" > /dev/null && cd "$(dirname -- "$SYM")" > /dev/null && pwd)/$(basename -- "$SYM")
     done
     echo "$NAME"
 }
@@ -37,7 +37,7 @@ canonicalize() {
 findCliPhp() {
     for TESTEXEC in php php-cli /usr/local/bin/php
     do
-        SAPI=`echo "<?= PHP_SAPI ?>" | $TESTEXEC 2>/dev/null`
+        SAPI=$(echo "<?= PHP_SAPI ?>" | $TESTEXEC 2>/dev/null)
         if [ "$SAPI" = "cli" ]
         then
             echo $TESTEXEC
@@ -65,11 +65,11 @@ then
     PHP=$(findCliPhp)
 fi
 
-if [ $(basename $realname) != 'cake' ]
+if [ "$(basename "$realname")" != 'cake' ]
 then
-    exec $PHP "$CONSOLE"/cake.php $(basename $realname) "$@"
+    exec "$PHP" "$CONSOLE"/cake.php "$(basename "$realname")" "$@"
 else
-    exec $PHP "$CONSOLE"/cake.php "$@"
+    exec "$PHP" "$CONSOLE"/cake.php "$@"
 fi
 
 exit

@@ -16,15 +16,26 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettings;
 
+use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
 {
-    public function tearDown()
+    use EmailNotificationSettingsTestTrait;
+
+    public function setUp(): void
     {
-        EmailNotificationSettings::flushCache();
+        parent::setUp();
+
+        $this->loadNotificationSettings();
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+    }
+
+    public function tearDown(): void
+    {
         parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
     /**

@@ -25,10 +25,10 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles', 'app.Base/Gpgkeys',
-        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites',
+        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         parent::setUp();

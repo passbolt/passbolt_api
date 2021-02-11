@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace App;
 
 use App\Middleware\ContentSecurityPolicyMiddleware;
-use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
@@ -25,24 +24,30 @@ use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\EmailDigest\DigestRegister\GroupDigests;
 use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
+use Authentication\AuthenticationService;
+use Authentication\AuthenticationServiceInterface;
+use Authentication\AuthenticationServiceProviderInterface;
+use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
+use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
+use Psr\Http\Message\ServerRequestInterface;
 
-class Application extends BaseApplication
+class Application extends BaseApplication implements AuthenticationServiceProviderInterface
 {
     /**
      * Setup the PSR-7 middleware passbolt application will use.
      *
-     * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to setup.
+     * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
      * @return \Cake\Http\MiddlewareQueue The updated middleware.
      */
-    public function middleware($middleware)
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         /*
          * Default Middlewares
@@ -51,18 +56,19 @@ class Application extends BaseApplication
          * - Handle plugin/theme assets like CakePHP normally does
          * - Apply routing middleware
          * - Apply GPG Auth headers
+         * - Apply the authentication middleware
          * - Apply CSRF protection
          */
-        $middleware
+        $middlewareQueue
             ->add(ContentSecurityPolicyMiddleware::class)
-            ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))
+            ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
             ->add(new AssetMiddleware([
                 'cacheTime' => Configure::read('Asset.cacheTime'),
             ]))
             ->add(new RoutingMiddleware($this))
             ->add(new SessionPreventExtensionMiddleware())
-            ->add(GpgAuthHeadersMiddleware::class)
-            ->add(new CsrfProtectionMiddleware());
+            ->add(new AuthenticationMiddleware($this))
+            ->add(GpgAuthHeadersMiddleware::class);
 
         /*
          * Additional security headers
@@ -83,10 +89,10 @@ class Application extends BaseApplication
                 ->noOpen()
                 ->noSniff();
 
-            $middleware->add($headers);
+            $middlewareQueue->add($headers);
         }
 
-        return $middleware;
+        return $middlewareQueue;
     }
 
     /**
@@ -96,7 +102,7 @@ class Application extends BaseApplication
      *
      * @return void
      */
-    public function bootstrap()
+    public function bootstrap(): void
     {
         parent::bootstrap();
 
@@ -140,7 +146,7 @@ class Application extends BaseApplication
      *
      * @return void
      */
-    public function pluginBootstrap()
+    public function pluginBootstrap(): void
     {
         parent::pluginBootstrap();
 
@@ -171,17 +177,15 @@ class Application extends BaseApplication
     /**
      * Add vendor plugins
      * - EmailQueue
-     * - FileStorage
+     * - Authentication
      *
      * @return $this
      */
     protected function addVendorPlugins()
     {
-        $this->addPlugin('EmailQueue');
-        $this->addPlugin('Burzum/FileStorage');
-        $this->addPlugin('Burzum/Imagine');
-
-        return $this;
+        return $this
+            ->addPlugin('EmailQueue')
+            ->addPlugin('Authentication');
     }
 
     /**
@@ -229,10 +233,39 @@ class Application extends BaseApplication
     {
         try {
             Application::addPlugin('Bake');
+            $this->addPlugin('CakephpFixtureFactories');
         } catch (MissingPluginException $e) {
             // Do not halt if the plugin is missing
         }
 
         return $this;
+    }
+
+    /**
+     * Returns a service provider instance.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request
+     * @return \Authentication\AuthenticationServiceInterface
+     */
+    public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
+    {
+        $service = new AuthenticationService();
+
+        // Define where users should be redirected to when they are not authenticated
+        // The login url is provided in string format because the routes are not loaded yet
+        if (!$request->is('json')) {
+            $loginUrl = '/auth/login';
+            $service->setConfig([
+                'unauthenticatedRedirect' => $loginUrl,
+                'logoutRedirect' => $loginUrl,
+                'queryParam' => 'redirect',
+            ]);
+        }
+
+        // Load the authenticators. Session should be first.
+        $service->loadAuthenticator('Authentication.Session');
+        $service->loadAuthenticator('Gpg');
+
+        return $service;
     }
 }

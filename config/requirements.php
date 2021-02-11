@@ -1,3 +1,4 @@
+
 <?php
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -12,16 +13,23 @@
  * @since         3.5.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-if (version_compare(PHP_VERSION, '7.0.0') < 0) {
-    trigger_error('Your PHP version must be equal or higher than 7.0.0 to use Passbolt.', E_USER_ERROR);
+
+/*
+ * You can empty out this file, if you are certain that you match all requirements.
+ */
+
+/*
+ * You can remove this if you are confident that your PHP version is sufficient.
+ */
+if (version_compare(PHP_VERSION, '7.2.0') < 0) {
+    trigger_error('Your PHP version must be equal or higher than 7.2.0 to use CakePHP.', E_USER_ERROR);
 }
 
+/*
+ * You can remove this if you are confident you have intl installed.
+ */
 if (!extension_loaded('intl')) {
-    trigger_error('You must enable the intl extension to use Passbolt.', E_USER_ERROR);
-}
-
-if (!extension_loaded('mbstring')) {
-    trigger_error('You must enable the mbstring extension to use Passbolt.', E_USER_ERROR);
+    trigger_error('You must enable the intl extension to use CakePHP.', E_USER_ERROR);
 }
 
 /*

@@ -29,6 +29,8 @@ class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerMiddleware_testConfiguredForbidden()
     {
+        // We load the plugin here manually in order to ensure the routes to be defined.
+        $this->loadPlugins(['Passbolt/WebInstaller' => ['bootstrap' => true, 'routes' => true]]);
         $this->get('/install');
         $this->assertResponseCode(403);
     }
@@ -39,7 +41,7 @@ class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
         $this->get('/install');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('<div id="container" class="page setup start', $data);
+        $this->assertStringContainsString('<div id="container" class="page setup start', $data);
     }
 
     public function testWebInstallerMiddleware_testNotConfiguredRedirect()

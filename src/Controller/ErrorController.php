@@ -18,7 +18,7 @@ namespace App\Controller;
 
 use App\Error\Exception\ExceptionWithErrorsDetailInterface;
 use App\Utility\UserAction;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
 
@@ -30,49 +30,32 @@ use Cake\Routing\Router;
 class ErrorController extends AppController
 {
     /**
-     * Initialization hook method.
-     *
-     * @throws \Exception If a component class cannot be found.
-     * @return void
+     * @inheritDoc
      */
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->loadComponent('RequestHandler', [
-            'enableBeforeRedirect' => false,
-        ]);
-    }
-
-    /**
-     * beforeRender callback.
-     *
-     * @param \Cake\Event\Event $event Event.
-     * @return \Cake\Network\Response|null|void
-     */
-    public function beforeRender(Event $event)
+    public function beforeRender(EventInterface $event)
     {
         if ($this->request->is('json')) {
             // If the body is a that exposes the getErrors functionality
             // for example ValidationRulesException
-            $error = $this->viewVars['error'];
+            $error = $this->viewBuilder()->getVar('error');
 
+            $body = '';
             if ($error instanceof ExceptionWithErrorsDetailInterface) {
                 $body = $error->getErrors();
             }
+            $header = [
+                'id' => UserAction::getInstance()->getUserActionId(),
+                'status' => 'error',
+                'servertime' => time(),
+                'action' => UserAction::getInstance()->getActionId(),
+                'message' => $this->viewBuilder()->getVar('message'),
+                'url' => Router::url(),
+                'code' => $this->viewBuilder()->getVar('code'),
+            ];
+            $this->set(compact('header', 'body'));
 
-            $this->set([
-                'header' => [
-                    'id' => UserAction::getInstance()->getUserActionId(),
-                    'status' => 'error',
-                    'servertime' => time(),
-                    'action' => UserAction::getInstance()->getActionId(),
-                    'message' => $this->viewVars['message'],
-                    'url' => Router::url(),
-                    'code' => $this->viewVars['code'],
-                ],
-                'body' => $body ?? '',
-                '_serialize' => ['header', 'body'],
-            ]);
+            $this->viewBuilder()->setOption('serialize', ['header', 'body',]);
+            $this->setViewBuilderOptions();
 
             // render a legacy JSON view by default
             $apiVersion = $this->request->getQuery('api-version');

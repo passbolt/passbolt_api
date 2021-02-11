@@ -27,7 +27,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
         'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
-         'app.Base/Avatars',
+
     ];
 
     public function testUsersRegisterGetSuccess()
@@ -147,7 +147,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->post('/users/register');
         $this->assertResponseCode(403);
         $result = $this->_getBodyAsString();
-        $this->assertContains('Missing CSRF token cookie', $result);
+        $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
     }
 
     public function testUsersRegisterPostExistingDeletedUserWithSameUsername()
@@ -213,6 +213,6 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertEquals($user->role_id, $userRoleId);
-        $this->assertTrue($user->created->gt(FrozenTime::create($date)));
+        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 }
