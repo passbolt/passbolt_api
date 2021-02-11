@@ -161,18 +161,15 @@ ubuntu-1804-runtime:
 
 ubuntu-2004-fs:
   extends: .kitchen-test
-  allow_failure: true
   variables:
     KITCHEN_JOB: filesystem-benchmarks-ubuntu-2004
 
 ubuntu-2004-purge:
   extends: .kitchen-test
-  allow_failure: true
   variables:
     KITCHEN_JOB: purge-benchmarks-ubuntu-2004
 
 ubuntu-2004-runtime:
   extends: .kitchen-test
-  allow_failure: true
   variables:
     KITCHEN_JOB: runtime-benchmarks-ubuntu-2004
