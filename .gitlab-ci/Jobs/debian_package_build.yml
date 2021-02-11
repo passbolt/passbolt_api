@@ -79,8 +79,6 @@ build-debian:
 
 debian-testing:
   extends: .publish
-  dependencies:
-    - build-debian
   variables:
     DISTRIBUTION: buster
     COMPONENT: testing
@@ -95,6 +93,28 @@ debian-stable:
     DISTRIBUTION: buster
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/debian
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+      when: on_success
+
+ubuntu-testing:
+  extends: .publish
+  variables:
+    DISTRIBUTION: focal
+    COMPONENT: testing
+    PREFIX: $PASSBOLT_FLAVOUR/ubuntu
+    COLD_START: "true"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+ubuntu-stable:
+  extends: .publish
+  variables:
+    DISTRIBUTION: focal
+    COMPONENT: stable
+    PREFIX: $PASSBOLT_FLAVOUR/ubuntu
+    COLD_START: "true"
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
       when: on_success
