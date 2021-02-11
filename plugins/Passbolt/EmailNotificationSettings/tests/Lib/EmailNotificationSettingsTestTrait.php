@@ -27,8 +27,6 @@ trait EmailNotificationSettingsTestTrait
 {
     protected function loadNotificationSettings()
     {
-//        $this->loadPlugins(['Passbolt/EmailNotificationSettings' => ['bootstrap' => true, 'routes' => true]]);
-
         EventManager::instance()
             ->on(new CoreNotificationSettingsDefinition());
     }

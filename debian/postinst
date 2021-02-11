@@ -194,7 +194,7 @@ configure_nginx_local_certs() {
   local_cert_key_file="${PASSBOLT_SSL_KEY_PATH}/$(basename "${nginx_values[cert_key_file]}")"
 
   # apply changes to nginx virtual host file, and ssl include file
-  sed -i "s|listen 80;|listen 443;|g" "$NGINX_CONF"
+  sed -i "s|listen 80;|listen 443 ssl http2;|g" "$NGINX_CONF"
   sed -i "s|# include __PASSBOLT_SSL__|include ${NGINX_SSL};|g" "$NGINX_CONF"
   sed -i "s|ssl_certificate __CERT_PATH__|ssl_certificate ${local_cert_file};|g" "$NGINX_SSL"
   sed -i "s|ssl_certificate_key __KEY_PATH__|ssl_certificate_key ${local_cert_key_file};|g" "$NGINX_SSL"
