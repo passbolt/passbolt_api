@@ -30,13 +30,13 @@ class UpdateTest extends AppTestCase
 
     public $fixtures = ['app.Base/Resources', 'app.Base/Secrets', 'app.Base/Users'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Secrets);
 

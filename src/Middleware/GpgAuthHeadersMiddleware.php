@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Middleware;
 
-use App\Auth\GpgAuthenticate;
+use App\Authenticator\GpgAuthenticator;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 
@@ -32,8 +32,9 @@ class GpgAuthHeadersMiddleware
      */
     public function __invoke(ServerRequest $request, Response $response, $next)
     {
+        /** @var \Cake\Http\Response $response */
         $response = $next($request, $response);
-        $allowedHeaders = GpgAuthenticate::HTTP_HEADERS_WHITELIST;
+        $allowedHeaders = GpgAuthenticator::HTTP_HEADERS_WHITELIST;
 
         $response = $response
             ->withHeader('X-GPGAuth-Version', '1.3.0')
@@ -42,6 +43,11 @@ class GpgAuthHeadersMiddleware
             ->withHeader('X-GPGAuth-Verify-URL', '/auth/verify')
             ->withHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json')
             ->withHeader('Access-Control-Expose-Headers', $allowedHeaders);
+
+        $authenticationHeaders = $request->getAttribute('authenticationResult')->getErrors() ?? [];
+        foreach ($authenticationHeaders as $header => $msg) {
+            $response = $response->withHeader($header, $msg);
+        }
 
         return $response;
     }

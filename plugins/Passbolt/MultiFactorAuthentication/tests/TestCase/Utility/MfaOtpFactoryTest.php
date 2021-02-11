@@ -60,11 +60,11 @@ class MfaOtpFactoryTest extends MfaIntegrationTestCase
     {
         $otp = MfaOtpFactory::generateTOTP($this->mockUserAccessControl('ada'));
         $this->assertTrue(true);
-        $this->assertContains('otpauth://totp/', $otp);
+        $this->assertStringContainsString('otpauth://totp/', $otp);
         $issuer = MfaOtpFactory::getIssuer();
-        $this->assertContains('issuer=' . $issuer, $otp);
-        $this->assertContains('secret=', $otp);
-        $this->assertContains('ada%40passbolt.com', $otp);
+        $this->assertStringContainsString('issuer=' . $issuer, $otp);
+        $this->assertStringContainsString('secret=', $otp);
+        $this->assertStringContainsString('ada%40passbolt.com', $otp);
     }
 
     /**
@@ -75,6 +75,6 @@ class MfaOtpFactoryTest extends MfaIntegrationTestCase
     {
         $otp = MfaOtpFactory::generateTOTP($this->mockUserAccessControl('ada'));
         $qrcode = MfaOtpFactory::getQrCodeInline($otp);
-        $this->assertContains('data:image/png;base64,', $qrcode);
+        $this->assertStringContainsString('data:image/png;base64,', $qrcode);
     }
 }

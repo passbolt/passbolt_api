@@ -32,7 +32,7 @@ class DirectoryReportsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -66,13 +66,13 @@ class DirectoryReportsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->scalar('status')
             ->maxLength('status', 36)
             ->requirePresence('status', 'create')
-            ->notEmpty('status');
+            ->notEmptyString('status');
 
         return $validator;
     }
@@ -84,7 +84,7 @@ class DirectoryReportsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
     {
         $rules->add(
             function ($entity, $options) {

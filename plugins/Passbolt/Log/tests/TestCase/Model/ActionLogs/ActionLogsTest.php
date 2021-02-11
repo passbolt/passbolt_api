@@ -36,7 +36,7 @@ class ActionLogsTest extends AppTestCase
      */
     public $ActionLogs;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Actions = TableRegistry::getTableLocator()->get('Passbolt/Log.Actions');

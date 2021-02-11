@@ -48,7 +48,7 @@ class DuoVerifyForm extends MfaForm
      * @param \Cake\Form\Schema $schema schema
      * @return $this|\Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('sig_response', ['type' => 'string']);
@@ -60,11 +60,11 @@ class DuoVerifyForm extends MfaForm
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('sig_response', __('A signature is required.'))
-            ->notEmpty('sig_response', __('The signature should not be empty.'))
+            ->notEmptyString('sig_response', __('The signature should not be empty.'))
             ->add('sig_response', ['isValidSigResponse' => [
                 'rule' => [$this, 'isValidSigResponse'],
                 'message' => __('This is not a valid signature response.'),

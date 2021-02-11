@@ -47,7 +47,7 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings');
@@ -58,7 +58,7 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->AccountSettings);
 

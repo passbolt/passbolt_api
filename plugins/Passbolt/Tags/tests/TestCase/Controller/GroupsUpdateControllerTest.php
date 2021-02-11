@@ -35,7 +35,7 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
-        'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Avatars',
+        'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Resources', 'app.Base/Favorites',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
@@ -45,7 +45,7 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
     public $Resources;
     public $ResourcesTags;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
@@ -53,7 +53,7 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->GroupsUsers);
         unset($this->Resources);

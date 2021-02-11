@@ -33,14 +33,14 @@ class SaveTest extends AppTestCase
 
     public $fixtures = ['app.Base/Groups', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Users'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Permissions);
 

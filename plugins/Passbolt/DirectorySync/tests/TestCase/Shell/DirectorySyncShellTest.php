@@ -26,7 +26,7 @@ class DirectorySyncShellTest extends DirectorySyncConsoleIntegrationTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setAppNamespace('Passbolt');

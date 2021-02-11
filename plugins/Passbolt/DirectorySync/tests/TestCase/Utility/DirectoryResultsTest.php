@@ -25,7 +25,7 @@ use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
 class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.directorySync.test', 'Nested');

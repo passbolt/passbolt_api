@@ -43,7 +43,7 @@ class ResourcesTagsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -75,19 +75,19 @@ class ResourcesTagsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->uuid('user_id')
-            ->allowEmpty('user_id');
+            ->allowEmptyString('user_id');
 
         $validator
             ->uuid('resource_id')
-            ->notEmpty('resource_id');
+            ->notEmptyString('resource_id');
 
         $validator
             ->uuid('resource_id')
-            ->notEmpty('resource_id');
+            ->notEmptyString('resource_id');
 
         return $validator;
     }
@@ -99,7 +99,7 @@ class ResourcesTagsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
     {
         $rules->add($rules->existsIn(['resource_id'], 'Resources'));
         $rules->add($rules->existsIn(['tag_id'], 'Tags'));

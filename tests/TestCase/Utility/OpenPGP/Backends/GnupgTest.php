@@ -35,13 +35,13 @@ class GnupgTest extends TestCase
      */
     public $gnupg;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->originalErrorSettings = ini_get('error_reporting');
         $this->gnupg = new Gnupg();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $settings = ini_get('error_reporting');
         if ($settings != $this->originalErrorSettings) {
@@ -188,7 +188,7 @@ zaZXtuDzZmnTOjWJm895TA==
         $fingerprint = $this->gnupg->importKeyIntoKeyring($armoredKey);
         $message = null;
         $this->gnupg->verify($armoredSignedMessage, $fingerprint, $message);
-        $this->assertRegExp('/^Signed message/', $message);
+        $this->assertMatchesRegularExpression('/^Signed message/', $message);
     }
 
     public function testGnupgVerifyError()

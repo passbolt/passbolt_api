@@ -45,7 +45,7 @@ class GpgKeyForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator): Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('public_key_armored', 'create', __('A public key is required.'))

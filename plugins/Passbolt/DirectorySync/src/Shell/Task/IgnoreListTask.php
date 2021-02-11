@@ -29,7 +29,7 @@ class IgnoreListTask extends AppShell
      * @return void
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
     }
@@ -43,7 +43,7 @@ class IgnoreListTask extends AppShell
      * @return \Cake\Console\ConsoleOptionParser
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
         $parser->setDescription(__('List records ignored during directory synchronization process.'));
@@ -92,10 +92,10 @@ class IgnoreListTask extends AppShell
         }
 
         $io->helper('Table')->output($records);
-        $this->out();
+        $this->out('');
         $this->out('[help] you can stop ignoring records with the following command.');
         $this->out('       ./bin/cake directory_sync ignore-create [ID]');
-        $this->out();
+        $this->out('');
 
         return true;
     }

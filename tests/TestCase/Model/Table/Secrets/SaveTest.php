@@ -36,14 +36,14 @@ class SaveTest extends AppTestCase
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Secrets);
 

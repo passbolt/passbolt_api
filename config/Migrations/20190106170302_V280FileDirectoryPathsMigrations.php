@@ -35,6 +35,7 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
         $connection = ConnectionManager::get($connectionName);
 
         $Avatars = TableRegistry::getTableLocator()->get('Avatars', ['connection' => $connection]);
+        $Avatars->setTable('file_storage');
         $avatars = $Avatars->find()->all();
         $publicPath = WWW_ROOT . Configure::read('ImageStorage.publicPath');
 
@@ -70,6 +71,8 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
         }
         $oldFolder = new Folder($publicPath . 'images');
         $oldFolder->delete();
+
+        \Cake\ORM\TableRegistry::getTableLocator()->clear();
     }
 
     /**

@@ -50,7 +50,7 @@ class TagsTableTest extends TagTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
@@ -61,7 +61,7 @@ class TagsTableTest extends TagTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Tags);
 

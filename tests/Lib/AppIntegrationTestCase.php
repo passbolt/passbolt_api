@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace App\Test\Lib;
 
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
@@ -76,7 +78,7 @@ abstract class AppIntegrationTestCase extends TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->enableCsrfToken();
@@ -89,7 +91,7 @@ abstract class AppIntegrationTestCase extends TestCase
     /**
      * Tear down
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->clearPlugins();
         parent::tearDown();
@@ -118,6 +120,26 @@ abstract class AppIntegrationTestCase extends TestCase
             $data['role']['name'] = Role::ADMIN;
         }
         $this->session(['Auth' => ['User' => $data]]);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function logInAs(User $user)
+    {
+        $this->session(['Auth' => ['User' => $user->toArray()]]);
+    }
+
+    /**
+     * @return User
+     * @throws \Exception
+     */
+    public function logInAsUser()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
+
+        return $user;
     }
 
     /**

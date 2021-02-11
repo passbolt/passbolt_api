@@ -39,7 +39,7 @@ class FindResourcesUserIsOwnerTest extends AppTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');

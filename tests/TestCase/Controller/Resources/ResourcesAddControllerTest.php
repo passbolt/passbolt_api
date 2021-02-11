@@ -27,11 +27,11 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles',
-        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites',
+        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Favorites',
          'app.Base/ResourceTypes',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         parent::setUp();
@@ -159,9 +159,10 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $data = $this->_getDummyPostData();
         $this->post('/resources.json', $data);
         $this->assertResponseCode(403);
+        // This will throw a route not found exeption
         $data = $this->_getBodyAsString();
-        $expect = 'Missing CSRF token cookie';
-        $this->assertContains($expect, $data);
+        $expect = 'Missing or incorrect CSRF cookie type.';
+        $this->assertStringContainsString($expect, $data);
     }
 
     public function testResourcesAddValidationErrors()
@@ -223,7 +224,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $error = Hash::get($arr, $case['errorField']);
             $this->assertNotNull($error, "The case \"$caseLabel\" should fail");
-            $this->assertResourceNotExist(['name' => $case['data']['name']]);
+            $this->assertResourceNotExist(['name' => $case['data']['name'] ?? ' ']);
         }
     }
 

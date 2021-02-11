@@ -37,7 +37,7 @@ class SubscribedRedactorPoolTest extends TestCase
      */
     private $subscribedRedactorsMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->subscribedRedactorsMock = [$this->createMock(SubscribedEmailRedactorInterface::class)];
 

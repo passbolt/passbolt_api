@@ -28,12 +28,12 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/passbolt/passbolt_selenium_api.git",
+            "url": "https://github.com/pabloelcolombiano/passbolt_selenium_api",
             "no-api": true
         },
         {
             "type": "vcs",
-            "url": "https://github.com/passbolt/passbolt_test_data.git",
+            "url": "https://github.com/pabloelcolombiano/passbolt_test_data",
             "no-api": true
         },
         {
@@ -51,32 +51,34 @@
         "ext-gnupg" : "*",
         "ext-ldap" : "*",
         "ext-curl" : "*",
-        "cakephp/cakephp": "3.9.5",
-        "cakephp/migrations": "^2.4.2",
+        "ext-gd": "*",
+        "cakephp/cakephp": "^4.2",
+        "cakephp/migrations": "^3.0",
         "cakephp/plugin-installer": "^1.3.0",
         "mobiledetect/mobiledetectlib": "^2.8.34",
         "ramsey/uuid": "^4.1.1",
         "singpolyma/openpgp-php": "dev-master#c961eca13df86a4e9af6ef1ebd9da7d3858d75c8",
         "donatj/phpuseragentparser": "^1.1.0",
-        "lorenzo/cakephp-email-queue": "^3.3.1",
-        "burzum/cakephp-file-storage": "^2.1.0",
-        "burzum/cakephp-imagine-plugin": "^3.0.0",
+        "lorenzo/cakephp-email-queue": "^4.0",
+        "imagine/imagine": "^1.2",
+        "league/flysystem": "^2.0",
         "spomky-labs/otphp": "^8.3",
         "bacon/bacon-qr-code": "^1.0",
         "enygma/yubikey": "^3.3",
         "duosecurity/duo_php": "^1.0",
-        "ldaptools/ldaptools": "^0.25.2"
+        "ldaptools/ldaptools": "^0.25.2",
+        "cakephp/authentication": "^2.0"
     },
     "require-dev": {
         "psy/psysh": "@stable",
-        "cakephp/debug_kit": "^3.22.4",
-        "cakephp/bake": "^1.12.0",
-        "phpunit/phpunit": "^6.5.14",
+        "cakephp/debug_kit": "^4.4",
+        "cakephp/bake": "^2.3",
+        "phpunit/phpunit": "^9.5",
         "passbolt/cakephp-codesniffer": "dev-master",
-        "passbolt/passbolt_selenium_api": "^2.10.0",
-        "passbolt/passbolt_test_data": "^2.14.1",
-        "vierge-noire/cakephp-test-suite-light": "^1.0",
-        "vierge-noire/cakephp-test-migrator": "^1.0"
+        "passbolt/passbolt_selenium_api": "dev-master",
+        "passbolt/passbolt_test_data": "dev-master",
+        "vierge-noire/cakephp-fixture-factories": "^2.2",
+        "vierge-noire/cakephp-test-migrator": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -129,8 +131,8 @@
             "@test",
             "@cs-check"
         ],
-        "cs-check": "phpcs --colors -p --standard=vendor/passbolt/cakephp-codesniffer/CakePHP --ignore=*.js ./src ./tests ./plugins",
-        "cs-fix": "phpcbf --colors --standard=vendor/passbolt/cakephp-codesniffer/CakePHP --ignore=*.js ./src ./tests ./plugins",
+        "cs-check": "phpcs --colors -p --standard=vendor/passbolt/cakephp-codesniffer/CakePHP --ignore=*.js,*/templates/* ./src ./tests ./plugins",
+        "cs-fix": "phpcbf --colors --standard=vendor/passbolt/cakephp-codesniffer/CakePHP --ignore=*.js,*/templates/* ./src ./tests ./plugins",
         "test": "phpunit --colors=always"
     },
     "prefer-stable": true

@@ -26,7 +26,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
 {
     use AssertGroupsTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->initAction();
@@ -75,7 +75,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
         $this->assertReportEmpty($report);
         $this->assertDirectoryIgnoreEmpty();
         $this->assertDirectoryEntryEmpty();
-        $this->assertTrue(true, true); // there is no spoon.
+        $this->assertTrue(true); // there is no spoon.
     }
 
     /**

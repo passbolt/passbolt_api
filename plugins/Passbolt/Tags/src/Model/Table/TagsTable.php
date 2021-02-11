@@ -48,7 +48,7 @@ class TagsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -155,7 +155,7 @@ class TagsTable extends Table
                 return $q
                     ->order(['slug'])
                     ->where(function (QueryExpression $where) use ($userId) {
-                        return $where->or_(function (QueryExpression $or) use ($userId) {
+                        return $where->or(function (QueryExpression $or) use ($userId) {
                             return $or
                                 ->eq('ResourcesTags.user_id', $userId)
                                 ->isNull('ResourcesTags.user_id');

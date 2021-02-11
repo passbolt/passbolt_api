@@ -21,7 +21,6 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 
 /**
@@ -33,14 +32,11 @@ class SetupStartController extends AppController
     use SetupControllerTrait;
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow(['start']);
+        $this->Authentication->allowUnauthenticated(['start']);
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('Users');
 

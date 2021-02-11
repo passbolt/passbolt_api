@@ -37,7 +37,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
      */
     private $usersTableMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->usersTableMock = $this->createMock(UsersTable::class);
 

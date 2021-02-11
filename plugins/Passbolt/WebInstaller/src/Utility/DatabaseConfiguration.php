@@ -74,7 +74,7 @@ class DatabaseConfiguration
 
         try {
             $connection->execute('SHOW TABLES')->fetchAll('assoc');
-        } catch (\PDOException $e) {
+        } catch (\Throwable $e) {
             return false;
         }
 

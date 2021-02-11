@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Groups;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -44,8 +43,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
-        FavoritesFixture::class,
+    FavoritesFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -60,7 +58,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -104,7 +102,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400);
         $this->assertUserIsNotSoftDeleted($userAId);
         $this->assertFolder($folderA->id);
-        $this->assertContains('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
+        $this->assertStringContainsString('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertEquals(1, count($errors->folders->sole_owner));

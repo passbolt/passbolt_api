@@ -33,12 +33,6 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
         'app.Base/Roles',
     ];
 
-    public function setUp()
-    {
-        parent::setUp();
-        $this->useHttpServer(true);
-    }
-
     /**
      * @group mfa
      * @group mfaSetup

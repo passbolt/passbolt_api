@@ -18,7 +18,6 @@ namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Http\Response;
 use Cake\Routing\Router;
 use Passbolt\WebInstaller\Utility\WebInstaller;
@@ -32,8 +31,6 @@ use Passbolt\WebInstaller\Utility\WebInstaller;
  */
 class WebInstallerController extends Controller
 {
-    public $components = ['Flash'];
-
     /**
      * The web installer model
      */
@@ -62,6 +59,7 @@ class WebInstallerController extends Controller
         $this->stepInfo['current'] = $this->request->getRequestTarget();
         $session = $this->request->getSession();
         $this->webInstaller = new WebInstaller($session);
+        $this->loadComponent('Flash');
     }
 
     /**
@@ -72,7 +70,7 @@ class WebInstallerController extends Controller
      * @param \Cake\Event\Event $event event
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(Event $event): ?Response
+    public function beforeFilter(\Cake\Event\EventInterface $event): ?Response
     {
         parent::beforeFilter($event);
 
@@ -94,7 +92,7 @@ class WebInstallerController extends Controller
      * @param \Cake\Event\Event $event event
      * @return void
      */
-    public function beforeRender(Event $event): void
+    public function beforeRender(\Cake\Event\EventInterface $event): void
     {
         parent::beforeRender($event);
         $this->set('stepInfo', $this->stepInfo);

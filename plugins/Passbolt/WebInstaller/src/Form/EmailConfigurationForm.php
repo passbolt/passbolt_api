@@ -48,7 +48,7 @@ class EmailConfigurationForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator): Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('sender_name', 'create', __('A sender name is required.'))

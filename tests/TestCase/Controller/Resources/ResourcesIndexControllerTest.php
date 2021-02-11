@@ -29,8 +29,8 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     use FavoritesModelTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
-        'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
+        'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions',
     ];
 
     public function testSuccess()

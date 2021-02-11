@@ -31,7 +31,6 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $last_logged_in
  *
  * @property \App\Model\Entity\Role $role
- * @property \App\Model\Entity\FileStorage[] $file_storage
  * @property \App\Model\Entity\Gpgkey[] $gpgkeys
  * @property \App\Model\Entity\Profile[] $profiles
  * @property \App\Model\Entity\Profile $profile

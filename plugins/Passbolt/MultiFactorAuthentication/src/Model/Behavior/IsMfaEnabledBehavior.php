@@ -24,7 +24,7 @@ use Passbolt\MultiFactorAuthentication\Service\IsMfaEnabledService;
 use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
 
 /**
- * @method \App\Model\Table\UsersTable getTable()
+ * @method \App\Model\Table\UsersTable table()
  */
 class IsMfaEnabledBehavior extends Behavior
 {
@@ -36,7 +36,7 @@ class IsMfaEnabledBehavior extends Behavior
     /**
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             TableFindIndexBefore::EVENT_NAME => 'addIsMfaEnabledBehavior',
@@ -47,11 +47,11 @@ class IsMfaEnabledBehavior extends Behavior
      * @param array $config Config
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $isMfaEnabledService = new IsMfaEnabledService();
         $this->isMfaEnabledQueryDecorator = new IsMfaEnabledQueryDecorator(
-            $this->getTable(),
+            $this->table(),
             new MfaEntityMapper($isMfaEnabledService)
         );
 

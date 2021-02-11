@@ -29,7 +29,7 @@ trait ControllerActionTrait
      */
     public function logControllerAction(Event $event)
     {
-        $statusCode = $event->getSubject()->response->getStatusCode();
+        $statusCode = $event->getSubject()->getResponse()->getStatusCode();
         $status = (int)($statusCode === 200);
         $userAction = UserAction::getInstance();
         $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');

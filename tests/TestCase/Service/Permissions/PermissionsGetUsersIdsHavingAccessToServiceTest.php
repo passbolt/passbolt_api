@@ -50,7 +50,7 @@ class PermissionsGetUsersIdsHavingAccessToServiceTest extends AppTestCase
         'app.Base/Users',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
