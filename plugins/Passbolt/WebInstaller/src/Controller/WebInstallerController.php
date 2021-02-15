@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Response;
 use Cake\Routing\Router;
@@ -107,10 +108,14 @@ class WebInstallerController extends Controller
      */
     protected function getNavigationSections(): array
     {
+        $pluginLicenseEnabled = !empty(Configure::read('passbolt.plugins.license'));
         $hasAdmin = $this->webInstaller->getSettings('hasAdmin');
         $sections = [];
 
         $sections['system_check'] = __('System check');
+        if ($pluginLicenseEnabled) {
+            $sections['license_key'] = __('Subscription key');
+        }
         $sections['database'] = __('Database');
         $sections['server_keys'] = __('Server keys');
         $sections['emails'] = __('Emails');

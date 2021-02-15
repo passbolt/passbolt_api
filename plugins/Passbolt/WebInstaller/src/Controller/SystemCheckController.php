@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use App\Utility\Healthchecks;
+use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Passbolt\WebInstaller\Utility\WebInstallerHealthchecks;
 
@@ -36,7 +37,12 @@ class SystemCheckController extends WebInstallerController
         $checks['ssl'] = ['is' => $this->request->is('ssl')];
         $checks['system_ok'] = $this->_healthcheckIsOk($checks);
 
-        $nextStepUrl = Router::url('/install/database', true);
+        if (Configure::read('passbolt.plugins.license')) {
+            $nextStepUrl = Router::url('/install/license_key', true);
+        } else {
+            $nextStepUrl = Router::url('/install/database', true);
+        }
+
         $this->webInstaller->setSettingsAndSave('initialized', true);
         $this->set('data', $checks);
         $this->set('nextStepUrl', $nextStepUrl);
