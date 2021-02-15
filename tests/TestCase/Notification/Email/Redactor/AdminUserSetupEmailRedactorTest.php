@@ -109,7 +109,7 @@ class AdminUserSetupCompleteEmailRedactorTest extends TestCase
 
         $this->assertThatAllAdminHaveAnEmailCreated($emailRecipients, $expectedAdmins);
 
-        $expectedSubject = sprintf('%s have just activated their account on passbolt', $userCompletedSetup->profile->first_name);
+        $expectedSubject = sprintf('%s has just activated their account on passbolt', $userCompletedSetup->profile->first_name);
 
         $email = $result->getEmails()[0];
         $this->assertEmailSubject($expectedSubject, $email, $userCompletedSetup, $expectedAdmins[0]);
