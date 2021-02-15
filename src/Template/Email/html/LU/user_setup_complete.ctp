@@ -43,7 +43,7 @@ echo $this->element('Email/module/avatar',[
         'last_name' => Purifier::clean($user->profile->last_name),
         'datetime' => $user->modified,
         'text' => __(
-            '{0} have just activated their account on passbolt!',
+            '{0} has just activated their account on passbolt!',
             $user->profile->first_name
         )
     ])
@@ -54,7 +54,7 @@ $text .= ' ';
 if ($invitedByYou) {
     $text .= __('This user was invited by you {0}.', $invitedWhen);
 } else if ($user->username === $invitedBy->username) {
-    $text .= __('This user signed up themselves, since you have open registration active.');
+    $text .= __('This user signed up on their own, since you have open registration active.');
 } else {
     $text .= __('This user was invited by {0} {1}.', $invitedBy->profile->first_name, $invitedWhen);
 }
