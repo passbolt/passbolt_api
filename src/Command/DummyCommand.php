@@ -12,15 +12,15 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.8.0
  */
-namespace PassboltTestData\Shell;
+namespace PassboltTestData\Command;
 
-use App\Shell\AppShell;
+use App\Command\PassboltCommand;
 use Cake\Console\ConsoleOptionParser;
 
 /**
  * Dummy shell command.
  */
-class DummyShell extends AppShell
+class DummyCommand extends PassboltCommand
 {
     /**
      * @var array of linked tasks
@@ -30,21 +30,15 @@ class DummyShell extends AppShell
     ];
 
     /**
-     * Get command options parser
-     *
-     * @return \Cake\Console\ConsoleOptionParser
+     * @inheritDoc
      */
-    public function getOptionParser(): ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $this->_io->styles('fail', ['text' => 'red', 'blink' => false]);
-        $this->_io->styles('success', ['text' => 'green', 'blink' => false]);
-
-        $parser = parent::getOptionParser();
+        $parser = parent::buildOptionParser($parser);
         $parser->setDescription(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'));
 
-        $parser->addSubcommand('Insert', [
+        $parser->addArgument('Insert', [
             'help' => __d('cake_console', 'Insert dummies'),
-            'parser' => $this->Insert->getOptionParser(),
         ]);
 
         return $parser;
