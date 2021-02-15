@@ -139,7 +139,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         /** @var Profile $profile */
         $profile = $userCompletedSetup->profile;
 
-        $subject = __('{0} have just activated their account on passbolt', $profile->first_name);
+        $subject = __('{0} has just activated their account on passbolt', $profile->first_name);
 
         return new Email(
             $admin->username,
