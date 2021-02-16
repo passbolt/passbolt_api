@@ -10,29 +10,24 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.8.0
+ * @since         2.0.0
  */
-namespace PassboltTestData\Command;
+namespace PassboltTestData\Command\Base;
 
-use App\Command\PassboltCommand;
-use Cake\Console\ConsoleOptionParser;
+use App\Utility\UuidFactory;
+use PassboltTestData\Lib\DataCommand;
 
-/**
- * Dummy shell command.
- */
-class DummyCommand extends PassboltCommand
+class EmailQueueDataCommand extends DataCommand
 {
+    public $entityName = 'EmailQueue';
+
     /**
-     * @inheritDoc
+     * Get the roles data
+     *
+     * @return array
      */
-    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
+    public function getData()
     {
-        $parser->setDescription(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'));
-
-        $parser->addArgument('Insert', [
-            'help' => __d('cake_console', 'Insert dummies'),
-        ]);
-
-        return $parser;
+        return [];
     }
 }

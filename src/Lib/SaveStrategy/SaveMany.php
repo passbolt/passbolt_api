@@ -14,24 +14,24 @@
  */
 namespace PassboltTestData\Lib\SaveStrategy;
 
-use Cake\Console\Shell;
 use Cake\Core\Configure;
+use PassboltTestData\Lib\DataCommand;
 
 class SaveMany
 {
     /**
      * The shell the strategy is executing on.
      *
-     * @var Shell
+     * @var DataCommand
      */
     private $shell;
 
     /**
      * Constructor
      *
-     * @param Shell $shell The console the strategy is executing by.
+     * @param DataCommand $shell The console the strategy is executing by.
      */
-    public function __construct(Shell $shell)
+    public function __construct(DataCommand $shell)
     {
         $this->shell = $shell;
     }
@@ -42,21 +42,21 @@ class SaveMany
      * @param array $data The data to save
      * @return void
      */
-    public function save($data)
+    public function save(array $data): void
     {
         $chunkSize = Configure::read('PassboltTestData.scenarios.large.install.count.chunk_size');
         $chunks = array_chunk($data, $chunkSize);
         $total = count($chunks);
 
-        $this->shell->out("Inserting \"" . $this->shell->entityName);
+        $this->shell->io->out("Inserting \"" . $this->shell->entityName);
         $progress = $this->shell->displayProgressBar($total);
         foreach ($chunks as $i => $chunk) {
-            $result = $this->saveEntities($chunk);
+            $this->saveEntities($chunk);
             if (!is_null($progress)) {
                 $progress->increment(1);
                 $progress->draw();
                 if ($i + 1 == $total) {
-                    $this->shell->out("\n");
+                    $this->shell->io->out("\n");
                 }
             }
         }
@@ -68,12 +68,12 @@ class SaveMany
      * @param array $data The data to save
      * @return void
      */
-    public function saveEntities(array $data)
+    public function saveEntities(array $data): void
     {
-        $entities = $this->shell->_Entity->newEntities($data, ['accessibleFields' => ['*' => true], 'validate' => false]);
+        $entities = $this->shell->Table->newEntities($data, ['accessibleFields' => ['*' => true], 'validate' => false]);
         foreach ($entities as $entity) {
             $entity->setAccess('*', true);
         }
-        $this->shell->_Entity->saveMany($entities, ['checkRules' => false, 'atomic' => false]);
+        $this->shell->Table->saveMany($entities, ['checkRules' => false, 'atomic' => false]);
     }
 }

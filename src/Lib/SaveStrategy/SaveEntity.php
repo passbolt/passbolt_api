@@ -14,23 +14,24 @@
  */
 namespace PassboltTestData\Lib\SaveStrategy;
 
-use Cake\Console\Shell;
+use Exception;
+use PassboltTestData\Lib\DataCommand;
 
 class SaveEntity
 {
     /**
      * The shell the strategy is executing on.
      *
-     * @var Shell
+     * @var DataCommand
      */
     private $shell;
 
     /**
      * Constructor
      *
-     * @param Shell $shell The console the strategy is executing by.
+     * @param DataCommand $shell The console the strategy is executing by.
      */
-    public function __construct(Shell $shell)
+    public function __construct(DataCommand $shell)
     {
         $this->shell = $shell;
     }
@@ -41,15 +42,15 @@ class SaveEntity
      * @param array $data The data to save
      * @return bool
      */
-    public function save(array $data = [])
+    public function save(array $data = []): bool
     {
         foreach ($data as $row) {
             try {
                 $this->saveEntity($row);
             } catch (Exception $e) {
-                $this->shell->err(sprintf('Data "%s" from "%s" could not be inserted', $row[array_keys($row)[0]]['id'], $this->shell->entityName));
-                $this->shell->err(print_r($row, true));
-                $this->shell->warn($e->getMessage());
+                $this->shell->io->err(sprintf('Data "%s" from "%s" could not be inserted', $row[array_keys($row)[0]]['id'], $this->shell->entityName));
+                $this->shell->io->err(print_r($row, true));
+                $this->shell->io->warning($e->getMessage());
 
                 return false;
             }
@@ -67,23 +68,23 @@ class SaveEntity
      */
     public function saveEntity(array $data = [])
     {
-        $entity = $this->shell->_Entity->newEntity();
+        $entity = $this->shell->Table->newEmptyEntity();
         $entity->setAccess('*', true);
         $entity->set($data);
 
         $errors = $entity->getErrors();
         if ($errors) {
-            $this->shell->out('Unable to validate the entity data');
-            $this->shell->out(json_encode($errors));
-            $this->shell->out(json_encode($data));
+            $this->shell->io->out('Unable to validate the entity data');
+            $this->shell->io->out(json_encode($errors));
+            $this->shell->io->out(json_encode($data));
             throw new Exception('Unable to save the entity data');
         }
 
-        if (!$this->shell->_Entity->save($entity, ['checkRules' => false, 'atomic' => false])) {
+        if (!$this->shell->Table->save($entity, ['checkRules' => false, 'atomic' => false])) {
             $errors = $entity->getErrors();
-            $this->shell->out('Unable to save the entity');
-            $this->shell->out(json_encode($errors));
-            $this->shell->out(json_encode($data));
+            $this->shell->io->out('Unable to save the entity');
+            $this->shell->io->out(json_encode($errors));
+            $this->shell->io->out(json_encode($data));
             throw new Exception('Unable to save the entity data');
         }
     }

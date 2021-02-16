@@ -18,13 +18,14 @@ use Cake\Console\Shell;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Utility\Hash;
+use PassboltTestData\Lib\DataCommand;
 
 class SaveSqlInfile
 {
     /**
      * The shell the strategy is executing on.
      *
-     * @var Shell
+     * @var DataCommand
      */
     private $shell;
 
@@ -38,9 +39,9 @@ class SaveSqlInfile
     /**
      * Constructor
      *
-     * @param Shell $shell The console the strategy is executing by.
+     * @param DataCommand $shell The console the strategy is executing by.
      */
-    public function __construct(Shell $shell)
+    public function __construct(DataCommand $shell)
     {
         $this->shell = $shell;
         $this->connection = ConnectionManager::get('default');
@@ -52,9 +53,9 @@ class SaveSqlInfile
      * @param array $data The data to save
      * @return void
      */
-    public function save(array $data)
+    public function save(array $data): void
     {
-        $table = $this->shell->_Entity->table();
+        $table = $this->shell->Table->table();
         $columns = $this->getTableColumnNames();
         $fileContent = '';
 
@@ -88,9 +89,9 @@ class SaveSqlInfile
      *
      * @return array
      */
-    private function getTableColumnNames()
+    private function getTableColumnNames(): array
     {
-        $table = $this->shell->_Entity->table();
+        $table = $this->shell->Table->table();
         $sql = "SHOW columns FROM $table;";
         $result = $this->connection->execute($sql)->fetchAll();
 
