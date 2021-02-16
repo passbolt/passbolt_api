@@ -35,7 +35,9 @@ class FixturizeCommand extends PassboltCommand
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $commands = Configure::read('PassboltTestData.scenarios.' . $args->getOption('scenario') . '.fixturize.shellTasks');
+        parent::execute($args, $io);
+
+        $commands = Configure::read('PassboltTestData.scenarios.' . $args->getArgument('scenario') . '.fixturize.shellTasks');
 
         if (!is_null($commands)) {
             $this->initDatabase();
@@ -80,20 +82,27 @@ class FixturizeCommand extends PassboltCommand
      * @param \PassboltTestData\Lib\DataCommand $command Command
      * @return void
      */
-    protected function fixturizeTask(DataCommand $command)
+    protected function fixturizeTask(DataCommand $command, ConsoleIo $io)
     {
         $Model = $this->loadModel($command->entityName);
         $tableName = $Model->getTable();
         $fixtureName = $command->entityName;
-        $options = ['name' => $fixtureName, '-r', '-n' => 10000, 'table' => $tableName, 'f'];
-        $this->executeCommand(FixtureCommand::class, $options);
+
+        $this->executeCommand(FixtureCommand::class, [
+            'name' => $fixtureName,
+            '--table' => $tableName,
+            '--force',
+            '--records',
+            '--count' => 10000,
+            '--connection' => 'default',
+        ]);
 
         // Move the fixture in the right folder.
         $fixtureFileName = $fixtureName . 'Fixture.php';
         $taskNamespace = $this->getTaskNamespace($command);
-        $destFixturePath = FIXTURES . DS . $taskNamespace;
+        $destFixturePath = FIXTURES . $taskNamespace;
         @mkdir($destFixturePath); // phpcs:ignore
-        rename(FIXTURES . DS . $fixtureFileName, $destFixturePath . DS . $fixtureFileName);
+        rename(FIXTURES . $fixtureFileName, $destFixturePath . DS . $fixtureFileName);
 
         // Move Adapt the fixture to take care of the namespace
         $content = file_get_contents($destFixturePath . DS . $fixtureFileName);

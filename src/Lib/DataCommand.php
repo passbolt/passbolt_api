@@ -64,7 +64,6 @@ abstract class DataCommand extends PassboltCommand
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
         parent::execute($args, $io);
-        dd($args->getOptions());
 
         $startTime = time();
         if (is_null($this->entityName)) {
