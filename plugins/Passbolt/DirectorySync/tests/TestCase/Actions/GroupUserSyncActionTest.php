@@ -16,9 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
+use App\Command\CommandBootstrap;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
-use App\Shell\AppShellBootstrap;
 use App\Utility\UuidFactory;
 use Cake\Event\EventManager;
 use Cake\I18n\FrozenTime;
@@ -514,8 +514,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroupUser_Case11b_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords()
     {
-        // Init AppShellBootstrap to handle email notifications.
-        AppShellBootstrap::init();
+        // Init CommandBootstrap to handle email notifications.
+        CommandBootstrap::init();
 
         $defaultGroupAdmin = 'edith@passbolt.com';
         $this->setDefaultGroupAdminUser($defaultGroupAdmin);
@@ -569,8 +569,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroupUser_PB1431()
     {
-        // Init AppShellBootstrap to handle email notifications.
-        AppShellBootstrap::init();
+        // Init CommandBootstrap to handle email notifications.
+        CommandBootstrap::init();
 
         $defaultGroupAdmin = 'edith@passbolt.com';
         $this->setDefaultGroupAdminUser($defaultGroupAdmin);

@@ -15,12 +15,14 @@ declare(strict_types=1);
  * @since         2.0.0
  */
 
-namespace App\Shell\Task;
+namespace App\Command;
 
-use App\Shell\AppShell;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
 
-class CleanupTask extends AppShell
+class CleanupCommand extends PassboltCommand
 {
     /**
      * @var array The list of cleanup jobs to perform.
@@ -106,9 +108,8 @@ class CleanupTask extends AppShell
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Cleanup and fix issues in database.'))
             ->addOption('dry-run', [
                 'help' => 'Don\'t fix only display report',
@@ -120,21 +121,21 @@ class CleanupTask extends AppShell
     }
 
     /**
-     * Main registration task
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $this->out(' Cleanup shell', 0);
+        parent::execute($args, $io);
+
+        $io->out(' Cleanup shell', 0);
         $dryRun = false;
-        if ($this->param('dry-run')) {
+        if ($args->getOption('dry-run')) {
             $dryRun = true;
-            $this->out(' (dry-run)');
+            $io->out(' (dry-run)');
         } else {
-            $this->out(' (fix mode)');
+            $io->out(' (fix mode)');
         }
-        $this->hr();
+        $io->hr();
 
         $totalErrorCount = 0;
         foreach (self::$cleanups as $tableName => $tableCleanup) {
@@ -146,9 +147,9 @@ class CleanupTask extends AppShell
                 if ($recordCount) {
                     $cleanupName = strtolower($cleanupName);
                     if ($dryRun) {
-                        $this->out(__('{0} issues found in table {1} ({2})', $recordCount, $tableName, $cleanupName));
+                        $io->out(__('{0} issues found in table {1} ({2})', $recordCount, $tableName, $cleanupName));
                     } else {
-                        $this->out(__('{0} issues fixed in table {1} ({2})', $recordCount, $tableName, $cleanupName));
+                        $io->out(__('{0} issues fixed in table {1} ({2})', $recordCount, $tableName, $cleanupName));
                     }
                 }
             }
@@ -157,14 +158,14 @@ class CleanupTask extends AppShell
         if ($totalErrorCount) {
             if ($dryRun) {
                 $msg = __('{0} issues detected, please re-run without --dry-run to fix.', $totalErrorCount);
-                $this->out($msg);
+                $io->out($msg);
             } else {
-                $this->out(__('{0} issues fixed!', $totalErrorCount));
+                $io->out(__('{0} issues fixed!', $totalErrorCount));
             }
         } else {
-            $this->out(__('No issue found, data looks squeaky clean!'));
+            $io->out(__('No issue found, data looks squeaky clean!'));
         }
 
-        return true;
+        return $this->successCode();
     }
 }

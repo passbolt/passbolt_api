@@ -4946,12 +4946,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pabloelcolombiano/passbolt_selenium_api",
-                "reference": "9ac14f4c33d17362784f6f4ceb5e25f2daf4b51c"
+                "reference": "010da3dbb1d514ef93bba72681c5d47d2c6b9c9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pabloelcolombiano/passbolt_selenium_api/zipball/9ac14f4c33d17362784f6f4ceb5e25f2daf4b51c",
-                "reference": "9ac14f4c33d17362784f6f4ceb5e25f2daf4b51c",
+                "url": "https://api.github.com/repos/pabloelcolombiano/passbolt_selenium_api/zipball/010da3dbb1d514ef93bba72681c5d47d2c6b9c9d",
+                "reference": "010da3dbb1d514ef93bba72681c5d47d2c6b9c9d",
                 "shasum": ""
             },
             "require": {
@@ -4994,7 +4994,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2021-02-11T16:24:07+00:00"
+            "time": "2021-02-16T19:29:58+00:00"
         },
         {
             "name": "passbolt/passbolt_test_data",
@@ -5002,12 +5002,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pabloelcolombiano/passbolt_test_data",
-                "reference": "0c461b49196821ec861771238fc79588d91a4269"
+                "reference": "3b96d43c79c92ae37d828902ca7d2ade14d30f32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pabloelcolombiano/passbolt_test_data/zipball/0c461b49196821ec861771238fc79588d91a4269",
-                "reference": "0c461b49196821ec861771238fc79588d91a4269",
+                "url": "https://api.github.com/repos/pabloelcolombiano/passbolt_test_data/zipball/3b96d43c79c92ae37d828902ca7d2ade14d30f32",
+                "reference": "3b96d43c79c92ae37d828902ca7d2ade14d30f32",
                 "shasum": ""
             },
             "require": {
@@ -5050,7 +5050,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2021-02-08T10:28:12+00:00"
+            "time": "2021-02-16T19:45:54+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7699,16 +7699,16 @@
         },
         {
             "name": "vierge-noire/cakephp-test-suite-light",
-            "version": "v2.1.4",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierge-noire/cakephp-test-suite-light.git",
-                "reference": "a742d62e142dcf7bdd04bd698729997bd2dc640a"
+                "reference": "3f7203829c4193be04d344451fabbeabbb3badd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-test-suite-light/zipball/a742d62e142dcf7bdd04bd698729997bd2dc640a",
-                "reference": "a742d62e142dcf7bdd04bd698729997bd2dc640a",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-test-suite-light/zipball/3f7203829c4193be04d344451fabbeabbb3badd9",
+                "reference": "3f7203829c4193be04d344451fabbeabbb3badd9",
                 "shasum": ""
             },
             "require": {
@@ -7749,9 +7749,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vierge-noire/cakephp-test-suite-light/issues",
-                "source": "https://github.com/vierge-noire/cakephp-test-suite-light/tree/v2.1.4"
+                "source": "https://github.com/vierge-noire/cakephp-test-suite-light/tree/2.1.5"
             },
-            "time": "2021-02-03T21:47:28+00:00"
+            "time": "2021-02-14T22:08:04+00:00"
         },
         {
             "name": "webmozart/assert",

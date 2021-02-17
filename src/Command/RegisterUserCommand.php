@@ -14,13 +14,15 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
-use App\Shell\AppShell;
 use App\Utility\UserAccessControl;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
@@ -30,7 +32,7 @@ use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
  * @property RolesTable Roles
  * @property AuthenticationTokensTable AuthenticationTokens
  */
-class RegisterUserTask extends AppShell
+class RegisterUserCommand extends PassboltCommand
 {
     /**
      * Initializes the Shell
@@ -51,9 +53,8 @@ class RegisterUserTask extends AppShell
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser
             ->setDescription(__('Register a new user.'))
             ->addOption('interactive', [
@@ -86,15 +87,15 @@ class RegisterUserTask extends AppShell
     }
 
     /**
-     * Main registration task
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
         // Root user is not allowed to execute this command.
-        if (!$this->assertNotRoot()) {
-            return false;
+        if (!$this->assertNotRoot($io)) {
+            return $this->errorCode();
         }
 
         // Who is creating the user?
@@ -110,53 +111,54 @@ class RegisterUserTask extends AppShell
         $attempt = 0;
         $user = null;
 
-        if ($this->param('interactive')) {
-            $maxAttempt = $this->param('interactive-loop');
+        if ($args->getOption('interactive')) {
+            $maxAttempt = $args->getOption('interactive-loop');
         } else {
             $maxAttempt = 1;
         }
         while (($attempt < $maxAttempt)) {
             $attempt++;
-            $data = $this->_getUserData();
+            $data = $this->askUserData($args, $io);
             try {
                 $user = $this->Users->register($data, $accessControl);
                 break;
             } catch (ValidationException $exception) {
-                $this->out(__('Validation failed for the following user data:'));
-                $this->_displayValidationError($exception->getErrors());
+                $io->out(__('Validation failed for the following user data:'));
+                $this->displayValidationError($exception->getErrors(), $io);
             } catch (InternalErrorException $exception) {
-                $this->out(__('Something went wrong when trying to save the user, please try again.'));
+                $io->out(__('Something went wrong when trying to save the user, please try again.'));
             }
         }
 
         if (!isset($user)) {
-            $this->_error(__('User registration failed.'));
+            $this->error(__('User registration failed.'), $io);
 
-            return false;
+            return $this->errorCode();
         }
 
-        $this->_success(__('User saved successfully.'));
-        $this->_notifyUser($user);
+        $this->success(__('User saved successfully.'), $io);
+        $this->notifyUser($user, $io);
 
-        return true;
+        return $this->successCode();
     }
 
     /**
      * Display the entity validation errors
      *
      * @param array $errors validation errors
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _displayValidationError($errors)
+    protected function displayValidationError($errors, ConsoleIo $io): void
     {
         foreach ($errors as $fieldname => $error) {
             foreach ($error as $rule => $message) {
                 if (is_array($message)) {
-                    $this->_displayValidationError($error);
+                    $this->displayValidationError($error, $io);
                     break;
                 } else {
                     $message = '- ' . ucfirst(str_replace('_', ' ', $fieldname)) . ': ' . $message;
-                    $this->out($message);
+                    $io->out($message);
                 }
             }
         }
@@ -165,32 +167,34 @@ class RegisterUserTask extends AppShell
     /**
      * Get user data from command line or prompt if interactive mode is on
      *
+     * @param \Cake\Console\Arguments $args Arguments.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return array
      */
-    protected function _getUserData()
+    protected function askUserData(Arguments $args, ConsoleIo $io): array
     {
-        $roleName = $this->param('role');
-        $username = $this->param('username');
-        $firstname = $this->param('first-name');
-        $lastname = $this->param('last-name');
-        $interactive = $this->param('interactive');
+        $roleName = $args->getOption('role');
+        $username = $args->getOption('username');
+        $firstname = $args->getOption('first-name');
+        $lastname = $args->getOption('last-name');
+        $interactive = $args->getOption('interactive');
 
         // Interactively capture missing data if needed
         if (empty($username) && $interactive) {
-            $username = $this->in(__('User email (also called username)'));
+            $username = $io->ask(__('User email (also called username)'));
         }
         if (empty($firstname) && $interactive) {
-            $firstname = $this->in(__('First name'));
+            $firstname = $io->ask(__('First name'));
         }
         if (empty($lastname) && $interactive) {
-            $lastname = $this->in(__('Last name'));
+            $lastname = $io->ask(__('Last name'));
         }
         if (empty($roleName) && $interactive) {
-            $roleName = $this->in(__('Role name: user (default) or admin'));
+            $roleName = $io->ask(__('Role name: user (default) or admin'));
         }
         if (empty($roleName)) {
             $roleName = Role::USER;
-            $this->out('<warning>' . __('Role not found, using default user role.') . '</warning>');
+            $io->out('<warning>' . __('Role not found, using default user role.') . '</warning>');
         }
         $roleId = $this->Roles->getIdByName($roleName);
         $userData = [
@@ -209,9 +213,10 @@ class RegisterUserTask extends AppShell
      * Notify the user by trigerring a registerPost event
      *
      * @param \App\Model\Entity\User $user Entity User
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _notifyUser(User $user)
+    protected function notifyUser(User $user, ConsoleIo $io)
     {
         // Display the token in console for convenience
         $token = $this->AuthenticationTokens->getByUserId($user->id);
@@ -228,6 +233,6 @@ class RegisterUserTask extends AppShell
             );
         }
 
-        $this->_success($message);
+        $this->success($message, $io);
     }
 }

@@ -14,19 +14,20 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
-use App\Shell\AppShell;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Datasource\ConnectionManager;
 
-class MysqlExportTask extends AppShell
+class MysqlExportCommand extends PassboltCommand
 {
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser
             ->setDescription(__('Utility to export mysql database backups.'))
             ->addOption('datasource', [
@@ -57,47 +58,48 @@ class MysqlExportTask extends AppShell
     }
 
     /**
-     * Export
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
         // Check if the data source is in the config
-        $datasource = $this->param('datasource');
+        $datasource = $args->getOption('datasource');
         $connection = ConnectionManager::get($datasource);
 
         // Check the database support
         $config = $connection->config();
         if ($config['driver'] !== 'Cake\Database\Driver\Mysql') {
-            $this->_error('Sorry only mySQL is supported at the moment');
+            $this->error('Sorry only mySQL is supported at the moment', $io);
 
-            return false;
+            return $this->errorCode();
         }
 
         // Define location and dump the table and data
-        $dir = $this->_getDir();
+        $dir = $this->getDir($args, $io);
         if (empty($dir)) {
-            return false;
+            return $this->errorCode();
         }
-        $file = $this->_getFile($dir);
+        $file = $this->getFile($dir, $args, $io);
+
         if (empty($file)) {
-            return false;
+            return $this->errorCode();
         }
-        $status = $this->_mysqlDump($config, $dir, $file);
+        $status = $this->mysqlDump($config, $dir, $file, $io);
         if (!$status) {
-            $this->_error('Something went wrong!');
+            $this->error('Something went wrong!', $io);
 
-            return false;
+            return $this->errorCode();
         }
 
-        if ($this->param('clear-previous')) {
-            $this->_clearPrevious($dir, $file);
+        if ($args->getOption('clear-previous')) {
+            $this->clearPrevious($dir, $file, $io);
         }
 
-        $this->_success(__('Success: the database was saved on file!'));
+        $this->success(__('Success: the database was saved on file!'), $io);
 
-        return true;
+        return $this->successCode();
     }
 
     /**
@@ -106,9 +108,10 @@ class MysqlExportTask extends AppShell
      * @param array $config connection manager config
      * @param string $dir directory path
      * @param string $file file name
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return bool
      */
-    protected function _mysqlDump($config, $dir, $file)
+    protected function mysqlDump($config, $dir, $file, ConsoleIo $io): bool
     {
         // Build the dump command.
         $cmd = 'mysqldump -h' . escapeshellarg($config['host']) . ' -u' . escapeshellarg($config['username']);
@@ -116,10 +119,10 @@ class MysqlExportTask extends AppShell
             $cmd .= ' -p' . escapeshellarg($config['password']);
         }
         $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
-        $this->out('Saving backup file: ' . $dir . $file);
+        $io->out('Saving backup file: ' . $dir . $file);
         exec($cmd, $output, $status);
 
-        return $status === self::CODE_SUCCESS;
+        return $status === $this->successCode();
     }
 
     /**
@@ -127,9 +130,10 @@ class MysqlExportTask extends AppShell
      *
      * @param string $dir directory
      * @param string $newFile name, to avoid deleting it
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _clearPrevious($dir, $newFile)
+    protected function clearPrevious($dir, $newFile, ConsoleIo $io): void
     {
         $files = glob($dir . '*');
         foreach ($files as $file) {
@@ -138,7 +142,7 @@ class MysqlExportTask extends AppShell
                     continue;
                 }
                 unlink($file);
-                $this->out('Deleting previous backup: ' . $file);
+                $io->out('Deleting previous backup: ' . $file);
             }
         }
     }
@@ -147,18 +151,20 @@ class MysqlExportTask extends AppShell
      * Get the file where to import the backup from
      *
      * @param string $dir directory
-     * @return string
+     * @param \Cake\Console\Arguments $args Arguments.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
+     * @return ?string
      */
-    protected function _getFile($dir)
+    protected function getFile($dir, Arguments $args, ConsoleIo $io): ?string
     {
-        $file = $this->param('file');
+        $file = $args->getOption('file');
         if (empty($file)) {
             $file = 'backup_' . time() . '.sql';
         }
         if (file_exists($dir . $file)) {
-            $force = $this->param('force');
+            $force = $args->getOption('force');
             if (!$force) {
-                $this->_error(__('The backup file already exist: ' . $dir . $file));
+                $this->error(__('The backup file already exist: ' . $dir . $file), $io);
 
                 return null;
             }
@@ -170,18 +176,26 @@ class MysqlExportTask extends AppShell
     /**
      * Get the directory where to import the backup from
      *
-     * @return string or null if not exist
+     * @param \Cake\Console\Arguments $args Arguments.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
+     * @return ?string or null if not exist
      */
-    protected function _getDir()
+    protected function getDir(Arguments $args, ConsoleIo $io): ?string
     {
-        $dir = $this->param('dir');
+        $dir = $args->getOption('dir');
         if (empty($dir)) {
             $dir = CACHE . 'database' . DS;
+            if (!file_exists($dir)) {
+                mkdir($dir);
+            }
         }
         if (!file_exists($dir)) {
-            $this->_error(__('Could not access the backup directory: ' . $dir));
+            $this->error(__('Could not access the backup directory: ' . $dir), $io);
 
             return null;
+        }
+        if (substr($dir, -1) !== DS) {
+            $dir .= DS;
         }
 
         return $dir;

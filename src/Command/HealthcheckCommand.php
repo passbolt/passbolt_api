@@ -14,13 +14,15 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
-use App\Shell\AppShell;
 use App\Utility\Healthchecks;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 
-class HealthcheckTask extends AppShell
+class HealthcheckCommand extends PassboltCommand
 {
     /**
      * Total number of errors for that check
@@ -42,12 +44,15 @@ class HealthcheckTask extends AppShell
     ];
 
     /**
+     * @var \Cake\Console\ConsoleIo
+     */
+    private $io;
+
+    /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
-
         // Display options
         $parser
             ->setDescription(__('Check the configuration of this installation and associated environment.'))
@@ -103,15 +108,17 @@ class HealthcheckTask extends AppShell
     }
 
     /**
-     * Assert all the checks
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
+        $this->io = $io;
+
         // Root user is not allowed to execute this command.
-        if (!$this->assertNotRoot()) {
-            return false;
+        if (!$this->assertNotRoot($io)) {
+            return $this->errorCode();
         }
 
         $results = [];
@@ -119,7 +126,7 @@ class HealthcheckTask extends AppShell
         // display options
         $displayOptions = ['hide-pass', 'hide-warning', 'hide-help', 'hide-title'];
         foreach ($displayOptions as $option) {
-            $this->_displayOptions[$option] = (isset($this->params[$option]) && $this->params[$option]);
+            $this->_displayOptions[$option] = $args->getOption($option);
         }
 
         // if user only want to run one check
@@ -128,7 +135,7 @@ class HealthcheckTask extends AppShell
             'environment', 'configFiles', 'core', 'ssl', 'database', 'gpg', 'application',
         ];
         foreach ($checks as $check) {
-            if (isset($this->params[$check]) && $this->params[$check]) {
+            if ($args->getOption($check)) {
                 $paramChecks[] = $check;
             }
         }
@@ -137,25 +144,25 @@ class HealthcheckTask extends AppShell
         }
 
         // Run all the selected checks
-        $this->out(' Healthcheck shell', 0);
+        $io->out(' Healthcheck shell', 0);
         foreach ($checks as $check) {
-            $this->out('.', 0); // Print a dot for each checks to show progress
+            $io->out('.', 0); // Print a dot for each checks to show progress
             $results = array_merge(Healthchecks::{$check}(), $results);
         }
         // Remove all dots
-        $this->out(str_repeat(chr(0x08), count($checks)) . str_repeat(' ', count($checks)), 0);
+        $io->out(str_repeat(chr(0x08), count($checks)) . str_repeat(' ', count($checks)), 0);
 
         // Print results
-        $this->out('');
-        $this->hr();
+        $io->out('');
+        $io->hr();
         foreach ($checks as $check) {
             $fn = 'assert' . ucfirst($check);
             $this->{$fn}($results);
         }
-        $this->out('');
+        $io->out('');
         $this->summary();
 
-        return true;
+        return $this->successCode();
     }
 
     /**
@@ -502,7 +509,7 @@ class HealthcheckTask extends AppShell
             $checks['gpg']['lib'],
             __('PHP GPG Module is installed and loaded.'),
             __('PHP GPG Module is not installed or loaded.'),
-            __('Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php'),
+            __('Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php') .
             __('Make sure to add extension=gnupg.so in php ini files for both php-cli and php.')
         );
         $this->assert(
@@ -705,7 +712,7 @@ class HealthcheckTask extends AppShell
     /**
      * Display one or more help messages
      *
-     * @param array $help messages
+     * @param array|string $help messages
      * @return void
      */
     protected function help($help = null)
@@ -726,7 +733,6 @@ class HealthcheckTask extends AppShell
      *
      * @param string $msg message
      * @param string $case pass or fail
-     * @throws \App\Shell\Task\Exception case is not defined or missing
      * @return void
      */
     protected function display($msg, $case)
@@ -751,9 +757,9 @@ class HealthcheckTask extends AppShell
                 $msg = '  <info>[' . __('HELP') . ']</info> ' . $msg;
                 break;
             default:
-                throw new Exception('Task output case not defined: ' . $case . ' ' . $msg);
+                throw new \Exception('Task output case not defined: ' . $case . ' ' . $msg);
         }
-        $this->out($msg);
+        $this->io->out($msg);
     }
 
     /**
@@ -767,9 +773,9 @@ class HealthcheckTask extends AppShell
         if ($this->_displayOptions['hide-title']) {
             return;
         }
-        $this->out('');
-        $this->out(' ' . $title);
-        $this->out('');
+        $this->io->out('');
+        $this->io->out(' ' . $title);
+        $this->io->out('');
     }
 
     /**
@@ -784,7 +790,7 @@ class HealthcheckTask extends AppShell
         } else {
             $summary = ' <success>' . __('No error found. Nice one sparky!') . '</success>';
         }
-        $this->out($summary);
-        $this->out('');
+        $this->io->out($summary);
+        $this->io->out('');
     }
 }

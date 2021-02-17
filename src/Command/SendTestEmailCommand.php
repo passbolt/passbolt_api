@@ -14,14 +14,17 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
-use App\Shell\AppShell;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
+use Cake\TestSuite\TestEmailTransport;
 use Cake\Utility\Hash;
 
-class SendTestEmailTask extends AppShell
+class SendTestEmailCommand extends PassboltCommand
 {
     /**
      * Name of the transport configuration that we'll use.
@@ -45,9 +48,8 @@ class SendTestEmailTask extends AppShell
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Debug Email shell for the passbolt application.'));
 
         $parser->addOption('recipient', [
@@ -59,34 +61,36 @@ class SendTestEmailTask extends AppShell
     }
 
     /**
-     * Main debug email task
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $this->out(' Debug email shell');
-        $this->hr();
+        parent::execute($args, $io);
 
-        $this->_checkSmtpIsSet();
-        $this->_checkFromIsSet();
+        $io->out(' Debug email shell');
+        $io->hr();
 
-        $this->_displayConfiguration();
+        $this->checkSmtpIsSet($io);
+        $this->checkFromIsSet($io);
+
+        $this->displayConfiguration($args, $io);
 
         $this->email = new Mailer('default');
-        $this->_setCustomTransportClassName(self::TRANSPORT_CLASS);
+        $this->setCustomTransportClassName(self::TRANSPORT_CLASS);
 
-        $this->_sendEmail(
-            $this->_getRecipient(),
+        $this->sendEmail(
+            $this->getRecipient($args),
             'Passbolt test email',
-            $this->_getDefaultMessage()
+            $this->getDefaultMessage(),
+            $io
         );
+        if (!$this->isRunningOnTestEnvironment()) {
+            $this->displayTrace($io);
+        }
+        $io->nl(0);
+        $this->success('The message has been successfully sent!', $io);
 
-        $this->_displayTrace();
-        $this->out($this->nl(0));
-        $this->_success('The message has been successfully sent!');
-
-        return true;
+        return $this->successCode();
     }
 
     /**
@@ -96,7 +100,7 @@ class SendTestEmailTask extends AppShell
      *
      * @return array|string
      */
-    protected static function _getEmailFromAsString()
+    protected static function getEmailFromAsString()
     {
         $config = Mailer::getConfig('default');
         $from = $config['from'] ?? '';
@@ -113,34 +117,37 @@ class SendTestEmailTask extends AppShell
     /**
      * Display configuration options.
      *
+     * @param \Cake\Console\Arguments $args Arguments.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _displayConfiguration()
+    protected function displayConfiguration(Arguments $args, ConsoleIo $io): void
     {
         $transportConfig = TransportFactory::getConfig('default');
 
-        $this->out($this->nl(0));
-        $this->out('<info>Email configuration</info>');
-        $this->hr();
-        $this->out(__('Host: {0}', $transportConfig['host']));
-        $this->out(__('Port: {0}', $transportConfig['port']));
-        $this->out(__('Username: {0}', $transportConfig['username']));
-        $this->out(__('Password: {0}', '*********'));
-        $this->out(__('TLS: {0}', $transportConfig['tls'] == null ? 'false' : 'true'));
-        $this->out($this->nl(0));
-        $this->out(__('Sending email from: {0}', self::_getEmailFromAsString()));
-        $this->out(__('Sending email to: {0}', $this->_getRecipient()));
-        $this->hr();
+        $io->nl(0);
+        $io->out('<info>Email configuration</info>');
+        $io->hr();
+        $io->out(__('Host: {0}', $transportConfig['host']));
+        $io->out(__('Port: {0}', $transportConfig['port']));
+        $io->out(__('Username: {0}', $transportConfig['username']));
+        $io->out(__('Password: {0}', '*********'));
+        $io->out(__('TLS: {0}', $transportConfig['tls'] == null ? 'false' : 'true'));
+        $io->nl(0);
+        $io->out(__('Sending email from: {0}', self::getEmailFromAsString()));
+        $io->out(__('Sending email to: {0}', $this->getRecipient($args)));
+        $io->hr();
     }
 
     /**
      * Get recipient email address.
      *
+     * @param \Cake\Console\Arguments $args Arguments.
      * @return string
      */
-    protected function _getRecipient()
+    protected function getRecipient(Arguments $args): string
     {
-        $recipient = $this->param('recipient');
+        $recipient = $args->getOption('recipient');
         if (empty($recipient)) {
             $recipient = 'doesnotexist@passboltdummydomain.com';
         }
@@ -154,9 +161,10 @@ class SendTestEmailTask extends AppShell
      * @param string $to email address to send the email to
      * @param string $subject the subject of the email
      * @param string $message the content of the email
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _sendEmail($to, $subject, $message)
+    protected function sendEmail($to, $subject, $message, ConsoleIo $io): void
     {
         $config = Mailer::getConfig('default');
         try {
@@ -164,35 +172,37 @@ class SendTestEmailTask extends AppShell
                 ->setFrom($config['from'])
                 ->setTo($to)
                 ->setSubject($subject)
-                ->send($message);
+                ->deliver($message);
         } catch (\Exception $e) {
-            $this->_displayTrace();
-            $this->out($this->nl(0));
-            $this->_error(__('A test email could not be sent.'));
-            $this->abort(__('Error: {0}', $e->getMessage()));
+            $this->displayTrace($io);
+            $io->nl(0);
+            $this->error(__('A test email could not be sent.'), $io);
+            $this->error(__('Error: {0}', $e->getMessage()), $io);
+            $this->abort();
         }
     }
 
     /**
      * Display trace of the communication with the server.
      *
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _displayTrace()
+    protected function displayTrace(ConsoleIo $io): void
     {
         $trace = $this->email->getTransport()->getTrace();
 
-        $this->out($this->nl(0));
-        $this->out('<info>Trace</info>');
+        $io->nl(0);
+        $io->out('<info>Trace</info>');
         foreach ($trace as $entry) {
             if (isset($entry['cmd'])) {
-                $cmd = $this->_removeCredentials($entry['cmd']);
-                $this->out("<info>> {$cmd}</info>");
+                $cmd = $this->removeCredentials($entry['cmd']);
+                $io->out("<info>> {$cmd}</info>");
             }
             if (!empty($entry['response'])) {
                 foreach ($entry['response'] as $response) {
-                    $msg = $this->_removeCredentials($response['message']);
-                    $this->out("[{$response['code']}] {$msg}");
+                    $msg = $this->removeCredentials($response['message']);
+                    $io->out("[{$response['code']}] {$msg}");
                 }
             }
         }
@@ -204,7 +214,7 @@ class SendTestEmailTask extends AppShell
      * @param string $str string where to remove the credentials
      * @return mixed
      */
-    protected function _removeCredentials($str)
+    protected function removeCredentials($str)
     {
         $transportConfig = TransportFactory::getConfig('default');
         $usernameClear = $transportConfig['username'];
@@ -225,7 +235,7 @@ class SendTestEmailTask extends AppShell
      *
      * @return string
      */
-    protected function _getDefaultMessage()
+    protected function getDefaultMessage(): string
     {
         $message = "Congratulations!\n" .
         'If you receive this email, it means that your passbolt smtp configuration is working fine.';
@@ -240,8 +250,12 @@ class SendTestEmailTask extends AppShell
      * @param string $customTransportClassName name of the custom transport class to use
      * @return void
      */
-    protected function _setCustomTransportClassName($customTransportClassName)
+    protected function setCustomTransportClassName($customTransportClassName): void
     {
+        // Return if we are in test context. This will enable the sending of email to be tested.
+        if ($this->isRunningOnTestEnvironment()) {
+            return;
+        }
         $transportConfig = TransportFactory::getConfig('default');
         $transportConfig['className'] = $customTransportClassName;
         TransportFactory::setConfig(self::TRANSPORT_CONFIG_NAME, $transportConfig);
@@ -252,40 +266,51 @@ class SendTestEmailTask extends AppShell
      * Check if Smtp is set as the transporter in the configuration.
      * Exit if smtp is not set and display an error message.
      *
-     * @return bool
+     * @param \Cake\Console\ConsoleIo $io Console IO.
+     * @return void
      */
-    protected function _checkSmtpIsSet()
+    protected function checkSmtpIsSet(ConsoleIo $io): void
     {
         $transportConfig = TransportFactory::getConfig('default');
         $className = Hash::get($transportConfig, 'className');
-        if ($className != 'Smtp') {
+        if ($className != 'Smtp' && $className !== TestEmailTransport::class) {
             $msg = __('Your email transport configuration is not set to use "Smtp". ({0} is set instead)', $className);
-            $this->_error($msg);
-            $this->_error(__('This email debug task is only for SMTP configurations.'));
+            $this->error($msg, $io);
+            $this->error(__('This email debug task is only for SMTP configurations.'), $io);
             $msg = __('To fix this, edit EmailTransport.default.className in passbolt.php, and set className to "Smtp"');// phpcs:ignore
-            $this->abort($msg);
+            $this->error($msg, $io);
+            $this->abort();
         }
-
-        return true;
     }
 
     /**
      * Check if a default from is provided in the configuration.
      * Exit if none is provided and display an error message.
      *
-     * @return bool
+     * @param \Cake\Console\ConsoleIo $io Console IO.
+     * @return void
      */
-    protected function _checkFromIsSet()
+    protected function checkFromIsSet(ConsoleIo $io)
     {
         $emailConfig = Mailer::getConfig('default');
         $from = Hash::get($emailConfig, 'from');
         if (empty($from)) {
-            $this->_error(__('Your email configuration doesn\'t define a default "from"'));
+            $this->error(__('Your email configuration doesn\'t define a default "from"'), $io);
             $msg = __('To fix this, edit Email.default.from property in /config/passbolt.php') . ' ';
             $msg .= _('And add \'from\' => [\'passbolt@your_organization.com\' => \'Passbolt\']');
-            $this->abort($msg);
+            $this->error($msg, $io);
+            $this->abort();
         }
+    }
 
-        return true;
+    /**
+     * We exceptionally need here to detect test environment in order to make
+     * the sending of email testable.
+     *
+     * @return bool
+     */
+    protected function isRunningOnTestEnvironment(): bool
+    {
+        return TransportFactory::getConfig('default')['className'] === TestEmailTransport::class;
     }
 }

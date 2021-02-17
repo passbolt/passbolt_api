@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell;
+namespace App\Command;
 
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
@@ -28,7 +28,7 @@ use App\Utility\UserAction;
  * this is done to avoid cascading effects on Event listeners
  * being added several times.
  */
-class AppShellBootstrap
+class CommandBootstrap
 {
     /**
      * Instance of class used for singleton.
@@ -40,12 +40,12 @@ class AppShellBootstrap
     /**
      * Init function.
      *
-     * @return \App\Shell\AppShellBootstrap
+     * @return self
      */
-    public static function init()
+    public static function init(): CommandBootstrap
     {
         if (!isset(self::$instance)) {
-            self::$instance = new AppShellBootstrap();
+            self::$instance = new CommandBootstrap();
             self::$instance->_initUserAction();
         }
 

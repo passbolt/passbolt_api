@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
 use App\Service\AuthenticationTokens\AuthenticationTokensHealthcheckService;
 use App\Service\Comments\CommentsHealthcheckService;
@@ -25,20 +25,30 @@ use App\Service\Profiles\ProfilesHealthcheckService;
 use App\Service\Resources\ResourcesHealthcheckService;
 use App\Service\Secrets\SecretsHealthcheckService;
 use App\Service\Users\UsersHealthcheckService;
-use App\Shell\AppShell;
 use App\Utility\Healthchecks\Healthcheck;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Exception\Exception;
 use Cake\Utility\Hash;
 
-class DatacheckTask extends AppShell
+class DatacheckCommand extends PassboltCommand
 {
+    /**
+     * @var \Cake\Console\Arguments
+     */
+    private $args;
+
+    /**
+     * @var \Cake\Console\ConsoleIo
+     */
+    private $io;
+
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
-
         // Display options
         $parser->setDescription(__('Re-validate the data of this installation.'))
             ->addOption('hide-success-details', [
@@ -54,13 +64,16 @@ class DatacheckTask extends AppShell
     }
 
     /**
-     * Assert all the checks
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $this->out('Data check shell');
+        parent::execute($args, $io);
+
+        $this->args = $args;
+        $this->io = $io;
+
+        $io->out('Data check shell');
 
         $services[] = new AuthenticationTokensHealthcheckService();
         $services[] = new CommentsHealthcheckService();
@@ -77,11 +90,11 @@ class DatacheckTask extends AppShell
                 $results = $service->check();
                 $this->displayResults($results, $service->getServiceCategory(), $service->getServiceName());
             } catch (\Exception $exception) {
-                $this->out($exception->getMessage());
+                $io->out($exception->getMessage());
             }
         }
 
-        return true;
+        return $this->successCode();
     }
 
     /**
@@ -143,9 +156,11 @@ class DatacheckTask extends AppShell
     {
         $count = 0;
         foreach ($details as $detail) {
+            $hideSuccessDetail = $this->args->getOption('hide-success-details');
+            $hideErrorDetail = $this->args->getOption('hide-error-details');
             if (
-                (!$this->param('hide-success-details') && $detail['status'] === Healthcheck::STATUS_SUCCESS) ||
-                (!$this->param('hide-error-details') && $detail['status'] === Healthcheck::STATUS_ERROR)
+                (!$hideSuccessDetail && $detail['status'] === Healthcheck::STATUS_SUCCESS) ||
+                (!$hideErrorDetail && $detail['status'] === Healthcheck::STATUS_ERROR)
             ) {
                 $count++;
                 $this->display($detail['message'], $detail['status'], 4);
@@ -185,6 +200,6 @@ class DatacheckTask extends AppShell
             default:
                 throw new Exception('Task output case not defined: ' . $case . ' ' . $msg);
         }
-        $this->out($msg);
+        $this->io->out($msg);
     }
 }

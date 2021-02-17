@@ -14,36 +14,37 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
-use App\Shell\AppShell;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 
-class KeyringInitTask extends AppShell
+class KeyringInitCommand extends PassboltCommand
 {
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
-        $parser->setDescription(__('Installation shell for the passbolt application.'));
+        $parser->setDescription(__('GnuPG Keyring init shell for the passbolt application.'));
 
         return $parser;
     }
 
     /**
-     * Main
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
         // Root user is not allowed to execute this command.
-        if (!$this->assertNotRoot()) {
-            return false;
+        if (!$this->assertNotRoot($io)) {
+            return $this->errorCode();
         }
 
         try {
@@ -58,17 +59,17 @@ class KeyringInitTask extends AppShell
             // Import the private key in the GPG keyring
             $gpg = OpenPGPBackendFactory::get();
 
-            $this->out('Importing ' . $filePath);
+            $io->out('Importing ' . $filePath);
             $gpg->importKeyIntoKeyring($armoredKey);
         } catch (Exception $e) {
-            $this->_error($e->getMessage());
-            $this->_error('The server OpenPGP key could not be imported into the GnuPG keyring.');
+            $this->error($e->getMessage(), $io);
+            $this->error('The server OpenPGP key could not be imported into the GnuPG keyring.', $io);
 
-            return false;
+            return $this->errorCode();
         }
 
-        $this->_success('Keyring init OK');
+        $this->success('Keyring init OK', $io);
 
-        return true;
+        return $this->successCode();
     }
 }

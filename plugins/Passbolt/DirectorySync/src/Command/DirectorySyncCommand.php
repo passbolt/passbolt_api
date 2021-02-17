@@ -14,103 +14,96 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\DirectorySync\Shell;
+namespace Passbolt\DirectorySync\Command;
 
-use App\Shell\AppShell;
+use App\Command\PassboltCommand;
+use Cake\Console\Arguments;
+use Cake\Console\BaseCommand;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Routing\Router;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
-class DirectorySyncShell extends AppShell
+class DirectorySyncCommand extends PassboltCommand
 {
     /**
-     * @var array of linked tasks
+     * All commands are extend the present command.
+     * There execution in the console should called by "directory_sync this-command".
+     * This method prepends the name of the command if required.
+     *
+     * @return string
      */
-    public $tasks = [
-        'Passbolt/DirectorySync.Test',
-        'Passbolt/DirectorySync.All',
-        'Passbolt/DirectorySync.Users',
-        'Passbolt/DirectorySync.Groups',
-        'Passbolt/DirectorySync.IgnoreList',
-        'Passbolt/DirectorySync.IgnoreCreate',
-        'Passbolt/DirectorySync.IgnoreDelete',
-        'Passbolt/DirectorySync.Debug',
-    ];
+    public static function defaultName(): string
+    {
+        $consoleName = str_replace('passbolt ', '', parent::defaultName());
+        if (strtolower($consoleName) !== 'directory_sync') {
+            $consoleName = 'directory_sync ' . $consoleName;
+        }
+
+        return $consoleName;
+    }
 
     /**
-     * Initialize.
-     *
-     * @return void
+     * @inheritDoc
      */
-    public function initialize(): void
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        parent::initialize();
+        if (!$this->assertNotRoot($io)) {
+            $this->error(__('aborting'), $io);
+            $this->abort();
 
-        if (!$this->assertNotRoot()) {
-            $this->abort(__('aborting'));
         }
 
         $isLdapLoaded = extension_loaded('ldap');
         if (!$isLdapLoaded) {
-            $this->abort(__('Error: the ldap extension is not installed'));
+            $this->error(__('Error: the ldap extension is not installed'), $io);
+            $this->abort();
         }
 
         $this->directoryOrgSettings = DirectoryOrgSettings::get();
         if (!$this->directoryOrgSettings->isEnabled()) {
-            $this->err(__('The ldap integration is not configured'));
-            $this->info(
+            $io->err(__('The ldap integration is not configured'));
+            $io->info(
                 __(
                     'To fix this problem, you need to configure ldap: {0}.',
                     [Router::url('/app/administration/users-directory', true)]
                 )
             );
-            $this->abort(__('aborting'));
+            $this->error(__('aborting'), $io);
+            $this->abort();
         }
     }
 
     /**
-     * Get command options parser
-     *
-     * @return \Cake\Console\ConsoleOptionParser
+     * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $this->_io->setStyle('fail', ['text' => 'red', 'blink' => false]);
-        $this->_io->setStyle('success', ['text' => 'green', 'blink' => false]);
-
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('The directory shell offer synchronizations tasks from the CLI.'));
 
-        $parser->addSubcommand('test', [
+        $parser->addArgument('test', [
             'help' => __d('cake_console', 'Test ldap connection and objects.'),
-            'parser' => $this->All->getOptionParser(),
         ]);
-        $parser->addSubcommand('all', [
+        $parser->addArgument('all', [
             'help' => __d('cake_console', 'Synchronize users and groups.'),
-            'parser' => $this->All->getOptionParser(),
         ]);
-        $parser->addSubcommand('users', [
+        $parser->addArgument('users', [
             'help' => __d('cake_console', 'Synchronize users'),
-            'parser' => $this->Users->getOptionParser(),
         ]);
-        $parser->addSubcommand('groups', [
+        $parser->addArgument('groups', [
             'help' => __d('cake_console', 'Synchronize groups'),
-            'parser' => $this->Groups->getOptionParser(),
         ]);
-        $parser->addSubcommand('ignore-list', [
+        $parser->addArgument('ignore-list', [
             'help' => __d('cake_console', 'List all the ignored record during the directory synchronization process.'),
-            'parser' => $this->IgnoreList->getOptionParser(),
         ]);
-        $parser->addSubcommand('ignore-create', [
+        $parser->addArgument('ignore-create', [
             'help' => __d('cake_console', 'Start ignoring a record during the directory synchronization process.'),
-            'parser' => $this->IgnoreCreate->getOptionParser(),
         ]);
-        $parser->addSubcommand('ignore-delete', [
+        $parser->addArgument('ignore-delete', [
             'help' => __d('cake_console', 'Stop ignoring a record during the directory synchronization process.'),
-            'parser' => $this->IgnoreDelete->getOptionParser(),
         ]);
-        $parser->addSubcommand('debug', [
+        $parser->addArgument('debug', [
             'help' => __d('cake_console', 'Debug configuration helper'),
-            'parser' => $this->Debug->getOptionParser(),
         ]);
 
         return $parser;
