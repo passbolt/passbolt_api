@@ -159,14 +159,14 @@ trait ResourcesFindersTrait
             ]);
         }
 
-        // Retrieve the permissions
-        if (isset($options['contain']['permissions'])) {
-            $query->contain('Permissions');
-        }
-
         // Retrieve the permission and the details of a group attach to it if any
         if (isset($options['contain']['permissions.group'])) {
             $query->contain('Permissions.Groups');
+        }
+
+        // Retrieve the permissions
+        if (isset($options['contain']['permissions'])) {
+            $query->contain('Permissions');
         }
 
         // If contains Resource type.
