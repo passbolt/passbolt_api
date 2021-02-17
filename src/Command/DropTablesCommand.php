@@ -51,7 +51,8 @@ class DropTablesCommand extends PassboltCommand
         $tables = $connection->execute('show tables')->fetchAll();
         foreach ($tables as $table) {
             $io->out(__('Dropping table ' . $table[0]));
-            $connection->query('drop table ' . $table[0]);
+            $quotedTableName = $connection->getDriver()->quoteIdentifier($table[0]);
+            $connection->query("drop table {$quotedTableName};");
         }
         $this->success(__('{0} tables dropped', count($tables)), $io);
 

@@ -59,7 +59,6 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
 
         // Expected fields.
         $this->assertResourceAttributes($this->_responseJsonBody);
-
         // Contain creator.
         $this->assertObjectHasAttribute('creator', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->creator);
@@ -78,11 +77,14 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
 
         // Contain permissions.user.
         $this->assertObjectHasAttribute('permissions', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->permissions[0]->user);
-        $this->assertProfileAttributes($this->_responseJsonBody->permissions[0]->user->profile);
-
-        // Contain permissions.group
-        $this->assertGroupAttributes($this->_responseJsonBody->permissions[6]->group);
+        foreach ($this->_responseJsonBody->permissions as $permission) {
+            if ($permission->aro === 'User') {
+                $this->assertUserAttributes($permission->user);
+                $this->assertProfileAttributes($permission->user->profile);
+            } else {
+                $this->assertGroupAttributes($permission->group);
+            }
+        }
 
         // Contain secret.
         $this->assertObjectHasAttribute('secrets', $this->_responseJsonBody);

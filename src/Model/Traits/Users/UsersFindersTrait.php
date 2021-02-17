@@ -72,7 +72,7 @@ trait UsersFindersTrait
         // Filter the query.
         if (empty($matchingUserIds)) {
             // if no user match all groups it should return nobody
-            $query->where(['true' => false]);
+            $query->where(['Users.id' => 'NOT_A_VALID_USER_ID']);
         } else {
             $query->where(['Users.id IN' => $matchingUserIds]);
         }
