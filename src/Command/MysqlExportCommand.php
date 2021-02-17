@@ -121,6 +121,16 @@ class MysqlExportCommand extends PassboltCommand
         $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
         $io->out('Saving backup file: ' . $dir . $file);
         exec($cmd, $output, $status);
+        if ($status !== $this->successCode()) {
+            $io->quiet(__('There was an error running mysqldump.'));
+            $userName = $config['username'];
+            $dbName = $config['database'];
+            $io->error(__('Please ensure that the user has PROCESS privileges.'));
+            $io->error('DB: ' . $dbName);
+            $io->error('User: ' . $userName);
+
+            return false;
+        }
 
         return $status === $this->successCode();
     }
