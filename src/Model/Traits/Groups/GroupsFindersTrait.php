@@ -249,7 +249,7 @@ trait GroupsFindersTrait
         // Filter the query.
         if (empty($matchingGroupsIds)) {
             // If no group contains all the users, the main request should return nothing
-            $query->where(['true' => false]);
+            $query->where(['Groups.id' => 'NOT_A_VALID_GROUP_ID']);
         } else {
             $query->where(['Groups.id IN' => $matchingGroupsIds]);
         }
