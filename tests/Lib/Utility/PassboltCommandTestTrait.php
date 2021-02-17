@@ -30,16 +30,6 @@ trait PassboltCommandTestTrait
         $cmd::$userIsRoot = false;
     }
 
-    public function makeCommandTempDir()
-    {
-        $testDir = TMP . 'command';
-        if (!file_exists($testDir)) {
-            mkdir($testDir);
-        }
-
-        return $testDir;
-    }
-
     /**
      * Delete all files in a directory.
      *
@@ -49,7 +39,7 @@ trait PassboltCommandTestTrait
     {
         $files = glob($dir . '*'); // get all file names
         foreach ($files as $file) { // iterate files
-            if (is_file($file)) {
+            if (is_file($file) && $file !== $dir . 'empty') {
                 unlink($file); // delete file
             }
         }

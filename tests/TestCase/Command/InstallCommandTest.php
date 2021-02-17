@@ -88,11 +88,19 @@ class InstallCommandTest extends TestCase
     public function testInstallCommandQuickWithExistingBackup()
     {
         // Create a backup
-        $this->exec('passbolt mysql_export -q');
-        $this->assertExitSuccess();
+        $cmd = "
+            INSERT INTO avatars (id, profile_id)
+            VALUES ('0da907bd-5c57-5acc-ba39-c6ebe091f613', '0da907bd-5c57-5acc-ba39-c6ebe091f613');
+        ";
+        file_put_contents(CACHE . 'database' . DS . 'backup_foo.sql', $cmd);
 
         $this->exec('passbolt install --quick -q');
         $this->assertExitSuccess();
+
+        $this->assertSame(
+            1,
+            TableRegistry::getTableLocator()->get('Avatars')->find()->count()
+        );
     }
 
     /**
@@ -106,6 +114,8 @@ class InstallCommandTest extends TestCase
 
     /**
      * Normal installation force
+     *
+     * @group mysqldump
      */
     public function testInstallCommandNormalForceWithoutAdmin()
     {
@@ -115,6 +125,8 @@ class InstallCommandTest extends TestCase
 
     /**
      * Normal installation force with data import
+     *
+     * @group mysqldump
      */
     public function testInstallCommandNormalForceWithDataImport()
     {
@@ -124,6 +136,8 @@ class InstallCommandTest extends TestCase
 
     /**
      * Normal installation force with admin data
+     *
+     * @group mysqldump
      */
     public function testInstallCommandNormalForceWithAdminData()
     {

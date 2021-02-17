@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
+use App\Command\MysqlExportCommand;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
@@ -57,7 +58,7 @@ class MysqlImportCommandTest extends TestCase
     public function testMysqlImportCommandOnDump()
     {
         // Create a file with a simple sql command
-        $dir = $this->makeCommandTempDir();
+        $dir = MysqlExportCommand::CACHE_DATABASE_DIRECTORY;
         $fileName = 'dummy_dump.sql';
         $avatarId = UuidFactory::uuid();
         $profileId = UuidFactory::uuid();
@@ -80,7 +81,7 @@ class MysqlImportCommandTest extends TestCase
     public function testMysqlImportCommandWrongDataSource()
     {
         // Create a file with a simple sql command
-        $dir = $this->makeCommandTempDir();
+        $dir = MysqlExportCommand::CACHE_DATABASE_DIRECTORY;
         $fileName = 'dummy_dump.sql';
         $sql = 'THIS IS NOT SQL, AND WILL THROW AN ERROR!!!';
         file_put_contents($dir . DS . $fileName, $sql);

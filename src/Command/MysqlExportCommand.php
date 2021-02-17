@@ -24,6 +24,11 @@ use Cake\Datasource\ConnectionManager;
 class MysqlExportCommand extends PassboltCommand
 {
     /**
+     * Where the dumps get exported by default.
+     */
+    public const CACHE_DATABASE_DIRECTORY = CACHE . 'database' . DS;
+
+    /**
      * @inheritDoc
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
@@ -121,6 +126,16 @@ class MysqlExportCommand extends PassboltCommand
         $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
         $io->out('Saving backup file: ' . $dir . $file);
         exec($cmd, $output, $status);
+        if ($status !== $this->successCode()) {
+            $io->quiet(__('There was an error running mysqldump.'));
+            $userName = $config['username'];
+            $dbName = $config['database'];
+            $io->error(__('Please ensure that the user has PROCESS privileges.'));
+            $io->error(__('Database ') . $dbName);
+            $io->error(__('User ') . $userName);
+
+            return false;
+        }
 
         return $status === $this->successCode();
     }
@@ -184,7 +199,7 @@ class MysqlExportCommand extends PassboltCommand
     {
         $dir = $args->getOption('dir');
         if (empty($dir)) {
-            $dir = CACHE . 'database' . DS;
+            $dir = self::CACHE_DATABASE_DIRECTORY;
             if (!file_exists($dir)) {
                 mkdir($dir);
             }
