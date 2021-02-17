@@ -24,7 +24,7 @@
     PASSBOLT_SELENIUM_ACTIVE: 1
     # This is the development dummy fingerprint
     PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
-    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
+    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml --exclude-group mysqldump
   services:
   - name: $DATABASE_ENGINE_VERSION
     command:

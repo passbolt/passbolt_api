@@ -132,14 +132,14 @@ class MysqlImportCommand extends PassboltCommand
 
             return $file;
         } else {
-            $files = array_diff(scandir($dir, SCANDIR_SORT_DESCENDING), ['..', '.']);
-            if (!isset($files[0])) {
+            $files = array_diff(scandir($dir, SCANDIR_SORT_DESCENDING), ['..', '.', 'empty']);
+            if (count($files) === 0) {
                 $this->error('Error: no existing backup found in ' . $dir, $io);
 
                 return null;
             }
 
-            return $files[0];
+            return array_values($files)[0];
         }
     }
 }

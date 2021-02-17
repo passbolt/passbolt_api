@@ -126,8 +126,8 @@ class MysqlExportCommand extends PassboltCommand
             $userName = $config['username'];
             $dbName = $config['database'];
             $io->error(__('Please ensure that the user has PROCESS privileges.'));
-            $io->error('DB: ' . $dbName);
-            $io->error('User: ' . $userName);
+            $io->error(__('Database ') . $dbName);
+            $io->error(__('User ') . $userName);
 
             return false;
         }

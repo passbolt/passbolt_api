@@ -208,8 +208,7 @@ class InstallCommand extends PassboltCommand
         // Import sql backup
 
         $this->keyringInit($args, $io);
-        $options = $this->formatOptions($args);
-        $code = $this->executeCommand(MysqlImportCommand::class, $options, $io);
+        $code = $this->executeCommand(MysqlImportCommand::class, $this->formatOptions($args), $io);
         if ($code === $this->successCode()) {
             $this->success(__('Passbolt installation success! Enjoy! ☮'), $io);
         }
