@@ -18,7 +18,6 @@ namespace Passbolt\DirectorySync\Command;
 
 use App\Command\PassboltCommand;
 use Cake\Console\Arguments;
-use Cake\Console\BaseCommand;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Routing\Router;
@@ -51,7 +50,6 @@ class DirectorySyncCommand extends PassboltCommand
         if (!$this->assertNotRoot($io)) {
             $this->error(__('aborting'), $io);
             $this->abort();
-
         }
 
         $isLdapLoaded = extension_loaded('ldap');

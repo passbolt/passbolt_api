@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Command;
 
-use Cake\Console\Shell;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncConsoleIntegrationTestCase;
 
 class DirectorySyncCommandTest extends DirectorySyncConsoleIntegrationTestCase

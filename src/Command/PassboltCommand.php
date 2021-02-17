@@ -131,7 +131,6 @@ class PassboltCommand extends Command
             'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
         ]);
 
-
         if (Configure::read('passbolt.plugins.license')) {
             $parser->addArgument('license_check', [
                 'help' => __d('cake_console', 'Check the license.'),
