@@ -70,6 +70,7 @@ class MysqlExportCommandTest extends TestCase
     /**
      * Various scenarios when specifying a file name or not.
      * This test covers IMO all the cases where $dir is specified.
+     *
      * @group mysqldump
      */
     public function testMysqlExportCommandStory()

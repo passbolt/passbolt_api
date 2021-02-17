@@ -114,6 +114,7 @@ class InstallCommandTest extends TestCase
 
     /**
      * Normal installation force
+     *
      * @group mysqldump
      */
     public function testInstallCommandNormalForceWithoutAdmin()
@@ -124,6 +125,7 @@ class InstallCommandTest extends TestCase
 
     /**
      * Normal installation force with data import
+     *
      * @group mysqldump
      */
     public function testInstallCommandNormalForceWithDataImport()
@@ -134,6 +136,7 @@ class InstallCommandTest extends TestCase
 
     /**
      * Normal installation force with admin data
+     *
      * @group mysqldump
      */
     public function testInstallCommandNormalForceWithAdminData()

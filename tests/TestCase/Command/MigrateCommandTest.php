@@ -79,6 +79,7 @@ class MigrateCommandTest extends TestCase
     /**
      * This will fail because the backup will be written at
      * some unreachable location. Still it is important to run this.
+     *
      * @group mysqldump
      */
     public function testMigrateCommandAsNonRootWithBackup()

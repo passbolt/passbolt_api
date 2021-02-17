@@ -49,7 +49,7 @@ trait PassboltCommandTestTrait
     {
         $files = glob($dir . '*'); // get all file names
         foreach ($files as $file) { // iterate files
-            if (is_file($file) && $file !== ($dir . 'empty')) {
+            if (is_file($file) && $file !== $dir . 'empty') {
                 unlink($file); // delete file
             }
         }
