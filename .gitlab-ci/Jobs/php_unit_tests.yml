@@ -32,10 +32,9 @@
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        docker-entrypoint.sh mysqld
+        docker-entrypoint.sh mysqld --default-authentication-plugin=mysql_native_password --log-bin-trust-function-creators=1
   image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
   script:
-    - init_test_db
     - cp config/app.default.php config/app.php
     - composer install --dev --no-interaction
     - gpg --import config/gpg/unsecure_private.key
@@ -99,11 +98,14 @@ php7.3-mysql5.7:
     DATABASE_ENGINE_VERSION: "mysql:5.7"
   extends: .test-template
 
-.custom_functions: &custom_functions |
-
-  function init_test_db() {
-    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON $DATASOURCES_TEST_DATABASE.* to $DATASOURCES_TEST_USERNAME@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
-  }
-
-before_script:
-  - *custom_functions
+php7.4-mysql8:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "mysql:8.0"
+  extends: .test-template
+  except:
+    variables:
+      - $TEST_DISABLED
+  only:
+    - develop
+    - master
