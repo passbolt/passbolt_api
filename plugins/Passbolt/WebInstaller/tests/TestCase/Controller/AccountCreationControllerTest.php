@@ -20,7 +20,7 @@ use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
@@ -32,7 +32,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/account_creation');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Admin user details', $data);
+        $this->assertStringContainsString('Admin user details', $data);
     }
 
     public function testWebInstallerAccountCreationPostSuccess()
@@ -66,6 +66,6 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/account_creation', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('The data entered are not correct', $data);
+        $this->assertStringContainsString('The data entered are not correct', $data);
     }
 }

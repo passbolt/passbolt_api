@@ -37,7 +37,7 @@ class FindLastLoggedInTest extends AppIntegrationTestCase
      */
     private $usersTable;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Users') ? [] : ['className' => UsersTable::class];

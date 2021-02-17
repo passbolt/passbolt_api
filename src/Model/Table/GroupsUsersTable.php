@@ -93,7 +93,8 @@ class GroupsUsersTable extends Table
 
         $validator
             ->boolean('is_admin')
-            ->requirePresence('is_admin');
+            ->requirePresence('is_admin')
+            ->notEmptyString('is_admin');
 
         return $validator;
     }

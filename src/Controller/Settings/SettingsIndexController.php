@@ -20,7 +20,6 @@ namespace App\Controller\Settings;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 
@@ -46,15 +45,12 @@ class SettingsIndexController extends AppController
     ];
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         $this->loadModel('Users');
-        $this->Auth->allow('index');
+        $this->Authentication->allowUnauthenticated(['index']);
 
         return parent::beforeFilter($event);
     }

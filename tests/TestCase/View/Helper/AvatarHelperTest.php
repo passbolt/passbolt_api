@@ -17,97 +17,61 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\View\Helper;
 
-use App\Model\Entity\Avatar;
+use App\Model\Table\AvatarsTable;
+use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\AvatarsModelTrait;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \App\View\Helper\AvatarHelper
  */
-class AvatarHelperTest extends TestCase
+class AvatarHelperTest extends AppIntegrationTestCase
 {
+    use AvatarsModelTrait;
+
     public const FULL_BASE_URL = 'http://mydomain.com';
 
-    /**
-     * @dataProvider provideAvatarsWithoutScheme
-     * @dataProvider provideAvatarsWithScheme
-     * @param Avatar $avatar An avatar instance
-     * @param string $fullBaseUrl The current full base url
-     * @param string $expectedUrl The expected URL for the avatar
-     */
-    public function testThatGetAvatarUrlReturnWellFormatedUrl(Avatar $avatar, string $fullBaseUrl, string $expectedUrl)
+    public function setUp(): void
     {
-        Configure::write('App.fullBaseUrl', $fullBaseUrl);
-
-        $this->assertSame($expectedUrl, AvatarHelper::getAvatarUrl($avatar));
+        Configure::write('App.fullBaseUrl', self::FULL_BASE_URL);
     }
 
-    /**
-     * Return local file paths
-     *
-     * @return array
-     */
-    public function provideAvatarsWithoutScheme()
+    public function testGetDefaultAvatarUrl()
     {
-        return [
-            'empty avatar (default)' => [
-                $this->createAvatarMock('img/avatar/user.png'),
-                static::FULL_BASE_URL,
-                static::FULL_BASE_URL . '/' . 'img/avatar/user.png',
-            ],
-            'avatar with relative path' => [
-                $this->createAvatarMock('./img/avatar/uuid/uuid/uuid.png'),
-                static::FULL_BASE_URL,
-                static::FULL_BASE_URL . '/' . 'img/avatar/uuid/uuid/uuid.png',
-            ],
-            'avatar with absolute path' => [
-                $this->createAvatarMock('/img/avatar/uuid/uuid/uuid.png'),
-                static::FULL_BASE_URL,
-                static::FULL_BASE_URL . '/' . 'img/avatar/uuid/uuid/uuid.png',
-            ],
-            'avatar with absolute path and appFullBaseUrl with trailing slash' => [
-                $this->createAvatarMock('/img/avatar/uuid/uuid/uuid.png'),
-                static::FULL_BASE_URL . '/',
-                static::FULL_BASE_URL . '/' . 'img/avatar/uuid/uuid/uuid.png',
-            ],
-        ];
+        $this->assertSame(
+            self::FULL_BASE_URL . '/img/avatar/user.png',
+            AvatarHelper::getAvatarUrl()
+        );
+
+        $this->assertSame(
+            self::FULL_BASE_URL . '/img/avatar/user.png',
+            AvatarHelper::getAvatarUrl(null, AvatarsTable::FORMAT_SMALL)
+        );
+
+        $this->assertSame(
+            self::FULL_BASE_URL . '/img/avatar/user_medium.png',
+            AvatarHelper::getAvatarUrl(null, AvatarsTable::FORMAT_MEDIUM)
+        );
+
+        $this->expectException(\RuntimeException::class);
+        AvatarHelper::getAvatarUrl(null, 'large');
     }
 
-    /**
-     * Return url with a scheme
-     *
-     * @return array
-     */
-    public function provideAvatarsWithScheme()
+    public function testGetExistingAvatarUrl()
     {
-        return [
-            'avatar with http scheme' => [
-                $this->createAvatarMock('https://storage.googleapis.com/gaufrette-remy-local/acme/Avatar/d9/38/ae/c8553fe26ba149eda9a3c36bec92f58c/c8553fe26ba149eda9a3c36bec92f58c.65a0ba70.png'),
-                static::FULL_BASE_URL,
-                'https://storage.googleapis.com/gaufrette-remy-local/acme/Avatar/d9/38/ae/c8553fe26ba149eda9a3c36bec92f58c/c8553fe26ba149eda9a3c36bec92f58c.65a0ba70.png',
-            ],
-            'avatar with ftp scheme' => [
-                $this->createAvatarMock('ftp://storage.googleapis.com/gaufrette-remy-local/acme/Avatar/d9/38/ae/c8553fe26ba149eda9a3c36bec92f58c/c8553fe26ba149eda9a3c36bec92f58c.65a0ba70.png'),
-                static::FULL_BASE_URL,
-                'ftp://storage.googleapis.com/gaufrette-remy-local/acme/Avatar/d9/38/ae/c8553fe26ba149eda9a3c36bec92f58c/c8553fe26ba149eda9a3c36bec92f58c.65a0ba70.png',
-            ],
-        ];
-    }
+        $avatar = $this->createAvatar();
+        $expectedUrl = self::FULL_BASE_URL . '/avatars/view/' . $avatar->get('id') . '/' . AvatarsTable::FORMAT_SMALL;
 
-    /**
-     * @param string $url URL to inject in the mock which must be returned when calling $avatar->url
-     * @return MockObject
-     */
-    private function createAvatarMock(string $url)
-    {
-        $avatar = $this->createMock(Avatar::class);
-        $avatar->method('__get')
-            ->with('url')
-            ->willReturn([
-                'small' => $url,
-            ]);
+        // We are performing a unit test here. But the routes are loaded in the Middleware in CakePHP4
+        // Therefore an application needs to be build, which is here made using a call to a dummy url (an avatar one)
+        $this->get($expectedUrl);
+        $this->assertResponseOk();
 
-        return $avatar;
+        // We now test the AvatarHelper as such.
+        $this->assertSame(
+            $expectedUrl,
+            AvatarHelper::getAvatarUrl($avatar)
+        );
     }
 }

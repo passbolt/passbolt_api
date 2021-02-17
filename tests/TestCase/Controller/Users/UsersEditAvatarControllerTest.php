@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
 class UsersEditAvatarControllerTest extends AppIntegrationTestCase
@@ -27,67 +28,61 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
     public $imageProcessingListener = null;
 
     /**
-     * @var AvatarsTable $Avatars
+     * @var \App\Model\Table\AvatarsTable $Avatars
      */
     public $Avatars;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Gpgkeys',
-        'app.Base/GroupsUsers', 'app.Base/Avatars',
-    ];
-
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Burzum/FileStorage', 'Burzum/Imagine']);
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
+        $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars');
+
+        RoleFactory::make()->guest()->persist();
+    }
+
+    public function tearDown(): void
+    {
+        $this->destroyDir($this->Avatars->getCacheDirectory());
+        unset($this->Avatars);
     }
 
     public function testUsersEditAvatarSuccess()
     {
-        $this->markTestSkipped('Not possible to fake file upload, issue with validation');
-        $adaAvatar = FIXTURES . 'Avatar' . DS . 'ada.png';
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
 
-        $ireneAvatar = $this->Avatars->find()
-            ->where(['user_id' => UuidFactory::uuid('user.id.irene')])
-            ->count();
-        $this->assertEquals(0, $ireneAvatar, 'Before the test, Irene should not have any avatar');
-
-        $this->authenticateAs('irene');
         $data = [
-            'id' => UuidFactory::uuid('user.id.irene'),
+            'id' => $user->id,
             'profile' => [
                 'avatar' => [
-                    'file' => [
-                        'tmp_name' => $adaAvatar,
-                        'filesize' => 170049, // filesize in bytes
-                        'error' => \UPLOAD_ERR_OK, // upload (error) status
-                        'filename' => 'ada.png', // upload filename
-                    ],
+                    'file' => $this->createUploadFile(),
                 ],
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
+
+        $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();
 
-        $ireneAvatar = $this->Avatars
+        $avatar = $this->Avatars
             ->find()
-            ->where(['user_id' => UuidFactory::uuid('user.id.irene')])
-            ->first();
-        $this->assertEquals(1, $ireneAvatar->count(), 'After the test, Irene should have an avatar');
-        $this->assertEquals('Local', $ireneAvatar->first()->adapter, 'Avatar adapter should be set to Local');
-        $this->assertEquals('Avatar', $ireneAvatar->first()->model, 'File Storage model should be set to Avatar');
-        $this->assertEquals('irene.png', $ireneAvatar->first()->filename, 'Avatar name should be set to irene.png');
-        $this->assertEquals(UuidFactory::uuid('profile.id.irene'), $ireneAvatar->first()->foreign_key, 'foreign_key should be the one of irene profile');
-        $this->assertNotEmpty($ireneAvatar->first()->path);
-        $this->assertTrue(file_exists(Configure::read('ImageStorage.basePath') . DS . $ireneAvatar->first()->path));
+            ->contain('Profiles.Users')
+            ->where(['Users.id' => $user->id])
+            ->firstOrFail();
+
+        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar)));
+        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'medium')));
+        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'whateverFormatWillReturnSmall')));
+        $this->assertTextEndsWith('.jpg', $this->Avatars->readFromCache($avatar));
+        $this->assertTextEndsWith('.jpg', $this->Avatars->readFromCache($avatar, 'medium'));
     }
 
     public function tesUsersEditAvatarMissingCsrfTokenError()
     {
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
         $this->disableCsrfToken();
-        $this->authenticateAs('irene');
-        $userId = UuidFactory::uuid('user.id.irene');
+        $userId = $user->id;
         $this->post("/users/$userId.json?api-version=v2");
         $this->assertResponseCode(403);
     }
@@ -97,11 +92,11 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $filesDirectory = TESTS . 'Fixtures' . DS . 'Avatar';
         $pdfFile = $filesDirectory . DS . 'minimal.pdf';
 
-        $avatarCountsBefore = $this->Avatars->find()->count();
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
 
-        $this->authenticateAs('irene');
         $data = [
-            'id' => UuidFactory::uuid('user.id.irene'),
+            'id' => $user->id,
             'profile' => [
                 'avatar' => [
                     'file' => [
@@ -111,26 +106,26 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                 ],
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v2', $data);
+        $this->postJson('/users/' . $user->id . '.json?api-version=v2', $data);
         $this->assertError(400, 'Could not validate user data.');
         $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validExtension);
         $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validMimeType);
         $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validUploadedFile);
 
-        $avatarCountsAfter = $this->Avatars->find()->count();
-        $this->assertEquals($avatarCountsBefore, $avatarCountsAfter, 'The number of avatars in db should be same before and after the test');
+        $this->assertEquals(0, $this->Avatars->find()->count(), 'The number of avatars in db should be same before and after the test');
     }
 
     public function testUsersEditAvatarNoDataProvided()
     {
-        $this->authenticateAs('irene');
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
         $data = [
-            'id' => UuidFactory::uuid('user.id.irene'),
+            'id' => $user->id,
             'profile' => [
                 'avatar' => [],
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
+        $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertError(400, 'Could not validate user data.');
         $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->_required);
     }

@@ -35,10 +35,10 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Resources', 'app.Base/Secrets',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Favorites',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',  'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
             parent::setUp();
             $this->Users = TableRegistry::getTableLocator()->get('Users');
@@ -76,7 +76,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $userAId = UuidFactory::uuid('user.id.ada');
             $this->deleteJson("/users/$userAId/dry-run.json?api-version=v2");
             $this->assertError(400);
-            $this->assertContains(
+            $this->assertStringContainsString(
                 'You need to transfer the user group manager role',
                 $this->_responseJsonHeader->message
             );
@@ -192,7 +192,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertError(400);
             $this->assertUserIsNotSoftDeleted($userKId);
             $this->assertResourceIsNotSoftDeleted($resourceMId);
-            $this->assertContains('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
+            $this->assertStringContainsString('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
 
             $errors = $this->_responseJsonBody->errors;
             $this->assertFalse(isset($errors->groups));

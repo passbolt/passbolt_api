@@ -38,7 +38,7 @@ class CleanupTest extends AppTestCase
         'app.Alt0/Permissions', 'app.Base/Resources',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
@@ -54,7 +54,7 @@ class CleanupTest extends AppTestCase
         ]];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Users);
         unset($this->Groups);

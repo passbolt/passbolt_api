@@ -62,11 +62,11 @@ class ResourcesShareServiceTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/Users', 'app.Base/Profiles',  'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/GroupsUsers', 'app.Base/Groups',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
@@ -76,7 +76,7 @@ class ResourcesShareServiceTest extends AppTestCase
         $this->service = new ResourcesShareService();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Resources);
         unset($this->Permissions);

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Notification\Email;
 
+use App\Notification\Email\CollectSubscribedEmailRedactorEvent;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -55,6 +56,15 @@ trait SubscribedEmailRedactorMockTrait
             public function getSubscribedEvents(): array
             {
                 return $this->subscribedEvents;
+            }
+
+            public function subscribe(CollectSubscribedEmailRedactorEvent $event)
+            {
+            }
+
+            public function implementedEvents(): array
+            {
+                return [];
             }
         };
     }

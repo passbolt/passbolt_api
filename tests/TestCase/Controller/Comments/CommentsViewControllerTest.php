@@ -26,7 +26,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
     use CommentsModelTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers',
+        'app.Base/Users', 'app.Base/Profiles',  'app.Base/Groups', 'app.Base/GroupsUsers',
         'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Comments',
     ];
 

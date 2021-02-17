@@ -61,11 +61,9 @@ class ConsoleShell extends Shell
     }
 
     /**
-     * Display help for this console.
-     *
-     * @return \Cake\Console\ConsoleOptionParser
+     * @inheritDoc
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
         $parser = new ConsoleOptionParser('console');
         $parser->setDescription(

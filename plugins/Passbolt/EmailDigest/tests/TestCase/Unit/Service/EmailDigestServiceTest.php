@@ -34,7 +34,7 @@ class EmailDigestServiceTest extends AppIntegrationTestCase
      */
     //private $emailDigestService;
 
-    public function setUp()
+    public function setUp(): void
     {
         //$this->digestFactoryMock = $this->createMock(DigestFactory::class);
 

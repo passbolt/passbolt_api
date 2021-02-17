@@ -25,11 +25,11 @@ use donatj\UserAgent\UserAgentParser;
 use Exception;
 
 /**
- * @property Component\AuthComponent Auth
+ * @property AuthenticationComponent Authentication
  */
 class UserComponent extends Component
 {
-    public $components = ['Auth'];
+    public $components = ['Authentication.Authentication'];
 
     /**
      * User agent cache to avoid parsing multiple times per request
@@ -45,7 +45,7 @@ class UserComponent extends Component
      */
     public function id()
     {
-        return $this->Auth->user('id');
+        return $this->Authentication->getIdentity()->User['id'] ?? null;
     }
 
     /**
@@ -55,7 +55,7 @@ class UserComponent extends Component
      */
     public function username()
     {
-        return $this->Auth->user('username');
+        return $this->Authentication->getIdentity()->User['username'] ?? null;
     }
 
     /**
@@ -65,12 +65,7 @@ class UserComponent extends Component
      */
     public function role()
     {
-        $role = $this->Auth->user('role.name');
-        if (!isset($role)) {
-            return Role::GUEST;
-        }
-
-        return $role;
+        return $this->Authentication->getIdentity()->User['role']['name'] ?? Role::GUEST;
     }
 
     /**

@@ -29,7 +29,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         'app.Base/Users', 'app.Base/Secrets',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');

@@ -27,7 +27,6 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Response;
 use Cake\ORM\RulesChecker;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -43,12 +42,9 @@ class GroupsDeleteController extends AppController
     public const DELETE_SUCCESS_EVENT_NAME = 'GroupsDeleteController.delete.success';
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event): ?Response
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         $this->loadModel('Groups');
         $this->loadModel('GroupsUsers');
@@ -64,7 +60,7 @@ class GroupsDeleteController extends AppController
      * @param string $id group uuid
      * @return void
      */
-    public function dryrun(string $id): void
+    public function dryRun(string $id): void
     {
         $group = $this->_validateRequestData($id);
         $this->_validateDelete($group);

@@ -33,7 +33,7 @@ class CleanupTest extends AppTestCase
     ];
     public $options;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
@@ -44,7 +44,7 @@ class CleanupTest extends AppTestCase
         ]];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Favorites);
         parent::tearDown();

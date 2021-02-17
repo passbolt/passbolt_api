@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Controller\Controller;
-use Cake\Event\Event;
+use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Routing\Router;
 use Passbolt\WebInstaller\Utility\WebInstaller;
@@ -31,8 +31,6 @@ use Passbolt\WebInstaller\Utility\WebInstaller;
  */
 class WebInstallerController extends Controller
 {
-    public $components = ['Flash'];
-
     /**
      * The web installer model
      */
@@ -61,6 +59,7 @@ class WebInstallerController extends Controller
         $this->stepInfo['current'] = $this->request->getRequestTarget();
         $session = $this->request->getSession();
         $this->webInstaller = new WebInstaller($session);
+        $this->loadComponent('Flash');
     }
 
     /**
@@ -71,7 +70,7 @@ class WebInstallerController extends Controller
      * @param \Cake\Event\Event $event event
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(Event $event): ?Response
+    public function beforeFilter(\Cake\Event\EventInterface $event): ?Response
     {
         parent::beforeFilter($event);
 
@@ -93,7 +92,7 @@ class WebInstallerController extends Controller
      * @param \Cake\Event\Event $event event
      * @return void
      */
-    public function beforeRender(Event $event): void
+    public function beforeRender(\Cake\Event\EventInterface $event): void
     {
         parent::beforeRender($event);
         $this->set('stepInfo', $this->stepInfo);
@@ -107,10 +106,14 @@ class WebInstallerController extends Controller
      */
     protected function getNavigationSections(): array
     {
+        $pluginLicenseEnabled = !empty(Configure::read('passbolt.plugins.license'));
         $hasAdmin = $this->webInstaller->getSettings('hasAdmin');
         $sections = [];
 
         $sections['system_check'] = __('System check');
+        if ($pluginLicenseEnabled) {
+            $sections['license_key'] = __('Subscription key');
+        }
         $sections['database'] = __('Database');
         $sections['server_keys'] = __('Server keys');
         $sections['emails'] = __('Emails');

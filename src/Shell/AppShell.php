@@ -45,9 +45,9 @@ class AppShell extends Shell
      *
      * @return void
      */
-    protected function _welcome()
+    protected function _welcome(): void
     {
-        $this->out();
+        $this->out('');
     }
 
     /**

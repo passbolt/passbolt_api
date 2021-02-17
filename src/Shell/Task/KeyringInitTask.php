@@ -24,14 +24,9 @@ use Cake\Core\Exception\Exception;
 class KeyringInitTask extends AppShell
 {
     /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * @inheritDoc
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
         $parser->setDescription(__('Installation shell for the passbolt application.'));

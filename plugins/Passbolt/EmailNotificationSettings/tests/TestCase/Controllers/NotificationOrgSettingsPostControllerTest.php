@@ -21,7 +21,7 @@ use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         EmailNotificationSettings::flushCache();
         parent::tearDown();

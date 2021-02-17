@@ -52,7 +52,7 @@ trait SubscribedEmailRedactorTrait
     /**
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this,

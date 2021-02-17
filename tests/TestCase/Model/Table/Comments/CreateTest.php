@@ -33,14 +33,14 @@ class CreateTest extends AppTestCase
 
     public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Permissions'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
         $this->Comments = TableRegistry::getTableLocator()->get('Comments', $config);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Comments);
 

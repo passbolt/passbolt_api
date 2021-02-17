@@ -25,7 +25,7 @@ use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 class ResourcesControllerLogTest extends LogIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles',
+        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles',  'app.Base/Roles',
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/ResourceTypes', 'app.Base/Permissions',
         'app.Base/Secrets', 'app.Base/Favorites',
     ];

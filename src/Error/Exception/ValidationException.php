@@ -16,14 +16,14 @@ declare(strict_types=1);
  */
 namespace App\Error\Exception;
 
-use Cake\Core\Exception\Exception;
+use Cake\Http\Exception\HttpException;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
 
 /**
  * Exception raised when a validation rule is not satisfied in a Controller.
  */
-class ValidationException extends Exception implements
+class ValidationException extends HttpException implements
     ExceptionWithErrorsDetailInterface,
     ExceptionWithTableDetailInterface
 {
@@ -31,6 +31,11 @@ class ValidationException extends Exception implements
      * @inheritDoc
      */
     protected $_defaultCode = 400;
+
+    /**
+     * @inheritDoc
+     */
+    protected $code = 400;
 
     /**
      * The validated entity.

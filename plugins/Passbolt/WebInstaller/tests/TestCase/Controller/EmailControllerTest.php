@@ -20,7 +20,7 @@ use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class EmailControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
@@ -32,7 +32,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/email');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Email configuration', $data);
+        $this->assertStringContainsString('Email configuration', $data);
     }
 
     public function testWebInstallerEmailPostSuccess()
@@ -56,7 +56,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/email', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('The data entered are not correct', $data);
+        $this->assertStringContainsString('The data entered are not correct', $data);
     }
 
     public function testWebInstallerEmailPostError_CannotSendTestEmail()
@@ -75,6 +75,6 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/email', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Email could not be sent', $data);
+        $this->assertStringContainsString('Email could not be sent', $data);
     }
 }

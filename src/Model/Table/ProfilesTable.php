@@ -56,10 +56,7 @@ class ProfilesTable extends Table
             'foreignKey' => 'user_id',
         ]);
 
-        $this->hasOne('Avatars', [
-            'foreignKey' => 'foreign_key',
-            'conditions' => ['model' => 'Avatar'],
-        ]);
+        $this->hasOne('Avatars');
     }
 
     /**

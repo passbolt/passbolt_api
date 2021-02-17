@@ -27,7 +27,7 @@ trait DigestRegisterTrait
     /**
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             DigestRegisterEvent::EVENT_NAME => $this,

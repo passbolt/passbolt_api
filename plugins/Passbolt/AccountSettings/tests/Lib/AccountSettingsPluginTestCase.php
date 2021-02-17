@@ -27,7 +27,7 @@ abstract class AccountSettingsPluginTestCase extends AppTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = require PLUGINS . 'Passbolt' . DS . 'AccountSettings' . DS . 'config' . DS . 'config.php';
