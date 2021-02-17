@@ -24,7 +24,7 @@
     PASSBOLT_SELENIUM_ACTIVE: 1
     # This is the development dummy fingerprint
     PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
-    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml --exclude-group mysqldump
+    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
   services:
   - name: $DATABASE_ENGINE_VERSION
     command:
@@ -102,7 +102,7 @@ php7.3-mysql5.7:
 .custom_functions: &custom_functions |
 
   function init_test_db() {
-    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON $DATASOURCES_TEST_DATABASE.* to $DATASOURCES_TEST_USERNAME@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
+    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
   }
 
 before_script:

@@ -24,6 +24,11 @@ use Cake\Datasource\ConnectionManager;
 class MysqlExportCommand extends PassboltCommand
 {
     /**
+     * Where the dumps get exported by default.
+     */
+    public const CACHE_DATABASE_DIRECTORY = CACHE . 'database' . DS;
+
+    /**
      * @inheritDoc
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
@@ -194,7 +199,7 @@ class MysqlExportCommand extends PassboltCommand
     {
         $dir = $args->getOption('dir');
         if (empty($dir)) {
-            $dir = CACHE . 'database' . DS;
+            $dir = self::CACHE_DATABASE_DIRECTORY;
             if (!file_exists($dir)) {
                 mkdir($dir);
             }

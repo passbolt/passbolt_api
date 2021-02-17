@@ -30,16 +30,6 @@ trait PassboltCommandTestTrait
         $cmd::$userIsRoot = false;
     }
 
-    public function makeCommandTempDir()
-    {
-        $testDir = TMP . 'command';
-        if (!file_exists($testDir)) {
-            mkdir($testDir);
-        }
-
-        return $testDir;
-    }
-
     /**
      * Delete all files in a directory.
      *

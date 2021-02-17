@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
+use App\Command\MysqlExportCommand;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Database\Exception\MissingDriverException;
 use Cake\Datasource\ConnectionManager;
@@ -37,6 +38,11 @@ class MysqlExportCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+    }
+
+    public function testEmptyCacheDatabaseFileExists()
+    {
+        $this->assertTrue(file_exists(MysqlExportCommand::CACHE_DATABASE_DIRECTORY . 'empty'));
     }
 
     /**
@@ -75,7 +81,7 @@ class MysqlExportCommandTest extends TestCase
      */
     public function testMysqlExportCommandStory()
     {
-        $testDir = $this->makeCommandTempDir();
+        $testDir = MysqlExportCommand::CACHE_DATABASE_DIRECTORY;
         $this->emptyDirectory($testDir);
 
         $testFile = 'foo';
