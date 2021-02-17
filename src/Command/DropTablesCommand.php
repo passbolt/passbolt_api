@@ -14,19 +14,20 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
-use App\Shell\AppShell;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Datasource\ConnectionManager;
 
-class DropTablesTask extends AppShell
+class DropTablesCommand extends PassboltCommand
 {
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser
             ->setDescription(__('Drop all the tables. Dangerous but useful for a full reinstall.'))
             ->addOption('datasource', [
@@ -39,22 +40,21 @@ class DropTablesTask extends AppShell
     }
 
     /**
-     * Main drop tables task
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $datasource = $this->param('datasource');
+        parent::execute($args, $io);
+
+        $datasource = $args->getOption('datasource');
         $connection = ConnectionManager::get($datasource);
-        $tables = $connection->execute('show tables');
-        $tables = $tables->fetchAll();
+        $tables = $connection->execute('show tables')->fetchAll();
         foreach ($tables as $table) {
-            $this->out(__('Dropping table ' . $table[0]));
+            $io->out(__('Dropping table ' . $table[0]));
             $connection->query('drop table ' . $table[0]);
         }
-        $this->_success(__('{0} tables dropped', count($tables)));
+        $this->success(__('{0} tables dropped', count($tables)), $io);
 
-        return true;
+        return $this->successCode();
     }
 }

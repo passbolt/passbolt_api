@@ -26,7 +26,7 @@ use Cake\Utility\Hash;
 
 class ShareDryRunControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles',  'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions'];
 
     public function setUp(): void
     {

@@ -14,21 +14,25 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
-use App\Shell\AppShell;
+use App\Model\Entity\Role;
 use App\Utility\Healthchecks;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
+use Migrations\Command\MigrationsMigrateCommand;
+use PassboltTestData\Command\InsertCommand;
 
-class InstallTask extends AppShell
+class InstallCommand extends PassboltCommand
 {
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser
             ->setDescription(__('Installation shell for the passbolt application.'))
             ->addOption('quick', [
@@ -75,89 +79,90 @@ class InstallTask extends AppShell
     }
 
     /**
-     * Main shell entry point
-     *
-     * @return bool true if successful
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
         // Root user is not allowed to execute this command.
         // This command needs to be executed with the same user as the webserver.
-        if (!$this->assertNotRoot()) {
-            return false;
+        if (!$this->assertNotRoot($io)) {
+            return $this->errorCode();
         }
 
         // Quick mode - exit on success
-        if ($this->_quickInstall()) {
-            return true;
+        if ($args->getOption('quick')) {
+            return $this->quickInstall($args, $io);
         }
 
         // Normal mode
-        if (!$this->_healthchecks()) {
-            return false;
+        if (!$this->healthchecks($args, $io)) {
+            return $this->errorCode();
         }
-        if (!$this->_schemaCleanup()) {
-            return false;
+        if (!$this->schemaCleanup($args, $io)) {
+            return $this->errorCode();
         }
-        if (!$this->_schema()) {
-            return false;
+        if (!$this->schema($args, $io)) {
+            return $this->errorCode();
         }
-        if (!$this->_dataImport()) {
-            return false;
+        if (!$this->dataImport($args, $io)) {
+            return $this->errorCode();
         }
-        if (!$this->_keyringInit()) {
-            return false;
+        if ($this->keyringInit($args, $io) === $this->errorCode()) {
+            return $this->errorCode();
         }
-        if (!$this->_userRegistration()) {
-            return false;
+        if (!$this->userRegistration($args, $io)) {
+            return $this->errorCode();
         }
 
         // Quick mode - backup for next time
-        if (!$this->_quickBackup()) {
-            return false;
+        if (!$this->quickBackup($args, $io)) {
+            return $this->errorCode();
         }
 
         // Winning!
-        $this->out('');
-        $this->_success(__('Passbolt installation success! Enjoy! ☮'));
-        $this->out('');
+        $io->nl();
+        $this->success(__('Passbolt installation success! Enjoy! ☮'), $io);
+        $io->nl();
 
-        return true;
+        return $this->successCode();
     }
 
     /**
      * Handle the user registration
      * Dispatch the task to register_user with admin option
      *
+     * @param \Cake\Console\Arguments $args Arguments
+     * @param \Cake\Console\ConsoleIo $io ConsoleIo
      * @return bool operation result
      */
-    protected function _userRegistration()
+    protected function userRegistration(Arguments $args, ConsoleIo $io): bool
     {
-        if ($this->param('no-admin') === false) {
-            $username = $this->param('admin-username');
-            $firstName = $this->param('admin-first-name');
-            $lastName = $this->param('admin-last-name');
+        if (!$args->getOption('no-admin')) {
+            $username = $args->getOption('admin-username');
+            $firstName = $args->getOption('admin-first-name');
+            $lastName = $args->getOption('admin-last-name');
 
-            $this->out('');
-            $this->out(__('Registering the admin user'));
-            $this->hr();
+            $io->nl();
+            $io->out(__('Registering the admin user'));
+            $io->hr();
 
-            $cmd = 'passbolt register_user -r admin';
-            if ($this->interactive) {
-                $cmd .= ' -i';
-            }
-            if (!is_null($username)) {
-                $cmd .= ' -u ' . $username;
-            }
-            if (!is_null($firstName)) {
-                $cmd .= ' -f ' . $firstName;
-            }
-            if (!is_null($lastName)) {
-                $cmd .= ' -l ' . $lastName;
-            }
-            $cmd = $this->_formatCmd($cmd);
+            $options = ['role' => Role::ADMIN];
+            $options['interactive'] = $this->interactive ?? false;
+            $options['username'] = $username;
+            $options['first-name'] = $firstName;
+            $options['last-name'] = $lastName;
+            $options['quiet'] = $args->getOption('quiet');
 
-            return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
+            // At the time, CakePHP does not support passing options with values to $this->RegisterUserCommand
+            // Therefore the little trick here:
+            $args = new Arguments([], $options, []);
+            $command = new RegisterUserCommand();
+            $command->initialize();
+            $result = $command->execute($args, $io);
+
+            return $result === self::CODE_SUCCESS;
         }
 
         return true;
@@ -167,17 +172,21 @@ class InstallTask extends AppShell
      * Handle import of data if parameter is set
      * Dispatch to plugin PassboltTestData.data task
      *
+     * @param \Cake\Console\Arguments $args Arguments
+     * @param \Cake\Console\ConsoleIo $io ConsoleIo
      * @return bool status
      */
-    protected function _dataImport()
+    protected function dataImport(Arguments $args, ConsoleIo $io): bool
     {
-        $data = $this->param('data');
-        if (isset($data)) {
-            $this->out('');
-            $this->out(__('Installing additional data'));
-            $this->hr();
-            $cmd = $this->_formatCmd('passbolt data ' . $data);
-            $this->dispatchShell($cmd);
+        if ($args->getOption('data')) {
+            $io->nl();
+            $io->out(__('Installing additional data'));
+            $io->hr();
+            $options = $this->formatOptions($args);
+            $options['scenario'] = $args->getOption('data');
+            $result = $this->executeCommand(InsertCommand::class, $options, $io);
+
+            return $result === $this->successCode();
         }
 
         return true;
@@ -187,43 +196,44 @@ class InstallTask extends AppShell
      * Try to perform a quick install steps
      * Dispatch to mysql_import job
      *
-     * @return bool
+     * @param \Cake\Console\Arguments $args Arguments
+     * @param \Cake\Console\ConsoleIo $io Console IO.
+     * @return int|null
      */
-    protected function _quickInstall()
+    protected function quickInstall(Arguments $args, ConsoleIo $io): ?int
     {
         // No healthcheck
         // No admin user install
         // etc.
         // Import sql backup
-        if ($this->param('quick')) {
-            $this->_keyringInit();
-            $cmd = $this->_formatCmd('passbolt mysql_import');
-            $code = $this->dispatchShell($cmd);
-            if ($code === self::CODE_SUCCESS) {
-                $this->_success(__('Passbolt installation success! Enjoy! ☮'));
 
-                return true;
-            }
+        $this->keyringInit($args, $io);
+        $options = $this->formatOptions($args);
+        $code = $this->executeCommand(MysqlImportCommand::class, $options, $io);
+        if ($code === $this->successCode()) {
+            $this->success(__('Passbolt installation success! Enjoy! ☮'), $io);
         }
 
-        return false;
+        return $code;
     }
 
     /**
      * Prepare a backup for next quick install
      *
+     * @param \Cake\Console\Arguments $args Arguments
+     * @param \Cake\Console\ConsoleIo $io ConsoleIo
      * @return bool true if shell exited with success code
      */
-    protected function _quickBackup()
+    protected function quickBackup(Arguments $args, ConsoleIo $io): bool
     {
-        if ($this->param('backup')) {
-            $this->out('');
-            $this->out(__('Backup data for next quick reinstall.'));
-            $this->hr();
-            $this->_keyringInit();
-            $cmd = $this->_formatCmd('passbolt mysql_export --clear-previous');
+        if ($args->getOption('backup')) {
+            $io->nl();
+            $io->out(__('Backup data for next quick reinstall.'));
+            $io->hr();
+            $this->keyringInit($args, $io);
+            $options = $this->formatOptions($args, ['--clear-previous']);
 
-            return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
+            return $this->executeCommand(MysqlExportCommand::class, $options, $io) === self::CODE_SUCCESS;
         }
 
         return true;
@@ -232,58 +242,65 @@ class InstallTask extends AppShell
     /**
      * Dispatch drop_tables task
      *
+     * @param \Cake\Console\Arguments $args Arguments
+     * @param \Cake\Console\ConsoleIo $io ConsoleIo
      * @return bool true if shell exited with success code
      */
-    protected function _schemaCleanup()
+    protected function schemaCleanup(Arguments $args, ConsoleIo $io): bool
     {
-        $this->out('');
-        $this->out(__('Cleaning up existing tables if any.'));
-        $this->hr();
-        $cmd = $this->_formatCmd('passbolt drop_tables');
+        $io->nl();
+        $io->out(__('Cleaning up existing tables if any.'));
+        $io->hr();
+        $options = $this->formatOptions($args);
 
-        return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
+        return $this->executeCommand(DropTablesCommand::class, $options, $io) === $this->successCode();
     }
 
     /**
      * Run the migrations
      *
+     * @param \Cake\Console\Arguments $args Arguments
+     * @param \Cake\Console\ConsoleIo $io ConsoleIo
      * @return bool true if shell exited with success code
      */
-    protected function _schema()
+    protected function schema(Arguments $args, ConsoleIo $io): bool
     {
-        $this->out('');
-        $this->out(__('Install the schema and default data.'));
-        $this->hr();
-        $cmd = $this->_formatCmd('migrations migrate --no-lock');
+        $io->nl();
+        $io->out(__('Install the schema and default data.'));
+        $io->hr();
+        $options = $this->formatOptions($args, ['--no-lock']);
 
-        return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
+        return $this->executeCommand(MigrationsMigrateCommand::class, $options, $io) === $this->successCode();
     }
 
     /**
      * Import the server key in the keyring
      * Dispatch to keyring init task
      *
-     * @return bool true if shell exited with success code
+     * @param \Cake\Console\Arguments $args Arguments
+     * @param \Cake\Console\ConsoleIo $io Console IO
+     * @return int|null true if shell exited with success code
      */
-    protected function _keyringInit()
+    protected function keyringInit(Arguments $args, ConsoleIo $io): ?int
     {
-        $this->out('');
-        $this->out(__('Import the server private key in the keyring'));
-        $this->hr();
-        $cmd = $this->_formatCmd('passbolt keyring_init');
+        $io->nl();
+        $io->out(__('Import the server private key in the keyring'));
+        $io->hr();
 
-        return $this->dispatchShell($cmd) === self::CODE_SUCCESS;
+        return $this->executeCommand(KeyringInitCommand::class, $this->formatOptions($args), $io);
     }
 
     /**
      * Installation healthchecks
      *
+     * @param \Cake\Console\Arguments $args Arguments.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return bool status success
      */
-    protected function _healthchecks()
+    protected function healthchecks(Arguments $args, ConsoleIo $io): bool
     {
-        $this->out('');
-        $this->out(__('Running baseline checks, please wait...'));
+        $io->nl();
+        $io->out(__('Running baseline checks, please wait...'));
         try {
             // Make sure the baseline config files are present
             $checks = Healthchecks::configFiles();
@@ -341,8 +358,8 @@ class InstallTask extends AppShell
                 throw new Exception(__('The server public key should have an email id.'));
             }
         } catch (Exception $e) {
-            $this->_error($e->getMessage());
-            $this->_error(__('Please run ./bin/cake passbolt healthcheck for more information and help.'));
+            $this->error($e->getMessage(), $io);
+            $this->error(__('Please run ./bin/cake passbolt healthcheck for more information and help.'), $io);
 
             return false;
         }
@@ -350,23 +367,23 @@ class InstallTask extends AppShell
         // Database checks
         $checks = Healthchecks::database();
         if (!$checks['database']['connect'] || !$checks['database']['supportedBackend']) {
-            $this->_error(__('There are some issues with the database configuration.'));
-            $this->_error(__('Please run ./bin/cake passbolt healthcheck for more information and help.'));
+            $this->error(__('There are some issues with the database configuration.'), $io);
+            $this->error(__('Please run ./bin/cake passbolt healthcheck for more information and help.'), $io);
 
             return false;
         }
         if ($checks['database']['tablesCount']) {
-            if (!$this->param('force')) {
+            if (!$args->getOption('force')) {
                 $msg = __('Some tables are already present in the database.') . ' ';
                 $msg .= __('A new installation would override existing data.');
-                $this->_error($msg);
-                $this->_error(__('Please use --force to proceed anyway.'));
+                $this->error($msg, $io);
+                $this->error(__('Please use --force to proceed anyway.'), $io);
 
                 return false;
             }
         }
 
-        $this->_success(__('Critical healthchecks are OK'));
+        $this->success(__('Critical healthchecks are OK'), $io);
 
         return true;
     }

@@ -19,6 +19,7 @@
   <testsuites>
     <testsuite name="app">
       <directory>./tests/TestCase</directory>
+      <exclude>./tests/TestCase/Command</exclude>
     </testsuite>
     <testsuite name="plugins">
       <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
@@ -27,8 +28,9 @@
       <directory>./plugins/Passbolt/EmailDigest/tests/TestCase</directory>
       <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
     </testsuite>
-    <testsuite name="web-installer">
+    <testsuite name="installers">
       <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
+      <directory>./tests/TestCase/Command</directory>
     </testsuite>
   </testsuites>
   <!-- Setup a listener for fixtures -->

@@ -62,7 +62,7 @@ class ResourcesShareServiceTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
-        'app.Base/Users', 'app.Base/Profiles',  'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/GroupsUsers', 'app.Base/Groups',
     ];
 

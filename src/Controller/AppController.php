@@ -20,6 +20,7 @@ namespace App\Controller;
 use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
@@ -85,7 +86,7 @@ class AppController extends Controller
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $safeMode = !Configure::read('debug');
         $safeMode = $safeMode && preg_match('/^https/', Configure::read('App.fullBaseUrl'));

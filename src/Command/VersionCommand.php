@@ -14,35 +14,36 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
-use App\Shell\AppShell;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 
-class VersionTask extends AppShell
+class VersionCommand extends PassboltCommand
 {
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Print version number for the passbolt application.'));
 
         return $parser;
     }
 
     /**
-     * Main debug email task
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
         $v = 'Passbolt ' . strtoupper(Configure::read('passbolt.edition')) . ' ';
         $v .= Configure::read('passbolt.version') . "\n" . 'Cakephp ' . Configure::version();
-        $this->out($v);
+        $io->out($v);
 
-        return true;
+        return $this->successCode();
     }
 }

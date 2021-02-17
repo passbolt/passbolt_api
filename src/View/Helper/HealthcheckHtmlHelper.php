@@ -16,13 +16,13 @@ declare(strict_types=1);
  */
 namespace App\View\Helper;
 
-use App\Shell\Task\HealthcheckTask;
+use App\Command\HealthcheckCommand;
 
 /**
  * HealthcheckHtmlHelper
  * Shenanigans to reuse outputs from app/Console/healthcheckTask.php
  */
-class HealthcheckHtmlHelper extends HealthcheckTask
+class HealthcheckHtmlHelper extends HealthcheckCommand
 {
     /**
      * HealthcheckHtmlHelper constructor

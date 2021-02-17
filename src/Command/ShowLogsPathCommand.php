@@ -14,28 +14,33 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Shell\Task;
+namespace App\Command;
 
-use App\Shell\AppShell;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 
-class ShowLogsPathTask extends AppShell
+class ShowLogsPathCommand extends PassboltCommand
 {
     /**
      * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
-        $parser->setDescription(__('Shows error logs path for the current environment'));
+        $parser->setDescription(__('Shows error logs path for the current environment.'));
 
         return $parser;
     }
 
     /**
-     * @return void
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $this->out(LOGS . 'error.log');
+        parent::execute($args, $io);
+
+        $io->success(LOGS . 'error.log');
+
+        return $this->successCode();
     }
 }
