@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace Passbolt\Tags\Test\TestCase\Model\Table\Users;
 
-use App\Model\Entity\Permission;
 use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
@@ -32,7 +33,7 @@ class SoftDeleteTest extends TagTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
         'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
+        'app.Base/ResourceTypes', 'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
@@ -43,7 +44,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
     }
 
-    public function testUsersSoftDeleteAlsoDeletePersonalTagsSuccess()
+    public function testTagsUsersSoftDeleteAlsoDeletePersonalTagsSuccess()
     {
         $ada = $this->Users->get(UuidFactory::uuid('user.id.ada'));
         $this->Users->softDelete($ada, ['checkRules' => false]);
@@ -61,7 +62,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags->get(UuidFactory::uuid('tag.id.fox-trot'));
     }
 
-    public function testUsersSoftDeleteAlsoDeleteSharedTagsSuccess()
+    public function testTagsUsersSoftDeleteAlsoDeleteSharedTagsSuccess()
     {
         $ada = $this->Users->get(UuidFactory::uuid('user.id.ada'));
         $this->Users->softDelete($ada, ['checkRules' => false]);
@@ -71,7 +72,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags->get(UuidFactory::uuid('tag.id.#echo'));
     }
 
-    public function testUsersSoftDeleteAlsoDeletePersonalTagsSuccess2()
+    public function testTagsUsersSoftDeleteAlsoDeletePersonalTagsSuccess2()
     {
         //Deleting Betty and Ada should delete alpha
         $ada = $this->Users->get(UuidFactory::uuid('user.id.ada'));

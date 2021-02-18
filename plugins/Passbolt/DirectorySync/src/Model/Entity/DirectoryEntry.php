@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -15,8 +17,6 @@
 
 namespace Passbolt\DirectorySync\Model\Entity;
 
-use App\Model\Entity\Group;
-use App\Model\Entity\User;
 use Cake\ORM\Entity;
 use Passbolt\DirectorySync\Utility\Alias;
 
@@ -34,7 +34,6 @@ use Passbolt\DirectorySync\Utility\Alias;
  */
 class DirectoryEntry extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -57,7 +56,7 @@ class DirectoryEntry extends Entity
     /**
      * Get associated entity.
      *
-     * @return Group|User|null
+     * @return \App\Model\Entity\Group|\Passbolt\DirectorySync\Model\Entity\User|null
      */
     public function getAssociatedEntity()
     {

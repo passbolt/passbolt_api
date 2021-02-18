@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -16,18 +18,18 @@ namespace Passbolt\DirectorySync\Utility;
 
 class Alias
 {
-    const STATUS_SUCCESS = 'success';
-    const STATUS_IGNORE = 'ignore';
-    const STATUS_ERROR = 'error';
-    const STATUS_SYNC = 'sync';
+    public const STATUS_SUCCESS = 'success';
+    public const STATUS_IGNORE = 'ignore';
+    public const STATUS_ERROR = 'error';
+    public const STATUS_SYNC = 'sync';
 
-    const MODEL_USERS = 'Users';
-    const MODEL_GROUPS = 'Groups';
-    const MODEL_GROUPS_USERS = 'GroupsUsers';
-    const MODEL_DIRECTORY_ENTRIES = 'DirectoryEntries';
+    public const MODEL_USERS = 'Users';
+    public const MODEL_GROUPS = 'Groups';
+    public const MODEL_GROUPS_USERS = 'GroupsUsers';
+    public const MODEL_DIRECTORY_ENTRIES = 'DirectoryEntries';
 
-    const ACTION_CREATE = 'create';
-    const ACTION_DELETE = 'delete';
-    const ACTION_UPDATE = 'update';
-    const ACTION_SYNC = 'update';
+    public const ACTION_CREATE = 'create';
+    public const ACTION_DELETE = 'delete';
+    public const ACTION_UPDATE = 'update';
+    public const ACTION_SYNC = 'update';
 }

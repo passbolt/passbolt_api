@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,23 +25,26 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * @property \App\Model\Table\GpgkeysTable $Gpgkeys
+ * @property \App\Model\Table\UsersTable $Users
+ */
 class SetupCompleteController extends AppController
 {
-    const COMPLETE_SUCCESS_EVENT_NAME = 'SetupCompleteController.complete.success';
-
-    private $_data; // formated request data
+    public const COMPLETE_SUCCESS_EVENT_NAME = 'SetupCompleteController.complete.success';
 
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
+     * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow('complete');
 
-        $this->loadModel('GpgKey');
+        $this->loadModel('Gpgkeys');
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('Users');
 
@@ -50,14 +55,13 @@ class SetupCompleteController extends AppController
      * Setup completion
      * Save the user gpg public key and set the account to active
      *
-     * @throws BadRequestException if the user id is not a valid uuid
-     * @throws BadRequestException if the user was deleted, is already active or does not exist
-     * @throws BadRequestException if no authentication token was provided
-     * @throws BadRequestException if the authentication token is not a uuid
-     * @throws BadRequestException if the authentication token is expired or invalid
-     * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
-     * @throws InternalErrorException if something went wrong when updating the data
-     *
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a valid uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the user was deleted, is already active or does not exist
+     * @throws \Cake\Http\Exception\BadRequestException if no authentication token was provided
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
+     * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
+     * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
      * @param string $userId uuid of the user
      * @return void
      */
@@ -103,14 +107,14 @@ class SetupCompleteController extends AppController
      *
      * @param string $userId the user uuid the token belongs to
      * @param string $tokenType AuthenticationToken::TYPE_*
-     * @throws BadRequestException if no authentication token was provided
-     * @throws BadRequestException if the authentication token is not a uuid
-     * @throws BadRequestException if the authentication token is expired or invalid
-     * @return object Token entity
+     * @throws \Cake\Http\Exception\BadRequestException if no authentication token was provided
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
+     * @return \App\Model\Entity\AuthenticationToken
      */
     protected function _getAndAssertToken(string $userId, string $tokenType)
     {
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
             throw new BadRequestException(__('An authentication token must be provided.'));
         }
@@ -121,6 +125,8 @@ class SetupCompleteController extends AppController
         if (!$this->AuthenticationTokens->isValid($tokenId, $userId, $tokenType)) {
             throw new BadRequestException(__('The authentication token is not valid or has expired.'));
         }
+
+        /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = $this->AuthenticationTokens->getByToken($tokenId);
 
         return $token;
@@ -130,9 +136,9 @@ class SetupCompleteController extends AppController
      * Return the user for matching the requesting id
      *
      * @param string $userId the user uuid
-     * @throws BadRequestException if the user id is not a valid uuid
-     * @throws BadRequestException if the user was deleted, is already active or does not exist
-     * @return bool if user id is valid
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a valid uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the user was deleted, is already active or does not exist
+     * @return \App\Model\Entity\User user entity
      */
     protected function _getAndAssertUser(string $userId)
     {
@@ -152,19 +158,18 @@ class SetupCompleteController extends AppController
      * Return the gpg key entity for matching the requesting id
      *
      * @param string $userId the user uuid
-     * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
-     * @return object Gpgkey entity
+     * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
+     * @return \App\Model\Entity\Gpgkey entity
      */
     protected function _getAndAssertGpgkey(string $userId)
     {
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
         $armoredKey = $data['gpgkey']['armored_key'];
 
         if (empty($armoredKey)) {
             throw new BadRequestException(__('An OpenPGP key must be provided.'));
         }
 
-        $this->loadModel('Gpgkeys');
         if (!$this->Gpgkeys->isParsableArmoredPublicKey($armoredKey)) {
             throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
         }
@@ -175,36 +180,5 @@ class SetupCompleteController extends AppController
         }
 
         return $gpgkey;
-    }
-
-    /**
-     * Format request data formatted for API v1 to API v2 format
-     * Example:
-     * - API v1: ['Gpgkey' => ['key' => '...'], 'AuthenticationToken' => [...]]
-     * - API v2: ['gpgkey' => ['armored_key' => '...']', 'authenticationtoken' => [...]]
-     *
-     * @return null|array $data
-     */
-    protected function _formatRequestData()
-    {
-        if (!isset($this->_data)) {
-            $data = $this->request->getData();
-            if (isset($data['Gpgkey']) || isset($data['AuthenticationToken'])) {
-                if (isset($data['Gpgkey']['armored_key'])) {
-                    $this->_data['gpgkey']['armored_key'] = $data['Gpgkey']['armored_key'];
-                }
-                if (isset($data['Gpgkey']['key'])) {
-                    // legacy name v1 backward compatibility support
-                    $this->_data['gpgkey']['armored_key'] = $data['Gpgkey']['key'];
-                }
-                if (isset($data['AuthenticationToken'])) {
-                    $this->_data['authenticationtoken'] = $data['AuthenticationToken'];
-                }
-            } else {
-                $this->_data = $data;
-            }
-        }
-
-        return $this->_data;
     }
 }

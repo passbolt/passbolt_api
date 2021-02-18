@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -30,15 +32,13 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Groups
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $DirectoryIgnore
- *
- * @method DirectoryEntry get($primaryKey, $options = [])
- * @method DirectoryEntry newEntity($data = null, array $options = [])
- * @method DirectoryEntry[] newEntities(array $data, array $options = [])
- * @method DirectoryEntry|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method DirectoryEntry patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method DirectoryEntry[] patchEntities($entities, array $data, array $options = [])
- * @method DirectoryEntry findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry get($primaryKey, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class DirectoryEntriesTable extends Table
@@ -46,7 +46,7 @@ class DirectoryEntriesTable extends Table
     use TableCleanupTrait;
     use UsersCleanupTrait;
 
-    const DN_MAX_LENGTH = 255;
+    public const DN_MAX_LENGTH = 255;
 
     /**
      * Initialize method
@@ -93,7 +93,7 @@ class DirectoryEntriesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->scalar('id')
@@ -102,7 +102,11 @@ class DirectoryEntriesTable extends Table
 
         $validator
             ->utf8('directory_name', __('The directory name is not a valid utf8 string.'))
-            ->lengthBetween('directory_name', [0, self::DN_MAX_LENGTH], __('The directory_name length should be maximum {0} characters.', self::DN_MAX_LENGTH))
+            ->lengthBetween(
+                'directory_name',
+                [0, self::DN_MAX_LENGTH],
+                __('The directory_name length should be maximum {0} characters.', self::DN_MAX_LENGTH)
+            )
             ->requirePresence('directory_name', 'create', __('A directory_name is required.'))
             ->notEmpty('directory_name', __('The directory_name cannot be empty.'));
 
@@ -132,8 +136,8 @@ class DirectoryEntriesTable extends Table
 
     /**
      * Return a DirectoryEntry entity.
-     * @param array $data data
      *
+     * @param array $data data
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry
      */
     public function buildEntity(array $data)
@@ -153,11 +157,11 @@ class DirectoryEntriesTable extends Table
     /**
      * Update the foreign key
      *
-     * @param DirectoryEntry $entity entity
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entity entity
      * @param string $foreignKey uuid
-     * @return DirectoryEntry|bool
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|bool
      */
-    public function updateForeignKey(DirectoryEntry $entity, string $foreignKey = null)
+    public function updateForeignKey(DirectoryEntry $entity, ?string $foreignKey = null)
     {
         $entity->foreign_key = $foreignKey;
 
@@ -167,11 +171,11 @@ class DirectoryEntriesTable extends Table
     /**
      * Update the foreign key
      *
-     * @param DirectoryEntry $entity entity
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entity entity
      * @param string $directoryName DN or equivalent
-     * @return DirectoryEntry|bool
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|bool
      */
-    public function updateDirectoryName(DirectoryEntry $entity, string $directoryName = null)
+    public function updateDirectoryName(DirectoryEntry $entity, ?string $directoryName = null)
     {
         $entity = $this->get($entity->id);
         $this->patchEntity($entity, ['directory_name' => $directoryName], [
@@ -189,9 +193,9 @@ class DirectoryEntriesTable extends Table
 
     /**
      * Build entity from data
-     * @param array $data data
      *
-     * @return DirectoryEntry
+     * @param array $data data
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry
      */
     public function buildEntityFromData(array $data)
     {
@@ -208,7 +212,7 @@ class DirectoryEntriesTable extends Table
      * Create a new directory entry.
      *
      * @param array $data data
-     * @return bool|DirectoryEntry
+     * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryEntry
      */
     public function create(array $data)
     {
@@ -239,7 +243,7 @@ class DirectoryEntriesTable extends Table
      *
      * @param array $data data
      * @param string $model model
-     * @return array|bool|DirectoryEntry
+     * @return array|bool|\Passbolt\DirectorySync\Model\Entity\DirectoryEntry
      */
     public function updateOrCreate(array $data, string $model)
     {
@@ -270,7 +274,7 @@ class DirectoryEntriesTable extends Table
      * @param array $directoryIds directory ids list
      * @return mixed
      */
-    public function lookupEntriesForDeletion(string $model, array $directoryIds = null)
+    public function lookupEntriesForDeletion(string $model, ?array $directoryIds = null)
     {
         $query = $this->find()
             ->select()

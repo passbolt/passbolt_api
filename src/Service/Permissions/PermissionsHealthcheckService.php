@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,28 +20,25 @@ use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
-use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 
 class PermissionsHealthcheckService extends AbstractHealthcheckService
 {
-    const CATEGORY = 'data';
-    const NAME = 'Permissions';
-    const CHECK_VALIDATES = 'Can validate';
+    public const CATEGORY = 'data';
+    public const NAME = 'Permissions';
+    public const CHECK_VALIDATES = 'Can validate';
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $table;
 
     /**
      * Permissions Healthcheck constructor.
      *
-     * @param OpenPGPBackend $gpg gpg backend to use
-     * @param PermissionsTable $table secret table
+     * @param \App\Model\Table\PermissionsTable|null $table secret table
      */
-    public function __construct($gpg = null, $table = null)
+    public function __construct(?PermissionsTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Permissions');
@@ -49,7 +48,7 @@ class PermissionsHealthcheckService extends AbstractHealthcheckService
     /**
      * @inheritDoc
      */
-    public function check()
+    public function check(): array
     {
         $records = $this->table->find()->all();
 
@@ -63,7 +62,7 @@ class PermissionsHealthcheckService extends AbstractHealthcheckService
     /**
      * Validates
      *
-     * @param Permission $permission permission
+     * @param \App\Model\Entity\Permission $permission permission
      * @return void
      */
     private function canValidate(Permission $permission)
@@ -72,11 +71,11 @@ class PermissionsHealthcheckService extends AbstractHealthcheckService
         $error = $copy->getErrors();
 
         if (count($error)) {
-            $this->checks[self::CHECK_VALIDATES]->fail()
-            ->addDetail(__('Validation failed for permission {0}. {1}', $permission->id, json_encode($copy->getErrors())), Healthcheck::STATUS_ERROR);
+            $msg = __('Validation failed for permission {0}. {1}', $permission->id, json_encode($copy->getErrors()));
+            $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         } else {
-            $this->checks[self::CHECK_VALIDATES]
-                ->addDetail(__('Validation success for permission {0}', $permission->id), Healthcheck::STATUS_SUCCESS);
+            $msg = __('Validation success for permission {0}', $permission->id);
+            $this->checks[self::CHECK_VALIDATES]->addDetail($msg, Healthcheck::STATUS_SUCCESS);
         }
     }
 }

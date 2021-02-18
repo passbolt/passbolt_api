@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -72,115 +74,74 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertContains($activeUserId, $usersIds);
     }
 
-    public function testUsersIndexGetApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v1');
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-        $foundAda = $foundThelma = false;
-
-        foreach ($this->_responseJsonBody as $user) {
-            if ($user->User->id === UuidFactory::uuid('user.id.ada')) {
-                $foundAda = true;
-                $this->assertObjectHasAttribute('User', $user);
-                $this->assertUserAttributes($user->User);
-
-                // Gpgkey
-                $this->assertObjectHasAttribute('Gpgkey', $user);
-                $this->assertGpgkeyAttributes($user->Gpgkey);
-                // Profile
-                $this->assertObjectHasAttribute('Profile', $user);
-                $this->assertProfileAttributes($user->Profile);
-                // Role
-                $this->assertObjectHasAttribute('Role', $user);
-                $this->assertRoleAttributes($user->Role);
-
-                // GroupUser
-                $this->assertObjectHasAttribute('GroupUser', $user);
-                $this->assertEquals(count($user->GroupUser), 0, 'Add should not belong to any group');
-            } elseif ($user->User->id === UuidFactory::uuid('user.id.thelma')) {
-                $foundThelma = true;
-                // GroupUser
-                $this->assertObjectHasAttribute('GroupUser', $user);
-                $this->assertGreaterThan(1, count($user->GroupUser));
-                $this->assertGroupUserAttributes($user->GroupUser[0]);
-            }
-            if ($foundAda && $foundThelma) {
-                break;
-            }
-        }
-        $this->assertTrue($foundThelma && $foundAda);
-    }
-
     public function testUsersIndexOrderByUsername()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v1&order=User.username');
+        $this->getJson('/users.json?api-version=v2&order=User.username');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.ada'));
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.ada'));
 
-        $this->getJson('/users.json?api-version=v1&order[]=User.username DESC');
+        $this->getJson('/users.json?api-version=v2&order[]=User.username DESC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.yvonne'));
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.yvonne'));
     }
 
     public function testUsersIndexOrderByFirstName()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v1&order[]=Profile.first_name');
+        $this->getJson('/users.json?api-version=v2&order[]=Profile.first_name');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.ada'));
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.ada'));
 
-        $this->getJson('/users.json?api-version=v1&order=Profile.first_name DESC');
+        $this->getJson('/users.json?api-version=v2&order=Profile.first_name DESC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.yvonne'));
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.yvonne'));
     }
 
     public function testUsersIndexOrderByLastName()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v1&order=Profile.last_name');
+        $this->getJson('/users.json?api-version=v2&order=Profile.last_name');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.frances'));
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.frances'));
 
-        $this->getJson('/users.json?api-version=v1&order[]=Profile.last_name DESC');
+        $this->getJson('/users.json?api-version=v2&order[]=Profile.last_name DESC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.wang'));
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.wang'));
     }
 
     public function testUsersIndexOrderByCreated()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v1&order[]=User.created');
+        $this->getJson('/users.json?api-version=v2&order[]=User.created');
         $this->assertSuccess();
-        $this->assertEquals(UuidFactory::uuid('user.id.ada'), $this->_responseJsonBody[0]->User->id);
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.ada'));
 
-        $this->getJson('/users.json?api-version=v1&order[]=User.created DESC&order[]=User.username ASC');
+        $this->getJson('/users.json?api-version=v2&order[]=User.created DESC&order[]=User.username ASC');
         $this->assertSuccess();
-        $this->assertEquals(UuidFactory::uuid('user.id.admin'), $this->_responseJsonBody[0]->User->id);
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.admin'));
     }
 
     public function testUsersIndexOrderByModified()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v1&order[]=User.modified');
+        $this->getJson('/users.json?api-version=v2&order[]=User.modified');
         $this->assertSuccess();
-        $this->assertEquals(UuidFactory::uuid('user.id.ada'), $this->_responseJsonBody[0]->User->id);
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.ada'));
 
-        $this->getJson('/users.json?api-version=v1&order[]=User.modified DESC&order[]=User.username ASC');
+        $this->getJson('/users.json?api-version=v2&order[]=User.modified DESC&order[]=User.username ASC');
         $this->assertSuccess();
-        $this->assertEquals(UuidFactory::uuid('user.id.admin'), $this->_responseJsonBody[0]->User->id);
+        $this->assertEquals($this->_responseJsonBody[0]->id, UuidFactory::uuid('user.id.admin'));
     }
 
     public function testUsersIndexOrderByError()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v1&order[]=Users.modified');
+        $this->getJson('/users.json?order[]=Users.modified');
         $this->assertResponseError(400);
-        $this->getJson('/users.json?api-version=v1&order[]=User.modified RAND');
+        $this->getJson('/users.json?order[]=User.modified RAND');
         $this->assertResponseError(400);
-        $this->getJson('/users.json?api-version=v1&order[]=');
+        $this->getJson('/users.json?order[]=');
         $this->assertResponseError(400);
     }
 
@@ -188,7 +149,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $freelancersId = UuidFactory::uuid('group.id.freelancer');
-        $this->getJson('/users.json?api-version=v1&filter[has-groups]=' . $freelancersId);
+        $this->getJson('/users.json?filter[has-groups]=' . $freelancersId);
         $this->assertSuccess();
         $freelancers = ['jean', 'kathleen', 'lynne', 'marlyn', 'nancy'];
         $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
@@ -204,7 +165,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $freelancers = ['ping', 'thelma', 'ursula', 'wang'];
         $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
 
-        $this->getJson('/users.json?api-version=v1&filter[has-groups][]=' . $it . '&filter[has-groups][]=' . $hr);
+        $this->getJson('/users.json?filter[has-groups][]=' . $it . '&filter[has-groups][]=' . $hr);
         $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
     }
@@ -216,17 +177,17 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $no = UuidFactory::uuid('group.id.nobueno');
 
         // Invalid format trigger BadRequest
-        $this->getJson('/users.json?api-version=v1&filter[has-groups]');
+        $this->getJson('/users.json?filter[has-groups]');
         $this->assertError(400);
-        $this->getJson('/users.json?api-version=v1&filter[has-groups]=');
+        $this->getJson('/users.json?filter[has-groups]=');
         $this->assertError(400);
-        $this->getJson('/users.json?api-version=v1&filter[has-groups]=nope');
+        $this->getJson('/users.json?filter[has-groups]=nope');
         $this->assertError(400);
-        $this->getJson('/users.json?api-version=v1&filter[has-groups]=' . $hr . ',nope');
+        $this->getJson('/users.json?filter[has-groups]=' . $hr . ',nope');
         $this->assertError(400);
 
         // non existing group triggers empty results set
-        $this->getJson('/users.json?api-version=v1&filter[has-groups]=' . $no);
+        $this->getJson('/users.json?filter[has-groups]=' . $no);
         $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), 0);
     }
@@ -234,18 +195,18 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexFilterBySearchSuccess()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v1&filter[search]=ovela');
+        $this->getJson('/users.json?api-version=v2&filter[search]=ovela');
         $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), 1);
-        $this->assertEquals($this->_responseJsonBody[0]->Profile->last_name, 'Lovelace');
+        $this->assertEquals($this->_responseJsonBody[0]->profile->last_name, 'Lovelace');
 
-        $this->getJson('/users.json?api-version=v1&filter[search]=wang@passbolt');
+        $this->getJson('/users.json?api-version=v2&filter[search]=wang@passbolt');
         $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), 1);
-        $this->assertEquals($this->_responseJsonBody[0]->Profile->last_name, 'Xiaoyun');
+        $this->assertEquals($this->_responseJsonBody[0]->profile->last_name, 'Xiaoyun');
 
         // Deleted user should not be shown
-        $this->getJson('/users.json?api-version=v1&filter[search]=sofia');
+        $this->getJson('/users.json?api-version=v2&filter[search]=sofia');
         $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), 0);
     }
@@ -255,11 +216,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         // too long
         $lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-        $this->getJson('/users.json?api-version=v1&filter[search]=' . $lorem);
+        $this->getJson('/users.json?api-version=v2&filter[search]=' . $lorem);
         $this->assertError(400);
         // not utf8
         $emo = '🔥🔥🔥';
-        $this->getJson('/users.json?api-version=v1&filter[search]=' . $emo);
+        $this->getJson('/users.json?api-version=v2&filter[search]=' . $emo);
         $this->assertError(400);
     }
 
@@ -271,22 +232,22 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexFilterActiveAsAdminSuccess()
     {
         $this->authenticateAs('admin');
-        $this->getJson('/users.json?api-version=v1&filter[is-active]=0');
-        $this->assertEquals($this->_responseJsonBody[0]->Profile->first_name, 'Ruth');
+        $this->getJson('/users.json?api-version=v2&filter[is-active]=0');
+        $this->assertEquals($this->_responseJsonBody[0]->profile->first_name, 'Ruth');
         $this->assertSuccess();
     }
 
     public function testUsersIndexFilterActiveNonAdmin()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v1&filter[is-active]=0');
+        $this->getJson('/users.json?api-version=v2&filter[is-active]=0');
         $this->assertNotEquals(count($this->_responseJsonBody), 1);
         $this->assertSuccess();
     }
 
     public function testUsersIndexErrorNotAuthenticated()
     {
-        $this->getJson('/users.json?api-version=v1');
+        $this->getJson('/users.json');
         $this->assertAuthenticationError();
     }
 }

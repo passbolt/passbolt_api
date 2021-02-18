@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -44,22 +46,6 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('group', $this->_responseJsonBody[0]);
     }
 
-    public function testPermissionsViewApiV1Success()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/permissions/resource/$resourceId.json?api-version=v1");
-        $this->assertSuccess();
-        $this->assertNotNull($this->_responseJsonBody);
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Permission', $this->_responseJsonBody[0]);
-        $this->assertPermissionAttributes($this->_responseJsonBody[0]->Permission);
-        // Not expected fields.
-        $this->assertObjectNotHasAttribute('User', $this->_responseJsonBody[0]);
-        $this->assertObjectNotHasAttribute('Group', $this->_responseJsonBody[0]);
-    }
-
     public function testPermissionsViewContainSuccess()
     {
         $this->authenticateAs('ada');
@@ -91,54 +77,10 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertGroupAttributes($permission->group);
     }
 
-    public function testPermissionsViewContainApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $urlParameter = 'api-version=v1&contain[group]=1&contain[user]=1&contain[user.profile]=1';
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->getJson("/permissions/resource/$resourceId.json?$urlParameter");
-        $this->assertSuccess();
-
-        // Search a user permission.
-        $permission = array_reduce($this->_responseJsonBody, function ($carry, $item) {
-            if (isset($item->User)) {
-                $carry = $item;
-            }
-
-            return $carry;
-        }, null);
-        $this->assertObjectHasAttribute('Permission', $permission);
-        $this->assertPermissionAttributes($permission->Permission);
-
-        // Contain user.
-        $this->assertObjectHasAttribute('User', $permission);
-        $this->assertUserAttributes($permission->User);
-        // Contain user profile.
-        $this->assertObjectHasAttribute('Profile', $permission->User);
-        $this->assertProfileAttributes($permission->User->Profile);
-        // Contain profile avatar.
-        $this->assertObjectHasAttribute('Avatar', $permission->User->Profile);
-        $this->assertAvatarAttributes($permission->User->Profile->Avatar);
-
-        // Search a group permission.
-        $permission = array_reduce($this->_responseJsonBody, function ($carry, $item) {
-            if (isset($item->Group)) {
-                $carry = $item;
-            }
-
-            return $carry;
-        }, null);
-        $this->assertObjectHasAttribute('Permission', $permission);
-        $this->assertPermissionAttributes($permission->Permission);
-        // Contain group.
-        $this->assertObjectHasAttribute('Group', $permission);
-        $this->assertGroupAttributes($permission->Group);
-    }
-
     public function testPermissionsViewErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->getJson("/permissions/resource/$resourceId.json?api-version=v1");
+        $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertAuthenticationError();
     }
 
@@ -146,7 +88,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
-        $this->getJson("/permissions/resource/$resourceId.json?api-version=v1");
+        $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertError(400, 'The id is not valid for model Resource');
     }
 
@@ -154,7 +96,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->getJson("/permissions/resource/$resourceId.json?api-version=v1");
+        $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 

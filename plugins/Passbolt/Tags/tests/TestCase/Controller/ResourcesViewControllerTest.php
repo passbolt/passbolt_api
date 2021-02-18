@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -18,7 +20,7 @@ use App\Utility\UuidFactory;
 use Cake\Validation\Validation;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class ResourceViewControllerTest extends TagPluginIntegrationTestCase
+class ResourcesViewControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
@@ -26,7 +28,7 @@ class ResourceViewControllerTest extends TagPluginIntegrationTestCase
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
-    public function testTagResourcesViewContainSuccess()
+    public function testTagsResourcesViewContainSuccess()
     {
         $this->authenticateAs('ada');
         $expected = ['alpha', '#echo', '#bravo', 'fox-trot'];

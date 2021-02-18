@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -42,7 +44,7 @@ class FindIndexTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function testSuccess()
+    public function testGroupFindIndexSuccess()
     {
         $groups = $this->Groups->findIndex()->all();
         $this->assertGreaterThan(1, count($groups));
@@ -55,7 +57,7 @@ class FindIndexTest extends AppTestCase
         $this->assertObjectNotHasAttribute('users', $group);
     }
 
-    public function testExcludeSoftDeletedGroups()
+    public function testGroupFindIndexExcludeSoftDeletedGroups()
     {
         // Check the deleted groups exist.
         $deletedGroups = [UuidFactory::uuid('group.id.deleted')];
@@ -72,7 +74,7 @@ class FindIndexTest extends AppTestCase
         $this->assertEquals(0, count(array_intersect($deletedGroups, $groupsIds)));
     }
 
-    public function testContainModifier()
+    public function testGroupFindIndexContainModifier()
     {
         $options['contain']['modifier'] = true;
         $groups = $this->Groups->findIndex($options)->all();
@@ -84,7 +86,7 @@ class FindIndexTest extends AppTestCase
         $this->assertUserAttributes($group->modifier);
     }
 
-    public function testContainModifierProfile()
+    public function testGroupFindIndexContainModifierProfile()
     {
         $options['contain']['modifier.profile'] = true;
         $groups = $this->Groups->findIndex($options)->all();
@@ -97,7 +99,7 @@ class FindIndexTest extends AppTestCase
         $this->assertProfileAttributes($group->modifier->profile);
     }
 
-    public function testContainUser()
+    public function testGroupFindIndexContainUserDeprecated()
     {
         $options['contain']['user'] = true;
         $groups = $this->Groups->findIndex($options)->all();
@@ -124,7 +126,34 @@ class FindIndexTest extends AppTestCase
         $this->assertEquals(0, count(array_diff($groupUsers, $usersIds)));
     }
 
-    public function testContainUserCount()
+    public function testGroupFindIndexContainUsers()
+    {
+        $options['contain']['users'] = true;
+        $groups = $this->Groups->findIndex($options)->all();
+        $group = $groups->first();
+
+        // Expected content.
+        $this->assertGroupAttributes($group);
+        $this->assertObjectHasAttribute('users', $group);
+        $this->assertUserAttributes($group->users[0]);
+
+        // Check that the groups contain only the expected users.
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $groupUsers = [
+            UuidFactory::uuid('user.id.jean'),
+            UuidFactory::uuid('user.id.kathleen'),
+            UuidFactory::uuid('user.id.lynne'),
+            UuidFactory::uuid('user.id.marlyn'),
+            UuidFactory::uuid('user.id.nancy'),
+        ];
+        // Retrieve the users from the group we want to test.
+        $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId . ']')[0];
+        $usersIds = Hash::extract($group->users, '{n}.id');
+        // Check that all the expected users are there.
+        $this->assertEquals(0, count(array_diff($groupUsers, $usersIds)));
+    }
+
+    public function testGroupFindIndexContainUserCount()
     {
         $options['contain']['user_count'] = true;
         $groups = $this->Groups->findIndex($options)->all();
@@ -137,7 +166,7 @@ class FindIndexTest extends AppTestCase
         }
     }
 
-    public function testContainGroupUser()
+    public function testGroupFindIndexContainGroupUser_DeprecatedContain()
     {
         $options['contain']['group_user'] = true;
         $groups = $this->Groups->findIndex($options)->all();
@@ -164,7 +193,48 @@ class FindIndexTest extends AppTestCase
         $this->assertEquals(0, count(array_diff($groupUsers, $usersIds)));
     }
 
-    public function testContainGroupUserProfile()
+    public function testGroupFindIndexContainGroupsUsers_DeprecateContain()
+    {
+        $options['contain']['groups_users'] = true;
+        $groups = $this->Groups->findIndex($options)->all();
+        $group = $groups->first();
+
+        // Expected content.
+        $this->assertGroupAttributes($group);
+        $this->assertObjectHasAttribute('groups_users', $group);
+        $this->assertGroupUserAttributes($group->groups_users[0]);
+
+        // Check that the groups contain only the expected users.
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $groupUsers = [
+            UuidFactory::uuid('user.id.jean'),
+            UuidFactory::uuid('user.id.kathleen'),
+            UuidFactory::uuid('user.id.lynne'),
+            UuidFactory::uuid('user.id.marlyn'),
+            UuidFactory::uuid('user.id.nancy'),
+        ];
+        // Retrieve the users from the group we want to test.
+        $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId . ']')[0];
+        $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
+        // Check that all the expected users are there.
+        $this->assertEquals(0, count(array_diff($groupUsers, $usersIds)));
+    }
+
+    public function testGroupFindIndexContainGroupsUsersProfile()
+    {
+        $options['contain']['groups_users.user.profile'] = true;
+        $groups = $this->Groups->findIndex($options)->all();
+        $group = $groups->first();
+
+        // Expected content.
+        $this->assertGroupAttributes($group);
+        $this->assertObjectHasAttribute('groups_users', $group);
+        $this->assertObjectHasAttribute('user', $group->groups_users[0]);
+        $this->assertObjectHasAttribute('profile', $group->groups_users[0]->user);
+        $this->assertProfileAttributes($group->groups_users[0]->user->profile);
+    }
+
+    public function testGroupFindIndexContainGroupUserProfile_DeprecateContain()
     {
         $options['contain']['group_user.user.profile'] = true;
         $groups = $this->Groups->findIndex($options)->all();

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -146,7 +148,7 @@ class HealthcheckTask extends AppShell
             $results = array_merge(Healthchecks::{$check}(), $results);
         }
         // Remove all dots
-        $this->out(str_repeat(chr(0x08), count($checks)) . str_repeat(" ", count($checks)), 0);
+        $this->out(str_repeat(chr(0x08), count($checks)) . str_repeat(' ', count($checks)), 0);
 
         // Print results
         $this->out('');
@@ -431,7 +433,8 @@ class HealthcheckTask extends AppShell
             $this->assert(
                 false,
                 __('Could connect to passbolt repository to check versions.'),
-                __('Could not connect to passbolt repository to check versions. It is not possible check if your version is up to date.'),
+                __('Could not connect to passbolt repository to check versions') . ' ' .
+                __('It is not possible check if your version is up to date.'),
                 __('Check the network configuration to allow this script to check for updates.')
             );
         } else {
@@ -510,21 +513,21 @@ class HealthcheckTask extends AppShell
         $this->assert(
             $checks['gpg']['gpgHome'],
             __('The environment variable GNUPGHOME is set to {0}.', $checks['gpg']['info']['gpgHome']),
-            __('The environment variable GNUPGHOME is set to {0}, but the directory does not exist.', $checks['gpg']['info']['gpgHome']),
+            __('The environment variable GNUPGHOME is set to {0}, but the directory does not exist.', $checks['gpg']['info']['gpgHome']),// phpcs:ignore
             [
                 __('Ensure the keyring location exists and is accessible by the webserver user.'),
                 __('you can try:'),
                 'sudo mkdir ' . $checks['gpg']['info']['gpgHome'],
                 'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
                 'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
-                __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in config/passbolt.php.'),
+                __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in config/passbolt.php.'),// phpcs:ignore
             ]
         );
         if ($checks['gpg']['gpgHome']) {
             $this->assert(
                 $checks['gpg']['gpgHomeWritable'],
-                __('The directory {0} containing the keyring is writable by the webserver user.', $checks['gpg']['info']['gpgHome']),
-                __('The directory {0} containing the keyring is not writable by the webserver user.', $checks['gpg']['info']['gpgHome']),
+                __('The directory {0} containing the keyring is writable by the webserver user.', $checks['gpg']['info']['gpgHome']),// phpcs:ignore
+                __('The directory {0} containing the keyring is not writable by the webserver user.', $checks['gpg']['info']['gpgHome']),// phpcs:ignore
                 [
                     __('Ensure the keyring location is accessible by the webserver user.'),
                     __('you can try:'),
@@ -570,24 +573,24 @@ class HealthcheckTask extends AppShell
             );
         }
         $this->assert(
-            $checks['gpg']['gpgKeyPublic'] && $checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPublicBlock'],
+            $checks['gpg']['gpgKeyPublic'] && $checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPublicBlock'],// phpcs:ignore
             __('The public key file is defined in config/passbolt.php and readable.'),
             __('The public key file is not defined in config/passbolt.php or not readable.'),
             [
-                __('Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in config/passbolt.php.'),
+                __('Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in config/passbolt.php.'),// phpcs:ignore
                 __('Ensure there is a public key armored block in the key file.'),
-                __('Ensure the public key defined in config/passbolt.php exists and is accessible by the webserver user.'),
+                __('Ensure the public key defined in config/passbolt.php exists and is accessible by the webserver user.'),// phpcs:ignore
                 __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
             ]
         );
         $this->assert(
-            $checks['gpg']['gpgKeyPrivate'] && $checks['gpg']['gpgKeyPrivateReadable'] && $checks['gpg']['gpgKeyPrivateBlock'],
+            $checks['gpg']['gpgKeyPrivate'] && $checks['gpg']['gpgKeyPrivateReadable'] && $checks['gpg']['gpgKeyPrivateBlock'],// phpcs:ignore
             __('The private key file is defined in config/passbolt.php and readable.'),
             __('The private key file is not defined in config/passbolt.php or not readable.'),
             [
-                __('Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in config/passbolt.php.'),
+                __('Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in config/passbolt.php.'),// phpcs:ignore
                 __('Ensure there is a private key armored block in the key file.'),
-                __('Ensure the private key defined in config/passbolt.php exists and is accessible by the webserver user.'),
+                __('Ensure the private key defined in config/passbolt.php exists and is accessible by the webserver user.'),// phpcs:ignore
                 __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
             ]
         );
@@ -597,19 +600,19 @@ class HealthcheckTask extends AppShell
             __('The server key fingerprint doesn\'t match the one defined in config/passbolt.php.'),
             [
                 __('Double check the key fingerprint, example: '),
-                'sudo su -s /bin/bash -c "gpg --list-keys --fingerprint --home ' . $checks['gpg']['info']['gpgHome'] . '" ' . PROCESS_USER . ' | grep -i -B 2 \'SERVER_KEY_EMAIL\'',
+                'sudo su -s /bin/bash -c "gpg --list-keys --fingerprint --home ' . $checks['gpg']['info']['gpgHome'] . '" ' . PROCESS_USER . ' | grep -i -B 2 \'SERVER_KEY_EMAIL\'',// phpcs:ignore
                 __('SERVER_KEY_EMAIL: The email you used when you generated the server key.'),
                 __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
             ]
         );
         $this->assert(
             $checks['gpg']['gpgKeyPublicInKeyring'],
-            __('The server public key defined in the config/passbolt.php (or environment variables) is in the keyring.'),
-            __('The server public key defined in the config/passbolt.php (or environment variables) is not in the keyring'),
+            __('The server public key defined in the config/passbolt.php (or environment variables) is in the keyring.'),// phpcs:ignore
+            __('The server public key defined in the config/passbolt.php (or environment variables) is not in the keyring'),// phpcs:ignore
             [
                 __('Import the private server key in the keyring of the webserver user.'),
                 __('you can try:'),
-                'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER,
+                'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER,// phpcs:ignore
             ]
         );
         $this->assert(
@@ -624,7 +627,7 @@ class HealthcheckTask extends AppShell
                 __('Make sure that the server private key is valid and that there is no passphrase.'),
                 __('Make sure you imported the private server key in the keyring of the webserver user.'),
                 __('you can try:'),
-                'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER,
+                'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER, // phpcs:ignore
             ];
 
             $this->assert(
@@ -728,7 +731,7 @@ class HealthcheckTask extends AppShell
      *
      * @param string $msg message
      * @param string $case pass or fail
-     * @throws Exception case is not defined or missing
+     * @throws \App\Shell\Task\Exception case is not defined or missing
      * @return void
      */
     protected function display($msg, $case)

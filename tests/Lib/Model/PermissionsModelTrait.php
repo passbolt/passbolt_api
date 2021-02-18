@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,15 +22,14 @@ use Cake\ORM\TableRegistry;
 
 trait PermissionsModelTrait
 {
-
     /**
      * Get a dummy permission with test data.
      * The comment returned passes a default validation.
      *
-     * @param array $data Custom data that will be merged with the default content.
+     * @param array|null $data Custom data that will be merged with the default content.
      * @return array Comment data
      */
-    public static function getDummyPermission(array $data = [])
+    public static function getDummyPermission(?array $data = [])
     {
         $entityContent = [
             'aco' => 'Resource',
@@ -44,6 +45,7 @@ trait PermissionsModelTrait
 
     /**
      * Add permission.
+     *
      * @param string $aco Aco
      * @param string $acoForeignKey Target aco
      * @param string $aro Aro
@@ -51,7 +53,7 @@ trait PermissionsModelTrait
      * @param int $type The type of permissions
      * @return Permission
      */
-    public function addPermission(string $aco, string $acoForeignKey, string $aro = null, string $aroForeignKey, int $type = Permission::OWNER)
+    public function addPermission(string $aco, string $acoForeignKey, ?string $aro = null, string $aroForeignKey, int $type = Permission::OWNER)
     {
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $saveOptions = [
@@ -92,6 +94,7 @@ trait PermissionsModelTrait
 
     /**
      * Assert an aro has the expected permission for a given aco
+     *
      * @param string $acoForeignKey
      * @param string $aroForeignKey
      * @param string $type
@@ -109,6 +112,7 @@ trait PermissionsModelTrait
 
     /**
      * Assert a permission does not exist
+     *
      * @param $acoForeignKey
      * @param $aroForeignKey
      */
@@ -121,6 +125,7 @@ trait PermissionsModelTrait
 
     /**
      * Assert that an aro has an expected computed access.
+     *
      * @param string $aco
      * @param string $acoForeignKey
      * @param string $aroForeignKey

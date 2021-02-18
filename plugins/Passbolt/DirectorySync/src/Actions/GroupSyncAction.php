@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -32,7 +34,7 @@ class GroupSyncAction extends SyncAction
     /**
      * @var string entityType
      */
-    const ENTITY_TYPE = Alias::MODEL_GROUPS;
+    public const ENTITY_TYPE = Alias::MODEL_GROUPS;
 
     /**
      * @var array|mixed
@@ -56,6 +58,7 @@ class GroupSyncAction extends SyncAction
 
     /**
      * BeforeExecute.
+     *
      * @return void
      */
     public function beforeExecute()

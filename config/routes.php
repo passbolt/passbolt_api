@@ -40,10 +40,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 Router::scope('/', function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/home', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view'])
+    $routes->connect('/', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiExtApp'])
         ->setMethods(['GET']);
 });
 
@@ -124,10 +121,10 @@ Router::scope('/comments', function ($routes) {
 Router::scope('/gpgkeys', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['prefix' => 'gpgkeys', 'controller' => 'GpgkeysIndex', 'action' => 'index'])
+    $routes->connect('/', ['prefix' => 'Gpgkeys', 'controller' => 'GpgkeysIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/:id', ['prefix' => 'gpgkeys', 'controller' => 'GpgkeysView', 'action' => 'view'])
+    $routes->connect('/:id', ['prefix' => 'Gpgkeys', 'controller' => 'GpgkeysView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
 });
@@ -171,11 +168,10 @@ Router::prefix('/groups', function ($routes) {
 Router::scope('/healthcheck', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/status', ['prefix' => 'healthcheck', 'controller' => 'HealthcheckStatus', 'action' => 'status'])
+    $routes->connect('/status', ['prefix' => 'Healthcheck', 'controller' => 'HealthcheckStatus', 'action' => 'status'])
         ->setMethods(['GET']);
 
-    $routes->connect('/', ['prefix' => 'healthcheck', 'controller' => 'HealthcheckIndex', 'action' => 'index'])
-        ->setPass(['id'])
+    $routes->connect('/', ['prefix' => 'Healthcheck', 'controller' => 'HealthcheckIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 });
 
@@ -213,6 +209,20 @@ Router::scope('/resources', function ($routes) {
     $routes->connect('/:id', ['prefix' => 'Resources', 'controller' => 'ResourcesDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
+});
+
+/**
+ * Resources types prefixed routes
+ */
+Router::scope('/resource-types', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/', ['prefix' => 'ResourceTypes', 'controller' => 'ResourceTypesIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/:id', ['prefix' => 'ResourceTypes', 'controller' => 'ResourceTypesView', 'action' => 'view'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
 });
 
 /**
@@ -262,19 +272,15 @@ Router::scope('/users', function ($routes) {
         ->setMethods(['POST']);
 
     $routes->connect('/register', ['prefix' => 'Users', 'controller' => 'UsersRegister', 'action' => 'registerGet'])
-        ->setPass(['id'])
         ->setMethods(['GET']);
 
     $routes->connect('/register', ['prefix' => 'Users', 'controller' => 'UsersRegister', 'action' => 'registerPost'])
-        ->setPass(['id'])
         ->setMethods(['POST']);
 
     $routes->connect('/recover', ['prefix' => 'Users', 'controller' => 'UsersRecover', 'action' => 'recoverGet'])
-        ->setPass(['id'])
         ->setMethods(['GET']);
 
     $routes->connect('/recover', ['prefix' => 'Users', 'controller' => 'UsersRecover', 'action' => 'recoverPost'])
-        ->setPass(['id'])
         ->setMethods(['POST']);
 
     $routes->connect('/:id', ['prefix' => 'Users', 'controller' => 'UsersView', 'action' => 'view'])
@@ -292,6 +298,9 @@ Router::scope('/users', function ($routes) {
     $routes->connect('/:id', ['prefix' => 'Users', 'controller' => 'UsersDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
+
+    $routes->connect('/csrf-token', ['prefix' => 'Users', 'controller' => 'GetCsrfToken', 'action' => 'get'])
+        ->setMethods(['GET']);
 
     $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])
@@ -360,5 +369,7 @@ Router::scope('/setup', function ($routes) {
  * Appjs routes
  */
 Router::scope('/app', function ($routes) {
-    $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view']);
+    $routes->connect('/administration/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
+    $routes->connect('/settings/mfa', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
+    $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiExtApp']);
 });

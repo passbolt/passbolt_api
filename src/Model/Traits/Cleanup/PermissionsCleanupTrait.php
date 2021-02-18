@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,20 +20,20 @@ use App\Model\Table\PermissionsTable;
 
 trait PermissionsCleanupTrait
 {
-
     /**
      * Delete all records where associated permissions are soft deleted
      *
-     * @param bool $dryRun false
-     * @return number of affected records
+     * @param bool|null $dryRun default false
+     * @return int number of affected records
      */
-    public function cleanupHardDeletedPermissions($dryRun = false)
+    public function cleanupHardDeletedPermissions(?bool $dryRun = false): int
     {
         $secretsToDelete = [];
-        $secrets = $this->find('all');
+        $secrets = $this->find('all')->select(['id', 'resource_id', 'user_id']);
+        $acoType = PermissionsTable::RESOURCE_ACO;
 
         foreach ($secrets as $secret) {
-            if (!$this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $secret->resource_id, $secret->user_id)) {
+            if (!$this->Resources->Permissions->hasAccess($acoType, $secret->resource_id, $secret->user_id)) {
                 $secretsToDelete[] = $secret->id;
             }
         }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use Cake\Core\Configure;
 
 abstract class TagTestCase extends AppTestCase
 {
-
     /**
      * setUp method
      *

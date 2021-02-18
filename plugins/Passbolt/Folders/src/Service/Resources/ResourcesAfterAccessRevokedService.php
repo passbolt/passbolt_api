@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,37 +18,34 @@
 namespace Passbolt\Folders\Service\Resources;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
-use Exception;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
 
 class ResourcesAfterAccessRevokedService
 {
     /**
-     * @var FoldersRelationsRemoveItemFromUserTreeService
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService
      */
     private $foldersRelationsRemoveItemFromUserTree;
 
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @var ResourcesTable
+     * @var \App\Model\Table\ResourcesTable
      */
     private $resourcesTable;
 
     /**
-     * @var UserHasPermissionService
+     * @var \App\Service\Permissions\UserHasPermissionService
      */
     private $userHasPermissionService;
 
@@ -64,10 +63,10 @@ class ResourcesAfterAccessRevokedService
     /**
      * Handle a revoked access on a resource.
      *
-     * @param UserAccessControl $uac The current user.
-     * @param Permission $permission The revoked permission.
+     * @param \App\Utility\UserAccessControl $uac The current user.
+     * @param \App\Model\Entity\Permission $permission The revoked permission.
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function afterAccessRevoked(UserAccessControl $uac, Permission $permission)
     {
@@ -83,10 +82,10 @@ class ResourcesAfterAccessRevokedService
     /**
      * Retrieve the resource.
      *
-     * @param UserAccessControl $uac UserAccessControl updating the resource
+     * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
      * @param string $resourceId The resource identifier to retrieve.
      * @return \App\Model\Entity\Resource
-     * @throws NotFoundException If the resource does not exist.
+     * @throws \Cake\Http\Exception\NotFoundException If the resource does not exist.
      */
     private function getResource(UserAccessControl $uac, string $resourceId)
     {
@@ -106,7 +105,7 @@ class ResourcesAfterAccessRevokedService
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param string $groupId The target group
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     private function removeResourceFromGroupUsersTrees(\App\Model\Entity\Resource $resource, string $groupId)
     {

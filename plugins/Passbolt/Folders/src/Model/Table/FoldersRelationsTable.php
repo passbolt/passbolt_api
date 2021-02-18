@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,9 +22,7 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
@@ -34,16 +34,15 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeS
 /**
  * FoldersRelations Model
  *
- * @method FoldersRelation get($primaryKey, $options = [])
- * @method FoldersRelation newEntity($data = null, array $options = [])
- * @method FoldersRelation[] newEntities(array $data, array $options = [])
- * @method FoldersRelation|false save(EntityInterface $entity, $options = [])
- * @method FoldersRelation saveOrFail(EntityInterface $entity, $options = [])
- * @method FoldersRelation patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method FoldersRelation[] patchEntities($entities, array $data, array $options = [])
- * @method FoldersRelation findOrCreate($search, callable $callback = null, $options = [])
- *
- * @mixin TimestampBehavior
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Passbolt\Folders\Model\Table\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Passbolt\Folders\Model\Table\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Passbolt\Folders\Model\Table\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @mixin \Passbolt\Folders\Model\Table\TimestampBehavior
  */
 class FoldersRelationsTable extends Table
 {
@@ -53,7 +52,7 @@ class FoldersRelationsTable extends Table
     /**
      * List of allowed item models on which a folder relation can be plugged.
      */
-    const ALLOWED_FOREIGN_MODELS = [
+    public const ALLOWED_FOREIGN_MODELS = [
         FoldersRelation::FOREIGN_MODEL_FOLDER,
         FoldersRelation::FOREIGN_MODEL_RESOURCE,
     ];
@@ -90,8 +89,8 @@ class FoldersRelationsTable extends Table
     /**
      * Default validation rules.
      *
-     * @param Validator $validator Validator instance.
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -128,8 +127,8 @@ class FoldersRelationsTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param RulesChecker $rules The rules object to be modified.
-     * @return RulesChecker
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {
@@ -160,11 +159,11 @@ class FoldersRelationsTable extends Table
     /**
      * Checks that the foreign id exists
      *
-     * @param FoldersRelation $foldersRelation The folder_relation to test
+     * @param \Passbolt\Folders\Model\Entity\FoldersRelation $foldersRelation The folder_relation to test
      * @param array $options The additional options for this rule
      * @return bool
      */
-    public function foreignIdExistsRule(FoldersRelation $foldersRelation, array $options)
+    public function foreignIdExistsRule(FoldersRelation $foldersRelation, array $options): bool
     {
         $rules = new RulesChecker($options);
         $exist = false;
@@ -193,9 +192,9 @@ class FoldersRelationsTable extends Table
      * Delete all records where associated users are soft deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      */
-    public function cleanupSoftDeletedUsers(bool $dryRun = false)
+    public function cleanupSoftDeletedUsers(?bool $dryRun = false): int
     {
         return $this->cleanupSoftDeleted('Users', $dryRun);
     }
@@ -204,9 +203,9 @@ class FoldersRelationsTable extends Table
      * Delete all records where associated users are deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      */
-    public function cleanupHardDeletedUsers(bool $dryRun = false)
+    public function cleanupHardDeletedUsers(?bool $dryRun = false): int
     {
         return $this->cleanupHardDeleted('Users', $dryRun);
     }
@@ -215,9 +214,9 @@ class FoldersRelationsTable extends Table
      * Delete all records where associated resources are soft deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      */
-    public function cleanupSoftDeletedResources(bool $dryRun = false)
+    public function cleanupSoftDeletedResources(?bool $dryRun = false): int
     {
         return $this->cleanupSoftDeletedForeignId('Resources', $dryRun);
     }
@@ -227,16 +226,16 @@ class FoldersRelationsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      */
-    private function cleanupSoftDeletedForeignId(string $modelName, $dryRun = false)
+    private function cleanupSoftDeletedForeignId(string $modelName, ?bool $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id'])
             ->leftJoinWith($modelName)
             ->where([
                 "$modelName.deleted" => true,
-                "FoldersRelations.foreign_model" => ucfirst(Inflector::singularize($modelName)),
+                'FoldersRelations.foreign_model' => ucfirst(Inflector::singularize($modelName)),
             ]);
 
         return $this->cleanupHardDeleted($modelName, $dryRun, $query);
@@ -246,9 +245,9 @@ class FoldersRelationsTable extends Table
      * Delete all records where associated resources are deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      */
-    public function cleanupHardDeletedResources(bool $dryRun = false)
+    public function cleanupHardDeletedResources(?bool $dryRun = false): int
     {
         return $this->cleanupHardDeletedForeignId('Resources', $dryRun);
     }
@@ -258,16 +257,16 @@ class FoldersRelationsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      */
-    private function cleanupHardDeletedForeignId(string $modelName, $dryRun = false)
+    private function cleanupHardDeletedForeignId(string $modelName, $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id'])
             ->leftJoinWith($modelName)
             ->where([
                 "$modelName.id IS NULL",
-                "FoldersRelations.foreign_model" => ucfirst(Inflector::singularize($modelName)),
+                'FoldersRelations.foreign_model' => ucfirst(Inflector::singularize($modelName)),
             ]);
 
         return $this->cleanupHardDeleted($modelName, $dryRun, $query);
@@ -277,9 +276,9 @@ class FoldersRelationsTable extends Table
      * Delete all records where associated folders are deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      */
-    public function cleanupHardDeletedFolders(bool $dryRun = false)
+    public function cleanupHardDeletedFolders(?bool $dryRun = false): int
     {
         return $this->cleanupHardDeletedForeignId('Folders', $dryRun);
     }
@@ -288,9 +287,9 @@ class FoldersRelationsTable extends Table
      * Move to root all folders relations where associated folders parents are deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      */
-    public function cleanupHardDeletedFoldersParents(bool $dryRun = false)
+    public function cleanupHardDeletedFoldersParents(?bool $dryRun = false): int
     {
         $query = $this->findByDeletedFolderParent()
             ->select('id');
@@ -302,10 +301,10 @@ class FoldersRelationsTable extends Table
      * Add missing folders relations for each resource the users have access to.
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      * @throws \Exception If something unexpected occurred
      */
-    public function cleanupMissingResourcesFoldersRelations(bool $dryRun = false)
+    public function cleanupMissingResourcesFoldersRelations(?bool $dryRun = false): int
     {
         return $this->cleanupMissingFoldersRelations(FoldersRelation::FOREIGN_MODEL_RESOURCE, $dryRun);
     }
@@ -315,10 +314,10 @@ class FoldersRelationsTable extends Table
      *
      * @param string $foreignModel The type of item. Can be Folder or Resource
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      * @throws \Exception If something unexpected occurred
      */
-    public function cleanupMissingFoldersRelations(string $foreignModel, bool $dryRun = false)
+    public function cleanupMissingFoldersRelations(string $foreignModel, ?bool $dryRun = false): int
     {
         $count = 0;
         $admin = $this->Users->findFirstAdmin();
@@ -353,7 +352,7 @@ class FoldersRelationsTable extends Table
      * model.
      * @return bool
      */
-    public function isItemInUserTree(string $userId, string $foreignId, string $foreignModel = null)
+    public function isItemInUserTree(string $userId, string $foreignId, ?string $foreignModel = null): bool
     {
         $conditions = ['foreign_id' => $foreignId, 'user_id' => $userId];
 
@@ -368,10 +367,10 @@ class FoldersRelationsTable extends Table
      * Add missing folders relations for each folder the users have access to.
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return int of affected records
      * @throws \Exception If something unexpected occurred
      */
-    public function cleanupMissingFoldersFoldersRelations(bool $dryRun = false)
+    public function cleanupMissingFoldersFoldersRelations(?bool $dryRun = false): int
     {
         return $this->cleanupMissingFoldersRelations(FoldersRelation::FOREIGN_MODEL_FOLDER, $dryRun);
     }
@@ -380,10 +379,10 @@ class FoldersRelationsTable extends Table
      * Count the number of occurrences of a given relation.
      *
      * @param string $foreignId The relation child id
-     * @param string $folderParentId The relation parent id
+     * @param string|null $folderParentId The relation parent id
      * @return int
      */
-    public function countRelationUsage(string $foreignId, string $folderParentId = FoldersRelation::ROOT)
+    public function countRelationUsage(string $foreignId, ?string $folderParentId = FoldersRelation::ROOT): int
     {
         $conditions = [
             'foreign_id' => $foreignId,
@@ -400,13 +399,18 @@ class FoldersRelationsTable extends Table
      *
      * @param string $userId The target user to look for
      * @param string $foreignId The item identifier
-     * @return string
+     * @return ?string|null
      */
-    public function getItemFolderParentIdInUserTree(string $userId, string $foreignId)
+    public function getItemFolderParentIdInUserTree(string $userId, string $foreignId): ?string
     {
         $foldersParentIds = $this->getItemFoldersParentIdsInUsersTrees([$userId], $foreignId);
 
-        return reset($foldersParentIds);
+        $parent = reset($foldersParentIds);
+        if ($parent === false) {
+            return null;
+        }
+
+        return $parent;
     }
 
     /**
@@ -417,8 +421,11 @@ class FoldersRelationsTable extends Table
      * @param bool $excludeRoot Exclude the root folder. Default false.
      * @return array
      */
-    public function getItemFoldersParentIdsInUsersTrees(array $usersIds, string $foreignId, bool $excludeRoot = false)
-    {
+    public function getItemFoldersParentIdsInUsersTrees(
+        array $usersIds,
+        string $foreignId,
+        ?bool $excludeRoot = false
+    ): array {
         $conditions = [
             'user_id IN' => $usersIds,
             'foreign_id' => $foreignId,
@@ -440,11 +447,13 @@ class FoldersRelationsTable extends Table
      * Get the oldest usage of a relation.
      *
      * @param string $foreignId The target entity id
-     * @param string $folderParentId The target entity parent id
-     * @return string
+     * @param string|null $folderParentId The target entity parent id
+     * @return \Passbolt\Folders\Model\Table\DateTime
      */
-    public function getRelationOldestCreatedDate(string $foreignId, string $folderParentId = FoldersRelation::ROOT)
-    {
+    public function getRelationOldestCreatedDate(
+        string $foreignId,
+        ?string $folderParentId = FoldersRelation::ROOT
+    ) {
         $conditions = [
             'foreign_id' => $foreignId,
             'folder_parent_id' => $folderParentId,
@@ -464,7 +473,7 @@ class FoldersRelationsTable extends Table
      * @param array $foreignIds The list of items to check for.
      * @return array
      */
-    public function getUsersIdsHavingAccessToMultipleItems(array $foreignIds)
+    public function getUsersIdsHavingAccessToMultipleItems(array $foreignIds): array
     {
         if (empty($foreignIds)) {
             throw new InternalErrorException('The foreignIds parameter cannot be empty.');
@@ -498,10 +507,10 @@ class FoldersRelationsTable extends Table
     /**
      * Check if an item is personal.
      *
-     * @param string $foreignId The item id
+     * @param string|null $foreignId The item id
      * @return bool
      */
-    public function isItemPersonal(string $foreignId = null)
+    public function isItemPersonal(?string $foreignId = null): bool
     {
         if (is_null($foreignId)) {
             return false;
@@ -516,11 +525,14 @@ class FoldersRelationsTable extends Table
      *
      * @param string $userId The target user
      * @param string $foreignId The target item id
-     * @param string $folderParentId The target folder parent id
+     * @param string|null $folderParentId The target folder parent id
      * @return bool
      */
-    public function isItemOrganizedInUserTree(string $userId, string $foreignId, string $folderParentId = FoldersRelation::ROOT)
-    {
+    public function isItemOrganizedInUserTree(
+        string $userId,
+        string $foreignId,
+        ?string $folderParentId = FoldersRelation::ROOT
+    ): bool {
         $conditions = [
             'foreign_id' => $foreignId,
             'folder_parent_id' => $folderParentId,
@@ -539,7 +551,7 @@ class FoldersRelationsTable extends Table
      * item to the root. Default null.
      * @return void
      */
-    public function moveItemFrom(string $foreignId, array $fromFoldersIds, string $folderParentId = null)
+    public function moveItemFrom(string $foreignId, array $fromFoldersIds, ?string $folderParentId = null): void
     {
         $fields = [
             'folder_parent_id' => $folderParentId,
@@ -554,12 +566,13 @@ class FoldersRelationsTable extends Table
     /**
      * Move an item for users from wherever they are to a target location
      * .
+     *
      * @param string $foreignId The target item
      * @param array $forUsersIds The list of users to move the item for
-     * @param string $folderParentId The destination folder
+     * @param string|null $folderParentId The destination folder
      * @return void
      */
-    public function moveItemFor(string $foreignId, array $forUsersIds, $folderParentId = null)
+    public function moveItemFor(string $foreignId, array $forUsersIds, ?string $folderParentId = null): void
     {
         $fields = [
             'folder_parent_id' => $folderParentId,

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,7 +20,7 @@ use App\Controller\AppController;
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
-use App\Model\Table\UsersTable;
+use Cake\Event\Event;
 
 /**
  * @property UsersTable Users
@@ -26,14 +28,29 @@ use App\Model\Table\UsersTable;
 class UsersIndexController extends AppController
 {
     /**
+     * Before filter
+     *
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+        $this->loadModel('Users');
+
+        return parent::beforeFilter($event);
+    }
+
+    /**
      * @return void
      */
     public function index()
     {
-        $this->loadModel('Users');
-
         $findIndexOptions = (new FindIndexOptions())
-            ->allowContain('LastLoggedIn')
+            ->allowContains([
+                'last_logged_in', 'groups_users', 'gpgkey', 'profile', 'role',
+                // @deprecate when v2.13 support drops
+                'LastLoggedIn', // remapped ot last_logged_in in QueryStringComponent
+            ])
             ->allowOrders(['User.username', 'User.created', 'User.modified'])
             ->allowOrders(['Profile.first_name', 'Profile.last_name', 'Profile.created', 'Profile.modified'])
             ->allowFilters(['search', 'has-groups', 'has-access', 'is-admin']);
@@ -42,10 +59,9 @@ class UsersIndexController extends AppController
             $findIndexOptions->allowFilter('is-active');
         }
 
+        // Get additional filters, contain, etc. from plugin
         $event = ControllerFindIndexOptionsBeforeMarshal::create($findIndexOptions, $this);
-
         $this->getEventManager()->dispatch($event);
-
         $computedFindIndexOptions = $this->QueryString->get(
             $event->getOptions()->getAllowedOptions(),
             $event->getOptions()->getFilterValidators()

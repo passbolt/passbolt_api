@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -35,11 +37,11 @@ class ResourceDigests implements EventListenerInterface
 {
     use DigestRegisterTrait;
 
-    const RESOURCE_CHANGES_TEMPLATE = 'LU/resources_change';
-    const RESOURCE_SHARE_MULTIPLE_TEMPLATE = 'LU/resources_share';
+    public const RESOURCE_CHANGES_TEMPLATE = 'LU/resources_change';
+    public const RESOURCE_SHARE_MULTIPLE_TEMPLATE = 'LU/resources_share';
 
     /**
-     * @param DigestsPool $digestsCollection Instance of the marshaller
+     * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsCollection Instance of the marshaller
      * @return void
      */
     public function addDigestsPool(DigestsPool $digestsCollection)
@@ -55,12 +57,12 @@ class ResourceDigests implements EventListenerInterface
      * The marshaller will create a digest only if there is minimum 2 emails.
      * It will create another digest if there is more than 50 emails.
      *
-     * @return Digest
+     * @return \Passbolt\EmailDigest\Utility\Digest\Digest
      */
     private function createResourceChangesDigest()
     {
         return new Digest(
-            __("{0} has made changes on several resources", "{0}"),
+            __('{0} has made changes on several resources', '{0}'),
             [
                 ResourceCreateEmailRedactor::TEMPLATE,
                 ResourceUpdateEmailRedactor::TEMPLATE,
@@ -86,12 +88,12 @@ class ResourceDigests implements EventListenerInterface
      * The marshaller will create a digest only if there is minimum 2 emails.
      * It will create another digest if there is more than 50 emails.
      *
-     * @return Digest
+     * @return \Passbolt\EmailDigest\Utility\Digest\Digest
      */
     private function createResourceShareDigest()
     {
         return new Digest(
-            __("{0} shared several items with you", "{0}"),
+            __('{0} shared several items with you', '{0}'),
             [
                 ShareEmailRedactor::TEMPLATE,
             ],

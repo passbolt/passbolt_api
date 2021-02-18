@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,23 +21,21 @@ use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
-use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 
 /**
  * Folders Model
  *
- * @method Folder get($primaryKey, $options = [])
- * @method Folder newEntity($data = null, array $options = [])
- * @method Folder[] newEntities(array $data, array $options = [])
- * @method Folder|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method Folder[] patchEntities($entities, array $data, array $options = [])
- * @method Folder findOrCreate($search, callable $callback = null, $options = [])
- *
- * @mixin TimestampBehavior
- * @mixin FolderizableBehavior
+ * @method \Passbolt\Folders\Model\Entity\Folder get($primaryKey, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder|false save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Table\Folder findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \Passbolt\Folders\Model\Behavior\FolderizableBehavior
  */
 class FoldersTable extends Table
 {
@@ -109,7 +109,7 @@ class FoldersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')

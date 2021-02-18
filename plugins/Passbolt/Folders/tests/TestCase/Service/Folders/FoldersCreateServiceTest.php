@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,10 +20,8 @@ namespace Passbolt\Folders\Test\TestCase\Service\Folders;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Fixture\Base\AvatarsFixture;
-use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -33,20 +33,15 @@ use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventManager;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 use Passbolt\Folders\Service\Folders\FoldersCreateService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -67,9 +62,6 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
     public $fixtures = [
         AvatarsFixture::class,
-        EmailQueueFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -85,16 +77,6 @@ class FoldersCreateServiceTest extends FoldersTestCase
     private $service;
 
     /**
-     * @var PermissionsTable
-     */
-    private $Permissions;
-
-    /**
-     * @var FoldersRelationsTable
-     */
-    private $FoldersRelations;
-
-    /**
      * setUp method
      *
      * @return void
@@ -103,11 +85,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
-        $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
-        $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
-        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
-        /** @var FoldersCreateService service */
+        /** @var FoldersCreateService $service */
         $this->service = new FoldersCreateService();
 
         $this->loadNotificationSettings();
@@ -122,9 +100,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $this->unloadNotificationSettings();
     }
 
-    /* ************************************************************** */
     /* COMMON & VALIDATION */
-    /* ************************************************************** */
 
     public function testCreateFolder_CommonError1_ValidationError()
     {
@@ -136,7 +112,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             $this->service->create($uac, $folderData);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate folder data.", $e->getMessage());
+            $this->assertEquals('Could not validate folder data.', $e->getMessage());
             $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -155,7 +131,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             $this->service->create($uac, $folderData);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate folder data.", $e->getMessage());
+            $this->assertEquals('Could not validate folder data.', $e->getMessage());
             $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent must exist.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -163,7 +139,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
     public function testCreateFolder_CommonError3_ParentFolderNoPermission()
     {
-        list ($parentFolder) = $this->insertCommonError3Fixture();
+        [$parentFolder] = $this->insertCommonError3Fixture();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -173,7 +149,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             $this->service->create($uac, $folderData);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate folder data.", $e->getMessage());
+            $this->assertEquals('Could not validate folder data.', $e->getMessage());
             $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -201,9 +177,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $this->assertResponseContains('You have created a new folder');
     }
 
-    /* ************************************************************** */
     /* PERSONAL FOLDER */
-    /* ************************************************************** */
 
     public function testCreateFolder_PersoSuccess1_CreateToRoot()
     {
@@ -249,13 +223,11 @@ class FoldersCreateServiceTest extends FoldersTestCase
         return $folderA;
     }
 
-    /* ************************************************************** */
     /* SHARED FOLDER */
-    /* ************************************************************** */
 
     public function testCreateFolder_SharedError1_ParentFolderInsufficientPermission()
     {
-        list ($parentFolder) = $this->insertSharedError1Fixture();
+        [$parentFolder] = $this->insertSharedError1Fixture();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -265,7 +237,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             $this->service->create($uac, $folderData);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate folder data.", $e->getMessage());
+            $this->assertEquals('Could not validate folder data.', $e->getMessage());
             $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -285,7 +257,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
     public function testCreateFolder_SharedSuccess1_CreateInFolder()
     {
-        list ($folderA) = $this->insertSharedSuccess1Fixture();
+        [$folderA] = $this->insertSharedSuccess1Fixture();
 
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');

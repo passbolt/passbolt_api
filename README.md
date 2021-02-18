@@ -6,7 +6,7 @@
 	  /_/    \__,_/____/____/_,___/\____/_/\__/
 
 	The open source password manager for teams
-	Copyright (c) 2019 Passbolt SA
+	Copyright (c) 2021 Passbolt SA
 	https://www.passbolt.com
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c804760791534e62b90632215952eaf0)](https://www.codacy.com/app/passbolt/passbolt_api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=passbolt/passbolt_api&amp;utm_campaign=Badge_Grade)
@@ -15,17 +15,22 @@
 
 ## License
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+Passbolt - Open source password manager for teams
 
-This program is distributed in the hope that it will be useful,
-but without any warranty; without even the implied warranty of
-merchantability or fitness for a particular purpose.  See the
-GNU Affero General Public License for more details.
+(c) 2021 Passbolt SA
 
-[Affero General Public License v3](http://www.gnu.org/licenses/agpl-3.0.html)
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+Public License (AGPL) as published by the Free Software Foundation version 3.
+
+The name "Passbolt" is a registered trademark of Passbolt SA, and Passbolt SA hereby declines to grant a trademark
+license to "Passbolt" pursuant to the GNU Affero General Public License version 3 Section 7(e), without a separate
+agreement with Passbolt SA.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program. If not,
+see [GNU Affero General Public License v3](http://www.gnu.org/licenses/agpl-3.0.html).
 
 ## About Passbolt
 

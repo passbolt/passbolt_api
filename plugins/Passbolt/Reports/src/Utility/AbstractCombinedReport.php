@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,11 +18,11 @@ namespace Passbolt\Reports\Utility;
 
 abstract class AbstractCombinedReport extends AbstractReport implements CombinedReportInterface
 {
-    const COMBINED_REPORT_TEMPLATE = 'Passbolt/Reports.CombinedReport';
-    const COMBINED_REPORT_TYPE = 'combined';
+    public const COMBINED_REPORT_TEMPLATE = 'Passbolt/Reports.CombinedReport';
+    public const COMBINED_REPORT_TYPE = 'combined';
 
     /**
-     * @var ReportInterface
+     * @var \Passbolt\Reports\Utility\ReportInterface
      */
     protected $subReports = [];
 
@@ -29,16 +31,15 @@ abstract class AbstractCombinedReport extends AbstractReport implements Combined
      *
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->template ?? self::COMBINED_REPORT_TEMPLATE;
     }
 
     /**
      * @inheritDoc
-     * @return string the report type, "single" in this case
      */
-    public function getType()
+    public function getType(): string
     {
         return self::COMBINED_REPORT_TYPE;
     }
@@ -46,7 +47,7 @@ abstract class AbstractCombinedReport extends AbstractReport implements Combined
     /**
      * @inheritDoc
      */
-    public function addReport(ReportInterface $report)
+    public function addReport(ReportInterface $report): ReportInterface
     {
         $this->subReports[] = $report;
 
@@ -56,7 +57,7 @@ abstract class AbstractCombinedReport extends AbstractReport implements Combined
     /**
      * @inheritDoc
      */
-    public function getReports()
+    public function getReports(): array
     {
         return $this->subReports;
     }
@@ -64,7 +65,7 @@ abstract class AbstractCombinedReport extends AbstractReport implements Combined
     /**
      * @inheritDoc
      */
-    public function getData()
+    public function getData(): array
     {
         $data = [];
         foreach ($this->subReports as $reports) {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -37,7 +39,6 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
         'app.Base/Resources', 'app.Base/Favorites',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-        'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
     ];
 
     public $GroupsUsers;
@@ -60,9 +61,9 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
         parent::tearDown();
     }
 
-    public function testGroupsUpdateControllerSuccess_RemoveTagWhenUserLoseAccess()
+    public function testTagsGroupsUpdateControllerSuccess_RemoveTagWhenUserLoseAccess()
     {
-        list($r1, $t1, $g1, $userAId, $userBId) = $this->insertFixture_RemoveTagWhenUserLoseAccess();
+        [$r1, $t1, $g1, $userAId, $userBId] = $this->insertFixture_RemoveTagWhenUserLoseAccess();
 
         // Remove user Betty from the group
         $groupUserB = $this->GroupsUsers->find('all')

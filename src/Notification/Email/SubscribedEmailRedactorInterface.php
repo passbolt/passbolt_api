@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,6 +21,7 @@ use Cake\Event\EventListenerInterface;
 
 /**
  * Interface SubscribedEmailRedactorInterface
+ *
  * @package App\Notification\Email
  *
  * A class implementing the interface SubscribedEmailRedactorInterface
@@ -31,13 +34,13 @@ interface SubscribedEmailRedactorInterface extends EventListenerInterface
      *
      * @return array
      */
-    public function getSubscribedEvents();
+    public function getSubscribedEvents(): array;
 
     /**
      * Method called by the EventDispatcher to register the redactor so it can be called when its subscribed events
      * are triggered.
      *
-     * @param CollectSubscribedEmailRedactorEvent $event Event object
+     * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
      * @return void
      */
     public function subscribe(CollectSubscribedEmailRedactorEvent $event);
@@ -47,8 +50,8 @@ interface SubscribedEmailRedactorInterface extends EventListenerInterface
      * Redactor MUST implement this method to manipulate the email collection to send.
      * Return an EmailCollection.
      *
-     * @param Event $event Event object
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event Event object
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event);
+    public function onSubscribedEvent(Event $event): EmailCollection;
 }

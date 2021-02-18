@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,8 +16,6 @@
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Utility\Healthchecks;
-use Cake\Core\Configure;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class SystemCheckControllerTest extends WebInstallerIntegrationTestCase

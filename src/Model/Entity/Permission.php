@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace App\Model\Entity;
 
-use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
@@ -27,17 +28,17 @@ use Cake\ORM\Entity;
  * @property string $aro
  * @property string $aro_foreign_key
  * @property int $type
- * @property FrozenTime $created
- * @property FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  */
 class Permission extends Entity
 {
     /**
      * The types of permissions.
      */
-    const READ = 1;
-    const UPDATE = 7;
-    const OWNER = 15;
+    public const READ = 1;
+    public const UPDATE = 7;
+    public const OWNER = 15;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -66,7 +67,7 @@ class Permission extends Entity
      * @param string|null $acoForeignKey ACO foreign key
      * @return string
      */
-    protected function _getAcoForeignKey(string $acoForeignKey = null)
+    protected function _getAcoForeignKey(?string $acoForeignKey = null)
     {
         if ($this->acoObject) {
             return $this->acoObject->getAcoForeignKey();
@@ -79,7 +80,7 @@ class Permission extends Entity
      * @param string|null $aco Access Control Object
      * @return string
      */
-    protected function _getAco(string $aco = null)
+    protected function _getAco(?string $aco = null)
     {
         if ($this->acoObject) {
             return $this->acoObject->getAcoType();
@@ -92,7 +93,7 @@ class Permission extends Entity
      * @param string|null $aroForeignKey ARO foreign key
      * @return string
      */
-    protected function _getAroForeignKey(string $aroForeignKey = null)
+    protected function _getAroForeignKey(?string $aroForeignKey = null)
     {
         if ($this->aroObject) {
             return $this->aroObject->getAroForeignKey();
@@ -105,7 +106,7 @@ class Permission extends Entity
      * @param string|null $aro Access Request Object
      * @return string
      */
-    protected function _getAro(string $aro = null)
+    protected function _getAro(?string $aro = null)
     {
         if ($this->aroObject) {
             return $this->aroObject->getAroType();

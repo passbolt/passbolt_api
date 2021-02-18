@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,10 +20,8 @@ namespace Passbolt\AccountSettings\Model\Table;
 use App\Error\Exception\ValidationException;
 use App\Model\Table\UsersTable;
 use App\Utility\UuidFactory;
-use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -33,14 +33,13 @@ use Passbolt\AccountSettings\Model\Table\Traits\ThemeSettingsTrait;
  * AccountSettings Model
  *
  * @property \Passbolt\AccountSettings\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- *
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get($primaryKey, $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEntity($data = null, array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] newEntities(array $data, array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] patchEntities($entities, array $data, array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting findOrCreate($search, callable $callback = null, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get($primaryKey, ?array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting findOrCreate($search, callable $callback = null, ?array $options = [])
  */
 class AccountSettingsTable extends Table
 {
@@ -52,7 +51,7 @@ class AccountSettingsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -75,17 +74,17 @@ class AccountSettingsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('property')
             ->maxLength('property', 256)
             ->requirePresence('property', 'create')
-            ->notEmpty('property')
+            ->notEmptyString('property')
             ->add('property', ['isValidProperty' => [
                 'rule' => [$this, 'isValidProperty'],
                 'message' => __('This setting is not supported.'),
@@ -94,7 +93,7 @@ class AccountSettingsTable extends Table
         $validator
             ->utf8Extended('value')
             ->requirePresence('value', 'create')
-            ->notEmpty('value');
+            ->notEmptyString('value');
 
         // Theme validation
         $validator = $this->themeValidationDefault($validator);
@@ -109,9 +108,9 @@ class AccountSettingsTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function isValidProperty(string $value, array $context = null)
+    public function isValidProperty(string $value, ?array $context = null)
     {
-        return (in_array($value, AccountSetting::SUPPORTED_PROPERTIES));
+        return in_array($value, AccountSetting::SUPPORTED_PROPERTIES);
     }
 
     /**
@@ -121,7 +120,7 @@ class AccountSettingsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
@@ -133,7 +132,7 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId uuid
      * @param array $whitelist example ['theme']
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findIndex(string $userId, array $whitelist)
     {
@@ -181,9 +180,9 @@ class AccountSettingsTable extends Table
      * @param string $userId uuid
      * @param string $property The property name
      * @param mixed $value The property value
-     * @throws BadRequestException if userId does not exist
-     * @throws ValidationException if could not save because of validation issues
-     * @throws InternalErrorException if save operation saved for another reason
+     * @throws \Cake\Http\Exception\BadRequestException if userId does not exist
+     * @throws \App\Error\Exception\ValidationException if could not save because of validation issues
+     * @throws \Cake\Http\Exception\InternalErrorException if save operation saved for another reason
      * @return \Passbolt\AccountSettings\Model\Entity\AccountSetting
      */
     public function createOrUpdateSetting(string $userId, string $property, string $value)
@@ -239,7 +238,7 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId user uuid
      * @param string $property user property
-     * @return EntityInterface|null
+     * @return \Cake\Datasource\EntityInterface|null
      */
     public function getByProperty(string $userId, string $property)
     {

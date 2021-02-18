@@ -1,3 +1,10 @@
+passbolt-pro-server (3.0.0-1) stretch; urgency=medium
+  * Cron job executes bin/cron script.
+  * Add cake passbolt show_logs command to display error.log path.
+  * Add bin/utils.sh script.
+
+ -- Daniel Del Rio <daniel@passbolt.com>  Mon, 18 Jan 2020 16:02:00 +0000
+
 passbolt-pro-server (2.13.1-1) stretch; urgency=medium
   * pb-1347 as a passbolt server administrator i should be able to use advanced filters for the ldap queries.
   * folders audit log
@@ -43,6 +50,7 @@ passbolt-pro-server (2.13.1-1) stretch; urgency=medium
   * PB-1370 Performance improvement while retrieving items associated folder_parent_id and personal status
 
  -- Diego Lendoiro <diego@passbolt.com>  Thu, 9 Jul 2020 14:24:00 +0000
+
 passbolt-pro-server (2.12.0-1) stretch; urgency=medium
   * Refactor config script
   * Refactor postinst script

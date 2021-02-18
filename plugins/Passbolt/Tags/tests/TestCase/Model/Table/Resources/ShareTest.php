@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -70,7 +72,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    public function testLostAccessAssociatedDataDeleted()
+    public function testTagsLostAccessAssociatedDataDeleted()
     {
         $resourceAId = UuidFactory::uuid('resource.id.apache');
         $userAId = UuidFactory::uuid('user.id.ada');

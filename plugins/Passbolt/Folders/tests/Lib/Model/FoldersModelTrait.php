@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,11 +20,10 @@ namespace Passbolt\Folders\Test\Lib\Model;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Passbolt\Folders\Model\Entity\Folder;
 
 trait FoldersModelTrait
 {
-    public function addFolder($data = [], $options = [])
+    public function addFolder($data = [], ?array $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $folder = self::getDummyFolderEntity($data, $options);
@@ -32,7 +33,7 @@ trait FoldersModelTrait
         return $folder;
     }
 
-    public function getDummyFolderEntity($data = [], $options = [])
+    public function getDummyFolderEntity(?array $data = [], ?array $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $defaultOptions = [
@@ -56,7 +57,7 @@ trait FoldersModelTrait
      * @return array
      * @throws \Exception If the create date is not correct.
      */
-    public function getDummyFolderData($data = [])
+    public function getDummyFolderData(?array $data = [])
     {
         $entityContent = [
             'name' => UuidFactory::uuid('folder.id.name'),
@@ -80,7 +81,7 @@ trait FoldersModelTrait
      * @param array $options The folder entity create options
      * @return Folder
      */
-    public function addFolderFor($data = [], array $users = [], array $groups = [], $options = [])
+    public function addFolderFor(?array $data = [], ?array $users = [], ?array $groups = [], ?array $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $usersTable = TableRegistry::getTableLocator()->get('Users');
@@ -143,6 +144,7 @@ trait FoldersModelTrait
 
     /**
      * Assert a user has a folder
+     *
      * @param string $folderId The folder to assert
      * @return void
      */

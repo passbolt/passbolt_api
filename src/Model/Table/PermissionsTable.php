@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,7 +20,6 @@ namespace App\Model\Table;
 use App\Model\Entity\Permission;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
-use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Permissions\PermissionsFindersTrait;
 use Cake\Core\Configure;
@@ -31,18 +32,16 @@ use Cake\Validation\Validator;
 /**
  * Permissions Model
  *
- * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsTo $Groups
- * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- *
- * @method \App\Model\Entity\Permission get($primaryKey, $options = [])
- * @method \App\Model\Entity\Permission newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Permission[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Permission|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Permission patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Permission[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Permission findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Permission get($primaryKey, ?array $options = [])
+ * @method \App\Model\Entity\Permission newEntity($data = null, ?array $options = [])
+ * @method \App\Model\Entity\Permission[] newEntities(array $data, ?array $options = [])
+ * @method \App\Model\Entity\Permission|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \App\Model\Entity\Permission patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Permission[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Permission findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class PermissionsTable extends Table
@@ -50,16 +49,16 @@ class PermissionsTable extends Table
     use PermissionsFindersTrait;
     use TableCleanupTrait;
 
-    const RESOURCE_ACO = 'Resource';
-    const FOLDER_ACO = 'Folder';
+    public const RESOURCE_ACO = 'Resource';
+    public const FOLDER_ACO = 'Folder';
 
-    const USER_ARO = 'User';
-    const GROUP_ARO = 'Group';
+    public const USER_ARO = 'User';
+    public const GROUP_ARO = 'Group';
 
     /**
      * List of allowed aco models on which Permissions can be plugged.
      */
-    const ALLOWED_ACOS = [
+    public const ALLOWED_ACOS = [
         self::RESOURCE_ACO,
         self::FOLDER_ACO,
     ];
@@ -67,7 +66,7 @@ class PermissionsTable extends Table
     /**
      * List of allowed aro models on which Permissions can be plugged.
      */
-    const ALLOWED_AROS = [
+    public const ALLOWED_AROS = [
         self::GROUP_ARO,
         self::USER_ARO,
     ];
@@ -75,7 +74,7 @@ class PermissionsTable extends Table
     /**
      * List of allowed permission types.
      */
-    const ALLOWED_TYPES = [
+    public const ALLOWED_TYPES = [
         Permission::READ,
         Permission::UPDATE,
         Permission::OWNER,
@@ -87,7 +86,7 @@ class PermissionsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -121,7 +120,7 @@ class PermissionsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
@@ -198,7 +197,7 @@ class PermissionsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->addCreate(
             $rules->isUnique(
@@ -260,7 +259,7 @@ class PermissionsTable extends Table
     /**
      * Checks that the aro exists
      *
-     * @param EntityInterface $entity The entity to test
+     * @param \Cake\Datasource\EntityInterface $entity The entity to test
      * @param array $options The additional options for this rule
      * @return bool
      */
@@ -300,7 +299,7 @@ class PermissionsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupSoftDeletedAro(string $modelName, $dryRun = false)
     {
@@ -320,7 +319,7 @@ class PermissionsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupHardDeletedAro(string $modelName, $dryRun = false)
     {
@@ -341,7 +340,7 @@ class PermissionsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupSoftDeletedAco(string $modelName, $dryRun = false)
     {
@@ -361,7 +360,7 @@ class PermissionsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupHardDeletedAco(string $modelName, $dryRun = false)
     {
@@ -381,7 +380,7 @@ class PermissionsTable extends Table
      * Delete all records where associated users are soft deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupSoftDeletedUsers($dryRun = false)
     {
@@ -392,7 +391,7 @@ class PermissionsTable extends Table
      * Delete all records where associated users are deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupHardDeletedUsers($dryRun = false)
     {
@@ -403,7 +402,7 @@ class PermissionsTable extends Table
      * Delete all records where associated groups are soft deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupSoftDeletedGroups($dryRun = false)
     {
@@ -414,7 +413,7 @@ class PermissionsTable extends Table
      * Delete all records where associated groups are deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupHardDeletedGroups($dryRun = false)
     {
@@ -425,7 +424,7 @@ class PermissionsTable extends Table
      * Delete all records where associated resources are deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupHardDeletedResources(bool $dryRun = false)
     {
@@ -436,7 +435,7 @@ class PermissionsTable extends Table
      * Delete all records where associated resources are deleted
      *
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \App\Model\Table\number of affected records
      */
     public function cleanupSoftDeletedResources(bool $dryRun = false)
     {

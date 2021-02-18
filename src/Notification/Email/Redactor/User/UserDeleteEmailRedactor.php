@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace App\Notification\Email\Redactor\User;
 
 use App\Controller\Users\UsersDeleteController;
-use App\Model\Entity\Group;
 use App\Model\Entity\User;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\UsersTable;
@@ -24,7 +25,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -33,30 +33,30 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     use SubscribedEmailRedactorTrait;
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @param UsersTable|null       $usersTable UsersTable
-     * @param GroupsUsersTable|null $groupsUsersTable GroupsUsersTable
+     * @param \App\Model\Table\UsersTable|null $usersTable UsersTable
+     * @param \App\Model\Table\GroupsUsersTable|null $groupsUsersTable GroupsUsersTable
      */
-    public function __construct(UsersTable $usersTable = null, GroupsUsersTable $groupsUsersTable = null)
+    public function __construct(?UsersTable $usersTable = null, ?GroupsUsersTable $groupsUsersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         $this->groupsUsersTable = $groupsUsersTable ?? TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -85,7 +85,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param array $groupsIds Groups IDs
-     * @return ResultSetInterface
+     * @return \Cake\Datasource\ResultSetInterface
      */
     private function getGroupManagers(array $groupsIds)
     {
@@ -98,10 +98,10 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param string  $recipient Email recipient
-     * @param User    $user User
-     * @param Group[] $groups Groups
-     * @param User    $deletedBy User admin who deleted the user
-     * @return Email
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\Group[] $groups Groups
+     * @param \App\Model\Entity\User $deletedBy User admin who deleted the user
+     * @return \App\Notification\Email\Email
      */
     private function createDeleteUserEmail(string $recipient, User $user, array $groups, User $deletedBy)
     {
@@ -120,7 +120,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             UsersDeleteController::DELETE_SUCCESS_EVENT_NAME,

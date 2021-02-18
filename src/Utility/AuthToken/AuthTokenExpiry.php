@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Utility\AuthToken;
 
@@ -8,7 +9,7 @@ use InvalidArgumentException;
 
 class AuthTokenExpiry
 {
-    const VALID_TOKEN_TYPES = [
+    public const VALID_TOKEN_TYPES = [
         AuthenticationToken::TYPE_LOGIN,
         AuthenticationToken::TYPE_RECOVER,
         AuthenticationToken::TYPE_REGISTER,

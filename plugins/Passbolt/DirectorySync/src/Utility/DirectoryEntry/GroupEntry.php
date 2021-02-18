@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,28 +22,31 @@ use LdapTools\Utilities\LdapUtilities;
 
 /**
  * Class GroupEntry
+ *
  * @package Passbolt\DirectorySync\Utility\DirectoryEntry
  */
 class GroupEntry extends DirectoryEntry
 {
     /**
      * Group.
+     *
      * @var array
      */
     public $group;
 
     /**
      * Type of object (group).
+     *
      * @var string
      */
     public $type = LdapObjectType::GROUP;
 
     /**
      * Build a groupEntry from a ldap object.
-     * @param LdapObject $ldapObject ldap object.
-     * @param array $mappingRules mapping rules
      *
-     * @return $this|DirectoryEntry directory entry
+     * @param \LdapTools\Object\LdapObject $ldapObject ldap object.
+     * @param array $mappingRules mapping rules
+     * @return $this|\Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryEntry directory entry
      * @throws \Exception
      */
     public function buildFromLdapObject(LdapObject $ldapObject, array $mappingRules)
@@ -62,10 +67,10 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Return a groupEntry from a ldap object.
-     * @param LdapObject $ldapObject ldap object.
-     * @param array $mappingRules mapping rules.
      *
-     * @return GroupEntry group entry
+     * @param \LdapTools\Object\LdapObject $ldapObject ldap object.
+     * @param array $mappingRules mapping rules.
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry group entry
      * @throws \Exception
      */
     public static function fromLdapObject(LdapObject $ldapObject, array $mappingRules)
@@ -78,9 +83,9 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Build a group Entry from array.
-     * @param array $data array
      *
-     * @return $this|DirectoryEntry the GroupEntry
+     * @param array $data array
+     * @return $this|\Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryEntry the GroupEntry
      */
     public function buildFromArray(array $data)
     {
@@ -88,13 +93,13 @@ class GroupEntry extends DirectoryEntry
 
         // If groups and users are note provided, we leave them empty.
         // They will be populated later by DirectoryResults.
-        $groups = isset($data['group']['groups']) ? $data['group']['groups'] : [];
-        $users = isset($data['group']['users']) ? $data['group']['users'] : [];
+        $groups = $data['group']['groups'] ?? [];
+        $users = $data['group']['users'] ?? [];
         $groupsUsers = array_merge($groups, $users);
-        $members = isset($data['group']['members']) ? $data['group']['members'] : [];
+        $members = $data['group']['members'] ?? [];
 
         $this->group = [
-            'name' => isset($data['group']['name']) ? $data['group']['name'] : '',
+            'name' => $data['group']['name'] ?? '',
             'members' => !empty($members) ? $members : $groupsUsers,
             'groups' => $groups,
             'users' => $users,
@@ -106,9 +111,9 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Return a GroupEntry from an array of data.
-     * @param array $data array of data.
      *
-     * @return GroupEntry the group entry
+     * @param array $data array of data.
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry the group entry
      */
     public static function fromArray(array $data)
     {
@@ -153,6 +158,7 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Transforms the Group entry into an array.
+     *
      * @return array
      */
     public function toArray()
@@ -183,6 +189,7 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Set group members.
+     *
      * @param array $members group members
      * @return void
      */
@@ -194,6 +201,7 @@ class GroupEntry extends DirectoryEntry
     /**
      * Set children groups.
      * Usually this function is called after a calculation has been done to deduct who the children are.
+     *
      * @param array $groups list of children groups.
      * @return void
      */
@@ -205,6 +213,7 @@ class GroupEntry extends DirectoryEntry
     /**
      * Set children Groups users.
      * Usually this function is called after a calculation has been done to deduct who the children are.
+     *
      * @param array $users the children groups users
      * @return void
      */
@@ -215,6 +224,7 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Get group members.
+     *
      * @return mixed
      */
     public function getGroupMembers()
@@ -224,6 +234,7 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Get groups groups.
+     *
      * @return mixed
      */
     public function getGroupGroups()
@@ -233,6 +244,7 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Get groups users.
+     *
      * @return mixed
      */
     public function getGroupUsers()

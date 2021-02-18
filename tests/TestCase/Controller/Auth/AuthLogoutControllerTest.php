@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,10 +23,6 @@ use Zend\Diactoros\Response\RedirectResponse;
 
 class AuthLogoutControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
-    ];
-
     /**
      * Check if a redirection is of type ZendRedirect
      * Usefull for high level routes redirections / route alias testing

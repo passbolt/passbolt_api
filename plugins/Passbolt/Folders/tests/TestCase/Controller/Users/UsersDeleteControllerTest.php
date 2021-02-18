@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,9 +30,6 @@ use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UuidFactory;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
-use Passbolt\Folders\Test\Fixture\PermissionsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -42,17 +41,12 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
 
-    private $Permissions;
-
     public $fixtures = [
         AvatarsFixture::class,
         FavoritesFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
-        PermissionsFixture::class,
         ProfilesFixture::class,
         RolesFixture::class,
         SecretsFixture::class,
@@ -69,9 +63,9 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
         parent::setUp();
     }
 
-    public function testUsersDeleteSuccess_PersonalFolder()
+    public function testFoldersUsersDeleteSuccess_PersonalFolder()
     {
-        list($folderA, $userAId) = $this->insertFixture_PersonalFolder();
+        [$folderA, $userAId] = $this->insertFixture_PersonalFolder();
         $this->authenticateAs('admin');
 
         $this->deleteJson("/users/$userAId.json?api-version=v2");
@@ -91,9 +85,9 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
         return [$folderA, $userAId];
     }
 
-    public function testUsersDeleteError_SoleOwnerFolder_FolderSharedWithUser()
+    public function testFoldersUsersDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
-        list($folderA, $userAId, $userBId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
         $this->authenticateAs('admin');
 
         $this->deleteJson("/users/$userAId.json?api-version=v2");
@@ -115,12 +109,15 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
     {
         // Ada is OWNER of folder A
         // Betty has READ on folder A
+        // Ada is OWNER of folder B
         // ---
         // A (Ada:O, Betty:R)
+        // B (Ada:O)
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER]);
 
-        return [$folderA, $userAId, $userBId];
+        return [$folderA, $folderB, $userAId, $userBId];
     }
 }

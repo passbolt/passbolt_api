@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -13,7 +15,7 @@
  * @since         2.0.0
  */
 
-namespace Passbolt\AuditLog\Test\TestCase\Utility;
+namespace Passbolt\AuditLog\Test\TestCase\Controller;
 
 use App\Utility\UuidFactory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
@@ -32,16 +34,9 @@ class UserLogsControllerTest extends LogIntegrationTestCase
         'app.Base/Permissions',
         'app.Base/Secrets',
         'app.Base/Favorites',
-        'app.Base/EmailQueue',
-        'plugin.Passbolt/Log.Base/Actions',
-        'plugin.Passbolt/Log.Base/ActionLogs',
-        'plugin.Passbolt/Log.Base/EntitiesHistory',
-        'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretAccesses',
-        'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
-    public function testUserLogsControllerViewByResourceEmpty()
+    public function testAuditLogUserLogsControllerViewByResourceEmpty()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
@@ -50,7 +45,7 @@ class UserLogsControllerTest extends LogIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testUserLogsControllerViewByResourceUserDoesNotHavePermission()
+    public function testAuditLogUserLogsControllerViewByResourceUserDoesNotHavePermission()
     {
         $this->authenticateAs('betty');
         $resourceId = UuidFactory::uuid('resource.id.bower');

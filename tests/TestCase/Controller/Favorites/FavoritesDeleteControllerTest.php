@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,7 +31,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
-        $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
+        $this->deleteJson("/favorites/$favoriteId.json?api-version=v2");
         $this->assertSuccess();
         $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $deletedFavorite = $Favorites->find('all')->where(['Favorites.id' => $favoriteId])->first();
@@ -41,7 +43,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->disableCsrfToken();
         $this->authenticateAs('dame');
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
-        $this->delete("/favorites/$favoriteId.json?api-version=2");
+        $this->delete("/favorites/$favoriteId.json?api-version=v2");
         $this->assertResponseCode(403);
     }
 
@@ -49,7 +51,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $favoriteId = 'invalid-id';
-        $this->deleteJson("/favorites/$favoriteId.json?api-version=v1");
+        $this->deleteJson("/favorites/$favoriteId.json?api-version=v2");
         $this->assertError(400, 'The favorite id is not valid.');
     }
 
@@ -57,7 +59,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $favoriteId = UuidFactory::uuid();
-        $this->deleteJson("/favorites/$favoriteId.json?api-version=v1");
+        $this->deleteJson("/favorites/$favoriteId.json?api-version=v2");
         $this->assertError(404, 'The favorite does not exist.');
     }
 
@@ -65,14 +67,14 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
-        $this->deleteJson("/favorites/$favoriteId.json?api-version=v1");
+        $this->deleteJson("/favorites/$favoriteId.json?api-version=v2");
         $this->assertError(404, 'The favorite does not exist.');
     }
 
     public function testFavoritesDeleteErrorNotAuthenticated()
     {
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
-        $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
+        $this->deleteJson("/favorites/$favoriteId.json?api-version=v2");
         $this->assertAuthenticationError();
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
     public $Groups;
 
     public $fixtures = [
-        'app.Base/Groups', 'app.Base/Users', 'app.Base/Resources', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/EmailQueue',
+        'app.Base/Groups', 'app.Base/Users', 'app.Base/Resources', 'app.Base/Profiles', 'app.Base/Roles',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Gpgkeys', 'app.Base/Secrets',
     ];
 
@@ -35,7 +37,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.group.delete', false);
 
         $this->authenticateAs('edith');
-        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v1');
+        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v2');
         $this->assertResponseSuccess();
 
         // check email notification
@@ -52,7 +54,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.group.delete', true);
 
         $this->authenticateAs('edith');
-        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v1');
+        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v2');
         $this->assertResponseSuccess();
 
         // check email notification

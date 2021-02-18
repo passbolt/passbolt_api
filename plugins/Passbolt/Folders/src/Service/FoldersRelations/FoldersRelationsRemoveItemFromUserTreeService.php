@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,17 +18,16 @@
 namespace Passbolt\Folders\Service\FoldersRelations;
 
 use Cake\ORM\TableRegistry;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsRemoveItemFromUserTreeService
 {
     /**
-     * @var FoldersRelationsDeleteService
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService
      */
     private $foldersRelationsDeleteService;
 
     /**
-     * @var FoldersRelationsTable
+     * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
     private $foldersRelationsTable;
 
@@ -48,14 +49,16 @@ class FoldersRelationsRemoveItemFromUserTreeService
      * @return void
      * @throws \Exception
      */
-    public function removeItemFromUserTree(string $foreignId, string $userId, bool $moveContentToRoot = false)
+    public function removeItemFromUserTree(string $foreignId, string $userId, ?bool $moveContentToRoot = false): void
     {
-        $this->foldersRelationsTable->getConnection()->transactional(function () use ($userId, $foreignId, $moveContentToRoot) {
-            if ($moveContentToRoot) {
-                $this->moveContentToRoot($foreignId, $userId);
+        $this->foldersRelationsTable->getConnection()->transactional(
+            function () use ($userId, $foreignId, $moveContentToRoot) {
+                if ($moveContentToRoot) {
+                    $this->moveContentToRoot($foreignId, $userId);
+                }
+                $this->foldersRelationsDeleteService->delete($userId, $foreignId);
             }
-            $this->foldersRelationsDeleteService->delete($userId, $foreignId);
-        });
+        );
     }
 
     /**

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,12 +20,11 @@ namespace Passbolt\Folders\Service\FoldersRelations;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsRepairStronglyConnectedComponents
 {
     /**
-     * @var FoldersRelationsTable
+     * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
     private $foldersRelationsTable;
 
@@ -38,22 +39,26 @@ class FoldersRelationsRepairStronglyConnectedComponents
     /**
      * Repair a set of strongly connected components.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $userId The user tree that is at the origin at the conflict. Most of the time it's the modified
      *                        tree.
      * @param array $foldersRelations The relations forming a strongly connected components set
      * @return void
      */
-    public function repair(UserAccessControl $uac, string $userId, array $foldersRelations)
+    public function repair(UserAccessControl $uac, string $userId, array $foldersRelations): void
     {
         $folderRelationToBreak = $this->identifyFolderRelationToBreak($uac, $userId, $foldersRelations);
-        $this->foldersRelationsTable->moveItemFrom($folderRelationToBreak['foreign_id'], [$folderRelationToBreak['folder_parent_id']], FoldersRelation::ROOT);
+        $this->foldersRelationsTable->moveItemFrom(
+            $folderRelationToBreak['foreign_id'],
+            [$folderRelationToBreak['folder_parent_id']],
+            FoldersRelation::ROOT
+        );
     }
 
     /**
      * Identify the relation to break in order to solve an SCC.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $userId The user tree that is at the origin at the conflict. Most of the time it's the modified
      * tree.
      * @param array $foldersRelations The list of folders relations responsible of the conflict.
@@ -67,12 +72,20 @@ class FoldersRelationsRepairStronglyConnectedComponents
      *   string $created The oldest time this relation has been created
      * ]
      */
-    private function identifyFolderRelationToBreak(UserAccessControl $uac, string $userId, array $foldersRelations)
-    {
+    private function identifyFolderRelationToBreak(
+        UserAccessControl $uac,
+        string $userId,
+        array $foldersRelations
+    ): array {
         // Retrieve the folders relations info that will help to prioritize the relation to break.
         $foldersRelationsInfo = [];
         foreach ($foldersRelations as $i => $folderRelation) {
-            $foldersRelationsInfo[] = $this->getFolderRelationInfo($uac, $userId, $folderRelation['foreign_id'], $folderRelation['folder_parent_id']);
+            $foldersRelationsInfo[] = $this->getFolderRelationInfo(
+                $uac,
+                $userId,
+                $folderRelation['foreign_id'],
+                $folderRelation['folder_parent_id']
+            );
         }
 
         // Sort the folders relations info and identify in the top of the list the folder relation to break.
@@ -87,15 +100,23 @@ class FoldersRelationsRepairStronglyConnectedComponents
     /**
      * Retrieve a folder relation information that will help to prioritize the relation to break.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $userId The user tree that is at the origin at the conflict. Most of the time it's the modified
      * @param string $foreignId The relation item id
      * @param string $folderParentId The relation parent item id
      * @return array
      */
-    private function getFolderRelationInfo(UserAccessControl $uac, string $userId, string $foreignId, string $folderParentId)
-    {
-        $inOperatorTree = $this->foldersRelationsTable->isItemOrganizedInUserTree($uac->userId(), $foreignId, $folderParentId);
+    private function getFolderRelationInfo(
+        UserAccessControl $uac,
+        string $userId,
+        string $foreignId,
+        string $folderParentId
+    ): array {
+        $inOperatorTree = $this->foldersRelationsTable->isItemOrganizedInUserTree(
+            $uac->getId(),
+            $foreignId,
+            $folderParentId
+        );
         $inUserTree = $this->foldersRelationsTable->isItemOrganizedInUserTree($userId, $foreignId, $folderParentId);
         $usedCount = $this->foldersRelationsTable->countRelationUsage($foreignId, $folderParentId);
         $created = $this->foldersRelationsTable->getRelationOldestCreatedDate($foreignId, $folderParentId);
@@ -118,11 +139,11 @@ class FoldersRelationsRepairStronglyConnectedComponents
      * 3. The relations that are in the tree of the user impacted by the action;
      * 4. The oldest relations.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param array $foldersRelations The relations forming a strongly connected components set
      * @return array
      */
-    private function sortFolderRelationsByPriority(UserAccessControl $uac, array $foldersRelations)
+    private function sortFolderRelationsByPriority(UserAccessControl $uac, array $foldersRelations): array
     {
         usort($foldersRelations, function ($folderRelationA, $folderRelationB) use ($uac) {
             // Operator relations should be broken with the lowest priority.

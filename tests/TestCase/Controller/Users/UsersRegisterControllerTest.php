@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,9 +25,9 @@ use Cake\ORM\TableRegistry;
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
+        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
         'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
-        'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue',
+         'app.Base/Avatars',
     ];
 
     public function testUsersRegisterGetSuccess()
@@ -61,7 +63,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         ];
 
         foreach ($success as $case => $data) {
-            $this->post('/users/register', $data);
+            $this->postJson('/users/register.json', $data);
             $this->assertResponseSuccess();
 
             // Check user was saved
@@ -81,26 +83,6 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             $roles = TableRegistry::getTableLocator()->get('Roles');
             $role = $roles->get($user->get('role_id'));
             $this->assertEquals(Role::USER, $role->name);
-        }
-    }
-
-    public function testUsersRegisterPostApiV1Success()
-    {
-        $success = [
-            'legacy format' => [
-                'User' => [
-                    'username' => 'anna@passbolt.com',
-                ],
-                'Profile' => [
-                    'first_name' => 'Anna',
-                    'last_name' => 'Fisher',
-                ],
-            ],
-        ];
-
-        foreach ($success as $case => $data) {
-            $this->post('/users/register', $data);
-            $this->assertResponseSuccess();
         }
     }
 
@@ -152,7 +134,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
         ];
         foreach ($fails as $case => $data) {
-            $this->post('/users/register.json?api-version=v1', $data);
+            $this->post('/users/register.json?api-version=v2', $data);
             $result = json_decode($this->_getBodyAsString());
             $this->assertEquals('400', $result->header->code, 'Validation should fail when ' . $case);
             $this->assertResponseError();
@@ -164,7 +146,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->disableCsrfToken();
         $this->post('/users/register');
         $this->assertResponseCode(403);
-        $result = ($this->_getBodyAsString());
+        $result = $this->_getBodyAsString();
         $this->assertContains('Missing CSRF token cookie', $result);
     }
 
@@ -179,7 +161,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
         ];
 
-        $this->post('/users/register.json?api-version=v1', $data);
+        $this->post('/users/register.json?api-version=v2', $data);
         $result = json_decode($this->_getBodyAsString());
         $this->assertEquals('400', $result->header->code, 'Validation should fail when the username already exists in db');
         $this->assertResponseError();
@@ -221,7 +203,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
         ];
 
-        $this->post('/users/register', $data);
+        $this->postJson('/users/register.json', $data);
         $this->assertResponseSuccess();
 
         $users = TableRegistry::getTableLocator()->get('Users');

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -44,20 +46,6 @@ class FoldersRelationsTableTest extends FoldersTestCase
     public $FoldersRelations;
 
     /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = [
-        'plugin.Passbolt/Folders.Folders',
-        'plugin.Passbolt/Folders.FoldersRelations',
-        'app.Base/Groups',
-        'app.Base/Resources',
-        'app.Base/Users',
-        'app.Base/Permissions',
-    ];
-
-    /**
      * setUp method
      *
      * @return void
@@ -99,11 +87,9 @@ class FoldersRelationsTableTest extends FoldersTestCase
         ];
     }
 
-    /* ************************************************************** */
     /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
 
-    public function testValidationForeignModel()
+    public function testFoldersRelationsValidationForeignModel()
     {
         $testCases = [
             'inList' => self::getInListTestCases($this->FoldersRelations::ALLOWED_FOREIGN_MODELS),
@@ -119,7 +105,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         );
     }
 
-    public function testValidationForeignId()
+    public function testFoldersRelationsValidationForeignId()
     {
         $testCases = [
             'uuid' => self::getUuidTestCases(),
@@ -135,7 +121,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         );
     }
 
-    public function testValidationUserId()
+    public function testFoldersRelationsValidationUserId()
     {
         $testCases = [
             'uuid' => self::getUuidTestCases(),
@@ -151,7 +137,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         );
     }
 
-    public function testValidationFolderParentId()
+    public function testFoldersRelationsValidationFolderParentId()
     {
         $testCases = [
             'uuid' => self::getUuidTestCases(),
@@ -166,11 +152,9 @@ class FoldersRelationsTableTest extends FoldersTestCase
         );
     }
 
-    /* ************************************************************** */
     /* BUILD RULES TESTS */
-    /* ************************************************************** */
 
-    public function testErrorBuildRuleCreate_FolderRelationUnique()
+    public function testFoldersRelationsErrorBuildRuleCreate_FolderRelationUnique()
     {
         // Insert fixtures.
         // Ada has access to folder A as a OWNER
@@ -191,7 +175,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         $this->assertNotNull($errors['foreign_id']['folder_relation_unique']);
     }
 
-    public function testErrorBuildRuleCreate_ForeignIdExists_FolderNotExist()
+    public function testFoldersRelationsErrorBuildRuleCreate_ForeignIdExists_FolderNotExist()
     {
         $data = [
             'foreign_model' => 'Folder',
@@ -205,7 +189,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         $this->assertNotNull($errors['foreign_id']['foreign_model_exists']);
     }
 
-    public function testErrorBuildRuleCreate_ForeignIdExists_ResourceNotExist()
+    public function testFoldersRelationsErrorBuildRuleCreate_ForeignIdExists_ResourceNotExist()
     {
         $data = [
             'foreign_model' => 'Resource',
@@ -219,7 +203,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         $this->assertNotNull($errors['foreign_id']['foreign_model_exists']);
     }
 
-    public function testErrorBuildRuleCreate_ForeignIdExists_ResourceSoftDeleted()
+    public function testFoldersRelationsErrorBuildRuleCreate_ForeignIdExists_ResourceSoftDeleted()
     {
         $data = [
             'foreign_model' => 'Resource',
@@ -233,7 +217,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         $this->assertNotNull($errors['foreign_id']['foreign_model_exists']);
     }
 
-    public function testErrorBuildRuleCreate_UserIdExists_UserNotExist()
+    public function testFoldersRelationsErrorBuildRuleCreate_UserIdExists_UserNotExist()
     {
         // Insert fixtures.
         // Ada has access to folder A as a OWNER
@@ -253,7 +237,7 @@ class FoldersRelationsTableTest extends FoldersTestCase
         $this->assertNotNull($errors['user_id']['user_exists']);
     }
 
-    public function testErrorBuildRuleCreate_UserIdExists_UserSoftDeleted()
+    public function testFoldersRelationsErrorBuildRuleCreate_UserIdExists_UserSoftDeleted()
     {
         // Insert fixtures.
         // Ada has access to folder A as a OWNER

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -124,9 +126,6 @@ trait AssertDirectoryTrait
         $this->assertEmpty($di, __('Directory ignore list should be empty, {0} found. {1}', count($di)));
     }
 
-    /**
-     *
-     */
     public function assertDirectoryIgnoreNotEmpty()
     {
         $di = $this->action->DirectoryEntries->DirectoryIgnore->find()->all()->toArray();
@@ -134,20 +133,20 @@ trait AssertDirectoryTrait
     }
 
     /**
-     * @param array $where
+     * @param array|null $where
      * @return void
      */
-    public function assertDirectoryIgnoreExist(array $where = [])
+    public function assertDirectoryIgnoreExist(?array $where = [])
     {
         $di = $this->action->DirectoryEntries->DirectoryIgnore->find()->where($where)->all()->toArray();
         $this->assertNotEmpty($di, __('Directory ignore list should not be empty.'));
     }
 
     /**
-     * @param array $where
+     * @param array|null $where
      * @return void
      */
-    public function assertDirectoryIgnoreDoesNotExist(array $where = [])
+    public function assertDirectoryIgnoreDoesNotExist(?array $where = [])
     {
         $di = $this->action->DirectoryEntries->DirectoryIgnore->find()->where($where)->all()->toArray();
         $this->assertEmpty($di, __('Directory ignore list should not be empty.'));

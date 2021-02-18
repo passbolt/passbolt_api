@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,12 +28,12 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 class MfaMiddleware
 {
     /**
-     * @var MfaSettings
+     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
     private $mfaSettings;
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function __invoke(ServerRequest $request, Response $response, $next)
     {
@@ -52,7 +54,7 @@ class MfaMiddleware
     }
 
     /**
-     * @param ServerRequest $request request
+     * @param \Cake\Http\ServerRequest $request request
      * @return bool
      */
     protected function requiredMfaCheck(ServerRequest $request)
@@ -96,7 +98,7 @@ class MfaMiddleware
     }
 
     /**
-     * @param ServerRequest $request request
+     * @param \Cake\Http\ServerRequest $request request
      * @return string
      */
     protected function getVerifyUrl(ServerRequest $request)

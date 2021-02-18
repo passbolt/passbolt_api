@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/EmailQueue', 'app.Base/Avatars', 'app.Base/Gpgkeys',
+         'app.Base/Avatars', 'app.Base/Gpgkeys',
     ];
 
     public function testGroupsUsersAddNotificationDisabled()
@@ -35,7 +37,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.group.user.add', false);
 
         $this->authenticateAs('admin');
-        $this->postJson('/groups.json?api-version=v1', [
+        $this->postJson('/groups.json?api-version=v2', [
             'Group' => ['name' => 'Temp Group'],
             'GroupUsers' => [
                 ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
@@ -58,7 +60,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.group.user.add', true);
 
         $this->authenticateAs('admin');
-        $this->postJson('/groups.json?api-version=v1', [
+        $this->postJson('/groups.json?api-version=v2', [
             'Group' => ['name' => 'Temp Group'],
             'GroupUsers' => [
                 ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => true]],

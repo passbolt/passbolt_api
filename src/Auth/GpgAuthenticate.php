@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,11 +18,8 @@ namespace App\Auth;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
-use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\GpgkeysTable;
-use App\Model\Table\UsersTable;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use App\Utility\OpenPGP\OpenPGPBackendInterface;
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
@@ -33,7 +32,7 @@ use Exception;
 
 class GpgAuthenticate extends BaseAuthenticate
 {
-    const HTTP_HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
+    public const HTTP_HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
         'X-GPGAuth-Authenticated, X-GPGAuth-Refer, X-GPGAuth-Debug, X-GPGAuth-Error, X-GPGAuth-Pubkey, ' .
         'X-GPGAuth-Logout-Url, X-GPGAuth-Version';
 
@@ -44,7 +43,7 @@ class GpgAuthenticate extends BaseAuthenticate
     protected $_config;
 
     /**
-     * @var $_gpg OpenPGPBackendInterface instance
+     * @var $_gpg \App\Utility\OpenPGP\OpenPGPBackendInterface instance
      * @access protected
      */
     protected $_gpg;
@@ -66,16 +65,16 @@ class GpgAuthenticate extends BaseAuthenticate
     protected $_data;
 
     /**
-     * @var User $_user
+     * @var \App\Model\Entity\User $_user
      */
     protected $_user;
 
     /**
      * When an unauthenticated user tries to access a protected page this method is called
      *
-     * @param ServerRequest $request interface for accessing request parameters
-     * @param Response $response features and functionality for generating HTTP responses
-     * @throws ForbiddenException
+     * @param \Cake\Http\ServerRequest $request interface for accessing request parameters
+     * @param \Cake\Http\Response $response features and functionality for generating HTTP responses
+     * @throws \Cake\Http\Exception\ForbiddenException
      * @return void
      */
     public function unauthenticated(ServerRequest $request, Response $response)
@@ -91,9 +90,9 @@ class GpgAuthenticate extends BaseAuthenticate
      * Authenticate
      * See. https://www.passbolt.com/help/tech/auth
      *
-     * @param ServerRequest $request interface for accessing request parameters
-     * @param Response $response features and functionality for generating HTTP responses
-     * @throws InternalErrorException if the config or key is not set or not usable
+     * @param \Cake\Http\ServerRequest $request interface for accessing request parameters
+     * @param \Cake\Http\Response $response features and functionality for generating HTTP responses
+     * @throws \Cake\Http\Exception\InternalErrorException if the config or key is not set or not usable
      * @return mixed User|false the user or false if authentication failed
      */
     public function authenticate(ServerRequest $request, Response $response)
@@ -155,7 +154,7 @@ class GpgAuthenticate extends BaseAuthenticate
      * Stage 1 - Client private key verification
      * Generate a random number, encrypt and send it back for the user to decrypts
      *
-     * @throws InternalErrorException
+     * @throws \Cake\Http\Exception\InternalErrorException
      * @return bool
      */
     private function _stage1()
@@ -175,7 +174,7 @@ class GpgAuthenticate extends BaseAuthenticate
         );
 
         // generate the authentication token
-        /** @var AuthenticationTokensTable $AuthenticationToken */
+        /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationToken */
         $AuthenticationToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $authenticationToken = $AuthenticationToken->generate($this->_user->id, AuthenticationToken::TYPE_LOGIN);
         if (!isset($authenticationToken->token)) {
@@ -201,14 +200,14 @@ class GpgAuthenticate extends BaseAuthenticate
     {
         //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_2', '');
         $this->_response = $this->_response->withHeader('X-GPGAuth-Progress', 'stage2');
-        if (!($this->_checkNonce($this->_data['user_token_result']))) {
+        if (!$this->_checkNonce($this->_data['user_token_result'])) {
             return $this->_error(__('The user token result is not a valid UUID.'));
         }
 
         // extract the UUID to get the database records
-        list($version, $length, $uuid, $version2) = explode('|', $this->_data['user_token_result']);
+        [$version, $length, $uuid, $version2] = explode('|', $this->_data['user_token_result']);
 
-        /** @var AuthenticationTokensTable $AuthenticationToken */
+        /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationToken */
         $AuthenticationToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $isValidToken = $AuthenticationToken->isValid($uuid, $this->_user->id, AuthenticationToken::TYPE_LOGIN);
         if (!$isValidToken) {
@@ -229,12 +228,12 @@ class GpgAuthenticate extends BaseAuthenticate
     /**
      * Common initialization for all steps
      *
-     * @param ServerRequest $request request
-     * @param Response $response response
-     * @throws InternalErrorException when the key is not valid
+     * @param \Cake\Http\ServerRequest $request request
+     * @param \Cake\Http\Response $response response
+     * @throws \Cake\Http\Exception\InternalErrorException when the key is not valid
      * @return bool
      */
-    private function _initForAllSteps(ServerRequest $request, Response $response)
+    private function _initForAllSteps(ServerRequest $request, Response $response): bool
     {
         $this->_response = $response
             ->withHeader('X-GPGAuth-Authenticated', 'false')
@@ -245,7 +244,7 @@ class GpgAuthenticate extends BaseAuthenticate
 
         // Begin process by checking if the user exist and his key is valid
         $this->_user = $this->_identifyUserWithFingerprint();
-        if ($this->_user === false) {
+        if ($this->_user === null) {
             $this->_missingUserError();
 
             return false;
@@ -257,7 +256,7 @@ class GpgAuthenticate extends BaseAuthenticate
     /**
      * Initialize GPG keyring and load the config
      *
-     * @throws InternalErrorException if the config is missing or key is not set or not usable to decrypt
+     * @throws \Cake\Http\Exception\InternalErrorException if config is missing or key is not set nor usable to decrypt
      * @return void
      */
     private function _initKeyring()
@@ -265,19 +264,20 @@ class GpgAuthenticate extends BaseAuthenticate
         // check if the default key is set and available in gpg
         $this->_gpg = OpenPGPBackendFactory::get();
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
 
         // Check if config contains fingerprint
-        if (!GpgkeysTable::isValidFingerprint($fingerprint)) {
+        if (!is_string($fingerprint) || !GpgkeysTable::isValidFingerprint($fingerprint)) {
             throw new InternalErrorException(__('The GnuPG config for the server is not available or incomplete.'));
         }
 
         // set the key to be used for decrypting
         try {
-            $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
+            $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
         } catch (Exception $exception) {
             try {
                 $this->_gpg->importServerKeyInKeyring();
-                $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
+                $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
             } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
@@ -290,10 +290,10 @@ class GpgAuthenticate extends BaseAuthenticate
      * Set user key for encryption and import it in the keyring if needed
      *
      * @param string $fingerprint fingerprint
-     * @throws InternalErrorException when the key is not valid
+     * @throws \Cake\Http\Exception\InternalErrorException when the key is not valid
      * @return void
      */
-    private function _initUserKey(string $fingerprint)
+    private function _initUserKey(string $fingerprint): void
     {
         try {
             $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
@@ -303,7 +303,8 @@ class GpgAuthenticate extends BaseAuthenticate
                 $this->_gpg->importKeyIntoKeyring($this->_user->gpgkey->armored_key);
                 $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
             } catch (Exception $exception) {
-                throw new InternalErrorException(__('The OpenPGP key for the user could not be imported in GnuPG.'));
+                $msg = __('The OpenPGP key for the user could not be imported in GnuPG.');
+                throw new InternalErrorException($msg);
             }
         }
     }
@@ -311,35 +312,37 @@ class GpgAuthenticate extends BaseAuthenticate
     /**
      * Find a user record from a public key fingerprint
      *
-     * @return mixed false or User
+     * @return \App\Model\Entity\User|null
      */
-    private function _identifyUserWithFingerprint()
+    private function _identifyUserWithFingerprint(): ?User
     {
         // First we check if we can get the user with the key fingerprint
         if (!isset($this->_data['keyid'])) {
             $this->_debug('No key id set.');
 
-            return false;
+            return null;
         }
         $fingerprint = strtoupper($this->_data['keyid']);
 
         // validate the fingerprint format
-        /** @var GpgkeysTable $Gpgkeys */
+        /** @var \App\Model\Table\GpgkeysTable $Gpgkeys */
         $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
-        if (!$Gpgkeys->isValidFingerprintRule($fingerprint)) {
+        if (!is_string($fingerprint) || !$Gpgkeys->isValidFingerprintRule($fingerprint)) {
             $this->_debug('Invalid fingerprint.');
 
-            return false;
+            return null;
         }
 
         // try to find the user
-        /** @var UsersTable $Users */
+        /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
+
+        /** @var \App\Model\Entity\User $user */
         $user = $Users->find('auth', ['fingerprint' => $fingerprint])->first();
         if (empty($user)) {
             $this->_debug('User not found.');
 
-            return false;
+            return null;
         }
 
         return $user;
@@ -348,10 +351,10 @@ class GpgAuthenticate extends BaseAuthenticate
     /**
      * Set a debug message in header if debug is enabled
      *
-     * @param string $s debug message
+     * @param string|null $s debug message
      * @return void
      */
-    private function _debug($s = null)
+    private function _debug(?string $s): void
     {
         $this->_debug = $s;
         if (isset($s) && Configure::read('debug')) {
@@ -362,10 +365,10 @@ class GpgAuthenticate extends BaseAuthenticate
     /**
      * Trigger a GPGAuth Error
      *
-     * @param string $msg the error message
+     * @param string|null $msg the error message
      * @return bool always false, that will be used as authenticated method final result
      */
-    private function _error($msg = null)
+    private function _error(?string $msg): bool
     {
         $this->_debug($msg);
         $this->_response = $this->_response->withHeader('X-GPGAuth-Error', 'true');
@@ -379,14 +382,14 @@ class GpgAuthenticate extends BaseAuthenticate
      * @param string $nonce for example: 'gpgauthv1.3.0|36|de305d54-75b4-431b-adb2-eb6b9e546014|gpgauthv1.3.0'
      * @return bool true if valid, false otherwise
      */
-    private function _checkNonce($nonce)
+    private function _checkNonce(string $nonce): bool
     {
         $result = explode('|', $nonce);
         $errorMsg = __('Invalid verify token format, ');
         if (count($result) != 4) {
             return $this->_error($errorMsg . __('sections are missing or using wrong delimiters.'));
         }
-        list($version, $length, $uuid, $version2) = $result;
+        [$version, $length, $uuid, $version2] = $result;
         if ($version != $version2) {
             return $this->_error($errorMsg . __('the version numbers do not match.'));
         }
@@ -406,10 +409,10 @@ class GpgAuthenticate extends BaseAuthenticate
     /**
      * Normalize request data
      *
-     * @param object $request Request
+     * @param \Cake\Http\ServerRequest $request Request
      * @return array|null
      */
-    private function _normalizeRequestData($request)
+    private function _normalizeRequestData(ServerRequest $request): ?array
     {
         $data = $request->getData();
         if (isset($data['data'])) {
@@ -428,9 +431,9 @@ class GpgAuthenticate extends BaseAuthenticate
      * Return the updated response
      * Usefull to get back response in controller since response is immutable
      *
-     * @return Response
+     * @return \Cake\Http\Response
      */
-    public function getUpdatedResponse()
+    public function getUpdatedResponse(): Response
     {
         return $this->_response;
     }
@@ -440,7 +443,7 @@ class GpgAuthenticate extends BaseAuthenticate
      *
      * @return void
      */
-    private function _missingUserError()
+    private function _missingUserError(): void
     {
         // If the user doesn't exist, we want to mention it in the debug anyway (no matter we are in debug mode or not)
         // IMPORTANT : Do not change this behavior. Exceptionally here, the client will need to know that

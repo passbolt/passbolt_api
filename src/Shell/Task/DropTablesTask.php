@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use Cake\Datasource\ConnectionManager;
 
 class DropTablesTask extends AppShell
 {
-
     /**
      * Gets the option parser instance and configures it.
      *
@@ -55,7 +56,8 @@ class DropTablesTask extends AppShell
         $tables = $tables->fetchAll();
         foreach ($tables as $table) {
             $this->out(__('Dropping table ' . $table[0]));
-            $connection->query('drop table ' . $table[0]);
+            $quotedTableName = $connection->getDriver()->quoteIdentifier($table[0]);
+            $connection->query("drop table {$quotedTableName};");
         }
         $this->_success(__('{0} tables dropped', count($tables)));
 

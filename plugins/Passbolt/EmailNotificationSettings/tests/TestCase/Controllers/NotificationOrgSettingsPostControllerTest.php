@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,17 +17,12 @@
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettings;
 
 use App\Notification\Email\EmailSubscriptionDispatcher;
-use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
-
-    public $fixtures = [
-        OrganizationSettingsFixture::class,
-    ];
 
     public function setUp()
     {

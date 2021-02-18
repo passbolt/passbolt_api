@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -12,12 +14,11 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\Tags\Test\TestCase\Model\Table;
+namespace Passbolt\Tags\Test\TestCase\Model\Table\Tags;
 
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Passbolt\Tags\Model\Table\TagsTable;
 use Passbolt\Tags\Test\Lib\TagTestCase;
 
 /**
@@ -25,7 +26,6 @@ use Passbolt\Tags\Test\Lib\TagTestCase;
  */
 class TagsTableTest extends TagTestCase
 {
-
     /**
      * Test subject
      *
@@ -39,7 +39,8 @@ class TagsTableTest extends TagTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources',
+        'app.Base/ResourceTypes', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
@@ -52,8 +53,7 @@ class TagsTableTest extends TagTestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Tags') ? [] : ['className' => TagsTable::class];
-        $this->Tags = TableRegistry::getTableLocator()->get('Tags', $config);
+        $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
     }
 
     /**
@@ -115,7 +115,7 @@ class TagsTableTest extends TagTestCase
         $this->assertFalse($tag->is_shared);
     }
 
-    public function testDeleteAllUnusedTags()
+    public function testTagsDeleteAllUnusedTags()
     {
         // unused and #unused
         $r = $this->Tags->deleteAllUnusedTags();

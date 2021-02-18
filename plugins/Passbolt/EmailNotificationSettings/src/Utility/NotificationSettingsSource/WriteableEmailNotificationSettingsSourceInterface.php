@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,7 +24,7 @@ interface WriteableEmailNotificationSettingsSourceInterface
      * Write an array of notification settings into a storage chosen by the implementation.
      *
      * @param array $notificationSettingsData Notification settings with the dotted notation.
-     * @param UserAccessControl $userAccessControl UAC
+     * @param \App\Utility\UserAccessControl $userAccessControl UAC
      * @return void
      */
     public function write(array $notificationSettingsData, UserAccessControl $userAccessControl);

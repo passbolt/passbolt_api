@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,12 +29,13 @@ abstract class AbstractDigest implements DigestInterface
 {
     /**
      * Email from email queue plugin
-     * @var Entity[]
+     *
+     * @var \Cake\ORM\Entity[]
      */
     protected $emailsData = [];
 
     /**
-     * @param Entity $emailQueueEntity Email entity to use to marshal digests.
+     * @param \Cake\ORM\Entity $emailQueueEntity Email entity to use to marshal digests.
      * @return static
      */
     public function addEmailEntity(Entity $emailQueueEntity)
@@ -45,24 +48,25 @@ abstract class AbstractDigest implements DigestInterface
     /**
      * Helper method which render the content of every emails contained in a digest into a string to be used
      * as the content of the digest.
-     * @param EmailPreviewFactory $factory Factory
-     * @param EmailDigestInterface $emailDigest Email digest to use to generate the render
+     *
+     * @param \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory $factory Factory
+     * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $digest Email digest to use to render
      * @return string
      */
-    protected function renderDigestContentFromEmailPreview(EmailPreviewFactory $factory, EmailDigestInterface $emailDigest)
+    protected function renderDigestContentFromEmailPreview(EmailPreviewFactory $factory, EmailDigestInterface $digest)
     {
         $emailDigestContent = [];
-        foreach ($emailDigest->getEmailsData() as $emailData) {
+        foreach ($digest->getEmailsData() as $emailData) {
             $emailPreview = $factory->renderEmailPreviewFromEmailEntity($emailData);
             $emailDigestContent[] = $emailPreview->getContent();
         }
 
-        return implode("", $emailDigestContent);
+        return implode('', $emailDigestContent);
     }
 
     /**
-     * @param Entity $emailQueueEntity entity
-     * @return EmailDigest
+     * @param \Cake\ORM\Entity $emailQueueEntity entity
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
      */
     public function buildSingleEmailDigest(Entity $emailQueueEntity)
     {

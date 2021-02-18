@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,8 +19,6 @@ namespace Passbolt\Folders\Test\TestCase\Service\Groups;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Model\Table\GroupsUsersTable;
-use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
@@ -28,11 +28,8 @@ use App\Test\Fixture\Base\SecretsFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Groups\GroupsAfterUserAddedService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -52,8 +49,6 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
 
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -64,16 +59,6 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
     ];
 
     /**
-     * @var GroupsUsersTable
-     */
-    private $groupsUsersTable;
-
-    /**
-     * @var PermissionsTable
-     */
-    private $permissionsTable;
-
-    /**
      * @var GroupsAfterUserAddedService
      */
     private $service;
@@ -81,14 +66,12 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $this->service = new GroupsAfterUserAddedService();
     }
 
     public function testGroupsAfterUserAddedSuccess_AddResourceToUserTree()
     {
-        list($r1, $r2, $g1, $userAId) = $this->insertFixture_AddResourceToUserTree();
+        [$r1, $r2, $g1, $userAId] = $this->insertFixture_AddResourceToUserTree();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userBId = UuidFactory::uuid('user.id.betty');
 
@@ -127,7 +110,7 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
 
     public function testGroupsAfterUserAddedSuccess_ResourceWasAlreadyInUserTree()
     {
-        list($r1, $r2, $g1, $userAId) = $this->insertFixture_ResourceWasAlreadyInUserTree();
+        [$r1, $r2, $g1, $userAId] = $this->insertFixture_ResourceWasAlreadyInUserTree();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userBId = UuidFactory::uuid('user.id.betty');
 
@@ -166,7 +149,7 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
 
     public function testGroupsAfterUserAddedSuccess_AddFolderToUserTree()
     {
-        list($folderA, $folderB, $g1, $userAId) = $this->insertFixture_AddFolderToUserTree();
+        [$folderA, $folderB, $g1, $userAId] = $this->insertFixture_AddFolderToUserTree();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userBId = UuidFactory::uuid('user.id.betty');
 
@@ -205,7 +188,7 @@ class GroupsAfterUserAddedServiceTest extends FoldersTestCase
 
     public function testGroupsAfterUserAddedSuccess_FolderWasAlreadyInUserTree()
     {
-        list($folderA, $folderB, $g1, $userAId, $userBId) = $this->insertFixture_FolderWasAlreadyInUserTree();
+        [$folderA, $folderB, $g1, $userAId, $userBId] = $this->insertFixture_FolderWasAlreadyInUserTree();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         // Prepare the test by deleting the group user entry

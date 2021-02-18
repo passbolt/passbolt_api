@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,14 +17,12 @@
 
 namespace Passbolt\Folders\EventListener;
 
-use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Passbolt\Folders\Service\Resources\ResourcesAfterAccessGrantedService;
 use Passbolt\Folders\Service\Resources\ResourcesAfterAccessRevokedService;
 use Passbolt\Folders\Service\Resources\ResourcesAfterCreateService;
 use Passbolt\Folders\Service\Resources\ResourcesAfterSoftDeleteService;
-use Passbolt\Folders\Service\Resources\ResourcesAfterUpdateService;
 
 /**
  * Listen when a resource is created or updated,
@@ -47,7 +47,8 @@ class ResourcesEventListener implements EventListenerInterface
 
     /**
      * Handle a resource after create event.
-     * @param Event $event The event.
+     *
+     * @param \Cake\Event\Event $event The event.
      * @return void
      * @throws \Exception
      */
@@ -62,7 +63,8 @@ class ResourcesEventListener implements EventListenerInterface
 
     /**
      * Handle a resource after soft delete event.
-     * @param Event $event The event.
+     *
+     * @param \Cake\Event\Event $event The event.
      * @return void
      * @throws \Exception
      */
@@ -75,7 +77,8 @@ class ResourcesEventListener implements EventListenerInterface
 
     /**
      * Handle a resource after an access has been granted.
-     * @param Event $event The event.
+     *
+     * @param \Cake\Event\Event $event The event.
      * @return void
      * @throws \Exception
      */
@@ -89,7 +92,8 @@ class ResourcesEventListener implements EventListenerInterface
 
     /**
      * Handle a resource after an access has been granted.
-     * @param Event $event The event.
+     *
+     * @param \Cake\Event\Event $event The event.
      * @return void
      * @throws \Exception
      */

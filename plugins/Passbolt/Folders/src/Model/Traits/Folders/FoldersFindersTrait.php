@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,9 +27,9 @@ use Passbolt\Folders\Model\Entity\Folder;
 
 /**
  * Trait FoldersFindersTrait
- * @package Passbolt\Folders\Model\Traits\Folders
  *
- * @mixin FolderizableBehavior
+ * @package Passbolt\Folders\Model\Traits\Folders
+ * @mixin \Passbolt\Folders\Model\Behavior\FolderizableBehavior
  */
 trait FoldersFindersTrait
 {
@@ -36,10 +38,10 @@ trait FoldersFindersTrait
      *
      * @param string $userId The user to get the folders for
      * @param array $options options
-     * @return Query
-     * @throws InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @return \Cake\ORM\Query
+     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
-    public function findIndex(string $userId, array $options = [])
+    public function findIndex(string $userId, ?array $options = [])
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
@@ -68,7 +70,8 @@ trait FoldersFindersTrait
         if (isset($options['contain']['permission'])) {
             $query->contain('Permission', function (Query $q) use ($userId) {
                 $subQueryOptions = ['checkGroupsUsers' => true];
-                $permissionIdSubQuery = $this->Permissions->findAllByAro(PermissionsTable::FOLDER_ACO, $userId, $subQueryOptions)
+                $permissionIdSubQuery = $this->Permissions
+                    ->findAllByAro(PermissionsTable::FOLDER_ACO, $userId, $subQueryOptions)
                     ->where(['Permissions.aco_foreign_key = Folders.id'])
                     ->order(['Permissions.type DESC'])
                     ->limit(1)
@@ -154,9 +157,9 @@ trait FoldersFindersTrait
      * @param string $userId The user to get the folders for
      * @param string $folderId The folder to retrieve
      * @param array $options options
-     * @return Query
+     * @return \Cake\ORM\Query
      */
-    public function findView(string $userId, string $folderId, array $options = [])
+    public function findView(string $userId, string $folderId, ?array $options = [])
     {
         $query = $this->findIndex($userId, $options)
             ->where(['Folders.id' => $folderId]);
@@ -167,16 +170,17 @@ trait FoldersFindersTrait
     /**
      * Filter a folders query to return only folders the user has access to.
      *
-     * @param Query $query The query to filter.
+     * @param \Cake\ORM\Query $query The query to filter.
      * @param string $userId The user to check the permissions for.
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     private function _filterQueryByPermissions(Query $query, string $userId)
     {
         $subQueryOptions = [
             'checkGroupsUsers' => true,
         ];
-        $resourcesFilterByPermissionTypeSubQuery = $this->Permissions->findAllByAro(PermissionsTable::FOLDER_ACO, $userId, $subQueryOptions)
+        $resourcesFilterByPermissionTypeSubQuery = $this->Permissions
+            ->findAllByAro(PermissionsTable::FOLDER_ACO, $userId, $subQueryOptions)
             ->select(['Permissions.aco_foreign_key'])
             ->distinct();
 
@@ -188,9 +192,9 @@ trait FoldersFindersTrait
     /**
      * Filter a query to retrieve folders on their ids with the given list of ids
      *
-     * @param Query $query Query to filter on
+     * @param \Cake\ORM\Query $query Query to filter on
      * @param array $folderIds array of folders ids
-     * @return Query|Folder[]
+     * @return \Cake\ORM\Query|\Passbolt\Folders\Model\Entity\Folder[]
      */
     public function filterByIds(Query $query, array $folderIds)
     {
@@ -207,9 +211,9 @@ trait FoldersFindersTrait
      *
      * Should filter all the groups with a name containing creative.
      *
-     * @param Query $query Query to filter
+     * @param \Cake\ORM\Query $query Query to filter
      * @param string $name Name to filter
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function filterQueryBySearch(Query $query, string $name)
     {
@@ -221,9 +225,9 @@ trait FoldersFindersTrait
     /**
      * Filter a query by parents ids.
      *
-     * @param Query $query Query to filter on
+     * @param \Cake\ORM\Query $query Query to filter on
      * @param array $parentIds Array of parent ids
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function filterQueryByParentIds(Query $query, array $parentIds)
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,31 +17,65 @@
 
 namespace App\Test\TestCase\Controller\Notifications;
 
-use App\Test\TestCase\Controller\Resources\ResourcesUpdateControllerTest;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
-class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
+class ResourcesUpdateNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Gpgkeys',
-        'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/OrganizationSettings',
+        'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Roles',
+        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars',
     ];
 
-    /**
-     * @var ResourcesTable
-     */
-    private $resourcesTable;
+    protected function _getGpgMessage()
+    {
+        return '-----BEGIN PGP MESSAGE-----
+
+hQIMA1P90Qk1JHA+ARAAu3oaLzv/BfeukST6tYAkAID+xbt5dhsv4lxL3oSbo8Nm
+qmJQSVe6wmh8nZJjeHN4L7iCq8FEZpdCwrDbX1qIuqBFFO3vx6BJFOURG0JbI/E/
+nXtvck00RvxTB1Y30OUbGp21jjEILyuELhWpf11+AQelybY4XKyM8UxGjSncDqaS
+X7/yXspCByywci1VfzK7D6+zfcyLy29wQm9Ci5j6I4QqhvlKQPTxl6tWrJh+EyLP
+SLZjO8ofc00fbc7mUIH5taDg6Br2VLG/x29HhKCPYdOVzSz3BpUCcUcPgn98mCV0
+Qh7ZPE1NNmCWXID5hryuSF71IiAYhxae9u77pOAbVe0PwFgMY6kke/hJQkO6IYJ/
+/Q3aL/xHTlY2XtPbpV1in6soc0wJBuoROrwN0AdtvEJOnomclNEH5BPwLjZ1shCr
+vuk0zJjj9WcqQiVNEuErs4d7rLc+dB7md+97S8Gtcf8lrlZMH9ooI2UnvxC8HRqX
+KzcgW17YF44VtD2TLMymvpnjPV9gruYnmpkQG/1ihnDOWe6xWlFH6jZf5eE4IEVn
+osx/D6inZHHMXWbZu9hMiQloKKZ0s8yxTFw9C1wFwaIxRtvJ84qc17rJs7mfcC2n
+sG7jLzQBV/GVWtR4hVebstP+q05Sib+sKwLOTZhzWNPKruBsdaBCUTxcmI6qwDHS
+QQFgGx0K1xQj2rKiP2j0cDHyGsWIlOITN+4r6Ohx23qRhVo0txPWVOYLpC8JnlfQ
+W3AI8+rWjK8MGH2T88hCYI/6
+=uahb
+-----END PGP MESSAGE-----';
+    }
+
+    protected function _getDummyPostData($data = [])
+    {
+        $defaultData = [
+            'Resource' => [
+                'name' => 'new resource name',
+                'username' => 'username@domain.com',
+                'uri' => 'https://www.domain.com',
+                'description' => 'new resource description',
+            ],
+            'Secret' => [
+                [
+                    'data' => $this->_getGpgMessage(),
+                ],
+            ],
+        ];
+        $data = array_merge($defaultData, $data);
+
+        return $data;
+    }
 
     public function setUp()
     {
         parent::setUp();
         $this->loadNotificationSettings();
-        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function tearDown()

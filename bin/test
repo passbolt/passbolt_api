@@ -1,13 +1,18 @@
-#!/bin/bash
-USER="$2"
-if [ -z "$USER" ];
-then
-    USER="www-data"
-fi
+#!/usr/bin/env bash
+# This script executes the php unit tests as a web user
 
-FILTER="$1"
-if [[ -z "$FILTER" || "$FILTER" == "all" ]]; then
-    sudo su -s /bin/bash -c "./vendor/bin/phpunit --stop-on-failure --stop-on-error" $USER
+set -euo pipefail
+
+FILTER="${1:-all}"
+user="${2:-www-data}"
+DIR=$(dirname "$(readlink -f "$0")")
+
+# shellcheck source=utils.sh
+# shellcheck disable=SC1091
+source "$DIR"/utils.sh
+
+if [[ "$FILTER" == "all" ]]; then
+  run_as "$DIR/../vendor/bin/phpunit --stop-on-failure --stop-on-error" "$user"
 else
-    sudo su -s /bin/bash -c "./vendor/bin/phpunit --filter=$FILTER " $USER
+  run_as "$DIR/../vendor/bin/phpunit --filter=$FILTER  --stop-on-failure --stop-on-error" "$user"
 fi

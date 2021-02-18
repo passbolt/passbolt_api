@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,9 +16,7 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use App\Utility\Healthchecks;
 use Cake\Controller\Controller;
-use Cake\Core\Configure;
 
 class GettingStartedController extends Controller
 {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,7 +24,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class MfaController extends AppController
 {
     /**
-     * @var MfaSettings
+     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
     protected $mfaSettings;
 
@@ -32,7 +34,7 @@ class MfaController extends AppController
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -46,7 +48,7 @@ class MfaController extends AppController
      * Fail is organization do not allow this authentication provider
      *
      * @param string $provider name of the provider
-     * @throws BadRequestException
+     * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
     protected function _orgAllowProviderOrFail(string $provider)

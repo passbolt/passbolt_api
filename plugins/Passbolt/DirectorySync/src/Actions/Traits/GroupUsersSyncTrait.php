@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -29,11 +31,11 @@ use Passbolt\DirectorySync\Utility\SyncError;
 
 trait GroupUsersSyncTrait
 {
-
     /**
      * Handle groupUsers once a group is created.
+     *
      * @param array $data directory data
-     * @param Group $group group
+     * @param \App\Model\Entity\Group $group group
      * @return void
      */
     public function handleGroupUsersAfterGroupCreate(array $data, Group $group)
@@ -47,8 +49,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Handle groupUsers that are deleted.
-     * @param DirectoryEntry $entry entries to be deleted.
      *
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entries to be deleted.
      * @return mixed
      */
     public function handleGroupUsersDeleted(DirectoryEntry $entry)
@@ -58,9 +60,10 @@ trait GroupUsersSyncTrait
 
     /**
      * Handle groupUsers when they are edited for an existing group.
+     *
      * @param array $data directory data
-     * @param DirectoryEntry $entry directory entry
-     * @param Group $group group to edit
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry directory entry
+     * @param \App\Model\Entity\Group $group group to edit
      * @return void
      */
     public function handleGroupUsersEdit(array $data, DirectoryEntry $entry, Group $group)
@@ -95,7 +98,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Request to add users into the group.
-     * @param Group $group groups
+     *
+     * @param \App\Model\Entity\Group $group groups
      * @param array $userIdsToAdd list of user ids to add
      * @return void
      */
@@ -107,7 +111,7 @@ trait GroupUsersSyncTrait
 
             // If users are deleted or active, we just ignore the entry.
             if ($u->deleted) {
-                $msg = __('The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt.', $u->username, $group->name);
+                $msg = __('The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt.', $u->username, $group->name); //phpcs:ignore
                 $this->addReportItem(new ActionReport(
                     $msg,
                     Alias::MODEL_GROUPS_USERS,
@@ -118,7 +122,7 @@ trait GroupUsersSyncTrait
 
                 continue;
             } elseif (!$u->active) {
-                $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $u->username, $group->name);
+                $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $u->username, $group->name);//phpcs:ignore
                 $this->addReportItem(new ActionReport(
                     $msg,
                     Alias::MODEL_GROUPS_USERS,
@@ -131,7 +135,7 @@ trait GroupUsersSyncTrait
             } else {
                 $groupUsers[] = $this->GroupsUsers->buildEntity(['group_id' => $group->id, 'user_id' => $userId]);
                 $this->addReportItem(new ActionReport(
-                    __('The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually.', $u->username, $group->name),
+                    __('The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually.', $u->username, $group->name),//phpcs:ignore
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_SUCCESS,
@@ -151,8 +155,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Retrieve a group with its groupUsers.
-     * @param Group $existingGroup existing group
      *
+     * @param \App\Model\Entity\Group $existingGroup existing group
      * @return mixed
      */
     protected function findGroupWithGroupUsers(Group $existingGroup)
@@ -168,8 +172,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Check if a DN belongs to the groups returned by the directory.
-     * @param string $dn DN
      *
+     * @param string $dn DN
      * @return bool
      */
     protected function groupExistsInDirectory(string $dn)
@@ -181,8 +185,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Find the directory relations corresponding to an entry.
-     * @param string $entryId entry id
      *
+     * @param string $entryId entry id
      * @return array
      */
     protected function findDirectoryRelationsByEntryId(string $entryId)
@@ -201,8 +205,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Find directory entries corresponding to a groupUser
-     * @param array $GroupsUsersDn user directory name
      *
+     * @param array $GroupsUsersDn user directory name
      * @return mixed
      */
     protected function findDirectoryEntriesForGroupUsers(array $GroupsUsersDn)
@@ -222,9 +226,9 @@ trait GroupUsersSyncTrait
 
     /**
      * Retrieve the list of users to add.
-     * @param array $data directory data
-     * @param Group $group group
      *
+     * @param array $data directory data
+     * @param \App\Model\Entity\Group $group group
      * @return array
      */
     protected function retrieveUsersToAdd(array $data, Group $group)
@@ -249,7 +253,7 @@ trait GroupUsersSyncTrait
             if (!isset($directoryGroupUserEntriesByDn[$userDn])) {
                 // If a DN was returned by the directory, but cannot be resolved with our entries, we notify the admin.
                 $this->addReportItem(new ActionReport(
-                    __('The user {0} could not be added to group {1} because there is no matching directory entry in passbolt.', $userDn, $group->name),
+                    __('The user {0} could not be added to group {1} because there is no matching directory entry in passbolt.', $userDn, $group->name),//phpcs:ignore
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_IGNORE,
@@ -276,7 +280,7 @@ trait GroupUsersSyncTrait
             if ($drExists) {
                 $u = $this->Users->get($userId);
                 $this->addReportItem(new ActionReport(
-                    __('The user {0} could not be added to the group {1} because the membership has been removed in passbolt', $u->username, $group->name),
+                    __('The user {0} could not be added to the group {1} because the membership has been removed in passbolt', $u->username, $group->name),//phpcs:ignore
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_IGNORE,
@@ -294,8 +298,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Retrieve the list of users to remove.
-     * @param array $data data
      *
+     * @param array $data data
      * @return array
      */
     protected function retrieveUsersToRemove(array $data)
@@ -314,7 +318,10 @@ trait GroupUsersSyncTrait
         // Calculate groupUsers to remove.
         // We remove group users that are in directoryRelations but not in group data
         foreach ($directoryRelations as $directoryRelation) {
-            if (!in_array($directoryRelation['user_directory_entry']['id'], $directoryGroupUserEntryIds)) {
+            if (
+                !isset($directoryRelation['user_directory_entry']['id']) ||
+                !in_array($directoryRelation['user_directory_entry']['id'], $directoryGroupUserEntryIds)
+            ) {
                 $toRemove[] = $directoryRelation['id'];
             }
         }
@@ -324,7 +331,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Add Group users
-     * @param Group $group group where to ad the group users.
+     *
+     * @param \App\Model\Entity\Group $group group where to ad the group users.
      * @param array $userIdsToAdd list of user ids to be added.
      * @return void
      */
@@ -357,11 +365,11 @@ trait GroupUsersSyncTrait
                 $isNotActive = !empty(Hash::extract($errors, '0.user_id.user_is_active'));
                 $isDeleted = !empty(Hash::extract($errors, '0.user_id.user_is_not_soft_deleted'));
                 if (($isNotActive && $isDeleted) || $isDeleted) {
-                    $msg = __('The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt.', $user->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt.', $user->username, $group->name);//phpcs:ignore
                 } elseif ($isNotActive) {
-                    $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $user->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $user->username, $group->name);//phpcs:ignore
                 } else {
-                    $msg = __('The user {0} could not be added to the group {1} because of validation issues.', $user->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because of validation issues.', $user->username, $group->name);//phpcs:ignore
                 }
                 $this->addReportItem(new ActionReport(
                     $msg,
@@ -373,7 +381,7 @@ trait GroupUsersSyncTrait
             } catch (\Exception $exception) {
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport(
-                    __('The user {0} could not be added to the group {1} because of an internal error.', $user->username, $group->name),
+                    __('The user {0} could not be added to the group {1} because of an internal error.', $user->username, $group->name),//phpcs:ignore
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_ERROR,
@@ -387,7 +395,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Remove groupUsers for a given group.
-     * @param Group $group group where to remove the groupUsers
+     *
+     * @param \App\Model\Entity\Group $group group where to remove the groupUsers
      * @param array $groupUserIdsToRemove list of groupUsers Ids
      * @return void
      */
@@ -425,16 +434,16 @@ trait GroupUsersSyncTrait
             } catch (CustomValidationException $exception) {
                 $errors = $group->getErrors();
                 if (isset($errors['groups_users']['at_least_one_admin'])) {
-                    $msg = __('The user {0} could not be removed from the group {1} because it is the only group manager.', $gp->user->username, $group->name);
+                    $msg = __('The user {0} could not be removed from the group {1} because it is the only group manager.', $gp->user->username, $group->name);//phpcs:ignore
                 } else {
-                    $msg = __('The user {0} could not be removed from the group {1} because some validation issues.', $gp->user->username, $group->name);
+                    $msg = __('The user {0} could not be removed from the group {1} because some validation issues.', $gp->user->username, $group->name);//phpcs:ignore
                 }
                 $error = new SyncError($group, $exception);
-                $this->addReportItem(new ActionReport($msg, Alias::MODEL_GROUPS_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $error));
+                $this->addReportItem(new ActionReport($msg, Alias::MODEL_GROUPS_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $error));//phpcs:ignore
             } catch (\Exception $exception) {
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport(
-                    __('The user {0} could not be removed from the group {1} because of an internal error.', $gp->user->username, $group->name),
+                    __('The user {0} could not be removed from the group {1} because of an internal error.', $gp->user->username, $group->name),//phpcs:ignore
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_ERROR,
@@ -446,7 +455,8 @@ trait GroupUsersSyncTrait
 
     /**
      * Sync Group Users.
-     * @param Group $group group
+     *
+     * @param \App\Model\Entity\Group $group group
      * @param array $toSync list of groupuserIds to be synced.
      * @return void
      */
@@ -455,7 +465,7 @@ trait GroupUsersSyncTrait
         foreach ($toSync as $groupUser) {
             $directoryRelation = $this->DirectoryRelations->createFromGroupUser($groupUser);
             $this->addReportItem(new ActionReport(
-                __('The user {0} was successfully synced with the group {1}.', $groupUser->user->username, $group->name),
+                __('The user {0} was successfully synced with the group {1}.', $groupUser->user->username, $group->name),//phpcs:ignore
                 Alias::MODEL_GROUPS_USERS,
                 Alias::ACTION_CREATE,
                 Alias::STATUS_SYNC,
@@ -466,9 +476,9 @@ trait GroupUsersSyncTrait
 
     /**
      * Retrieve list of users to sync.
-     * @param array $data directory data
-     * @param Group $group group
      *
+     * @param array $data directory data
+     * @param \App\Model\Entity\Group $group group
      * @return array
      */
     public function retrieveUsersToSync(array $data, Group $group)
@@ -495,7 +505,7 @@ trait GroupUsersSyncTrait
                     } else {
                         // Send ignore report.
                         $this->addReportItem(new ActionReport(
-                            __('The user {0} was not synced with existing membership for group {1} because the membership was created before.', $groupUser->user->username, $group->name),
+                            __('The user {0} was not synced with existing membership for group {1} because the membership was created before.', $groupUser->user->username, $group->name),//phpcs:ignore
                             Alias::MODEL_GROUPS_USERS,
                             Alias::ACTION_CREATE,
                             Alias::STATUS_IGNORE,

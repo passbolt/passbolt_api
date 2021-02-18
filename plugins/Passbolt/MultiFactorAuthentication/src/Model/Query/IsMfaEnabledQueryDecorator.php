@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,21 +27,21 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class IsMfaEnabledQueryDecorator
 {
-    const IS_MFA_ENABLED_FILTER_NAME = 'is-mfa-enabled';
+    public const IS_MFA_ENABLED_FILTER_NAME = 'is-mfa-enabled';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @var MfaEntityMapper
+     * @var \Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper
      */
     private $userMfaMapper;
 
     /**
-     * @param UsersTable $usersTable Users table
-     * @param MfaEntityMapper $userMfaMapper Property mapper
+     * @param \App\Model\Table\UsersTable $usersTable Users table
+     * @param \Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper $userMfaMapper Property mapper
      */
     public function __construct(UsersTable $usersTable, MfaEntityMapper $userMfaMapper)
     {
@@ -48,9 +50,9 @@ class IsMfaEnabledQueryDecorator
     }
 
     /**
-     * @param Query $query Query
-     * @param FindIndexOptions $options Options
-     * @return Query
+     * @param \Cake\ORM\Query $query Query
+     * @param \App\Model\Table\Dto\FindIndexOptions $options Options
+     * @return \Cake\ORM\Query
      */
     public function apply(Query $query, FindIndexOptions $options)
     {
@@ -74,8 +76,8 @@ class IsMfaEnabledQueryDecorator
     }
 
     /**
-     * @param Query $query Query
-     * @return Query
+     * @param \Cake\ORM\Query $query Query
+     * @return \Cake\ORM\Query
      */
     private function addIsMfaEnabledPropertyToUsers(Query $query)
     {
@@ -89,9 +91,9 @@ class IsMfaEnabledQueryDecorator
     }
 
     /**
-     * @param Query $query Query
-     * @param FindIndexOptions $options Options
-     * @return Query
+     * @param \Cake\ORM\Query $query Query
+     * @param \App\Model\Table\Dto\FindIndexOptions $options Options
+     * @return \Cake\ORM\Query
      */
     private function applyIsMfaEnabledFilterToResults(Query $query, FindIndexOptions $options)
     {

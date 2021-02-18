@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,16 +27,28 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets',
-        'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles',
+        'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Roles',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Gpgkeys',
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->loadNotificationSettings();
+    }
+
+    public function tearDown()
+    {
+        $this->unloadNotificationSettings();
+        parent::tearDown();
+    }
 
     public function testResourcesDeleteNotificationDisabled()
     {
         $this->setEmailNotificationSetting('send.password.delete', false);
 
         $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v1');
+        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
         $this->assertSuccess();
 
         // check email notification
@@ -48,7 +62,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.password.delete', true);
 
         $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v1');
+        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
         $this->assertSuccess();
 
         // check email notification

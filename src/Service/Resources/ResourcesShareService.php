@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,11 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
-use App\Model\Table\FavoritesTable;
-use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourcesTable;
-use App\Model\Table\UsersTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
@@ -36,64 +34,52 @@ use Cake\ORM\TableRegistry;
 class ResourcesShareService
 {
     /**
-     * @var FavoritesTable
-     */
-    private $favoritesTable;
-
-    /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @var PermissionsGetUsersIdsHavingAccessToService
+     * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
      */
     private $permissionsGetUsersIdsHavingAccessToService;
 
     /**
-     * @var PermissionsUpdatePermissionsService
+     * @var \App\Service\Permissions\PermissionsUpdatePermissionsService
      */
     private $permissionsUpdatePermissionsService;
 
     /**
-     * @var ResourcesTable
+     * @var \App\Model\Table\ResourcesTable
      */
     private $resourcesTable;
 
     /**
-     * @var SecretsUpdateSecretsService
+     * @var \App\Service\Secrets\SecretsUpdateSecretsService
      */
     private $secretsUpdateSecretsService;
 
     /**
-     * @var UserHasPermissionService
+     * @var \App\Service\Permissions\UserHasPermissionService
      */
     private $userHasPermissionService;
-
-    /**
-     * @var UsersTable
-     */
-    private $usersTable;
 
     /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        $this->favoritesTable = TableRegistry::getTableLocator()->get('Favorites');
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->permissionsGetUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
         $this->userHasPermissionService = new UserHasPermissionService();
-        $this->usersTable = TableRegistry::getTableLocator()->get('Users');
     }
 
     /**
      * Share a resource by updating its permissions.
      *
-     * @param UserAccessControl $uac The current user
+     * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $resourceId The target resource
      * @param array $changes The list of permissions changes to apply
      * @param array $secrets The list of new secrets to add
@@ -119,7 +105,7 @@ class ResourcesShareService
      *
      * @param string $resourceId The resource identifier to retrieve.
      * @return \App\Model\Entity\Resource
-     * @throws NotFoundException If the resource does not exist.
+     * @throws \Cake\Http\Exception\NotFoundException If the resource does not exist.
      */
     private function getResource(string $resourceId)
     {
@@ -134,7 +120,7 @@ class ResourcesShareService
     /**
      * Update the permissions of a resource.
      *
-     * @param UserAccessControl $uac The current user
+     * @param \App\Utility\UserAccessControl $uac The current user
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $changes The list of permissions changes to apply
      * @return array
@@ -148,7 +134,8 @@ class ResourcesShareService
     private function updatePermissions(UserAccessControl $uac, \App\Model\Entity\Resource $resource, array $changes)
     {
         try {
-            return $this->permissionsUpdatePermissionsService->updatePermissions($uac, PermissionsTable::RESOURCE_ACO, $resource->id, $changes);
+            return $this->permissionsUpdatePermissionsService
+                ->updatePermissions($uac, PermissionsTable::RESOURCE_ACO, $resource->id, $changes);
         } catch (CustomValidationException $e) {
             $resource->setError('permissions', $e->getErrors());
             $this->handleValidationErrors($resource);
@@ -160,7 +147,7 @@ class ResourcesShareService
      *
      * @param \App\Model\Entity\Resource $resource The target resource
      * @return void
-     * @throws ValidationException If the provided data does not validate.
+     * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
     private function handleValidationErrors(\App\Model\Entity\Resource $resource)
     {
@@ -173,8 +160,8 @@ class ResourcesShareService
     /**
      * Update the secrets.
      *
-     * @param UserAccessControl $uac The operator
-     * @param resource $resource The target resource
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param Resource $resource The target resource
      * @param array $data The list of secrets to add
      * @return void
      * @throws \Exception
@@ -192,7 +179,7 @@ class ResourcesShareService
     /**
      * Post accesses granted.
      *
-     * @param UserAccessControl $uac The operator
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param array $addedPermissions The list of added permissions
      * @return void
      */
@@ -206,8 +193,8 @@ class ResourcesShareService
     /**
      * Trigger an event to notify other components about the granted permissions.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Permission $permission The granted permission
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \App\Model\Entity\Permission $permission The granted permission
      * @return void
      */
     private function notifyAccessGranted(UserAccessControl $uac, Permission $permission)
@@ -220,8 +207,8 @@ class ResourcesShareService
     /**
      * Post accesses revoked.
      *
-     * @param UserAccessControl $uac The operator
-     * @param resource $resource The target permissions
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param Resource $resource The target permissions
      * @param array $deletedPermissions The list of deleted permissions
      * @return void
      */
@@ -240,8 +227,8 @@ class ResourcesShareService
     /**
      * Trigger an event to notify other components about the revoked permissions.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Permission $permission The revoked permission
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \App\Model\Entity\Permission $permission The revoked permission
      * @return void
      */
     private function notifyAccessRevoked(UserAccessControl $uac, Permission $permission)
@@ -254,10 +241,10 @@ class ResourcesShareService
     /**
      * Post group access revoked treatment.
      *
-     * @param resource $resource The target resource
+     * @param Resource $resource The target resource
      * @param string $groupId The target group
      * @return void
-     * @throws Exception
+     * @throws \App\Service\Resources\Exception
      */
     private function postGroupAccessRevoked(Resource $resource, string $groupId)
     {
@@ -273,7 +260,7 @@ class ResourcesShareService
      * - Remove the user favorites for this resource.
      * - Trigger an event to notify other plugin about the revoked access.
      *
-     * @param resource $resource The target resource
+     * @param Resource $resource The target resource
      * @param string $userId The target user
      * @return void
      */
@@ -300,25 +287,29 @@ class ResourcesShareService
      *   'removed' => [uuid]
      * ]
      *
-     * @param UserAccessControl $uac The current user
+     * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $resourceId The target resource
-     * @param array $changes The list of changes to apply
+     * @param array|null $changes The list of changes to apply
      * @return array
      * @throws \Exception
      */
-    public function shareDryRun(UserAccessControl $uac, string $resourceId, array $changes = [])
+    public function shareDryRun(UserAccessControl $uac, string $resourceId, ?array $changes = []): array
     {
         $resource = $this->getResource($resourceId);
-        $userIdsHavingAccessBefore = $this->permissionsGetUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resourceId);
+        $userIdsHavingAccessBefore = $this->permissionsGetUsersIdsHavingAccessToService
+            ->getUsersIdsHavingAccessTo($resourceId);
         $userIdsHavingAccessAfter = [];
 
-        $this->resourcesTable->getConnection()->transactional(function () use ($uac, $resource, $changes, &$userIdsHavingAccessAfter) {
-            $this->updatePermissions($uac, $resource, $changes);
-            $userIdsHavingAccessAfter = $this->permissionsGetUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resource->id);
+        $this->resourcesTable->getConnection()->transactional(
+            function () use ($uac, $resource, $changes, &$userIdsHavingAccessAfter) {
+                $this->updatePermissions($uac, $resource, $changes);
+                $userIdsHavingAccessAfter = $this->permissionsGetUsersIdsHavingAccessToService
+                    ->getUsersIdsHavingAccessTo($resource->id);
 
-            // Don't commit the transaction.
-            return false;
-        });
+                // Don't commit the transaction.
+                return false;
+            }
+        );
 
         // Extract the users that will require the secrets to be encrypted for.
         $usersIdsToAddSecretFor = array_diff($userIdsHavingAccessAfter, $userIdsHavingAccessBefore);

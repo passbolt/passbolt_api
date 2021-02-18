@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,8 +31,6 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsMoveItemInUserTreeService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -46,8 +46,6 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
 
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -72,13 +70,11 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $this->service = new FoldersRelationsMoveItemInUserTreeService();
     }
 
-    /* ************************************************************** */
     /* FOLDER - COMMON */
-    /* ************************************************************** */
 
     public function testMoveItemInUserTreeError_Folder_Common_CannotMoveIntoFolderDoesNotExist()
     {
-        list($folderA, $userAId) = $this->insertFixture_Folder_Common_CannotMoveIntoFolderDoesNotExist();
+        [$folderA, $userAId] = $this->insertFixture_Folder_Common_CannotMoveIntoFolderDoesNotExist();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -101,13 +97,11 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $userAId];
     }
 
-    /* ************************************************************** */
     /* FOLDER - PERSONAL */
-    /* ************************************************************** */
 
     public function testMoveItemInUserTreeSuccess_Folder_Personal_MoveFolderFromRoot()
     {
-        list($folderA, $folderB, $userAId) = $this->insertFixture_Folder_Personal_MoveFolderFromRoot();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_Folder_Personal_MoveFolderFromRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
@@ -134,7 +128,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_Personal_MoveFolderToRoot()
     {
-        list($folderA, $folderB, $userAId) = $this->insertFixture_Folder_Personal_MoveFolderToRoot();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_Folder_Personal_MoveFolderToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, FoldersRelation::ROOT);
@@ -160,7 +154,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Folder_Personal_CannotCreateCycle()
     {
-        list($folderA, $folderB, $userAId) = $this->insertFixture_Folder_Personal_CannotCreateCycle();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_Folder_Personal_CannotCreateCycle();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -186,13 +180,11 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $userAId];
     }
 
-    /* ************************************************************** */
     /* FOLDER - SHARED */
-    /* ************************************************************** */
 
     public function testMoveItemInUserTreeSuccess_Folder_SharedWithUser_MoveFolderFromRoot()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_MoveFolderFromRoot();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_MoveFolderFromRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
@@ -224,7 +216,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_SharedWithGroup_MoveFolderFromRoot()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithGroup_MoveFolderFromRoot();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithGroup_MoveFolderFromRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
@@ -262,7 +254,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_SharedWithUser_MoveIntoSharedFolder_MoveToRootForUsersNotSeeingDestination()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_MoveIntoSharedFolder_MoveToRootForUsersNotSeeingDestination();
+        [$folderA, $folderB, $folderC, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_MoveIntoSharedFolder_MoveToRootForUsersNotSeeingDestination();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderC->id);
@@ -302,7 +294,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_SharedWithUser_MoveFromSharedFolderToSharedFolder_DontMoveForUsersNotSeeingOriginalAndTargetFolders()
     {
-        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId) =
+        [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId] =
             $this->insertFixture_Folder_SharedWithUser_MoveFromSharedFolderToSharedFolder_DontMoveForUsersNotSeeingOriginalAndTargetFolders();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
@@ -356,7 +348,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_SharedWithUser_MoveFromRootToSharedFolder_MoveToTargetFolderForUsersSeeingIt()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId) =
+        [$folderA, $folderB, $folderC, $userAId, $userBId] =
             $this->insertFixture_Folder_SharedWithUser_MoveFromRootToSharedFolder_MoveToTargetFolderForUsersSeeingIt();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
@@ -403,7 +395,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_SharedWithUser_MoveFromSharedFolderToRoot_MoveToRootForUsersSeeingItInTheOriginalOperatorFolder()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_MoveFromSharedFolderToRoot_MoveToRootForUsersSeeingItInTheOriginalOperatorFolder();
+        [$folderA, $folderB, $folderC, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_MoveFromSharedFolderToRoot_MoveToRootForUsersSeeingItInTheOriginalOperatorFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderC->id, FoldersRelation::ROOT);
@@ -449,7 +441,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_MoveSharedFolderShouldNotCreateSCCInOtherUsersTrees()
     {
-        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId) = $this->insertFixture_Folder_MoveSharedFolderShouldNotCreateSCCInOtherUsersTrees();
+        [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId] = $this->insertFixture_Folder_MoveSharedFolderShouldNotCreateSCCInOtherUsersTrees();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderC->id, $folderB->id);
@@ -515,7 +507,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_MoveSharedFolderShouldNotCreateIndirectSCCInOtherUsersTrees()
     {
-        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId, $userEId) = $this->insertFixture_Folder_MoveSharedFolderShouldNotCreateIndirectSCCInOtherUsersTrees();
+        [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId, $userEId] = $this->insertFixture_Folder_MoveSharedFolderShouldNotCreateIndirectSCCInOtherUsersTrees();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
@@ -588,7 +580,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -619,7 +611,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -650,14 +642,14 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermission()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermissionShared_InsufficientPermissionOnOriginalParentFolder();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermissionShared_InsufficientPermissionOnOriginalParentFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
             $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, FoldersRelation::ROOT);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
-            $this->assertEquals("Could not validate move data.", $e->getMessage());
+            $this->assertEquals('Could not validate move data.', $e->getMessage());
             $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -683,14 +675,14 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveOutOfFolder_InsufficientPermissionMovedFolder()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolder_InsufficientPermissionMovedFolder();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolder_InsufficientPermissionMovedFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
             $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, FoldersRelation::ROOT);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
-            $this->assertEquals("Could not validate move data.", $e->getMessage());
+            $this->assertEquals('Could not validate move data.', $e->getMessage());
             $errors = ['folder_parent_id' => ['has_access' => 'You are not allowed to move this item.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -714,13 +706,11 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $userAId, $userBId];
     }
 
-    /* ************************************************************** */
     /* FOLDER - SELF ORGANIZE */
-    /* ************************************************************** */
 
     public function testMoveItemInUserTreeSuccess_Folder_SelfOrganize_MoveFromRootToPersonalFolder()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SelfOrganize_MoveFromRootToPersonalFolder();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SelfOrganize_MoveFromRootToPersonalFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
@@ -750,7 +740,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_SelfOrganize_MoveFromPersonalToRoot()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SelfOrganize_MoveFromPersonalToRoot();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SelfOrganize_MoveFromPersonalToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, FoldersRelation::ROOT);
@@ -780,7 +770,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Folder_SelfOrganize_CannotCreateCycle()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_Folder_SelfOrganize_CannotCreateCycle();
+        [$folderA, $folderB, $folderC, $userAId, $userBId] = $this->insertFixture_Folder_SelfOrganize_CannotCreateCycle();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -815,13 +805,11 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
     }
 
-    /* ************************************************************** */
     /* RESOURCE - COMMON */
-    /* ************************************************************** */
 
     public function testMoveItemInUserTreeError_Resource_Common_CannotMoveIntoAFolderDoesNotExist()
     {
-        list($resource, $userAId) = $this->insertFixture_Resource_Common_CannotMoveIntoAFolderDoesNotExist();
+        [$resource, $userAId] = $this->insertFixture_Resource_Common_CannotMoveIntoAFolderDoesNotExist();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -842,13 +830,11 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$resource, $userAId];
     }
 
-    /* ************************************************************** */
     /* RESOURCE - PERSONAL */
-    /* ************************************************************** */
 
     public function testMoveItemInUserTreeSuccess_Resource_Personal_MoveFromRoot()
     {
-        list($folderA, $resource, $userAId) = $this->insertFixture_Resource_Personal_MoveFromRoot();
+        [$folderA, $resource, $userAId] = $this->insertFixture_Resource_Personal_MoveFromRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
@@ -872,7 +858,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Resource_Personal_MoveToRoot()
     {
-        list($folderA, $resource, $userAId) = $this->insertFixture_Resource_Personal_MoveToRoot();
+        [$folderA, $resource, $userAId] = $this->insertFixture_Resource_Personal_MoveToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, FoldersRelation::ROOT);
@@ -894,13 +880,11 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $resource, $userAId];
     }
 
-    /* ************************************************************** */
     /* RESOURCE - SHARED */
-    /* ************************************************************** */
 
     public function testMoveItemInUserTreeSuccess_Resource_SharedWithUser_MoveFromRoot()
     {
-        list($folderA, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SharedWithUser_MoveFromRoot();
+        [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithUser_MoveFromRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
@@ -932,7 +916,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Resource_SharedWithGroup_MoveFromRoot()
     {
-        list($folderA, $resource, $g1, $userAId, $userBId) = $this->insertFixture_Resource_SharedWithGroup_MoveFromRoot();
+        [$folderA, $resource, $g1, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithGroup_MoveFromRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
@@ -970,7 +954,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Resource_SharedWithUser_MoveIntoSharedFolder_MoveToRootForUsersNotSeeingDestination()
     {
-        list($folderA, $resource, $folderC, $userAId, $userBId) = $this->insertFixture_Resource_SharedWithUser_MoveIntoSharedFolder_MoveToRootForUsersNotSeeingDestination();
+        [$folderA, $resource, $folderC, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithUser_MoveIntoSharedFolder_MoveToRootForUsersNotSeeingDestination();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderC->id);
@@ -1010,7 +994,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Resource_SharedWithUser_MoveFromSharedFolderToSharedFolder_DontMoveForUsersNotSeeingOriginalAndTargetFolders()
     {
-        list($folderA, $resource, $folderC, $folderD, $userAId, $userBId) =
+        [$folderA, $resource, $folderC, $folderD, $userAId, $userBId] =
             $this->insertFixture_Resource_SharedWithUser_MoveFromSharedFolderToSharedFolder_DontMoveForUsersNotSeeingOriginalAndTargetFolders();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
@@ -1064,7 +1048,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Resource_SharedWithUser_MoveFromRootToSharedFolder_MoveToTargetFolderForUsersSeeingIt()
     {
-        list($folderA, $resource, $folderC, $userAId, $userBId) =
+        [$folderA, $resource, $folderC, $userAId, $userBId] =
             $this->insertFixture_Resource_SharedWithUser_MoveFromRootToSharedFolder_MoveToTargetFolderForUsersSeeingIt();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
@@ -1111,7 +1095,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Resource_SharedWithUser_MoveFromSharedFolderToRoot_MoveToRootForUsersSeeingItInTheOriginalOperatorFolder()
     {
-        list($folderA, $folderB, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SharedWithUser_MoveFromSharedFolderToRoot_MoveToRootForUsersSeeingItInTheOriginalOperatorFolder();
+        [$folderA, $folderB, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithUser_MoveFromSharedFolderToRoot_MoveToRootForUsersSeeingItInTheOriginalOperatorFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, FoldersRelation::ROOT);
@@ -1157,7 +1141,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Resource_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission()
     {
-        list($folderA, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission();
+        [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -1187,14 +1171,14 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Resource_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermission()
     {
-        list($folderA, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermissionShared_InsufficientPermissionOnOriginalParentFolder();
+        [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermissionShared_InsufficientPermissionOnOriginalParentFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
             $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, FoldersRelation::ROOT);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
-            $this->assertEquals("Could not validate move data.", $e->getMessage());
+            $this->assertEquals('Could not validate move data.', $e->getMessage());
             $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -1218,13 +1202,11 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $resource, $userAId, $userBId];
     }
 
-    /* ************************************************************** */
     /* RESOURCE - SELF ORGANIZE */
-    /* ************************************************************** */
 
     public function testMoveItemInUserTreeSuccess_Resource_SelfOrganize_MoveFromRootToPersonalFolder()
     {
-        list($folderA, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SelfOrganize_MoveFromRootToPersonalFolder();
+        [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SelfOrganize_MoveFromRootToPersonalFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
@@ -1254,7 +1236,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Resource_SelfOrganize_MoveFromPersonalFolderToRoot()
     {
-        list($folderA, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SelfOrganize_MoveFromPersonalFolderToRoot();
+        [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SelfOrganize_MoveFromPersonalFolderToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, FoldersRelation::ROOT);

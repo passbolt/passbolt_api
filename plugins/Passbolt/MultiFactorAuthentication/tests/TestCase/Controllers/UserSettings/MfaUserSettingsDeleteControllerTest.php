@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,13 +15,11 @@
  * @since         2.12.0
  */
 
-namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettings;
+namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\UserSettings;
 
 use App\Test\Fixture\Alt0\GroupsUsersFixture;
-use App\Test\Fixture\Base\AuthenticationTokensFixture;
 use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
@@ -33,18 +33,16 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
 {
     public $fixtures = [
-        OrganizationSettingsFixture::class,
         AccountSettingsFixture::class,
         UsersFixture::class,
         RolesFixture::class,
-        AuthenticationTokensFixture::class,
         ProfilesFixture::class,
         GpgkeysFixture::class,
         AvatarsFixture::class,
         GroupsUsersFixture::class,
     ];
 
-    const TESTED_ROUTE = '/mfa/setup/%s.json?api-version=v2';
+    public const TESTED_ROUTE = '/mfa/setup/%s.json?api-version=v2';
 
     public function testMfaUserSettingsDeleteNeedsAuthenticatedUser()
     {

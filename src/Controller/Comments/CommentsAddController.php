@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,19 +26,22 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\CommentsTable $Comments
+ */
 class CommentsAddController extends AppController
 {
-    const ADD_SUCCESS_EVENT_NAME = 'CommentAddController.addPost.success';
+    public const ADD_SUCCESS_EVENT_NAME = 'CommentAddController.addPost.success';
 
     /**
      * Create a new comment for a resource.
      *
      * @param string $foreignKey The identifier of the resource to add a comment to
-     * @throws BadRequestException
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\BadRequestException
+     * @throws \Cake\Http\Exception\NotFoundException
      * @return void
      */
-    public function addPost($foreignKey)
+    public function addPost(string $foreignKey)
     {
         if (!Validation::uuid($foreignKey)) {
             throw new BadRequestException(__('The resource id is not valid.'));
@@ -59,8 +64,8 @@ class CommentsAddController extends AppController
      * Manage validation errors.
      *
      * @param \App\Model\Entity\Comment $comment comment
-     * @throws BadRequestException
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\BadRequestException
+     * @throws \Cake\Http\Exception\NotFoundException
      * @return void
      */
     protected function _handleValidationErrors(Comment $comment)
@@ -84,12 +89,12 @@ class CommentsAddController extends AppController
     /**
      * Build and validate comment entity from user input.
      *
-     * @param string $foreignKey The identifier of the instance the comment belongs to.
+     * @param string|null $foreignKey The identifier of the instance the comment belongs to.
      * @return \App\Model\Entity\Comment $comment comment entity
      */
-    protected function _buildAndValidateCommentEntity(string $foreignKey = null)
+    protected function _buildAndValidateCommentEntity(?string $foreignKey = null)
     {
-        $data = $this->_formatRequestData();
+        $data = $this->request->getData();
 
         // Build entity and perform basic check.
         $comment = $this->Comments->newEntity(
@@ -121,34 +126,12 @@ class CommentsAddController extends AppController
     }
 
     /**
-     * Format request data formatted for API v1 to API v2 format
-     *
-     * @return array data
-     */
-    protected function _formatRequestData()
-    {
-        $output = [];
-        $data = $this->request->getData();
-
-        // API v2 additional checks and error (was silent before)
-        if ($this->getApiVersion() == 'v2') {
-            $output = $data;
-        } else {
-            if (isset($data['Comment'])) {
-                $output = $data['Comment'];
-            }
-        }
-
-        return $output;
-    }
-
-    /**
      * Notify users about this new comment
      *
      * @param \App\Model\Entity\Comment $comment comment entity
      * @return void
      */
-    protected function _notifyUsers($comment)
+    protected function _notifyUsers(Comment $comment)
     {
         $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, [
             'comment' => $comment,

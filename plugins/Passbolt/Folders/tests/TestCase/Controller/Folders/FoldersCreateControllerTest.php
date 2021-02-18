@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,7 +15,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller;
+namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
@@ -32,13 +34,9 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
-use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 
 /**
  * Passbolt\Folders\Controller\Folders\FoldersCreateController Test Case
@@ -53,11 +51,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        ActionsFixture::class,
-        ActionLogsFixture::class,
         AvatarsFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -82,7 +76,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    public function testCreateFolder_PersoSuccess1_CreateFolder()
+    public function testFoldersCreateFolder_PersoSuccess1_CreateFolder()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $data = ['name' => 'A'];
@@ -98,7 +92,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->assertEquals($userId, $folder->modified_by);
     }
 
-    public function testCreateFolder_PersoSuccess2_CreateInFolder()
+    public function testFoldersCreateFolder_PersoSuccess2_CreateInFolder()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $parentFolder = $this->insertPersoSuccess2Fixture();
@@ -130,7 +124,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         return $folderA;
     }
 
-    public function testCreateFolder_CommonError1_ValidationError()
+    public function testFoldersCreateFolder_CommonError1_ValidationError()
     {
         $data = ['name' => ''];
         $this->authenticateAs('ada');
@@ -138,11 +132,11 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400, 'Could not validate folder data.');
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'name');
-        $this->assertNotNull($error, "The test should return an error of the given field.");
+        $this->assertNotNull($error, 'The test should return an error of the given field.');
         $this->assertEquals('The name cannot be empty.', $error['_empty']);
     }
 
-    public function testCreateFolder_CommonError2_ParentFolderDoesNotExist()
+    public function testFoldersCreateFolder_CommonError2_ParentFolderDoesNotExist()
     {
         $data = [
             'name' => 'B',
@@ -153,11 +147,11 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400, 'Could not validate folder data');
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'folder_parent_id');
-        $this->assertNotNull($error, "The test should return an error of the given field.");
+        $this->assertNotNull($error, 'The test should return an error of the given field.');
         $this->assertEquals('The folder parent must exist.', $error['folder_exists']);
     }
 
-    public function testCreateFolder_SharedError1_ParentFolderInsufficientPermission()
+    public function testFoldersCreateFolder_SharedError1_ParentFolderInsufficientPermission()
     {
         $parentFolder = $this->insertSharedError1Fixture();
 
@@ -169,7 +163,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->postJson('/folders.json?api-version=2', $data);
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'folder_parent_id');
-        $this->assertNotNull($error, "The test should return an error of the given field.");
+        $this->assertNotNull($error, 'The test should return an error of the given field.');
         $this->assertEquals('You are not allowed to create content into the parent folder.', $error['has_folder_access']);
     }
 
@@ -185,7 +179,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         return $folder;
     }
 
-    public function testCreateFolderError_IsProtectedByCsrfToken()
+    public function testFoldersCreateFolderError_IsProtectedByCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
@@ -193,7 +187,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testCreateFolderError_NotAuthenticated()
+    public function testFoldersCreateFolderError_NotAuthenticated()
     {
         $this->postJson('/folders.json?api-version=2');
         $this->assertAuthenticationError();

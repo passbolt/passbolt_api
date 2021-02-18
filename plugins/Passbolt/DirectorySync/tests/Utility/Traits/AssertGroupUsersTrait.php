@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
 use Cake\ORM\TableRegistry;
 
 trait AssertGroupUsersTrait
 {
-    public function assertGroupUserExist($id = null, $where = [])
+    public function assertGroupUserExist(?string $id = null, ?array $where = [])
     {
         if ($id !== null) {
             $where['id'] = $id;
@@ -17,7 +19,7 @@ trait AssertGroupUsersTrait
         return $results[0];
     }
 
-    public function assertGroupUserNotExist($id = null, $where = [])
+    public function assertGroupUserNotExist(?string $id = null, ?array $where = [])
     {
         if ($id !== null) {
             $where['id'] = $id;

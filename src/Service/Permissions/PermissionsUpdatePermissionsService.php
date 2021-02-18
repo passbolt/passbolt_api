@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,24 +28,24 @@ use Cake\Utility\Hash;
 class PermissionsUpdatePermissionsService
 {
     /**
-     * @var PermissionsAcoHasOwnerService
+     * @var \App\Service\Permissions\PermissionsAcoHasOwnerService
      */
     private $permissionsAcoHasOwnerService;
 
     /**
-     * @var PermissionsCreateService
+     * @var \App\Service\Permissions\PermissionsCreateService
      */
     private $permissionsCreateService;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
     /**
-     * @param PermissionsTable $permissionsTable PermissionsTable instance
+     * @param \App\Model\Table\PermissionsTable|null $permissionsTable PermissionsTable instance
      */
-    public function __construct(PermissionsTable $permissionsTable = null)
+    public function __construct(?PermissionsTable $permissionsTable = null)
     {
         $this->permissionsAcoHasOwnerService = new PermissionsAcoHasOwnerService();
         $this->permissionsCreateService = new PermissionsCreateService();
@@ -56,10 +58,10 @@ class PermissionsUpdatePermissionsService
     /**
      * Update an entity permissions.
      *
-     * @param UserAccessControl $uac The operator.
+     * @param \App\Utility\UserAccessControl $uac The operator.
      * @param string $aco The type of entity
      * @param string $acoForeignkey The target entity id
-     * @param array $data The permissions to update
+     * @param array|null $data The permissions to update
      * @return array
      * [
      *   added => <array> List of added permissions
@@ -68,8 +70,12 @@ class PermissionsUpdatePermissionsService
      * ]
      * @throws \Exception If something unexpected occurred
      */
-    public function updatePermissions(UserAccessControl $uac, string $aco, string $acoForeignkey, array $data = [])
-    {
+    public function updatePermissions(
+        UserAccessControl $uac,
+        string $aco,
+        string $acoForeignkey,
+        ?array $data = []
+    ): ?array {
         $addedPermissions = [];
         $updatedPermissions = [];
         $deletedPermissions = [];
@@ -108,16 +114,21 @@ class PermissionsUpdatePermissionsService
     /**
      * Add a permission to an entity.
      *
-     * @param UserAccessControl $uac The operator
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param int $rowIndexRef The row index in the request data
      * @param string $aco The type of entity
      * @param string $acoForeignkey The target entity id
      * @param array $data The permission data
-     * @return Permission
+     * @return \App\Model\Entity\Permission
      * @throws \Exception
      */
-    private function addPermission(UserAccessControl $uac, int $rowIndexRef, string $aco, string $acoForeignkey, array $data)
-    {
+    private function addPermission(
+        UserAccessControl $uac,
+        int $rowIndexRef,
+        string $aco,
+        string $acoForeignkey,
+        array $data
+    ): Permission {
         $permissionData = [
             'aco' => $aco,
             'aco_foreign_key' => $acoForeignkey,
@@ -139,12 +150,13 @@ class PermissionsUpdatePermissionsService
      *
      * @param array $errors The list of errors
      * @return void
-     * @throws CustomValidationException If the provided data does not validate.
+     * @throws \App\Error\Exception\CustomValidationException If the provided data does not validate.
      */
-    private function handleValidationErrors(array $errors = [])
+    private function handleValidationErrors(array $errors = []): void
     {
         if (!empty($errors)) {
-            throw new CustomValidationException(__('Could not validate permissions data.'), $errors, $this->permissionsTable);
+            $msg = __('Could not validate permissions data.');
+            throw new CustomValidationException($msg, $errors, $this->permissionsTable);
         }
     }
 
@@ -154,10 +166,10 @@ class PermissionsUpdatePermissionsService
      * @param int $rowIndexRef The row index in the request data
      * @param string $acoForeignkey The target entity id
      * @param string $permissionId The permission identifier to retrieve.
-     * @return Permission
-     * @throws ValidationException If the permission does not exist.
+     * @return \App\Model\Entity\Permission
+     * @throws \App\Error\Exception\ValidationException If the permission does not exist.
      */
-    private function getPermission(int $rowIndexRef, string $acoForeignkey, string $permissionId)
+    private function getPermission(int $rowIndexRef, string $acoForeignkey, string $permissionId): Permission
     {
         $permission = $this->permissionsTable->findByIdAndAcoForeignKey($permissionId, $acoForeignkey)->first();
 
@@ -172,11 +184,10 @@ class PermissionsUpdatePermissionsService
     /**
      * Delete a permission.
      *
-     * @param Permission $permission The target permission
-     * @return Permission
-     * @throws Exception
+     * @param \App\Model\Entity\Permission $permission The target permission
+     * @return \App\Model\Entity\Permission
      */
-    private function deletePermission(Permission $permission)
+    private function deletePermission(Permission $permission): Permission
     {
         $this->permissionsTable->delete($permission);
 
@@ -186,21 +197,25 @@ class PermissionsUpdatePermissionsService
     /**
      * Update a permission.
      *
-     * @param UserAccessControl $uac The operator
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param int $rowIndexRef The row index in the request data
-     * @param Permission $permission The target permission to update
+     * @param \App\Model\Entity\Permission $permission The target permission to update
      * @param array $data The permission data.
-     * @return Permission
+     * @return \App\Model\Entity\Permission
      */
-    private function updatePermission(UserAccessControl $uac, int $rowIndexRef, Permission $permission, array $data)
-    {
+    private function updatePermission(
+        UserAccessControl $uac,
+        int $rowIndexRef,
+        Permission $permission,
+        array $data
+    ): Permission {
         // If the permission is similar to the original, nothing to do.
         $updatedPermissionType = Hash::get($data, 'type');
         if ($permission->type === $updatedPermissionType) {
             return $permission;
         }
 
-        $data['modified_by'] = $uac->userId();
+        $data['modified_by'] = $uac->getId();
 
         $patchEntityOptions = ['accessibleFields' => ['type' => true, 'modified_by' => true]];
         $permission = $this->permissionsTable->patchEntity($permission, $data, $patchEntityOptions);
@@ -223,10 +238,10 @@ class PermissionsUpdatePermissionsService
      *
      * @param string $acoForeignKey The target entity
      * @return void
-     * @throws ValidationException If the entity has no owner
+     * @throws \App\Error\Exception\ValidationException If the entity has no owner
      * @throws \Exception If something unexpected occurred
      */
-    private function assertAtLeastOneOwnerPermission(string $acoForeignKey)
+    private function assertAtLeastOneOwnerPermission(string $acoForeignKey): void
     {
         $hasOwner = $this->permissionsAcoHasOwnerService->check($acoForeignKey);
         if (!$hasOwner) {

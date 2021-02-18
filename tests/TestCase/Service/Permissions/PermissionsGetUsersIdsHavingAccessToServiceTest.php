@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,8 +18,6 @@
 namespace App\Test\TestCase\Service\Permissions;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
@@ -60,7 +60,7 @@ class PermissionsGetUsersIdsHavingAccessToServiceTest extends AppTestCase
 
     public function testGetUsersIdsHavingAccessTo()
     {
-        list($resource1, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_GetUsersIdsHavingAccessTo();
+        [$resource1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_GetUsersIdsHavingAccessTo();
 
         $result = $this->service->getUsersIdsHavingAccessTo($resource1->id);
 

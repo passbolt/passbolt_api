@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,7 +27,6 @@ class ThemesSelectControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
-        'app.Base/OrganizationSettings',
         'plugin.Passbolt/AccountSettings.AccountSettings',
     ];
 

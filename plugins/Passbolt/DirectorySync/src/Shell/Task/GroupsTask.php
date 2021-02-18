@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace Passbolt\DirectorySync\Shell\Task;
 
-use App\Shell\AppShell;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 
 class GroupsTask extends SyncTask

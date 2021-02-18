@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -30,7 +32,7 @@ class LdapConfigurationFormTest extends AppTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
         'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars',
-        'app.Base/Favorites', 'app.Base/OrganizationSettings',
+        'app.Base/Favorites',
     ];
 
     public static function getDummyFormData()

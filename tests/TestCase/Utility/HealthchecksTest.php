@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,11 +18,9 @@ namespace App\Test\TestCase\Utility;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Healthchecks;
-use Cake\Core\Configure;
 
 class HealthchecksTest extends AppIntegrationTestCase
 {
-
     public function testHealthcheckApplication()
     {
         $check = Healthchecks::application();

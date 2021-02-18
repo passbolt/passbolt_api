@@ -36,7 +36,7 @@
                                 <table border="0" cellpadding="0" cellspacing="0" width="260" class="emailButton" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #2894DF;color: #FFFFFF;order-collapse: separate;border-radius: 4px;">
                                     <tr>
                                         <td align="center" valign="middle" class="buttonContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #FFFFFF;font-family: Helvetica;font-size: 14px;font-weight: bold;line-height: 100%;padding: 15px;text-align: center;">
-                                            <a href="<?= $url; ?>" target="_blank" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #FFFFFF;display: block;text-decoration: none;">
+                                            <a href="<?= $url; ?>" target="_blank" rel="noopener noreferrer" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #FFFFFF;display: block;text-decoration: none;">
                                                 <?= $text; ?>
                                             </a>
                                         </td>

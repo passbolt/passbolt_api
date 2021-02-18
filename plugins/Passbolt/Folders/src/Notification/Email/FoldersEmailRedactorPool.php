@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,14 +18,14 @@
 namespace Passbolt\Folders\Notification\Email;
 
 use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
-use App\Notification\Email\SubscribedEmailRedactorInterface;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class FoldersEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
     /**
      * Return a list of subscribed redactors
-     * @return SubscribedEmailRedactorInterface[]
+     *
+     * @return \Passbolt\Folders\Notification\Email\SubscribedEmailRedactorInterface[]
      */
     public function getSubscribedRedactors()
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,43 +20,28 @@ namespace Passbolt\Folders\Service\Folders;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\EntityInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
-use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
-use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsMoveItemInUserTreeService;
 
 class FoldersUpdateService
 {
     use EventDispatcherTrait;
 
-    const FOLDERS_UPDATE_FOLDER_EVENT = 'folders.folder.update';
+    public const FOLDERS_UPDATE_FOLDER_EVENT = 'folders.folder.update';
 
     /**
-     * @var FoldersTable
+     * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
     public $foldersTable;
 
     /**
-     * @var FoldersRelationsMoveItemInUserTreeService
-     */
-    private $foldersRelationsMoveItemInUserTreeService;
-
-    /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
-
-    /**
-     * @var UserHasPermissionService
-     */
-    private $userHasPermissionService;
 
     /**
      * Instantiate the service.
@@ -63,20 +50,18 @@ class FoldersUpdateService
     {
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        $this->foldersRelationsMoveItemInUserTreeService = new FoldersRelationsMoveItemInUserTreeService();
-        $this->userHasPermissionService = new UserHasPermissionService();
     }
 
     /**
      * Update a folder for the current user.
      *
-     * @param UserAccessControl $uac The current user
+     * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $id The folder to update
-     * @param array $data The folder data
-     * @return Folder
-     * @throws Exception If an unexpected error occurred
+     * @param array|null $data The folder data
+     * @return \Passbolt\Folders\Model\Entity\Folder
+     * @throws \Exception If an unexpected error occurred
      */
-    public function update(UserAccessControl $uac, string $id, array $data = [])
+    public function update(UserAccessControl $uac, string $id, ?array $data = [])
     {
         $folder = $this->getFolder($uac, $id);
         $meta = $this->extractDataFolderMeta($data);
@@ -100,14 +85,15 @@ class FoldersUpdateService
     /**
      * Retrieve the folder.
      *
-     * @param UserAccessControl $uac UserAccessControl updating the resource
+     * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
      * @param string $folderId The folder identifier to retrieve.
-     * @return Folder
-     * @throws NotFoundException If the folder does not exist.
+     * @return \Passbolt\Folders\Model\Entity\Folder
+     * @throws \Cake\Http\Exception\NotFoundException If the folder does not exist.
      */
     private function getFolder(UserAccessControl $uac, string $folderId)
     {
-        $permission = $this->permissionsTable->findHighestByAcoAndAro(PermissionsTable::FOLDER_ACO, $folderId, $uac->getId())
+        $permission = $this->permissionsTable
+            ->findHighestByAcoAndAro(PermissionsTable::FOLDER_ACO, $folderId, $uac->getId())
             ->first();
 
         if (empty($permission)) {
@@ -121,6 +107,7 @@ class FoldersUpdateService
 
     /**
      * Extract the resource meta data from the request data
+     *
      * @param array $data The request data
      * @return array
      */
@@ -138,10 +125,10 @@ class FoldersUpdateService
     /**
      * Update folder meta.
      *
-     * @param UserAccessControl $uac The current user
-     * @param Folder $folder The folder to update.
+     * @param \App\Utility\UserAccessControl $uac The current user
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The folder to update.
      * @param array $data The folder meta to updated
-     * @return EntityInterface|Folder
+     * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
      */
     private function updateFolderMeta(UserAccessControl $uac, Folder $folder, array $data)
     {
@@ -156,9 +143,9 @@ class FoldersUpdateService
     /**
      * Patch the folder entity.
      *
-     * @param Folder $folder The folder entity to update.
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The folder entity to update.
      * @param array $data The folder data.
-     * @return EntityInterface|Folder
+     * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
      */
     private function patchEntity($folder, $data)
     {
@@ -172,9 +159,9 @@ class FoldersUpdateService
     /**
      * Handle folder validation errors.
      *
-     * @param Folder $folder The folder
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The folder
      * @return void
-     * @throws ValidationException If the provided data does not validate.
+     * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
     private function handleValidationErrors(Folder $folder)
     {

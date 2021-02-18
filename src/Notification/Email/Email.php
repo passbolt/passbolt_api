@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,6 +18,7 @@ namespace App\Notification\Email;
 
 /**
  * Class Email
+ *
  * @package App\Notification\Email
  *
  * Object returned by an EmailRedactor and used by an EmailSender to send the email.
@@ -90,8 +93,9 @@ class Email
 
     /**
      * Return a new instance of Email with the provided data
+     *
      * @param array $data Data to use for the email
-     * @return Email
+     * @return \App\Notification\Email\Email
      */
     public function withData(array $data)
     {

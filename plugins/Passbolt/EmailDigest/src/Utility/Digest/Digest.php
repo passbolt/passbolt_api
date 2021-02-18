@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,12 +16,10 @@
  */
 namespace Passbolt\EmailDigest\Utility\Digest;
 
-use App\Model\Entity\User;
 use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
-use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
  * Default digest to fall back to building a single email
@@ -27,10 +27,10 @@ use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
  */
 class Digest extends AbstractDigest implements DigestInterface
 {
-    const MAXIMUM_EMAILS_IN_DIGEST = 10;
+    public const MAXIMUM_EMAILS_IN_DIGEST = 10;
 
     /**
-     * @var EmailPreviewFactory
+     * @var \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory
      */
     private $emailPreviewFactory;
 
@@ -47,6 +47,7 @@ class Digest extends AbstractDigest implements DigestInterface
     /**
      * List of supported templates. An empty list means that all templates are supported.
      * Email with a template included in this list will be part of the same digest.
+     *
      * @var string[]
      */
     private $supportedTemplates = [];
@@ -55,12 +56,14 @@ class Digest extends AbstractDigest implements DigestInterface
      * Name of the variable in template vars body which contain the user.
      * i.e. in template, $body['user'] contains the user executing the action, then $executedByTemplateVarKey = 'user';
      * in template, if $body['admin'] contains the user executing the action, then $executedByTemplateVarKey = 'admin'
+     *
      * @var string
      */
     private $executedByTemplateVarKey;
 
     /**
      * Subject of the digest.
+     *
      * @var string
      */
     private $subject;
@@ -72,18 +75,19 @@ class Digest extends AbstractDigest implements DigestInterface
 
     /**
      * Digest constructor.
+     *
      * @param string $subject templates
      * @param string $supportedTemplates subject
      * @param string $executedByTemplateVarKey key to look for user info in email data
      * @param callable $onThresholdCallback what to do when too many emails are present in digest
-     * @param EmailPreviewFactory|null $emailPreviewFactory email preview factory
+     * @param \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory|null $emailPreviewFactory email preview factory
      */
     public function __construct(
         string $subject,
         array $supportedTemplates,
         string $executedByTemplateVarKey,
         callable $onThresholdCallback,
-        EmailPreviewFactory $emailPreviewFactory = null
+        ?EmailPreviewFactory $emailPreviewFactory = null
     ) {
         $this->supportedTemplates = $supportedTemplates;
         $this->subject = $subject;
@@ -99,9 +103,9 @@ class Digest extends AbstractDigest implements DigestInterface
      * it checks if a digest in the collection already exists with the same template than the one from the email to add.
      * If it exists, the email will be part of the same digest, if not a new digest is created for the email.
      *
-     * @param Entity $emailQueueEntity An email entity
+     * @param \Cake\ORM\Entity $emailQueueEntity An email entity
      * @return $this
-     * @throws UnsupportedEmailDigestDataException
+     * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */
     public function addEmailEntity(Entity $emailQueueEntity)
     {
@@ -127,7 +131,8 @@ class Digest extends AbstractDigest implements DigestInterface
 
     /**
      * Process and set the content of the emails (as EmailDigest).
-     * @return EmailDigestInterface[]
+     *
+     * @return \Passbolt\EmailDigest\Utility\Digest\EmailDigestInterface[]
      */
     public function marshalEmails()
     {
@@ -154,7 +159,7 @@ class Digest extends AbstractDigest implements DigestInterface
 
     /**
      * @param array $emails array of EmailQueue Entity
-     * @return EmailDigest
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
      */
     public function buildMultipleEmailDigest(array $emails)
     {
@@ -173,7 +178,7 @@ class Digest extends AbstractDigest implements DigestInterface
     /**
      * Single email digest can always add any email.
      *
-     * @param Entity $emailQueueEntity An email entity
+     * @param \Cake\ORM\Entity $emailQueueEntity An email entity
      * @return bool
      */
     public function canAddToDigest(Entity $emailQueueEntity)
@@ -185,6 +190,7 @@ class Digest extends AbstractDigest implements DigestInterface
 
     /**
      * Return true if the template is supported by the digest, false otherwise.
+     *
      * @param string $template Template to use
      * @return bool
      */
@@ -195,8 +201,9 @@ class Digest extends AbstractDigest implements DigestInterface
 
     /**
      * Return the user from the variable of the email.
-     * @param Entity $emailData An email queue entity
-     * @return User|null
+     *
+     * @param \Cake\ORM\Entity $emailData An email queue entity
+     * @return \App\Model\Entity\User|null
      */
     private function getOperatorFromEmail(Entity $emailData)
     {
@@ -251,9 +258,10 @@ class Digest extends AbstractDigest implements DigestInterface
      * Callback executed when the maximum threshold defined is reached.
      *
      * Must return an array of email digests.
-     * @param Entity $emailQueueEntity An email queue entity
+     *
+     * @param \Cake\ORM\Entity $emailQueueEntity An email queue entity
      * @param int $emailCount Count of the emails
-     * @return EmailDigestInterface[]
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      */
     private function onThresholdCallback(Entity $emailQueueEntity, int $emailCount)
     {

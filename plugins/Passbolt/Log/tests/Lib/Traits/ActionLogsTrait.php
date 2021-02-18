@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,17 +17,19 @@ namespace Passbolt\Log\Test\Lib\Traits;
 
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Log\Model\Entity\ActionLog;
 
 trait ActionLogsTrait
 {
     /**
      * Add an action log
-     * @param array $data The data
-     * @param array $options The options
-     * @return mixed
+     *
+     * @param array|null $data The data
+     * @param array|null $options The options
+     * @return ActionLog
      * @throws \Exception
      */
-    public function addActionLog($data = [], $options = [])
+    public function addActionLog(?array $data = [], ?array $options = []): ActionLog
     {
         $actionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
         $actionLog = self::getDummyActionLogEntity($data, $options);
@@ -37,12 +41,13 @@ trait ActionLogsTrait
 
     /**
      * Get a dummy action log entity
-     * @param array $data The data
-     * @param array $options The options
-     * @return mixed
+     *
+     * @param array|null $data The data
+     * @param array|null $options The options
+     * @return ActionLog
      * @throws \Exception
      */
-    public function getDummyActionLogEntity($data = [], $options = [])
+    public function getDummyActionLogEntity(?array $data = [], ?array $options = []): ActionLog
     {
         $actionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
         $defaultOptions = [
@@ -62,11 +67,10 @@ trait ActionLogsTrait
      * Get a dummy action log with test data.
      * The relation returned should pass a default validation.
      *
-     * @param array $data Custom data that will be merged with the default content.
+     * @param array|null $data Custom data that will be merged with the default content.
      * @return array
-     * @throws \Exception If the create date is not correct.
      */
-    public function getDummyActionLogData($data = [])
+    public function getDummyActionLogData(?array $data = []): array
     {
         $entityContent = [
             'user_id' => UuidFactory::uuid('user.id.test-place-holder'),

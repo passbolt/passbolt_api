@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Passbolt\Folders\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\PermissionsTable;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UuidFactory;
@@ -11,7 +11,6 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Closure;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -36,12 +35,9 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
 
-    private $Permissions;
-
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
-        'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars', 'plugin.Passbolt/Folders.Folders',
-        'plugin.Passbolt/Folders.FoldersRelations',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers',
+        'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars',
     ];
 
     /**
@@ -53,10 +49,6 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
-        $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
-        $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
-        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
     /**
@@ -68,7 +60,10 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
     {
         $this->addFolderFor(['id' => $folderParentId], [$userId => Permission::OWNER]);
         foreach ($childrenFolders as $childrenFolderId) {
-            $this->addResourceFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId], [$userId => Permission::OWNER]);
+            $this->addResourceFor(
+                ['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId],
+                [$userId => Permission::OWNER]
+            );
         }
     }
 
@@ -210,7 +205,7 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
         $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
 
         foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
-            $this->assertContains($expectedFolderChildrenId, $resultFolderIds, "Expected children is missing for the given parent folder.");
+            $this->assertContains($expectedFolderChildrenId, $resultFolderIds, 'Expected children is missing for the given parent folder.');
         }
     }
 }

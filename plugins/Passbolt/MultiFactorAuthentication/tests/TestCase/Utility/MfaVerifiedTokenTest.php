@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Table\AuthenticationTokensTable;
 use App\Utility\UuidFactory;
 use Cake\Http\ServerRequestFactory;
 use Cake\I18n\Date;
@@ -33,7 +34,6 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/AuthenticationTokens',
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles',
     ];
 
@@ -67,7 +67,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
 
         $token = $this->AuthenticationTokens->getByToken($token);
         $this->assertNotEmpty($token->data);
-        $data = json_decode($token->data, 1);
+        $data = json_decode($token->data, true);
         $this->assertNotEmpty($data);
         $this->assertEquals($data['provider'], MfaSettings::PROVIDER_TOTP);
     }
@@ -148,7 +148,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         $token = $this->AuthenticationTokens->getByToken($token);
         $this->AuthenticationTokens->setInactive($token->token);
-        $success = MfaVerifiedToken::check($uac, $token, $sessionId);
+        $success = MfaVerifiedToken::check($uac, $token->token, $sessionId);
         $this->assertFalse($success);
     }
 

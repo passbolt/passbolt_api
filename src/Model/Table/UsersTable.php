@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -36,29 +38,27 @@ use Cake\Validation\Validator;
  * Users Model
  *
  * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsTo $Roles
- * @property \App\Model\Table\FileStorageTable|\Cake\ORM\Association\HasMany $FileStorage
+ * @property \Burzum\FileStorage\Model\Table\FileStorageTable|\Cake\ORM\Association\HasMany $FileStorage
  * @property \App\Model\Table\GpgkeysTable|\Cake\ORM\Association\HasMany $Gpgkeys
  * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasMany $Permissions
  * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
  * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsToMany $Groups
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable|\Cake\ORM\Association\HasMany $EntitiesHistory
- *
- * @method \App\Model\Entity\User get($primaryKey, $options = [])
- * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\User|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\User[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\User findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \App\Model\Entity\User get($primaryKey, ?array $options = [])
+ * @method \App\Model\Entity\User newEntity($data = null, ?array $options = [])
+ * @method \App\Model\Entity\User[] newEntities(array $data, ?array $options = [])
+ * @method \App\Model\Entity\User|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \App\Model\Entity\User[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \App\Model\Entity\User findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class UsersTable extends Table
 {
     use UsersFindersTrait;
 
-    const AFTER_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterRegister.success';
+    public const AFTER_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterRegister.success';
 
     /**
      * Initialize method
@@ -66,7 +66,7 @@ class UsersTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -117,7 +117,7 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id', __('User id by must be a valid UUID.'))
@@ -126,7 +126,11 @@ class UsersTable extends Table
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum {0} characters.', 255))
-            ->email('username', Configure::read('passbolt.email.validate.mx'), __('The username should be a valid email address.'));
+            ->email(
+                'username',
+                Configure::read('passbolt.email.validate.mx'),
+                __('The username should be a valid email address.')
+            );
 
         $validator
             ->boolean('active');
@@ -176,9 +180,13 @@ class UsersTable extends Table
     {
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
-            ->notEmpty('username', __('A username is required.'))
+            ->notEmptyString('username', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum 254 characters.'))
-            ->email('username', Configure::read('passbolt.email.validate.mx'), __('The username should be a valid email address.'));
+            ->email(
+                'username',
+                Configure::read('passbolt.email.validate.mx'),
+                __('The username should be a valid email address.')
+            );
 
         return $validator;
     }
@@ -190,7 +198,7 @@ class UsersTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         // Add rule
         $rules->add($rules->isUnique(['username', 'deleted']), 'uniqueUsername', [
@@ -201,13 +209,15 @@ class UsersTable extends Table
         ]);
 
         // Delete rules
+        $msg = __('You need to transfer the ownership for the shared content owned by this user before deleting them.');
         $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedContent', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the ownership for the shared content owned by this user before deleting this user.'),
+            'message' => $msg,
         ]);
+        $msg = __('You need to transfer the user group manager role to other users before deleting them.');
         $rules->addDelete(new IsNotSoleManagerOfNonEmptyGroupRule(), 'soleManagerOfNonEmptyGroup', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the user group manager role to other users before deleting this user.'),
+            'message' => $msg,
         ]);
 
         return $rules;
@@ -254,9 +264,9 @@ class UsersTable extends Table
      * @param \App\Model\Entity\User $user User
      * @param array $data request data
      * @param string $roleName role name for example Role::User or Role::ADMIN
-     * @return object the patched user entity
+     * @return \App\Model\Entity\User the patched user entity
      */
-    public function editEntity(\App\Model\Entity\User $user, array $data, string $roleName)
+    public function editEntity(User $user, array $data, string $roleName)
     {
         $accessibleUserFields = [
             'active' => false,
@@ -294,7 +304,7 @@ class UsersTable extends Table
             }
         }
 
-        $entity = $this->patchEntity($user, $data, [
+        return $this->patchEntity($user, $data, [
             'validate' => 'update',
             'accessibleFields' => $accessibleUserFields,
             'associated' => [
@@ -307,8 +317,6 @@ class UsersTable extends Table
                 ],
             ],
         ]);
-
-        return $entity;
     }
 
     /**
@@ -320,10 +328,10 @@ class UsersTable extends Table
      * Delete all Permissions
      *
      * @param \App\Model\Entity\User $user entity
-     * @param array $options additional delete options such as ['checkRules' => true]
+     * @param array|null $options additional delete options such as ['checkRules' => true]
      * @return bool status
      */
-    public function softDelete(\App\Model\Entity\User $user, array $options = null)
+    public function softDelete(User $user, ?array $options = null)
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {
@@ -336,9 +344,12 @@ class UsersTable extends Table
         }
 
         // find all the resources that only belongs to the user and mark them as deleted
-        // Note: all resources that cannot be deleted should have been transferred to other people already.
-        $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
-            ->extract('aco_foreign_key')->toArray();
+        // Note: all resources that cannot be deleted should have been
+        // transferred to other people already (ref. checkRules)
+        $resourceIds = $this->Permissions
+            ->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
+            ->extract('aco_foreign_key')
+            ->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
@@ -347,14 +358,17 @@ class UsersTable extends Table
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             // Find all the folders that only belongs to the deleted user and delete them.
             // Note: all folders that cannot be deleted should have been transferred to other people already.
-            $foldersIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::FOLDER_ACO, $user->id, ['checkGroupsUsers' => true])
-                ->extract('aco_foreign_key')->toArray();
+            $foldersIds = $this->Permissions
+                ->findAcosOnlyAroCanAccess(PermissionsTable::FOLDER_ACO, $user->id, ['checkGroupsUsers' => true])
+                ->extract('aco_foreign_key')
+                ->toArray();
             if (!empty($foldersIds)) {
                 $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
                 $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
                 $foldersTable->deleteAll(['id IN' => $foldersIds]);
                 $foldersRelationsTable->deleteAll(['foreign_id IN' => $foldersIds]);
-                $foldersRelationsTable->updateAll(['folder_parent_id' => null], ['folder_parent_id IN ' => $foldersIds]);
+                $foldersRelationsTable
+                    ->updateAll(['folder_parent_id' => null], ['folder_parent_id IN ' => $foldersIds]);
             }
             // Remove all the folders relations of the users.
             $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
@@ -398,7 +412,8 @@ class UsersTable extends Table
         // Mark user as deleted
         $user->deleted = true;
         if (!$this->save($user, ['checkRules' => false])) {
-            throw new InternalErrorException(__('Could not delete the user {0}, please try again later.', $user->username));
+            $msg = __('Could not delete the user {0}, please try again later.', $user->username);
+            throw new InternalErrorException($msg);
         }
 
         return true;
@@ -406,13 +421,14 @@ class UsersTable extends Table
 
     /**
      * Register a user
+     *
      * @param array $data register data
-     * @param UserAccessControl $control who is requesting the registration
-     * @throws InternalErrorException if there was an issue during the save
-     * @throws ValidationException if the user data do not validate
-     * @return User entity
+     * @param \App\Utility\UserAccessControl|null $control who is requesting the registration
+     * @throws \Cake\Http\Exception\InternalErrorException if there was an issue during the save
+     * @throws \App\Error\Exception\ValidationException if the user data do not validate
+     * @return \App\Model\Entity\User entity
      */
-    public function register(array $data, UserAccessControl $control = null)
+    public function register(array $data, ?UserAccessControl $control = null)
     {
         // if role id is empty make it a user
         // Only admins are allowed to set the role
@@ -448,8 +464,8 @@ class UsersTable extends Table
 
         // Generate event data
         $eventData = ['user' => $user, 'token' => $token];
-        if (isset($control) && !is_null($control->userId())) {
-            $eventData['adminId'] = $control->userId();
+        if (isset($control) && !is_null($control->getId())) {
+            $eventData['adminId'] = $control->getId();
         }
         $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);

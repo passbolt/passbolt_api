@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,9 +23,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
-use Exception;
 use Passbolt\Tags\Model\Entity\Tag;
-use Passbolt\Tags\Model\Table\TagsTable;
 
 /**
  * @property TagsTable Tags
@@ -37,9 +37,9 @@ class TagsUpdateController extends AppController
      *
      * @param string|null $id Id of the tag to update
      * @return void
-     * @throws NotFoundException If the Tag is not found or the user does not have access.
+     * @throws \Cake\Http\Exception\NotFoundException If the Tag is not found or the user does not have access.
      */
-    public function update(string $id = null)
+    public function update(?string $id = null)
     {
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The tag id is not valid.'));
@@ -49,7 +49,7 @@ class TagsUpdateController extends AppController
         $this->loadModel('Passbolt/Tags.ResourcesTags');
 
         try {
-            /** @var Tag $tag */
+            /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
             $tag = $this->Tags->get($id, [
                 'contain' => ['ResourcesTags'],
             ]);
@@ -73,10 +73,10 @@ class TagsUpdateController extends AppController
     /**
      * Update personal tag
      *
-     * @param Tag $tag The tag to update
-     * @return Tag|bool The updated tag
-     * @throws BadRequestException If a non admin tries to change a personal tag into a shared tag.
-     * @throws Exception
+     * @param \Passbolt\Tags\Model\Entity\Tag $tag The tag to update
+     * @return \Passbolt\Tags\Model\Entity\Tag|bool The updated tag
+     * @throws \Cake\Http\Exception\BadRequestException If a non admin tries to change a personal tag into a shared tag.
+     * @throws \Exception
      */
     private function _updatePersonalTag(Tag $tag)
     {

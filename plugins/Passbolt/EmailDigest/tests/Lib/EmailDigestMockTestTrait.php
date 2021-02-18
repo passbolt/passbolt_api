@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,13 +20,13 @@ use App\Model\Entity\Profile;
 use App\Model\Entity\User;
 use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Utility\Digest\AbstractDigest;
-use Passbolt\EmailDigest\Utility\Digest\DigestInterface;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
 
 trait EmailDigestMockTestTrait
 {
     /**
      * Create a new digest at runtime for testing.
+     *
      * @param bool $canAddToDigests Returned by canAddToDigests method of the digest.
      * @param array $digests Some email digests that the digest must return
      * @return DigestInterface
@@ -57,11 +59,11 @@ trait EmailDigestMockTestTrait
     /**
      * Create an email queue entity with the passed properties.
      *
-     * @param array $properties properties for the email queue entity
-     * @param array $templateBodyVars variables for email body
+     * @param array|null $properties properties for the email queue entity
+     * @param array|null $templateBodyVars variables for email body
      * @return Entity
      */
-    protected function createEmailQueueEntity(array $properties = [], array $templateBodyVars = [])
+    protected function createEmailQueueEntity(?array $properties = [], ?array $templateBodyVars = []): Entity
     {
         $defaultProperties = [
             'id' => 1,
@@ -82,10 +84,11 @@ trait EmailDigestMockTestTrait
     /**
      * Create an email digest
      *
-     * @param Entity[] $emailsData Array of emails queue entity
+     * @param array $emailsData Array of emails queue entity
+     * @param array|null $properties props
      * @return EmailDigest
      */
-    protected function createEmailDigest(array $emailsData = [], array $properties = [])
+    protected function createEmailDigest(?array $emailsData = [], ?array $properties = []): EmailDigest
     {
         $defaultProperties = [
             'recipient' => 'digest_recipient@passbolt.com',

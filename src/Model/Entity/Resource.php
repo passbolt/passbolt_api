@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -36,6 +38,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Permission $permission
  * @property \App\Model\Entity\Permission[] $permissions
  * @property \App\Model\Entity\Secret[] $secrets
+ * @property \Passbolt\Tags\Model\Entity\Tag[] $tags
  */
 class Resource extends Entity
 {
@@ -65,5 +68,6 @@ class Resource extends Entity
         'permission' => false,
         'permissions' => false,
         'secrets' => false,
+        'resource_type_id' => false,
     ];
 }

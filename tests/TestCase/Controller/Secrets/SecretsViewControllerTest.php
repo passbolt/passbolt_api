@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,7 +23,7 @@ use App\Utility\UuidFactory;
 class SecretsViewControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Secrets', 'plugin.Passbolt/Log.Base/SecretAccesses',
+        'app.Base/Users', 'app.Base/Secrets',
     ];
 
     public function testSecretsViewControllerSuccess()

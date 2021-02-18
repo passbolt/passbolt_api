@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -12,14 +13,15 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use Cake\Core\Configure;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
 Router::plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/ignore/toggle/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'toggle'])
+    $routes->connect('/ignore/toggle/:foreign_model/:foreign_key', [
+                'controller' => 'DirectoryIgnore', 'action' => 'toggle',
+            ])
             ->setPass(['foreign_model', 'foreign_key'])
             ->setMethods(['GET']);
 

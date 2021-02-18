@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,20 +24,20 @@ use Cake\ORM\Table;
 
 class TableFindIndexBefore extends Event
 {
-    const EVENT_NAME = 'Table.findIndex.before';
+    public const EVENT_NAME = 'Table.findIndex.before';
 
     /**
-     * @var FindIndexOptions
+     * @var \App\Model\Table\Dto\FindIndexOptions
      */
     private $options;
 
     /**
-     * @var Query
+     * @var \Cake\ORM\Query
      */
     private $query;
 
     /**
-     * @var Table
+     * @var \Cake\ORM\Table
      */
     private $table;
 
@@ -54,7 +56,7 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @param Table $table Instance of Table
+     * @param \Cake\ORM\Table $table Instance of Table
      * @return $this
      */
     private function setTable(Table $table)
@@ -65,7 +67,7 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @param FindIndexOptions $options Instance of FindIndexOptions
+     * @param \App\Model\Table\Dto\FindIndexOptions $options Instance of FindIndexOptions
      * @return $this
      */
     private function setOptions(FindIndexOptions $options)
@@ -76,7 +78,7 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @param Query $query Instance of Query
+     * @param \Cake\ORM\Query $query Instance of Query
      * @return $this
      */
     private function setQuery(Query $query)
@@ -87,10 +89,10 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @param Query $query Query
-     * @param FindIndexOptions $options Options
-     * @param Table $table Table
-     * @return TableFindIndexBefore
+     * @param \Cake\ORM\Query $query Query
+     * @param \App\Model\Table\Dto\FindIndexOptions $options Options
+     * @param \Cake\ORM\Table $table Table
+     * @return \App\Model\Event\TableFindIndexBefore
      */
     public static function create(Query $query, FindIndexOptions $options, Table $table)
     {
@@ -101,7 +103,7 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @return Table
+     * @return \Cake\ORM\Table
      */
     public function getTable()
     {
@@ -109,7 +111,7 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @return FindIndexOptions
+     * @return \App\Model\Table\Dto\FindIndexOptions
      */
     public function getOptions()
     {
@@ -117,7 +119,7 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function getQuery()
     {

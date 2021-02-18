@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -21,13 +23,13 @@ use Passbolt\DirectorySync\Utility\LdapDirectory;
 
 class TestTask extends AppShell
 {
-
     protected $DirectoryEntries;
     protected $Groups;
     protected $Users;
 
     /**
      * Initialize.
+     *
      * @return void
      */
     public function initialize()
@@ -91,6 +93,7 @@ class TestTask extends AppShell
 
     /**
      * Display flattened tree.
+     *
      * @param array $flattenedTree flattened tree content.
      * @return void
      */
@@ -122,8 +125,8 @@ class TestTask extends AppShell
 
     /**
      * Convert a group to a string.
-     * @param mixed $group group
      *
+     * @param mixed $group group
      * @return string|null
      */
     protected function _groupToString($group)
@@ -143,8 +146,8 @@ class TestTask extends AppShell
 
     /**
      * Convert a user to a string.
-     * @param mixed $user user
      *
+     * @param mixed $user user
      * @return string|null
      */
     protected function _userToString($user)
@@ -165,6 +168,7 @@ class TestTask extends AppShell
 
     /**
      * Display valid objects.
+     *
      * @param array $data data
      * @return void
      */
@@ -205,7 +209,12 @@ class TestTask extends AppShell
     {
         if (count($data['users'])) {
             $this->hr();
-            $this->err(__('{0} users returned by your directory are invalid and will be ignored during synchronization', count($data['users'])));
+            $this->err(
+                __(
+                    '{0} users returned by your directory are invalid and will be ignored during synchronization',
+                    count($data['users'])
+                )
+            );
             $this->err(__('bin/cake directory_sync test --verbose for more details'));
             $this->hr();
             foreach ($data['users'] as $user) {
@@ -216,7 +225,12 @@ class TestTask extends AppShell
 
         if (count($data['groups'])) {
             $this->hr();
-            $this->err(__('{0} group(s) returned by your directory are invalid and will be ignored during synchronization', count($data['groups'])));
+            $this->err(
+                __(
+                    '{0} group(s) returned by your directory are invalid and will be ignored during synchronization',
+                    count($data['groups'])
+                )
+            );
             $this->hr();
             foreach ($data['groups'] as $group) {
                 $this->verbose(__('Error: ') . $group->getErrorsAsString());

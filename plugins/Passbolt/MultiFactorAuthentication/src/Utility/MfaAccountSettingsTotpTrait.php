@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,7 +23,7 @@ trait MfaAccountSettingsTotpTrait
     /**
      * Return OTP provisioning url
      *
-     * @throws RecordNotFoundException if URI is not set
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException if URI is not set
      * @return string
      */
     public function getOtpProvisioningUri()
@@ -40,6 +42,6 @@ trait MfaAccountSettingsTotpTrait
      */
     public function isOtpProvisioningUriSet()
     {
-        return (isset($this->settings[MfaSettings::PROVIDER_TOTP][MfaAccountSettings::OTP_PROVISIONING_URI]));
+        return isset($this->settings[MfaSettings::PROVIDER_TOTP][MfaAccountSettings::OTP_PROVISIONING_URI]);
     }
 }

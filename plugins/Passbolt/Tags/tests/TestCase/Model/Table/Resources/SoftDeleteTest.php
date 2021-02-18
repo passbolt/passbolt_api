@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -28,7 +30,7 @@ class SoftDeleteTest extends TagTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
         'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
+        'app.Base/ResourceTypes', 'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
@@ -46,7 +48,7 @@ class SoftDeleteTest extends TagTestCase
         parent::tearDown();
     }
 
-    public function testResourceSoftDeleteAlsoDeletePersonalTagsSuccess()
+    public function testTagsResourcesoftDeleteAlsoDeletePersonalTagsSuccess()
     {
         $r = $this->Resources->get(UuidFactory::uuid('resource.id.apache'));
         $this->Resources->softDelete(UuidFactory::uuid('user.id.ada'), $r);
@@ -64,7 +66,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags->get(UuidFactory::uuid('tag.id.fox-trot'));
     }
 
-    public function testResourceSoftDeleteAlsoDeleteSharedTagsSuccess()
+    public function testTagsResourcesoftDeleteAlsoDeleteSharedTagsSuccess()
     {
         $r = $this->Resources->get(UuidFactory::uuid('resource.id.apache'));
         $this->Resources->softDelete(UuidFactory::uuid('user.id.ada'), $r);
@@ -74,7 +76,7 @@ class SoftDeleteTest extends TagTestCase
         $this->Tags->get(UuidFactory::uuid('tag.id.#echo'));
     }
 
-    public function testResourceSoftDeleteAlsoDeleteSharedTagsViaGroupSuccess()
+    public function testTagsResourcesoftDeleteAlsoDeleteSharedTagsViaGroupSuccess()
     {
         $r = $this->Resources->get(UuidFactory::uuid('resource.id.cakephp'));
         $this->Resources->softDelete(UuidFactory::uuid('user.id.ada'), $r);

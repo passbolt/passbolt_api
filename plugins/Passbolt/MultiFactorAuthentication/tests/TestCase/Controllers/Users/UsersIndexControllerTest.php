@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Model\Entity\Role;
 use App\Test\Fixture\Alt0\GroupsUsersFixture;
 use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
@@ -29,7 +30,6 @@ use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
-use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 use Passbolt\AccountSettings\Test\Fixture\AccountSettingsFixture;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
@@ -42,7 +42,6 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     use UserAccessControlTrait;
 
     public $fixtures = [
-        OrganizationSettingsFixture::class,
         AccountSettingsFixture::class,
         UsersFixture::class,
         ProfilesFixture::class,
@@ -55,7 +54,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     /**
      * @return void
      */
-    public function testThatColumnIsMfaEnabledIsDisabledIfMfaIsDisabledForOrg()
+    public function testMfaUsersIndex_ThatColumnIsMfaEnabledIsDisabledIfMfaIsDisabledForOrg()
     {
         $config = [
             MfaSettings::PROVIDERS => [
@@ -69,26 +68,26 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/users.json?contain[is_mfa_enabled]=1');
         $this->assertSuccess();
-        $this->assertObjectHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]->User);
-        $this->assertAttributeEquals(false, 'is_mfa_enabled', $this->_responseJsonBody[0]->User);
+        $this->assertObjectHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]);
+        $this->assertAttributeEquals(false, 'is_mfa_enabled', $this->_responseJsonBody[0]);
     }
 
     /**
      * @return void
      */
-    public function testThatUsersIndexResultsContainIsMfaEnabledPropertyWhenContainParameterHaveIsMfaEnabled()
+    public function testMfaUsersIndex_UsersIndexResultsContainIsMfaEnabledPropertyWhenContainParameterHaveIsMfaEnabled()
     {
         $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'configure');
         $this->authenticateAs('ada');
         $this->getJson('/users.json?contain[is_mfa_enabled]=1');
         $this->assertSuccess();
-        $this->assertObjectHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]->User);
+        $this->assertObjectHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]);
     }
 
     /**
      * @return void
      */
-    public function testThatUsersIndexResultsAreFilteredWhenFilterParameterHaveIsMfaEnabled()
+    public function testMfaUsersIndex_ThatUsersIndexResultsAreFilteredWhenFilterParameterHaveIsMfaEnabled()
     {
         $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'configure');
         $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
@@ -109,20 +108,20 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/users.json?filter[is-mfa-enabled]=1&contain[is_mfa_enabled]=1');
         $this->assertSuccess();
         foreach ($this->_responseJsonBody as $user) {
-            $this->assertAttributeEquals(true, 'is_mfa_enabled', $user->User, 'All users in the results should have MFA enabled.');
+            $this->assertAttributeEquals(true, 'is_mfa_enabled', $user, 'All users in the results should have MFA enabled.');
         }
 
         $this->getJson('/users.json?filter[is-mfa-enabled]=0&contain[is_mfa_enabled]=1');
         $this->assertSuccess();
         foreach ($this->_responseJsonBody as $user) {
-            $this->assertAttributeEquals(false, 'is_mfa_enabled', $user->User, 'All users in the results should have MFA disabled.');
+            $this->assertAttributeEquals(false, 'is_mfa_enabled', $user, 'All users in the results should have MFA disabled.');
         }
     }
 
     /**
      * @return void
      */
-    public function testThatUsersIndexResultsAreNotFilteredWhenFilterParameterDoesNotHaveIsMfaEnabled()
+    public function testMfaUsersIndex_UsersIndexResultsAreNotFilteredWhenFilterParameterDoesNotHaveIsMfaEnabled()
     {
         $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'configure');
         $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
@@ -143,10 +142,10 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/users.json?contain[is_mfa_enabled]=1');
         $this->assertSuccess();
         foreach ($this->_responseJsonBody as $user) {
-            if ($user->User->id === $userId) {
-                $this->assertAttributeEquals(true, 'is_mfa_enabled', $user->User);
+            if ($user->id === $userId) {
+                $this->assertAttributeEquals(true, 'is_mfa_enabled', $user);
             } else {
-                $this->assertAttributeEquals(false, 'is_mfa_enabled', $user->User);
+                $this->assertAttributeEquals(false, 'is_mfa_enabled', $user);
             }
         }
     }

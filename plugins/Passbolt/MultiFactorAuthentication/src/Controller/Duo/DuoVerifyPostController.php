@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use App\Error\Exception\CustomValidationException;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -26,8 +27,8 @@ class DuoVerifyPostController extends MfaVerifyController
     /**
      * Duo Verify Post
      *
-     * @throws InternalErrorException
-     * @throws BadRequestException
+     * @throws \Cake\Http\Exception\InternalErrorException
+     * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
     public function post()

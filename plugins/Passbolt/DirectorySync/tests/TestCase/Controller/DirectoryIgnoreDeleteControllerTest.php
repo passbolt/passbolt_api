@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -24,9 +26,7 @@ class DirectoryIgnoreDeleteControllerTest extends DirectorySyncIntegrationTestCa
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars',
-        'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
-        'plugin.Passbolt/DirectorySync.Base/DirectoryEntries',
-        'plugin.Passbolt/DirectorySync.Base/DirectoryIgnore',
+        'app.Base/Favorites',
     ];
 
     /**

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,12 +19,6 @@ namespace Passbolt\Folders\Test\TestCase\Model\Table\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\GroupsFixture;
-use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\PermissionsFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
@@ -31,8 +27,6 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -46,22 +40,6 @@ class FoldersTableTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
     use FormatValidationTrait;
     use PermissionsModelTrait;
-
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
-        GpgkeysFixture::class,
-        GroupsFixture::class,
-        GroupsUsersFixture::class,
-        PermissionsFixture::class,
-        ProfilesFixture::class,
-        UsersFixture::class,
-    ];
 
     /**
      * @var FoldersTable
@@ -118,9 +96,7 @@ class FoldersTableTest extends FoldersTestCase
         $this->assertFieldFormatValidation($this->Folders, 'name', self::getDummyFolderData(), self::getDummyFolderEntityDefaultOptions(), $testCases);
     }
 
-    /* ************************************************************** */
     /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
 
     /**
      * Get default folder entity options.
@@ -135,9 +111,7 @@ class FoldersTableTest extends FoldersTestCase
         ];
     }
 
-    /* ************************************************************** */
     /* CONTAINS TESTS */
-    /* ************************************************************** */
 
     public function testFindView_ContainChildrenFolders()
     {
@@ -205,9 +179,7 @@ class FoldersTableTest extends FoldersTestCase
         $this->assertEquals(false, $folderB->personal);
     }
 
-    /* ************************************************************** */
     /* FINDER TESTS */
-    /* ************************************************************** */
 
     public function testFindIndex_FilterByParentId()
     {
@@ -227,7 +199,7 @@ class FoldersTableTest extends FoldersTestCase
         foreach ($expectedFoldersForParentId as $parentIdToFilter => $expectedFolderIds) {
             $folders = $this->Folders->filterQueryByParentIds($this->Folders->find(), [$parentIdToFilter]);
             $resultFolderIds = Hash::extract($folders->toArray(), '{n}.id');
-            $this->assertEquals(asort($expectedFolderIds), asort($resultFolderIds), "List of folders returned does not contain expected folders.");
+            $this->assertEquals(asort($expectedFolderIds), asort($resultFolderIds), 'List of folders returned does not contain expected folders.');
         }
 
         // Multiple parents should retrieve the children of all parents once
@@ -236,7 +208,7 @@ class FoldersTableTest extends FoldersTestCase
 
         $folders = $this->Folders->filterQueryByParentIds($this->Folders->find(), $parentIdsToFilter);
         $resultFolderIds = Hash::extract($folders->toArray(), '{n}.id');
-        $this->assertSame(asort($expectedFolderIds), asort($resultFolderIds), "List of folders returned does not contain expected folders. Filtering with multiple parent ids should return all children.");
+        $this->assertSame(asort($expectedFolderIds), asort($resultFolderIds), 'List of folders returned does not contain expected folders. Filtering with multiple parent ids should return all children.');
     }
 
     private function insertTestCase1()
@@ -293,7 +265,7 @@ class FoldersTableTest extends FoldersTestCase
 
         foreach ($matchingNames as $matchingName) {
             $folders = $this->Folders->filterQueryBySearch($query, $matchingName);
-            $this->assertCount(1, $folders, sprintf("FoldersTable::findAllByName() should match the given input: `%s`", $matchingName));
+            $this->assertCount(1, $folders, sprintf('FoldersTable::findAllByName() should match the given input: `%s`', $matchingName));
         }
 
         $nonMatchingNames = [
@@ -303,7 +275,7 @@ class FoldersTableTest extends FoldersTestCase
 
         foreach ($nonMatchingNames as $nonMatchingName) {
             $folders = $this->Folders->filterQueryBySearch($query, $nonMatchingName);
-            $this->assertCount(0, $folders, sprintf("FoldersTable::findAllByName() should not match the given input: `%s`", $nonMatchingName));
+            $this->assertCount(0, $folders, sprintf('FoldersTable::findAllByName() should not match the given input: `%s`', $nonMatchingName));
         }
     }
 
@@ -334,6 +306,6 @@ class FoldersTableTest extends FoldersTestCase
         $folders = $this->Folders->filterByIds($this->Folders->find(), $expectedFolderIds);
         $folderIds = Hash::extract($folders->toArray(), '{n}.id');
 
-        $this->assertSame($folderIds, $expectedFolderIds, "List of folders returned does not contain expected folders.");
+        $this->assertSame($folderIds, $expectedFolderIds, 'List of folders returned does not contain expected folders.');
     }
 }

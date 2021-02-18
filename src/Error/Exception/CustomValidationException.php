@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,9 +29,8 @@ class CustomValidationException extends Exception implements
     ExceptionWithErrorsDetailInterface,
     ExceptionWithTableDetailInterface
 {
-
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_defaultCode = 400;
 
@@ -43,7 +44,7 @@ class CustomValidationException extends Exception implements
     /**
      * The table that throw the validation exception.
      *
-     * @var Table
+     * @var \Cake\ORM\Table|null
      */
     protected $_table = null;
 
@@ -52,12 +53,17 @@ class CustomValidationException extends Exception implements
      *
      * @param string $message The error message
      * @param mixed|null $errors The validation errors.
-     * @param Table $table The table that is the source of the validation errors.
-     * @param int $code The code of the error, is also the HTTP status code for the error.
+     * @param \Cake\ORM\Table|null $table The table that is the source of the validation errors.
+     * @param int|null $code The code of the error, is also the HTTP status code for the error.
      * @param \Exception|null $previous the previous exception.
      */
-    public function __construct($message, $errors = null, $table = null, $code = null, $previous = null)
-    {
+    public function __construct(
+        $message,
+        $errors = null,
+        ?Table $table = null,
+        ?int $code = null,
+        ?\Exception $previous = null
+    ) {
         parent::__construct($message, $code, $previous);
         $this->_errors = $errors;
         $this->_table = $table;
@@ -66,7 +72,7 @@ class CustomValidationException extends Exception implements
     /**
      * Get the validation errors
      *
-     * @return array
+     * @return array|null
      */
     public function getErrors()
     {
@@ -76,7 +82,7 @@ class CustomValidationException extends Exception implements
     /**
      * Get the table
      *
-     * @return Table
+     * @return \Cake\ORM\Table|null
      */
     public function getTable()
     {

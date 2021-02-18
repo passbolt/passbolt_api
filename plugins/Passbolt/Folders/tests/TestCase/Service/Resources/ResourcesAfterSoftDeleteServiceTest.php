@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,7 +27,6 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UuidFactory;
 use Passbolt\Folders\Service\Resources\ResourcesAfterSoftDeleteService;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -43,7 +44,6 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
     use ResourcesModelTrait;
 
     public $fixtures = [
-        FoldersRelationsFixture::class,
         GroupsFixture::class,
         PermissionsFixture::class,
         UsersFixture::class,
@@ -64,7 +64,7 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
 
     public function testResourcesAfterCreateServiceSuccess_AfterResourceSoftDeleted()
     {
-        list($resource, $userAId, $userBId) = $this->insertFixture_AfterResourceSoftDeleted();
+        [$resource, $userAId, $userBId] = $this->insertFixture_AfterResourceSoftDeleted();
 
         $this->service->afterSoftDelete($resource);
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -83,6 +85,7 @@ class TestDirectory implements DirectoryInterface
 
     /**
      * Get directory results with filtered applied (as per filters defined in the config).
+     *
      * @return DirectoryResults directory results
      * @throws \Exception
      */
@@ -120,6 +123,7 @@ class TestDirectory implements DirectoryInterface
 
     /**
      * Get raw users fixtures.
+     *
      * @return mixed
      * @throws \Exception
      */
@@ -130,6 +134,7 @@ class TestDirectory implements DirectoryInterface
 
     /**
      * Get raw groups fixtures.
+     *
      * @return mixed
      * @throws \Exception
      */

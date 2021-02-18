@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsIndexControllerTest extends AppIntegrationTestCase
@@ -42,24 +43,8 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         // Not expected content.
         $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('users', $this->_responseJsonBody[0]);
-        $this->assertObjectNotHasAttribute('group_user', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('groups_users', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('my_group_user', $this->_responseJsonBody[0]);
-    }
-
-    public function testGroupsIndexApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $this->getJson('/groups.json?api-version=v1');
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Group', $this->_responseJsonBody[0]);
-        $this->assertGroupAttributes($this->_responseJsonBody[0]->Group);
-        // Not expected fields.
-        $this->assertObjectNotHasAttribute('Modifier', $this->_responseJsonBody[0]);
-        $this->assertObjectNotHasAttribute('User', $this->_responseJsonBody[0]);
-        $this->assertObjectNotHasAttribute('GroupUser', $this->_responseJsonBody[0]);
     }
 
     public function testGroupsIndexContainSuccess()
@@ -109,31 +94,6 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGroupUserAttributes($groupB->my_group_user);
     }
 
-    public function testGroupsIndexContainApiV1SSuccess()
-    {
-        $this->authenticateAs('ada');
-        $urlParameter = 'api-version=v1';
-        $urlParameter .= '&contain[modifier]=1';
-        $urlParameter .= '&contain[modifier.profile]=1';
-        $urlParameter .= '&contain[user]=1';
-        $urlParameter .= '&contain[group_user]=1';
-        $this->getJson("/groups.json?$urlParameter");
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-
-        // Expected content.
-        $this->assertObjectHasAttribute('Group', $this->_responseJsonBody[0]);
-        $this->assertGroupAttributes($this->_responseJsonBody[0]->Group);
-        $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody[0]->Modifier);
-        $this->assertObjectHasAttribute('Profile', $this->_responseJsonBody[0]->Modifier);
-        $this->assertProfileAttributes($this->_responseJsonBody[0]->Modifier->Profile);
-        $this->assertObjectHasAttribute('User', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody[0]->User[0]);
-        $this->assertObjectHasAttribute('GroupUser', $this->_responseJsonBody[0]);
-        $this->assertGroupUserAttributes($this->_responseJsonBody[0]->GroupUser[0]);
-    }
-
     public function testGroupsIndexFilterHasUsersSuccess()
     {
         $this->authenticateAs('ada');
@@ -160,7 +120,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
 
     public function testGroupsIndexErrorNotAuthenticated()
     {
-        $this->getJson('/groups.json?api-version=v1');
+        $this->getJson('/groups.json');
         $this->assertAuthenticationError();
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -115,7 +117,8 @@ class DatacheckTask extends AppShell
      */
     protected function displayServiceTotal(array $results, string $serviceName)
     {
-        $status = (!count(Hash::extract($results, '{s}.{s}.{n}[status=error]'))) ? Healthcheck::STATUS_SUCCESS : Healthcheck::STATUS_ERROR;
+        $status = !count(Hash::extract($results, '{s}.{s}.{n}[status=error]')) ?
+            Healthcheck::STATUS_SUCCESS : Healthcheck::STATUS_ERROR;
         $this->display(__('Data integrity for {0}.', $serviceName), $status);
     }
 
@@ -131,7 +134,7 @@ class DatacheckTask extends AppShell
         $success = count(Hash::extract($details, '{n}[status=success]'));
         $total = count($details);
         $msg = $name . ': ' . $success . '/' . $total;
-        $status = ($success === $total) ? Healthcheck::STATUS_SUCCESS : Healthcheck::STATUS_ERROR;
+        $status = $success === $total ? Healthcheck::STATUS_SUCCESS : Healthcheck::STATUS_ERROR;
         $this->display($msg, $status, 2);
     }
 
@@ -161,7 +164,7 @@ class DatacheckTask extends AppShell
      * @param string $msg message
      * @param string $case pass or fail
      * @param int $padding how many space char in front
-     * @throws Exception case is not defined or missing
+     * @throws \Cake\Core\Exception\Exception case is not defined or missing
      * @return void
      */
     protected function display(string $msg, string $case, int $padding = 0)

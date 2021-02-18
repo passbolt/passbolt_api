@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,7 +22,6 @@ use Cake\Core\Configure;
 
 abstract class AccountSettingsPluginTestCase extends AppTestCase
 {
-
     /**
      * setUp method
      *
@@ -29,7 +30,7 @@ abstract class AccountSettingsPluginTestCase extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $config = require(PLUGINS . 'Passbolt' . DS . 'AccountSettings' . DS . 'config' . DS . 'config.php');
+        $config = require PLUGINS . 'Passbolt' . DS . 'AccountSettings' . DS . 'config' . DS . 'config.php';
         Configure::write($config);
     }
 }

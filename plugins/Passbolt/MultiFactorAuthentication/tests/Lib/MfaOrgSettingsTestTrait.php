@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ trait MfaOrgSettingsTestTrait
      * @param string $type configure or database
      * @param UserAccessControl $user optional, only used when $type is database
      */
-    public function mockMfaOrgSettings(array $data, string $type = 'configure', UserAccessControl $user = null)
+    public function mockMfaOrgSettings(array $data, string $type = 'configure', ?UserAccessControl $user = null)
     {
         if ($type === 'configure') {
             Configure::write('passbolt.plugins.multiFactorAuthentication', $data);

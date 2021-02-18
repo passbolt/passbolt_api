@@ -19,34 +19,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * TagsFixture
- *
  */
 class TagsFixture extends TestFixture
 {
-
-    /**
-     * Fields
-     *
-     * @var array
-     */
-    // @codingStandardsIgnoreStart
-    public $fields = [
-        'id' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
-        'slug' => ['type' => 'string', 'length' => 128, 'null' => false, 'default' => null, 'collate' => 'utf8mb4_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'is_shared' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
-        '_indexes' => [
-            'id' => ['type' => 'index', 'columns' => ['id', 'slug'], 'length' => []],
-        ],
-        '_constraints' => [
-            'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
-        ],
-        '_options' => [
-            'engine' => 'InnoDB',
-            'collation' => 'utf8mb4_unicode_ci'
-        ],
-    ];
-    // @codingStandardsIgnoreEnd
-
     /**
      * Init the records dynamically
      *

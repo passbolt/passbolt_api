@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Passbolt\AccountSettings\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -17,7 +19,6 @@ use Cake\ORM\Entity;
  */
 class AccountSetting extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -32,9 +33,9 @@ class AccountSetting extends Entity
         'modified' => true,
     ];
 
-    const SUPPORTED_PROPERTIES = [
+    public const SUPPORTED_PROPERTIES = [
         'theme', 'mfa',
     ];
 
-    const UUID_NAMESPACE = 'account.settings.property.id.';
+    public const UUID_NAMESPACE = 'account.settings.property.id.';
 }

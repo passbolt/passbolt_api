@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,19 +17,18 @@
 
 namespace App\Service\Permissions;
 
-use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use Cake\ORM\TableRegistry;
 
 class PermissionsGetUsersIdsHavingAccessToService
 {
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
@@ -49,7 +50,8 @@ class PermissionsGetUsersIdsHavingAccessToService
     public function getUsersIdsHavingAccessTo(string $acoForeignKey)
     {
         // Retrieve the groups having access to the aco.
-        $groupsIdsHavingAccessQuery = $this->permissionsTable->findByAroAndAcoForeignKey(PermissionsTable::GROUP_ARO, $acoForeignKey)
+        $groupsIdsHavingAccessQuery = $this->permissionsTable
+            ->findByAroAndAcoForeignKey(PermissionsTable::GROUP_ARO, $acoForeignKey)
             ->select('aro_foreign_key');
 
         // Retrieve the groups members having access to the aco.
@@ -60,7 +62,8 @@ class PermissionsGetUsersIdsHavingAccessToService
             ->toArray();
 
         // Retrieve the users having access to the aco.
-        $usersIds = $this->permissionsTable->findByAroAndAcoForeignKey(PermissionsTable::USER_ARO, $acoForeignKey)
+        $usersIds = $this->permissionsTable
+            ->findByAroAndAcoForeignKey(PermissionsTable::USER_ARO, $acoForeignKey)
             ->select('aro_foreign_key')
             ->extract('aro_foreign_key')
             ->toArray();

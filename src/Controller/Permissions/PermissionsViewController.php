@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,6 +22,10 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\PermissionsTable $Permissions
+ * @property \App\Model\Table\ResourcesTable $Resources
+ */
 class PermissionsViewController extends AppController
 {
     /**
@@ -27,18 +33,15 @@ class PermissionsViewController extends AppController
      * Only support the entity Resource for now.
      *
      * @param string $acoForeignKey The target aco id.
-     * @throws BadRequestException If the parameter acoForeignKey is null
-     * @throws BadRequestException If the parameter acoForeignKey is not a valid uuid
-     * @throws NotFoundException If the target resource doesn't exist
-     * @throws NotFoundException If the target resource is soft deleted
+     * @throws \Cake\Http\Exception\BadRequestException If the parameter acoForeignKey is null
+     * @throws \Cake\Http\Exception\BadRequestException If the parameter acoForeignKey is not a valid uuid
+     * @throws \Cake\Http\Exception\NotFoundException If the target resource doesn't exist
+     * @throws \Cake\Http\Exception\NotFoundException If the target resource is soft deleted
      * @return void
      */
-    public function viewAcoPermissions($acoForeignKey = null)
+    public function viewAcoPermissions(string $acoForeignKey)
     {
         // Check request sanity
-        if (is_null($acoForeignKey)) {
-            throw new BadRequestException(__('The id is missing for model Resource.'));
-        }
         if (!Validation::uuid($acoForeignKey)) {
             throw new BadRequestException(__('The id is not valid for model Resource.'));
         }

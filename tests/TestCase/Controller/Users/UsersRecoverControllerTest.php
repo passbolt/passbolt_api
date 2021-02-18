@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,8 +21,8 @@ use App\Test\Lib\AppIntegrationTestCase;
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
-        'app.Base/Avatars', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
+        'app.Base/Avatars',
     ];
 
     public $fails = [
@@ -32,14 +34,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
             'form-data' => ['username' => 'notanemail'],
             'error' => 'Please provide a valid email address.',
         ],
-        'cannot recover a user that does not exist' => [
-            'form-data' => ['username' => 'notauser@passbolt.com'],
-            'error' => 'This user does not exist or has been deleted.',
-        ],
-        'cannot recover a user that has been deleted' => [
-            'form-data' => ['username' => 'sofia@passbolt.com'],
-            'error' => 'This user does not exist or has been deleted.',
-        ],
     ];
 
     public $successes = [
@@ -48,9 +42,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         ],
         'can recover a user that has not completed setup' => [
             'form-data' => ['username' => 'ruth@passbolt.com'],
-        ],
-        'legacy form data' => [
-            'form-data' => ['User' => ['username' => 'ruth@passbolt.com']],
         ],
     ];
 
@@ -68,42 +59,52 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testRecoverGetJsonSuccess()
     {
-        $this->getJson('/users/recover.json?api-version=v1');
+        $this->getJson('/users/recover.json?api-version=v2');
         $this->assertSuccess();
     }
 
     public function testRecoverPostErrors()
     {
         foreach ($this->fails as $case => $data) {
-            $this->post('/users/recover', $data['form-data']);
-            $result = ($this->_getBodyAsString());
+            $this->postJson('/users/recover.json', $data['form-data']);
+            $result = $this->_getBodyAsString();
             $this->assertContains($data['error'], $result, 'Error case not respected: ' . $case);
         }
     }
 
-    public function testRecoverPostError_MissingCsrfTokenError()
+    public function testRecoverPostError_UserDeleted()
     {
-        $this->disableCsrfToken();
-        $this->post('/users/recover');
-        $this->assertResponseCode(403);
-        $result = ($this->_getBodyAsString());
-        $this->assertContains('Missing CSRF token cookie', $result);
+        $data = ['username' => 'sofia@passbolt.com'];
+        $error = 'This user does not exist or has been deleted.';
+        $this->postJson('/users/recover.json', $data);
+        $this->assertResponseCode(404);
+        $result = $this->_getBodyAsString();
+        $this->assertContains($error, $result);
+    }
+
+    public function testRecoverPostError_UserNotExist()
+    {
+        $data = ['username' => 'notauser@passbolt.com'];
+        $error = 'This user does not exist or has been deleted.';
+        $this->postJson('/users/recover.json', $data);
+        $this->assertResponseCode(404);
+        $result = $this->_getBodyAsString();
+        $this->assertContains($error, $result);
     }
 
     public function testRecoverPostSuccess()
     {
         foreach ($this->successes as $case => $data) {
-            $this->post('/users/recover', $data['form-data']);
-            $result = ($this->_getBodyAsString());
-            $success = 'Email sent!';
-            $this->assertContains($success, $result, 'Success case not respected: ' . $case);
+            $this->postJson('/users/recover.json', $data['form-data']);
+            $result = $this->_getBodyAsString();
+            $this->assertResponseSuccess('Recovery process started, check your email.');
         }
     }
 
     public function testRecoverPostJsonError()
     {
         foreach ($this->fails as $case => $data) {
-            $this->postJson('/users/recover.json?api-version=v1', $data['form-data']);
+            $this->postJson('/users/recover.json?api-version=v2', $data['form-data']);
             $this->assertError(400, $data['error']);
         }
     }
@@ -111,7 +112,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     public function testRecoverPostJsonSuccess()
     {
         foreach ($this->successes as $case => $data) {
-            $this->postJson('/users/recover.json?api-version=v1', $data['form-data']);
+            $this->postJson('/users/recover.json?api-version=v2', $data['form-data']);
             $this->assertSuccess();
         }
     }
@@ -119,7 +120,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     public function testRecoverPostJsonError_MissingCsrfTokenError()
     {
         $this->disableCsrfToken();
-        $this->post('/users/recover.json?api-version=v1');
+        $this->post('/users/recover.json?api-version=v2');
         $this->assertResponseCode(403);
     }
 }

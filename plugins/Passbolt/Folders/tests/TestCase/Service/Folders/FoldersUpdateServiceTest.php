@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,10 +22,8 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Fixture\Base\AvatarsFixture;
-use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
@@ -38,12 +38,9 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
-use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -64,12 +61,8 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public $fixtures = [
         AvatarsFixture::class,
-        EmailQueueFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
-        OrganizationSettingsFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,
         RolesFixture::class,
@@ -111,7 +104,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderSuccess_UpdateFolderMeta()
     {
-        list($folderA, $userAId) = $this->insertFixture_UpdateFolderMeta();
+        [$folderA, $userAId] = $this->insertFixture_UpdateFolderMeta();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->update($uac, $folderA->id, ['name' => 'new name']);
@@ -133,7 +126,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderSuccess_NotifyUserAfterUpdate()
     {
-        list($folderA, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->update($uac, $folderA->id, ['name' => 'new name']);
@@ -149,7 +142,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderError_ValidationError()
     {
-        list($folderA, $userAId) = $this->insertFixture_UpdateFolderMeta();
+        [$folderA, $userAId] = $this->insertFixture_UpdateFolderMeta();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $folderData = ['name' => ''];
 
@@ -157,7 +150,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
             $this->service->update($uac, $folderA->id, $folderData);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate folder data.", $e->getMessage());
+            $this->assertEquals('Could not validate folder data.', $e->getMessage());
             $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -165,7 +158,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderError_InsufficientPermission()
     {
-        list($folderA, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userBId);
 
@@ -198,7 +191,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderError_NoAccessToFolder()
     {
-        list($folderA, $userAId) = $this->insertFixture_UpdateFolderMeta();
+        [$folderA, $userAId] = $this->insertFixture_UpdateFolderMeta();
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userBId);
 

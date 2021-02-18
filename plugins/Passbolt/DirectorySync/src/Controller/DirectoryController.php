@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -25,7 +27,7 @@ abstract class DirectoryController extends AppController
     /**
      * The directory org settings
      *
-     * @var DirectoryOrgSettings
+     * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
      */
     protected $directoryOrgSettings = null;
 
@@ -35,7 +37,7 @@ abstract class DirectoryController extends AppController
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         $isLdapLoaded = extension_loaded('ldap');
         if (!$isLdapLoaded) {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -35,19 +37,13 @@ class ActionLogsFinderSecretAccessesTest extends LogIntegrationTestCase
         'app.Base/Groups',
         'app.Base/GroupsUsers',
         'app.Base/Resources',
+        'app.Base/ResourceTypes',
         'app.Base/Permissions',
         'app.Base/Secrets',
         'app.Base/Favorites',
-        'app.Base/EmailQueue',
-        'plugin.Passbolt/Log.Base/Actions',
-        'plugin.Passbolt/Log.Base/ActionLogs',
-        'plugin.Passbolt/Log.Base/EntitiesHistory',
-        'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretAccesses',
-        'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
-    public function testActionLogsFinderSecretAccessSingle()
+    public function testAuditLogsActionLogsFinderSecretAccessSingle()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateMultipleResourceGetWithSecrets($uac, [UuidFactory::uuid('resource.id.cakephp')]);
@@ -66,9 +62,10 @@ class ActionLogsFinderSecretAccessesTest extends LogIntegrationTestCase
      * Test retrieving secret access logs when multiple access to a secret were done during a single operation.
      * This can be the case when a multiple share occurs.
      * Expected result: only the secret access log corresponding to the requested resource should be returned.
+     *
      * @throws \Exception
      */
-    public function testActionLogsFinderSecretAccessMultiple()
+    public function testAuditLogsActionLogsFinderSecretAccessMultiple()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateMultipleResourceGetWithSecrets($uac, [UuidFactory::uuid('resource.id.apache'), UuidFactory::uuid('resource.id.cakephp')]);

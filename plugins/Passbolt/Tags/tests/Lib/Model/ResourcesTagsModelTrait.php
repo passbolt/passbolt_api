@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@ namespace Passbolt\Tags\Test\Lib\Model;
 
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Passbolt\Tags\Model\Entity\ResourcesTag;
 
 trait ResourcesTagsModelTrait
 {
@@ -27,7 +28,7 @@ trait ResourcesTagsModelTrait
      * @param array $options The entity options
      * @return ResourcesTag
      */
-    public function addResourceTag(array $data = [], array $options = [])
+    public function addResourceTag(array $data = [], ?array $options = [])
     {
         $resourcesTagsTable = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
         $resourceTag = self::getDummyResourceTagEntity($data, $options);
@@ -44,7 +45,7 @@ trait ResourcesTagsModelTrait
      * @param array $options The new entity options.
      * @return ResourcesTag
      */
-    public function getDummyResourceTagEntity(array $data = [], array $options = [])
+    public function getDummyResourceTagEntity(array $data = [], ?array $options = [])
     {
         $resourcesTagsTable = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
         $defaultOptions = [

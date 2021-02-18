@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,11 +19,9 @@ namespace Passbolt\EmailDigest\Test\TestCase\Unit\Utility\Digest;
 
 use Cake\TestSuite\TestCase;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
-use Passbolt\EmailDigest\Utility\Digest\Digest;
 use Passbolt\EmailDigest\Utility\Digest\SingleDigest;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
 use Passbolt\EmailDigest\Utility\Mailer\EmailPreview;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class SingleEmailDigestTest extends TestCase
 {

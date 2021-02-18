@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,8 +27,9 @@ class LicenseKeyForm extends Form
 
     /**
      * License key schema.
-     * @param Schema $schema schema
-     * @return Schema
+     *
+     * @param \Cake\Form\Schema $schema schema
+     * @return \Cake\Form\Schema
      */
     protected function _buildSchema(Schema $schema)
     {
@@ -36,14 +39,15 @@ class LicenseKeyForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator validator
-     * @return Validator
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
     protected function _buildValidator(Validator $validator)
     {
         $validator
             ->requirePresence('license_key', 'create', __('A subscription key is required.'))
-            ->notEmpty('license_key', __('A subscription key is required.'))
+            ->notEmptyString('license_key', __('A subscription key is required.'))
             ->add('license_key', 'is_valid_license', [
                 'last' => true,
                 'rule' => [$this, 'checkLicenseIsValid'],
@@ -60,7 +64,7 @@ class LicenseKeyForm extends Form
      * @param array|null $context not in use
      * @return string|bool
      */
-    public function checkLicenseIsValid(string $value, array $context = null)
+    public function checkLicenseIsValid(string $value, ?array $context = null)
     {
         $license = new LicenseKey($value);
         $valid = $license->validate();
@@ -71,6 +75,7 @@ class LicenseKeyForm extends Form
 
     /**
      * Get last error details.
+     *
      * @return string|null
      */
     public function getLastErrorDetails()
@@ -80,6 +85,7 @@ class LicenseKeyForm extends Form
 
     /**
      * Execute implementation.
+     *
      * @param array $data formdata
      * @return bool
      */

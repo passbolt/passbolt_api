@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,6 +20,7 @@ use Cake\Event\Event;
 
 /**
  * Class EmailSubscriptionManager
+ *
  * @package App\Notification\Email
  *
  * The EmailSubscriptionManager class is a composite object to handle the email subscriptions.
@@ -33,7 +36,7 @@ class EmailSubscriptionManager
     private $subscriptions = [];
 
     /**
-     * @param SubscribedEmailRedactorInterface $subscribedEmailRedactor Email Redactor
+     * @param \App\Notification\Email\SubscribedEmailRedactorInterface $subscribedEmailRedactor Email Redactor
      * @return $this
      */
     public function addNewSubscription(SubscribedEmailRedactorInterface $subscribedEmailRedactor)
@@ -46,8 +49,8 @@ class EmailSubscriptionManager
     }
 
     /**
-     * @param Event $event Event object
-     * @return SubscribedEmailRedactorInterface[]
+     * @param \Cake\Event\Event $event Event object
+     * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
      */
     public function getSubscriptionsForEvent(Event $event)
     {
@@ -57,7 +60,7 @@ class EmailSubscriptionManager
     /**
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return array_keys($this->subscriptions);
     }

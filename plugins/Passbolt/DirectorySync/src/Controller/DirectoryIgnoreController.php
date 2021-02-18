@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -31,11 +33,11 @@ class DirectoryIgnoreController extends DirectoryController
      *
      * @param string $foreignModel foreign model
      * @param string $foreignKey foreign key
-     * @throws ValidationException If the model name or id is not valid
-     * @throws ForbiddenException if the current user is not an admin
+     * @throws \App\Error\Exception\ValidationException If the model name or id is not valid
+     * @throws \Cake\Http\Exception\ForbiddenException if the current user is not an admin
      * @return void
      */
-    public function toggle(string $foreignModel, string $foreignKey)
+    public function toggle(string $foreignModel, string $foreignKey): void
     {
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
@@ -60,11 +62,11 @@ class DirectoryIgnoreController extends DirectoryController
      *
      * @param string $foreignModel foreign model
      * @param string $foreignKey foreign key
-     * @throws ValidationException If the model name or id is not valid
-     * @throws ForbiddenException if the current user is not an admin
+     * @throws \App\Error\Exception\ValidationException If the model name or id is not valid
+     * @throws \Cake\Http\Exception\ForbiddenException if the current user is not an admin
      * @return void
      */
-    public function view(string $foreignModel, string $foreignKey)
+    public function view(string $foreignModel, string $foreignKey): void
     {
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
@@ -79,7 +81,8 @@ class DirectoryIgnoreController extends DirectoryController
         try {
             $ignored = $this->DirectoryIgnore->get($foreignKey);
         } catch (RecordNotFoundException $exception) {
-            throw new NotFoundException(__('The record is currently not ignored as part of directory synchronization.'));
+            $msg = __('The record is currently not ignored as part of directory synchronization.');
+            throw new NotFoundException($msg);
         }
         $this->success(__('The record is currently ignored as part of directory synchronization.'), $ignored);
     }
@@ -89,11 +92,11 @@ class DirectoryIgnoreController extends DirectoryController
      *
      * @param string $foreignModel foreign model
      * @param string $foreignKey foreign key
-     * @throws ValidationException If the model name or id is not valid
-     * @throws ForbiddenException if the current user is not an admin
+     * @throws \App\Error\Exception\ValidationException If the model name or id is not valid
+     * @throws \Cake\Http\Exception\ForbiddenException if the current user is not an admin
      * @return void
      */
-    public function add(string $foreignModel, string $foreignKey)
+    public function add(string $foreignModel, string $foreignKey): void
     {
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
@@ -119,11 +122,12 @@ class DirectoryIgnoreController extends DirectoryController
 
     /**
      * Delete
+     *
      * @param string $foreignModel foreign model
      * @param string $foreignKey foreign key
      * @return void
      */
-    public function delete(string $foreignModel, string $foreignKey)
+    public function delete(string $foreignModel, string $foreignKey): void
     {
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
@@ -147,7 +151,8 @@ class DirectoryIgnoreController extends DirectoryController
 
         $result = $this->DirectoryIgnore->delete($record);
         if (!$result) {
-            throw new InternalErrorException(__('The record could not be unmarked as ignored. Please try again later.'));
+            $msg = __('The record could not be unmarked as ignored. Please try again later.');
+            throw new InternalErrorException($msg);
         }
         $this->success(__('The record will not be ignored in the next directory synchronization.'));
     }
@@ -156,7 +161,7 @@ class DirectoryIgnoreController extends DirectoryController
      * @param string $foreignModel foreign model
      * @return string
      */
-    private function normalizeForeignModel(string $foreignModel)
+    private function normalizeForeignModel(string $foreignModel): string
     {
         $foreignModel = ucfirst($foreignModel);
         if ($foreignModel === 'Directoryentries') {

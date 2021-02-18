@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,18 +18,16 @@
 namespace Passbolt\Folders\Test\TestCase\EventListener;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\AvatarsFixture;
-use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
-use App\Test\Fixture\Base\OrganizationSettingsFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
+use App\Test\Fixture\Base\ResourceTypesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\ResourcesModelTrait;
@@ -36,18 +36,13 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
-use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
-use Passbolt\Log\Test\Fixture\Base\EntitiesHistoryFixture;
-use Passbolt\Log\Test\Fixture\Base\PermissionsHistoryFixture;
 
 /**
  * \Passbolt\Folders\EventListener\ResourcesEventListener Test Case
+ *
  * @covers \Passbolt\Folders\EventListener\ResourcesEventListener
  */
 class ResourceEventListenerTest extends FoldersIntegrationTestCase
@@ -58,26 +53,19 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
     use SecretsModelTrait;
 
     public $fixtures = [
-        ActionsFixture::class,
-        ActionLogsFixture::class,
-        EntitiesHistoryFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsUsersFixture::class,
         GroupsFixture::class,
         PermissionsFixture::class,
-        PermissionsHistoryFixture::class,
         ProfilesFixture::class,
         UsersFixture::class,
-        EmailQueueFixture::class,
         AvatarsFixture::class,
         FavoritesFixture::class,
         RolesFixture::class,
         SecretsFixture::class,
         ProfilesFixture::class,
         ResourcesFixture::class,
-        OrganizationSettingsFixture::class,
+        ResourceTypesFixture::class,
     ];
 
     /**
@@ -91,9 +79,9 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 
-    public function testResourcesEventListenerSuccess_AfterResourceAdded()
+    public function testFoldersResourcesEventListenerSuccess_AfterResourceAdded()
     {
-        list($userId, $folder) = $this->insertFixture_AfterResourceAdded();
+        [$userId, $folder] = $this->insertFixture_AfterResourceAdded();
         $data = [
             'name' => 'R1',
             'folder_parent_id' => $folder->id,
@@ -101,7 +89,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         ];
 
         $this->authenticateAs('ada');
-        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->postJson('/resources.json?api-version=v2', $data);
         $this->assertSuccess();
 
         $resource = $this->_responseJsonBody;
@@ -117,9 +105,9 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         return [$userId, $folder];
     }
 
-    public function testResourcesEventListenerSuccess_AfterResourceSoftDeleted()
+    public function testFoldersResourcesEventListenerSuccess_AfterResourceSoftDeleted()
     {
-        list($userId, $resource) = $this->insertFixture_AfterResourceSoftDeleted();
+        [$userId, $resource] = $this->insertFixture_AfterResourceSoftDeleted();
         $data = $resource->toArray();
         $data['folder_parent_id'] = null;
 
@@ -139,9 +127,9 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         return [$userId, $resource];
     }
 
-    public function testResourcesEventListenerSuccess_AfterAccessGranted()
+    public function testFoldersResourcesEventListenerSuccess_AfterAccessGranted()
     {
-        list($folder, $resource, $userAId, $userBId) = $this->insertFixture_AfterAccessGranted();
+        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_AfterAccessGranted();
 
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $data['secrets'][] = ['user_id' => $userBId, 'data' => Hash::get($this->getDummySecretData(), 'data')];
@@ -165,9 +153,9 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         return [$folder, $resource, $userAId, $userBId];
     }
 
-    public function testResourcesEventListenerSuccess_AfterAccessRevoked()
+    public function testFoldersResourcesEventListenerSuccess_AfterAccessRevoked()
     {
-        list($folder, $resource, $userAId, $userBId) = $this->insertFixture_AfterAccessRevoked();
+        [$folder, $resource, $userAId, $userBId] = $this->insertFixture_AfterAccessRevoked();
 
         $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($resource->id, $userBId)->first();
         $data['permissions'][] = ['id' => $permission->id, 'delete' => true];

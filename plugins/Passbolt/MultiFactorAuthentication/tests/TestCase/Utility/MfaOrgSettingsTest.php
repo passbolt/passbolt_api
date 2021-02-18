@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use App\Error\Exception\CustomValidationException;
-use App\Model\Table\OrganizationSettingsTable;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
@@ -30,8 +31,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/OrganizationSettings',
-        'app.Base/AuthenticationTokens', 'app.Base/Users',
+        'app.Base/Users',
         'app.Base/Roles',
     ];
 

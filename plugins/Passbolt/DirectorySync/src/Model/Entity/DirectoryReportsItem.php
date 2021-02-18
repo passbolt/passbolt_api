@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Passbolt\DirectorySync\Model\Entity;
 
 use Cake\ORM\Entity;

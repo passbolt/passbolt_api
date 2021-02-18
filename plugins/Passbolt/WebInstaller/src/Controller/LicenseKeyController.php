@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,18 +23,20 @@ class LicenseKeyController extends WebInstallerController
 {
     /**
      * Initialize.
+     *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = 'install';
-        $this->stepInfo['next'] = 'install/database';
+        $this->stepInfo['previous'] = '/install';
+        $this->stepInfo['next'] = '/install/database';
         $this->stepInfo['template'] = 'Pages/license_key';
     }
 
     /**
      * Index
+     *
      * @return mixed
      */
     public function index()
@@ -47,6 +51,7 @@ class LicenseKeyController extends WebInstallerController
 
     /**
      * Index post
+     *
      * @return mixed
      */
     protected function indexPost()
@@ -64,8 +69,9 @@ class LicenseKeyController extends WebInstallerController
 
     /**
      * Validate data.
+     *
      * @param array $data request data
-     * @throws Exception The license is not valid
+     * @throws \Cake\Core\Exception\Exception The license is not valid
      * @return void
      */
     protected function validateData($data)

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace Passbolt\Tags\Controller\Tags;
 
-use App\Controller\Component\UserComponent;
 use Passbolt\Tags\Model\Entity\Tag;
 
 /**
@@ -25,7 +26,7 @@ trait TagAccessTrait
     /**
      * Determines if a $tag is accessible to the current user
      *
-     * @param Tag $tag The Tag to check
+     * @param \Passbolt\Tags\Model\Entity\Tag $tag The Tag to check
      * @return bool True if Tag is accessible and false otherwise.
      */
     protected function isPersonalTagAccessible(Tag $tag)

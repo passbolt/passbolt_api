@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,7 +24,7 @@ use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSetting
 
 class FolderNotificationSettingsDefinitionTest extends TestCase
 {
-    const EXPECTED_FIELDS = [
+    public const EXPECTED_FIELDS = [
         'send_folder_delete',
         'send_folder_create',
         'send_folder_update',
