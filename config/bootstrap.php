@@ -67,6 +67,16 @@ try {
     }
 }
 
+/**
+ * Overwrite these paths. This is a helper to ensure CakePHP3 to 4 retro-compatibility
+ * It will also be helpful if we ever have multiple plugin directories. Same goes for locales.
+ */
+Configure::write('App.paths', [
+    'plugins' => [ROOT . DS . 'plugins' . DS],
+    'templates' => [ROOT . DS . 'templates' . DS],
+    'locales' => [RESOURCES . 'locales' . DS],
+]);
+
 /*
  * Load an environment local configuration file.
  * You can use a file like app_local.php to provide local overrides to your
