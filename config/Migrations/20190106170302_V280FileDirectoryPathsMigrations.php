@@ -13,6 +13,7 @@
  * @since         2.7.0
  */
 
+use App\Utility\Filesystem\DirectoryUtility;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\Folder;
@@ -69,10 +70,8 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
                 }
             }
         }
-        $oldFolder = new Folder($publicPath . 'images');
-        $oldFolder->delete();
-
-        \Cake\ORM\TableRegistry::getTableLocator()->clear();
+        DirectoryUtility::removeRecursively($publicPath . 'images');
+        TableRegistry::getTableLocator()->clear();
     }
 
     /**

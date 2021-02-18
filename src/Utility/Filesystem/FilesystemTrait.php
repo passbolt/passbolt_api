@@ -37,6 +37,7 @@ trait FilesystemTrait
     /**
      * @param string $path Path to the directory.
      * @return void
+     * @throws \RuntimeException Will throw an exception if the image storage adapter is not configured.
      */
     public function setFilesystem(string $path): void
     {
@@ -52,7 +53,7 @@ trait FilesystemTrait
     public function createDirectoryIfNotExists(string $directoryPath): string
     {
         if (!file_exists($directoryPath)) {
-            mkdir($directoryPath, 0777, true);
+            mkdir($directoryPath, 0770, true);
         }
 
         return $directoryPath;

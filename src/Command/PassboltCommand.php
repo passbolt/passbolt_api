@@ -155,13 +155,13 @@ class PassboltCommand extends Command
             return $this->successCode();
         }
 
-        $io->out('');
+        $io->out();
         $io->out('     ____                  __          ____  ');
         $io->out('    / __ \____  _____ ____/ /_  ____  / / /_ ');
         $io->out('   / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/ ');
         $io->out('  / ____/ /_/ (__  |__  ) /_/ / /_/ / / /    ');
         $io->out(' /_/    \__,_/____/____/_.___/\____/_/\__/   ');
-        $io->out('');
+        $io->out();
         $io->out(' Open source password manager for teams');
         $io->hr();
 
@@ -222,13 +222,13 @@ class PassboltCommand extends Command
     protected function assertNotRoot(ConsoleIo $io): bool
     {
         if (self::$userIsRoot) {
-            $io->out('');
+            $io->out();
             $this->error('Passbolt commands cannot be executed as root.', $io);
-            $io->out('');
+            $io->out();
             $io->out('The command should be executed with the same user as your web server. By instance:');
             $io->out('su -s /bin/bash -c "' . ROOT . '/bin/cake COMMAND" HTTP_USER');
             $io->out('where HTTP_USER match your web server user: www-data, nginx, http');
-            $io->out('');
+            $io->out();
 
             return false;
         }

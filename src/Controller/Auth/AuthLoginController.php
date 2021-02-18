@@ -70,10 +70,10 @@ class AuthLoginController extends AppController
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
         }
 
-        $user = $this->Authentication->getIdentity();
+        $result = $this->Authentication->getResult();
 
-        if ($user) {
-            $this->Authentication->setIdentity(new \ArrayObject($user));
+        if ($result->isValid()) {
+            $user = $result->getData();
             UserAction::getInstance()->setUserAccessControl(new UserAccessControl(
                 $user['role']['name'],
                 $user['id']

@@ -50,11 +50,6 @@ return [
         'imageBaseUrl' => 'img/',
         'cssBaseUrl' => 'css/',
         'jsBaseUrl' => 'js/',
-        'paths' => [
-            'plugins' => [ROOT . DS . 'plugins' . DS],
-            'templates' => [ROOT . DS . 'templates' . DS],
-            'locales' => [RESOURCES . 'locales' . DS],
-        ],
     ],
 
     /**

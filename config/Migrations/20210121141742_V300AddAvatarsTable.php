@@ -46,4 +46,7 @@ class V300AddAvatarsTable extends AbstractMigration
             ->addTimestamps()
             ->create();
     }
+
+    public function down()
+    {}
 }

@@ -39,7 +39,7 @@ trait AvatarsModelTrait
      * @return \App\Model\Entity\Avatar
      * @throws \Exception
      */
-    public function createAvatar(?Avatar $avatar = null)
+    public function createAvatar(?Avatar $avatar = null): Avatar
     {
         $profileId = $avatar->profile_id ?? ProfileFactory::make()->persist()->id;
 

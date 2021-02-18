@@ -14,14 +14,5 @@
  * @since         2.5.0
  */
 use Cake\Core\Configure;
-use Cake\Event\EventManager;
-use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 
 Configure::load('Passbolt/WebInstaller.config', 'default', true);
-
-EventManager::instance()->on(
-    'Server.buildMiddleware',
-    function ($event, $middlewareQueue) {
-        $middlewareQueue->add(new WebInstallerMiddleware());
-    }
-);

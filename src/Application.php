@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Middleware\ContentSecurityPolicyMiddleware;
+use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
@@ -32,8 +33,10 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
+use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
+use Cake\I18n\I18n;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
@@ -49,14 +52,20 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
+        $csrf = new CsrfProtectionMiddleware();
+        // Token check will be skipped when callback returns `true`.
+        $csrf->skipCheckCallback(function ($request) use ($csrf) {
+            return $csrf->skipCsrfProtection($request);
+        });
+
         /*
          * Default Middlewares
          * - Does not extend the session when requesting /auth/is-authenticated
          * - Catch any exceptions in the lower layers, and make an error page/response
          * - Handle plugin/theme assets like CakePHP normally does
          * - Apply routing middleware
-         * - Apply GPG Auth headers
          * - Apply the authentication middleware
+         * - Apply GPG Authenticator headers
          * - Apply CSRF protection
          */
         $middlewareQueue
@@ -68,7 +77,9 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new RoutingMiddleware($this))
             ->add(new SessionPreventExtensionMiddleware())
             ->add(new AuthenticationMiddleware($this))
-            ->add(GpgAuthHeadersMiddleware::class);
+            ->add(GpgAuthHeadersMiddleware::class)
+            ->add(new BodyParserMiddleware())
+            ->add($csrf);
 
         /*
          * Additional security headers
@@ -112,6 +123,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
+            I18n::setLocale('en_US');
         }
 
         $this->initEmails();

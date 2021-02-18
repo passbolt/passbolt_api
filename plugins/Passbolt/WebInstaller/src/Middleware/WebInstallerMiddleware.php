@@ -21,26 +21,30 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\MissingDatasourceConfigException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
-use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class WebInstallerMiddleware
+class WebInstallerMiddleware implements MiddlewareInterface
 {
     /**
-     * Checks and sets the CSRF token depending on the HTTP verb.
+     * Webinstaller Middleware.
      *
      * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $response The response.
-     * @param callable $next Callback to invoke the next middleware.
-     * @return \Cake\Http\Response A response
+     * @param \Cake\Http\Response $handler The handler.
+     * @return \Cake\Http\Response The response.
      */
-    public function __invoke(ServerRequest $request, Response $response, $next)
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
         $uri = $request->getRequestTarget();
         $targetInstallPage = preg_match('/^\/install/', $uri);
 
         if (!self::isConfigured() && !$targetInstallPage) {
-            return $response
+            return (new Response())
                 ->withStatus(302)
                 ->withLocation(Router::url('/install', true));
         }
@@ -48,7 +52,7 @@ class WebInstallerMiddleware
             throw new ForbiddenException();
         }
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 
     /**

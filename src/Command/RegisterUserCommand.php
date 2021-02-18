@@ -35,6 +35,11 @@ use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 class RegisterUserCommand extends PassboltCommand
 {
     /**
+     * Number of interaction with the console.
+     */
+    public const DEFAULT_INTERACTIVE_LOOP = 3;
+
+    /**
      * Initializes the Shell
      * acts as constructor for subclasses
      * allows configuration of tasks prior to shell execution
@@ -63,7 +68,7 @@ class RegisterUserCommand extends PassboltCommand
                 'help' => __('Enable interactive mode'),
             ])
             ->addOption('interactive-loop', [
-                'default' => 3,
+                'default' => self::DEFAULT_INTERACTIVE_LOOP,
                 'help' => __('Enable interactive mode'),
             ])
             ->addOption('username', [

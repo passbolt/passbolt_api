@@ -12,43 +12,67 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         3.1.0
  */
 namespace App\Middleware;
 
 use Cake\Core\Configure;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
+use Cake\Utility\Security;
+use Psr\Http\Message\RequestInterface;
 
 class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddleware
 {
     /**
-     * Checks and sets the CSRF token depending on the HTTP verb.
-     *
-     * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $response The response.
-     * @param callable $next Callback to invoke the next middleware.
-     * @return \Cake\Http\Response A response
+     * @inheritDoc
      */
-    public function __invoke(ServerRequest $request, Response $response, $next)
+    protected function isHexadecimalToken(string $token): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function _verifyToken(string $token): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createToken(): string
+    {
+        return hash('sha512', Security::randomBytes(static::TOKEN_VALUE_LENGTH), false);
+    }
+
+    /**
+     * Skip Csrf protection.
+     *
+     * @param \Psr\Http\Message\RequestInterface $request The request
+     * @return bool result
+     */
+    public function skipCsrfProtection(RequestInterface $request): bool
     {
         $plugins = Configure::read('passbolt.plugins');
-        $controller = $request->getParam('controller', null) ?? 'Error';
-        $action = $request->getParam('action', null) ?? 'error';
+        $controller = $request->getParam('controller', 'Error');
 
         $unlockedActions = Configure::read("passbolt.security.csrfProtection.unlockedActions.$controller", []);
         foreach ($plugins as $plugin) {
-            $pluginsUnlockedActions = Hash::extract($plugin, "security.csrfProtection.unlockedActions.$controller", []);
+            $pluginsUnlockedActions = Hash::extract($plugin, "security.csrfProtection.unlockedActions.$controller");
             if (!empty($pluginsUnlockedActions)) {
                 $unlockedActions = array_merge($unlockedActions, $pluginsUnlockedActions);
             }
         }
 
-        if (Configure::read('passbolt.security.csrfProtection.active') && !in_array($action, $unlockedActions)) {
-            return parent::__invoke($request, $response, $next);
+        if (!Configure::read('passbolt.security.csrfProtection.active')) {
+            return true;
+        }
+        if (in_array($request->getParam('action'), $unlockedActions)) {
+            return true;
         }
 
-        return $next($request, $response);
+        return false;
     }
 }
