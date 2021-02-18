@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,11 +20,10 @@ use InvalidArgumentException;
 
 class Healthcheck
 {
-
-    const STATUS_ERROR = 'error';
-    const STATUS_WARNING = 'warning';
-    const STATUS_SUCCESS = 'success';
-    const STATUS_INFO = 'info';
+    public const STATUS_ERROR = 'error';
+    public const STATUS_WARNING = 'warning';
+    public const STATUS_SUCCESS = 'success';
+    public const STATUS_INFO = 'info';
 
     /**
      * @var string $name
@@ -49,10 +50,10 @@ class Healthcheck
      *
      * @param string $name name
      * @param string $category category
-     * @param bool $success true if success
-     * @param array $details optional
+     * @param bool|null $success true if success
+     * @param array|null $details optional
      */
-    public function __construct(string $name, string $category, bool $success = null, array $details = [])
+    public function __construct(string $name, string $category, ?bool $success = null, ?array $details = [])
     {
         $this->name = $name;
         $this->category = $category;
@@ -62,9 +63,10 @@ class Healthcheck
 
     /**
      * Mark check as failed
-     * @return $this
+     *
+     * @return self
      */
-    public function fail()
+    public function fail(): Healthcheck
     {
         $this->success = false;
 
@@ -73,9 +75,10 @@ class Healthcheck
 
     /**
      * Mark check as pass
-     * @return $this
+     *
+     * @return self
      */
-    public function pass()
+    public function pass(): Healthcheck
     {
         $this->success = true;
 
@@ -85,7 +88,7 @@ class Healthcheck
     /**
      * @return string name
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -93,7 +96,7 @@ class Healthcheck
     /**
      * @return string category
      */
-    public function getCategory()
+    public function getCategory(): string
     {
         return $this->category;
     }
@@ -101,16 +104,16 @@ class Healthcheck
     /**
      * @return array details
      */
-    public function getDetails()
+    public function getDetails(): array
     {
         return $this->details;
     }
 
     /**
      * @param string $name name
-     * @return $this
+     * @return self
      */
-    public function setName(string $name)
+    public function setName(string $name): Healthcheck
     {
         $this->name = $name;
 
@@ -119,9 +122,9 @@ class Healthcheck
 
     /**
      * @param string $category category
-     * @return $this
+     * @return self
      */
-    public function setCategory(string $category)
+    public function setCategory(string $category): Healthcheck
     {
         $this->category = $category;
 
@@ -131,9 +134,9 @@ class Healthcheck
     /**
      * @param string $detail information message
      * @param string $status success, warning, error, info
-     * @return $this
+     * @return self
      */
-    public function addDetail(string $detail, string $status)
+    public function addDetail(string $detail, string $status): Healthcheck
     {
         $allowedStatus = [
             self::STATUS_ERROR, self::STATUS_INFO, self::STATUS_SUCCESS, self::STATUS_WARNING,

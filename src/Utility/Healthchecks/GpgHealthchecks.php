@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace App\Utility\Healthchecks;
 
-use App\Model\Table\GpgkeysTable;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
@@ -26,14 +27,11 @@ class GpgHealthchecks
     /**
      * Run all healthchecks
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function all($checks = [])
+    public static function all(?array $checks = []): array
     {
-        if (empty($checks)) {
-            $checks = [];
-        }
         $checks = self::gpgLib($checks);
         $checks = self::gpgNotDefault($checks);
         $checks = self::gpgHome($checks);
@@ -53,10 +51,10 @@ class GpgHealthchecks
     /**
      * Check gpg php module is installed and enabled
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgLib($checks = [])
+    public static function gpgLib(?array $checks = []): array
     {
         try {
             OpenPGPBackendFactory::get();
@@ -71,13 +69,14 @@ class GpgHealthchecks
     /**
      * Check fingerprint is set
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgNotDefault($checks = [])
+    public static function gpgNotDefault(?array $checks = []): array
     {
-        $checks['gpg']['gpgKey'] = (Configure::read('passbolt.gpg.serverKey.fingerprint') != null);
-        $checks['gpg']['gpgKeyNotDefault'] = (Configure::read('passbolt.gpg.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
+        $checks['gpg']['gpgKey'] = (Configure::read('passbolt.gpg.serverKey.fingerprint') !== null);
+        $default = '2FC8945833C51946E937F9FED47B0811573EE67E';
+        $checks['gpg']['gpgKeyNotDefault'] = (Configure::read('passbolt.gpg.serverKey.fingerprint') !== $default);
 
         return $checks;
     }
@@ -85,10 +84,10 @@ class GpgHealthchecks
     /**
      * Check gnupg home is set and usable
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgHome($checks = [])
+    public static function gpgHome(?array $checks = []): array
     {
         switch (Configure::read('passbolt.gpg.backend')) {
             case OpenPGPBackendFactory::GNUPG:
@@ -122,23 +121,25 @@ class GpgHealthchecks
     /**
      * Check key file exist and are readable
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgKeyFile($checks = [])
+    public static function gpgKeyFile(?array $checks = []): array
     {
-        $checks['gpg']['gpgKeyPublic'] = (Configure::read('passbolt.gpg.serverKey.public') != null);
+        $checks['gpg']['gpgKeyPublic'] = (Configure::read('passbolt.gpg.serverKey.public') !== null);
         $checks['gpg']['gpgKeyPublicReadable'] = is_readable(Configure::read('passbolt.gpg.serverKey.public'));
         if ($checks['gpg']['gpgKeyPublicReadable']) {
             $publicKeydata = file_get_contents(Configure::read('passbolt.gpg.serverKey.public'));
-            $checks['gpg']['gpgKeyPublicBlock'] = (strpos($publicKeydata, '-----BEGIN PGP PUBLIC KEY BLOCK-----') === 0);
+            $blockStart = '-----BEGIN PGP PUBLIC KEY BLOCK-----';
+            $checks['gpg']['gpgKeyPublicBlock'] = (strpos($publicKeydata, $blockStart) === 0);
         }
-        $checks['gpg']['gpgKeyPrivate'] = (Configure::read('passbolt.gpg.serverKey.private') != null);
+        $checks['gpg']['gpgKeyPrivate'] = (Configure::read('passbolt.gpg.serverKey.private') !== null);
         $checks['gpg']['info']['gpgKeyPrivate'] = Configure::read('passbolt.gpg.serverKey.private');
         $checks['gpg']['gpgKeyPrivateReadable'] = is_readable(Configure::read('passbolt.gpg.serverKey.private'));
         if ($checks['gpg']['gpgKeyPrivateReadable']) {
             $privateKeydata = file_get_contents(Configure::read('passbolt.gpg.serverKey.private'));
-            $checks['gpg']['gpgKeyPrivateBlock'] = (strpos($privateKeydata, '-----BEGIN PGP PRIVATE KEY BLOCK-----') === 0);
+            $blockStart = '-----BEGIN PGP PRIVATE KEY BLOCK-----';
+            $checks['gpg']['gpgKeyPrivateBlock'] = (strpos($privateKeydata, $blockStart) === 0);
         }
 
         return $checks;
@@ -147,15 +148,16 @@ class GpgHealthchecks
     /**
      * Check that the private key match the fingerprint
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgFingerprint($checks = [])
+    public static function gpgFingerprint(?array $checks = []): array
     {
         $checks['gpg']['gpgKeyPrivateFingerprint'] = false;
         $checks['gpg']['gpgKeyPublicFingerprint'] = false;
         $checks['gpg']['gpgKeyPublicEmail'] = false;
-        if ($checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPrivateReadable'] && $checks['gpg']['gpgKey']) {
+        $areKeysReadable = $checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPrivateReadable'];
+        if ($areKeysReadable && $checks['gpg']['gpgKey']) {
             $gpg = OpenPGPBackendFactory::get();
             $privateKeydata = file_get_contents(Configure::read('passbolt.gpg.serverKey.private'));
             $privateKeyInfo = $gpg->getKeyInfo($privateKeydata);
@@ -167,9 +169,10 @@ class GpgHealthchecks
             if ($publicKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
-            /** @var GpgkeysTable $Gpgkeys */
+            /** @var \App\Model\Table\GpgkeysTable $Gpgkeys */
             $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
-            $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
+            $checks['gpg']['gpgKeyPublicEmail'] = is_string($publicKeyInfo['uid']) &&
+                $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
         }
 
         return $checks;
@@ -178,10 +181,10 @@ class GpgHealthchecks
     /**
      * Check that the server public/private keys are present in the keyring.
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgKeyInKeyring($checks = [])
+    public static function gpgKeyInKeyring(?array $checks = []): array
     {
         $checks['gpg']['gpgKeyPublicInKeyring'] = false;
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
@@ -200,10 +203,10 @@ class GpgHealthchecks
     /**
      * Check if it can encrypt
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgCanEncrypt($checks = [])
+    public static function gpgCanEncrypt(?array $checks = []): array
     {
         $checks['gpg']['canEncrypt'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
@@ -225,10 +228,10 @@ class GpgHealthchecks
     /**
      * Check if it can encrypt and sign
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgCanEncryptSign($checks = [])
+    public static function gpgCanEncryptSign(?array $checks = []): array
     {
         $checks['gpg']['canEncryptSign'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
@@ -253,10 +256,10 @@ class GpgHealthchecks
     /**
      * Check if it can decrypt
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgCanDecrypt($checks = [])
+    public static function gpgCanDecrypt(?array $checks = []): array
     {
         $checks['gpg']['canDecrypt'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
@@ -284,10 +287,10 @@ class GpgHealthchecks
     /**
      * Check if it can decrypt and verify signature
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgCanDecryptVerify($checks = [])
+    public static function gpgCanDecryptVerify(?array $checks = []): array
     {
         $checks['gpg']['canDecryptVerify'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
@@ -315,15 +318,18 @@ class GpgHealthchecks
     /**
      * Check if it can verify
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgCanSign($checks = [])
+    public static function gpgCanSign(?array $checks = []): array
     {
         $checks['gpg']['canSign'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
-            $_gpg->setSignKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
+            $_gpg->setSignKeyFromFingerprint(
+                Configure::read('passbolt.gpg.serverKey.fingerprint'),
+                Configure::read('passbolt.gpg.serverKey.passphrase')
+            );
             $messageToEncrypt = 'test message';
             try {
                 $signature = $_gpg->sign($messageToEncrypt);
@@ -340,10 +346,10 @@ class GpgHealthchecks
     /**
      * Check if it can verify
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpgCanVerify($checks = [])
+    public static function gpgCanVerify(?array $checks = []): array
     {
         $checks['gpg']['canVerify'] = false;
         if ($checks['gpg']['canDecryptVerify']) {

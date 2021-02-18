@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -25,18 +27,21 @@ class UserAction
 {
     /**
      * Unique user action id.
+     *
      * @var string (uuid)
      */
     private $userActionId;
 
     /**
      * User access control.
-     * @var UserAccessControl
+     *
+     * @var \App\Utility\UserAccessControl
      */
     private $userAccessControl;
 
     /**
      * actionName.
+     *
      * @var string
      */
     private $actionName;
@@ -45,19 +50,22 @@ class UserAction
      * Description of the context
      * - In case of a controller/action, the controller action pair (Resources.create)
      * - In case of a command line being executed, the corresponding command line (without arguments).
+     *
      * @var string
      */
     private $context;
 
     /**
      * Instance of class used for singleton.
+     *
      * @var
      */
     private static $instance;
 
     /**
      * ActionLog constructor.
-     * @param UserAccessControl $accessControl user access control object.
+     *
+     * @param \App\Utility\UserAccessControl $accessControl user access control object.
      * @param string $actionName action name
      * @param string $context context
      */
@@ -74,14 +82,16 @@ class UserAction
     /**
      * Get ActionLog singleton.
      *
-     * @param UserAccessControl $accessControl user access control object
-     * @param string $action action name. Example: "Resources.create"
-     * @param string $context context. Example: "POST resources.json"
-     *
-     * @return UserAction
+     * @param \App\Utility\UserAccessControl|null $accessControl user access control object
+     * @param string|null $action action name. Example: "Resources.create"
+     * @param string|null $context context. Example: "POST resources.json"
+     * @return \App\Utility\UserAction
      */
-    public static function getInstance(UserAccessControl $accessControl = null, string $action = null, string $context = null)
-    {
+    public static function getInstance(
+        ?UserAccessControl $accessControl = null,
+        ?string $action = null,
+        ?string $context = null
+    ) {
         if (isset($accessControl) && isset($action) && isset($context)) {
             self::$instance = new UserAction($accessControl, $action, $context);
         }
@@ -96,10 +106,9 @@ class UserAction
     /**
      * Init singleton from a Cakephp request.
      *
-     * @param UserAccessControl|null $accessControl user access control object
-     * @param ServerRequest|null $request server request object
-     *
-     * @return UserAction userAction object
+     * @param \App\Utility\UserAccessControl|null $accessControl user access control object
+     * @param \Cake\Http\ServerRequest|null $request server request object
+     * @return \App\Utility\UserAction userAction object
      */
     public static function initFromRequest(UserAccessControl $accessControl, ServerRequest $request)
     {
@@ -108,8 +117,8 @@ class UserAction
         }
 
         // Extract action name.
-        $controller = $request->getParam('controller');
-        $action = $request->getParam('action');
+        $controller = $request->getParam('controller', null) ?? 'Error';
+        $action = $request->getParam('action', null) ?? 'error';
         $actionName = "$controller.$action";
 
         // Extract url.
@@ -122,6 +131,7 @@ class UserAction
 
     /**
      * delete singleton.
+     *
      * @return void
      */
     public static function destroy()
@@ -131,6 +141,7 @@ class UserAction
 
     /**
      * Get predictable user action id.
+     *
      * @return string uuid
      */
     public function getUserActionId()
@@ -140,6 +151,7 @@ class UserAction
 
     /**
      * Get action  name.
+     *
      * @return string
      */
     public function getActionName()
@@ -150,15 +162,28 @@ class UserAction
     /**
      * Get Action id (based on action name).
      * Also used by Action entity
+     *
      * @return string action name
      */
     public function getActionId()
     {
-        return UuidFactory::uuid($this->getActionName());
+        return self::actionId($this->getActionName());
+    }
+
+    /**
+     * Convert an action name to an action Id.
+     *
+     * @param string $actionName action name
+     * @return string
+     */
+    public static function actionId(string $actionName)
+    {
+        return UuidFactory::uuid($actionName);
     }
 
     /**
      * Get context.
+     *
      * @return string context
      */
     public function getContext()
@@ -168,6 +193,7 @@ class UserAction
 
     /**
      * Get User access control.
+     *
      * @return string context
      */
     public function getUserAccessControl()
@@ -178,7 +204,8 @@ class UserAction
     /**
      * Set User access control.
      * This function exists because a user access control can possibly change during the execution.
-     * @param UserAccessControl $userAccessControl user access control.
+     *
+     * @param \App\Utility\UserAccessControl $userAccessControl user access control.
      * @return void
      */
     public function setUserAccessControl(UserAccessControl $userAccessControl)

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,7 +19,6 @@ namespace Passbolt\EmailDigest\Utility\Digest;
 
 use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
-use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
  * Create emails from several other digests.
@@ -29,14 +30,14 @@ use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 class DigestsCollection extends AbstractDigest implements DigestInterface
 {
     /**
-     * @var DigestsPool
+     * @var \Passbolt\EmailDigest\Utility\Digest\DigestsPool
      */
     private $digestsPool;
 
     /**
-     * @param DigestsPool $digestsPool pool of Digests
+     * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsPool pool of Digests
      */
-    public function __construct(DigestsPool $digestsPool = null)
+    public function __construct(?DigestsPool $digestsPool = null)
     {
         $this->digestsPool = $digestsPool ?? DigestsPool::getInstance();
     }
@@ -45,7 +46,8 @@ class DigestsCollection extends AbstractDigest implements DigestInterface
      * Foreach each email entity, it goes through each email digests,
      * check if it can digest the email entity, if yes add emails data to it.
      * The first digest to be picked in the list, if can be used, will be the first and ONLY one digest served for the email.
-     * @return EmailDigestInterface[]
+     *
+     * @return \Passbolt\EmailDigest\Utility\Digest\EmailDigestInterface[]
      */
     public function marshalEmails()
     {
@@ -62,7 +64,7 @@ class DigestsCollection extends AbstractDigest implements DigestInterface
      * A digest collection can work with an email entity if at least one of the digests
      * in the collection can work with the email
      *
-     * @param Entity $emailQueueEntity An email entity from email queue
+     * @param \Cake\ORM\Entity $emailQueueEntity An email entity from email queue
      * @return bool return false if no digest in the pool supports the email data.
      */
     public function canAddToDigest(Entity $emailQueueEntity)
@@ -77,9 +79,9 @@ class DigestsCollection extends AbstractDigest implements DigestInterface
     }
 
     /**
-     * @param Entity $emailQueueEntity An instance of email entity
+     * @param \Cake\ORM\Entity $emailQueueEntity An instance of email entity
      * @return $this
-     * @throws UnsupportedEmailDigestDataException
+     * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */
     public function addEmailEntity(Entity $emailQueueEntity)
     {

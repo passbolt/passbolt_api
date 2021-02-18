@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,6 +18,7 @@ namespace App\Notification\Email;
 
 /**
  * Class EmailCollection
+ *
  * @package App\Notification\Email
  *
  * Utility class to help email redactors aggregate multiple Emails to be sent.
@@ -23,12 +26,12 @@ namespace App\Notification\Email;
 class EmailCollection
 {
     /**
-     * @var Email[]
+     * @var \App\Notification\Email\Email[]
      */
     private $emails = [];
 
     /**
-     * @param Email[] $emails A list of emails
+     * @param \App\Notification\Email\Email[] $emails A list of emails
      */
     public function __construct(array $emails = [])
     {
@@ -38,7 +41,7 @@ class EmailCollection
     }
 
     /**
-     * @param Email $email Email object to add to the collection
+     * @param \App\Notification\Email\Email $email Email object to add to the collection
      * @return $this
      */
     public function addEmail(Email $email)
@@ -49,7 +52,7 @@ class EmailCollection
     }
 
     /**
-     * @return Email[]
+     * @return \App\Notification\Email\Email[]
      */
     public function getEmails()
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,7 @@ trait PermissionsHistoryTrait
 
     public function assertPermissionsHistoryCount($expectedCount)
     {
-        $entityHistoryCount = $this->EntitiesHistory
+        $entityHistoryCount = $this->PermissionsHistory
             ->find()
             ->count();
         $this->assertEquals($expectedCount, $entityHistoryCount);

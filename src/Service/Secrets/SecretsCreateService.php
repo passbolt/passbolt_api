@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,15 +19,13 @@ namespace App\Service\Secrets;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Secret;
-use App\Model\Table\SecretsTable;
-use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class SecretsCreateService
 {
     /**
-     * @var SecretsTable
+     * @var \App\Model\Table\SecretsTable
      */
     private $secretsTable;
 
@@ -41,7 +41,7 @@ class SecretsCreateService
      * Create a secret.
      *
      * @param array $data The secret data
-     * @return Secret
+     * @return \App\Model\Entity\Secret
      * @throws \Exception
      */
     public function create(array $data)
@@ -61,7 +61,7 @@ class SecretsCreateService
      * Build the entity.
      *
      * @param array $data The secret data
-     * @return Secret
+     * @return \App\Model\Entity\Secret
      */
     private function buildEntity(array $data)
     {
@@ -82,7 +82,7 @@ class SecretsCreateService
     /**
      * Handle validation errors.
      *
-     * @param Secret $secret The secret
+     * @param \App\Model\Entity\Secret $secret The secret
      * @return void
      */
     private function handleValidationErrors(Secret $secret)

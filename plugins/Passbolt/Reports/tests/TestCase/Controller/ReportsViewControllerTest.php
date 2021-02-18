@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -12,11 +14,12 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
+
 namespace Passbolt\Reports\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Reports\Service\ReportPool;
 use Passbolt\Reports\Utility\AbstractSingleReport;
-use Passbolt\Reports\Utility\ReportPool;
 
 class ReportsViewControllerTest extends AppIntegrationTestCase
 {
@@ -25,9 +28,15 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments',
     ];
 
-    private $sampleReport;
+    public function testReportsViewControllerError_ThrowErrorWhenNotAuthenticated()
+    {
+        $slug = 'sample-report';
+        $this->addSampleReport($slug);
+        $this->getJson('/reports/' . $slug . '.json');
+        $this->assertAuthenticationError();
+    }
 
-    private function _setEmptyReport($slug)
+    private function addSampleReport($slug)
     {
         $ReportClass = new class extends AbstractSingleReport
         {
@@ -37,27 +46,18 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
             }
         };
 
-        $this->sampleReport = new $ReportClass();
-        $this->sampleReport
-             ->setSlug($slug)
-             ->setName(__('Sample report'))
-             ->setDescription(__('This is a description for sample report'));
+        $report = new $ReportClass();
+        $report->setSlug($slug)
+            ->setName(__('Sample report'))
+            ->setDescription(__('This is a description for sample report'));
 
-        ReportPool::getInstance()->addReport($this->sampleReport);
-    }
-
-    public function testReportsViewControllerError_ThrowErrorWhenNotAuthenticated()
-    {
-        $slug = 'sample-report';
-        $this->_setEmptyReport($slug, []);
-        $this->getJson('/reports/' . $slug . '.json');
-        $this->assertAuthenticationError();
+        ReportPool::getInstance()->addReport($report);
     }
 
     public function testReportsViewControllerError_ThrowUnauthorizedErrorWhenNotAdmin()
     {
         $slug = 'sample-report';
-        $this->_setEmptyReport($slug, []);
+        $this->addSampleReport($slug);
         $this->authenticateAs('ada');
         $this->getJson('/reports/' . $slug . '.json');
         $this->assertError(403, 'Only administrators can view reports.');
@@ -73,9 +73,40 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
     public function testReportsViewControllerSuccess()
     {
         $slug = 'sample-report';
-        $this->_setEmptyReport($slug, []);
+        $this->addSampleReport($slug);
         $this->authenticateAs('admin');
         $this->getJson('/reports/' . $slug . '.json?api-version=2');
         $this->assertResponseSuccess();
+    }
+
+    public function testReportsViewControllerWithArgumentSuccess()
+    {
+        $slug = 'sample-report-with-argument';
+        $this->addSampleReportWithArgument($slug);
+        $this->authenticateAs('admin');
+        $this->getJson('/reports/' . $slug . '/arg1.json?api-version=2');
+        $this->assertResponseSuccess();
+    }
+
+    private function addSampleReportWithArgument($slug)
+    {
+        $ReportClass = new class extends AbstractSingleReport
+        {
+            public function __construct(?string $arg1 = null)
+            {
+            }
+
+            public function getData()
+            {
+                return [];
+            }
+        };
+
+        $report = new $ReportClass();
+        $report->setSlug($slug)
+            ->setName(__('Sample report with argument'))
+            ->setDescription(__('This is a description for sample report with argument'));
+
+        ReportPool::getInstance()->addReport($report);
     }
 }

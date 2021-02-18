@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,8 +23,6 @@ use Cake\TestSuite\IntegrationTestTrait;
 class AuthVerifyControllerTest extends AppIntegrationTestCase
 {
     use IntegrationTestTrait;
-
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
 
     public function testAuthVerifyControllerUserGetSuccess()
     {

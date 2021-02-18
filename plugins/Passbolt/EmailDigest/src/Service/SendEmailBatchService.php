@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,41 +23,47 @@ use Cake\Network\Exception\SocketException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\EmailTrait;
 use EmailQueue\Model\Table\EmailQueueTable;
-use Exception;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
  * Class SendEmailBatchService sends batch of emails entities as digests.
  * Digests are composed using EmailDigestService
+ *
  * @see EmailDigestService
  */
 class SendEmailBatchService
 {
     use EmailTrait;
 
-    /** @var EmailQueueTable */
+    /**
+     * @var \EmailQueue\Model\Table\EmailQueueTable
+     */
     private $emailQueueTable;
 
-    /** @var EmailDigestService */
+    /**
+     * @var \Passbolt\EmailDigest\Service\EmailDigestService
+     */
     private $emailDigestService;
 
     /**
-     * @param EmailQueueTable $emailQueueTable An instance of EmailQueueTable
-     * @param EmailDigestService $emailDigestService An instance Emails Digests Service
+     * @param \EmailQueue\Model\Table\EmailQueueTable|null $table An instance of EmailQueueTable
+     * @param \Passbolt\EmailDigest\Service\EmailDigestService|null $emailDigestService digest service
      */
-    public function __construct(EmailQueueTable $emailQueueTable = null, EmailDigestService $emailDigestService = null)
+    public function __construct(?EmailQueueTable $table = null, ?EmailDigestService $emailDigestService = null)
     {
-        $this->emailQueueTable = $emailQueueTable ?? TableRegistry::getTableLocator()->get('EmailQueue', ['className' => EmailQueueTable::class]);
+        $options = ['className' => EmailQueueTable::class];
+        $this->emailQueueTable = $table ?? TableRegistry::getTableLocator()->get('EmailQueue', $options);
         $this->emailDigestService = $emailDigestService ?? new EmailDigestService();
     }
 
     /**
      * Get and send the next emails batch from the email queue. The size of the email batch is determined by $limit.
+     *
      * @param int $limit Size of the emails batch.
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    public function sendNextEmailsBatch($limit = 10)
+    public function sendNextEmailsBatch($limit = 10): void
     {
         Configure::write('App.baseUrl', '/');
 
@@ -69,10 +77,10 @@ class SendEmailBatchService
     }
 
     /**
-     * @param EmailDigestInterface $emailDigest An instance of Email digest
+     * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest An instance of Email digest
      * @return void
      */
-    private function sendDigest(EmailDigestInterface $emailDigest)
+    private function sendDigest(EmailDigestInterface $emailDigest): void
     {
         $emailDigest->addLayoutVar('title', $emailDigest->getSubject());
 
@@ -84,7 +92,8 @@ class SendEmailBatchService
         } catch (SocketException $exception) {
             $this->flagEmailsFromDigestAsFailedWithError($emailDigest, $exception->getMessage());
         } finally {
-            // We use finally to guarantee that even if an exception occurred while flagging the emails, locks are released
+            // We use finally to guarantee that even if an exception occurred
+            // while flagging the emails, locks are released
             if (!empty($emailDigest->getEmailIds())) {
                 $this->emailQueueTable->releaseLocks($emailDigest->getEmailIds());
             }
@@ -94,11 +103,11 @@ class SendEmailBatchService
     /**
      * Configure the view for the email as it should be send with layout, theme and template from the digest.
      *
-     * @param Email $email An instance of Mailer email
-     * @param EmailDigestInterface $digest An instace of email digest
-     * @return Email
+     * @param \Cake\Mailer\Email $email An instance of Mailer email
+     * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $digest An instace of email digest
+     * @return \Cake\Mailer\Email
      */
-    private function prepareEmailToBeSend(Email $email, EmailDigestInterface $digest)
+    private function prepareEmailToBeSend(Email $email, EmailDigestInterface $digest): Email
     {
         $email->viewBuilder()
             ->setLayout('default')
@@ -110,10 +119,11 @@ class SendEmailBatchService
 
     /**
      * Flag the list of given emails ids as sent
-     * @param EmailDigestInterface $emailDigest An email digest
+     *
+     * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest An email digest
      * @return void
      */
-    private function flagEmailsFromDigestAsSentWithSuccess(EmailDigestInterface $emailDigest)
+    private function flagEmailsFromDigestAsSentWithSuccess(EmailDigestInterface $emailDigest): void
     {
         foreach ($emailDigest->getEmailIds() as $id) {
             $this->emailQueueTable->success($id);
@@ -122,22 +132,24 @@ class SendEmailBatchService
 
     /**
      * Flag the list of given emails ids as failed
-     * @param EmailDigestInterface $emailDigest An email digest
-     * @param string $errorMessage Error message to store in db
+     *
+     * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $digest An email digest
+     * @param string $message Error message to store in db
      * @return void
      */
-    private function flagEmailsFromDigestAsFailedWithError(EmailDigestInterface $emailDigest, string $errorMessage)
+    private function flagEmailsFromDigestAsFailedWithError(EmailDigestInterface $digest, string $message): void
     {
-        foreach ($emailDigest->getEmailIds() as $id) {
-            $this->emailQueueTable->fail($id, $errorMessage);
+        foreach ($digest->getEmailIds() as $id) {
+            $this->emailQueueTable->fail($id, $message);
         }
     }
 
     /**
      * Map an instance of EmailDigest to an instance of Email, so it can be send.
-     * @param Email $email An instance of Email
-     * @param EmailDigestInterface $emailDigest An instance of EmailDigest
-     * @return Email
+     *
+     * @param \Cake\Mailer\Email $email An instance of Email
+     * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest An instance of EmailDigest
+     * @return \Cake\Mailer\Email
      */
     private function mapEmailDigestToMailerEmail(Email $email, EmailDigestInterface $emailDigest)
     {

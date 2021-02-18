@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,10 +28,10 @@ class DefaultLogger implements LoggerInterface
     /**
      * @param mixed $level Level
      * @param string $message Message
-     * @param array $context Context
+     * @param array|null $context Context
      * @return bool|void
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, ?array $context = [])
     {
         return CakeLog::write($level, $message, $context);
     }

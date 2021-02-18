@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,6 +22,7 @@ trait ConfigurationTrait
 {
     // Keep a copy of the original passbolt config.
     private $backupConfig = [];
+    private $installerFriendly = null;
 
     /*
      * Skip the test if the environment is production like:
@@ -42,21 +45,23 @@ trait ConfigurationTrait
 
     protected function isWebInstallerFriendly()
     {
+        if (isset($this->installerFriendly)) {
+            return $this->installerFriendly;
+        }
+
         $configFolderWritable = is_writable(CONFIG);
 
         $passboltConfigPath = CONFIG . 'passbolt.php';
         $passboltConfigFileIsWritable = file_exists($passboltConfigPath) ? is_writable($passboltConfigPath) : $configFolderWritable;
         if (!$passboltConfigFileIsWritable) {
-            return false;
+            $this->installerFriendly = false;
+
+            return $this->installerFriendly;
         }
 
-        $passboltLicensePath = CONFIG . 'license';
-        $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ? is_writable($passboltLicensePath) : $configFolderWritable;
-        if (!$passboltLicenseFileIsWritable) {
-            return false;
-        }
+        $this->installerFriendly = true;
 
-        return true;
+        return $this->installerFriendly;
     }
 
     /*
@@ -89,9 +94,7 @@ trait ConfigurationTrait
         if (!$this->isWebInstallerFriendly()) {
             return;
         }
-        if (file_exists(CONFIG . 'license')) {
-            chmod(CONFIG . 'license', 0777);
-        }
+
         if (file_exists(CONFIG . 'passbolt.php')) {
             chmod(CONFIG . 'passbolt.php', 0777);
         }
@@ -100,13 +103,6 @@ trait ConfigurationTrait
         } else {
             if (file_exists(CONFIG . 'passbolt.php')) {
                 unlink(CONFIG . 'passbolt.php');
-            }
-        }
-        if (isset($this->backupConfig['license'])) {
-            file_put_contents(CONFIG . 'license', $this->backupConfig['license']);
-        } else {
-            if (file_exists(CONFIG . 'license')) {
-                unlink(CONFIG . 'license');
             }
         }
         if (file_exists(TMP . 'tests' . DS . 'testkey.asc')) {

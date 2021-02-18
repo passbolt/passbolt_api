@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace Passbolt\EmailDigest\Utility\Mailer;
 
-use ArrayAccess;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 
@@ -24,17 +25,17 @@ class EmailDigest implements EmailDigestInterface
     /**
      * The default format used for the email
      */
-    const DEFAULT_FORMAT = 'html';
+    public const DEFAULT_FORMAT = 'html';
 
     /**
      * The default template used for the email
      */
-    const DEFAULT_TEMPLATE = 'Passbolt/EmailDigest.LU/email_digest';
+    public const DEFAULT_TEMPLATE = 'Passbolt/EmailDigest.LU/email_digest';
 
     /**
      * The var name containing the digest of the email
      */
-    const TPL_VAR_DIGEST_CONTENT = 'digest_content';
+    public const TPL_VAR_DIGEST_CONTENT = 'digest_content';
 
     /**
      * @var array
@@ -73,7 +74,8 @@ class EmailDigest implements EmailDigestInterface
 
     /**
      * Return the list of ids of the emails part of the digest
-     * @return array|ArrayAccess|string[]
+     *
+     * @return array|\Passbolt\EmailDigest\Utility\Mailer\ArrayAccess|string[]
      */
     public function getEmailIds()
     {
@@ -81,7 +83,7 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
-     * @param Entity $emailQueueEntity An instance of EmailQueue entity
+     * @param \Cake\ORM\Entity $emailQueueEntity An instance of EmailQueue entity
      * @return $this
      */
     public function addEmailData(Entity $emailQueueEntity)
@@ -92,7 +94,7 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
-     * @return Entity[]
+     * @return \Cake\ORM\Entity[]
      */
     public function getEmailsData()
     {
@@ -101,6 +103,7 @@ class EmailDigest implements EmailDigestInterface
 
     /**
      * Return vars associated to the view (layout + template)
+     *
      * @return array
      */
     public function getViewVars()
@@ -126,6 +129,7 @@ class EmailDigest implements EmailDigestInterface
 
     /**
      * Return the path of the template file to use for this email
+     *
      * @return string
      */
     public function getTemplate()
@@ -143,8 +147,9 @@ class EmailDigest implements EmailDigestInterface
 
     /**
      * Return the email recipient
+     *
      * @param string $recipient Email Recipient of the digest, i.e: ada@passbolt.com
-     * @return EmailDigest
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
      */
     public function setEmailRecipient(string $recipient)
     {
@@ -155,6 +160,7 @@ class EmailDigest implements EmailDigestInterface
 
     /**
      * Return the email recipient
+     *
      * @return string
      */
     public function getEmailRecipient()
@@ -164,7 +170,7 @@ class EmailDigest implements EmailDigestInterface
 
     /**
      * @param string $subject Subject of the digest
-     * @return EmailDigest
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
      */
     public function setSubject(string $subject)
     {
@@ -175,6 +181,7 @@ class EmailDigest implements EmailDigestInterface
 
     /**
      * Return the subject of the digest
+     *
      * @return string
      */
     public function getSubject()
@@ -184,6 +191,7 @@ class EmailDigest implements EmailDigestInterface
 
     /**
      * Define the content of the email digest
+     *
      * @param string $digestContent Content of the digest
      * @return $this
      */

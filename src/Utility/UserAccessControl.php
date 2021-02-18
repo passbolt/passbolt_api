@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -30,13 +32,16 @@ class UserAccessControl
 {
     private $userId;
     private $roleName;
+    private $username;
 
     /**
      * UserAccessControl constructor.
+     *
      * @param string $roleName The role name
-     * @param string $userId the user uuid
+     * @param string|null $userId the user uuid
+     * @param string|null $username the user email
      */
-    public function __construct($roleName, $userId = null)
+    public function __construct(string $roleName, ?string $userId = null, ?string $username = null)
     {
         if (!is_string($roleName)) {
             throw new InternalErrorException('Invalid UserControl role name.');
@@ -44,21 +49,27 @@ class UserAccessControl
         if (isset($userId) && !Validation::uuid($userId)) {
             throw new InternalErrorException('Invalid UserControl user id.');
         }
+        if (isset($username) && !Validation::email($username)) {
+            throw new InternalErrorException('Invalid UserControl username.');
+        }
         $this->userId = $userId;
         $this->roleName = $roleName;
+        $this->username = $username;
     }
 
     /**
      * Get the user id
+     *
      * @return string
      */
-    public function userId()
+    public function getId()
     {
         return $this->userId;
     }
 
     /**
      * Get the user role name
+     *
      * @return string
      */
     public function roleName()
@@ -67,26 +78,37 @@ class UserAccessControl
     }
 
     /**
+     * @return null|string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
      * Check if the user is an admin
+     *
      * @return bool
      */
     public function isAdmin()
     {
-        return ($this->roleName() === Role::ADMIN);
+        return $this->roleName() === Role::ADMIN;
     }
 
     /**
      * Check if the given user is the current user.
+     *
      * @param string $userId the user uuid
      * @return bool
      */
     public function is(string $userId)
     {
-        return ($this->userId() === $userId);
+        return $this->getId() === $userId;
     }
 
     /**
      * Convert the UserAccessControl data in array
+     *
      * @return array
      */
     public function toArray()

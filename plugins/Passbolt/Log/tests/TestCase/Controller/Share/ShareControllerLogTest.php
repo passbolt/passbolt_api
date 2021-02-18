@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -19,30 +21,32 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
-use Passbolt\Log\Model\Table\PermissionsHistoryTable;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\Log\Test\Lib\Traits\PermissionsHistoryTrait;
+use Passbolt\Log\Test\Lib\Traits\SecretsHistoryTrait;
 
 class ShareControllerLogTest extends LogIntegrationTestCase
 {
     use PermissionsHistoryTrait;
+    use SecretsHistoryTrait;
 
-    /** @var PermissionsHistoryTable */
+    /**
+     * @var PermissionsHistoryTable
+     */
     protected $PermissionHistory;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles',
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
-        'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
-        'plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs',
-        'plugin.Passbolt/Log.Base/EntitiesHistory', 'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretsHistory',
+        'app.Base/Favorites',
     ];
 
     public function setUp()
     {
         parent::setUp();
         $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
+        $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
+        $this->SecretsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretsHistory');
     }
 
     public function testLogShareAddSuccess()
@@ -67,6 +71,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $data);
         $this->assertSuccess();
+        $secret = $this->Secrets->findByResourceIdAndUserId($resourceId, $userEId)->first();
 
         // Assert action log is correct.
         $this->assertOneActionLog();
@@ -78,19 +83,33 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
         // Assert permissionHistory is correct.
-        $this->assertOnePermissionHistory();
+        $this->assertPermissionsHistoryCount(1);
         $permissionHistory = $this->assertPermissionHistoryExists([
             'aco_foreign_key' => $resourceId,
             'aro_foreign_key' => $userEId,
             'type' => Permission::OWNER,
         ]);
 
+        // Assert secretHistory is correct.
+        $this->assertSecretsHistoryCount(1);
+        $this->assertSecretHistoryExists([
+            'id' => $secret->id,
+            'resource_id' => $resourceId,
+            'user_id' => $userEId,
+        ]);
+
         // Assert entityHistory is correct.
-        $this->assertOneEntityHistory();
+        $this->assertEntitiesHistoryCount(2);
         $this->assertEntityHistoryExists([
             'action_log_id' => $actionLog['id'],
             'foreign_model' => 'PermissionsHistory',
             'foreign_key' => $permissionHistory['id'],
+            'crud' => EntityHistory::CRUD_CREATE,
+        ]);
+        $this->assertEntityHistoryExists([
+            'action_log_id' => $actionLog['id'],
+            'foreign_model' => 'SecretsHistory',
+            'foreign_key' => $secret->id,
             'crud' => EntityHistory::CRUD_CREATE,
         ]);
     }

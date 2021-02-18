@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,11 +17,9 @@
 
 namespace App\Test\TestCase\Model\Table\Users;
 
-use App\Model\Table\UsersTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\PassboltText;
-use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
@@ -27,7 +27,9 @@ class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
 
-    /** @var UsersTable */
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
     public $Users;
 
     public $fixtures = [
@@ -60,8 +62,6 @@ class SaveTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-
-        /** @var UsersTable Users */
         $this->Users = TableRegistry::getTableLocator()->get('Users');
     }
 
@@ -133,9 +133,7 @@ class SaveTest extends AppTestCase
         $this->assertFieldFormatValidation($this->Users, 'username', $user, self::getEntityDefaultOptions(), $testCases);
     }
 
-    /* ************************************************************** */
     /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testValidationId()
     {
@@ -249,9 +247,7 @@ class SaveTest extends AppTestCase
         );
     }
 
-    /* ************************************************************** */
     /* LOGIC VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testRuleUsernameIsUnique()
     {

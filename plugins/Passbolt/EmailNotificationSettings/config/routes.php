@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,12 +22,16 @@ Router::plugin('Passbolt/EmailNotificationSettings', ['path' => '/settings'], fu
     /**
      * Get notification settings page
      */
-    $routes->connect('/emails/notifications', ['prefix' => 'NotificationOrgSettings', 'controller' => 'NotificationOrgSettingsGet', 'action' => 'get'])
+    $routes->connect('/emails/notifications', [
+            'prefix' => 'NotificationOrgSettings', 'controller' => 'NotificationOrgSettingsGet', 'action' => 'get',
+        ])
         ->setMethods(['GET']);
 
     /**
      * Update notification settings page
      */
-    $routes->connect('/emails/notifications', ['prefix' => 'NotificationOrgSettings', 'controller' => 'NotificationOrgSettingsPost', 'action' => 'post'])
+    $routes->connect('/emails/notifications', [
+            'prefix' => 'NotificationOrgSettings', 'controller' => 'NotificationOrgSettingsPost', 'action' => 'post',
+        ])
         ->setMethods(['POST']);
 });

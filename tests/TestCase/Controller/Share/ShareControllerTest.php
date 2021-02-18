@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,6 @@ class ShareControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Groups',
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets', 'app.Base/Favorites',
-        'app.Base/OrganizationSettings', 'app.Base/EmailQueue',
     ];
 
     public function setUp()
@@ -57,7 +58,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    public function testSuccessApiV1()
+    public function testSuccess()
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -106,7 +107,7 @@ hcciUFw5
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         $this->authenticateAs('ada');
-        $this->putJson("/share/resource/$resourceId.json", $data);
+        $this->putJson("/share/resource/$resourceId.json?api-version=v2", $data);
         $this->assertSuccess();
 
         // Load the resource.

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace App\Notification\Email\Redactor;
 
 use App\Controller\Setup\SetupCompleteController;
-use App\Model\Entity\Profile;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
@@ -38,29 +39,29 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/user_setup_complete';
+    public const TEMPLATE = 'LU/user_setup_complete';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param UsersTable|null $usersTable Users Table instance
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table instance
      */
-    public function __construct(UsersTable $usersTable = null)
+    public function __construct(?UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         if (!Configure::read('passbolt.plugins.log.enabled')) {
             // Check if plugin log is enabled because this redactor uses on ActionLog tables
-            throw new RuntimeException(sprintf('%s requires Passbolt/Log plugin', __CLASS__));
+            throw new RuntimeException(sprintf('%s requires Passbolt/Log plugin', self::class));
         }
     }
 
     /**
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             SetupCompleteController::COMPLETE_SUCCESS_EVENT_NAME,
@@ -68,23 +69,23 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
     }
 
     /**
-     * @param Event $event Event Instance
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event Event Instance
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         return $this->createEmailCollection($event->getData()['user']);
     }
 
     /**
-     * @param User $userWhoCompletedSetup User who completed the setup
-     * @return EmailCollection
+     * @param \App\Model\Entity\User $userWhoCompletedSetup User who completed the setup
+     * @return \App\Notification\Email\EmailCollection
      */
     private function createEmailCollection(User $userWhoCompletedSetup)
     {
         $emailCollection = new EmailCollection();
 
-        /** @var User $userWhoCompletedSetup */
+        /** @var \App\Model\Entity\User $userWhoCompletedSetup */
         $userWhoCompletedSetup = $this->usersTable->loadInto(
         // Load additional associations needed for the email
             $userWhoCompletedSetup,
@@ -114,7 +115,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
             }
         }
 
-        /** @var User[] $admins */
+        /** @var \App\Model\Entity\User[] $admins */
         $admins = $this->usersTable->findAdmins();
         // Create an email for every admin
         foreach ($admins as $admin) {
@@ -127,19 +128,18 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
     }
 
     /**
-     * @param User       $admin An admin user to notify
-     * @param User       $userCompletedSetup User who completed setup
-     * @param User       $invitedBy User who invited the user
-     * @param FrozenTime $invitedWhen When user was invited
-     *
-     * @return Email
+     * @param \App\Model\Entity\User $admin An admin user to notify
+     * @param \App\Model\Entity\User $userCompletedSetup User who completed setup
+     * @param \App\Model\Entity\User $invitedBy User who invited the user
+     * @param \Cake\I18n\FrozenTime $invitedWhen When user was invited
+     * @return \App\Notification\Email\Email
      */
     private function createEmail(User $admin, User $userCompletedSetup, User $invitedBy, FrozenTime $invitedWhen)
     {
-        /** @var Profile $profile */
+        /** @var \App\Model\Entity\Profile $profile */
         $profile = $userCompletedSetup->profile;
 
-        $subject = __('{0} have just activated their account on passbolt', $profile->first_name);
+        $subject = __('{0} just activated their account on passbolt', $profile->first_name);
 
         return new Email(
             $admin->username,

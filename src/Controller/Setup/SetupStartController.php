@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,94 +17,139 @@
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Entity\User;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * @property \App\Model\Table\UsersTable $Users
+ */
 class SetupStartController extends AppController
 {
+    use SetupControllerTrait;
+
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
+     * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
-        $this->Auth->allow('start');
+        $this->Auth->allow(['start']);
         $this->loadModel('AuthenticationTokens');
+        $this->loadModel('Users');
 
         return parent::beforeFilter($event);
     }
 
     /**
-     * Setup start
-     *
-     * @throws BadRequestException if the user id is missing or not a uuid
-     * @throws BadRequestException if the token is missing or not a uuid
-     * @throws BadRequestException if the authentication token is expired or not valid for this user
-     * @throws BadRequestException if the user does not exist or is already active
+     * Recover start
      *
      * @param string $userId uuid of the user
-     * @param string $tokenId uuid of the token
+     * @param string $token uuid of the token
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the token is missing or not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is missing or not a uuid
+     */
+    public function start(string $userId, string $token): void
+    {
+        if ($this->request->is('json')) {
+            $this->retrieveSetupInfo($userId, $token);
+        } else {
+            $this->renderSetupApplication();
+        }
+    }
+
+    /**
+     * Retrieve the recover info
+     *
+     * @param string $userId uuid of the user
+     * @param string $token uuid of the token
      * @return void
      */
-    public function start($userId, $tokenId)
+    private function retrieveSetupInfo(string $userId, string $token): void
     {
-        // Check user id and token id are valid
-        $this->_assertRequestSanity($userId, $tokenId);
+        $this->_assertRequestSanity($userId, $token);
+        $user = $this->findUser($userId);
+        $token = $this->findToken($user, $token);
+        $this->assertTokenExpiry($user, $token);
+        $this->success(__('The operation was successful.'), ['user' => $user]);
+    }
 
-        // Retrieve the user.
-        $this->loadModel('Users');
+    /**
+     * Find the user requesting the setup
+     *
+     * @param string $userId uuid of the user
+     * @return \App\Model\Entity\User
+     * @throw BadRequestException if the user cannot be found, is deleted or is active.
+     */
+    private function findUser(string $userId): User
+    {
         $user = $this->Users->findSetup($userId);
         if (empty($user)) {
-            $msg = __('The user does not exist or is already active or has been deleted.');
-            throw new BadRequestException($msg);
+            throw new BadRequestException(__('The user does not exist or is active.'));
         }
-        $this->set('user', $user);
 
-        // Parse the user agent
-        $this->loadModel('UserAgents');
-        $browserName = $this->UserAgents->browserName();
-        $this->set('browserName', strtolower($browserName));
+        return $user;
+    }
 
+    /**
+     * Find the setup token
+     *
+     * @param \App\Model\Entity\User $user user attempting to setup
+     * @param string $token uuid of the token
+     * @return \App\Model\Entity\AuthenticationToken
+     * @throw BadRequestException if the token is not valid
+     */
+    private function findToken(User $user, string $token): AuthenticationToken
+    {
+        $finderOptions = ['userId' => $user->id, 'token' => $token];
+        /** @var \App\Model\Entity\AuthenticationToken $token */
+        $token = $this->AuthenticationTokens->find('activeUserRegistrationToken', $finderOptions)->first();
+        if (empty($token)) {
+            throw new BadRequestException(__('The authentication token is not valid'));
+        }
+
+        return $token;
+    }
+
+    /**
+     * Assert the token expiry. If the token is expired, regenerate a new one and throw an notify the client with an error.
+     *
+     * @param \App\Model\Entity\User $user user attempting to recover
+     * @param \App\Model\Entity\AuthenticationToken $token the recovery token
+     * @return void
+     * @throw CustomValidationException if the token is expired
+     */
+    private function assertTokenExpiry(User $user, AuthenticationToken $token): void
+    {
+        $isExpired = $this->AuthenticationTokens->isExpired($token);
+        if ($isExpired) {
+            $error = [
+                'token' => [
+                    'expired' => 'The token is expired.',
+                ],
+            ];
+            throw new CustomValidationException(__('The token is expired.'), $error);
+        }
+    }
+
+    /**
+     * Render the setup application
+     *
+     * @return void
+     */
+    private function renderSetupApplication(): void
+    {
+        $this->set('title', Configure::read('passbolt.meta.description'));
         $this->viewBuilder()
             ->setTemplatePath('/Setup')
             ->setLayout('default')
             ->setTemplate('start');
-    }
-
-    /**
-     * Assert that the setup start request is valid
-     *
-     * @throws BadRequestException if the user id is missing or not a uuid
-     * @throws BadRequestException if the token is missing or not a uuid
-     * @throws BadRequestException if the authentication token is expired or not valid for this user
-     * @param string $userId uuid
-     * @param string $tokenId uuid
-     * @param string $tokenType register or recover
-     * @return void
-     */
-    protected function _assertRequestSanity($userId, $tokenId, $tokenType = AuthenticationToken::TYPE_REGISTER)
-    {
-        // Check request sanity
-        if (!isset($userId)) {
-            throw new BadRequestException(__('The user id is missing.'));
-        }
-        if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user id is not valid. It should be a uuid.'));
-        }
-        if (!isset($tokenId)) {
-            throw new BadRequestException(__('The authentication token is missing.'));
-        }
-        if (!Validation::uuid($tokenId)) {
-            throw new BadRequestException(__('The token is not valid. It should be a uuid.'));
-        }
-
-        // Check that the token exists
-        if (!$this->AuthenticationTokens->isValid($tokenId, $userId, $tokenType)) {
-            throw new BadRequestException(__('The authentication token is not valid or expired.'));
-        }
     }
 }

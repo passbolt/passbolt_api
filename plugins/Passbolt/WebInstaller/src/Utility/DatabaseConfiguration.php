@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -63,7 +65,7 @@ class DatabaseConfiguration
     /**
      * Test database connection.
      *
-     * @throws Exception when a connection cannot be established
+     * @throws \Cake\Core\Exception\Exception when a connection cannot be established
      * @return bool
      */
     public static function testConnection()
@@ -95,7 +97,7 @@ class DatabaseConfiguration
     /**
      * Validate the database schema.
      *
-     * @throws Exception If the database schema does not validate
+     * @throws \Cake\Core\Exception\Exception If the database schema does not validate
      * @return void
      */
     public static function validateSchema()

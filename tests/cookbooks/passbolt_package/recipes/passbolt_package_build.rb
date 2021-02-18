@@ -27,7 +27,7 @@ end
 
 if Dir.glob("#{node['dest_dir']}/passbolt-*.deb").empty? then
   package 'Install dev dependencies' do
-    package_name ['devscripts', 'build-essential', 'apt-utils', 'fakeroot', 'equivs', 'cdbs']
+    package_name ['devscripts', 'build-essential', 'apt-utils', 'fakeroot', 'equivs', 'cdbs', 'git-buildpackage']
     action :install
   end
 
@@ -35,6 +35,7 @@ if Dir.glob("#{node['dest_dir']}/passbolt-*.deb").empty? then
     cwd     "#{node['dest_dir']}"
     command "export PASSBOLT_FLAVOUR=#{node['passbolt_flavour']} \
              && make -f debian/rules debian/control \
+             && gbp dch --snapshot --snapshot-number=$(date +%s) --ignore-branch \
              && mk-build-deps -irt'apt-get --no-install-recommends -yV' debian/control && dpkg-checkbuilddeps \
              && debuild --preserve-envvar PASSBOLT_FLAVOUR -us -uc -b -i -I  \
              && cp ../*.deb . \

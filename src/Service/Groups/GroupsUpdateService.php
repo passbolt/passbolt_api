@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,10 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
 use App\Model\Entity\GroupsUser;
-use App\Model\Table\GroupsTable;
-use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourcesTable;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
@@ -32,37 +31,37 @@ use Cake\Utility\Hash;
 
 class GroupsUpdateService
 {
-    const AFTER_GROUP_USER_ADDED_EVENT_NAME = 'Service.GroupsUpdate.afterGroupUserAdded';
-    const AFTER_GROUP_USER_REMOVED_EVENT_NAME = 'Service.GroupsUpdate.afterGroupUserRemoved';
-    const UPDATE_SUCCESS_EVENT_NAME = 'GroupsUpdateController.update.success';
+    public const AFTER_GROUP_USER_ADDED_EVENT_NAME = 'Service.GroupsUpdate.afterGroupUserAdded';
+    public const AFTER_GROUP_USER_REMOVED_EVENT_NAME = 'Service.GroupsUpdate.afterGroupUserRemoved';
+    public const UPDATE_SUCCESS_EVENT_NAME = 'GroupsUpdateController.update.success';
 
     /**
-     * @var GroupsTable
+     * @var \App\Model\Table\GroupsTable
      */
     private $groupsTable;
 
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @var GroupsUpdateGroupUsersService
+     * @var \App\Service\Groups\GroupsUpdateGroupUsersService
      */
     private $groupsUpdateGroupUsersService;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
     /**
-     * @var ResourcesTable
+     * @var \App\Model\Table\ResourcesTable
      */
     private $resourcesTable;
 
     /**
-     * @var SecretsUpdateSecretsService
+     * @var \App\Service\Secrets\SecretsUpdateSecretsService
      */
     private $secretsUpdateSecretsService;
 
@@ -72,40 +71,47 @@ class GroupsUpdateService
     public function __construct()
     {
         $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
-        $this->groupsUpdateGroupUsersService = new GroupsUpdateGroupUsersService();
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        $this->groupsUpdateGroupUsersService = new GroupsUpdateGroupUsersService();
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
     }
 
     /**
      * Update a group.
      *
-     * @param UserAccessControl $uac The current user
+     * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $groupId The target group
      * @param array $metaData The group meta data to update
-     * @param array $changes The list of group users changes to apply
-     * @param array $secrets The list of new secrets to add
-     * @return Group
+     * @param array|null $changes The list of group users changes to apply
+     * @param array|null $secrets The list of new secrets to add
+     * @return \App\Model\Entity\Group
      * @throws \Exception
      */
-    public function update(UserAccessControl $uac, string $groupId, array $metaData, array $changes = [], array $secrets = [])
-    {
+    public function update(
+        UserAccessControl $uac,
+        string $groupId,
+        array $metaData,
+        ?array $changes = [],
+        ?array $secrets = []
+    ): Group {
         $group = $this->getGroup($groupId);
 
-        $this->groupsTable->getConnection()->transactional(function () use ($uac, $group, $metaData, $changes, $secrets) {
-            $resourcesIdsGroupHasAccess = $this->getResourcesIdsGroupHasAccess($group);
-            $this->updateMetaData($uac, $group, $metaData);
-            $updateGroupsUsersResult = $this->updateGroupUsers($uac, $group, $changes);
-            $addedGroupUsers = Hash::get($updateGroupsUsersResult, 'added', []);
-            $updatedGroupUsers = Hash::get($updateGroupsUsersResult, 'updated', []);
-            $removedGroupUsers = Hash::get($updateGroupsUsersResult, 'removed', []);
-            $this->updateResourcesSecrets($uac, $group, $resourcesIdsGroupHasAccess, $secrets, $addedGroupUsers, $removedGroupUsers);
-            $this->postGroupUsersAdded($uac, $group, $addedGroupUsers);
-            $this->postGroupUsersRemoved($uac, $group, $removedGroupUsers, $resourcesIdsGroupHasAccess);
-            $this->notifyUsers($uac, $group, $addedGroupUsers, $updatedGroupUsers, $removedGroupUsers);
-        });
+        $this->groupsTable->getConnection()->transactional(
+            function () use ($uac, $group, $metaData, $changes, $secrets) {
+                $rIds = $this->getResourcesIdsGroupHasAccess($group);
+                $this->updateMetaData($uac, $group, $metaData);
+                $updateGroupsUsersResult = $this->updateGroupUsers($uac, $group, $changes);
+                $addedGroupUsers = Hash::get($updateGroupsUsersResult, 'added', []);
+                $updatedGroupUsers = Hash::get($updateGroupsUsersResult, 'updated', []);
+                $removedGroupUsers = Hash::get($updateGroupsUsersResult, 'removed', []);
+                $this->updateResourcesSecrets($uac, $group, $rIds, $secrets, $addedGroupUsers, $removedGroupUsers);
+                $this->postGroupUsersAdded($uac, $group, $addedGroupUsers);
+                $this->postGroupUsersRemoved($uac, $group, $removedGroupUsers, $rIds);
+                $this->notifyUsers($uac, $group, $addedGroupUsers, $updatedGroupUsers, $removedGroupUsers);
+            }
+        );
 
         return $group;
     }
@@ -114,10 +120,10 @@ class GroupsUpdateService
      * Retrieve the group.
      *
      * @param string $groupId The target group to retrieve
-     * @return Group
-     * @throws NotFoundException If the group does not exist.
+     * @return \App\Model\Entity\Group
+     * @throws \Cake\Http\Exception\NotFoundException If the group does not exist.
      */
-    private function getGroup(string $groupId)
+    private function getGroup(string $groupId): Group
     {
         $group = $this->groupsTable->findById($groupId)->first();
         if (empty($group) || $group->deleted) {
@@ -130,10 +136,10 @@ class GroupsUpdateService
     /**
      * Retrieve the resources ids a group has access.
      *
-     * @param Group $group The target group
+     * @param \App\Model\Entity\Group $group The target group
      * @return array The list of resources ids
      */
-    private function getResourcesIdsGroupHasAccess(Group $group)
+    private function getResourcesIdsGroupHasAccess(Group $group): array
     {
         return $this->permissionsTable->findAllByAro(PermissionsTable::RESOURCE_ACO, $group->id)
             ->select('aco_foreign_key')
@@ -144,12 +150,12 @@ class GroupsUpdateService
     /**
      * Update the group meta data.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Group $group The target group
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \App\Model\Entity\Group $group The target group
      * @param array $metaData The raw meta data to update
      * @return void
      */
-    private function updateMetaData(UserAccessControl $uac, Group $group, array $metaData)
+    private function updateMetaData(UserAccessControl $uac, Group $group, array $metaData): void
     {
         // Only admin can update the group meta data.
         if (!$uac->isAdmin() || empty($metaData)) {
@@ -161,7 +167,7 @@ class GroupsUpdateService
                 'modified_by' => true,
             ],
         ];
-        $metaData['modified_by'] = $uac->userId();
+        $metaData['modified_by'] = $uac->getId();
         $this->groupsTable->patchEntity($group, $metaData, $groupPatchOptions);
         $this->groupsTable->save($group);
         $this->handleValidationErrors($group);
@@ -170,11 +176,11 @@ class GroupsUpdateService
     /**
      * Handle group validation errors.
      *
-     * @param Group $group The target group
+     * @param \App\Model\Entity\Group $group The target group
      * @return void
-     * @throws ValidationException If the provided data does not validate.
+     * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
-    private function handleValidationErrors(Group $group)
+    private function handleValidationErrors(Group $group): void
     {
         $errors = $group->getErrors();
         if (!empty($errors)) {
@@ -185,8 +191,8 @@ class GroupsUpdateService
     /**
      * Update the group users of a group.
      *
-     * @param UserAccessControl $uac The current user
-     * @param Group $group The target group
+     * @param \App\Utility\UserAccessControl $uac The current user
+     * @param \App\Model\Entity\Group $group The target group
      * @param array $changes The list of group users changes to apply
      * @return array
      * [
@@ -196,14 +202,14 @@ class GroupsUpdateService
      * ]
      * @throws \Exception If something unexpected occurred
      */
-    private function updateGroupUsers(UserAccessControl $uac, Group $group, array $changes)
+    private function updateGroupUsers(UserAccessControl $uac, Group $group, array $changes): array
     {
         if (empty($changes)) {
             return [];
         }
 
         // Only a group manager can add new members to a group.
-        $canAdd = $this->groupsUsersTable->isManager($uac->userId(), $group->id);
+        $canAdd = $this->groupsUsersTable->isManager($uac->getId(), $group->id);
         // If not a group manager keep only the changes that are relative to existing group users.
         if (!$canAdd) {
             $changes = Hash::extract($changes, '{n}[id=/.*/]');
@@ -220,8 +226,8 @@ class GroupsUpdateService
     /**
      * Update the secrets.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Group $group The target group
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \App\Model\Entity\Group $group The target group
      * @param array $resourcesIds The list of resources ids the groups has access
      * @param array $secrets The list of secret data to add
      * @param array $addedGroupUsers A list of added group users
@@ -230,8 +236,14 @@ class GroupsUpdateService
      * @throws \Exception If something wrong occurred
      * @throwq CustomValidationException If a secret didn't validate
      */
-    private function updateResourcesSecrets(UserAccessControl $uac, Group $group, array $resourcesIds, array $secrets, array $addedGroupUsers, array $removedGroupUsers)
-    {
+    private function updateResourcesSecrets(
+        UserAccessControl $uac,
+        Group $group,
+        array $resourcesIds,
+        array $secrets,
+        array $addedGroupUsers,
+        array $removedGroupUsers
+    ): void {
         if (empty($addedGroupUsers) && empty($removedGroupUsers)) {
             return;
         }
@@ -244,15 +256,15 @@ class GroupsUpdateService
     /**
      * Update the secrets of a resource.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Group $group The target group
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \App\Model\Entity\Group $group The target group
      * @param string $resourceId The target resource
      * @param array $data The list of secrets to add
      * @return void
      * @throwq CustomValidationException If a secret didn't validate
      * @throws \Exception If something unexpected went wrong
      */
-    private function updateResourceSecrets(UserAccessControl $uac, Group $group, string $resourceId, array $data)
+    private function updateResourceSecrets(UserAccessControl $uac, Group $group, string $resourceId, array $data): void
     {
         $secretsData = array_filter($data, function ($secretData) use ($resourceId) {
             return $resourceId === Hash::get($secretData, 'resource_id');
@@ -269,12 +281,12 @@ class GroupsUpdateService
     /**
      * Post group user added.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Group $group The target group
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \App\Model\Entity\Group $group The target group
      * @param array $addedGroupUsers The list of added groups users
      * @return void
      */
-    private function postGroupUsersAdded(UserAccessControl $uac, Group $group, array $addedGroupUsers = [])
+    private function postGroupUsersAdded(UserAccessControl $uac, Group $group, array $addedGroupUsers = []): void
     {
         foreach ($addedGroupUsers as $groupUser) {
             $eventData = ['groupUser' => $groupUser, 'accessControl' => $uac];
@@ -286,14 +298,18 @@ class GroupsUpdateService
     /**
      * Post group users removed.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Group $group The target group
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \App\Model\Entity\Group $group The target group
      * @param array $groupsUsers The list of removed groups users
      * @param array $resourcesIds The list of resources ids the group has access
      * @return void
      */
-    private function postGroupUsersRemoved(UserAccessControl $uac, Group $group, array $groupsUsers, array $resourcesIds)
-    {
+    private function postGroupUsersRemoved(
+        UserAccessControl $uac,
+        Group $group,
+        array $groupsUsers,
+        array $resourcesIds
+    ): void {
         foreach ($groupsUsers as $groupUser) {
             $this->postGroupUserRemoved($uac, $group, $groupUser, $resourcesIds);
         }
@@ -302,17 +318,23 @@ class GroupsUpdateService
     /**
      * Post group user removed.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Group $group The target group
-     * @param GroupsUser $groupUser The removed group user
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \App\Model\Entity\Group $group The target group
+     * @param \App\Model\Entity\GroupsUser $groupUser The removed group user
      * @param array $resourcesIdsGroupHasAccess The list of resources ids the group has access
      * @return void
      */
-    private function postGroupUserRemoved(UserAccessControl $uac, Group $group, GroupsUser $groupUser, array $resourcesIdsGroupHasAccess = [])
-    {
+    private function postGroupUserRemoved(
+        UserAccessControl $uac,
+        Group $group,
+        GroupsUser $groupUser,
+        array $resourcesIdsGroupHasAccess = []
+    ): void {
         foreach ($resourcesIdsGroupHasAccess as $resourceIdGroupHasAccess) {
-            if (!$this->permissionsTable->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceIdGroupHasAccess, $groupUser->user_id)) {
-                $this->resourcesTable->deleteLostAccessAssociatedData($resourceIdGroupHasAccess, [$groupUser->user_id]);
+            $acoType = PermissionsTable::RESOURCE_ACO;
+            $userId = $groupUser->user_id;
+            if (!$this->permissionsTable->hasAccess($acoType, $resourceIdGroupHasAccess, $userId)) {
+                $this->resourcesTable->deleteLostAccessAssociatedData($resourceIdGroupHasAccess, [$userId]);
             }
         }
 
@@ -324,21 +346,26 @@ class GroupsUpdateService
     /**
      * Notify the users that they group have been deleted
      *
-     * @param UserAccessControl $uac The current user
-     * @param Group $group The updated group
+     * @param \App\Utility\UserAccessControl $uac The current user
+     * @param \App\Model\Entity\Group $group The updated group
      * @param array $addedGroupsUsers changes requested by group editor
      * @param array $updatedGroupsUsers the list of users updated for the group
      * @param array $removedGroupsUsers the list of users removed from the group
      * @return void
      */
-    private function notifyUsers(UserAccessControl $uac, Group $group, array $addedGroupsUsers, array $updatedGroupsUsers, array $removedGroupsUsers)
-    {
+    private function notifyUsers(
+        UserAccessControl $uac,
+        Group $group,
+        array $addedGroupsUsers,
+        array $updatedGroupsUsers,
+        array $removedGroupsUsers
+    ): void {
         $event = new Event(static::UPDATE_SUCCESS_EVENT_NAME, $this, [
             'group' => $group,
             'addedGroupsUsers' => $addedGroupsUsers,
             'updatedGroupsUsers' => $updatedGroupsUsers,
             'removedGroupsUsers' => $removedGroupsUsers,
-            'userId' => $uac->userId(),
+            'userId' => $uac->getId(),
         ]);
         $this->groupsTable->getEventManager()->dispatch($event);
     }

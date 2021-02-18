@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# This script is executed as part of a cronjob task
+# is already run as www-data or any other web user.
+
+set -euo pipefail
+
+DIGEST_ENABLED=${PASSBOLT_PLUGINS_EMAIL_DIGEST_ENABLED:-0}
+
+DIR=$(dirname "$(readlink -f "$0")")
+
+if [[ "$DIGEST_ENABLED" = 0 ]]; then
+    "$DIR"/cake EmailQueue.sender
+else
+    "$DIR"/cake Passbolt/EmailDigest.sender
+fi

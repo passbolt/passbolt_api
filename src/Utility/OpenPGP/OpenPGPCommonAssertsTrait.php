@@ -1,17 +1,18 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Utility\OpenPGP;
 
 use Cake\Core\Exception\Exception;
 
 trait OpenPGPCommonAssertsTrait
 {
-
     /**
      * Assert an armored message/key marker is present in plaintext
      *
      * @param string $armoredText message or key in ASCII armored format
      * @param string $marker a message delimiter like 'PGP MESSAGE'
-     * @throws Exception if the armored message marker does not match the one provided
+     * @throws \Cake\Core\Exception\Exception if the armored message marker does not match the one provided
      * @return bool true if successful
      */
     public function assertGpgMarker(string $armoredText, string $marker)
@@ -45,7 +46,7 @@ trait OpenPGPCommonAssertsTrait
     /**
      * Assert the signature key is set
      *
-     * @throws Exception if not signature key is set
+     * @throws \Cake\Core\Exception\Exception if not signature key is set
      * @return void
      */
     public function assertSignKey()
@@ -58,7 +59,7 @@ trait OpenPGPCommonAssertsTrait
     /**
      * Assert the verification key is set
      *
-     * @throws Exception if not signature key is set
+     * @throws \Cake\Core\Exception\Exception if not signature key is set
      * @return void
      */
     public function assertVerifyKey()
@@ -71,7 +72,7 @@ trait OpenPGPCommonAssertsTrait
     /**
      * Check if an encryption key is set
      *
-     * @throws Exception if no encryption key is set
+     * @throws \Cake\Core\Exception\Exception if no encryption key is set
      * @return void
      */
     public function assertEncryptKey()
@@ -84,7 +85,7 @@ trait OpenPGPCommonAssertsTrait
     /**
      * Check if a decrypt key is set
      *
-     * @throws Exception if no decryption key is set
+     * @throws \Cake\Core\Exception\Exception if no decryption key is set
      * @return void
      */
     public function assertDecryptKey()

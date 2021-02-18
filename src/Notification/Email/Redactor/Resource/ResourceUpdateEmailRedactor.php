@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,18 +33,18 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/resource_update';
+    public const TEMPLATE = 'LU/resource_update';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param array      $config Configuration for the redactor
-     * @param UsersTable $usersTable Users Table
+     * @param array|null $config Configuration for the redactor
+     * @param \App\Model\Table\UsersTable $usersTable Users Table
      */
-    public function __construct(array $config = [], UsersTable $usersTable = null)
+    public function __construct(?array $config = [], ?UsersTable $usersTable = null)
     {
         $this->setConfig($config);
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
@@ -53,7 +55,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             ResourcesUpdateService::UPDATE_SUCCESS_EVENT_NAME,
@@ -61,10 +63,10 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event Resource update event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event Resource update event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -72,7 +74,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         $resource = $event->getData('resource');
 
         // Get the users that can access this resource
-        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
+        $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
         $users = $this->usersTable->findIndex(Role::USER, $options)->all();
         $owner = $this->usersTable->findFirstForEmail($resource->modified_by);
 
@@ -86,13 +88,13 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param string   $emailRecipient Email of the recipient user
-     * @param User     $owner User who executed the action
-     * @param resource $resource Resource
-     * @return Email
+     * @param \App\Model\Entity\User $owner User who executed the action
+     * @param Resource $resource Resource
+     * @return \App\Notification\Email\Email
      */
     private function createUpdateEmail(string $emailRecipient, User $owner, Resource $resource)
     {
-        $subject = __("{0} edited the password {1}", $owner->profile->first_name, $resource->name);
+        $subject = __('{0} edited the password {1}', $owner->profile->first_name, $resource->name);
         $data = [
             'body' => [
                 'user' => $owner,

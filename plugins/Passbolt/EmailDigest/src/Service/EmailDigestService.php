@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace Passbolt\EmailDigest\Service;
 
-use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
 use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
 
 /**
@@ -31,19 +32,20 @@ use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
  * - One email entity can be only present in one digest.
  *
  * Class EmailDigestService
+ *
  * @package Passbolt\EmailDigest\Service
  */
 class EmailDigestService
 {
     /**
-     * @var DigestFactory
+     * @var \Passbolt\EmailDigest\Utility\Factory\DigestFactory
      */
     private $digestFactory;
 
     /**
-     * @param DigestFactory $digestFactory Factory
+     * @param \Passbolt\EmailDigest\Utility\Factory\DigestFactory|null $digestFactory Factory
      */
-    public function __construct(DigestFactory $digestFactory = null)
+    public function __construct(?DigestFactory $digestFactory = null)
     {
         $this->digestFactory = $digestFactory ?? DigestFactory::getInstance();
     }
@@ -53,9 +55,9 @@ class EmailDigestService
      *
      * @param array $emails An array of emails entities from email queue.
      * @return array of EmailDigestInterface
-     * @throws UnsupportedEmailDigestDataException
+     * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */
-    public function createDigests(array $emails)
+    public function createDigests(array $emails): array
     {
         // Group the emails entities by recipient and create digests for each group of emails.
         $digestsCollection = $this->digestFactory->createDigestsCollection();

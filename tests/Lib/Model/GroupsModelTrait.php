@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,11 +25,11 @@ trait GroupsModelTrait
     /**
      * Add a dummy group.
      *
-     * @param array $data The group data
-     * @param array $options The entity options
+     * @param array|null $data The group data
+     * @param array|null $options The entity options
      * @return Group
      */
-    public function addGroup($data = [], $options = [])
+    public function addGroup(?array $data = [], ?array $options = [])
     {
         $groupsTable = TableRegistry::getTableLocator()->get('Groups');
         $group = self::getDummyGroupEntity($data, $options);
@@ -40,11 +42,11 @@ trait GroupsModelTrait
     /**
      * Get a new group entity
      *
-     * @param array $data The group data.
-     * @param array $options The new entity options.
-     * @return Resouce
+     * @param array|null $data The group data.
+     * @param array|null $options The new entity options.
+     * @return Group
      */
-    public function getDummyGroupEntity($data = [], $options = [])
+    public function getDummyGroupEntity(?array $data = [], ?array $options = []): Group
     {
         $groupsTable = TableRegistry::getTableLocator()->get('Groups');
         $defaultOptions = [

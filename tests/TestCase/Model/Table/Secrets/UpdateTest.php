@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
-use App\Model\Table\SecretsTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
@@ -69,9 +70,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    /* ************************************************************** */
     /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testValidationData()
     {
@@ -86,9 +85,7 @@ hcciUFw5
         $this->assertFieldFormatValidation($this->Secrets, 'data', $entityData, self::getEntityDefaultOptions(), $testCases);
     }
 
-    /* ************************************************************** */
     /* LOGIC VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testSuccess()
     {

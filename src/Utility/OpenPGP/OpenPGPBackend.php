@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Utility\OpenPGP;
 
 use Cake\Core\Configure;
@@ -32,7 +34,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
     /**
      * Constructor.
      *
-     * @throws Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     public function __construct()
     {
@@ -44,7 +46,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
     /**
      * Import server key in keyring
      *
-     * @throws InternalErrorException if server key is undefined or invalid
+     * @throws \Cake\Http\Exception\InternalErrorException if server key is undefined or invalid
      * @return void
      */
     public function importServerKeyInKeyring()
@@ -74,7 +76,8 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
         // try to import it
         $this->importKeyIntoKeyring($privateKey);
         if (!$this->isKeyInKeyring($fingerprint)) {
-            $msg = __('The OpenPGP server key fingerprint defined in the config does not match the one associated with the key on file.');
+            $msg = __('There is an issue with the OpenPGP server key.') . ' ';
+            $msg .= __('The fingerprint does not match the one associated with the key on file.');
             throw new InternalErrorException($msg);
         }
     }
@@ -84,7 +87,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @param string $armored ASCII armored gpg data
      * @return mixed
-     * @throws Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     protected function getGpgMarker(string $armored)
     {

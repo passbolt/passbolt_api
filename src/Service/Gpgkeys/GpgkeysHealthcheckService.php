@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,28 +29,28 @@ use Cake\Utility\Hash;
 
 class GpgkeysHealthcheckService extends AbstractHealthcheckService
 {
-    const CATEGORY = 'data';
-    const NAME = 'Gpgkeys';
-    const CHECK_CANENCRYPT = 'Can encrypt';
-    const CHECK_VALIDATES = 'Can validate';
+    public const CATEGORY = 'data';
+    public const NAME = 'Gpgkeys';
+    public const CHECK_CANENCRYPT = 'Can encrypt';
+    public const CHECK_VALIDATES = 'Can validate';
 
     /**
-     * @var GpgkeysTable
+     * @var \App\Model\Table\GpgkeysTable
      */
     private $table;
 
     /**
-     * @var OpenPGPBackend
+     * @var \App\Utility\OpenPGP\OpenPGPBackend
      */
     private $gpg;
 
     /**
      * Service constructor.
      *
-     * @param OpenPGPBackend $gpg gpg backend to use
-     * @param GpgkeysTable $table gpgkeys table
+     * @param \App\Model\Table\GpgkeysTable|null $table gpgkeys table
+     * @param \App\Utility\OpenPGP\OpenPGPBackend|null $gpg gpg backend to use
      */
-    public function __construct($gpg = null, $table = null)
+    public function __construct(?GpgkeysTable $table = null, ?OpenPGPBackend $gpg = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->gpg = $gpg ?? OpenPGPBackendFactory::get();
@@ -60,7 +62,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     /**
      * @inheritDoc
      */
-    public function check()
+    public function check(): array
     {
         $recordIds = $this->table->find()
             ->select('id')
@@ -81,10 +83,10 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     /**
      * Validates
      *
-     * @param Gpgkey $gpgkey gpg key
+     * @param \App\Model\Entity\Gpgkey $gpgkey gpg key
      * @return void
      */
-    private function canValidate(Gpgkey $gpgkey)
+    private function canValidate(Gpgkey $gpgkey): void
     {
         try {
             $copy = $this->table->buildEntityFromArmoredKey($gpgkey->armored_key, $gpgkey->user_id);
@@ -94,27 +96,27 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
             $this->checks[self::CHECK_VALIDATES]
                 ->addDetail(__('Validation success for key {0}', $gpgkey->fingerprint), Healthcheck::STATUS_SUCCESS);
         } catch (Exception $exception) {
-            $this->checks[self::CHECK_VALIDATES]->fail()
-                ->addDetail(__('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage()), Healthcheck::STATUS_ERROR);
+            $msg = __('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage());
+            $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         }
     }
 
     /**
      * Can encrypt
      *
-     * @param Gpgkey $gpgkey gpg key
+     * @param \App\Model\Entity\Gpgkey $gpgkey gpg key
      * @return void
      */
-    private function canEncrypt(Gpgkey $gpgkey)
+    private function canEncrypt(Gpgkey $gpgkey): void
     {
         try {
             $this->initUserKey($gpgkey->fingerprint, $gpgkey->armored_key);
             $this->gpg->encrypt('test');
-            $this->checks[self::CHECK_CANENCRYPT]
-                ->addDetail(__('Encryption success for key {0}', $gpgkey->fingerprint), Healthcheck::STATUS_SUCCESS);
+            $msg = __('Encryption success for key {0}', $gpgkey->fingerprint);
+            $this->checks[self::CHECK_CANENCRYPT]->addDetail($msg, Healthcheck::STATUS_SUCCESS);
         } catch (Exception $exception) {
-            $this->checks[self::CHECK_CANENCRYPT]->fail()
-                ->addDetail(__('Failed to encrypt with key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage()), Healthcheck::STATUS_ERROR);
+            $msg = __('Failed to encrypt with key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage());
+            $this->checks[self::CHECK_CANENCRYPT]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         }
     }
 
@@ -123,10 +125,10 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
      *
      * @param string $fingerprint fingerprint
      * @param string $armored armored
-     * @throws InternalErrorException when the key is not valid
+     * @throws \Cake\Http\Exception\InternalErrorException when the key is not valid
      * @return void
      */
-    private function initUserKey(string $fingerprint, string $armored)
+    private function initUserKey(string $fingerprint, string $armored): void
     {
         try {
             $this->gpg->setEncryptKeyFromFingerprint($fingerprint);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,7 +20,6 @@ namespace App\Test\TestCase\View\Helper;
 use App\Model\Entity\Avatar;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,7 +27,7 @@ use PHPUnit\Framework\TestCase;
  */
 class AvatarHelperTest extends TestCase
 {
-    const FULL_BASE_URL = 'http://mydomain.com';
+    public const FULL_BASE_URL = 'http://mydomain.com';
 
     /**
      * @dataProvider provideAvatarsWithoutScheme
@@ -44,6 +45,7 @@ class AvatarHelperTest extends TestCase
 
     /**
      * Return local file paths
+     *
      * @return array
      */
     public function provideAvatarsWithoutScheme()
@@ -74,6 +76,7 @@ class AvatarHelperTest extends TestCase
 
     /**
      * Return url with a scheme
+     *
      * @return array
      */
     public function provideAvatarsWithScheme()

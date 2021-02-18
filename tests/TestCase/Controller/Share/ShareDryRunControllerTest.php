@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -34,7 +36,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         parent::setUp();
     }
 
-    public function testSuccessApiV1()
+    public function testSuccess()
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -81,7 +83,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         $this->authenticateAs('ada');
-        $this->postJson("/share/simulate/resource/$resourceId.json", $data);
+        $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v2", $data);
         $this->assertNotEmpty($this->_responseJsonBody);
         $this->assertNotEmpty($this->_responseJsonBody->changes);
         $addedUsers = $this->_responseJsonBody->changes->added;

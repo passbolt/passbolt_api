@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,12 +19,10 @@ namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Table\PermissionsTable;
-use App\Utility\UserAction;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Passbolt\Log\Model\Entity\EntityHistory;
 
 class PermissionsHistoryTable extends Table
 {
@@ -32,7 +32,7 @@ class PermissionsHistoryTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -91,12 +91,12 @@ class PermissionsHistoryTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
             ->requirePresence('id', 'create')
-            ->notEmpty('id', __('The id cannot be empty.'));
+            ->notEmptyString('id', __('The id cannot be empty.'));
 
         $validator
             ->inList('aco', PermissionsTable::ALLOWED_ACOS, __(
@@ -104,12 +104,12 @@ class PermissionsHistoryTable extends Table
                 implode(', ', PermissionsTable::ALLOWED_ACOS)
             ))
             ->requirePresence('aco', 'create', __('The aco is required.'))
-            ->notEmpty('aco', __('The aco cannot be empty.'));
+            ->notEmptyString('aco', __('The aco cannot be empty.'));
 
         $validator
             ->uuid('aco_foreign_key')
             ->requirePresence('aco_foreign_key', 'create')
-            ->notEmpty('aco_foreign_key');
+            ->notEmptyString('aco_foreign_key');
 
         $validator
             ->inList('aro', PermissionsTable::ALLOWED_AROS, __(
@@ -117,12 +117,12 @@ class PermissionsHistoryTable extends Table
                 implode(', ', PermissionsTable::ALLOWED_AROS)
             ))
             ->requirePresence('aro', 'create', __('The aro is required.'))
-            ->notEmpty('aro', __('The aro cannot be empty.'));
+            ->notEmptyString('aro', __('The aro cannot be empty.'));
 
         $validator
             ->uuid('aro_foreign_key')
             ->requirePresence('aro_foreign_key', 'create')
-            ->notEmpty('aro_foreign_key');
+            ->notEmptyString('aro_foreign_key');
 
         $validator
             ->inList('type', PermissionsTable::ALLOWED_TYPES, __(
@@ -130,16 +130,16 @@ class PermissionsHistoryTable extends Table
                 implode(', ', PermissionsTable::ALLOWED_TYPES)
             ))
             ->requirePresence('type', 'create', __('The type is required.'))
-            ->notEmpty('type', __('The type cannot be empty.'));
+            ->notEmptyString('type', __('The type cannot be empty.'));
 
         return $validator;
     }
 
     /**
      * Return a permissions_history entity.
-     * @param array $data entity data
      *
-     * @return EntityHistory
+     * @param array $data entity data
+     * @return \Passbolt\Log\Model\Table\EntityHistory
      */
     public function buildEntity(array $data)
     {
@@ -159,10 +159,9 @@ class PermissionsHistoryTable extends Table
      * Create a new permissions_history.
      *
      * @param array $data the data
-     *
-     * @return UserAction|bool
-     * @throws ValidationException
-     * @throws InternalErrorException
+     * @return \Passbolt\Log\Model\Table\UserAction|bool
+     * @throws \App\Error\Exception\ValidationException
+     * @throws \Cake\Http\Exception\InternalErrorException
      */
     public function create(array $data)
     {

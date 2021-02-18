@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -13,7 +15,7 @@
  * @since         2.8.0
  */
 
-namespace Passbolt\Log\Test\TestCase\Controller\Share;
+namespace Passbolt\Log\Test\TestCase\Controller\Resources;
 
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
@@ -24,11 +26,8 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles',
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
-        'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue',
-        'plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs',
-        'plugin.Passbolt/Log.Base/EntitiesHistory', 'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretsHistory', 'app.Base/OrganizationSettings',
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/ResourceTypes', 'app.Base/Permissions',
+        'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
     public function testLogResourcesAddSuccessWithSecrets()
@@ -44,7 +43,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
                 'data' => Hash::get(self::getDummySecretData(), 'data'),
             ]],
         ];
-        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->postJson('/resources.json?api-version=v2', $data);
         $this->assertSuccess();
 
         // Check the server response.

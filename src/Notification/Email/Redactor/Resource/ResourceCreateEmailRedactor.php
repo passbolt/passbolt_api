@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,18 +31,18 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/resource_create';
+    public const TEMPLATE = 'LU/resource_create';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param array      $config Configuration for the redactor
-     * @param UsersTable $usersTable Users Table
+     * @param array|null $config Configuration for the redactor
+     * @param \App\Model\Table\UsersTable $usersTable Users Table
      */
-    public function __construct(array $config = [], UsersTable $usersTable = null)
+    public function __construct(?array $config = [], ?UsersTable $usersTable = null)
     {
         $this->setConfig($config);
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
@@ -51,7 +53,7 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             ResourcesAddController::ADD_SUCCESS_EVENT_NAME,
@@ -59,10 +61,10 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -75,13 +77,13 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param resource $resource Resource
-     * @return Email
+     * @param Resource $resource Resource
+     * @return \App\Notification\Email\Email
      */
     private function createResourceCreateEmail(Resource $resource)
     {
         $user = $this->usersTable->findFirstForEmail($resource->created_by);
-        $subject = __("You added the password {0}", $resource->name);
+        $subject = __('You added the password {0}', $resource->name);
         $data = [
             'body' => [
                 'user' => $user,

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,14 +21,13 @@ use InvalidArgumentException;
 
 /**
  * Class CollectSubscribedEmailRedactorEvent
- * @package App\Notification\Email
- * @method EmailSubscriptionManager getSubject()
  *
- * Event triggered by the EmailSubscriptionDispatcher to collect emails from the subscribed EmailRedactors.
+ * @package App\Notification\Email
+ * @method \App\Notification\Email\EmailSubscriptionManager getSubject() Event triggered by the EmailSubscriptionDispatcher to collect emails from the subscribed EmailRedactors.
  */
 class CollectSubscribedEmailRedactorEvent extends Event
 {
-    const EVENT_NAME = 'subscribed_email_redactor.collect';
+    public const EVENT_NAME = 'subscribed_email_redactor.collect';
 
     /**
      * @param string $name Name of the event
@@ -43,8 +44,8 @@ class CollectSubscribedEmailRedactorEvent extends Event
     }
 
     /**
-     * @param EmailSubscriptionManager $emailSubscriptionManager Email Subscription Manager
-     * @return CollectSubscribedEmailRedactorEvent
+     * @param \App\Notification\Email\EmailSubscriptionManager $emailSubscriptionManager Email Subscription Manager
+     * @return \App\Notification\Email\CollectSubscribedEmailRedactorEvent
      */
     public static function create(EmailSubscriptionManager $emailSubscriptionManager)
     {
@@ -52,7 +53,7 @@ class CollectSubscribedEmailRedactorEvent extends Event
     }
 
     /**
-     * @return EmailSubscriptionManager
+     * @return \App\Notification\Email\EmailSubscriptionManager
      */
     public function getManager()
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,35 +18,21 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationException;
-use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Hash;
 
+/**
+ * @property \App\Model\Table\GroupsTable $Groups
+ */
 class GroupsAddController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(Event $event)
-    {
-        $this->loadModel('Groups');
-        $this->loadModel('Users');
-
-        return AppController::beforeFilter($event);
-    }
-
-    /**
      * Group Add action
      *
-     * @throws InternalErrorException If an unexpected error occurred when saving the group
-     * @throws ForbiddenException If the user is not an admin
-     * @throws ValidationException if the group validation failed
-     * @throws InternalErrorException if the group can't be saved for some reason
+     * @throws \Cake\Http\Exception\InternalErrorException If an unexpected error occurred when saving the group
+     * @throws \Cake\Http\Exception\ForbiddenException If the user is not an admin
+     * @throws \App\Error\Exception\ValidationException if the group validation failed
+     * @throws \Cake\Http\Exception\InternalErrorException if the group can't be saved for some reason
      * @return void
      */
     public function addPost()
@@ -54,6 +42,8 @@ class GroupsAddController extends AppController
         }
 
         $data = $this->_formatRequestData();
+
+        $this->loadModel('Groups');
         $group = $this->Groups->create($data, $this->User->getAccessControl());
 
         $msg = __('The group has been added successfully.');
@@ -61,15 +51,22 @@ class GroupsAddController extends AppController
     }
 
     /**
-     * Format request data formatted for API v1 to API v2 format
+     * Format request data formatted for API v1
      *
+     * Note: historically broken in v2.14 and before
+     * Prior to v3 this method expected data in v1 format only
+     * So both v2 and v1 format are supported in v2 & v3
+     *
+     * @deprecated when support for API v2 is dropped
      * @return array
      */
     protected function _formatRequestData()
     {
         $data = $this->request->getData();
-        $output['name'] = Hash::get($data, 'Group.name');
-        if (isset($data['GroupUsers'])) {
+        $output['name'] = $data['name'] ?? Hash::get($data, 'Group.name');
+        if (isset($data['groups_users'])) {
+            $output['groups_users'] = $data['groups_users'];
+        } elseif (isset($data['GroupUsers'])) {
             $output['groups_users'] = Hash::reduce($data, 'GroupUsers.{n}', function ($result, $row) {
                 $result[] = [
                     'user_id' => Hash::get($row, 'GroupUser.user_id', ''),
@@ -77,7 +74,7 @@ class GroupsAddController extends AppController
                 ];
 
                 return $result;
-            }, []);
+            });
         }
 
         return $output;

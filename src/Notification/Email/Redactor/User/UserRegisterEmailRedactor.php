@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -30,27 +32,27 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE_REGISTER_SELF = 'AN/user_register_self';
-    const TEMPLATE_REGISTER_ADMIN = 'AN/user_register_admin';
+    public const TEMPLATE_REGISTER_SELF = 'AN/user_register_self';
+    public const TEMPLATE_REGISTER_ADMIN = 'AN/user_register_admin';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param UsersTable|null $usersTable Users Table
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
      */
-    public function __construct(UsersTable $usersTable = null)
+    public function __construct(?UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 
     /**
-     * @param Event $event User register event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User register event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -58,26 +60,30 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
         $uac = $event->getData('token');
         $adminId = $event->getData('adminId');
 
-        $email = $adminId ? $this->createEmailAdminRegister($user, $uac, $adminId) : $this->createEmailSelfRegister($user, $uac);
+        if ($adminId) {
+            $email = $this->createEmailAdminRegister($user, $uac, $adminId);
+        } else {
+            $email = $this->createEmailSelfRegister($user, $uac);
+        }
 
         return $emailCollection->addEmail($email);
     }
 
     /**
-     * @param User $user User to include in the subject
+     * @param \App\Model\Entity\User $user User to include in the subject
      * @return string
      */
-    private function getSubject(User $user)
+    private function getSubject(User $user): string
     {
-        return __("Welcome to passbolt, {0}!", $user->profile->first_name);
+        return __('Welcome to passbolt, {0}!', $user->profile->first_name);
     }
 
     /**
-     * @param User                $user User
-     * @param AuthenticationToken $uac UAC
-     * @return Email
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\AuthenticationToken $uac UAC
+     * @return \App\Notification\Email\Email
      */
-    private function createEmailSelfRegister(User $user, AuthenticationToken $uac)
+    private function createEmailSelfRegister(User $user, AuthenticationToken $uac): Email
     {
         $user = $this->usersTable->findFirstForEmail($user->id);
 
@@ -95,12 +101,12 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param User                $user User
-     * @param AuthenticationToken $uac UAC
-     * @param string              $adminId Admin user ID
-     * @return Email
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\AuthenticationToken $uac UAC
+     * @param string $adminId Admin user ID
+     * @return \App\Notification\Email\Email
      */
-    private function createEmailAdminRegister(User $user, AuthenticationToken $uac, string $adminId)
+    private function createEmailAdminRegister(User $user, AuthenticationToken $uac, string $adminId): Email
     {
         $admin = $this->usersTable->findFirstForEmail($adminId);
 
@@ -126,7 +132,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME,

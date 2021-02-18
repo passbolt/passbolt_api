@@ -38,7 +38,7 @@ $healtcheck = new HealthcheckHtmlHelper();
                     <!-- if the javascript does not load this message will be shown -->
                     <div id="url-rewriting-warning" class="message error">
                         <?php echo __('URL rewriting is not properly configured on your server.'); ?>
-                        <a target="_blank" rel="noopener" href="http://book.cakephp.org/2.0/en/installation/url-rewriting.html">Learn more.</a>
+                        <a target="_blank" rel="noopener noreferrer" href="http://book.cakephp.org/2.0/en/installation/url-rewriting.html">Learn more.</a>
                     </div>
 
                     <?php

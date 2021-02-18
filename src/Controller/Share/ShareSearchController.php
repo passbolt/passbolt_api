@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,11 +21,17 @@ use App\Controller\AppController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
 use Cake\Collection\Collection;
+use Cake\ORM\Query;
 
+/**
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\GroupsTable $Groups
+ */
 class ShareSearchController extends AppController
 {
     /**
      * Share search potential user or group to share with
+     *
      * @return void
      */
     public function searchArosToShareWith()
@@ -39,6 +47,7 @@ class ShareSearchController extends AppController
 
         $groups = $this->_searchGroups($options);
         $users = $this->_searchUsers($options);
+
         $aros = $users->append($groups);
         $output = $this->_formatResult($aros);
 
@@ -48,10 +57,10 @@ class ShareSearchController extends AppController
     /**
      * Search groups.
      *
-     * @param array $options The find options
+     * @param array|null $options The find options
      * @return \Cake\ORM\Query
      */
-    private function _searchGroups(array $options = [])
+    private function _searchGroups(?array $options = []): Query
     {
         $options['contain']['user_count'] = true;
 
@@ -61,10 +70,10 @@ class ShareSearchController extends AppController
     /**
      * Search the users.
      *
-     * @param array $options The find options
+     * @param array|null $options The find options
      * @return \Cake\ORM\Query
      */
-    private function _searchUsers(array $options = [])
+    private function _searchUsers(?array $options = []): Query
     {
         $options['filter']['is-active'] = true;
 

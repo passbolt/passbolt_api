@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -32,6 +34,6 @@ class IsNotSoleManagerOfNonEmptyGroupRule
         $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $groups = $GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($entity->id)->extract('group_id')->toArray();
 
-        return (empty($groups));
+        return empty($groups);
     }
 }

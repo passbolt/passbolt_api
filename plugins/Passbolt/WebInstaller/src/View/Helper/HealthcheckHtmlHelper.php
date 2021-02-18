@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -43,20 +45,6 @@ class HealthcheckHtmlHelper extends \App\View\Helper\HealthcheckHtmlHelper
                 'sudo chmod 775 $(find ' . CONFIG . ' -type d)',
             ]
         );
-
-        if (Configure::read('passbolt.plugins.license')) {
-            $this->assert(
-                $checks['webInstaller']['passboltLicenseWritable'],
-                __('The passbolt license is writable.'),
-                __('The passbolt license is not writable.'),
-                [
-                    __('Ensure the file ' . CONFIG . 'license is writable by the webserver user.'),
-                    __('you can try:'),
-                    'sudo chown ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . CONFIG,
-                    'sudo chmod 775 $(find ' . CONFIG . ' -type d)',
-                ]
-            );
-        }
 
         $publicKeyPath = Configure::read('passbolt.gpg.serverKey.public');
         $this->assert(

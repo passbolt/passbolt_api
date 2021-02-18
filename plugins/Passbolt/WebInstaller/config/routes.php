@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,9 +26,6 @@ Router::plugin('Passbolt/WebInstaller', ['path' => '/install'], function ($route
 
     $routes->connect('/system_check', ['controller' => 'SystemCheck', 'action' => 'index'])
         ->setMethods(['GET']);
-
-    $routes->connect('/license_key', ['controller' => 'LicenseKey', 'action' => 'index'])
-        ->setMethods(['GET', 'POST']);
 
     $routes->connect('/database', ['controller' => 'Database', 'action' => 'index'])
         ->setMethods(['GET', 'POST']);

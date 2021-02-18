@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,6 +22,7 @@ use Cake\Datasource\Exception\MissingDatasourceConfigException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use Cake\Routing\Router;
 
 class WebInstallerMiddleware
 {
@@ -39,7 +42,7 @@ class WebInstallerMiddleware
         if (!self::isConfigured() && !$targetInstallPage) {
             return $response
                 ->withStatus(302)
-                ->withLocation('/install');
+                ->withLocation(Router::url('/install', true));
         }
         if (self::isConfigured() && $targetInstallPage) {
             throw new ForbiddenException();
@@ -62,7 +65,7 @@ class WebInstallerMiddleware
         try {
             $connection = ConnectionManager::get('default')->config();
 
-            return (!empty($connection) && !empty($connection['database']));
+            return !empty($connection) && !empty($connection['database']);
         } catch (MissingDatasourceConfigException $exception) {
             return false;
         }

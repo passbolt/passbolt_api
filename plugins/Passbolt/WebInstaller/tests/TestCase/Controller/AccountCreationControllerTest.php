@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
     public function testWebInstallerAccountCreationViewSuccess()
     {
         $this->get('/install/account_creation');
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('Admin user details', $data);
     }
@@ -62,7 +64,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
             'last_name' => 'Avarguès-Weber',
         ];
         $this->post('/install/account_creation', $postData);
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('The data entered are not correct', $data);
     }

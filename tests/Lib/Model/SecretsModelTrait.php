@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,11 +26,11 @@ trait SecretsModelTrait
     /**
      * Add a dummy secret.
      *
-     * @param array $data The secret data
-     * @param array $options The entity options
+     * @param array|null $data The secret data
+     * @param array|null $options The entity options
      * @return Secret
      */
-    public function addSecret($data = [], $options = [])
+    public function addSecret(?array $data = [], ?array $options = []): Secret
     {
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
 
@@ -46,11 +48,11 @@ trait SecretsModelTrait
     /**
      * Get a new secret entity
      *
-     * @param array $data The secret data.
-     * @param array $options The new entity options.
+     * @param array|null $data The secret data.
+     * @param array|null $options The new entity options.
      * @return Secret
      */
-    public function getDummySecretEntity($data = [], $options = [])
+    public function getDummySecretEntity(?array $data = [], ?array $options = []): Secret
     {
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
         $defaultOptions = [
@@ -68,6 +70,7 @@ trait SecretsModelTrait
 
     /**
      * Encrypt a message for a user.
+     *
      * @param string $userId The user to encrypt for
      * @return mixed
      */
@@ -130,6 +133,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
     /**
      * Assert a secret exists
+     *
      * @param $resourceId
      * @param $userId
      */
@@ -142,6 +146,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
     /**
      * Assert a secret does not exist
+     *
      * @param $resourceId
      * @param $userId
      */

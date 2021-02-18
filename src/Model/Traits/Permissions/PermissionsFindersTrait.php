@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,9 +31,9 @@ trait PermissionsFindersTrait
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param string $acoForeignKey The target aco. By instance resource or folder id.
      * @param string $aroForeignKey The target aro id. By instance a user or a group id.
-     * @return Query
+     * @return \Cake\ORM\Query
      */
-    public function findHighestByAcoAndAro(string $acoType, string $acoForeignKey, string $aroForeignKey)
+    public function findHighestByAcoAndAro(string $acoType, string $acoForeignKey, string $aroForeignKey): Query
     {
         return $this->findAllByAro($acoType, $aroForeignKey, ['checkGroupsUsers' => true])
             ->where(['Permissions.aco_foreign_key' => $acoForeignKey])
@@ -43,12 +45,12 @@ trait PermissionsFindersTrait
      * Returns a query retrieving data for aco permissions view
      *
      * @param string $aco The target aco id. By instance a resource or a folder id.
-     * @param array $options options
-     * @throws InvalidArgumentException if the userId parameter is not a valid uuid.
-     * @throws InvalidArgumentException if the resourceId parameter is not a valid uuid.
-     * @return Query
+     * @param array|null $options options
+     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
+     * @return \Cake\ORM\Query
      */
-    public function findViewAcoPermissions(string $aco, array $options = [])
+    public function findViewAcoPermissions(string $aco, ?array $options = []): Query
     {
         if (!Validation::uuid($aco)) {
             throw new InvalidArgumentException(__('The aco parameter is not a valid uuid.'));
@@ -87,13 +89,13 @@ trait PermissionsFindersTrait
      *
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param string $aroForeignKey The target aro id. By instance a user or a group id.
-     * @param array $options (optional) array of options
+     * @param array|null $options options
      * [
      *   bool $checkGroupsUsers Check also for the groups the aro is member of
      * ]
-     * @return Query
+     * @return \Cake\ORM\Query
      */
-    public function findAllByAro(string $acoType, string $aroForeignKey, array $options = [])
+    public function findAllByAro(string $acoType, string $aroForeignKey, ?array $options = []): Query
     {
         $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
 
@@ -127,14 +129,14 @@ trait PermissionsFindersTrait
      *
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param string $aro The target aro id. By instance a user or a group id.
-     * @param array $options (optional) array of options
+     * @param array|null $options (optional) array of options
      * [
      *   bool $checkGroupsUsers Check also for the groups the aro is member of
      * ]
-     * @throws InvalidArgumentException if the user id is not a valid uuid
-     * @return Query
+     * @throws \InvalidArgumentException if the user id is not a valid uuid
+     * @return \Cake\ORM\Query
      */
-    public function findSharedAcosByAroIsSoleOwner(string $acoType, string $aro, array $options = [])
+    public function findSharedAcosByAroIsSoleOwner(string $acoType, string $aro, ?array $options = []): Query
     {
         $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
 
@@ -211,7 +213,7 @@ trait PermissionsFindersTrait
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param array $aros An array of aro id. Composed of users or groups ids.
      * @throw \InvalidArgumentException if the aros parameter contains not only uuid value.
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findAcosByArosAreSoleOwner(string $acoType, array $aros)
     {
@@ -276,10 +278,10 @@ trait PermissionsFindersTrait
      * [
      *   bool $checkGroupsUsers Check also for the groups the aro is member of.
      * ]
-     * @throws InvalidArgumentException if the aro id is not a valid uuid
-     * @return Query
+     * @throws \InvalidArgumentException if the aro id is not a valid uuid
+     * @return \Cake\ORM\Query
      */
-    public function findAcosOnlyAroCanAccess(string $acoType, string $aro, array $options = [])
+    public function findAcosOnlyAroCanAccess(string $acoType, string $aro, ?array $options = [])
     {
         $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
 
@@ -336,10 +338,10 @@ trait PermissionsFindersTrait
      * [
      *   bool $checkGroupsUsers Check also for the groups the aro is member of
      * ]
-     * @throws InvalidArgumentException if the aro foreign key is not a valid uuid
-     * @return Query
+     * @throws \InvalidArgumentException if the aro foreign key is not a valid uuid
+     * @return \Cake\ORM\Query
      */
-    public function findAcosByAroIsOwner(string $acoType, string $aro, array $options = [])
+    public function findAcosByAroIsOwner(string $acoType, string $aro, ?array $options = [])
     {
         return $this->findAllByAro($acoType, $aro, $options)
             ->where(['Permissions.type' => Permission::OWNER])
@@ -353,22 +355,28 @@ trait PermissionsFindersTrait
      * @param string $acoForeignKey The target aco id. By instance a resource or a folder id.
      * @param string $aroForeignKey The target aro id. By instance a user or a group id.
      * @param int $permissionType The minimum permission type
-     * @throws InvalidArgumentException if the $aco parameter is not a valid uuid.
-     * @throws InvalidArgumentException if the $aro parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the $aco parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the $aro parameter is not a valid uuid.
      * @return bool
      */
-    public function hasAccess(string $acoType, string $acoForeignKey, string $aroForeignKey, int $permissionType = Permission::READ)
-    {
+    public function hasAccess(
+        string $acoType,
+        string $acoForeignKey,
+        string $aroForeignKey,
+        ?int $permissionType = null
+    ): bool {
         if (!Validation::uuid($acoForeignKey)) {
             throw new InvalidArgumentException(__('The aco parameter should be a valid uuid.'));
         }
         if (!Validation::uuid($aroForeignKey)) {
             throw new InvalidArgumentException(__('The aro parameter should be a valid uuid.'));
         }
-        if (!$this->isValidPermissionType($permissionType)) {
-            throw new InvalidArgumentException(__('The permission type should be in the list of allowed permission type.'));
-        }
+        $permissionType = $permissionType ?? Permission::READ;
 
+        if (!$this->isValidPermissionType($permissionType)) {
+            $msg = __('The permission type should be in the list of allowed permission type.');
+            throw new InvalidArgumentException($msg);
+        }
         $query = $this->findHighestByAcoAndAro($acoType, $acoForeignKey, $aroForeignKey)
             ->where(['Permissions.type >=' => $permissionType]);
 

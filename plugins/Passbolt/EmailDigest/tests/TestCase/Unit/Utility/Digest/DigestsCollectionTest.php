@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -56,7 +58,7 @@ class DigestsCollectionTest extends TestCase
                 $this->createDigest(true, []),
             ]);
 
-        $this->assertTrue($this->sut->canAddToDigest($emailEntity), "Marshaller should support the given email.");
+        $this->assertTrue($this->sut->canAddToDigest($emailEntity), 'Marshaller should support the given email.');
     }
 
     public function testDigestsCollection_canAddToDigestFail()
@@ -70,7 +72,7 @@ class DigestsCollectionTest extends TestCase
                 $this->createDigest(false, []),
             ]);
 
-        $this->assertFalse($this->sut->canAddToDigest($emailEntity), "Marshaller should not support the given email.");
+        $this->assertFalse($this->sut->canAddToDigest($emailEntity), 'Marshaller should not support the given email.');
     }
 
     /**

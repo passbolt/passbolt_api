@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -33,25 +35,28 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/comment_add';
+    public const TEMPLATE = 'LU/comment_add';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @var ResourcesTable
+     * @var \App\Model\Table\ResourcesTable
      */
     private $resourcesTable;
 
     /**
-     * @param array               $config Configuration for the redactor
-     * @param UsersTable|null     $usersTable Users Table
-     * @param ResourcesTable|null $resourcesTable Resources Table
+     * @param array|null $config Configuration for the redactor
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
+     * @param \App\Model\Table\ResourcesTable|null $resourcesTable Resources Table
      */
-    public function __construct(array $config = [], UsersTable $usersTable = null, ResourcesTable $resourcesTable = null)
-    {
+    public function __construct(
+        ?array $config = [],
+        ?UsersTable $usersTable = null,
+        ?ResourcesTable $resourcesTable = null
+    ) {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         $this->resourcesTable = $resourcesTable ?? TableRegistry::getTableLocator()->get('Resources');
         $this->setConfig($config);
@@ -62,7 +67,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             CommentsAddController::ADD_SUCCESS_EVENT_NAME,
@@ -70,17 +75,17 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
         $comment = $event->getData('comment');
 
         // Find the users that have access to the resource (including via their groups)
-        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$comment->foreign_key]]];
+        $options = ['contain' => ['role'], 'filter' => ['has-access' => [$comment->foreign_key]]];
         $users = $this->usersTable->findIndex(Role::USER, $options)->all();
         if (count($users) < 2) {
             // if there is nobody or just one user, give it up
@@ -103,15 +108,15 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param User     $user User to notify
-     * @param User     $creator Creator of the comment
-     * @param resource $resource Resource on which a comment was added
-     * @param Comment  $comment Comment added
-     * @return Email
+     * @param \App\Model\Entity\User $user User to notify
+     * @param \App\Model\Entity\User $creator Creator of the comment
+     * @param Resource $resource Resource on which a comment was added
+     * @param \App\Model\Entity\Comment $comment Comment added
+     * @return \App\Notification\Email\Email
      */
-    private function createCommentAddEmail(User $user, User $creator, Resource $resource, Comment $comment)
+    private function createCommentAddEmail(User $user, User $creator, Resource $resource, Comment $comment): Email
     {
-        $subject = __("{0} commented on {1}", $creator->profile->first_name, $resource->name);
+        $subject = __('{0} commented on {1}', $creator->profile->first_name, $resource->name);
         $body = [
             'creator' => $creator,
             'comment' => $comment,
