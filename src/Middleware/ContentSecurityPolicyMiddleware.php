@@ -18,26 +18,31 @@ namespace App\Middleware;
 
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class ContentSecurityPolicyMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddleware
+class ContentSecurityPolicyMiddleware implements MiddlewareInterface
 {
     /**
      * Add Content Security Policy to the response headers
      *
-     * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $response The response.
-     * @param callable $next Callback to invoke the next middleware.
-     * @return \Cake\Http\Response A response
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The handler.
+     * @return \Psr\Http\Message\ResponseInterface A response
      */
-    public function __invoke(ServerRequest $request, Response $response, $next)
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
+        $response = $handler->handle($request);
+
         $cspFromConfig = Configure::read('passbolt.security.csp');
 
         // No CSP - should be for testing only
         if ($cspFromConfig === false) {
-            return $next($request, $response);
+            return $response;
         }
 
         $defaultCsp = "default-src 'self'; ";
@@ -56,6 +61,6 @@ class ContentSecurityPolicyMiddleware extends \Cake\Http\Middleware\CsrfProtecti
 
         $response = $response->withAddedHeader('Content-Security-Policy', $csp);
 
-        return $next($request, $response);
+        return $response;
     }
 }

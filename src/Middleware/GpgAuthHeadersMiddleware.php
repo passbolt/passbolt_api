@@ -17,23 +17,26 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use App\Authenticator\GpgAuthenticator;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class GpgAuthHeadersMiddleware
+class GpgAuthHeadersMiddleware implements MiddlewareInterface
 {
     /**
      * Checks and sets the CSRF token depending on the HTTP verb.
      *
      * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $response The response.
-     * @param callable $next Callback to invoke the next middleware.
+     * @param \Cake\Http\Response $handler The response.
      * @return \Cake\Http\Response A response
      */
-    public function __invoke(ServerRequest $request, Response $response, $next)
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
         /** @var \Cake\Http\Response $response */
-        $response = $next($request, $response);
+        $response = $handler->handle($request);
         $allowedHeaders = GpgAuthenticator::HTTP_HEADERS_WHITELIST;
 
         $response = $response

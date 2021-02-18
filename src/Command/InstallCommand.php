@@ -173,7 +173,8 @@ class InstallCommand extends PassboltCommand
             $io->hr();
 
             $options = ['role' => Role::ADMIN];
-            $options['interactive'] = $this->interactive ?? false;
+            $options['interactive'] = true;
+            $options['interactive-loop'] = RegisterUserCommand::DEFAULT_INTERACTIVE_LOOP;
             $options['username'] = $username;
             $options['first-name'] = $firstName;
             $options['last-name'] = $lastName;

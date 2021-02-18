@@ -32,11 +32,15 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
+use Cake\Http\Middleware\BodyParserMiddleware;
+use Cake\Http\Middleware\CsrfProtectionMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Utility\Hash;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
@@ -49,14 +53,20 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
+        $csrf = new CsrfProtectionMiddleware();
+        // Token check will be skipped when callback returns `true`.
+        $csrf->skipCheckCallback(function ($request) {
+            return $this->skipCsrfProtection($request);
+        });
+
         /*
          * Default Middlewares
          * - Does not extend the session when requesting /auth/is-authenticated
          * - Catch any exceptions in the lower layers, and make an error page/response
          * - Handle plugin/theme assets like CakePHP normally does
          * - Apply routing middleware
-         * - Apply GPG Auth headers
          * - Apply the authentication middleware
+         * - Apply GPG Authenticator headers
          * - Apply CSRF protection
          */
         $middlewareQueue
@@ -68,7 +78,9 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new RoutingMiddleware($this))
             ->add(new SessionPreventExtensionMiddleware())
             ->add(new AuthenticationMiddleware($this))
-            ->add(GpgAuthHeadersMiddleware::class);
+            ->add(GpgAuthHeadersMiddleware::class)
+            ->add(new BodyParserMiddleware())
+            ->add($csrf);
 
         /*
          * Additional security headers
@@ -295,5 +307,37 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $service->loadAuthenticator('Gpg');
 
         return $service;
+    }
+
+    /**
+     * Skip Csrf protection.
+     *
+     * @param \Psr\Http\Message\RequestInterface $request The request
+     * @return bool result
+     */
+    public function skipCsrfProtection(RequestInterface $request): bool
+    {
+        $plugins = Configure::read('passbolt.plugins');
+        $controller = $request->getParam('controller', 'Error');
+
+        $unlockedActions = Configure::read("passbolt.security.csrfProtection.unlockedActions.$controller", []);
+        foreach ($plugins as $plugin) {
+            $pluginsUnlockedActions = Hash::extract($plugin, "security.csrfProtection.unlockedActions.$controller");
+            if (!empty($pluginsUnlockedActions)) {
+                $unlockedActions = array_merge($unlockedActions, $pluginsUnlockedActions);
+            }
+        }
+
+//        if ($request->is('json')) {
+//            return true;
+//        }
+        if (!Configure::read('passbolt.security.csrfProtection.active')) {
+            return true;
+        }
+        if (in_array($request->getParam('action'), $unlockedActions)) {
+            return true;
+        }
+
+        return false;
     }
 }
