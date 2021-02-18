@@ -46,11 +46,12 @@ trait ErrorTrait
     /**
      * Asserts that the json response is relative to an authentication error.
      *
+     * @param $msg
      * @return void
      */
-    public function assertAuthenticationError()
+    public function assertAuthenticationError(string $msg = 'You need to login to access this location.')
     {
-        $this->assertError(403, 'You need to login to access this location.');
+        $this->assertError(403, $msg);
     }
 
     /**
@@ -64,12 +65,45 @@ trait ErrorTrait
     }
 
     /**
+     * Asserts that the json response is relative to a payment required error.
+     *
+     * @return void
+     */
+    public function assertPaymentRequiredError($msg = 'Payment Required')
+    {
+        $this->assertError(402, $msg);
+    }
+
+    /**
      * Asserts that the json response is relative to a forbidden error.
      *
+     * @param string $msg
      * @return void
      */
     public function assertBadRequestError($msg = 'Bad Request')
     {
         $this->assertError(400, $msg);
+    }
+
+    /**
+     * Asserts that the json response is relative to a forbidden error.
+     *
+     * @param string $msg
+     * @return void
+     */
+    public function assertNotFoundError($msg = 'Not Found')
+    {
+        $this->assertError(404, $msg);
+    }
+
+    /**
+     * Asserts that the json response is relative to a forbidden error.
+     *
+     * @param string $msg
+     * @return void
+     */
+    public function assertInternalError($msg = 'Internal Error')
+    {
+        $this->assertError(500, $msg);
     }
 }

@@ -1,0 +1,49 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.1.0
+ */
+namespace Passbolt\Ee\Controller\Subscriptions;
+
+use App\Controller\AppController;
+use App\Error\Exception\PaymentRequiredException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
+use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionException;
+use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionSignatureException;
+use Passbolt\Ee\Service\SubscriptionKeyGetService;
+
+class SubscriptionsViewController extends AppController
+{
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function view()
+    {
+        if (!$this->User->isAdmin()) {
+            throw new ForbiddenException(__('You are not allowed to access this location.'));
+        }
+        try {
+            $service = new SubscriptionKeyGetService();
+            $keyDto = $service->get($this->User->getAccessControl());
+        } catch (SubscriptionSignatureException $e) {
+            throw new InternalErrorException($e->getMessage());
+        } catch (SubscriptionException $e) {
+            throw new PaymentRequiredException($e->getMessage(), $e->getErrors());
+        }
+
+        $this->success(__('The subscription is valid.'), $keyDto->toArray());
+    }
+}

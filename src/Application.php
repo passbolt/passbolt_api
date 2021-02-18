@@ -196,8 +196,7 @@ class Application extends BaseApplication
             $this->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
         }
 
-        $this->addPlugin('Passbolt/License', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/Pro', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin('Passbolt/Ee', ['bootstrap' => true, 'routes' => true]);
 
         // Add tags plugin if not configured.
         if (!WebInstallerMiddleware::isConfigured()) {
@@ -257,6 +256,7 @@ class Application extends BaseApplication
     {
         try {
             Application::addPlugin('Bake');
+            $this->addPlugin('CakephpFixtureFactories');
         } catch (MissingPluginException $e) {
             // Do not halt if the plugin is missing
         }

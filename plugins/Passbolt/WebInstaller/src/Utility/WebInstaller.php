@@ -20,6 +20,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Session;
@@ -155,8 +156,8 @@ class WebInstaller
         $this->importGpgKey();
         $this->writePassboltConfigFile();
         $this->installDatabase();
-        $this->writeLicenseFile();
         $this->createFirstUser();
+        $this->importSubscription(); // Pro Only
         $this->saveSettings();
         $this->deleteTmpFiles();
         $this->changeConfigFolderPermission();
@@ -207,17 +208,17 @@ class WebInstaller
     }
 
     /**
-     * Write the license file.
+     * Store the subscription in the DB.
      *
      * @return void
      */
-    public function writeLicenseFile(): void
+    public function importSubscription(): void
     {
-        if (!Configure::read('passbolt.plugins.license')) {
-            return;
-        }
-        $license = $this->getSettings('license');
-        file_put_contents(CONFIG . 'license', $license);
+        Log::warning(json_encode($this->settings));
+        $asciiKey = $this->getSettings('subscription.subscription_key');
+        $Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
+        $uac = new UserAccessControl(Role::ADMIN, $this->getSettings('user.user_id'));
+        $Subscriptions->createOrUpdate($asciiKey, $uac);
     }
 
     /**

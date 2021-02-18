@@ -49,8 +49,8 @@ class PassboltShell extends AppShell
      */
     public function initialize()
     {
-        if (Configure::read('passbolt.plugins.license')) {
-            $this->tasks[] = 'Passbolt/License.LicenseCheck';
+        if (Configure::read('passbolt.plugins.ee')) {
+            $this->tasks[] = 'Passbolt/Ee.SubscriptionCheck';
         }
         parent::initialize();
     }
@@ -116,10 +116,10 @@ class PassboltShell extends AppShell
             'parser' => $this->KeyringInit->getOptionParser(),
         ]);
 
-        if (Configure::read('passbolt.plugins.license')) {
-            $parser->addSubcommand('license_check', [
-                'help' => __d('cake_console', 'Check the license.'),
-                'parser' => $this->LicenseCheck->getOptionParser(),
+        if (Configure::read('passbolt.plugins.ee')) {
+            $parser->addSubcommand('subscription_check', [
+                'help' => __d('cake_console', 'Check the subscription.'),
+                'parser' => $this->SubscriptionCheck->getOptionParser(),
             ]);
         }
 

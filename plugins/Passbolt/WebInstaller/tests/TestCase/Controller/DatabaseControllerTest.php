@@ -23,7 +23,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->truncateTables();
+        $this->dropAllTables();
         $this->mockPassboltIsNotconfigured();
         $this->initWebInstallerSession();
     }

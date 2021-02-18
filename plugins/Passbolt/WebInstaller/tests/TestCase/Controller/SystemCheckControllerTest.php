@@ -44,7 +44,7 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
     public function testWebInstallerSystemCheckViewSuccess_LicensePluginEnabled()
     {
         $this->markTestSkipped('creates an issue with healthcheck on a webserverless environment.');
-//        Configure::write('passbolt.plugins.license', ['version' => '2.0.0']);
+//        Configure::write('passbolt.plugins.ee', ['version' => '2.0.0']);
 //        $this->get('/install/system_check');
 //        $data = ($this->_getBodyAsString());
 //        $this->assertResponseOk();
