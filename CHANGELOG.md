@@ -3,8 +3,62 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+
+## [3.0.0] - 2021-02-18
+### Deprecated
+- Drop support for API format v1, api-version parameter is deprecated
+- Remove title from API response envelope format
+- Drop support for PHP < v7.3, application require PHP v7.3 by default
+- Drop support for Composer < v2, application requires Composer v2 by default
+
+## Added
+- Add dark theme to the community edition
+- Add new system check utilities in ./bin, for example ./bin/status-report
+- Add web installer automatically populates mysql credentials (VM / Debian Package)
+- Add support for multiple resource types
+- Add resource with encrypted description as resource type
+- Add generic cron job task in ./bin/cron
+- Add support for untracked personal shell scripts under ./bin/my
+- Add support for configurable footer link in config
+- Add permissions filters on resource view and index
+- Add permissions contain options on resource view
+
+### Chores
+- Update OpenPGP-PHP dependencies to provide PHP 7.4 compatibility
+- Remove unmaintained user agent parser library
+- Fix PHP 7.4 warnings
+
+### Improvements
+- Improve testsuite execution times
+- Refactor testsuite to not install data model from fixtures but use migrations instead
+- Refactor testsuite to remove unused fixtures
+- Migrate administration and mfa settings screen to React
+- Add placeholder application skeleton when webextension is still loading
+- Redesign of login and recover screens
+- Add Mysql 8 support
+
 ### Fixed
-- GITHUB-350 update CakePHP to 3.8.13 and support email AUTH PLAIN authentication
+- Fix allow overriding rememberMe options in passbolt.php configuration file
+- Fix all target blank link should contain rel noopener noreferrer
+- Fix email sender, email subject should not exceed 255 characters.
+- Fix secret access log on resource view with contain secret
+- GITHUB-376 Fix missing route prefix on the recovery button
+- GITHUB-373 Fix API format for create group (previously v1 instead of v2 format)
+- GITHUB-372 Fix after modifying passwd, the modification time should be changed
+- GITHUB-370 Fix metadata should be deleted for deleted resources
+- GITHUB-369 Fix Notification Emails Have Wrong Tense In Subject/Body
+- GITHUB-368 Clarify PHP extension requirements
+- GITHUB-362 Fix wrong filename on healthcheck HELP message for assertConfigFiles
+- GITHUB-356 As a user I shouldn't be able to export folders if export plugin is disabled
+- GITHUB-350 Fix no mails are sent when providers offer AUTH PLAIN authentication only
+- GITHUB-339 Fix web installer urls do not work when passbolt is installed in a directory
+- Fix performance issues on resource / folder activity log
+
+## [2.13.5] 2019-07-29
+### Fixed
+- Fix display a validation error when db password contains a quote or db name contain a dash
+- Fix email notification settings bootstrap messes up non persistent database connection in wizard
+- Bump dependencies versions
 
 ## [2.13.1] 2019-07-06
 ### Fixed
@@ -716,7 +770,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.13.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.13.5...v3.0.0
+[2.13.5]: https://github.com/passbolt/passbolt_api/compare/v2.13.1...v2.13.5
 [2.13.1]: https://github.com/passbolt/passbolt_api/compare/v2.13.0...v2.13.1
 [2.13.0]: https://github.com/passbolt/passbolt_api/compare/v2.12.1...v2.13.0
 [2.12.1]: https://github.com/passbolt/passbolt_api/compare/v2.12.0...v2.12.1
