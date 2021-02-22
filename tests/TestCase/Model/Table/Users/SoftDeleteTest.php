@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,7 +33,7 @@ class SoftDeleteTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
-        'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/OrganizationSettings',
+        'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources', 'app.Base/Secrets',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
     ];
 

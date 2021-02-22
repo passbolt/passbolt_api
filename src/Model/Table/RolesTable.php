@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,33 +20,29 @@ use App\Model\Entity\Role;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Psr\Log\InvalidArgumentException;
 
 /**
  * Roles Model
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $Users
- *
- * @method \App\Model\Entity\Role get($primaryKey, $options = [])
- * @method \App\Model\Entity\Role newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Role[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Role|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Role patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Role[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Role findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \App\Model\Entity\Role get($primaryKey, ?array $options = [])
+ * @method \App\Model\Entity\Role newEntity($data = null, ?array $options = [])
+ * @method \App\Model\Entity\Role[] newEntities(array $data, ?array $options = [])
+ * @method \App\Model\Entity\Role|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \App\Model\Entity\Role patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Role[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \App\Model\Entity\Role findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class RolesTable extends Table
 {
-
     /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -68,21 +66,21 @@ class RolesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->scalar('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('name')
             ->requirePresence('name', 'create')
-            ->notEmpty('name')
+            ->notEmptyString('name')
             ->add('name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->scalar('description')
-            ->allowEmpty('description');
+            ->allowEmptyString('description');
 
         return $validator;
     }
@@ -94,7 +92,7 @@ class RolesTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['name']));
 
@@ -111,7 +109,7 @@ class RolesTable extends Table
     {
         $allowedRoleNames = [Role::GUEST, Role::USER, Role::ADMIN, Role::ROOT];
 
-        return (in_array($roleName, $allowedRoleNames));
+        return in_array($roleName, $allowedRoleNames);
     }
 
     /**

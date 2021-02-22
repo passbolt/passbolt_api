@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,10 +16,8 @@
  */
 namespace App\Test\TestCase\Controller\Notifications;
 
-use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 
 class UsersDeleteNotificationTest extends AppIntegrationTestCase
 {
@@ -27,8 +27,8 @@ class UsersDeleteNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Resources', 'app.Base/EmailQueue', 'app.Base/Favorites', 'app.Base/Secrets',
-        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/OrganizationSettings',
+        'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Secrets',
+        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars',
     ];
 
     public function testUsersDeleteNotificationSuccess()

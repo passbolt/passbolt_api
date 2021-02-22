@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -65,5 +67,6 @@ class Resource extends Entity
         'permission' => false,
         'permissions' => false,
         'secrets' => false,
+        'resource_type_id' => false,
     ];
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,6 +26,7 @@ interface ReadableEmailNotificationSettingsSourceInterface
     /**
      * Return an array of notification settings with notification setting name as key and notification setting value as value.
      * Notification setting names must use the dotted key notation.
+     *
      * @return array
      */
     public function read();

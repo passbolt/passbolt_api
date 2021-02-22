@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,6 +22,6 @@ Configure::load('Passbolt/WebInstaller.config', 'default', true);
 EventManager::instance()->on(
     'Server.buildMiddleware',
     function ($event, $middlewareQueue) {
-        $middlewareQueue->add(new WebinstallerMiddleware());
+        $middlewareQueue->add(new WebInstallerMiddleware());
     }
 );

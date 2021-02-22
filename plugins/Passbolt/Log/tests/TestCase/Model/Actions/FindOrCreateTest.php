@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,8 +22,6 @@ use Cake\ORM\TableRegistry;
 
 class FindOrCreateTest extends AppTestCase
 {
-    public $fixtures = ['plugin.Passbolt/Log.Base/Actions'];
-
     public function setUp()
     {
         parent::setUp();

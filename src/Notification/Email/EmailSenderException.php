@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,16 +21,18 @@ use Exception;
 class EmailSenderException extends Exception
 {
     /**
-     * @var Email
+     * @var \App\Notification\Email\Email
      */
     private $email;
+
     /**
      * @var array
      */
     private $options;
 
     /**.
-     * @param Email $email Email which failed to send
+     *
+     * @param \App\Notification\Email\Email $email Email which failed to send
      * @param array $options Options used to send the email
      */
     public function __construct(Email $email, array $options)
@@ -39,9 +43,17 @@ class EmailSenderException extends Exception
     }
 
     /**
+     * @return \App\Notification\Email\Email
+     */
+    public function getEmail(): Email
+    {
+        return $this->email;
+    }
+
+    /**
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }

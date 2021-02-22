@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,8 +17,6 @@
 
 namespace Passbolt\Log\Model\Entity;
 
-use App\Model\Entity\User;
-use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
@@ -25,12 +25,11 @@ use Cake\ORM\Entity;
  * @property string $action_id
  * @property string $context
  * @property bool $status
- * @property FrozenTime $created
- * @property User $user
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \App\Model\Entity\User $user
  */
 class ActionLog extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

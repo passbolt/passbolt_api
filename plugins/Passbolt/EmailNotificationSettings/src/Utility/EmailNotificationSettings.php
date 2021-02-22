@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,7 @@ use const ARRAY_FILTER_USE_KEY;
 
 class EmailNotificationSettings
 {
-    const NAMESPACE = 'emailNotification';
+    public const NAMESPACE = 'emailNotification';
 
     /**
      * The settings.
@@ -38,17 +40,17 @@ class EmailNotificationSettings
     private static $settings;
 
     /**
-     * @var ConfigEmailNotificationSettingsSource
+     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource
      */
     private static $configSettingsSource;
 
     /**
-     * @var DbEmailNotificationSettingsSource
+     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource
      */
     private static $dbSettingsSource;
 
     /**
-     * @var DefaultEmailNotificationSettingsSource
+     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource
      */
     private static $defaultSettingsSource;
 
@@ -72,7 +74,7 @@ class EmailNotificationSettings
      * @param string $key (optional) Key to lookup. If not provided, return all the settings.
      * @return mixed
      */
-    public static function get(string $key = null)
+    public static function get(?string $key = null)
     {
         // Before making any lookups, check if the key is valid
         if ($key && !static::isConfigKeyValid($key)) {
@@ -128,6 +130,7 @@ class EmailNotificationSettings
 
     /**
      * Sanitize the provided settings and filter out the settings which does not exist
+     *
      * @param array $settings Settings to sanitize
      * @return array
      */
@@ -144,7 +147,7 @@ class EmailNotificationSettings
     }
 
     /**
-     * @return ConfigEmailNotificationSettingsSource
+     * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource
      */
     protected static function getConfigSettingsSource()
     {
@@ -159,8 +162,8 @@ class EmailNotificationSettings
      * Get notification settings saved in the database.
      *
      * @return array $config setting if found and null otherwise
-     * @throws RecordNotFoundException If a matching DB config doesn't exist
-     * @throws InternalErrorException If the DB config is not valid json string
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException If a matching DB config doesn't exist
+     * @throws \Cake\Http\Exception\InternalErrorException If the DB config is not valid json string
      */
     protected static function getSettingsFromDb()
     {
@@ -168,7 +171,7 @@ class EmailNotificationSettings
     }
 
     /**
-     * @return DbEmailNotificationSettingsSource
+     * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource
      */
     protected static function getDbSettingsSource()
     {
@@ -181,6 +184,7 @@ class EmailNotificationSettings
 
     /**
      * Get notification settings from the default definition.
+     *
      * @return array
      */
     protected static function getSettingsFromDefault()
@@ -189,7 +193,7 @@ class EmailNotificationSettings
     }
 
     /**
-     * @return DefaultEmailNotificationSettingsSource
+     * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource
      */
     protected static function getDefaultSettingsSource()
     {
@@ -222,7 +226,7 @@ class EmailNotificationSettings
      * Save the new config to database
      *
      * @param array $configs The new config to save
-     * @param UserAccessControl $accessControl accessControl to use to save the configs
+     * @param \App\Utility\UserAccessControl $accessControl accessControl to use to save the configs
      * @return void
      */
     public static function save(array $configs, UserAccessControl $accessControl)
@@ -251,6 +255,7 @@ class EmailNotificationSettings
 
     /**
      * Return a string normalized to the dotted format i.e: "email_settings_xxx" into "email.settings.xxx"
+     *
      * @param string $key Key to normalize
      * @return string
      */

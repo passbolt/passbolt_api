@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,8 +31,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/OrganizationSettings',
-        'app.Base/AuthenticationTokens', 'app.Base/Users',
+        'app.Base/Users',
         'app.Base/Roles',
     ];
 

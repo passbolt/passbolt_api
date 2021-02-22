@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,28 +16,21 @@
  */
 namespace Passbolt\EmailDigest\Test\TestCase\Unit\Service;
 
-use App\Test\Fixture\Base\EmailQueueFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Mailer\Email;
 use Cake\Mailer\TransportFactory;
 use Cake\Network\Exception\SocketException;
 use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestEmailTransport;
-use EmailQueue\Model\Table\EmailQueueTable;
 use Passbolt\EmailDigest\Service\EmailDigestService;
 use Passbolt\EmailDigest\Service\SendEmailBatchService;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
-use PHPUnit\Framework\MockObject\MockObject;
 use Throwable;
 
 class SendEmailBatchServiceTest extends AppIntegrationTestCase
 {
     use EmailDigestMockTestTrait;
     use EmailTrait;
-
-    public $fixtures = [
-        EmailQueueFixture::class,
-    ];
 
     /**
      * @var SendEmailBatchService

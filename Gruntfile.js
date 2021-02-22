@@ -26,7 +26,6 @@ module.exports = function(grunt) {
    */
   var paths = {
     node_modules: 'node_modules/',
-    node_modules_appjs: 'node_modules/passbolt-appjs/',
     node_modules_styleguide: 'node_modules/passbolt-styleguide/',
     webroot: 'webroot/',
     img: 'webroot/img/',
@@ -43,22 +42,15 @@ module.exports = function(grunt) {
   /**
    * Load baseline NPM tasks
    */
-  var root = path.resolve('node_modules');
-  var pkgfile = path.join(root, 'grunt-browser-sync', 'package.json');
-  if (grunt.file.exists(pkgfile)) {
-    grunt.loadNpmTasks('grunt-browser-sync');
-  }
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   /**
    * Register project specific grunt tasks
    */
-  grunt.registerTask('default', ['dependencies-update', 'styleguide-update', 'appjs-update']);
-  grunt.registerTask('appjs-update', 'copy:appjs');
-  grunt.registerTask('appjs-watch', ['watch:node-modules-appjs']);
-  grunt.registerTask('appjs-watch-browser-sync', ['browserSync:appjs', 'watch:node-modules-appjs']);
+  grunt.registerTask('default', ['dependencies-update', 'styleguide-update']);
   grunt.registerTask('styleguide-update', 'copy:styleguide');
+  grunt.registerTask('styleguide-watch', ['watch:node-modules-styleguide']);
   grunt.registerTask('dependencies-update', 'copy:dependencies');
 
   /**
@@ -66,20 +58,6 @@ module.exports = function(grunt) {
    */
   grunt.initConfig({
     pkg: pkg,
-
-    browserSync: {
-      appjs: {
-        bsFiles: {
-          src: paths.js + 'app/**/*'
-        },
-        options: {
-          localOnly: true,
-          watchTask: true,
-          host: 'passbolt.dev',
-          browser: 'google chrome'
-        }
-      }
-    },
 
     copy: {
       dependencies: {
@@ -94,19 +72,6 @@ module.exports = function(grunt) {
           cwd: paths.node_modules + 'jquery/dist',
           src: ['jquery.min.js'],
           dest: paths.js + 'vendors',
-          expand: true
-        }]
-      },
-      appjs: {
-        files: [{
-          cwd: paths.node_modules + 'babel-polyfill/dist',
-          src: ['polyfill.min.js'],
-          dest: paths.js + 'app',
-          expand: true
-        }, {
-          cwd: paths.node_modules_appjs + 'dist',
-          src: ['steal.production.js', 'bundles/passbolt-appjs/passbolt.js'],
-          dest: paths.js + 'app',
           expand: true
         }]
       },
@@ -132,8 +97,10 @@ module.exports = function(grunt) {
             // Passbolt logos
             'logo/icon-20_white.png', 'logo/icon-20_grey.png', 'logo/icon-20.png',
             'logo/icon-48_white.png', 'logo/icon-48.png',
-            'logo/logo.png', 'logo/logo@2x.png', 'logo/logo.svg', 'logo/logo_white.svg',
+            'logo/logo.png', 'logo/logo@2x.png', 'logo/logo.svg', 'logo/logo_white.svg', 'logo/logo_white.png',
             // Image for inputs and controls
+            'controls/check_black.svg',
+            'controls/check_white.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
             'controls/dot_black.svg',
@@ -141,31 +108,47 @@ module.exports = function(grunt) {
             'controls/loading_light.svg',
             'controls/loading_dark.svg',
             'controls/overlay-opacity-50.png',
-            // Background images for error pages for ex
-            'background/rocket.svg',
-            'illustrations/birds6_850.png',
-            'illustrations/birds3_850.png',
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
-            'third_party/ChromeWebStore.png',
-            'third_party/gnupg_logo_disabled.png', 'third_party/gnupg_logo.png'
+            'third_party/FirefoxAMO_black.svg',
+            'third_party/FirefoxAMO_white.svg',
+            'third_party/ChromeWebStore_black.png',
+            'third_party/ChromeWebStore_white.png',
+            'third_party/chosen-sprite.png',
+            'third_party/chosen-sprite@2x.png',
+            // Setup
+            'illustrations/email.png',
+            // Themes preview
+            'themes/*.png',
           ],
           dest: paths.webroot + 'img',
           expand: true
         }, {
           // CSS
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
-          src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css'],
+          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
-        }]
+        }, {
+          // Midgar css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
+          src: ['api_main.min.css'],
+          dest: paths.webroot + 'css/themes/midgar',
+          expand: true
+        }, {
+          // Javascript applications
+          cwd: paths.node_modules_styleguide + 'build/js/dist',
+          src: ['api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js'],
+          dest: paths.js + 'app',
+          expand: true
+        },]
       }
     },
 
     watch: {
-      'node-modules-appjs': {
-        files: [paths.node_modules_appjs + 'dist/**/*'],
-        tasks: ['appjs-update']
+      'node-modules-styleguide': {
+        files: [paths.node_modules_styleguide + 'build/**/*'],
+        tasks: ['styleguide-update']
       }
     }
    });

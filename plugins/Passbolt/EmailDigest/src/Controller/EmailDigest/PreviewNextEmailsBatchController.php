@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,15 +20,13 @@ use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Response;
-use Exception;
 use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 
 class PreviewNextEmailsBatchController extends AppController
 {
     /**
-     * @param Event $event Event to use
-     * @return Response|null
+     * @param \Cake\Event\Event $event Event to use
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -34,14 +34,14 @@ class PreviewNextEmailsBatchController extends AppController
             $this->Auth->allow('preview');
         } else {
             throw new NotFoundException();
-        };
+        }
 
         return parent::beforeFilter($event);
     }
 
     /**
-     * @return Response
-     * @throws Exception
+     * @return \Cake\Http\Response
+     * @throws \Exception
      */
     public function preview()
     {

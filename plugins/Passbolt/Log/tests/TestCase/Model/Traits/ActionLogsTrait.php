@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -27,7 +29,7 @@ trait ActionLogsTrait
         return $actionLog;
     }
 
-    public function assertActionLogsCount($count, $conditions = [])
+    public function assertActionLogsCount($count, ?array $conditions = [])
     {
         $actionLogCount = $this->ActionLogs
             ->find()
@@ -36,7 +38,7 @@ trait ActionLogsTrait
         $this->assertEquals($actionLogCount, $count);
     }
 
-    public function assertOneActionLog($conditions = [])
+    public function assertOneActionLog(?array $conditions = [])
     {
         return $this->assertActionLogsCount(1);
     }

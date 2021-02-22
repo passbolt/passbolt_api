@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@ namespace App\Test\Lib\Utility;
 
 trait ObjectTrait
 {
-
     /**
      * Override the phpunit Assert::assertObjectHasAttribute to assert that an object has a specified attribute.
      * We override the parent method to take care of \Cake\ORM\Entity objects for which the properties are declared

@@ -65,6 +65,7 @@ trait JsonRequestTrait
         $this->post($url, $data);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
+            pr($this->_getBodyAsString());
             Assert::fail('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;

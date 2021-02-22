@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,18 +19,18 @@ namespace App\Model\Table;
 use App\Utility\Purifier;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use UserAgentParser\Provider\DonatjUAParser;
+use donatj\UserAgent\UserAgentParser;
 
 /**
  * UserAgents Model
  *
- * @method \App\Model\Entity\UserAgent get($primaryKey, $options = [])
- * @method \App\Model\Entity\UserAgent newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\UserAgent[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\UserAgent|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\UserAgent patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\UserAgent[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\UserAgent findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\UserAgent get($primaryKey, ?array $options = [])
+ * @method \App\Model\Entity\UserAgent newEntity($data = null, ?array $options = [])
+ * @method \App\Model\Entity\UserAgent[] newEntities(array $data, ?array $options = [])
+ * @method \App\Model\Entity\UserAgent|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \App\Model\Entity\UserAgent patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \App\Model\Entity\UserAgent[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \App\Model\Entity\UserAgent findOrCreate($search, callable $callback = null, ?array $options = [])
  */
 class UserAgentsTable extends Table
 {
@@ -38,7 +40,7 @@ class UserAgentsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -53,7 +55,7 @@ class UserAgentsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
@@ -73,16 +75,16 @@ class UserAgentsTable extends Table
      * @param string $ua user agent (optional)
      * @return string
      */
-    public function browserName(string $ua = null)
+    public function browserName(?string $ua = null)
     {
         if ($ua == null) {
             $ua = Purifier::clean(env('HTTP_USER_AGENT'));
         }
         $browserName = 'undefined';
         try {
-            $provider = new DonatjUAParser();
+            $provider = new UserAgentParser();
             $userAgent = $provider->parse($ua);
-            $browserName = $userAgent->getBrowser()->getName();
+            $browserName = $userAgent->browser();
         } catch (\Exception $e) {
         }
 

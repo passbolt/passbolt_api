@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,14 +21,14 @@ use App\Utility\UuidFactory;
 
 trait CommentsModelTrait
 {
-
     /**
      * Get a dummy comment with test data.
      * The comment returned passes a default validation.
-     * @param array $data Custom data that will be merged with the default dummy comment.
+     *
+     * @param array|null $data Custom data that will be merged with the default dummy comment.
      * @return array Comment data
      */
-    public static function getDummyComment($data = [])
+    public static function getDummyComment(?array $data = []): array
     {
         $entityContent = [
             'user_id' => UuidFactory::uuid('user.id.ada'),

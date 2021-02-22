@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,6 +21,9 @@ use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 
+/**
+ * @property \App\Model\Table\ResourcesTable $Resources
+ */
 class ResourcesIndexController extends AppController
 {
     /**
@@ -32,13 +37,16 @@ class ResourcesIndexController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['creator', 'favorite', 'modifier', 'permission', 'permissions.user.profile', 'permissions.group', 'secret'],
+            'contain' => [
+                'creator', 'favorite', 'modifier', 'secret', 'resource-type',
+                'permission', 'permissions', 'permissions.user.profile', 'permissions.group',
+            ],
             'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id'],
             'order' => ['Resource.modified'],
         ];
 
         if (Configure::read('passbolt.plugins.tags')) {
-            $whitelist['contain'][] = 'tag';
+            $whitelist['contain'][] = 'tag'; // @deprecate should be tags
             $whitelist['filter'][] = 'has-tag';
         }
         $options = $this->QueryString->get($whitelist);
@@ -51,6 +59,7 @@ class ResourcesIndexController extends AppController
 
     /**
      * Log secrets accesses in secretAccesses table.
+     *
      * @param array $resources resources
      * @return void
      */

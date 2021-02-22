@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,13 +16,12 @@
  */
 namespace App\Utility;
 
-use Exception;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Ramsey\Uuid\Uuid;
 
 class UuidFactory
 {
-    const PASSBOLT_SEED = 'd5447ca1-950f-459d-8b20-86ddfdd0f922';
+    public const PASSBOLT_SEED = 'd5447ca1-950f-459d-8b20-86ddfdd0f922';
 
     /**
      * Return a UUID v4 or v5

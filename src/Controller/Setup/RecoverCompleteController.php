@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,15 +28,14 @@ class RecoverCompleteController extends SetupCompleteController
      * Check if the public key matches the currently stored fingerprint
      * Unlike setup completion we do not update anything
      *
-     * @throws BadRequestException if the user id is not a valid uuid
-     * @throws BadRequestException if the user was deleted, is already active or does not exist
-     * @throws BadRequestException if no authentication token was provided
-     * @throws BadRequestException if the authentication token is not a uuid
-     * @throws BadRequestException if the authentication token is expired or invalid
-     * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
-     * @throws BadRequestException if the gpg key does not belong to the user
-     * @throws InternalErrorException if something went wrong when updating the data
-     *
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a valid uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the user was deleted, is already active or does not exist
+     * @throws \Cake\Http\Exception\BadRequestException if no authentication token was provided
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is not a uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
+     * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
+     * @throws \Cake\Http\Exception\BadRequestException if the gpg key does not belong to the user
+     * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
      * @param string $userId uuid of the user
      * @return void
      */
@@ -64,9 +65,9 @@ class RecoverCompleteController extends SetupCompleteController
      * Return the user for matching the requesting id
      *
      * @param string $userId the user uuid
-     * @throws BadRequestException if the user id is not a valid uuid
-     * @throws BadRequestException if the user was deleted or has not completed the setup
-     * @return bool if user id is valid
+     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a valid uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the user was deleted or has not completed the setup
+     * @return \App\Model\Entity\User
      */
     protected function _getAndAssertUser(string $userId)
     {

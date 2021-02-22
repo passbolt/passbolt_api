@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -52,9 +54,9 @@ trait EmailNotificationSettingsTestTrait
     /**
      * Set email notification settings
      *
-     * @param array $settings Array of settings
+     * @param array|null $settings Array of settings
      */
-    protected function setEmailNotificationSettings(array $settings = [])
+    protected function setEmailNotificationSettings(?array $settings = [])
     {
         $settingsToSave = [];
         foreach ($settings as $key => $setting) {

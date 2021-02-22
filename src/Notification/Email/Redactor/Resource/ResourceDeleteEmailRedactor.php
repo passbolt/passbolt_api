@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,7 +25,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -31,33 +32,18 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/resource_delete';
+    public const TEMPLATE = 'LU/resource_delete';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @var bool
+     * @param array|null $config Configuration for the redactor
+     * @param \App\Model\Table\UsersTable|null $usersTable Users table
      */
-    private $showUsername;
-
-    /**
-     * @var bool
-     */
-    private $showUri;
-
-    /**
-     * @var bool
-     */
-    private $showDescription;
-
-    /**
-     * @param array           $config Configuration for the redactor
-     * @param UsersTable|null $usersTable Users table
-     */
-    public function __construct(array $config = [], UsersTable $usersTable = null)
+    public function __construct(?array $config = [], ?UsersTable $usersTable = null)
     {
         $this->setConfig($config);
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
@@ -68,7 +54,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             ResourcesDeleteController::DELETE_SUCCESS_EVENT_NAME,
@@ -76,10 +62,10 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event Resource update event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event Resource update event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -87,7 +73,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $resource = $event->getData('resource');
         /** @var string $deletedBy */
         $deletedBy = $event->getData('deletedBy');
-        /** @var ResultSetInterface $users */
+        /** @var \Cake\Datasource\ResultSetInterface $users */
         $users = $event->getData('users');
 
         // if there is nobody or just one user, give it up
@@ -109,13 +95,13 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param string   $emailRecipient Email of the recipient user
-     * @param User     $owner User who executed the action
-     * @param resource $resource Resource
-     * @return Email
+     * @param \App\Model\Entity\User $owner User who executed the action
+     * @param Resource $resource Resource
+     * @return \App\Notification\Email\Email
      */
     private function createDeleteEmail(string $emailRecipient, User $owner, Resource $resource)
     {
-        $subject = __("{0} deleted the password {1}", $owner->profile->first_name, $resource->name);
+        $subject = __('{0} deleted the password {1}', $owner->profile->first_name, $resource->name);
         $data = [
             'body' => [
                 'user' => $owner,

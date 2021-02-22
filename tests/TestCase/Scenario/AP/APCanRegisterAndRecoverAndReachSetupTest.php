@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,8 +17,6 @@
 namespace App\Test\TestCase\Scenario\AP;
 
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Table\AuthenticationTokensTable;
-use App\Model\Table\UsersTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -25,8 +25,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
-        //'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Secrets',
-        'app.Base/Gpgkeys', 'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue',
+        'app.Base/Gpgkeys', 'app.Base/Avatars',
     ];
 
     /**
@@ -38,6 +37,19 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
      * @var AuthenticationTokensTable
      */
     protected $AuthenticationTokens;
+
+    public function setUp()
+    {
+        // The setup/recover requires a supported user agent.
+        $_ENV['HTTP_USER_AGENT'] = 'Firefox';
+        parent::setUp();
+    }
+
+    public function tearDown()
+    {
+        $_ENV['HTTP_USER_AGENT'] = null;
+        parent::tearDown();
+    }
 
     /**
      * Given that I am an anonymous user
@@ -52,8 +64,8 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         // Register using signup form
         $email = 'integration@passbolt.com';
         $data = ['username' => $email, 'profile' => ['first_name' => 'integration', 'last_name' => 'test']];
-        $this->post('/users/register', $data);
-        $this->assertResponseContains('class="page register thank-you"');
+        $this->postJson('/users/register.json', $data);
+        $this->assertResponseSuccess();
 
         // Get and check user
         $this->Users = TableRegistry::getTableLocator()->get('Users');
@@ -73,8 +85,8 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $this->assertResponseContains($url);
 
         // Recover to get another token
-        $this->post('/users/recover', ['username' => $email]);
-        $this->assertResponseContains('class="page recover thank-you"');
+        $this->post('/users/recover.json', ['username' => $email]);
+        $this->assertResponseSuccess();
 
         // There should be two valid auth tokens
         $tokens = $this->AuthenticationTokens
@@ -89,18 +101,17 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $this->assertResponseCode(200);
 
         // Setup complete should work
-        $url = '/setup/complete/' . $user->id . '.json';
+        $url = '/setup/complete/' . $user->id . '.json?api-version=v2';
         $this->postJson($url, [
-            'AuthenticationToken' => ['token' => $tokens[0]['token']],
-            'Gpgkey' => ['key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key')],
+            'authenticationtoken' => ['token' => $tokens[0]['token']],
+            'gpgkey' => ['armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key')],
         ]);
         $this->assertSuccess();
 
         // Try to start setup with other token
         // Url should not work since user is already signed up
-        $url = Router::url('/setup/install/' . $user->id . '/' . $tokens[1]['token']);
-        $this->get($url);
+        $url = Router::url('/setup/install/' . $user->id . '/' . $tokens[1]['token'] . '.json');
+        $this->getJson($url);
         $this->assertResponseCode(400);
-        $this->assertResponseContains('The user does not exist or is already active or has been deleted');
     }
 }

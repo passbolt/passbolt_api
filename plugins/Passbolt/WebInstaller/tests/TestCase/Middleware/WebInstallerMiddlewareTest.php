@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -35,7 +37,7 @@ class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
     {
         $this->mockPassboltIsNotconfigured();
         $this->get('/install');
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('<div id="container" class="page setup start', $data);
     }

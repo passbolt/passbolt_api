@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -38,19 +40,6 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
         $this->assertGpgkeyAttributes($this->_responseJsonBody);
-    }
-
-    public function testGpgkeysViewGetApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uuid = UuidFactory::uuid('gpgkey.id.' . $userId);
-        $this->getJson('/gpgkeys/' . $uuid . '.json');
-        $this->assertSuccess();
-        $this->assertNotNull($this->_responseJsonBody);
-
-        $this->assertObjectHasAttribute('Gpgkey', $this->_responseJsonBody);
-        $this->assertGpgkeyAttributes($this->_responseJsonBody->Gpgkey);
     }
 
     public function testGpgkeysViewInvalidIdError()

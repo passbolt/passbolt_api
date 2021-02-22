@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -52,7 +54,7 @@ class FindViewAcoPermissionsTest extends AppTestCase
         $permissions = $this->Permissions->findViewAcoPermissions($resourceId, $options)->all();
 
         // retrieve a direct user permission
-        $permission = Hash::extract($permissions->toArray(), "{n}[aro=User]")[0];
+        $permission = Hash::extract($permissions->toArray(), '{n}[aro=User]')[0];
         $this->assertPermissionAttributes($permission);
         $this->assertUserAttributes($permission->user);
     }
@@ -64,7 +66,7 @@ class FindViewAcoPermissionsTest extends AppTestCase
         $permissions = $this->Permissions->findViewAcoPermissions($resourceId, $options)->all();
 
         // retrieve a direct user permission
-        $permission = Hash::extract($permissions->toArray(), "{n}[aro=User]")[0];
+        $permission = Hash::extract($permissions->toArray(), '{n}[aro=User]')[0];
         $this->assertPermissionAttributes($permission);
         $this->assertProfileAttributes($permission->user->profile);
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,17 +33,17 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/group_delete';
+    public const TEMPLATE = 'LU/group_delete';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param UsersTable $usersTable Users Table
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
      */
-    public function __construct(UsersTable $usersTable = null)
+    public function __construct(?UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
@@ -51,7 +53,7 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             GroupsDeleteController::DELETE_SUCCESS_EVENT_NAME,
@@ -59,14 +61,14 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
-        /** @var Group $resource */
+        /** @var \App\Model\Entity\Group $resource */
         $group = $event->getData('group');
         $deletedBy = $event->getData('userId');
 
@@ -88,13 +90,13 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param string $emailRecipient Email recipient
-     * @param User $admin Admin
-     * @param Group $group Group
-     * @return Email
+     * @param \App\Model\Entity\User $admin Admin
+     * @param \App\Model\Entity\Group $group Group
+     * @return \App\Notification\Email\Email
      */
-    private function createGroupDeleteEmail(string $emailRecipient, User $admin, Group $group)
+    private function createGroupDeleteEmail(string $emailRecipient, User $admin, Group $group): Email
     {
-        $subject = __("{0} deleted the group {1}", $admin->profile->first_name, $group->name);
+        $subject = __('{0} deleted the group {1}', $admin->profile->first_name, $group->name);
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
 
         return new Email($emailRecipient, $subject, $data, self::TEMPLATE);

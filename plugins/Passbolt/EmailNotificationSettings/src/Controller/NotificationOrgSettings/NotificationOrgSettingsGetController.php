@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -47,10 +49,10 @@ class NotificationOrgSettingsGetController extends AppController
     /**
      * Format the . delimited keys to snake_case
      *
-     * @param array $data The data to Format
+     * @param array|null $data The data to Format
      * @return array the formatted array
      */
-    private function _formatForOutput(array $data = [])
+    private function _formatForOutput(?array $data = [])
     {
         $output = [];
 

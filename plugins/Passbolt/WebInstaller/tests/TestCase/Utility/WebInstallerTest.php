@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -172,20 +174,5 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $this->assertEquals($userSettings['profile']['first_name'], $user->profile->first_name);
         $this->assertEquals($userSettings['profile']['last_name'], $user->profile->last_name);
         $this->assertEquals(AuthenticationToken::TYPE_REGISTER, $user->authentication_tokens[0]->type);
-    }
-
-    public function testWebInstallerUtilityWriteLicenseFile()
-    {
-        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
-            $webInstaller = new WebInstaller(null);
-            $licenseSettings = [
-                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev'),
-            ];
-            $webInstaller->setSettings('license', $licenseSettings);
-
-            $webInstaller->writeLicenseFile();
-            $this->assertFileExists(CONFIG . 'license');
-        }
-        $this->assertTrue(true);
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,7 @@ use Cake\Event\EventListenerInterface;
 abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInterface
 {
     /**
-     * @param CollectSubscribedEmailRedactorEvent $event Event object
+     * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
      * @return void
      */
     public function subscribe(CollectSubscribedEmailRedactorEvent $event)
@@ -40,7 +42,7 @@ abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInter
     }
 
     /**
-     * @param CollectSubscribedEmailRedactorEvent $event Event object
+     * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
      * @return void
      */
     final public function __invoke(CollectSubscribedEmailRedactorEvent $event)
@@ -50,7 +52,8 @@ abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInter
 
     /**
      * Return a list of subscribed redactors
-     * @return SubscribedEmailRedactorInterface[]
+     *
+     * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
      */
     abstract public function getSubscribedRedactors();
 }

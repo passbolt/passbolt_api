@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,10 +21,10 @@ trait GpgkeysModelTrait
     /**
      * Get a dummy gpgkey with test data.
      *
-     * @param array $data Custom data that will be merged with the default content.
+     * @param array|null $data Custom data that will be merged with the default content.
      * @return array
      */
-    public function getDummyGpgkey(array $data = [])
+    public function getDummyGpgkey(?array $data = []): array
     {
         $dummy = [
             'public_key_armored' => '-----BEGIN PGP PUBLIC KEY BLOCK-----

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,6 +21,7 @@ Router::plugin('Passbolt/EmailDigest', ['path' => '/seleniumtests'], function (R
 
     /**
      * Return a preview of the next emails batch
+     *
      * @uses \Passbolt\EmailDigest\Controller\EmailDigest\PreviewNextEmailsBatchController::preview()
      */
     $routes->connect(

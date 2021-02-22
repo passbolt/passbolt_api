@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,11 +23,10 @@ use App\Notification\Email\EmailSenderException;
 use App\Utility\Purifier;
 use Cake\TestSuite\TestCase;
 use EmailQueue\Model\Table\EmailQueueTable;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class EmailSenderTest extends TestCase
 {
-    const APP_FULL_BASE_URL = 'http://full_base_url.com';
+    public const APP_FULL_BASE_URL = 'http://full_base_url.com';
 
     /**
      * @var EmailSender
@@ -85,7 +86,7 @@ class EmailSenderTest extends TestCase
             $expectedException = true;
         }
 
-        $this->assertTrue($expectedException, "sendEmail should have raised exception " . EmailSenderException::class);
+        $this->assertTrue($expectedException, 'sendEmail should have raised exception ' . EmailSenderException::class);
     }
 
     public function testThatSendEnqueueEmailWithOptionsWhenPurifySubjectIsDisabled()
@@ -120,6 +121,36 @@ class EmailSenderTest extends TestCase
         );
 
         $email = new Email('test', 'test', [], '');
+
+        $options = [
+            'template' => $email->getTemplate(),
+            'subject' => $this->getSubject($email->getSubject(), true),
+            'format' => 'html',
+            'config' => 'default',
+            'headers' => ['Auto-Submitted' => 'auto-generated'],
+        ];
+
+        $data = $email->getData();
+        $data['body']['fullBaseUrl'] = self::APP_FULL_BASE_URL;
+
+        $this->emailQueueMock->expects($this->once())
+            ->method('enqueue')
+            ->with($email->getRecipient(), $data, $options)
+            ->willReturn(true);
+
+        $sut->sendEmail($email);
+    }
+
+    public function testThatSendEnqueueEmailWithSubjectExceedingMaximumLength()
+    {
+        $sut = new EmailSender(
+            $this->emailQueueMock,
+            self::APP_FULL_BASE_URL,
+            true
+        );
+
+        $subject = 'Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long su';
+        $email = new Email('test', $subject, [], '');
 
         $options = [
             'template' => $email->getTemplate(),

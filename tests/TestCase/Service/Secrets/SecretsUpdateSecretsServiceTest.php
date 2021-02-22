@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
-use App\Model\Table\SecretsTable;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
@@ -57,13 +58,11 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         $this->service = new SecretsUpdateSecretsService();
     }
 
-    /* ************************************************************** */
     /* ADD SECRETS */
-    /* ************************************************************** */
 
     public function testUpdateSecretsSuccess_AddSecrets()
     {
-        list($resource1, $userAId, $userBId) = $this->insertFixture_UpdateSecretsSuccess_AddSecrets();
+        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsSuccess_AddSecrets();
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
@@ -95,7 +94,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
 
     public function testUpdateSecretsError_AddSecrets_NotAllSecretsProvided()
     {
-        list($resource1, $userAId, $userBId) = $this->insertFixture_UpdateSecretsError_AddSecrets_NotAllSecretsProvided();
+        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsError_AddSecrets_NotAllSecretsProvided();
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [];
@@ -122,7 +121,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
 
     public function testUpdateSecretsError_AddSecrets_ValidationExceptions_UserWithoutAccess()
     {
-        list($resource1, $userAId) = $this->insertFixture_UpdateSecretsError_AddSecrets_ValidationExceptions_UserWithoutAccess();
+        [$resource1, $userAId] = $this->insertFixture_UpdateSecretsError_AddSecrets_ValidationExceptions_UserWithoutAccess();
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userBId = UuidFactory::uuid('user.id.betty');
@@ -138,7 +137,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
 
     private function assertUpdateSecretsValidationException(CustomValidationException $e, string $errorFieldName)
     {
-        $this->assertEquals("Could not validate secrets data.", $e->getMessage());
+        $this->assertEquals('Could not validate secrets data.', $e->getMessage());
         $error = Hash::get($e->getErrors(), $errorFieldName);
         $this->assertNotNull($error, "Expected error not found : {$errorFieldName}. Errors: " . json_encode($e->getErrors()));
     }
@@ -154,7 +153,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
 
     public function testUpdateSecretsError_AddSecrets_ValidationExceptions_SoftDeletedUser()
     {
-        list($resource1, $userAId) = $this->insertFixture_UpdateSecretsError_AddSecrets_ValidationExceptions_SoftDeletedUser();
+        [$resource1, $userAId] = $this->insertFixture_UpdateSecretsError_AddSecrets_ValidationExceptions_SoftDeletedUser();
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userBId = UuidFactory::uuid('user.id.sofia');
@@ -177,13 +176,11 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         return [$resource1, $userAId];
     }
 
-    /* ************************************************************** */
     /* DELETE SECRETS */
-    /* ************************************************************** */
 
     public function testUpdateSecretsSuccess_DeleteSecrets()
     {
-        list($resource1, $userAId, $userBId) = $this->insertFixture_UpdateSecretsSuccess_DeleteSecrets();
+        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsSuccess_DeleteSecrets();
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [];
@@ -208,37 +205,41 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
         return [$resource1, $userAId, $userBId];
     }
 
-    /* ************************************************************** */
     /* UPDATE SECRETS */
-    /* ************************************************************** */
 
     public function testUpdateSecretsSuccess_UpdateSecrets()
     {
-        list($resource1, $userAId) = $this->insertFixture_UpdateSecretsSuccess_UpdateSecrets();
+        [$resource1, $userAId] = $this->insertFixture_UpdateSecretsSuccess_UpdateSecrets();
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $encryptedSecret = '-----BEGIN PGP MESSAGE-----
 
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000/0
-=0000
+hQIMA+p38wQEIh7oARAA01hXtj/fXnMEbilhaL1xihs+2kjJXFROw24/W+GmUQgP
+cTr5zfM+CyFLwC2qDffhDnPoAlj8dLLBOyxlHk/+L3pvnLKTpdeDtXKizj/CG9Y1
+howFSiql00egivNikd/ZwUW94qXhLlm/0s8CXkKS5ogA3nS9ZE8rbRyO5Qn9GtsS
+LiE303+/UTcr5N9ul5zi0Bz1bbch3gaAJ7hYqzKNVveIQCwciZP2nCiBnTQkCUzb
+ucQ3lOeGxzpKXHwdGU2KufA+JB9gnGgpzTknxbzqfIjdvbmI0Lobol+sKPHlDtNl
+0guQljNcRxRC/I5e/DWVekyuE2IX042SDijgnV3B/thm0otVX5wB3mYiHqw068DK
+Cae/ef3jAxafzIb+gJBOyMjLh+ITVpYaleQDl2suR5EKEOmx4+k/ZFWtYsynj+h/
+RDIqqpCnEIty+txA4ssIuifBf5wXqRulgpVVdOXpYZBjGRvD7TCos2savhaG/2YH
+FQuz1IG9lCTYBWJPHp7iUvqUCiD6nzC20zC/qAn3AIp/mS+yOHceC71jXqKsVMkJ
+iOL8/FJm/SwPIgwYO7uYv8/lT+6OYjznXGqt6bwAJlX0MI6NxNYEePBBw9WKaqsY
+CyZ/m96d+zxfXDkSsje3cim1U7q6dA7qX3vZ1t3yoNyjM6sE4bL14P6jqDzP0enS
+QAEWx5cGIKOwYLS+HQA4w46JQUgJH3uqe8AK26+i20wLKtbWIF7MWW1nfKm9rDiG
+URIWI7R+VCewqviRfmezc4M=
+=50Mc
 -----END PGP MESSAGE-----';
         $data = [
             ['user_id' => $userAId, 'data' => $encryptedSecret],
         ];
 
-        $this->service->updateSecrets($uac, $resource1->id, $data);
+        try {
+            $this->service->updateSecrets($uac, $resource1->id, $data);
+        } catch (CustomValidationException $validationException) {
+            $data = json_encode($data);
+            $errors = json_encode($validationException->getErrors());
+            $this->fail(__("Failed to update secret.\nData {0}\nErrors {1}", $data, $errors));
+        }
 
         // Assert secrets
         $secrets = $this->Secrets->findByResourceId($resource1->id)->toArray();
@@ -259,7 +260,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
 
     public function testUpdateSecretsError_UpdateSecrets_ValidationExceptions_InvalidGpgMessage()
     {
-        list($resource1, $userAId) = $this->insertFixture_UpdateSecretsError_UpdateSecrets_ValidationExceptions_InvalidGpgMessage();
+        [$resource1, $userAId] = $this->insertFixture_UpdateSecretsError_UpdateSecrets_ValidationExceptions_InvalidGpgMessage();
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userBId = UuidFactory::uuid('user.id.sofia');

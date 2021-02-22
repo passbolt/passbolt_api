@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,23 +31,30 @@ use Cake\ORM\RulesChecker;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\UsersTable Users
+ * @property \App\Model\Table\GroupsTable Groups
+ * @property \App\Model\Table\GroupsUsersTable GroupsUsers
+ * @property \App\Model\Table\PermissionsTable Permissions
+ * @property \App\Model\Table\ResourcesTable Resources
+ */
 class UsersDeleteController extends AppController
 {
-    const DELETE_SUCCESS_EVENT_NAME = 'UsersDeleteController.delete.success';
+    public const DELETE_SUCCESS_EVENT_NAME = 'UsersDeleteController.delete.success';
 
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
+     * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
         $this->loadModel('Users');
-        $this->loadModel('Resources');
         $this->loadModel('Groups');
         $this->loadModel('GroupsUsers');
         $this->loadModel('Permissions');
+        $this->loadModel('Resources');
 
         return parent::beforeFilter($event);
     }
@@ -56,7 +65,7 @@ class UsersDeleteController extends AppController
      * @param string $id user uuid
      * @return void
      */
-    public function dryrun($id)
+    public function dryrun(string $id)
     {
         $user = $this->_validateRequestData($id);
         $this->_validateDelete($user);
@@ -67,13 +76,17 @@ class UsersDeleteController extends AppController
      * User delete action
      *
      * @param string $id user uuid
+     * @throws \Exception if user cannot be deleted
      * @return void
      */
-    public function delete($id)
+    public function delete(string $id)
     {
         $user = $this->_validateRequestData($id);
         // keep a list of group the user was a member of. Useful to notify the group managers after the delete
-        $groupIdsNotOnlyMember = $this->GroupsUsers->findGroupsWhereUserNotOnlyMember($id)->extract('group_id')->toArray();
+        $groupIdsNotOnlyMember = $this->GroupsUsers
+            ->findGroupsWhereUserNotOnlyMember($id)
+            ->extract('group_id')
+            ->toArray();
 
         $this->GroupsUsers->getConnection()->transactional(function () use ($user) {
             $this->_transferGroupsManagers($user);
@@ -92,13 +105,13 @@ class UsersDeleteController extends AppController
      * Assert request sanity and return the sanitized data
      *
      * @param string $id user uuid
-     * @throws ForbiddenException if current user is not an admin
-     * @throws BadRequestException if the user uuid id invalid
-     * @throws BadRequestException if the user tries to delete themselves
-     * @throws NotFoundException if the user does not exist or is already deleted
-     * @return User $user entity
+     * @throws \Cake\Http\Exception\ForbiddenException if current user is not an admin
+     * @throws \Cake\Http\Exception\BadRequestException if the user uuid id invalid
+     * @throws \Cake\Http\Exception\BadRequestException if the user tries to delete themselves
+     * @throws \Cake\Http\Exception\NotFoundException if the user does not exist or is already deleted
+     * @return \App\Model\Entity\User $user entity
      */
-    protected function _validateRequestData($id)
+    protected function _validateRequestData(string $id)
     {
         // Admin can delete all users
         if ($this->User->role() !== Role::ADMIN) {
@@ -111,6 +124,8 @@ class UsersDeleteController extends AppController
         if ($id === $this->User->id()) {
             throw new BadRequestException(__('You are not allowed to delete yourself.'));
         }
+
+        /** @var \App\Model\Entity\User $user */
         $user = $this->Users->findDelete($id, $this->User->role())->first();
         if (empty($user)) {
             throw new NotFoundException(__('The user does not exist or has been already deleted.'));
@@ -121,13 +136,15 @@ class UsersDeleteController extends AppController
 
     /**
      * Validate the delete operation.
-     * @param User $user The target user
-     * @throws CustomValidationException if the user is sole manager of a group
-     * @throws CustomValidationException if the user is sole owner of a shared resource
-     * @throws CustomValidationException if the user is sole manager of a group that is the sole owner of a shared resource
+     *
+     * @param \App\Model\Entity\User $user The target user
+     * @throws \App\Error\Exception\CustomValidationException if the user is sole manager of a group
+     * @throws \App\Error\Exception\CustomValidationException if the user is sole owner of a shared resource
+     * @throws \App\Error\Exception\CustomValidationException if the user is sole manager of a group that is the
+     *  sole owner of a shared resource
      * @return void
      */
-    protected function _validateDelete($user)
+    protected function _validateDelete(User $user)
     {
         // Check business rules
         // Returning the validation error is not meaningful enough so we may need to
@@ -138,16 +155,22 @@ class UsersDeleteController extends AppController
             $msg = __('The user cannot be deleted.') . ' ';
 
             if (isset($errors['id']['soleManagerOfNonEmptyGroup'])) {
-                $groupIds = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($user->id)->extract('group_id')->toArray();
+                $groupIds = $this->GroupsUsers
+                    ->findNonEmptyGroupsWhereUserIsSoleManager($user->id)
+                    ->extract('group_id')
+                    ->toArray();
                 $findGroupsOptions = [];
-                $findGroupsOptions['contain']['group_user.user.profile'] = true;
+                $findGroupsOptions['contain']['groups_users.user.profile'] = true;
                 $groups = $this->Groups->findAllByIds($groupIds, $findGroupsOptions);
                 $body['errors']['groups']['sole_manager'] = $groups;
                 $msg .= $errors['id']['soleManagerOfNonEmptyGroup'];
             }
 
             if (isset($errors['id']['soleOwnerOfSharedContent'])) {
-                $resourcesIds = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])->extract('aco_foreign_key')->toArray();
+                $acoType = PermissionsTable::RESOURCE_ACO;
+                $resourcesIds = $this->Permissions
+                    ->findSharedAcosByAroIsSoleOwner($acoType, $user->id, ['checkGroupsUsers' => true])
+                    ->extract('aco_foreign_key')->toArray();
                 if ($resourcesIds) {
                     $findResourcesOptions = [];
                     $findResourcesOptions['contain']['permissions.user.profile'] = true;
@@ -158,7 +181,10 @@ class UsersDeleteController extends AppController
                 }
             }
 
-            $groupsToDeleteIds = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)->extract('group_id')->toArray();
+            $groupsToDeleteIds = $this->GroupsUsers
+                ->findGroupsWhereUserOnlyMember($user->id)
+                ->extract('group_id')
+                ->toArray();
             if ($groupsToDeleteIds) {
                 $groupsToDelete = $this->Groups->findAllByIds($groupsToDeleteIds);
                 $body['groups_to_delete'] = $groupsToDelete;
@@ -170,11 +196,12 @@ class UsersDeleteController extends AppController
 
     /**
      * Transfer the group managers which blocked the user delete
-     * @param {User} $user entity
-     * @throws BadRequestException The groups that required a change are not all satisfied
+     *
+     * @param \App\Model\Entity\User $user entity
+     * @throws \Cake\Http\Exception\BadRequestException The groups that required a change are not all satisfied
      * @return void
      */
-    protected function _transferGroupsManagers($user)
+    protected function _transferGroupsManagers(User $user)
     {
         $managers = $this->request->getData('transfer.managers');
         if (empty($managers)) {
@@ -191,7 +218,10 @@ class UsersDeleteController extends AppController
         $groupsIdsToUpdate = Hash::extract($managers, '{n}.group_id');
         sort($groupsIdsToUpdate);
 
-        $groupsIdsBlockingDelete = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($user->id)->extract('group_id')->toArray();
+        $groupsIdsBlockingDelete = $this->GroupsUsers
+            ->findNonEmptyGroupsWhereUserIsSoleManager($user->id)
+            ->extract('group_id')
+            ->toArray();
         sort($groupsIdsBlockingDelete);
 
         // If all the groups that are requiring a change are not satisfied, throw an exception.
@@ -199,17 +229,24 @@ class UsersDeleteController extends AppController
             throw new BadRequestException('The transfer is not authorized.');
         }
 
-        // Update all the groups users given as parameter as long as they are relative to a group which blocked the delete process.
-        $this->GroupsUsers->updateAll(['is_admin' => true], ['id IN' => $groupsUsersIdsToUpdate, 'group_id IN' => $groupsIdsBlockingDelete]);
+        // Update all the groups users given as parameter as long as they are relative
+        // to a group which blocked the delete process.
+        $this->GroupsUsers->updateAll([
+            'is_admin' => true,
+        ], [
+            'id IN' => $groupsUsersIdsToUpdate,
+            'group_id IN' => $groupsIdsBlockingDelete,
+        ]);
     }
 
     /**
      * Transfer the content permissions which blocked the user delete
-     * @param {User} $user entity
-     * @throws BadRequestException if the array of manager is
+     *
+     * @param \App\Model\Entity\User $user entity
+     * @throws \Cake\Http\Exception\BadRequestException if the array of manager is
      * @return void
      */
-    protected function _transferContentOwners($user)
+    protected function _transferContentOwners(User $user)
     {
         $owners = $this->request->getData('transfer.owners');
         if (empty($owners)) {
@@ -226,7 +263,10 @@ class UsersDeleteController extends AppController
         $contentIdsToUpdate = Hash::extract($owners, '{n}.aco_foreign_key');
         sort($contentIdsToUpdate);
 
-        $contentIdBlockingDelete = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])->extract('aco_foreign_key')->toArray();
+        $contentIdBlockingDelete = $this->Permissions
+            ->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
+            ->extract('aco_foreign_key')
+            ->toArray();
         sort($contentIdBlockingDelete);
 
         // If all the resources that are requiring a change are not satisfied, throw an exception.
@@ -234,14 +274,20 @@ class UsersDeleteController extends AppController
             throw new BadRequestException('The transfer is not authorized');
         }
 
-        // Update all the permissions given as parameter as long as they are relative to a content which blocked the delete process.
-        $this->Permissions->updateAll(['type' => Permission::OWNER], ['id IN' => $permissionsIdsToUpdate, 'aco_foreign_key IN' => $contentIdBlockingDelete]);
+        // Update all the permissions given as parameter as long as they are
+        // relative to a content which blocked the delete process.
+        $this->Permissions->updateAll([
+            'type' => Permission::OWNER,
+        ], [
+            'id IN' => $permissionsIdsToUpdate,
+            'aco_foreign_key IN' => $contentIdBlockingDelete,
+        ]);
     }
 
     /**
      * Send email notification
      *
-     * @param User  $deletedUser entity
+     * @param \App\Model\Entity\User $deletedUser entity
      * @param array $groupIds list of Group entity user was member of
      * @return void
      */

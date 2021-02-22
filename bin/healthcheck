@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+user=${1:-www-data}
+DIR=$(dirname "$(readlink -f "$0")")
+
+# shellcheck source=utils.sh
+# shellcheck disable=SC1091
+source "$DIR"/utils.sh
+
+run_as "$DIR/cake passbolt healthcheck" "$user"

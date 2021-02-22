@@ -7,6 +7,7 @@ examples_dir = '/usr/share/passbolt/examples'
 docs_dir = "/usr/share/doc/passbolt-#{input('passbolt_flavour')}-server"
 crontabs_dir = '/etc/cron.d'
 logrotate_dir = '/etc/logrotate.d'
+cron_script = '/usr/share/php/passbolt/bin/cron'
 
 control 'passbolt-logs-01' do
   impact 1
@@ -77,6 +78,28 @@ control 'passbolt-crontab' do
     its('owner') { should eq 'root' }
     its('group') { should eq 'root' }
     its('mode') { should cmp '00644' }
+  end
+end
+
+control 'passbolt-crontab-contents' do
+  impact 0.5
+  title 'passbolt crontab contents'
+  desc 'the passbolt crontab contents should point to the cron script'
+  describe file("#{crontabs_dir}/passbolt-#{input('passbolt_flavour')}-server") do
+    its('content') { should match(%r{.*\$PASSBOLT_BASE_DIR/bin/cron.*}) }
+    its('content') { should match(%r{.*PASSBOLT_BASE_DIR=/usr/share/php/passbolt.*}) }
+  end
+end
+
+control 'passbolt-cron-script' do
+  impact 0.5
+  title 'passbolt cron_script'
+  desc 'the passbolt cron file must be installed'
+  describe file("#{cron_script}") do
+    it { should exist }
+    its('owner') { should eq 'root' }
+    its('group') { should eq 'root' }
+    its('mode') { should cmp '0755' }
   end
 end
 

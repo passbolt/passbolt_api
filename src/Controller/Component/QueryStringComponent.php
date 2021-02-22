@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,6 +30,7 @@ class QueryStringComponent extends Component
 {
     /**
      * Get query Items
+     *
      * @param array $allowedQueryItems whitelist
      * @param callable[] $filterValidators Filters validator callable
      * @return array
@@ -37,7 +40,7 @@ class QueryStringComponent extends Component
         $request = $this->getController()->getRequest();
         $query = $request->getQueryParams();
         $query = self::rewriteLegacyItems($query);
-        $query = self::extractQueryItems($query);
+        $query = self::extractQueryArrayItems($query);
         $query = self::unsetUnwantedQueryItems($query, $allowedQueryItems);
         $query = self::normalizeQueryItems($query);
         self::validateQueryItems($query, $allowedQueryItems, $filterValidators);
@@ -53,7 +56,7 @@ class QueryStringComponent extends Component
      * @param array $query original query string items
      * @return array modified query
      */
-    public static function rewriteLegacyItems(array $query)
+    public static function rewriteLegacyItems(array $query): array
     {
         if (isset($query['modified_after'])) {
             $query['filter']['modified-after'] = $query['modified_after'];
@@ -67,17 +70,21 @@ class QueryStringComponent extends Component
             $query['filter']['search'] = $query['filter']['keywords'];
             unset($query['filter']['keywords']);
         }
+        if (isset($query['contain']['LastLoggedIn'])) {
+            $query['contain']['last_logged_in'] = $query['contain']['LastLoggedIn'];
+            unset($query['contain']['LastLoggedIn']);
+        }
 
         return $query;
     }
 
     /**
-     * Additional normalization and array tranformations
+     * Additional normalization and array transformations
      *
      * @param array $query original query string items
      * @return array modified query
      */
-    public static function normalizeQueryItems(array $query)
+    public static function normalizeQueryItems(array $query): array
     {
         // order should always be an array even when one value is provided
         if (isset($query['order']) && !is_array($query['order'])) {
@@ -91,13 +98,21 @@ class QueryStringComponent extends Component
                 throw new BadRequestException(__('Invalid query string. Filter should be an array.'));
             }
             foreach ($query['filter'] as $filterName => $filter) {
-                if (substr($filterName, 0, 3) === "is-") {
+                if (substr($filterName, 0, 3) === 'is-') {
                     $query['filter'][$filterName] = self::normalizeBoolean($filter);
                 } elseif ($filterName === 'search') {
                     // search should always be an array
                     if (!is_array($query['filter']['search'])) {
                         $query['filter']['search'] = [$query['filter']['search']];
                     }
+                } elseif ($filterName === 'from') {
+                    try {
+                        $query['filter']['from'] = new \DateTime($query['filter']['from']);
+                    } catch (\Exception $e) {
+                        $query['filter']['from'] = false;
+                    }
+                } elseif ($filterName === 'frequency') {
+                    $query['filter'][$filterName] = self::normalizeInteger($filter);
                 }
             }
         }
@@ -121,7 +136,7 @@ class QueryStringComponent extends Component
      * @param array $allowedQueryItems whitelist
      * @return array $query the sanitized query
      */
-    public static function unsetUnwantedQueryItems(array $query, array $allowedQueryItems)
+    public static function unsetUnwantedQueryItems(array $query, array $allowedQueryItems): array
     {
         foreach ($query as $key => $items) {
             if (!isset($allowedQueryItems[$key])) {
@@ -148,12 +163,15 @@ class QueryStringComponent extends Component
      * @param array $query original query string items
      * @return array $query the sanitized query
      */
-    public static function extractQueryItems(array $query)
+    public static function extractQueryArrayItems(array $query): array
     {
         foreach ($query as $key => $items) {
+            if ($key === 'contain') {
+                continue;
+            }
             if (is_array($items)) {
                 foreach ($items as $subKey => $subItems) {
-                    if (substr($subKey, -1) === 's' && is_scalar($query[$key][$subKey])) {
+                    if (is_string($subKey) && substr($subKey, -1) === 's' && is_scalar($query[$key][$subKey])) {
                         $query[$key][$subKey] = explode(',', $query[$key][$subKey]);
                     }
                 }
@@ -174,9 +192,9 @@ class QueryStringComponent extends Component
      * @param array $allowedQueryItems whitelisted items
      * @param callable[] $filterValidators Filters validator callable
      * @return bool true if validate
-     * @throws BadRequestException if a validation error occurs
+     * @throws \Cake\Http\Exception\BadRequestException if a validation error occurs
      */
-    public static function validateQueryItems(array $query, array $allowedQueryItems, array $filterValidators)
+    public static function validateQueryItems(array $query, array $allowedQueryItems, array $filterValidators): bool
     {
         foreach ($query as $key => $parameters) {
             switch ($key) {
@@ -210,7 +228,7 @@ class QueryStringComponent extends Component
     /**
      * Validate filters
      *
-     * @param array $filters such as:
+     * @param array|null $filters such as:
      * - search: a string to do a keyword based search
      * - has-access: a resource id
      * - has-users: an array of user uuids
@@ -224,15 +242,19 @@ class QueryStringComponent extends Component
      * - is-shared-with-me: bool
      * @param callable[] $filterValidators Filter validators callable
      * @return bool true if valid
-     * @throws Exception if one of the filters is not supported / not in the list
+     * @throws \Cake\Core\Exception\Exception if one of the filters is not supported / not in the list
      */
-    public static function validateFilters(array $filters = null, array $filterValidators = [])
+    public static function validateFilters(?array $filters = null, array $filterValidators = []): bool
     {
         if (isset($filters)) {
             foreach ($filters as $filterName => $values) {
-                switch ((string)$filterName) { // See: https://www.php.net/manual/en/types.comparisons.php for NULL/0/FALSE
+                // See: https://www.php.net/manual/en/types.comparisons.php for NULL/0/FALSE
+                switch ((string)$filterName) {
                     case 'search':
                         self::validateFilterSearch($values);
+                        break;
+                    case 'from':
+                        self::validateFilterDateTime($values, $filterName);
                         break;
                     case 'has-access':
                     case 'has-id':
@@ -259,10 +281,14 @@ class QueryStringComponent extends Component
                     case 'is-deleted':
                         self::validateFilterBoolean($values, $filterName);
                         break;
+                    case 'frequency':
+                        self::validateFilterInteger($values, $filterName);
+                        break;
                     default:
                         // Check if custom filter validators were defined for this filter
                         if (!isset($filterValidators[$filterName])) {
-                            throw new Exception(__('No validation rule for filter {0}. Please create one.', $filterName));
+                            $msg = __('No validation rule for filter {0}. Please create one.', $filterName);
+                            throw new Exception($msg);
                         }
 
                         if (!call_user_func($filterValidators[$filterName], $values)) {
@@ -281,14 +307,31 @@ class QueryStringComponent extends Component
      * Check if the filter is a valid boolean
      *
      * @param mixed $values to check
-     * @param string $filtername for error message display
+     * @param string $filterName for error message display
      * @throw Exception if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterBoolean($values, string $filtername)
+    public static function validateFilterBoolean($values, string $filterName): bool
     {
         if (!is_bool($values)) {
-            throw new Exception(__('"{0}" is not a valid value for filter {1}.', $values, $filtername));
+            throw new Exception(__('"{0}" is not a valid value for filter {1}.', $values, $filterName));
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the filter is a valid integer
+     *
+     * @param mixed $values to check
+     * @param string $filterName for error message display
+     * @throw Exception if the filter is not valid
+     * @return bool true if the filter is valid
+     */
+    public static function validateFilterInteger($values, string $filterName): bool
+    {
+        if (!is_int($values)) {
+            throw new Exception(__('"{0}" is not a valid value for filter {1}.', $values, $filterName));
         }
 
         return true;
@@ -305,7 +348,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterSearch(array $values)
+    public static function validateFilterSearch(array $values): bool
     {
         foreach ($values as $i => $keyword) {
             if (!is_int($i)) {
@@ -315,10 +358,13 @@ class QueryStringComponent extends Component
                 throw new Exception(__('"{0}" is not a valid search filter.', $i));
             }
             if (!Validation::utf8($keyword)) {
-                throw new Exception(__('"{0}" is not a valid search filter. It is not a UTF8 string.', $keyword));
+                $msg = __('"{0}" is not a valid search filter. It is not a UTF8 string.', $keyword);
+                throw new Exception($msg);
             }
             if (!Validation::lengthBetween($keyword, 1, 64)) {
-                throw new Exception(__('"{0}" is not a valid search filter. It should be between 1 and 64 char in length.', $keyword));
+                $msg = __('"{0}" is not a valid search filter.', $keyword) . ' ';
+                $msg .= __('It should be between 1 and 64 char in length.');
+                throw new Exception($msg);
             }
         }
 
@@ -337,7 +383,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterUsers(array $values, string $filterName)
+    public static function validateFilterUsers(array $values, string $filterName): bool
     {
         foreach ($values as $i => $userId) {
             if (!is_int($i)) {
@@ -361,20 +407,20 @@ class QueryStringComponent extends Component
      * - No Bueno: ['this' => 'no']
      *
      * @param array $values array of group id to check
-     * @param string $filtername for error message display
+     * @param string $filterName for error message display
      * @throw Exception if the filter is not valid
      * @return bool true if validate
      */
-    public static function validateFilterGroups(array $values, string $filtername)
+    public static function validateFilterGroups(array $values, string $filterName): bool
     {
         foreach ($values as $i => $groupId) {
             if (!is_int($i)) {
-                throw new Exception(__('"{0}" is not a valid group filter.', $i, $filtername));
+                throw new Exception(__('"{0}" is not a valid group filter.', $i, $filterName));
             }
             if (!is_scalar($groupId) || empty($groupId)) {
                 throw new Exception(__('"{0}" is not a valid group filter.', $i));
             }
-            self::validateFilterGroup($groupId, $filtername);
+            self::validateFilterGroup($groupId, $filterName);
         }
 
         return true;
@@ -387,21 +433,22 @@ class QueryStringComponent extends Component
      * - No Bueno: 'no-bueno'
      *
      * @param array $values resources id
-     * @param string $filtername name of filters
+     * @param string $filterName name of filters
      * @throw Exception if the filter is not valid
      * @return bool true if validate
      */
-    public static function validateFilterResources(array $values, string $filtername)
+    public static function validateFilterResources(array $values, string $filterName): bool
     {
         foreach ($values as $i => $resourceId) {
             if (!is_int($i)) {
-                throw new Exception(__('"{0}" is not a valid resource id for filter {1}.', $i, $filtername));
+                throw new Exception(__('"{0}" is not a valid resource id for filter {1}.', $i, $filterName));
             }
             if (!is_scalar($resourceId) || empty($resourceId)) {
                 throw new Exception(__('"{0}" is not a valid resource id for filter {1}.', $i));
             }
             if (!Validation::uuid($resourceId)) {
-                throw new Exception(__('"{0}" is not a valid resource id for filter {1}.', $resourceId, $filtername));
+                $msg = __('"{0}" is not a valid resource id for filter {1}.', $resourceId, $filterName);
+                throw new Exception($msg);
             }
         }
 
@@ -415,14 +462,14 @@ class QueryStringComponent extends Component
      * - No Bueno: 'no-bueno'
      *
      * @param string $groupId uuid
-     * @param string $filtername name of filters
+     * @param string $filterName name of filters
      * @throw Exception if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterGroup(string $groupId, string $filtername)
+    public static function validateFilterGroup(string $groupId, string $filterName): bool
     {
         if (!Validation::uuid($groupId)) {
-            throw new Exception(__('"{0}" is not a valid group id for filter {1}.', $groupId, $filtername));
+            throw new Exception(__('"{0}" is not a valid group id for filter {1}.', $groupId, $filterName));
         }
 
         return true;
@@ -431,16 +478,38 @@ class QueryStringComponent extends Component
     /**
      * Validate a filter that is a timestamp
      *
-     * @param string $values timestamp to check
-     * @param string $filtername for error message display
+     * @param mixed $values timestamp to check
+     * @param string $filterName for error message display
      * @throw Exception if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterTimestamp($values, string $filtername)
+    public static function validateFilterTimestamp($values, string $filterName): bool
     {
         $timestamp = $values;
         if (!self::isTimestamp($timestamp)) {
-            throw new Exception(__('"{0}" is not a valid timestamp for filter {1}.', $timestamp, $filtername));
+            throw new Exception(__('"{0}" is not a valid timestamp for filter {1}.', $timestamp, $filterName));
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate a filter that is a datetime.
+     *
+     * @param mixed $values the value to check
+     * @param string $filterName for error message display
+     * @throw Exception if the filter is not valid
+     * @return bool if validate
+     */
+    public static function validateFilterDateTime($values, string $filterName): bool
+    {
+        if (!is_string($values)) {
+            throw new Exception(__('"{0}" is not a valid datetime for filter {1}.', $values, $filterName));
+        }
+        try {
+            new \DateTime($values);
+        } catch (\Exception $e) {
+            throw new Exception(__('"{0}" is not a valid datetime for filter {1}.', $values, $filterName));
         }
 
         return true;
@@ -449,12 +518,12 @@ class QueryStringComponent extends Component
     /**
      * Validate order
      *
-     * @param array $orders a list of order to validate like ['Groups.name ASC', 'Users.created']
-     * @param array $allowedQueryItems whitelist
+     * @param array|null $orders a list of order to validate like ['Groups.name ASC', 'Users.created']
+     * @param array|null $allowedQueryItems whitelist
      * @return bool true if validate
-     * @throws Exception if the group name does not validate
+     * @throws \Cake\Core\Exception\Exception if the group name does not validate
      */
-    public static function validateOrders(array $orders = null, array $allowedQueryItems = null)
+    public static function validateOrders(?array $orders = null, ?array $allowedQueryItems = null): bool
     {
         if (isset($orders)) {
             foreach ($orders as $i => $orderName) {
@@ -462,7 +531,7 @@ class QueryStringComponent extends Component
                     throw new Exception(__('"{0}" is not a valid order.', $orderName));
                 }
                 $order = explode(' ', $orderName); // remove ASC DESC if any
-                if (!in_array($order[0], $allowedQueryItems['order'])) {
+                if (!isset($allowedQueryItems) || !in_array($order[0], $allowedQueryItems['order'])) {
                     throw new Exception(__('"{0}" is not in the list of allowed order.', $orderName));
                 }
             }
@@ -474,11 +543,11 @@ class QueryStringComponent extends Component
     /**
      * Validate Contain
      *
-     * @param array $contain conditions
+     * @param array|null $contain conditions
      * @return bool true if validate
-     * @throws Exception if the contain value is not 0 or 1
+     * @throws \Cake\Core\Exception\Exception if the contain value is not 0 or 1
      */
-    public static function validateContain(array $contain = null)
+    public static function validateContain(?array $contain = null): bool
     {
         if (isset($contain)) {
             foreach ($contain as $item => $value) {
@@ -496,11 +565,14 @@ class QueryStringComponent extends Component
      * 'TRUE', 'True', 'true', '1' becomes true
      * 'FALSE', 'False', 'false', '0' becomes false
      *
-     * @param string $str the string to normalize
+     * @param mixed $str the string to normalize
      * @return bool|string if original string is not bool
      */
     public static function normalizeBoolean($str)
     {
+        if (is_bool($str)) {
+            return $str;
+        }
         if (!is_scalar($str)) {
             return false;
         }
@@ -514,6 +586,21 @@ class QueryStringComponent extends Component
     }
 
     /**
+     * Normalize string to integer if it is a scalar
+     *
+     * @param mixed $str the string to normalize
+     * @return false|int false if non scalar type, integer value of $str otherwise
+     */
+    public static function normalizeInteger($str)
+    {
+        if (!is_scalar($str)) {
+            return false;
+        }
+
+        return intval($str);
+    }
+
+    /**
      * Format order so that it can be used as is by ORM layer
      * Examples:
      * - ['order' => ['User.first_name ASC', 'User.last_name DESC']]
@@ -521,9 +608,10 @@ class QueryStringComponent extends Component
      * - ['order' => ['Users.first_name' => 'ASC', 'Users.last_name' => 'DESC']]
      *
      * @param array $query items
+     * @throws \Cake\Core\Exception\Exception if order is invalid
      * @return array updated query items
      */
-    public static function finalizeOrder(array $query)
+    public static function finalizeOrder(array $query): array
     {
         if (isset($query['order']) && count($query['order'])) {
             $neworder = [];
@@ -547,10 +635,10 @@ class QueryStringComponent extends Component
     /**
      * Return true if valid timestamp
      *
-     * @param string $timestamp unixtimestamp
+     * @param mixed $timestamp unixtimestamp
      * @return bool true if unix timestamp
      */
-    public static function isTimestamp($timestamp)
+    public static function isTimestamp($timestamp): bool
     {
         if (!is_scalar($timestamp)) {
             return false;
@@ -562,10 +650,10 @@ class QueryStringComponent extends Component
     /**
      * Return true if valid order
      *
-     * @param string $orderName like Groups.name
+     * @param mixed $orderName like Groups.name
      * @return bool true if valid order
      */
-    public static function isOrder($orderName)
+    public static function isOrder($orderName): bool
     {
         if (!is_scalar($orderName)) {
             return false;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,8 +27,7 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
-        'app.Base/Profiles', 'app.Base/EmailQueue', 'app.Base/AuthenticationTokens', 'app.Base/Avatars',
-        'app.Base/OrganizationSettings',
+        'app.Base/Profiles', 'app.Base/Avatars',
     ];
 
     public function testUserAddNotificationDisabled()

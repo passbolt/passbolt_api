@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,8 +20,6 @@ namespace App\Test\TestCase\Service\Resources;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Model\Table\ResourcesTable;
-use App\Model\Table\SecretsTable;
 use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -82,7 +82,9 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
     public function testUpdateResourcesSuccess_UpdateResourceMeta()
     {
-        list($r1, $r2, $userAId) = $this->insertFixture_UpdateResourceMeta();
+        [$r1, $r2, $userAId] = $this->insertFixture_UpdateResourceMeta();
+        // Wait 1 second in order to test that the modified field is not on the same second.
+        sleep(1);
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data = [
@@ -99,6 +101,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
         $this->assertEquals('R1 username updated', $r1Updated->username);
         $this->assertEquals('https://r1-updated.com', $r1Updated->uri);
         $this->assertEquals('R1 description updated', $r1Updated->description);
+        $this->assertGreaterThan($r1->modified, $r1Updated->modified);
 
         // Assert R2 have not been updated
         $r2 = $this->resourcesTable->findById($r2->id)->first();
@@ -121,7 +124,10 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
     public function testUpdateResourcesSuccess_UpdateResourceSecrets()
     {
-        list($r1, $r2, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_UpdateResourceSecrets();
+        [$r1, $r2, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_UpdateResourceSecrets();
+        // Wait 1 second in order to test that the modified field is not on the same second.
+        sleep(1);
+
         $uac = new UserAccessControl(Role::USER, $userAId);
         $r2SecretA = $this->secretsTable->findByResourceIdAndUserId($r2->id, $userAId)->first();
 
@@ -145,13 +151,14 @@ class ResourcesUpdateServiceTest extends AppTestCase
         $r1SecretC = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userCId)->first();
         $this->assertEquals($r1EncryptedSecretC, $r1SecretC->data);
 
-        // Assert R1 meta has not been updated
+        // Assert R1 meta has not been updated except for the modified field.
         $r1Updated = $this->resourcesTable->findById($r1->id)->first();
         $this->assertEquals('R1', $r1Updated->name);
         $this->assertEquals('R1 username', $r1Updated->username);
         $this->assertEquals('https://r1.com', $r1Updated->uri);
         $this->assertEquals('R1 description', $r1Updated->description);
         $this->assertEquals('R1', $r1Updated->name);
+        $this->assertGreaterThan($r1->modified, $r1Updated->modified);
 
         // Assert R2 secrets have not been updated
         $r2AfterUpdateSecretA = $this->secretsTable->findByResourceIdAndUserId($r2->id, $userAId)->first();
@@ -182,7 +189,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
     public function testUpdateResourcesError_UpdateResourceMeta_ValidationError()
     {
-        list($r1, $userAId) = $this->insertFixture_UpdateResourceMeta_ValidationError();
+        [$r1, $userAId] = $this->insertFixture_UpdateResourceMeta_ValidationError();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data = [
@@ -193,7 +200,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->service->update($uac, $r1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate resource data.", $e->getMessage());
+            $this->assertEquals('Could not validate resource data.', $e->getMessage());
             $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -212,7 +219,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
     public function testUpdateResourcesError_UpdateResourceSecrets_ValidationError()
     {
-        list($r1, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_UpdateResourceSecrets_ValidationError();
+        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_UpdateResourceSecrets_ValidationError();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $r1EncryptedSecretA = $this->encryptMessageFor($userAId, 'R1 secret updated');
@@ -226,7 +233,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->service->update($uac, $r1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate resource data.", $e->getMessage());
+            $this->assertEquals('Could not validate resource data.', $e->getMessage());
             $errors = ['secrets' => ['secrets_provided' => 'The secrets of all the users having access to the resource are required.']];
             $this->assertEquals($errors, $e->getErrors());
         }
@@ -253,7 +260,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
     public function testUpdateResourcesError_InsufficientPermission()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_UpdateResourcesError_InsufficientPermission();
+        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourcesError_InsufficientPermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             'name' => 'R1 updated',
@@ -263,7 +270,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->service->update($uac, $r1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ForbiddenException $e) {
-            $this->assertEquals("You are not allowed to update this resource.", $e->getMessage());
+            $this->assertEquals('You are not allowed to update this resource.', $e->getMessage());
         }
     }
 
@@ -290,13 +297,13 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->service->update($uac, $notFoundId);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (NotFoundException $e) {
-            $this->assertEquals("The resource does not exist.", $e->getMessage());
+            $this->assertEquals('The resource does not exist.', $e->getMessage());
         }
     }
 
     public function testUpdateResourcesError_NoAccessToResource()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_UpdateResourcesError_InsufficientPermission();
+        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourcesError_InsufficientPermission();
         $userCId = UuidFactory::uuid('user.id.carol');
         $uac = new UserAccessControl(Role::USER, $userCId);
         $data = [
@@ -307,7 +314,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->service->update($uac, $r1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (NotFoundException $e) {
-            $this->assertEquals("The resource does not exist.", $e->getMessage());
+            $this->assertEquals('The resource does not exist.', $e->getMessage());
         }
     }
 }

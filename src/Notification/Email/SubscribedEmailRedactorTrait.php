@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -58,17 +60,17 @@ trait SubscribedEmailRedactorTrait
     }
 
     /**
-     * @param CollectSubscribedEmailRedactorEvent $event Event object
+     * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
      * @return void
      */
     public function subscribe(CollectSubscribedEmailRedactorEvent $event)
     {
-        /** @var SubscribedEmailRedactorInterface $this */
+        /** @var \App\Notification\Email\SubscribedEmailRedactorInterface $this */
         $event->getManager()->addNewSubscription($this);
     }
 
     /**
-     * @param CollectSubscribedEmailRedactorEvent $event Event object
+     * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
      * @return void
      */
     public function __invoke(CollectSubscribedEmailRedactorEvent $event)

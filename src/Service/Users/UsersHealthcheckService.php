@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,27 +20,25 @@ use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
-use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\ORM\TableRegistry;
 
 class UsersHealthcheckService extends AbstractHealthcheckService
 {
-    const CATEGORY = 'data';
-    const NAME = 'Users';
-    const CHECK_VALIDATES = 'Can validate';
+    public const CATEGORY = 'data';
+    public const NAME = 'Users';
+    public const CHECK_VALIDATES = 'Can validate';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $table;
 
     /**
      * Users Healthcheck constructor.
      *
-     * @param OpenPGPBackend $gpg gpg backend to use
-     * @param UsersTable $table secret table
+     * @param \App\Model\Table\UsersTable|null $table secret table
      */
-    public function __construct($gpg = null, $table = null)
+    public function __construct(?UsersTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Users');
@@ -48,7 +48,7 @@ class UsersHealthcheckService extends AbstractHealthcheckService
     /**
      * @inheritDoc
      */
-    public function check()
+    public function check(): array
     {
         $records = $this->table->find()->all();
 
@@ -62,10 +62,10 @@ class UsersHealthcheckService extends AbstractHealthcheckService
     /**
      * Validates
      *
-     * @param User $user user
+     * @param \App\Model\Entity\User $user user
      * @return void
      */
-    private function canValidate(User $user)
+    private function canValidate(User $user): void
     {
         $copy = $this->table->newEntity($user->toArray());
         $error = $copy->getErrors();
@@ -74,8 +74,9 @@ class UsersHealthcheckService extends AbstractHealthcheckService
         unset($error['profile']);
 
         if (count($error)) {
+            $msg = __('Validation failed for user {0}. {1}', $user->id, json_encode($copy->getErrors()));
             $this->checks[self::CHECK_VALIDATES]->fail()
-            ->addDetail(__('Validation failed for user {0}. {1}', $user->id, json_encode($copy->getErrors())), Healthcheck::STATUS_ERROR);
+            ->addDetail($msg, Healthcheck::STATUS_ERROR);
         } else {
             $this->checks[self::CHECK_VALIDATES]
                 ->addDetail(__('Validation success for user {0}', $user->id), Healthcheck::STATUS_SUCCESS);

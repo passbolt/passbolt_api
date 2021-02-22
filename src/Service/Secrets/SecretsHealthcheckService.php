@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,28 +20,26 @@ use App\Model\Entity\Secret;
 use App\Model\Table\SecretsTable;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
-use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class SecretsHealthcheckService extends AbstractHealthcheckService
 {
-    const CATEGORY = 'data';
-    const NAME = 'Secrets';
-    const CHECK_VALIDATES = 'Can validate';
+    public const CATEGORY = 'data';
+    public const NAME = 'Secrets';
+    public const CHECK_VALIDATES = 'Can validate';
 
     /**
-     * @var SecretsTable
+     * @var \App\Model\Table\SecretsTable
      */
     private $table;
 
     /**
      * Secret Healthcheck constructor.
      *
-     * @param OpenPGPBackend $gpg gpg backend to use
-     * @param SecretsTable $table secret table
+     * @param \App\Model\Table\SecretsTable|null $table secret table
      */
-    public function __construct($gpg = null, $table = null)
+    public function __construct(?SecretsTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Secrets');
@@ -49,7 +49,7 @@ class SecretsHealthcheckService extends AbstractHealthcheckService
     /**
      * @inheritDoc
      */
-    public function check()
+    public function check(): array
     {
         $recordIds = $this->table->find()
             ->all()
@@ -67,15 +67,15 @@ class SecretsHealthcheckService extends AbstractHealthcheckService
     /**
      * Validates
      *
-     * @param Secret $secret secret
+     * @param \App\Model\Entity\Secret $secret secret
      * @return void
      */
-    private function canValidate(Secret $secret)
+    private function canValidate(Secret $secret): void
     {
         $copy = $this->table->newEntity($secret->toArray());
         if ($copy->getErrors()) {
-            $this->checks[self::CHECK_VALIDATES]->fail()
-            ->addDetail(__('Validation failed for secret {0}. {1}', $secret->id, json_encode($copy->getErrors())), Healthcheck::STATUS_ERROR);
+            $msg = __('Validation failed for secret {0}. {1}', $secret->id, json_encode($copy->getErrors()));
+            $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         } else {
             $this->checks[self::CHECK_VALIDATES]
                 ->addDetail(__('Validation success for secret {0}', $secret->id), Healthcheck::STATUS_SUCCESS);

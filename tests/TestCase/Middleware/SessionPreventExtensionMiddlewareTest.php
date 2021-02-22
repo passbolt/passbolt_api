@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams

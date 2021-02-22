@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,6 +25,7 @@ interface EmailInterface
     /**
      * Return the recipient of the email digest.
      * i.e: sendmeanemail@domain.com
+     *
      * @return string
      */
     public function getEmailRecipient();
@@ -30,12 +33,14 @@ interface EmailInterface
     /**
      * Return the subject of the email digest
      * i.e: your password has been reset
+     *
      * @return string
      */
     public function getSubject();
 
     /**
      * Return the template vars associated to the digest
+     *
      * @return array
      */
     public function getViewVars();
@@ -43,6 +48,7 @@ interface EmailInterface
     /**
      * Return the format of the email digest
      * i.e: html
+     *
      * @return string
      */
     public function getEmailFormat();
@@ -50,12 +56,14 @@ interface EmailInterface
     /**
      * Return the template file to use with this email digest
      * i.e: LU/template.ctp
+     *
      * @return string
      */
     public function getTemplate();
 
     /**
      * Add a variable to the template variables for the email.
+     *
      * @param string $name Name of the variable
      * @param mixed $value Value of the variable
      * @return $this
@@ -64,6 +72,7 @@ interface EmailInterface
 
     /**
      * Add a variable to the layout variables for the email.
+     *
      * @param string $name Name of the variable
      * @param mixed $value Value of the variable
      * @return $this

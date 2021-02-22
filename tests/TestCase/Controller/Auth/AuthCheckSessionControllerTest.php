@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,10 +18,9 @@ namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
 
-class CheckSessionControllerTest extends AppIntegrationTestCase
+class AuthCheckSessionControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
-        'app.Base/OrganizationSettings'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
 
     public function testCheckSessionNotLoggedIn()
     {

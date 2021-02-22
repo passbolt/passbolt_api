@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -24,7 +26,6 @@ use Psy\Shell as PsyShell;
  */
 class ConsoleShell extends Shell
 {
-
     /**
      * Start the shell and interactive console.
      *
@@ -46,7 +47,7 @@ class ConsoleShell extends Shell
             return self::CODE_ERROR;
         }
 
-        $this->out("You can exit with <info>`CTRL-C`</info> or <info>`exit`</info>");
+        $this->out('You can exit with <info>`CTRL-C`</info> or <info>`exit`</info>');
         $this->out('');
 
         Log::drop('debug');

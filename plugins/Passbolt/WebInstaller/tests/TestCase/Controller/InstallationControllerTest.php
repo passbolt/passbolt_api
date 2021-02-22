@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -226,12 +228,6 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
                 'role_id' => '0d6990c8-4aaa-4456-a333-00e803ba0828',
             ],
         ];
-        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
-            $licenseSettings = [
-                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev'),
-            ];
-            $data += $licenseSettings;
-        }
 
         return $data;
     }
@@ -241,7 +237,7 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $config = $this->getInstallSessionData();
         $this->initWebInstallerSession($config);
         $this->get('/install/installation');
-        $data = ($this->_getBodyAsString());
+        $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertContains('Installing', $data);
     }
