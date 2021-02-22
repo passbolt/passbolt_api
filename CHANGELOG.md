@@ -37,6 +37,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Redesign of login and recover screens
 - Add Mysql 8 support
 
+## [2.13.5] 2020-07-30
 ### Fixed
 - Fix allow overriding rememberMe options in passbolt.php configuration file
 - Fix all target blank link should contain rel noopener noreferrer
@@ -60,11 +61,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fix email notification settings bootstrap messes up non persistent database connection in wizard
 - Bump dependencies versions
 
-## [2.13.1] 2019-07-06
+## [2.13.1] 2020-07-06
 ### Fixed
 - PB-1372 Fix user setup completed admin email notification
 
-## [2.13.0] 2019-06-23
+## [2.13.0] 2020-06-23
 ### Added
 - PB-1168 Add baseline code and tests for Debian package build
 - PB-1067 As a user I can receive digest emails when creating a lot of resources
