@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,8 +20,6 @@ namespace App\Service\Secrets;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Secret;
-use App\Model\Table\SecretsTable;
-use App\Model\Table\UsersTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
@@ -28,40 +28,34 @@ use Cake\Utility\Hash;
 class SecretsUpdateSecretsService
 {
     /**
-     * @var PermissionsGetUsersIdsHavingAccessToService
+     * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
      */
-    private $permissionsGetUsersIdsHavingAccessToService;
+    private $accessService;
 
     /**
-     * @var SecretsUpdateSecretsService
+     * @var \App\Service\Secrets\SecretsUpdateSecretsService
      */
     private $secretCreateService;
 
     /**
-     * @var SecretsTable
+     * @var \App\Model\Table\SecretsTable
      */
     private $secretsTable;
-
-    /**
-     * @var UsersTable
-     */
-    private $usersTable;
 
     /**
      * Instantiate the constructor
      */
     public function __construct()
     {
-        $this->permissionsGetUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
+        $this->accessService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->secretCreateService = new SecretsCreateService();
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        $this->usersTable = TableRegistry::getTableLocator()->get('Users');
     }
 
     /**
      * Update a resource' secrets.
      *
-     * @param UserAccessControl $uac The operator.
+     * @param \App\Utility\UserAccessControl $uac The operator.
      * @param string $resourceId The resource to update the secrets for.
      * @param array $data The list of secrets to add
      * [
@@ -93,10 +87,10 @@ class SecretsUpdateSecretsService
     /**
      * Update a secret for a resource and a user
      *
-     * @param Secret $secret The secret to update
+     * @param \App\Model\Entity\Secret $secret The secret to update
      * @param int $rowIndexRef The row index in the request data
      * @param array $data The secrets data
-     * @return Secret
+     * @return \App\Model\Entity\Secret
      * @throws \Exception
      */
     private function updateSecret(Secret $secret, int $rowIndexRef, array $data)
@@ -126,7 +120,7 @@ class SecretsUpdateSecretsService
      *
      * @param array $errors The list of errors
      * @return void
-     * @throws ValidationException If the provided data does not validate.
+     * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
     private function handleValidationErrors(array $errors = [])
     {
@@ -138,11 +132,11 @@ class SecretsUpdateSecretsService
     /**
      * Add a secret for a resource and a user.
      *
-     * @param UserAccessControl $uac The operator
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param int $rowIndexRef The row index in the request data
      * @param string $resourceId The target resource
      * @param array $data The secrets data
-     * @return Secret
+     * @return \App\Model\Entity\Secret
      * @throws \Exception
      */
     private function addSecret(UserAccessControl $uac, int $rowIndexRef, string $resourceId, array $data)
@@ -169,7 +163,7 @@ class SecretsUpdateSecretsService
      */
     private function deleteOrphanSecrets(string $resourceId)
     {
-        $usersIds = $this->permissionsGetUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resourceId);
+        $usersIds = $this->accessService->getUsersIdsHavingAccessTo($resourceId);
 
         $this->secretsTable->deleteAll([
             'resource_id' => $resourceId,
@@ -185,13 +179,15 @@ class SecretsUpdateSecretsService
      */
     private function assertAllSecretsAreProvided(string $resourceId)
     {
-        $usersIdsHavingAccess = $this->permissionsGetUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resourceId);
+        $usersIdsHavingAccess = $this->accessService->getUsersIdsHavingAccessTo($resourceId);
         sort($usersIdsHavingAccess);
         $usersIdsHavingASecret = $this->secretsTable->findByResourceId($resourceId)->extract('user_id')->toArray();
         sort($usersIdsHavingASecret);
 
         if ($usersIdsHavingAccess !== $usersIdsHavingASecret) {
-            $errors = ['secrets_provided' => 'The secrets of all the users having access to the resource are required.'];
+            $errors = ['secrets_provided' =>
+                __('The secrets of all the users having access to the resource are required.'),
+            ];
             $this->handleValidationErrors($errors);
         }
     }

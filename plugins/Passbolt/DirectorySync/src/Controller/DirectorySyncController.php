@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -26,8 +28,8 @@ class DirectorySyncController extends DirectoryController
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
-     * @throws ForbiddenException if the controller is accessed by a non admin
+     * @param \Cake\Event\Event $event An Event instance
+     * @throws \Cake\Http\Exception\ForbiddenException if the controller is accessed by a non admin
      * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
@@ -42,6 +44,7 @@ class DirectorySyncController extends DirectoryController
 
     /**
      * Synchronize entry point
+     *
      * @return void
      */
     public function synchronize()
@@ -56,6 +59,7 @@ class DirectorySyncController extends DirectoryController
 
     /**
      * Synchronization with dry run entry point
+     *
      * @return void
      */
     public function dryRun()
@@ -70,8 +74,8 @@ class DirectorySyncController extends DirectoryController
 
     /**
      * Main synchronization function
-     * @param bool $dryRun whether it should run in dry run mode.
      *
+     * @param bool $dryRun whether it should run in dry run mode.
      * @return array reports list in array format
      */
     protected function _synchronize(bool $dryRun = true)

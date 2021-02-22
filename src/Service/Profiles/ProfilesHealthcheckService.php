@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,27 +20,25 @@ use App\Model\Entity\Profile;
 use App\Model\Table\ProfilesTable;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
-use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\ORM\TableRegistry;
 
 class ProfilesHealthcheckService extends AbstractHealthcheckService
 {
-    const CATEGORY = 'data';
-    const NAME = 'Profiles';
-    const CHECK_VALIDATES = 'Can validate';
+    public const CATEGORY = 'data';
+    public const NAME = 'Profiles';
+    public const CHECK_VALIDATES = 'Can validate';
 
     /**
-     * @var ProfilesTable
+     * @var \App\Model\Table\ProfilesTable
      */
     private $table;
 
     /**
      * Profiles Healthcheck constructor.
      *
-     * @param OpenPGPBackend $gpg gpg backend to use
-     * @param ProfilesTable $table secret table
+     * @param \App\Model\Table\ProfilesTable|null $table secret table
      */
-    public function __construct($gpg = null, $table = null)
+    public function __construct(?ProfilesTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Profiles');
@@ -48,7 +48,7 @@ class ProfilesHealthcheckService extends AbstractHealthcheckService
     /**
      * @inheritDoc
      */
-    public function check()
+    public function check(): array
     {
         $records = $this->table->find()->all();
 
@@ -62,17 +62,17 @@ class ProfilesHealthcheckService extends AbstractHealthcheckService
     /**
      * Validates
      *
-     * @param Profile $profile profile
+     * @param \App\Model\Entity\Profile $profile profile
      * @return void
      */
-    private function canValidate(Profile $profile)
+    private function canValidate(Profile $profile): void
     {
         $copy = $this->table->newEntity($profile->toArray());
         $error = $copy->getErrors();
 
         if (count($error)) {
-            $this->checks[self::CHECK_VALIDATES]->fail()
-            ->addDetail(__('Validation failed for profile {0}. {1}', $profile->id, json_encode($copy->getErrors())), Healthcheck::STATUS_ERROR);
+            $msg = __('Validation failed for profile {0}. {1}', $profile->id, json_encode($copy->getErrors()));
+            $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         } else {
             $this->checks[self::CHECK_VALIDATES]
                 ->addDetail(__('Validation success for profile {0}', $profile->id), Healthcheck::STATUS_SUCCESS);

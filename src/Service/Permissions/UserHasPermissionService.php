@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,19 +23,20 @@ use Cake\ORM\TableRegistry;
 
 /**
  * This service determine if a user has a given permission on an ACO
+ *
  * @package App\Service\Permissions
  */
 class UserHasPermissionService
 {
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
     /**
-     * @param PermissionsTable $permissionsTable PermissionsTable instance
+     * @param \App\Model\Table\PermissionsTable|null $permissionsTable PermissionsTable instance
      */
-    public function __construct(PermissionsTable $permissionsTable = null)
+    public function __construct(?PermissionsTable $permissionsTable = null)
     {
         $this->permissionsTable = $permissionsTable;
         if (is_null($this->permissionsTable)) {
@@ -49,10 +52,10 @@ class UserHasPermissionService
      * @param string $aco The target aco type. By instance a Resource or a Folder.
      * @param string $acoForeignKey The target aco id. By instance a resource or a folder id.
      * @param string $aroForeignKey The target aro id. By instance a user or a group id.
-     * @param int $permissionType The minimum permission type
+     * @param int|null $permissionType The minimum permission type, default to read
      * @return bool
      */
-    public function check(string $aco, string $acoForeignKey, string $aroForeignKey, int $permissionType = Permission::READ)
+    public function check(string $aco, string $acoForeignKey, string $aroForeignKey, ?int $permissionType = Permission::READ) // phpcs:ignore
     {
         return $this->permissionsTable->hasAccess($aco, $acoForeignKey, $aroForeignKey, $permissionType);
     }

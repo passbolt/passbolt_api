@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,8 +26,8 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
     use EmailNotificationSettingsTestTrait;
 
     public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Users',
-        'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Favorites', 'app.Base/EmailQueue',
-        'app.Base/Avatars', 'app.Base/OrganizationSettings'];
+        'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Favorites',
+        'app.Base/Avatars', ];
 
     public function testUpdateNotificationAddMemberSuccess()
     {
@@ -40,7 +42,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
@@ -63,7 +65,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
@@ -88,7 +90,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
@@ -102,11 +104,11 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
         // Remove Kathleen.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/kathleen@passbolt.com');
@@ -123,11 +125,11 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
         // Remove Kathleen.
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/kathleen@passbolt.com');
@@ -143,13 +145,13 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
         // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
         // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-nancy"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/jean@passbolt.com');
@@ -169,13 +171,13 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
         // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
         // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-nancy"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/jean@passbolt.com');
@@ -198,13 +200,13 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $changes[] = ['user_id' => $userAId, 'is_admin' => true];
         $changes[] = ['user_id' => $userBId, 'is_admin' => false];
         // Update memberships
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.human_resource-wang"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-wang'), 'is_admin' => true];
         // Remove users
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.human_resource-ursula"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-ursula'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('ping');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/thelma@passbolt.com');
@@ -231,13 +233,13 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $changes[] = ['user_id' => $userAId, 'is_admin' => true];
         $changes[] = ['user_id' => $userBId, 'is_admin' => false];
         // Update memberships
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.human_resource-wang"), 'is_admin' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-wang'), 'is_admin' => true];
         // Remove users
-        $changes[] = ['id' => UuidFactory::uuid("group_user.id.human_resource-ursula"), 'delete' => true];
+        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-ursula'), 'delete' => true];
 
         // Update the group users.
         $this->authenticateAs('ping');
-        $this->putJson("/groups/$groupId.json?api-version=v1", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->get('/seleniumtests/showLastEmail/thelma@passbolt.com');

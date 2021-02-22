@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,7 +15,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller;
+namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
@@ -32,13 +34,9 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
-use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 
 /**
  * Passbolt\Folders\Controller\Folders\FoldersDeleteController Test Case
@@ -53,11 +51,7 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        ActionsFixture::class,
-        ActionLogsFixture::class,
         AvatarsFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -84,7 +78,7 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    public function testDeleteFolder_PersoSuccess1_DeleteFolder()
+    public function testFoldersDeleteFolder_PersoSuccess1_DeleteFolder()
     {
         $folder = $this->insertPersoSuccess1Fixture();
 
@@ -104,9 +98,9 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
         return $folderA;
     }
 
-    public function testDeleteFolder_PersoSuccess3_CascadeDelete()
+    public function testFoldersDeleteFolder_PersoSuccess3_CascadeDelete()
     {
-        list($folderA, $folderB) = $this->insertPersoSuccess3Fixture();
+        [$folderA, $folderB] = $this->insertPersoSuccess3Fixture();
 
         $this->authenticateAs('ada');
         $this->deleteJson("/folders/{$folderA->id}.json?cascade=1&api-version=2");
@@ -130,9 +124,9 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
         return [$folderA, $folderB];
     }
 
-    public function testDeleteFolder_PersoSuccess2_NoCascadeMoveChildrenToRoo()
+    public function testFoldersDeleteFolder_PersoSuccess2_NoCascadeMoveChildrenToRoo()
     {
-        list($folderA, $folderB) = $this->insertPersoSuccess2Fixture();
+        [$folderA, $folderB] = $this->insertPersoSuccess2Fixture();
 
         $this->authenticateAs('ada');
         $this->deleteJson("/folders/{$folderA->id}.json?api-version=2");
@@ -156,7 +150,7 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
         return [$folderA, $folderB];
     }
 
-    public function testDeleteFolder_Error_NotValidIdParameter()
+    public function testFoldersDeleteFolder_Error_NotValidIdParameter()
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
@@ -164,7 +158,7 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400, 'The folder id is not valid.');
     }
 
-    public function testDeleteFolder_Error_IsProtectedByCsrfToken()
+    public function testFoldersDeleteFolder_Error_IsProtectedByCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
@@ -173,7 +167,7 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testDeleteFolder_Error_NotAuthenticated()
+    public function testFoldersDeleteFolder_Error_NotAuthenticated()
     {
         $folderId = UuidFactory::uuid('folder.id.folder');
         $this->deleteJson("/folders/{$folderId}.json?api-version=2");

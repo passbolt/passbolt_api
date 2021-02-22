@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,17 +33,17 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/group_user_update';
+    public const TEMPLATE = 'LU/group_user_update';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param UsersTable $usersTable Users Table
+     * @param \App\Model\Table\UsersTable $usersTable Users Table
      */
-    public function __construct(UsersTable $usersTable = null)
+    public function __construct(?UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
@@ -51,7 +53,7 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME,
@@ -59,10 +61,10 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -86,8 +88,8 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param array $updatedGroupsUsers List of updated users
-     * @param User  $modifiedBy User who modified
-     * @param Group $group Group
+     * @param \App\Model\Entity\User $modifiedBy User who modified
+     * @param \App\Model\Entity\Group $group Group
      * @return array
      */
     public function createUpdateMembershipGroupUpdateEmails(array $updatedGroupsUsers, User $modifiedBy, Group $group)
@@ -100,9 +102,10 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
             ->combine('id', 'username');
         $whoIsAdmin = Hash::combine($updatedGroupsUsers, '{n}.user_id', '{n}.is_admin');
 
-        foreach ($users as $userId => $userName) {
+        $emails = [];
+        foreach ($users as $userId => $name) {
             $isAdmin = isset($whoIsAdmin[$userId]) && $whoIsAdmin[$userId];
-            $emails[] = $this->createUpdateMembershipGroupUpdateEmail($userName, $userId, $isAdmin, $modifiedBy, $group);
+            $emails[] = $this->createUpdateMembershipGroupUpdateEmail($name, $isAdmin, $modifiedBy, $group);
         }
 
         return $emails;
@@ -111,18 +114,22 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * Create group update email for the user whom the membership has changed
      *
-     * @param string $emailRecipient Email recipient
-     * @param string $userId Id of the user
-     * @param bool   $isAdmin Is user admin
-     * @param User   $modifiedBy person who did the change
-     * @param Group  $group Group the affected group
-     * @return Email
+     * @param string $recipient Email recipient
+     * @param bool $isAdmin Is user admin
+     * @param \App\Model\Entity\User $modifiedBy person who did the change
+     * @param \App\Model\Entity\Group $group Group the affected group
+     * @return \App\Notification\Email\Email
      */
-    public function createUpdateMembershipGroupUpdateEmail(string $emailRecipient, $userId, bool $isAdmin, User $modifiedBy, Group $group)
-    {
-        $subject = __("{0} updated your membership in the group {1}", $modifiedBy->profile->first_name, $group->name);
+    public function createUpdateMembershipGroupUpdateEmail(
+        string $recipient,
+        bool $isAdmin,
+        User $modifiedBy,
+        Group $group
+    ): Email {
+        $msg = '{0} updated your membership in the group {1}';
+        $subject = __($msg, $modifiedBy->profile->first_name, $group->name);
         $data = ['body' => ['admin' => $modifiedBy, 'group' => $group, 'isAdmin' => $isAdmin], 'title' => $subject];
 
-        return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

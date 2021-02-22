@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -892,7 +894,7 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case33_Invalid_Null_Null_Null_Null()
     {
-        $groupName = str_repeat("group", 256);
+        $groupName = str_repeat('group', 256);
         $groupData = $this->mockDirectoryGroupData($groupName);
 
         $reports = $this->action->execute();

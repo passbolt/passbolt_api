@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,7 +15,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller;
+namespace Passbolt\Folders\Test\TestCase\Controller\FoldersRelations;
 
 use App\Model\Entity\Permission;
 use App\Test\Fixture\Base\AvatarsFixture;
@@ -31,13 +33,9 @@ use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
-use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 
 /**
  * Passbolt\Folders\Controller\FoldersRelations\FoldersRelationsMoveController Test Case
@@ -52,11 +50,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        ActionsFixture::class,
-        ActionLogsFixture::class,
         AvatarsFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -70,7 +64,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersRelationsMoveSuccess_MoveFolder()
     {
-        list ($folderA, $folderB, $userAId) = $this->insertFixture_MoveFolder();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder();
         $this->authenticateAs('ada');
         $data['folder_parent_id'] = $folderA->id;
         $this->putJson("/move/folder/$folderB->id.json?api-version=2", $data);
@@ -101,7 +95,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersRelationsMoveSuccess_MoveResource()
     {
-        list ($folderA, $r1, $userAId) = $this->insertFixture_MoveResource();
+        [$folderA, $r1, $userAId] = $this->insertFixture_MoveResource();
         $this->authenticateAs('ada');
         $data['folder_parent_id'] = $folderA->id;
         $this->putJson("/move/resource/$r1->id.json?api-version=2", $data);
@@ -148,7 +142,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersRelationsMoveError_ValidationErrors_FolderParentIdRequired()
     {
-        list($folderA, $folderB, $userAId) = $this->insertFixture_MoveFolder();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder();
         $this->authenticateAs('ada');
         $this->putJson("/move/folder/$folderA->id.json?api-version=2");
         $this->assertError(400, 'Could not validate move data.');
@@ -187,9 +181,9 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         $this->assertError(404, 'The folder does not exist.');
     }
 
-    public function testUpdateResourcesError_NoAccessToFolder()
+    public function testFoldersRelationsUpdateResourcesError_NoAccessToFolder()
     {
-        list($folderA, $folderB, $userAId) = $this->insertFixture_MoveFolder();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder();
         $this->authenticateAs('dame');
         $data = ['folder_parent_id' => FoldersRelation::ROOT];
         $this->putJson("/move/folder/$folderA->id.json", $data);

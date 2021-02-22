@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +15,6 @@
  */
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
-use Passbolt\MultiFactorAuthentication\Controller\UserSettings\MfaUserSettingsDeleteController;
 
 Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
@@ -57,13 +57,17 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
     $routes->connect('/setup/yubikey', ['prefix' => 'Yubikey', 'controller' => 'YubikeySetupPost', 'action' => 'post'])
         ->setMethods(['POST']);
 
-    $routes->connect('/setup/yubikey', ['prefix' => 'Yubikey', 'controller' => 'YubikeySetupDelete', 'action' => 'delete'])
+    $routes->connect('/setup/yubikey', [
+            'prefix' => 'Yubikey', 'controller' => 'YubikeySetupDelete', 'action' => 'delete',
+        ])
         ->setMethods(['DELETE']);
 
     $routes->connect('/verify/yubikey', ['prefix' => 'Yubikey', 'controller' => 'YubikeyVerifyGet', 'action' => 'get'])
         ->setMethods(['GET']);
 
-    $routes->connect('/verify/yubikey', ['prefix' => 'Yubikey', 'controller' => 'YubikeyVerifyPost', 'action' => 'post'])
+    $routes->connect('/verify/yubikey', [
+            'prefix' => 'Yubikey', 'controller' => 'YubikeyVerifyPost', 'action' => 'post',
+        ])
         ->setMethods(['POST']);
 
     /**
@@ -99,7 +103,9 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
     /**
      * User settings
      */
-    $routes->connect('/setup/:userId', ['prefix' => 'UserSettings', 'controller' => 'MfaUserSettingsDelete', 'action' => 'delete'])
+    $routes->connect('/setup/:userId', [
+            'prefix' => 'UserSettings', 'controller' => 'MfaUserSettingsDelete', 'action' => 'delete',
+        ])
         ->setPass(['userId'])
         ->setMethods(['DELETE']);
 });

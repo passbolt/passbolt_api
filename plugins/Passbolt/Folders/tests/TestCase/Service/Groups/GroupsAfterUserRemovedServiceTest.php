@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,8 +18,6 @@
 namespace Passbolt\Folders\Test\TestCase\Service\Groups;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\GroupsUsersTable;
-use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
@@ -29,8 +29,6 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Groups\GroupsAfterUserRemovedService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -46,8 +44,6 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
 
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -63,11 +59,6 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
     private $groupsUsersTable;
 
     /**
-     * @var PermissionsTable
-     */
-    private $permissionsTable;
-
-    /**
      * @var GroupsAfterUserRemovedService
      */
     private $service;
@@ -76,13 +67,12 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
     {
         parent::setUp();
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $this->service = new GroupsAfterUserRemovedService();
     }
 
     public function testGroupsAfterUserRemovedSuccess_RemoveResourceFromUserTree()
     {
-        list($r1, $r2, $g1, $userAId, $userBId) = $this->insertFixture_RemoveResourceFromUserTree();
+        [$r1, $r2, $g1, $userAId, $userBId] = $this->insertFixture_RemoveResourceFromUserTree();
 
         // Prepare the test by deleting the group user entry
         $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();
@@ -120,7 +110,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
 
     public function testGroupsAfterUserRemovedSuccess_KeepResourceInTreeWhenUserHasAnotherAccess()
     {
-        list($r1, $r2, $g1, $userAId, $userBId) = $this->insertFixture_KeepResourceInTreeWhenUserHasAnotherAccess();
+        [$r1, $r2, $g1, $userAId, $userBId] = $this->insertFixture_KeepResourceInTreeWhenUserHasAnotherAccess();
 
         // Prepare the test by deleting the group user entry
         $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();
@@ -158,7 +148,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
 
     public function testGroupsAfterUserRemovedSuccess_RemoveFolderFromUserTree()
     {
-        list($folderA, $folderB, $g1, $userAId, $userBId) = $this->insertFixture_RemoveFolderFromUserTree();
+        [$folderA, $folderB, $g1, $userAId, $userBId] = $this->insertFixture_RemoveFolderFromUserTree();
 
         // Prepare the test by deleting the group user entry
         $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();
@@ -197,7 +187,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
 
     public function testGroupsAfterUserRemovedSuccess_RemoveFolderFromUserTreeMoveContentToRoot()
     {
-        list($folderA, $folderB, $g1, $userAId, $userBId) = $this->insertFixture_RemoveFolderFromUserTreeMoveContentToRoot();
+        [$folderA, $folderB, $g1, $userAId, $userBId] = $this->insertFixture_RemoveFolderFromUserTreeMoveContentToRoot();
 
         // Prepare the test by deleting the group user entry
         $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();
@@ -238,7 +228,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
 
     public function testGroupsAfterUserRemovedSuccess_KeepFolderInTreeWhenUserHasAnotherAccess()
     {
-        list($folderA, $folderB, $g1, $userAId, $userBId) = $this->insertFixture_KeepFolderInTreeWhenUserHasAnotherAccess();
+        [$folderA, $folderB, $g1, $userAId, $userBId] = $this->insertFixture_KeepFolderInTreeWhenUserHasAnotherAccess();
 
         // Prepare the test by deleting the group user entry
         $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();

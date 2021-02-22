@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,6 +25,7 @@ trait ActionLogsOperationsTrait
 {
     /**
      * Simulate a share operation from the perspective of action logs and history tables.
+     *
      * @param UserAccessControl $user user access control
      * @param string $aco aco
      * @param string $acoKey aco key
@@ -60,6 +63,7 @@ trait ActionLogsOperationsTrait
 
     /**
      * Simulate resources crud operation.
+     *
      * @param UserAccessControl $user user access control
      * @param string $resourceId resource id
      * @param string $crud crud
@@ -88,23 +92,24 @@ trait ActionLogsOperationsTrait
 
     /**
      * Simulate resource secret update operation.
-     * @param UserAccessControl $user user
+     *
+     * @param UserAccessControl $uac user
      * @param string $resourceId resource id
      * @return void
      */
-    public function simulateResourceSecretUpdate(UserAccessControl $user, string $resourceId)
+    public function simulateResourceSecretUpdate(UserAccessControl $uac, string $resourceId)
     {
         $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
         $EntitiesHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
         $SecretsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretsHistory');
-        $userAction = UserAction::getInstance($user, 'Resources.update', 'PUT /resources/' . $resourceId . '.json');
+        $userAction = UserAction::getInstance($uac, 'Resources.update', 'PUT /resources/' . $resourceId . '.json');
 
         $ActionLogs->create($userAction, 1);
 
         $secretsHistory = [
             'id' => UuidFactory::uuid('secret.resource.id.' . $resourceId),
             'resource_id' => $resourceId,
-            'user_id' => $user->userId(),
+            'user_id' => $uac->getId(),
         ];
         $sh = $SecretsHistory->create($secretsHistory);
 
@@ -118,6 +123,7 @@ trait ActionLogsOperationsTrait
 
     /**
      * Simulate multiple resource get with secrets.
+     *
      * @param UserAccessControl $user user
      * @param array $resourceIds resource ids
      * @return void

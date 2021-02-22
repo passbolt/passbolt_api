@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -51,7 +53,7 @@ class Migration
         $remoteVersion = ltrim(Migration::getLatestTagName(), 'v');
         $localVersion = ltrim(Configure::read('passbolt.version'), 'v');
 
-        return version_compare($localVersion, $remoteVersion, ">=");
+        return version_compare($localVersion, $remoteVersion, '>=');
     }
 
     /**

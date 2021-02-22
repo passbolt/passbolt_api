@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,7 +22,6 @@ use App\Model\Entity\Profile;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
-use App\Notification\Email\EmailCollection;
 use App\Notification\Email\Redactor\AdminUserSetupCompleteEmailRedactor;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -30,9 +30,8 @@ use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\Log\Model\Entity\ActionLog;
 use Passbolt\Log\Model\Entity\EntityHistory;
-use PHPUnit\Framework\MockObject\MockObject;
 
-class AdminUserSetupCompleteEmailRedactorTest extends TestCase
+class AdminUserSetupEmailRedactorTest extends TestCase
 {
     /**
      * @var AdminUserSetupCompleteEmailRedactor
@@ -109,7 +108,7 @@ class AdminUserSetupCompleteEmailRedactorTest extends TestCase
 
         $this->assertThatAllAdminHaveAnEmailCreated($emailRecipients, $expectedAdmins);
 
-        $expectedSubject = sprintf('%s have just activated their account on passbolt', $userCompletedSetup->profile->first_name);
+        $expectedSubject = sprintf('%s just activated their account on passbolt', $userCompletedSetup->profile->first_name);
 
         $email = $result->getEmails()[0];
         $this->assertEmailSubject($expectedSubject, $email, $userCompletedSetup, $expectedAdmins[0]);
@@ -161,7 +160,7 @@ class AdminUserSetupCompleteEmailRedactorTest extends TestCase
             $this->assertContains(
                 $admin->username,
                 $emailRecipients,
-                sprintf("`%s` is an admin and should have an email created", $admin->username)
+                sprintf('`%s` is an admin and should have an email created', $admin->username)
             );
         }
     }

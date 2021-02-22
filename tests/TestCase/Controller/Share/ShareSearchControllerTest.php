@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -47,7 +49,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->getJson("/share/search-users/resource/$resourceId.json?api-version=2");
         $aros = $this->_responseJsonBody;
         $this->assertNotEmpty($aros);
-        $arosIds = Hash::extract($aros, "{n}.id");
+        $arosIds = Hash::extract($aros, '{n}.id');
 
         // Should find the user Edith
         $userEId = UuidFactory::uuid('user.id.edith');

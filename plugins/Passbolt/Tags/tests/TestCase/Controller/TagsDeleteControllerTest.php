@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -33,7 +35,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      * @group tag
      * @group tagDelete
      */
-    public function testTagDeleteNotLoggedIn()
+    public function testTagsDeleteNotLoggedIn()
     {
         $this->deleteJson('/tags/0507cbbb-eb14-5121-9105-05380dbe64ff.json?api-version=v2');
         $this->assertAuthenticationError();
@@ -46,7 +48,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      * @group tag
      * @group tagDelete
      */
-    public function testTagDeleteInvalidTagId()
+    public function testTagsDeleteInvalidTagId()
     {
         $this->authenticateAs('ada');
         $this->deleteJson('/tags/invalid-tag-id.json?api-version=v2');
@@ -60,7 +62,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      * @group tag
      * @group tagDelete
      */
-    public function testTagDeleteNonExistingTagId()
+    public function testTagsDeleteNonExistingTagId()
     {
         $this->authenticateAs('ada');
         $tagId = UuidFactory::uuid('tag.id.nope');
@@ -75,7 +77,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      * @group tag
      * @group tagDelete
      */
-    public function testTagDeleteUserCanNotDeleteSharedTag()
+    public function testTagsDeleteUserCanNotDeleteSharedTag()
     {
         $this->authenticateAs('ada');
         $tagId = UuidFactory::uuid('tag.id.#bravo');
@@ -90,7 +92,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      * @group tag
      * @group tagDelete
      */
-    public function testTagDeleteUserCanNotDeleteWithoutCsrfToken()
+    public function testTagsDeleteUserCanNotDeleteWithoutCsrfToken()
     {
         $this->disableCsrfToken();
 
@@ -98,7 +100,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
         $tagId = UuidFactory::uuid('tag.id.hotel');
         $this->delete("/tags/$tagId.json?api-version=v2");
         $this->assertResponseCode(403);
-        $result = ($this->_getBodyAsString());
+        $result = $this->_getBodyAsString();
         $this->assertContains('Missing CSRF token cookie', $result);
     }
 
@@ -110,7 +112,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      * @group tagDelete
      * @group admin
      */
-    public function testTagDeleteAdminCanNotDeletePersonalTag()
+    public function testTagsDeleteAdminCanNotDeletePersonalTag()
     {
         // Make sure ada has access to personal tag hotel
         $this->authenticateAs('ada');
@@ -140,7 +142,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      * @group tag
      * @group tagDelete
      */
-    public function testTagDeleteUserCanDeletePersonalTag()
+    public function testTagsDeleteUserCanDeletePersonalTag()
     {
         $this->authenticateAs('ada');
         $tagId = UuidFactory::uuid('tag.id.fox-trot');

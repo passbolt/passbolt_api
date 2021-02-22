@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -19,6 +21,7 @@ use Passbolt\DirectorySync\Test\Utility\TestDirectory;
 
 /**
  * Directory factory class
+ *
  * @package App\Utility
  */
 class DirectoryFactory
@@ -26,11 +29,11 @@ class DirectoryFactory
     /**
      * Get directory factory.
      *
-     * @param DirectoryOrgSettings $settings The directory settings
+     * @param \Passbolt\DirectorySync\Utility\DirectoryOrgSettings $settings The directory settings
      * @return mixed
      * @throws \Exception
      */
-    public static function get(DirectoryOrgSettings $settings = null)
+    public static function get(?DirectoryOrgSettings $settings = null)
     {
         if (Configure::read('passbolt.plugins.directorySync.test')) {
             return new TestDirectory();

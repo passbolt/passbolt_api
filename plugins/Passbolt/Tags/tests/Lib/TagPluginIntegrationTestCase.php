@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -16,11 +18,9 @@ namespace Passbolt\Tags\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 
 abstract class TagPluginIntegrationTestCase extends AppIntegrationTestCase
 {
-
     /**
      * setUp method
      *

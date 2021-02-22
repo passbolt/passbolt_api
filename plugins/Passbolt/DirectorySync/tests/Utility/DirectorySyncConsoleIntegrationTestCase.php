@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -26,10 +28,6 @@ abstract class DirectorySyncConsoleIntegrationTestCase
     use DirectoryOrgSettingsTrait;
     use MockDirectoryTrait;
     use UserAccessControlTrait;
-
-    public $fixtures = [
-        'app.Base/OrganizationSettings',
-    ];
 
     public function setUp()
     {

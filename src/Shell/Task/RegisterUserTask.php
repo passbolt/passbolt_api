@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,13 +18,18 @@ namespace App\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Shell\AppShell;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
+/**
+ * @property UsersTable Users
+ * @property RolesTable Roles
+ * @property AuthenticationTokensTable AuthenticationTokens
+ */
 class RegisterUserTask extends AppShell
 {
     /**
@@ -33,7 +40,7 @@ class RegisterUserTask extends AppShell
      * @return void
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->loadModel('Users');
@@ -105,30 +112,29 @@ class RegisterUserTask extends AppShell
             $accessControl = new UserAccessControl(Role::ADMIN);
         }
 
-        $result = false;
         $attempt = 0;
+        $user = null;
+
         if ($this->param('interactive')) {
             $maxAttempt = $this->param('interactive-loop');
         } else {
             $maxAttempt = 1;
         }
         while (($attempt < $maxAttempt)) {
-            $result = false;
             $attempt++;
             $data = $this->_getUserData();
             try {
                 $user = $this->Users->register($data, $accessControl);
-                $result = true;
                 break;
             } catch (ValidationException $exception) {
                 $this->out(__('Validation failed for the following user data:'));
                 $this->_displayValidationError($exception->getErrors());
             } catch (InternalErrorException $exception) {
                 $this->out(__('Something went wrong when trying to save the user, please try again.'));
-            };
+            }
         }
 
-        if (!$result) {
+        if (!isset($user)) {
             $this->_error(__('User registration failed.'));
 
             return false;
@@ -207,14 +213,13 @@ class RegisterUserTask extends AppShell
     /**
      * Notify the user by trigerring a registerPost event
      *
-     * @param object $user Entity User
+     * @param \App\Model\Entity\User $user Entity User
      * @return void
      */
-    protected function _notifyUser($user)
+    protected function _notifyUser(User $user)
     {
         // Display the token in console for convenience
-        $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        $token = $AuthenticationTokens->getByUserId($user->id);
+        $token = $this->AuthenticationTokens->getByUserId($user->id);
 
         if (EmailNotificationSettings::get('send.user.create')) {
             $message = __(

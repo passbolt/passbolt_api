@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -16,7 +18,6 @@ namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Shell\AppShell;
-use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
@@ -27,6 +28,7 @@ abstract class SyncTask extends AppShell
 
     /**
      * Display reports
+     *
      * @param array $reports list of reports
      * @return void
      */
@@ -53,13 +55,19 @@ abstract class SyncTask extends AppShell
             $this->_displayReport($report);
         }
         $this->out();
-        $this->info(__('For more explanation on sync error messages, see: {0}', ['https://help.passbolt.com/configure/ldap/ldap-common-sync-error-messages']));
+        $this->info(
+            __(
+                'For more explanation on sync error messages, see: {0}',
+                ['https://help.passbolt.com/configure/ldap/ldap-common-sync-error-messages']
+            )
+        );
         $this->out();
     }
 
     /**
      * Display report
-     * @param ActionReport $report report
+     *
+     * @param \Passbolt\DirectorySync\Shell\Task\ActionReport $report report
      * @return void
      */
     protected function _displayReport($report)
@@ -81,8 +89,9 @@ abstract class SyncTask extends AppShell
                         $model = 'DirectoryEntries';
                     }
 
-                    $this->out(str_pad('', $this->pad) . __('To ignore this error in the next sync please run'));
-                    $this->out(str_pad('', $this->pad) . "./bin/cake directory_sync ignore-create --id=$id --model=$model");
+                    $p = str_pad('', $this->pad);
+                    $this->out($p . __('To ignore this error in the next sync please run'));
+                    $this->out($p . "./bin/cake directory_sync ignore-create --id=$id --model=$model");
                 }
                 break;
             case Alias::STATUS_SYNC:

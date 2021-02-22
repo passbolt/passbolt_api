@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -32,7 +34,7 @@ class AddIsMfaEnabledBehavior implements EventListenerInterface
     }
 
     /**
-     * @param EventInterface $event Event
+     * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
     public function __invoke(EventInterface $event)
@@ -41,7 +43,7 @@ class AddIsMfaEnabledBehavior implements EventListenerInterface
             return;
         }
 
-        /** @var UsersTable $users */
+        /** @var \App\Model\Table\UsersTable $users */
         $users = $event->getSubject();
 
         $users->addBehavior(IsMfaEnabledBehavior::class);

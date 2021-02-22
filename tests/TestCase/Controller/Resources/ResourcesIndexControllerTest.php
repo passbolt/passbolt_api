@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -47,21 +49,6 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
     }
 
-    public function testApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $this->getJson('/resources.json?api-version=v1');
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody[0]);
-        $this->assertResourceAttributes($this->_responseJsonBody[0]->Resource);
-        // Not expected fields.
-        $this->assertObjectNotHasAttribute('Secret', $this->_responseJsonBody[0]);
-        $this->assertObjectNotHasAttribute('Creator', $this->_responseJsonBody[0]);
-    }
-
     public function testContainSuccess()
     {
         $this->authenticateAs('ada');
@@ -103,40 +90,6 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         }));
         $this->assertObjectHasAttribute('favorite', $favoriteResource);
         $this->assertFavoriteAttributes($favoriteResource->favorite);
-    }
-
-    public function testContainApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
-        $this->getJson("/resources.json?$urlParameter&api-version=v1");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody[0]);
-        $this->assertResourceAttributes($this->_responseJsonBody[0]->Resource);
-        // Contain creator.
-        $this->assertObjectHasAttribute('Creator', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody[0]->Creator);
-        // Contain modifier.
-        $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody[0]->Modifier);
-        // Contain permission.
-        $this->assertObjectHasAttribute('Permission', $this->_responseJsonBody[0]);
-        $this->assertPermissionAttributes($this->_responseJsonBody[0]->Permission);
-        // Contain secret.
-        $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody[0]);
-        $this->assertCount(1, $this->_responseJsonBody[0]->Secret);
-        $this->assertSecretAttributes($this->_responseJsonBody[0]->Secret[0]);
-        // Contain favorite.
-        $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody[0]);
-        // A resource marked as favorite contains the favorite data.
-        $favoriteResourceId = UuidFactory::uuid('resource.id.apache');
-        $favoriteResource = current(array_filter($this->_responseJsonBody, function ($resource) use ($favoriteResourceId) {
-            return $resource->Resource->id == $favoriteResourceId;
-        }));
-        $this->assertObjectHasAttribute('Favorite', $favoriteResource);
-        $this->assertFavoriteAttributes($favoriteResource->Favorite);
     }
 
     public function testFilterIsFavoriteSuccess()
@@ -186,7 +139,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     public function testFilterIsSharedWithMeSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = "filter[is-shared-with-me]=1";
+        $urlParameter = 'filter[is-shared-with-me]=1';
         $this->getJson("/resources.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
@@ -222,7 +175,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
     public function testIndexErrorNotAuthenticated()
     {
-        $this->getJson('/resources.json?api-version=v1');
+        $this->getJson('/resources.json');
         $this->assertAuthenticationError();
     }
 }

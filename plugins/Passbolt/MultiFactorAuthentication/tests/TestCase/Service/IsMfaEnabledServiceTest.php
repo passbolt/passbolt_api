@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,7 +24,6 @@ use Passbolt\MultiFactorAuthentication\Service\GetMfaOrgSettingsService;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaEnabledService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class IsMfaEnabledServiceTest extends TestCase

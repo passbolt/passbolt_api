@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,14 +16,10 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
-use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
-use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 class MfaAccountSettings
 {
@@ -29,10 +27,10 @@ class MfaAccountSettings
     use MfaAccountSettingsYubikeyTrait;
 
     // Names used for settings props
-    const OTP_PROVISIONING_URI = 'otpProvisioningUri';
-    const YUBIKEY_ID = 'yubikeyId';
-    const VERIFIED = 'verified';
-    const PROVIDERS = 'providers';
+    public const OTP_PROVISIONING_URI = 'otpProvisioningUri';
+    public const YUBIKEY_ID = 'yubikeyId';
+    public const VERIFIED = 'verified';
+    public const PROVIDERS = 'providers';
 
     protected $settings;
     protected $uac;
@@ -40,15 +38,15 @@ class MfaAccountSettings
     protected $remember;
 
     /**
-     * @var AccountSettingsTable
+     * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
      */
     protected $AccountSettings;
 
     /**
      * Get MfaSettings (Singleton)
      *
-     * @param UserAccessControl $uac user access control
-     * @return MfaAccountSettings
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
      */
     public static function get(UserAccessControl $uac)
     {
@@ -62,10 +60,10 @@ class MfaAccountSettings
     /**
      * MfaSettings constructor.
      *
-     * @param UserAccessControl $uac user access control
+     * @param \App\Utility\UserAccessControl $uac user access control
      * @param array $settings account settings
      */
-    public function __construct(UserAccessControl $uac, array $settings = null)
+    public function __construct(UserAccessControl $uac, ?array $settings = null)
     {
         $this->AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $this->uac = $uac;
@@ -93,10 +91,10 @@ class MfaAccountSettings
 
         switch ($provider) {
             case MfaSettings::PROVIDER_TOTP:
-                $result = ($this->isOtpProvisioningUriSet());
+                $result = $this->isOtpProvisioningUriSet();
                 break;
             case MfaSettings::PROVIDER_YUBIKEY:
-                $result = ($this->isYubikeyUserIdSet());
+                $result = $this->isYubikeyUserIdSet();
                 break;
             default:
                 $result = true;
@@ -119,7 +117,7 @@ class MfaAccountSettings
     /**
      * Return all providers
      *
-     * @throws RecordNotFoundException if there is no provider set
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException if there is no provider set
      * @return array list of providers
      */
     protected function getProviders()
@@ -134,7 +132,7 @@ class MfaAccountSettings
     /**
      * Get an array of provider name that are enabled and verified for this user
      *
-     * @throws RecordNotFoundException
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @return array
      */
     public function getEnabledProviders()
@@ -154,7 +152,7 @@ class MfaAccountSettings
      * Return verification date time as FrozenTime
      *
      * @param string $provider name of the provider
-     * @return FrozenTime
+     * @return \Cake\I18n\FrozenTime
      */
     public function getVerifiedFrozenTime(string $provider)
     {
@@ -168,12 +166,12 @@ class MfaAccountSettings
     /**
      * Enable a new mfa provider for the given user
      *
-     * @param UserAccessControl $uac access control
+     * @param \App\Utility\UserAccessControl $uac access control
      * @param string $provider name of the provider
-     * @param array $data data
+     * @param array|null $data data
      * @return void
      */
-    public static function enableProvider(UserAccessControl $uac, string $provider, array $data = [])
+    public static function enableProvider(UserAccessControl $uac, string $provider, ?array $data = [])
     {
         $data['verified'] = FrozenTime::now();
         $mfaAccountSettings = null;
@@ -196,9 +194,9 @@ class MfaAccountSettings
     /**
      * Save the MFA account settings as account setting prop
      *
-     * @throws BadRequestException if userId does not exist
-     * @throws ValidationException if could not save because of validation issues
-     * @throws InternalErrorException if save operation saved for another reason
+     * @throws \Cake\Http\Exception\BadRequestException if userId does not exist
+     * @throws \App\Error\Exception\ValidationException if could not save because of validation issues
+     * @throws \Cake\Http\Exception\InternalErrorException if save operation saved for another reason
      * @return void
      */
     public function save()

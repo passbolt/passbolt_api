@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,13 +20,13 @@ namespace Passbolt\Folders\EventListener;
 use App\Model\Table\PermissionsTable;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Table;
 use Passbolt\Folders\Model\Behavior\PermissionsCleanupBehavior;
 
 /**
  * Listen when the PermissionsTable class is initialized and attach the folders permissions cleanup behaviors to it.
  *
  * Class PermissionsModelInitializeEventListener
+ *
  * @package Passbolt\Folders\EventListener
  */
 class PermissionsModelInitializeEventListener implements EventListenerInterface
@@ -40,13 +42,13 @@ class PermissionsModelInitializeEventListener implements EventListenerInterface
     }
 
     /**
-     * @param EventInterface $event Event
+     * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
     public function __invoke(EventInterface $event)
     {
         if ($event->getSubject() instanceof PermissionsTable) {
-            /** @var Table $table */
+            /** @var \Cake\ORM\Table $table */
             $table = $event->getSubject();
             $table->addBehavior(PermissionsCleanupBehavior::class);
         }

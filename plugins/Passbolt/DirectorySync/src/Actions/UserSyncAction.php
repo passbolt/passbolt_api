@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -30,7 +32,7 @@ class UserSyncAction extends SyncAction
     /**
      * @var string entityType
      */
-    const ENTITY_TYPE = Alias::MODEL_USERS;
+    public const ENTITY_TYPE = Alias::MODEL_USERS;
 
     /**
      * UserSyncAction constructor.
@@ -44,6 +46,7 @@ class UserSyncAction extends SyncAction
 
     /**
      * Things to do after the constructor and before the sync job
+     *
      * @return void
      */
     public function beforeExecute()
@@ -67,6 +70,7 @@ class UserSyncAction extends SyncAction
 
     /**
      * Get user from data.
+     *
      * @param array $data data
      * @return array|\Cake\Datasource\EntityInterface|null
      */

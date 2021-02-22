@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -30,7 +32,6 @@ use Cake\ORM\TableRegistry;
  */
 class OrganizationSettingsTableTest extends AppTestCase
 {
-
     /**
      * Test subject
      *
@@ -39,16 +40,8 @@ class OrganizationSettingsTableTest extends AppTestCase
     public $OrganizationSettings;
 
     /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/OrganizationSettings',
-    ];
-
-    /**
      * Get test settings.
+     *
      * @return array sample settings.
      */
     protected function _getTestSettings()

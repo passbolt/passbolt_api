@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,28 +22,31 @@ use LdapTools\Object\LdapObjectType;
 
 /**
  * Class UserEntry
+ *
  * @package Passbolt\DirectorySync\Utility\DirectoryEntry
  */
 class UserEntry extends DirectoryEntry
 {
     /**
      * User object
+     *
      * @var array
      */
     public $user;
 
     /**
      * Object type (user).
+     *
      * @var string
      */
     public $type = LdapObjectType::USER;
 
     /**
      * Build user entry from ldap object.
-     * @param LdapObject $ldapObject ldap object.
-     * @param array $mappingRules mapping rules.
      *
-     * @return $this|DirectoryEntry directory entry.
+     * @param \LdapTools\Object\LdapObject $ldapObject ldap object.
+     * @param array $mappingRules mapping rules.
+     * @return $this|\Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryEntry directory entry.
      * @throws \Exception
      */
     public function buildFromLdapObject(LdapObject $ldapObject, array $mappingRules)
@@ -61,10 +66,10 @@ class UserEntry extends DirectoryEntry
 
     /**
      * Return the corresponding userEntry from a given ldapObject.
-     * @param LdapObject $ldapObject ldap object.
-     * @param array $mappingRules mapping rules.
      *
-     * @return UserEntry user entry.
+     * @param \LdapTools\Object\LdapObject $ldapObject ldap object.
+     * @param array $mappingRules mapping rules.
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry user entry.
      * @throws \Exception
      */
     public static function fromLdapObject(LdapObject $ldapObject, array $mappingRules)
@@ -77,9 +82,9 @@ class UserEntry extends DirectoryEntry
 
     /**
      * Build user entry from array.
-     * @param array $data data
      *
-     * @return DirectoryEntry
+     * @param array $data data
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryEntry
      */
     public function buildFromArray(array $data)
     {
@@ -94,9 +99,9 @@ class UserEntry extends DirectoryEntry
 
     /**
      * Return a user entry from an array.
-     * @param array $data data
      *
-     * @return UserEntry the user entry.
+     * @param array $data data
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry the user entry.
      */
     public static function fromArray(array $data)
     {
@@ -141,6 +146,7 @@ class UserEntry extends DirectoryEntry
 
     /**
      * Convert a user entry into a simple array.
+     *
      * @return array
      */
     public function toArray()

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,8 +19,6 @@ namespace App\Test\TestCase\Controller\Users;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
-use Cake\ORM\TableRegistry;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
@@ -96,9 +96,9 @@ class UsersEditControllerTest extends AppIntegrationTestCase
                 'first_name' => '💁',
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json', $data);
         $this->assertError(400, 'Could not validate user data.');
-        $error = $this->_responseJsonBody->User->profile->first_name->utf8;
+        $error = $this->_responseJsonBody->profile->first_name->utf8;
         $this->assertEquals($error, 'First name should be a valid utf8 string.');
     }
 
@@ -111,29 +111,27 @@ class UsersEditControllerTest extends AppIntegrationTestCase
                 'first_name' => 'ada edited',
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->Profile->first_name, 'Ada edited');
+        $this->assertEquals($this->_responseJsonBody->profile->first_name, 'Ada edited');
     }
 
-    public function testUsersEditUsersApiV1Success()
+    public function testUsersEditUsersSuccess_CannotEditProtectedFields()
     {
         $this->authenticateAs('ada');
         $data = [
-            'User' => [
-                'id' => UuidFactory::uuid('user.id.ada'),
-                'active' => 'false',
-                'deleted' => 'true',
-            ],
-            'Profile' => [
+            'id' => UuidFactory::uuid('user.id.ada'),
+            'active' => false,
+            'deleted' => true,
+            'profile' => [
                 'first_name' => 'ada edited',
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->Profile->first_name, 'Ada edited');
-        $this->assertEquals($this->_responseJsonBody->User->active, true);
-        $this->assertEquals($this->_responseJsonBody->User->deleted, false);
+        $this->assertEquals($this->_responseJsonBody->profile->first_name, 'Ada edited');
+        $this->assertEquals($this->_responseJsonBody->active, true);
+        $this->assertEquals($this->_responseJsonBody->deleted, false);
     }
 
     public function testUsersEditIgnoreNotAllowedFieldsSuccess()
@@ -148,12 +146,12 @@ class UsersEditControllerTest extends AppIntegrationTestCase
                 'first_name' => 'ada edited',
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v2', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->Profile->first_name, 'Ada edited');
-        $this->assertEquals($this->_responseJsonBody->User->username, 'ada@passbolt.com');
-        $this->assertEquals($this->_responseJsonBody->User->active, true);
-        $this->assertEquals($this->_responseJsonBody->User->deleted, false);
+        $this->assertEquals($this->_responseJsonBody->profile->first_name, 'Ada edited');
+        $this->assertEquals($this->_responseJsonBody->username, 'ada@passbolt.com');
+        $this->assertEquals($this->_responseJsonBody->active, true);
+        $this->assertEquals($this->_responseJsonBody->deleted, false);
     }
 
     public function testUsersEditAdminRoleEditSuccess()
@@ -163,26 +161,9 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.ada'),
             'role_id' => UuidFactory::uuid('role.id.admin'),
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v2', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->Role->name, Role::ADMIN);
-    }
-
-    public function testUsersEditNotAdminApiv1IgnoreRoleEditSuccess()
-    {
-        $this->authenticateAs('ada');
-        $data = [
-            'User' => [
-                'id' => UuidFactory::uuid('user.id.ada'),
-                'role_id' => UuidFactory::uuid('role.id.admin'),
-            ],
-            'Role' => [
-                'id' => UuidFactory::uuid('role.id.admin'),
-            ],
-        ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1', $data);
-        $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->Role->name, Role::USER);
+        $this->assertEquals($this->_responseJsonBody->role->name, Role::ADMIN);
     }
 
     public function testUsersEditNotAdminRoleEditError()
@@ -192,7 +173,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.ada'),
             'role_id' => UuidFactory::uuid('role.id.admin'),
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=2', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v2', $data);
         $this->assertForbiddenError('You are not authorized to edit the role.');
     }
 
@@ -203,7 +184,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.ada'),
             'gpgkey' => [],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=2', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v2', $data);
         $this->assertBadRequestError('Updating the gpgkey is not allowed.');
     }
 
@@ -214,7 +195,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.ada'),
             'groups_user' => [],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=2', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v2', $data);
         $this->assertBadRequestError('Updating the groups is not allowed.');
     }
 }

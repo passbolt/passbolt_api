@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,7 +28,7 @@ class IsValidTest extends AppTestCase
     use AuthenticationTokenModelTrait;
 
     public $AuthenticationTokens;
-    public $fixtures = ['app.Base/AuthenticationTokens', 'app.Base/Users'];
+    public $fixtures = [ 'app.Base/Users'];
 
     public function setUp()
     {

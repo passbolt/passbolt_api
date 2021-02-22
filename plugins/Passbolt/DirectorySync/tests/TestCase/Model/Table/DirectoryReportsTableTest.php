@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Passbolt\DirectorySync\Test\TestCase\Model\Table;
 
 use Cake\ORM\TableRegistry;
@@ -10,7 +12,6 @@ use Passbolt\DirectorySync\Model\Table\DirectoryReportsTable;
  */
 class DirectoryReportsTableTest extends TestCase
 {
-
     /**
      * Test subject
      *

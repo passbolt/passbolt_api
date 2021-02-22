@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,13 +17,11 @@
 
 namespace App\Model\Table\Dto;
 
-use App\Controller\Component\QueryStringComponent;
-
 class FindIndexOptions
 {
-    const FILTER_OPTION = 'filter';
-    const ORDER_OPTION = 'order';
-    const CONTAIN_OPTION = 'contain';
+    public const FILTER_OPTION = 'filter';
+    public const ORDER_OPTION = 'order';
+    public const CONTAIN_OPTION = 'contain';
 
     /**
      * @var string[]
@@ -60,16 +60,17 @@ class FindIndexOptions
 
     /**
      * UUID of a User
+     *
      * @var string
      */
     private $userId;
 
     /**
-     * @param array $filter filters Filters
-     * @param array $order orders Orders
-     * @param array $contain contains Contains
+     * @param array|null $filter filters Filters
+     * @param array|null $order orders Orders
+     * @param array|null $contain contains Contains
      */
-    public function __construct(array $filter = [], array $order = [], array $contain = [])
+    public function __construct(?array $filter = [], ?array $order = [], ?array $contain = [])
     {
         $this->filter = $filter;
         $this->order = $order;
@@ -78,7 +79,7 @@ class FindIndexOptions
 
     /**
      * @param array $findIndexOptions Find index options
-     * @return FindIndexOptions
+     * @return \App\Model\Table\Dto\FindIndexOptions
      */
     public static function createFromArray(array $findIndexOptions)
     {
@@ -97,6 +98,19 @@ class FindIndexOptions
     {
         foreach ($filters as $filter) {
             $this->allowFilter($filter);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $contains Contains
+     * @return $this
+     */
+    public function allowContains(array $contains)
+    {
+        foreach ($contains as $contain) {
+            $this->allowContain($contain);
         }
 
         return $this;
@@ -200,6 +214,7 @@ class FindIndexOptions
 
     /**
      * Set the ID of the user for which the findIndex is executed
+     *
      * @param string $userId The user id
      * @return void
      */
@@ -210,6 +225,7 @@ class FindIndexOptions
 
     /**
      * Return the ID of the user for which the findIndex is executed
+     *
      * @return string
      */
     public function getUserId()

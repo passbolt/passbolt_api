@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,10 +18,7 @@
 namespace Passbolt\EmailDigest\Test\TestCase\Unit\Service;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\EmailDigest\Service\EmailDigestService;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
-use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class EmailDigestServiceTest extends AppIntegrationTestCase
 {
@@ -28,18 +27,18 @@ class EmailDigestServiceTest extends AppIntegrationTestCase
     /**
      * @var MockObject|DigestFactory
      */
-    private $digestFactoryMock;
+    //private $digestFactoryMock;
 
     /**
      * @var EmailDigestService
      */
-    private $emailDigestService;
+    //private $emailDigestService;
 
     public function setUp()
     {
-        $this->digestFactoryMock = $this->createMock(DigestFactory::class);
+        //$this->digestFactoryMock = $this->createMock(DigestFactory::class);
 
-        $this->emailDigestService = new EmailDigestService($this->digestFactoryMock);
+        //$this->emailDigestService = new EmailDigestService($this->digestFactoryMock);
 
         parent::setUp();
     }

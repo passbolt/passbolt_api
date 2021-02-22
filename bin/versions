@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+DIR=$(dirname "$(readlink -f "$0")")
+user=${1:-www-data}
+
+# shellcheck source=utils.sh
+# shellcheck disable=SC1091
+source "$DIR"/utils.sh
+
+run_as "$DIR/cake passbolt version" "$user"
+oops uname -a
+grep -m1 "" <(oops php --version)
+oops mysql --version
+grep -m2 "" <(oops gpg --version)
+oops composer --version -n

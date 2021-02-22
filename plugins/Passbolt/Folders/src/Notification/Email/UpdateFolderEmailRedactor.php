@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace Passbolt\Folders\Notification\Email;
 
 use App\Model\Entity\User;
-use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -36,15 +37,15 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * @var string
      * @see Template/Email/html/LU/folder_update.ctp
      */
-    const TEMPLATE = 'Passbolt/Folders.LU/folder_update';
+    public const TEMPLATE = 'Passbolt/Folders.LU/folder_update';
 
     /**
-     * @var PermissionsGetUsersIdsHavingAccessToService
+     * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
      */
     private $getUsersIdsHavingAccessToService;
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
@@ -60,7 +61,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT,
@@ -68,10 +69,10 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event Event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event Event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -85,7 +86,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
             throw new InvalidArgumentException('`uac` is missing from event data.');
         }
 
-        $operator = $this->usersTable->findFirstForEmail($uac->userId());
+        $operator = $this->usersTable->findFirstForEmail($uac->getId());
         $usersUsernames = $this->findUsersUsernameToSendEmailTo($folder);
         foreach ($usersUsernames as $userUsername) {
             $email = $this->createEmail($userUsername, $operator, $folder);
@@ -97,7 +98,8 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * Find the users username the email has to be sent to.
-     * @param Folder $folder The updated folder
+     *
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The updated folder
      * @return array The list of users username
      */
     private function findUsersUsernameToSendEmailTo(Folder $folder)
@@ -113,13 +115,13 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param string $recipient The recipient email
-     * @param User $operator The user at the origin of the operation
-     * @param Folder $folder The target folder
-     * @return Email
+     * @param \App\Model\Entity\User $operator The user at the origin of the operation
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
+     * @return \App\Notification\Email\Email
      */
     private function createEmail(string $recipient, User $operator, Folder $folder)
     {
-        $subject = __("{0} edited the folder {1}", $operator->profile->first_name, $folder->name);
+        $subject = __('{0} edited the folder {1}', $operator->profile->first_name, $folder->name);
         $data = [
             'body' => [
                 'user' => $operator,

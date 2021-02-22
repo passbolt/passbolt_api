@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,19 +21,18 @@ use App\Model\Entity\GroupsUser;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
-use Exception;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService;
 
 class GroupsAfterUserAddedService
 {
     /**
-     * @var FoldersRelationsAddItemToUserTreeService
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService
      */
     private $foldersRelationsAddItemFromUserTree;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
@@ -47,21 +48,31 @@ class GroupsAfterUserAddedService
     /**
      * Handle a user added to a group.
      *
-     * @param UserAccessControl $uac The current user
-     * @param GroupsUser $groupUser The added group user.
+     * @param \App\Utility\UserAccessControl $uac The current user
+     * @param \App\Model\Entity\GroupsUser $groupUser The added group user.
      * @return void
-     * @throws Exception If something unexpected occurred
+     * @throws \Exception If something unexpected occurred
      */
     public function afterUserAdded(UserAccessControl $uac, GroupsUser $groupUser)
     {
         $foldersIdsGroupHasAccess = $this->getFoldersIdsGroupHasAccess($groupUser->group_id);
         foreach ($foldersIdsGroupHasAccess as $folderIdGroupHasAccess) {
-            $this->foldersRelationsAddItemFromUserTree->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderIdGroupHasAccess, $groupUser->user_id);
+            $this->foldersRelationsAddItemFromUserTree->addItemToUserTree(
+                $uac,
+                FoldersRelation::FOREIGN_MODEL_FOLDER,
+                $folderIdGroupHasAccess,
+                $groupUser->user_id
+            );
         }
 
         $resourcesIdsGroupHasAccess = $this->getResourcesIdsGroupHasAccess($groupUser->group_id);
         foreach ($resourcesIdsGroupHasAccess as $resourceIdGroupHasAccess) {
-            $this->foldersRelationsAddItemFromUserTree->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resourceIdGroupHasAccess, $groupUser->user_id);
+            $this->foldersRelationsAddItemFromUserTree->addItemToUserTree(
+                $uac,
+                FoldersRelation::FOREIGN_MODEL_RESOURCE,
+                $resourceIdGroupHasAccess,
+                $groupUser->user_id
+            );
         }
     }
 

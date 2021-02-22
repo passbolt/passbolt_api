@@ -53,7 +53,9 @@ Router::plugin('Passbolt/Folders', ['path' => '/move'], function (RouteBuilder $
     $routes->setExtensions('json');
 
     /** @uses \Passbolt\Folders\Controller\FoldersRelations\FoldersRelationsMoveController::index() */
-    $routes->connect('/:foreignModel/:foreignId', ['prefix' => 'FoldersRelations', 'controller' => 'FoldersRelationsMove', 'action' => 'move'])
+    $routes->connect('/:foreignModel/:foreignId', [
+            'prefix' => 'FoldersRelations', 'controller' => 'FoldersRelationsMove', 'action' => 'move',
+        ])
         ->setPass(['foreignModel', 'foreignId'])
         ->setMethods(['PUT', 'POST']);
 });

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,20 +21,19 @@ use App\Error\Exception\ValidationException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 
 /**
  * FoldersHistory Model
  *
- * @method Folder get($primaryKey, $options = [])
- * @method Folder newEntity($data = null, array $options = [])
- * @method Folder[] newEntities(array $data, array $options = [])
- * @method Folder|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method Folder[] patchEntities($entities, array $data, array $options = [])
- * @method Folder findOrCreate($search, callable $callback = null, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder get($primaryKey, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder|false save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder findOrCreate($search, callable $callback = null, ?array $options = [])
  */
 class FoldersHistoryTable extends Table
 {
@@ -97,7 +98,7 @@ class FoldersHistoryTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
@@ -118,9 +119,9 @@ class FoldersHistoryTable extends Table
 
     /**
      * Return a FoldersHistory entity.
-     * @param array $data entity data
      *
-     * @return Folder
+     * @param array $data entity data
+     * @return \Passbolt\Folders\Model\Table\Folder
      */
     public function buildEntity(array $data)
     {
@@ -137,10 +138,9 @@ class FoldersHistoryTable extends Table
      * Create a new FolderHistory.
      *
      * @param array $data the data
-     *
-     * @return FoldersHistory|bool
-     * @throws ValidationException
-     * @throws InternalErrorException
+     * @return \Passbolt\Folders\Model\Table\FoldersHistory|bool
+     * @throws \App\Error\Exception\ValidationException
+     * @throws \Cake\Http\Exception\InternalErrorException
      */
     public function create(array $data)
     {

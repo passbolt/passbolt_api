@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,11 +15,9 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller;
+namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
-use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -27,14 +27,9 @@ use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -53,8 +48,6 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
 
     public $fixtures = [
         AvatarsFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -79,11 +72,9 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
 //        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    /* ************************************************************** */
     /* COMMON & VALIDATION */
-    /* ************************************************************** */
 
-    public function testShareFolder_CommonError1_DoesNotExist()
+    public function testFoldersShareFolder_CommonError1_DoesNotExist()
     {
         $this->authenticateAs('ada');
         $folderId = UuidFactory::uuid();
@@ -91,7 +82,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $this->assertError(404, 'The folder does not exist.');
     }
 
-    public function testShareFolder_CommonError2_NoPermission()
+    public function testFoldersShareFolder_CommonError2_NoPermission()
     {
         $userBId = UuidFactory::uuid('user.id.betty');
         $folder = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::READ]);
@@ -101,14 +92,14 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $this->assertForbiddenError('You are not allowed to update the permissions of this folder.');
     }
 
-    public function testShareFolder_CommonError_NotAuthenticated()
+    public function testFoldersShareFolder_CommonError_NotAuthenticated()
     {
         $folderId = UuidFactory::uuid('folder.id.folder');
         $this->putJson("/folders/{$folderId}.json?api-version=2");
         $this->assertAuthenticationError();
     }
 
-    public function testShareFolder_CommonError_NotValidIdParameter()
+    public function testFoldersShareFolder_CommonError_NotValidIdParameter()
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
@@ -116,7 +107,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400, 'The folder id is not valid.');
     }
 
-    public function testShareFolder_CommonError_IsProtectedByCsrfToken()
+    public function testFoldersShareFolder_CommonError_IsProtectedByCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
@@ -125,15 +116,11 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    /* ************************************************************** */
     /* PERSONAL */
-    /* ************************************************************** */
 
-    /* ************************************************************** */
     /* SHARED */
-    /* ************************************************************** */
 
-    public function testShareFolder_SharedError1_InsufficientPermission()
+    public function testFoldersShareFolder_SharedError1_InsufficientPermission()
     {
         $folder = $this->insertSharedError1Fixture();
 

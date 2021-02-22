@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -31,18 +33,18 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE = 'LU/resource_share';
+    public const TEMPLATE = 'LU/resource_share';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
-     * @param array $config Configuration for redactor
-     * @param UsersTable|null $usersTable Users Table
+     * @param array|null $config Configuration for redactor
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
      */
-    public function __construct(array $config = [], UsersTable $usersTable = null)
+    public function __construct(?array $config = [], ?UsersTable $usersTable = null)
     {
         $this->setConfig($config);
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
@@ -53,7 +55,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      *
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             ShareController::SHARE_SUCCESS_EVENT_NAME,
@@ -61,10 +63,10 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event User delete event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event User delete event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -74,7 +76,8 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
 
         // for now only handle the new share
         // e.g. we don't notify when permission changes or are removed
-        $userIds = Hash::extract($changes['secrets'], '{n}.user_id');
+        $secrets = $changes['secrets'] ?? [];
+        $userIds = Hash::extract($secrets, '{n}.user_id');
         if (!empty($userIds)) {
             // Get the details of whoever did the changes
             $owner = $this->usersTable->findFirstForEmail($ownerId);
@@ -95,7 +98,6 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      * Return a collection of users from a list of user ids
      *
      * @param array $userIds A list of user ids
-     *
      * @return array
      */
     private function getUserFromIds(array $userIds)
@@ -109,14 +111,14 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param string   $emailRecipient Email of the user to send email to
-     * @param User     $owner Owner
-     * @param resource $resource Resource
+     * @param \App\Model\Entity\User $owner Owner
+     * @param Resource $resource Resource
      * @param string   $secret Secret
-     * @return Email
+     * @return \App\Notification\Email\Email
      */
     private function createShareEmail(string $emailRecipient, User $owner, Resource $resource, string $secret)
     {
-        $subject = __("{0} shared the password {1}", $owner->profile->first_name, $resource->name);
+        $subject = __('{0} shared the password {1}', $owner->profile->first_name, $resource->name);
 
         $data = [
             'body' => [

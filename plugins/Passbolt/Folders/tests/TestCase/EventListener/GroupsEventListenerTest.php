@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,23 +17,23 @@
 
 namespace Passbolt\Folders\Test\TestCase\EventListener;
 
-use Passbolt\Folders\EventListener\GroupsEventListener;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 
 /**
  * \Passbolt\Folders\EventListener\GroupsEventListener test case
+ *
  * @covers \Passbolt\Folders\EventListener\GroupsEventListener
  */
 class GroupsEventListenerTest extends FoldersIntegrationTestCase
 {
-    /**
-     * @var ResourcesEventListener
-     */
-    private $sut;
+   /**
+    * @var GroupsEventListener
+    */
+   //private $sut;
 
     public function setUp()
     {
-        $this->sut = new GroupsEventListener();
+        //$this->sut = new GroupsEventListener();
 
         parent::setUp();
     }

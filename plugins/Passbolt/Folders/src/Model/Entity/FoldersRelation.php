@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,7 +16,6 @@
  */
 namespace Passbolt\Folders\Model\Entity;
 
-use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
@@ -24,14 +25,14 @@ use Cake\ORM\Entity;
  * @property string $foreign_id
  * @property string $foreign_model
  * @property string|null $folder_parent_id
- * @property FrozenTime $created
- * @property FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  */
 class FoldersRelation extends Entity
 {
-    const FOREIGN_MODEL_FOLDER = 'Folder';
-    const FOREIGN_MODEL_RESOURCE = 'Resource';
-    const ROOT = null;
+    public const FOREIGN_MODEL_FOLDER = 'Folder';
+    public const FOREIGN_MODEL_RESOURCE = 'Resource';
+    public const ROOT = null;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

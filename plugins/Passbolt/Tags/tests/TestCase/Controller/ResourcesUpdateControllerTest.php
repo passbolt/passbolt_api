@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -17,7 +19,7 @@ namespace Passbolt\Tags\Test\TestCase\Controller;
 use App\Utility\UuidFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class ResourceUpdateControllerTest extends TagPluginIntegrationTestCase
+class ResourcesUpdateControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
@@ -25,10 +27,9 @@ class ResourceUpdateControllerTest extends TagPluginIntegrationTestCase
         'app.Base/Resources', 'app.Base/Favorites',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-        'app.Base/EmailQueue',
     ];
 
-    public function testResourcesUpdateSuccess()
+    public function testTagsResourcesUpdateSuccess()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');

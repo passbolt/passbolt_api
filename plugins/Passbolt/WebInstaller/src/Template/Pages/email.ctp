@@ -77,7 +77,7 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                     <p>&nbsp;</p>
                     <div class="message warning">
                         <strong>Pro tip: a cron job is required</strong><br>
-                        Once your installation is complete, do not forget to set a cron job in order to have your emails sent automatically. <br><a href="https://help.passbolt.com/hosting/install" rel="noopener" target="_blank">Read the doc</a>
+                        Once your installation is complete, do not forget to set a cron job in order to have your emails sent automatically. <br><a href="https://help.passbolt.com/hosting/install" rel="noopener noreferrer" target="_blank">Read the doc</a>
                     </div>
                     <h3>Why do I need a SMTP server?</h3>
                     <p>Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications.</p>

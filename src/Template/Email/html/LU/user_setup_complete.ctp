@@ -43,7 +43,7 @@ echo $this->element('Email/module/avatar',[
         'last_name' => Purifier::clean($user->profile->last_name),
         'datetime' => $user->modified,
         'text' => __(
-            '{0} have just activated their account on passbolt!',
+            '{0} just activated their account on passbolt!',
             $user->profile->first_name
         )
     ])

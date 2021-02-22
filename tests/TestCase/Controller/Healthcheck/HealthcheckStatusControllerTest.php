@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,7 +20,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class HealthcheckStatusControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
     public function testHealthcheckStatusOk()
     {
@@ -29,7 +31,7 @@ class HealthcheckStatusControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckStatusJsonOk()
     {
-        $this->getJson('/healthcheck/status.json?api-version=v1');
+        $this->getJson('/healthcheck/status.json?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertEquals($this->_responseJson->header->message, 'OK');
         $this->assertEquals($this->_responseJson->body, 'OK');

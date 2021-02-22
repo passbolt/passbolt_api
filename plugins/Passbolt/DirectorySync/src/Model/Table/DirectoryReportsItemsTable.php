@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Passbolt\DirectorySync\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -11,20 +12,17 @@ use Passbolt\DirectorySync\Actions\Reports\ActionReport;
  * DirectoryReportsItems Model
  *
  * @property \Passbolt\DirectorySync\Model\Table\ReportsTable|\Cake\ORM\Association\BelongsTo $Reports
- *
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get($primaryKey, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem newEntity($data = null, array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] newEntities(array $data, array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] patchEntities($entities, array $data, array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get($primaryKey, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class DirectoryReportsItemsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -54,7 +52,7 @@ class DirectoryReportsItemsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
@@ -99,11 +97,12 @@ class DirectoryReportsItemsTable extends Table
 
     /**
      * Create report item table.
+     *
      * @param string|null $reportId report id
-     * @param ActionReport $reportItem report item
+     * @param \Passbolt\DirectorySync\Actions\Reports\ActionReport $reportItem report item
      * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem
      */
-    public function create(string $reportId = null, ActionReport $reportItem)
+    public function create(?string $reportId = null, ActionReport $reportItem)
     {
         $entity = $this->newEntity([
             'report_id' => $reportId,

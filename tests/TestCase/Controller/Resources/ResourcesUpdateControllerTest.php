@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -53,7 +55,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesSuccess_UpdateResourceMeta()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_UpdateResourceMeta();
+        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourceMeta();
         $this->authenticateAs('betty');
 
         $data = [
@@ -109,7 +111,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesSuccess_UpdateResourceSecrets()
     {
-        list($r1, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_UpdateResourceSecrets();
+        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_UpdateResourceSecrets();
         $this->authenticateAs('betty');
 
         $r1EncryptedSecretA = $this->encryptMessageFor($userAId, 'R1 secret updated');
@@ -178,13 +180,13 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->putJson("/resources/$resourceId.json?api-version=v1");
+        $this->putJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(400, 'The resource id is not valid.');
     }
 
     public function testUpdateResourcesError_ValidationErrors()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_UpdateResourceMeta();
+        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourceMeta();
         $this->authenticateAs('ada');
 
         $data = [
@@ -205,7 +207,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testResourcesUpdateError_InsufficientPermission()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        [$r1, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $data = [
             'name' => ['Updated name'],
         ];
@@ -229,7 +231,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesError_NotAuthenticated()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        [$r1, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $this->putJson("/resources/$r1->id.json", []);
         $this->assertAuthenticationError();
     }
@@ -238,13 +240,13 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
-        $this->putJson("/resources/$resourceId.json?api-version=v1");
+        $this->putJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(404, 'The resource does not exist.');
     }
 
     public function testUpdateResourcesError_NoAccessToResource()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        [$r1, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $this->authenticateAs('dame');
         $this->putJson("/resources/$r1->id.json");
         $this->assertError(404, 'The resource does not exist.');

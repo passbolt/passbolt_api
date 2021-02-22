@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
 use Cake\ORM\TableRegistry;
 
 trait AssertDirectoryRelationsTrait
 {
-    public function assertDirectoryRelationExist($id = null, $where = [])
+    public function assertDirectoryRelationExist(?string $id = null, ?array $where = [])
     {
         if ($id !== null) {
             $where['id'] = $id;
@@ -17,7 +19,7 @@ trait AssertDirectoryRelationsTrait
         return $results[0];
     }
 
-    public function assertDirectoryRelationNotExist($id = null, $where = [])
+    public function assertDirectoryRelationNotExist(?string $id = null, ?array $where = [])
     {
         if ($id !== null) {
             $where['id'] = $id;

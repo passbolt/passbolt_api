@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -31,8 +33,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     use UserAccessControlTrait;
 
     public $fixtures = [
-        'app.Base/OrganizationSettings',
-        'app.Base/AuthenticationTokens', 'app.Base/Users',
+        'app.Base/Users',
         'app.Base/Roles',
     ];
 
@@ -53,7 +54,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     {
         $this->disableDirectoryIntegration();
         $this->authenticateAs('admin');
-        $this->getJson("/directorysync/settings.json?api-version=2");
+        $this->getJson('/directorysync/settings.json?api-version=2');
         $this->assertSuccess();
         $settings = $this->_responseJsonBody;
         $this->assertEmpty($settings);
@@ -74,7 +75,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $directoryOrgSettings->save($uac);
 
         $this->authenticateAs('admin');
-        $this->getJson("/directorysync/settings.json?api-version=2");
+        $this->getJson('/directorysync/settings.json?api-version=2');
         $this->assertSuccess();
         $settings = $this->_responseJsonBody;
         $this->assertNotEmpty($settings);
@@ -90,7 +91,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     public function testDirectorySync_DirectorySettingsController_View_AccessDenied()
     {
         $this->authenticateAs('dame');
-        $this->getJson("/directorysync/settings.json?api-version=2");
+        $this->getJson('/directorysync/settings.json?api-version=2');
         $this->assertError(403);
     }
 
@@ -107,7 +108,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
 
         $formData = LdapConfigurationFormTest::getDummyFormData();
         $this->authenticateAs('admin');
-        $this->putJson("/directorysync/settings.json?api-version=2", $formData);
+        $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertSuccess();
 
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
@@ -133,7 +134,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $formData['username'] = '';
         $formData['password'] = '';
         $this->authenticateAs('admin');
-        $this->putJson("/directorysync/settings.json?api-version=2", $formData);
+        $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertSuccess();
 
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
@@ -157,7 +158,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $formData = LdapConfigurationFormTest::getDummyFormData();
         $formData['domain_name'] = '';
         $this->authenticateAs('admin');
-        $this->putJson("/directorysync/settings.json?api-version=2", $formData);
+        $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertError(400);
         $errors = json_decode(json_encode($this->_responseJsonBody), true);
         $this->assertNotEmpty($errors);
@@ -173,7 +174,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     public function testDirectorySync_DirectorySettingsController_Update_AccessDenied()
     {
         $this->authenticateAs('dame');
-        $this->putJson("/directorysync/settings.json?api-version=2", []);
+        $this->putJson('/directorysync/settings.json?api-version=2', []);
         $this->assertError(403);
     }
 
@@ -189,13 +190,13 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
 
         // Enable the directory integration
         $formData = LdapConfigurationFormTest::getDummyFormData();
-        $this->putJson("/directorysync/settings.json?api-version=2", $formData);
+        $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertSuccess();
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertTrue($directoryOrgSettings->isEnabled());
 
         // Disable the directory integration
-        $this->deleteJson("/directorysync/settings.json?api-version=2");
+        $this->deleteJson('/directorysync/settings.json?api-version=2');
         $this->assertSuccess();
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $this->expectException(RecordNotFoundException::class);
@@ -213,7 +214,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     public function testDirectorySync_DirectorySettingsController_Disable_AccessDenied()
     {
         $this->authenticateAs('dame');
-        $this->deleteJson("/directorysync/settings.json?api-version=2");
+        $this->deleteJson('/directorysync/settings.json?api-version=2');
         $this->assertError(403);
     }
 
@@ -228,7 +229,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $formData = LdapConfigurationFormTest::getDummyFormData();
         $formData['domain_name'] = '';
         $this->authenticateAs('admin');
-        $this->postJson("/directorysync/settings/test.json?api-version=2", $formData);
+        $this->postJson('/directorysync/settings/test.json?api-version=2', $formData);
         $this->assertError(400);
         $errors = json_decode(json_encode($this->_responseJsonBody), true);
         $this->assertNotEmpty($errors);
@@ -247,7 +248,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
 
         $formData = LdapConfigurationFormTest::getDummyFormData();
         $this->authenticateAs('admin');
-        $this->postJson("/directorysync/settings/test.json?api-version=2", $formData);
+        $this->postJson('/directorysync/settings/test.json?api-version=2', $formData);
         $this->assertSuccess();
         $this->assertTrue(isset($this->_responseJsonBody->users));
         $this->assertEquals(6, count($this->_responseJsonBody->users));

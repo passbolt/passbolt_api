@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,41 +19,41 @@ namespace App\Service\GroupsUsers;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\GroupsUser;
-use App\Model\Entity\Permission;
 use App\Model\Table\GroupsUsersTable;
-use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 
 class GroupsUsersCreateService
 {
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * Instantiate the service.
+     * GroupsUsersCreateService constructor.
+     *
+     * @param \App\Model\Table\GroupsUsersTable|null $groupsUsersTable table
      */
-    public function __construct()
+    public function __construct(?GroupsUsersTable $groupsUsersTable = null)
     {
-        $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->groupsUsersTable = $groupsUsersTable ?? TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
     /**
      * Create a group user.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
-     * @param array $data The group user data
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
+     * @param array|null $data The group user data
      * [
      *   string $group_id The group
      *   string $user_id The user
      *   string $is_admin Is the user group manager
      * ]
-     * @return GroupsUser
+     * @return \App\Model\Entity\GroupsUser
      * @throws \Exception
      */
-    public function create(UserAccessControl $uac, array $data = [])
+    public function create(UserAccessControl $uac, ?array $data = []): GroupsUser
     {
         $groupUser = null;
         $this->groupsUsersTable->getConnection()->transactional(function () use (&$groupUser, $uac, $data) {
@@ -64,16 +66,16 @@ class GroupsUsersCreateService
     /**
      * Create and save a group user.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
-     * @param array $data The group user data
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
+     * @param array|null $data The group user data
      * [
      *   string $group_id The group
      *   string $user_id The user
      *   string $is_admin Is the user group manager
      * ]
-     * @return GroupsUser
+     * @return \App\Model\Entity\GroupsUser
      */
-    private function createGroupUser(UserAccessControl $uac, array $data = [])
+    private function createGroupUser(UserAccessControl $uac, ?array $data = []): GroupsUser
     {
         $groupUser = $this->buildGroupUserEntity($uac, $data);
         $this->handlePermissionValidationErrors($groupUser);
@@ -86,18 +88,18 @@ class GroupsUsersCreateService
     /**
      * Build the group user entity.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
-     * @param array $data The group user data
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
+     * @param array|null $data The group user data
      * [
      *   string $group_id The group
      *   string $user_id The user
      *   string $is_admin Is the user group manager
      * ]
-     * @return GroupsUser
+     * @return \App\Model\Entity\GroupsUser
      */
-    private function buildGroupUserEntity(UserAccessControl $uac, array $data = [])
+    private function buildGroupUserEntity(UserAccessControl $uac, ?array $data = []): GroupsUser
     {
-        $operatorId = $uac->userId();
+        $operatorId = $uac->getId();
         $data = array_merge([
             'created_by' => $operatorId,
             'modified_by' => $operatorId,
@@ -116,14 +118,15 @@ class GroupsUsersCreateService
     /**
      * Handle group user validation errors.
      *
-     * @param GroupsUser $groupUser The group user
+     * @param \App\Model\Entity\GroupsUser $groupUser The group user
      * @return void
      */
-    private function handlePermissionValidationErrors(GroupsUser $groupUser)
+    private function handlePermissionValidationErrors(GroupsUser $groupUser): void
     {
         $errors = $groupUser->getErrors();
         if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate the group user data.'), $groupUser, $this->groupsUsersTable);
+            $msg = __('Could not validate the group user data.');
+            throw new ValidationException($msg, $groupUser, $this->groupsUsersTable);
         }
     }
 }

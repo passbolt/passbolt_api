@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,13 +19,11 @@ namespace Passbolt\Folders\Service\Resources;
 
 use App\Model\Entity\Resource;
 use Cake\ORM\TableRegistry;
-use Exception;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class ResourcesAfterSoftDeleteService
 {
     /**
-     * @var FoldersRelationsTable
+     * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
     private $foldersRelationsTable;
 
@@ -36,10 +36,9 @@ class ResourcesAfterSoftDeleteService
     }
 
     /**
-     *
      * @param resource $resource The soft deleted resource.
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function afterSoftDelete(Resource $resource)
     {

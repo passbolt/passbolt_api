@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -14,10 +16,9 @@
  */
 namespace Passbolt\DirectorySync\Actions\Reports;
 
-use Cake\Utility\Hash;
-
 /**
  * Directory factory class
+ *
  * @package App\Utility
  */
 class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, \Countable
@@ -28,9 +29,9 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
     /**
      * ActionReportCollection constructor.
      *
-     * @param array $reports reports
+     * @param array|null $reports reports
      */
-    public function __construct(array $reports = [])
+    public function __construct(?array $reports = [])
     {
         $this->position = 0;
         $this->reports = $reports;
@@ -38,7 +39,8 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Add report
-     * @param ActionReport $report report
+     *
+     * @param \Passbolt\DirectorySync\Actions\Reports\ActionReport $report report
      * @return void
      */
     public function add(ActionReport $report)
@@ -48,9 +50,9 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Get By Action
-     * @param string $actionName action name
      *
-     * @return ActionReportCollection
+     * @param string $actionName action name
+     * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection
      */
     public function getByAction(string $actionName)
     {
@@ -66,9 +68,9 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Get by status.
-     * @param string $status status
      *
-     * @return ActionReportCollection
+     * @param string $status status
+     * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection
      */
     public function getByStatus(string $status)
     {
@@ -84,15 +86,17 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * check if empty.
+     *
      * @return bool
      */
     public function isEmpty()
     {
-        return (count($this->reports) === 0);
+        return count($this->reports) === 0;
     }
 
     /**
      * Transform to array.
+     *
      * @return array
      */
     public function toArray()
@@ -102,6 +106,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Serialize
+     *
      * @return string
      */
     public function serialize()
@@ -111,6 +116,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Unserialize
+     *
      * @param string $serialized serialized data
      * @return void
      */
@@ -121,6 +127,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Rewind
+     *
      * @return void
      */
     public function rewind()
@@ -130,6 +137,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Current
+     *
      * @return mixed
      */
     public function current()
@@ -139,6 +147,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Key
+     *
      * @return int
      */
     public function key()
@@ -148,6 +157,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Next
+     *
      * @return void
      */
     public function next()
@@ -157,6 +167,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Check if valid.
+     *
      * @return bool
      */
     public function valid()
@@ -166,6 +177,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Offset set.
+     *
      * @param mixed $offset offset
      * @param mixed $value value
      * @return void
@@ -181,8 +193,8 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Check if offset exists.
-     * @param mixed $offset offset
      *
+     * @param mixed $offset offset
      * @return bool
      */
     public function offsetExists($offset)
@@ -192,6 +204,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * unset offset.
+     *
      * @param mixed $offset offset
      * @return void
      */
@@ -202,17 +215,18 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Get offset.
-     * @param mixed $offset offset
      *
+     * @param mixed $offset offset
      * @return mixed|null
      */
     public function offsetGet($offset)
     {
-        return isset($this->reports[$offset]) ? $this->reports[$offset] : null;
+        return $this->reports[$offset] ?? null;
     }
 
     /**
      * Count
+     *
      * @return int|void
      */
     public function count()
@@ -222,6 +236,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
 
     /**
      * Transform a collection of reports to Json.
+     *
      * @return array
      */
     public function toFormattedArray()

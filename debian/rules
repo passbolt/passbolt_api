@@ -13,7 +13,7 @@ ifeq ($(PASSBOLT_FLAVOUR), ce)
 endif
 
 ifeq ($(PASSBOLT_FLAVOUR), pro)
-	PASSBOLT_EXTENSIONS := php-ldap,
+	PASSBOLT_EXTENSIONS := php-ldap, php-curl,
 	SED_COMMAND := s
 	CONTROL_OP := /g
 endif
@@ -48,6 +48,10 @@ override_dh_fixperms: check_env
 	chmod -R -x+X $(PKG_ROOT)/var/*
 	chmod +x $(PKG_ROOT)/usr/share/php/passbolt/bin/cake
 	chmod +x $(PKG_ROOT)/usr/share/php/passbolt/bin/cake.php
+	chmod +x $(PKG_ROOT)/usr/share/php/passbolt/bin/cron
+	chmod +x $(PKG_ROOT)/usr/share/php/passbolt/bin/healthcheck
+	chmod +x $(PKG_ROOT)/usr/share/php/passbolt/bin/status-report
+	chmod +x $(PKG_ROOT)/usr/share/php/passbolt/bin/versions
 	# Configuration files not readable by others
 	chmod -R o-rw $(PKG_ROOT)/etc/passbolt/*
 	# www-data needs to write on /etc/passbolt for webinstaller

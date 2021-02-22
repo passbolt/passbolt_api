@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -30,19 +32,9 @@ class RolesIndexControllerTest extends AppIntegrationTestCase
         $this->assertRoleAttributes($this->_responseJsonBody[0]);
     }
 
-    public function testRolesIndexGetApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $this->getJson('/roles.json?api-version=v1');
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-        $this->assertObjectHasAttribute('Role', $this->_responseJsonBody[0]);
-        $this->assertRoleAttributes($this->_responseJsonBody[0]->Role);
-    }
-
     public function testRolesIndexErrorNotAuthenticated()
     {
-        $this->getJson('/roles.json?api-version=v1');
+        $this->getJson('/roles.json');
         $this->assertAuthenticationError();
     }
 }

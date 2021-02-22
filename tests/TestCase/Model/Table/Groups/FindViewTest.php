@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Table\GroupsTable;

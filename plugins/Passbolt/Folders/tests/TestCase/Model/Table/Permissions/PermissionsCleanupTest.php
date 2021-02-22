@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,21 +15,16 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Model\Table;
+namespace Passbolt\Folders\Test\TestCase\Model\Table\Permissions;
 
 use App\Model\Entity\Permission;
-use App\Model\Table\ResourcesTable;
 use App\Test\Fixture\Base\GroupsFixture;
+use App\Test\Fixture\Base\ResourceTypesFixture;
 use App\Test\Fixture\Base\SecretsFixture;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
-use Passbolt\Folders\Test\Fixture\PermissionsFixture;
-use Passbolt\Folders\Test\Fixture\ResourcesFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -47,11 +44,8 @@ class PermissionsCleanupTest extends FoldersTestCase
      * @var array
      */
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GroupsFixture::class,
-        PermissionsFixture::class,
-        ResourcesFixture::class,
+        ResourceTypesFixture::class,
         SecretsFixture::class,
     ];
 
@@ -59,11 +53,6 @@ class PermissionsCleanupTest extends FoldersTestCase
      * @var FoldersTable
      */
     private $foldersTable;
-
-    /**
-     * @var ResourcesTable
-     */
-    private $resourcesTables;
 
     /**
      * setUp method
@@ -74,7 +63,6 @@ class PermissionsCleanupTest extends FoldersTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
-        $this->resourcesTables = TableRegistry::getTableLocator()->get('Resources');
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
     }
 

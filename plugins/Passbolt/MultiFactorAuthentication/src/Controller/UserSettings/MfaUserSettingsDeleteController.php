@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,30 +17,28 @@
 namespace Passbolt\MultiFactorAuthentication\Controller\UserSettings;
 
 use App\Model\Entity\User;
-use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Response;
 use Cake\Validation\Validation;
 use Passbolt\MultiFactorAuthentication\Controller\MfaController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 
 class MfaUserSettingsDeleteController extends MfaController
 {
-    const MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT = 'mfa.user_account.settings.delete';
+    public const MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT = 'mfa.user_account.settings.delete';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $UsersTable;
 
     /**
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -46,8 +46,8 @@ class MfaUserSettingsDeleteController extends MfaController
     }
 
     /**
-     * @param Event $event An event instance
-     * @return Response|null
+     * @param \Cake\Event\Event $event An event instance
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
     {
@@ -64,13 +64,13 @@ class MfaUserSettingsDeleteController extends MfaController
      * @param string|null $userId UUID of the user for which MFA config must be deleted
      * @return void
      */
-    public function delete(string $userId = null)
+    public function delete(?string $userId = null)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id is not valid.'));
         }
 
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         try {
             $user = $this->UsersTable->findView($userId, $this->User->role())->firstOrFail();
         } catch (RecordNotFoundException $exception) {
@@ -97,13 +97,13 @@ class MfaUserSettingsDeleteController extends MfaController
      * @param string|null $userId UUID of the user
      * @return bool
      */
-    private function isAllowed(string $userId = null)
+    private function isAllowed(?string $userId = null)
     {
         return isset($userId) && ($this->User->isAdmin() || $userId === $this->Auth->user('id'));
     }
 
     /**
-     * @param User $user user
+     * @param \App\Model\Entity\User $user user
      * @return void
      */
     private function dispatchSettingsDeletedEvent(User $user)

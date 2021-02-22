@@ -28,7 +28,6 @@ use Cake\Core\Configure;
 <div id="container" class="page <?php echo $this->fetch('page_classes') ?>">
 <?php echo $this->fetch('content'); ?>
 </div>
-<?= $this->element('Footer/default'); ?>
 <?php echo $this->fetch('scriptBottom'); ?>
 </body>
 </html>

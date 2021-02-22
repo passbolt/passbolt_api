@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -26,6 +28,7 @@ class ActionsListener implements EventListenerInterface
      * Return a list if implemented Events, with their callback.
      * The callback is based on the camelized name of the event slug.
      * Example: event "user.add" will have callback "logUserAdd"
+     *
      * @return array
      */
     public static function getImplementedEvents()

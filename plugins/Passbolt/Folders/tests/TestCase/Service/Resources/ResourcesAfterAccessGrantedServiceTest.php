@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,8 +31,6 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Resources\ResourcesAfterAccessGrantedService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -46,8 +46,6 @@ class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
 
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -70,7 +68,7 @@ class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
 
     public function testResourceAfterAccessGrantedSuccess_UserPermissionAdded()
     {
-        list($r1, $userAId) = $this->insertFixture_UserPermissionAdded();
+        [$r1, $userAId] = $this->insertFixture_UserPermissionAdded();
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
 
@@ -94,7 +92,7 @@ class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
 
     public function testResourceAfterAccessGrantedSuccess_GroupPermissionAdded()
     {
-        list($r1, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_GroupPermissionAdded();
+        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_GroupPermissionAdded();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $permission = $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::GROUP_ARO, $g1->id);

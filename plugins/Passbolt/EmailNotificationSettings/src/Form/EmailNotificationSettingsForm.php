@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -25,14 +27,14 @@ use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefiniti
 class EmailNotificationSettingsForm extends Form
 {
     /**
-     * @var EmailNotificationSettingsDefinitionInterface[]
+     * @var \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface[]
      */
     private $notificationSettingsDefinitions = [];
 
     /**
-     * @param EventManager|null $eventManager An instance of event manager
+     * @param \Cake\Event\EventManager|null $eventManager An instance of event manager
      */
-    public function __construct(EventManager $eventManager = null)
+    public function __construct(?EventManager $eventManager = null)
     {
         parent::__construct($eventManager);
 
@@ -40,21 +42,21 @@ class EmailNotificationSettingsForm extends Form
     }
 
     /**
-     * @param EmailNotificationSettingsDefinitionInterface $emailNotificationSettingsDefinition Email notification setting definition
+     * @param \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface $definition def
      * @return void
      */
-    public function addEmailNotificationSettingsDefinition(EmailNotificationSettingsDefinitionInterface $emailNotificationSettingsDefinition)
+    public function addEmailNotificationSettingsDefinition(EmailNotificationSettingsDefinitionInterface $definition)
     {
-        $this->notificationSettingsDefinitions[] = $emailNotificationSettingsDefinition;
+        $this->notificationSettingsDefinitions[] = $definition;
     }
 
     /**
      * Database configuration schema. Build schema from all notification settings definitions schemas.
      *
-     * @param Schema $schema schema
-     * @return Schema
+     * @param \Cake\Form\Schema $schema schema
+     * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): Schema
     {
         foreach ($this->notificationSettingsDefinitions as $notificationSettingsDefinition) {
             $notificationSettingsDefinition->buildSchema($schema);
@@ -66,10 +68,10 @@ class EmailNotificationSettingsForm extends Form
     /**
      * Validation rules. Build validator rules from all notification settings definitions validators.
      *
-     * @param Validator $validator validator
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    protected function _buildValidator(Validator $validator): Validator
     {
         foreach ($this->notificationSettingsDefinitions as $notificationSettingsDefinition) {
             $notificationSettingsDefinition->buildValidator($validator);
@@ -81,10 +83,10 @@ class EmailNotificationSettingsForm extends Form
     /**
      * Transform form data into the expected org settings format
      *
-     * @param array $data The form data
+     * @param array|null $data The form data
      * @return array $settings The org settings data
      */
-    public static function formatFormDataToOrgSettings(array $data = [])
+    public static function formatFormDataToOrgSettings(?array $data = []): array
     {
         if (empty($data)) {
             return $data;
@@ -107,7 +109,7 @@ class EmailNotificationSettingsForm extends Form
      * @param array $data The data array
      * @return array array with the invalid keys removed
      */
-    public static function stripInvalidKeys(array $data = [])
+    public static function stripInvalidKeys(array $data): array
     {
         if (empty($data)) {
             return $data;

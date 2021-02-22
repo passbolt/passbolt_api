@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -34,11 +36,12 @@ class UserAccessControl
 
     /**
      * UserAccessControl constructor.
+     *
      * @param string $roleName The role name
-     * @param string $userId the user uuid
-     * @param string $username the user email
+     * @param string|null $userId the user uuid
+     * @param string|null $username the user email
      */
-    public function __construct($roleName, $userId = null, $username = null)
+    public function __construct(string $roleName, ?string $userId = null, ?string $username = null)
     {
         if (!is_string($roleName)) {
             throw new InternalErrorException('Invalid UserControl role name.');
@@ -56,16 +59,7 @@ class UserAccessControl
 
     /**
      * Get the user id
-     * @return string
-     * @deprecated use getId()
-     */
-    public function userId()
-    {
-        return $this->getId();
-    }
-
-    /**
-     * Get the user id
+     *
      * @return string
      */
     public function getId()
@@ -75,21 +69,12 @@ class UserAccessControl
 
     /**
      * Get the user role name
+     *
      * @return string
      */
     public function roleName()
     {
         return $this->roleName;
-    }
-
-    /**
-     * Return username / email
-     * @deprecated use getUsername
-     * @return null|string
-     */
-    public function username()
-    {
-        return $this->getUsername();
     }
 
     /**
@@ -102,25 +87,28 @@ class UserAccessControl
 
     /**
      * Check if the user is an admin
+     *
      * @return bool
      */
     public function isAdmin()
     {
-        return ($this->roleName() === Role::ADMIN);
+        return $this->roleName() === Role::ADMIN;
     }
 
     /**
      * Check if the given user is the current user.
+     *
      * @param string $userId the user uuid
      * @return bool
      */
     public function is(string $userId)
     {
-        return ($this->userId() === $userId);
+        return $this->getId() === $userId;
     }
 
     /**
      * Convert the UserAccessControl data in array
+     *
      * @return array
      */
     public function toArray()

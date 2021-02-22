@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,7 +27,7 @@ class MfaSetupController extends MfaController
      * Fail is account is already setup for this authentication provider
      *
      * @param string $provider name of the provider
-     * @throws BadRequestException
+     * @throws \Cake\Http\Exception\BadRequestException
      * @return bool
      */
     protected function _notAlreadySetupOrFail(string $provider)

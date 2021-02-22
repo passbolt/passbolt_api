@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -42,12 +44,12 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     protected $template;
 
     /**
-     * @var FindIndexOptions $options find options (optional)
+     * @var \App\Model\Table\Dto\FindIndexOptions $options find options (optional)
      */
     protected $options;
 
     /**
-     * @var User $creator
+     * @var \App\Model\Entity\User $creator
      */
     protected $creator;
 
@@ -144,7 +146,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     }
 
     /**
-     * @return User|null
+     * @return \App\Model\Entity\User|null
      */
     public function getCreator()
     {

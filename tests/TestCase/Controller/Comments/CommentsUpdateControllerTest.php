@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,10 +27,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
 {
     public $Comments;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
-        'app.Base/Comments', 'app.Base/Permissions',
-    ];
+    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Permissions'];
 
     public function setUp()
     {
@@ -38,39 +37,11 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
-    public function testCommentsUpdateApiV1Success()
+    public function testCommentsUpdateSuccess()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
-        $putData = [
-            'Comment' => [
-                'content' => $commentContent,
-            ],
-        ];
-        $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
-        $this->assertSuccess();
-
-        $comment = $this->Comments->find()
-            ->where(['id' => $this->_responseJsonBody->Comment->id])
-            ->first();
-        $this->assertEquals($commentContent, $comment->content);
-        $this->assertEquals(UuidFactory::uuid('user.id.irene'), $comment->created_by);
-        $this->assertEquals(UuidFactory::uuid('user.id.irene'), $comment->modified_by);
-
-        // Assert that modified time is within one second from the test time.
-        $modifiedTime = strtotime($comment->modified);
-        $nowTime = strtotime(date('c'));
-        $this->assertTrue($nowTime - $modifiedTime < 1000);
-    }
-
-    public function testCommentsUpdateApiV2Success()
-    {
-        $this->authenticateAs('irene', Role::USER);
-        $commentContent = 'updated comment content';
-        $putData = [
-            'content' => $commentContent,
-        ];
+        $putData = ['content' => $commentContent];
         $commentId = UuidFactory::uuid('comment.id.apache-1');
         $this->putJson("/comments/$commentId.json?api-version=2", $putData);
         $this->assertSuccess();
@@ -83,9 +54,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEquals(UuidFactory::uuid('user.id.irene'), $comment->modified_by);
 
         // Assert that modified time is within one second from the test time.
-        $modifiedTime = strtotime($comment->modified);
-        $nowTime = strtotime(date('c'));
-        $this->assertTrue($nowTime - $modifiedTime < 1000);
+        $this->assertTrue($comment->modified->wasWithinLast('1 second'));
     }
 
     public function testCommentsUpdateErrorCsrfToken()
@@ -101,13 +70,9 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
-        $putData = [
-            'Comment' => [
-                'content' => $commentContent,
-            ],
-        ];
+        $putData = ['content' => $commentContent];
         $commentId = 'testBadUuid';
-        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v2", $putData);
         $this->assertError(400, 'The comment id is not valid.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -115,29 +80,21 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
     public function testCommentsUpdateErrorContentEmpty()
     {
         $this->authenticateAs('irene', Role::USER);
-        $putData = [
-            'Comment' => [
-                'content' => '',
-            ],
-        ];
+        $putData = ['content' => ''];
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v2", $putData);
         $this->assertError(400, 'Could not validate comment data.');
         $this->assertNotEmpty($this->_responseJsonBody);
-        $this->assertNotEmpty($this->_responseJsonBody->Comment->content);
+        $this->assertNotEmpty($this->_responseJsonBody->content);
     }
 
     public function testCommentsUpdateRuleValidationCommentDoesNotExist()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
-        $putData = [
-            'Comment' => [
-                'content' => $commentContent,
-            ],
-        ];
+        $putData = ['content' => $commentContent];
         $commentId = UuidFactory::uuid('comment.id.notexist');
-        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v2", $putData);
         $this->assertError(404, 'The comment does not exist.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -146,13 +103,9 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada', Role::USER);
         $commentContent = 'updated comment content';
-        $putData = [
-            'Comment' => [
-                'content' => $commentContent,
-            ],
-        ];
+        $putData = ['content' => $commentContent];
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v2", $putData);
         $this->assertError(403, 'You are not allowed to edit this comment.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -169,14 +122,14 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
             'created_by' => UuidFactory::uuid('user.id.ada'),
             'modified_by' => UuidFactory::uuid('user.id.ada'),
         ];
-        $putData = ['Comment' => $comment];
+        $putData = $comment;
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v2", $putData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
         $commentUpdated = $this->Comments->find()
-            ->where(['id' => $this->_responseJsonBody->Comment->id])
+            ->where(['id' => $this->_responseJsonBody->id])
             ->first();
         $this->assertNotEquals($comment['id'], $commentUpdated->id);
         $this->assertEquals($comment['content'], $commentUpdated->content);
@@ -191,7 +144,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
     {
         $postData = [];
         $resourceId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$resourceId.json?api-version=v1", $postData);
+        $this->putJson("/comments/$resourceId.json?api-version=v2", $postData);
         $this->assertAuthenticationError();
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@
 namespace Passbolt\Folders\Notification\Email;
 
 use App\Model\Entity\User;
-use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -35,10 +36,10 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * @var string
      * @see Template/Email/html/LU/folder_delete.ctp
      */
-    const TEMPLATE = 'Passbolt/Folders.LU/folder_delete';
+    public const TEMPLATE = 'Passbolt/Folders.LU/folder_delete';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
@@ -53,7 +54,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             FoldersDeleteService::FOLDERS_DELETE_FOLDER_EVENT,
@@ -61,10 +62,10 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event Event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event Event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -83,7 +84,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
             throw new InvalidArgumentException('`users` is missing from event data.');
         }
 
-        $operator = $this->usersTable->findFirstForEmail($uac->userId());
+        $operator = $this->usersTable->findFirstForEmail($uac->getId());
         $usersUsernames = $this->findUsersUsernameToSendEmailTo($users);
         foreach ($usersUsernames as $userUsername) {
             $email = $this->createEmail($userUsername, $operator, $folder);
@@ -95,6 +96,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * Find the users username the email has to be sent to.
+     *
      * @param array $usersIds The list of users id to send the email to.
      * @return array The list of users username
      */
@@ -109,13 +111,13 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param string $recipient The recipient email
-     * @param User $operator The user at the origin of the operation
-     * @param Folder $folder The target folder
-     * @return Email
+     * @param \App\Model\Entity\User $operator The user at the origin of the operation
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
+     * @return \App\Notification\Email\Email
      */
     private function createEmail(string $recipient, User $operator, Folder $folder)
     {
-        $subject = __("{0} deleted the folder {1}", $operator->profile->first_name, $folder->name);
+        $subject = __('{0} deleted the folder {1}', $operator->profile->first_name, $folder->name);
         $data = [
             'body' => [
                 'user' => $operator,

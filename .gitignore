@@ -1,3 +1,8 @@
+# Personal scripts #
+####################
+# you can place your personal bash scripts in bin/my
+/bin/my/*
+
 # Local config #
 ################
 /config/app.php

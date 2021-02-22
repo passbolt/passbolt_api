@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,7 +30,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Profiles',
         'app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Roles',
-        'app.Base/EmailQueue', 'app.Base/Avatars', 'app.Base/Gpgkeys', 'app.Base/OrganizationSettings',
+         'app.Base/Avatars', 'app.Base/Gpgkeys',
     ];
 
     public function testCommentsAddNotificationGroupSuccess()
@@ -36,8 +38,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.comment.add', true);
 
         $this->authenticateAs('dame');
-        $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.docker') . '.json?api-version=v1', $postData);
+        $postData = ['content' => 'this is a test'];
+        $resourceId = UuidFactory::uuid('resource.id.docker');
+        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
         $this->assertSuccess();
 
         // Every member of the group should get notification
@@ -60,8 +63,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.comment.add', true);
 
         $this->authenticateAs('betty');
-        $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json?api-version=v1', $postData);
+        $postData = ['content' => 'this is a test'];
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
         $this->assertSuccess();
 
         // Every users with direct permissions should get notified
@@ -82,8 +86,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('show.comment', false);
 
         $this->authenticateAs('betty');
-        $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json?api-version=v1', $postData);
+        $postData = ['content' => 'this is a test'];
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
         $this->assertSuccess();
 
         // Every users with direct permissions should get notified
@@ -97,8 +102,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->setEmailNotificationSetting('send.comment.add', false);
 
         $this->authenticateAs('betty');
-        $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json?api-version=v1', $postData);
+        $postData = ['content' => 'this is a test'];
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
         $this->assertSuccess();
 
         // Nobody should get notifications

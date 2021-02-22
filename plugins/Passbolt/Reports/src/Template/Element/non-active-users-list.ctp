@@ -25,7 +25,7 @@ $users = $report['data']['users'] ?? [];
 <div class="row list">
     <div class="col12">
 <?php if (empty($users)) : ?>
-    <h2><?= __('All users have completed the setup.'); ?></h2>
+        <h2><?= __('All users have completed the setup.'); ?></h2>
 <?php else : ?>
         <table class="table-info horizontal ">
             <thead>
@@ -54,8 +54,6 @@ $users = $report['data']['users'] ?? [];
 <?php endforeach; ?>
             </tbody>
         </table>
+<?php endif; ?>
     </div>
 </div>
-<?php endif; ?>
-</div>
-

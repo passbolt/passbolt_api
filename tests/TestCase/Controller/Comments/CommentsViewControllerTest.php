@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,8 +27,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers',
-        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Comments', 'plugin.Passbolt/Folders.Folders',
-        'plugin.Passbolt/Folders.FoldersRelations',
+        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Comments',
     ];
 
     public function testCommentsViewSuccess()
@@ -48,26 +49,6 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('creator', $this->_responseJsonBody[0]);
     }
 
-    public function testCommentsViewApiV1Success()
-    {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->authenticateAs('ada');
-        $this->getJson("/comments/resource/$resourceId.json");
-        $this->assertSuccess();
-        $this->assertGreaterThan(0, count($this->_responseJsonBody));
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Comment', $this->_responseJsonBody[0]);
-        $this->assertCommentAttributes($this->_responseJsonBody[0]->Comment);
-
-        $this->assertObjectHasAttribute('children', $this->_responseJsonBody[0]);
-        $this->assertCommentAttributes($this->_responseJsonBody[0]->children[0]->Comment);
-
-        // Not expected fields.
-        $this->assertObjectNotHasAttribute('Modifier', $this->_responseJsonBody[0]);
-        $this->assertObjectNotHasAttribute('Creator', $this->_responseJsonBody[0]);
-    }
-
     public function testCommentsViewContainSuccess()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -85,30 +66,12 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody[0]->creator);
     }
 
-    public function testCommentsViewContainApiV1Success()
-    {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[creator]=1';
-        $this->getJson("/comments/resource/$resourceId.json?$urlParameter");
-        $this->assertSuccess();
-        $this->assertGreaterThan(0, count($this->_responseJsonBody));
-
-        // Expected content.
-        $this->assertObjectHasAttribute('Comment', $this->_responseJsonBody[0]);
-        $this->assertCommentAttributes($this->_responseJsonBody[0]->Comment);
-        $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody[0]->Modifier);
-        $this->assertObjectHasAttribute('Creator', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody[0]->Creator);
-    }
-
     public function testCommentsViewErrorNotFound()
     {
         $this->authenticateAs('ada');
         // jquery is soft deleted. Hence, not reachable.
         $resourceId = UuidFactory::uuid('Resource.id.jquery');
-        $this->getJson("/comments/resource/$resourceId.json");
+        $this->getJson("/comments/resource/$resourceId.json?api-version=v2");
         $this->assertError(404, 'Could not find comments for the requested model');
     }
 
@@ -116,21 +79,21 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
-        $this->getJson("/comments/WrongModelName/$resourceId.json");
+        $this->getJson("/comments/WrongModelName/$resourceId.json?api-version=v2");
         $this->assertError(500, 'Invalid model name');
     }
 
     public function testCommentsViewErrorWrongUuidParameter()
     {
         $this->authenticateAs('ada');
-        $this->getJson("/comments/resource/wrong-uuid.json");
+        $this->getJson('/comments/resource/wrong-uuid.json?api-version=v2');
         $this->assertError(500, 'Invalid id');
     }
 
     public function testCommentsViewErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/comments/resource/$resourceId.json");
+        $this->getJson("/comments/resource/$resourceId.json?api-version=v2");
         $this->assertAuthenticationError();
     }
 }

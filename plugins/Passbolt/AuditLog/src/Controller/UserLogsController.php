@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,7 +20,6 @@ namespace Passbolt\AuditLog\Controller;
 use App\Controller\AppController;
 use Cake\Datasource\Exception\PageOutOfBoundsException;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 use Passbolt\AuditLog\Utility\ActionLogsFinder;
 
@@ -26,6 +27,7 @@ class UserLogsController extends AppController
 {
     /**
      * Paginator options
+     *
      * @var array
      */
     public $paginate = [
@@ -40,7 +42,7 @@ class UserLogsController extends AppController
      * @throws \Exception If a component class cannot be found.
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->loadComponent('Paginator');
@@ -48,12 +50,13 @@ class UserLogsController extends AppController
 
     /**
      * View action logs for a given resource.
+     *
      * @param string $resourceId resource id
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the resource id has the wrong format
-     * @throws NotFoundException if the user cannot access the given resource, or if the resource does not exist
+     * @throws \Cake\Http\Exception\NotFoundException if the user cannot access the given resource, or if the resource does not exist
      */
-    public function viewByResource(string $resourceId = null)
+    public function viewByResource(?string $resourceId = null)
     {
         // Check request sanity
         if (!Validation::uuid($resourceId)) {
@@ -75,12 +78,13 @@ class UserLogsController extends AppController
 
     /**
      * View action logs for a given folder.
+     *
      * @param string $folderId folder id
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the resource id has the wrong format
-     * @throws NotFoundException if the user cannot access the given resource, or if the resource does not exist
+     * @throws \Cake\Http\Exception\NotFoundException if the user cannot access the given resource, or if the resource does not exist
      */
-    public function viewByFolder(string $folderId = null)
+    public function viewByFolder(?string $folderId = null)
     {
         // Check request sanity
         if (!Validation::uuid($folderId)) {

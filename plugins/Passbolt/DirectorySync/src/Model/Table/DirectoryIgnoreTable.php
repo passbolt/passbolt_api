@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -30,15 +32,13 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Groups
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $DirectoryEntries
- *
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get($primaryKey, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEntity($data = null, array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] newEntities(array $data, array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] patchEntities($entities, array $data, array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore findOrCreate($search, callable $callback = null, $options = [])
- *
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get($primaryKey, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore findOrCreate($search, callable $callback = null, ?array $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class DirectoryIgnoreTable extends Table
@@ -86,7 +86,7 @@ class DirectoryIgnoreTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->scalar('id')
@@ -137,6 +137,7 @@ class DirectoryIgnoreTable extends Table
 
     /**
      * Create DirectoryIgnore
+     *
      * @param array $data data
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
      */
@@ -155,6 +156,7 @@ class DirectoryIgnoreTable extends Table
 
     /**
      * Create or fail
+     *
      * @param string $foreignModel foreign model
      * @param string $foreignKey foreign key
      * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
@@ -199,9 +201,9 @@ class DirectoryIgnoreTable extends Table
      *
      * @param string $entityType Users or Groups
      * @param bool $dryRun false
-     * @return number of affected records
+     * @return \Passbolt\DirectorySync\Model\Table\number of affected records
      */
-    public function cleanupHardDeletedEntities(string $entityType, bool $dryRun = false)
+    public function cleanupHardDeletedEntities(string $entityType, ?bool $dryRun = false)
     {
         $query = $this->query()
             ->select(['id'])
@@ -220,9 +222,9 @@ class DirectoryIgnoreTable extends Table
      *
      * @param array|null $entryIds entry ids
      * @param bool $dryRun dry run
-     * @return number
+     * @return \Passbolt\DirectorySync\Model\Table\number
      */
-    public function cleanupHardDeletedDirectoryEntries(array $entryIds = null, bool $dryRun = false)
+    public function cleanupHardDeletedDirectoryEntries(?array $entryIds = null, ?bool $dryRun = false)
     {
         $query = $this->query()
             ->select(['id']);

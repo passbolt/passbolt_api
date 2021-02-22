@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace App\Test\TestCase\Controller\Favorites;
 
-use App\Model\Entity\Favorite;
 use App\Model\Table\FavoritesTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\FavoritesModelTrait;
@@ -26,7 +27,9 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
 {
     use FavoritesModelTrait;
 
-    /** @var FavoritesTable */
+    /**
+     * @var FavoritesTable
+     */
     private $Favorites;
 
     public $fixtures = [
@@ -50,18 +53,6 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
 
         // Expected fields.
         $this->assertFavoriteAttributes($this->_responseJsonBody);
-    }
-
-    public function testFavoritesAddSuccessApiV1()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=v1");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody);
-        $this->assertFavoriteAttributes($this->_responseJsonBody->Favorite);
     }
 
     public function testFavoritesAddCannotModifyNotAccessibleFields()
@@ -107,7 +98,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=v1");
+        $this->postJson("/favorites/resource/$resourceId.json");
         $this->assertError(400, 'The resource id is not valid.');
     }
 

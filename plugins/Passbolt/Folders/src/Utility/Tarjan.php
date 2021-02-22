@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Tarjan strongly connected components detection utility.
  * The utility is based on the code of Tomáš Fülöpp, licensed under GPL v2, see:
@@ -80,7 +82,15 @@ class Tarjan
                 $cycles[implode('|', $pointStack)] = true;
                 $found = true;
             } elseif ($marked[$successorNode] === false) {
-                $foundOnSuccessor = self::detectOnNode($initialNode, $successorNode, $graph, $cycles, $marked, $markedStack, $pointStack);
+                $foundOnSuccessor = self::detectOnNode(
+                    $initialNode,
+                    $successorNode,
+                    $graph,
+                    $cycles,
+                    $marked,
+                    $markedStack,
+                    $pointStack
+                );
                 if ($found || $foundOnSuccessor) {
                     $found = true;
                 }

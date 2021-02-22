@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,11 +17,10 @@
 namespace App\Test\TestCase\Controller\Healthcheck;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\Core\Configure;
 
 class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
     public function testHealthcheckIndexOk()
     {
@@ -30,7 +31,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckIndexJsonOk()
     {
-        $this->getJson('/healthcheck.json?api-version=v1');
+        $this->getJson('/healthcheck.json?api-version=v2');
         $this->assertResponseSuccess();
         $attributes = [
             'ssl', 'application', 'gpg', 'core', 'configFile', 'environment', 'database',

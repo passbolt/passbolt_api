@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -149,7 +151,8 @@ trait EntitiesHistoryTrait
 
     /**
      * Log entity history.
-     * @param Event $event the event
+     *
+     * @param \Cake\Event\Event $event the event
      * @return void
      */
     public function logEntityHistory(Event $event)
@@ -168,7 +171,7 @@ trait EntitiesHistoryTrait
      * Initialize needed associations for the required core models on the fly.
      * Example: we need to associate PermissionsHistory to Permissions in order to track the history.
      *
-     * @param Event $event the event
+     * @param \Cake\Event\Event $event the event
      * @return void
      */
     public function entityAssociationsInitialize(Event $event)
@@ -215,7 +218,8 @@ trait EntitiesHistoryTrait
 
     /**
      * Log entity history
-     * @param Event $event event
+     *
+     * @param \Cake\Event\Event $event event
      * @return void
      */
     private function _logEntityHistory(Event $event)
@@ -268,8 +272,8 @@ trait EntitiesHistoryTrait
 
     /**
      * Check if a table has a detailed history.
-     * @param Table $table table
      *
+     * @param \Cake\ORM\Table $table table
      * @return bool|string
      */
     private function _hasTableDetailedHistory(Table $table)
@@ -285,8 +289,8 @@ trait EntitiesHistoryTrait
 
     /**
      * Identify crud operation type based on the event.
-     * @param Event $event the event
      *
+     * @param \Cake\Event\Event $event the event
      * @return string CRUD type.
      */
     private function _getCrudType(Event $event)
@@ -311,8 +315,8 @@ trait EntitiesHistoryTrait
 
     /**
      * Check if an entity is soft deleted.
-     * @param Entity $entity entity
      *
+     * @param \Cake\ORM\Entity $entity entity
      * @return bool
      */
     private function _isEntitySoftDeleted(Entity $entity)
@@ -326,9 +330,9 @@ trait EntitiesHistoryTrait
 
     /**
      * Check if a log operation is needed based on the config.
-     * @param Event $event event
-     * @param string $actionName action name
      *
+     * @param \Cake\Event\Event $event event
+     * @param string $actionName action name
      * @return bool
      */
     private function isLogOperationNeeded(Event $event, string $actionName)
@@ -352,8 +356,8 @@ trait EntitiesHistoryTrait
 
     /**
      * Get entities history config
-     * @param string $actionName action name
      *
+     * @param string $actionName action name
      * @return |null
      */
     public function getEntitiesHistoryConfig(string $actionName)

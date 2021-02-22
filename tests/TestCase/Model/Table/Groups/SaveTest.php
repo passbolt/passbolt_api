@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -32,7 +34,7 @@ class SaveTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Permissions',
-        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
+        'app.Base/Resources', 'app.Base/Favorites',
     ];
 
     public function setUp()
@@ -72,9 +74,7 @@ class SaveTest extends AppTestCase
         ];
     }
 
-    /* ************************************************************** */
     /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testValidationName()
     {
@@ -87,9 +87,7 @@ class SaveTest extends AppTestCase
         $this->assertFieldFormatValidation($this->Groups, 'name', self::getDummyGroupData(), self::getEntityDefaultOptions(), $testCases);
     }
 
-    /* ************************************************************** */
     /* LOGIC VALIDATION TESTS */
-    /* ************************************************************** */
 
     public function testSuccess()
     {

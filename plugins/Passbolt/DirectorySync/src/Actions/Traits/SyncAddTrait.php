@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -29,12 +31,13 @@ trait SyncAddTrait
 {
     /**
      * Handle add exist.
+     *
      * @param array $data data
-     * @param DirectoryEntry|null $entry entry
-     * @param Entity $existingEntity (User or Group)
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|null $entry entry
+     * @param \Cake\ORM\Entity $existingEntity (User or Group)
      * @return void
      */
-    public function handleAddExist(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
+    public function handleAddExist(array $data, ?DirectoryEntry $entry = null, Entity $existingEntity)
     {
         // Do not overly report already successfully synced entities
         if (isset($entry) && !isset($entry->foreign_key)) {
@@ -84,14 +87,19 @@ trait SyncAddTrait
 
     /**
      * Handle add ignore
+     *
      * @param array $data data
-     * @param DirectoryEntry|null $entry entry
-     * @param Entity|null $existingEntity existingEntity
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|null $entry entry
+     * @param \Cake\ORM\Entity|null $existingEntity existingEntity
      * @param bool $ignoreEntity ignoreEntity
      * @return void
      */
-    public function handleAddIgnore(array $data, DirectoryEntry $entry = null, Entity $existingEntity = null, bool $ignoreEntity)
-    {
+    public function handleAddIgnore(
+        array $data,
+        ?DirectoryEntry $entry = null,
+        ?Entity $existingEntity = null,
+        bool $ignoreEntity
+    ): void {
         if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'create')) {
             return;
         }
@@ -116,16 +124,18 @@ trait SyncAddTrait
             );
             $reportData = $this->DirectoryIgnore->get($entry->id);
         }
-        $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
+        $r = new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData);
+        $this->addReportItem($r);
     }
 
     /**
      * Handle add new
+     *
      * @param array $data data
-     * @param DirectoryEntry|null $entry entry
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|null $entry entry
      * @return void
      */
-    public function handleAddNew(array $data, DirectoryEntry $entry = null)
+    public function handleAddNew(array $data, ?DirectoryEntry $entry = null)
     {
         if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'create')) {
             return;
@@ -167,12 +177,13 @@ trait SyncAddTrait
 
     /**
      * Handle add deleted
+     *
      * @param array $data data
-     * @param DirectoryEntry|null $entry entry
-     * @param Entity $existingEntity existingEntity
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|null $entry entry
+     * @param \Cake\ORM\Entity $existingEntity existingEntity
      * @return void
      */
-    public function handleAddDeleted(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
+    public function handleAddDeleted(array $data, ?DirectoryEntry $entry = null, Entity $existingEntity)
     {
         if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'create')) {
             return;
@@ -226,9 +237,9 @@ trait SyncAddTrait
 
     /**
      * Create entity
-     * @param array $data data
-     * @param DirectoryEntry $entry entry
      *
+     * @param array $data data
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
      * @return mixed
      */
     public function createEntity(array $data, DirectoryEntry $entry)

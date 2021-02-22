@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,8 +18,6 @@
 namespace App\Test\TestCase\Notification\NotificationSettings\Utility;
 
 use App\Model\Entity\Role;
-use App\Model\Table\OrganizationSettingsTable;
-use App\Model\Table\UsersTable;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAccessControl;
@@ -34,21 +34,29 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 
+    /**
+     * @var \EmailQueue\Model\Table\EmailQueueTable emailQueue
+     */
+    protected $emailQueue;
+
+    /**
+     * @var \App\Model\Table\UsersTable Users
+     */
+    protected $Users;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments',
-        'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/EmailQueue',
-        'app.Base/OrganizationSettings', 'app.Base/Gpgkeys',
+        'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Profiles',
+         'app.Base/Gpgkeys',
     ];
 
     public function setUp()
     {
         parent::setUp();
 
-        /** @var EmailQueueTable Users */
         $this->emailQueue = TableRegistry::getTableLocator()
             ->get('EmailQueue', ['className' => EmailQueueTable::class]);
 
-        /** @var UsersTable Users */
         $this->Users = TableRegistry::getTableLocator()->get('Users');
 
         EventManager::instance()

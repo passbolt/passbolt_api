@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -23,8 +25,9 @@ class LicenseKeyDataForm extends Form
 {
     /**
      * License key details schema.
-     * @param Schema $schema schema
-     * @return Schema
+     *
+     * @param \Cake\Form\Schema $schema schema
+     * @return \Cake\Form\Schema
      */
     protected function _buildSchema(Schema $schema)
     {
@@ -38,8 +41,9 @@ class LicenseKeyDataForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator validator
-     * @return Validator
+     *
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
      */
     protected function _buildValidator(Validator $validator)
     {
@@ -75,7 +79,7 @@ class LicenseKeyDataForm extends Form
      * @param array $context not in use
      * @return bool
      */
-    public function checkUsersLimitIsInRange(string $value, array $context = null)
+    public function checkUsersLimitIsInRange(string $value, ?array $context = null)
     {
         try {
             $users = TableRegistry::getTableLocator()->get('Users');
@@ -98,7 +102,6 @@ class LicenseKeyDataForm extends Form
      *
      * @param string $value value
      * @param array $context context
-     *
      * @return bool
      */
     public function checkCreatedInPast(string $value, array $context)
@@ -115,10 +118,9 @@ class LicenseKeyDataForm extends Form
      *
      * @param string $value The license
      * @param array|null $context not in use
-     *
      * @return bool
      */
-    public function checkNotExpired(string $value, array $context = null)
+    public function checkNotExpired(string $value, ?array $context = null)
     {
         if (time() > strtotime($value)) {
             return false;
@@ -129,6 +131,7 @@ class LicenseKeyDataForm extends Form
 
     /**
      * Execute implementation.
+     *
      * @param array $data form data
      * @return bool
      */

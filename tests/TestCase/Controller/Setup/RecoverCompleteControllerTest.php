@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,7 +26,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
 {
     use AuthenticationTokenModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',];
     public $AuthenticationTokens;
 
     public function setUp()
@@ -59,28 +61,6 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         // Check that token is now inactive
         $t2 = $this->AuthenticationTokens->get($t->id);
         $this->assertFalse($t2->active);
-    }
-
-    /**
-     * @group AN
-     * @group recover
-     * @group recoverComplete
-     */
-    public function testRecoverCompleteApiV1Success()
-    {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_RECOVER);
-        $url = '/setup/completeRecovery/' . UuidFactory::uuid('user.id.ada') . '.json';
-        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
-        $data = [
-            'AuthenticationToken' => [
-                'token' => $t->token,
-            ],
-            'Gpgkey' => [
-                'key' => $armoredKey,
-            ],
-        ];
-        $this->postJson($url, $data);
-        $this->assertSuccess();
     }
 
     /**
@@ -153,7 +133,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-                'AuthenticationToken' => $case['data'],
+                'authenticationtoken' => $case['data'],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -179,7 +159,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-                'AuthenticationToken' => $case['data'],
+                'authenticationtoken' => $case['data'],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -226,10 +206,10 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-            'AuthenticationToken' => [
+            'authenticationtoken' => [
                 'token' => $t->token,
             ],
-            'Gpgkey' => $case['data'],
+            'gpgkey' => $case['data'],
             ];
         }
         $this->postJson($url, $data);

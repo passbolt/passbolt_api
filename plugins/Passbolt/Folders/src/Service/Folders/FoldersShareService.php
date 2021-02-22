@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -18,7 +20,6 @@ namespace Passbolt\Folders\Service\Folders;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
-use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
@@ -28,12 +29,9 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Exception;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
-use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
 
@@ -41,40 +39,40 @@ class FoldersShareService
 {
     use EventDispatcherTrait;
 
-    const FOLDERS_SHARE_FOLDER_EVENT = 'folders.folder.share';
+    public const FOLDERS_SHARE_FOLDER_EVENT = 'folders.folder.share';
 
     /**
-     * @var FoldersTable
+     * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
     private $foldersTable;
 
     /**
-     * @var FoldersRelationsAddItemToUserTreeService
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService
      */
     private $foldersRelationsAddItemToUserTreeService;
 
     /**
-     * @var FoldersRelationsRemoveItemFromUserTreeService
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService
      */
     private $foldersRelationsRemoveItemFromUserTreeService;
 
     /**
-     * @var FoldersRelationsTable
+     * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
     private $foldersRelationsTable;
 
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @var PermissionsUpdatePermissionsService
+     * @var \App\Service\Permissions\PermissionsUpdatePermissionsService
      */
     private $permissionsUpdatePermissionsService;
 
     /**
-     * @var UserHasPermissionService
+     * @var \App\Service\Permissions\UserHasPermissionService
      */
     private $userHasPermissionService;
 
@@ -95,13 +93,13 @@ class FoldersShareService
     /**
      * Update a folder for the current user.
      *
-     * @param UserAccessControl $uac The current user
+     * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $id The folder to update
-     * @param array $data The folder data
-     * @return void|Folder
-     * @throws Exception If an unexpected error occurred
+     * @param array|null $data The folder data
+     * @return void|\Passbolt\Folders\Model\Entity\Folder
+     * @throws \Exception If an unexpected error occurred
      */
-    public function share(UserAccessControl $uac, string $id, array $data = [])
+    public function share(UserAccessControl $uac, string $id, ?array $data = []): Folder
     {
         $folder = $this->getFolder($id, $uac);
         $this->assertUserCanShare($uac, $folder);
@@ -130,11 +128,11 @@ class FoldersShareService
      * Retrieve the folder.
      *
      * @param string $folderId The folder identifier to retrieve.
-     * @param UserAccessControl $uac UserAccessControl updating the resource
-     * @return Folder
-     * @throws NotFoundException If the folder does not exist.
+     * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
+     * @return \Passbolt\Folders\Model\Entity\Folder
+     * @throws \Cake\Http\Exception\NotFoundException If the folder does not exist.
      */
-    private function getFolder(string $folderId, UserAccessControl $uac)
+    private function getFolder(string $folderId, UserAccessControl $uac): Folder
     {
         $folder = $this->foldersTable->findById($folderId)
             ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $uac->getId()])
@@ -150,15 +148,16 @@ class FoldersShareService
     /**
      * Assert if the operator can share the given folder.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Folder $folder The folder to assert
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The folder to assert
      * @return void
-     * @throws ForbiddenException If the user cannot share the folder
+     * @throws \Cake\Http\Exception\ForbiddenException If the user cannot share the folder
      */
-    private function assertUserCanShare(UserAccessControl $uac, Folder $folder)
+    private function assertUserCanShare(UserAccessControl $uac, Folder $folder): void
     {
-        $userId = $uac->userId();
-        $isAllowed = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folder->id, $userId, Permission::OWNER);
+        $userId = $uac->getId();
+        $isAllowed = $this->userHasPermissionService
+            ->check(PermissionsTable::FOLDER_ACO, $folder->id, $userId, Permission::OWNER);
         if (!$isAllowed) {
             throw new ForbiddenException(__('You are not allowed to update the permissions of this folder.'));
         }
@@ -167,14 +166,14 @@ class FoldersShareService
     /**
      * Update a folder permissions
      *
-     * @param UserAccessControl $uac The operator
-     * @param Folder $folder The target folder
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @param array $changes The list of permissions changes
      * @return array
-     * @throws ValidationException If the permissions didn't validate
+     * @throws \App\Error\Exception\ValidationException If the permissions didn't validate
      * @throws \Exception If something went wrong
      */
-    private function updatePermissions(UserAccessControl $uac, Folder $folder, array $changes)
+    private function updatePermissions(UserAccessControl $uac, Folder $folder, array $changes): array
     {
         $result = [
             'added' => [],
@@ -182,7 +181,8 @@ class FoldersShareService
         ];
 
         try {
-            $result = $this->permissionsUpdatePermissionsService->updatePermissions($uac, PermissionsTable::FOLDER_ACO, $folder->id, $changes);
+            $result = $this->permissionsUpdatePermissionsService
+                ->updatePermissions($uac, PermissionsTable::FOLDER_ACO, $folder->id, $changes);
         } catch (CustomValidationException $e) {
             $folder->setError('permissions', $e->getErrors());
             $this->handleValidationErrors($folder);
@@ -194,11 +194,11 @@ class FoldersShareService
     /**
      * Handle folder validation errors.
      *
-     * @param Folder $folder The target folder
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @return void
-     * @throws ValidationException If the provided data does not validate.
+     * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
-    private function handleValidationErrors(Folder $folder)
+    private function handleValidationErrors(Folder $folder): void
     {
         $errors = $folder->getErrors();
         if (!empty($errors)) {
@@ -210,19 +210,24 @@ class FoldersShareService
      * Move content of the folder which was self organized without sufficient permission (<UPDATE) to move it into
      * a shared folder to the root of the operator.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Folder $folder The target shared folder
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target shared folder
      * @return void
      */
-    private function moveSelfOrganizedContentWithInsufficientPermissionToRoot(UserAccessControl $uac, Folder $folder)
-    {
-        $personalItems = $this->foldersRelationsTable->findByUserIdAndFolderParentId($uac->userId(), $folder->id)
+    private function moveSelfOrganizedContentWithInsufficientPermissionToRoot(
+        UserAccessControl $uac,
+        Folder $folder
+    ): void {
+        $personalItems = $this->foldersRelationsTable
+            ->findByUserIdAndFolderParentId($uac->getId(), $folder->id)
             ->select(['foreign_id', 'foreign_model'])
             ->toArray();
         foreach ($personalItems as $personalItem) {
-            $canUpdate = $this->userHasPermissionService->check($personalItem->foreign_model, $personalItem->foreign_id, $uac->userId(), Permission::UPDATE);
+            $canUpdate = $this->userHasPermissionService
+                ->check($personalItem->foreign_model, $personalItem->foreign_id, $uac->getId(), Permission::UPDATE);
             if (!$canUpdate) {
-                $this->foldersRelationsTable->moveItemFor($personalItem->foreign_id, [$uac->userId()], FoldersRelation::ROOT);
+                $this->foldersRelationsTable
+                    ->moveItemFor($personalItem->foreign_id, [$uac->getId()], FoldersRelation::ROOT);
                 continue;
             }
         }
@@ -231,12 +236,12 @@ class FoldersShareService
     /**
      * Post permissions revoked.
      *
-     * @param Folder $folder The target folder
-     * @param array $deletedPermissions The list of deleted permissions
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
+     * @param array|null $deletedPermissions The list of deleted permissions
      * @return void
-     * @throws Exception If something unexpected occurred
+     * @throws \Exception If something unexpected occurred
      */
-    private function postPermissionsRevoked(Folder $folder, array $deletedPermissions = [])
+    private function postPermissionsRevoked(Folder $folder, ?array $deletedPermissions = []): void
     {
         foreach ($deletedPermissions as $permission) {
             if ($permission->aro === PermissionsTable::GROUP_ARO) {
@@ -250,12 +255,12 @@ class FoldersShareService
     /**
      * Remove a folder from a group of users trees.
      *
-     * @param Folder $folder The target folder
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @param string $groupId The target group
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    private function removeFolderFromGroupUsersTrees(Folder $folder, string $groupId)
+    private function removeFolderFromGroupUsersTrees(Folder $folder, string $groupId): void
     {
         $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
@@ -266,12 +271,12 @@ class FoldersShareService
     /**
      * Remove a folder from a user tree
      *
-     * @param Folder $folder The target folder
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @param string $userId The target user
      * @return void
      * @throws \Exception
      */
-    private function removeFolderFromUserTree(Folder $folder, string $userId)
+    private function removeFolderFromUserTree(Folder $folder, string $userId): void
     {
         // If the user still has access to the folder, don't alter the user tree.
         $hasAccess = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folder->id, $userId);
@@ -285,13 +290,13 @@ class FoldersShareService
     /**
      * Post permissions added.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Folder $folder The target folder
-     * @param array $addedPermissions The list of added permissions
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
+     * @param array|null $addedPermissions The list of added permissions
      * @return void
-     * @throws Exception If something unexpected occurred
+     * @throws \Exception If something unexpected occurred
      */
-    private function postPermissionsAdded(UserAccessControl $uac, Folder $folder, array $addedPermissions = [])
+    private function postPermissionsAdded(UserAccessControl $uac, Folder $folder, ?array $addedPermissions = []): void
     {
         foreach ($addedPermissions as $permission) {
             if ($permission->aro === PermissionsTable::GROUP_ARO) {
@@ -305,13 +310,13 @@ class FoldersShareService
     /**
      * Add a folder to a group of users trees.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Folder $folder The target folder
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @param string $groupId The target group
      * @return void
-     * @throws Exception If something wrong occurred
+     * @throws \Exception If something wrong occurred
      */
-    private function addFolderToGroupUsersTrees(UserAccessControl $uac, Folder $folder, string $groupId)
+    private function addFolderToGroupUsersTrees(UserAccessControl $uac, Folder $folder, string $groupId): void
     {
         $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
@@ -322,20 +327,21 @@ class FoldersShareService
     /**
      * Add a folder to a user tree.
      *
-     * @param UserAccessControl $uac The operator
-     * @param Folder $folder The target folder
+     * @param \App\Utility\UserAccessControl $uac The operator
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @param string $userId The target user
      * @return void
-     * @throws Exception If something wrong occurred
+     * @throws \Exception If something wrong occurred
      */
-    private function addFolderToUserTree(UserAccessControl $uac, Folder $folder, string $userId)
+    private function addFolderToUserTree(UserAccessControl $uac, Folder $folder, string $userId): void
     {
         $exists = $this->foldersRelationsTable->isItemInUserTree($userId, $folder->id);
         if ($exists) {
             return;
         }
 
-        $this->foldersRelationsAddItemToUserTreeService->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId);
+        $this->foldersRelationsAddItemToUserTreeService
+            ->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId);
         $this->dispatchEvent(self::FOLDERS_SHARE_FOLDER_EVENT, [
             'uac' => $uac,
             'folder' => $folder,

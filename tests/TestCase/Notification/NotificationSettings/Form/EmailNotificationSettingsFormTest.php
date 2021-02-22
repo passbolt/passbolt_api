@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -319,10 +321,10 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     /**
      * Get dummy data.
      *
-     * @param array $data Custom data that will be merged with the default content.
+     * @param array|null $data Custom data that will be merged with the default content.
      * @return array Merged data
      */
-    public static function getDummyData($data = [])
+    public static function getDummyData(?array $data = []): array
     {
         $default = [
             'show_comment' => true,

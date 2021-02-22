@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,23 +26,25 @@ use Cake\ORM\TableRegistry;
 class PermissionsCreateService
 {
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
     /**
-     * Instantiate the service.
+     * PermissionsCreateService constructor.
+     *
+     * @param \App\Model\Table\PermissionsTable|null $permissionsTable table
      */
-    public function __construct()
+    public function __construct(?PermissionsTable $permissionsTable = null)
     {
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $this->permissionsTable = $permissionsTable ?? TableRegistry::getTableLocator()->get('Permissions');
     }
 
     /**
      * Create a permission.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
-     * @param array $data The permission data
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
+     * @param array|null $data The permission data
      * [
      *   string $aco The permission aco type
      *   string $aco_foreign_key The permission aco instance id
@@ -48,10 +52,10 @@ class PermissionsCreateService
      *   string $aro_foreign_key The permission aro instance id
      *   int $type The permission type
      * ]
-     * @return Permission
+     * @return \App\Model\Entity\Permission
      * @throws \Exception
      */
-    public function create(UserAccessControl $uac, array $data = [])
+    public function create(UserAccessControl $uac, ?array $data = []): Permission
     {
         $permission = null;
         $this->permissionsTable->getConnection()->transactional(function () use (&$permission, $uac, $data) {
@@ -64,8 +68,8 @@ class PermissionsCreateService
     /**
      * Create and save a permission.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
-     * @param array $data The permission data
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
+     * @param array|null $data The permission data
      * [
      *   string $aco The permission aco type
      *   string $aco_foreign_key The permission aco instance id
@@ -73,9 +77,9 @@ class PermissionsCreateService
      *   string $aro_foreign_key The permission aro instance id
      *   int $type The permission type
      * ]
-     * @return Permission
+     * @return \App\Model\Entity\Permission
      */
-    private function createPermission(UserAccessControl $uac, array $data = [])
+    private function createPermission(UserAccessControl $uac, ?array $data = []): Permission
     {
         $permission = $this->buildPermissionEntity($uac, $data);
         $this->handlePermissionValidationErrors($permission);
@@ -88,8 +92,8 @@ class PermissionsCreateService
     /**
      * Build the permission entity.
      *
-     * @param UserAccessControl $uac The user at the origin of the operation
-     * @param array $data The permission data
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
+     * @param array|null $data The permission data
      * [
      *   string $aco The permission aco type
      *   string $aco_foreign_key The permission aco instance id
@@ -97,11 +101,11 @@ class PermissionsCreateService
      *   string $aro_foreign_key The permission aro instance id
      *   int $type The permission type
      * ]
-     * @return Permission
+     * @return \App\Model\Entity\Permission
      */
-    private function buildPermissionEntity(UserAccessControl $uac, array $data = [])
+    private function buildPermissionEntity(UserAccessControl $uac, ?array $data = []): Permission
     {
-        $operatorId = $uac->userId();
+        $operatorId = $uac->getId();
         $data = array_merge([
             'created_by' => $operatorId,
             'modified_by' => $operatorId,
@@ -122,14 +126,15 @@ class PermissionsCreateService
     /**
      * Handle permission validation errors.
      *
-     * @param Permission $permission The permission
+     * @param \App\Model\Entity\Permission $permission The permission
      * @return void
      */
-    private function handlePermissionValidationErrors(Permission $permission)
+    private function handlePermissionValidationErrors(Permission $permission): void
     {
         $errors = $permission->getErrors();
         if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate the permission data.'), $permission, $this->permissionsTable);
+            $msg = __('Could not validate the permission data.');
+            throw new ValidationException($msg, $permission, $this->permissionsTable);
         }
     }
 }

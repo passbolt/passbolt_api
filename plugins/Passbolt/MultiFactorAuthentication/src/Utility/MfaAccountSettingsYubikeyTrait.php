@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -21,7 +23,7 @@ trait MfaAccountSettingsYubikeyTrait
     /**
      * Return the yubikey id
      *
-     * @throws RecordNotFoundException if URI is not set
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException if URI is not set
      * @return mixed
      */
     public function getYubikeyId()

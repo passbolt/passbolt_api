@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -55,11 +57,11 @@ class Healthchecks
      * - registrationClosed: true if registration is not open
      * - jsProd: true if using minified/concatenated javascript
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      * @access private
      */
-    public static function application($checks = null)
+    public static function application(?array $checks = []): array
     {
         try {
             $checks['application']['info']['remoteVersion'] = Migration::getLatestTagName();
@@ -74,13 +76,16 @@ class Healthchecks
             // Cannot connect to the database
             $checks['application']['schema'] = null;
         }
-        $checks['application']['robotsIndexDisabled'] = (strpos(Configure::read('passbolt.meta.robots'), 'noindex') !== false);
+        $robots = strpos(Configure::read('passbolt.meta.robots'), 'noindex');
+        $checks['application']['robotsIndexDisabled'] = ($robots !== false);
         $checks['application']['sslForce'] = Configure::read('passbolt.ssl.force');
-        $checks['application']['sslFullBaseUrl'] = !(strpos(Configure::read('App.fullBaseUrl'), 'https') === false);
+        $https = !strpos(Configure::read('App.fullBaseUrl'), 'https');
+        $checks['application']['sslFullBaseUrl'] = ($https === false);
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
         $checks['application']['registrationClosed'] = !Configure::read('passbolt.registration.public');
         $checks['application']['jsProd'] = (Configure::read('passbolt.js.build') === 'production');
-        $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', json_encode(Configure::read('passbolt.email.send'))) === 1);
+        $sendEmailJson = json_encode(Configure::read('passbolt.email.send'));
+        $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', $sendEmailJson) === 1);
 
         $checks = array_merge(Healthchecks::appUser(), $checks);
 
@@ -91,13 +96,13 @@ class Healthchecks
      * Check that users are set in the database
      * - app.adminCount there is at least an admin in the database
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function appUser($checks = null)
+    public static function appUser(?array $checks = []): array
     {
         // no point checking for records if can not connect
-        $checks = Healthchecks::database();
+        $checks = array_merge(Healthchecks::database(), $checks);
         $checks['application']['adminCount'] = false;
         if (!$checks['database']['connect']) {
             return $checks;
@@ -122,10 +127,10 @@ class Healthchecks
      * Return config file checks:
      * - configFile.app true if file is present, false otherwise
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function configFiles($checks = null)
+    public static function configFiles(?array $checks = []): array
     {
         $files = ['app', 'passbolt'];
         foreach ($files as $file) {
@@ -142,13 +147,13 @@ class Healthchecks
      * - salt: true if non default salt is used
      * - cipherSeed: true if non default cipherSeed is used
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function core($checks = [])
+    public static function core(?array $checks = []): array
     {
         $settings = Cache::getConfig('_cake_core_');
-        $checks['core']['cache'] = (!empty($settings));
+        $checks['core']['cache'] = !empty($settings);
         $checks['core']['debugDisabled'] = (Configure::read('debug') === false);
         $checks['core']['salt'] = (Configure::read('Security.salt') !== '__SALT__');
         $checks['core']['fullBaseUrl'] = (Configure::read('App.fullBaseUrl') !== null);
@@ -169,7 +174,7 @@ class Healthchecks
             ]);
             $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
             $response = @file_get_contents($url, false, $context); // phpcs:ignore
-            if (isset($response)) {
+            if ($response !== false && isset($response)) {
                 $json = json_decode($response);
                 if (isset($json->body)) {
                     $checks['core']['fullBaseUrlReachable'] = ($json->body === 'OK');
@@ -189,10 +194,10 @@ class Healthchecks
      * - info.tableCount: number of tables installed
      * - defaultContent: some default content (4 roles)
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function database($checks = [])
+    public static function database(?array $checks = []): array
     {
         return DatabaseHealthchecks::all($checks);
     }
@@ -203,13 +208,13 @@ class Healthchecks
      * - pcre: unicode support
      * - tmpWritable: the TMP directory is writable for the current user
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function environment($checks = [])
+    public static function environment(?array $checks = []): array
     {
-        $checks['environment']['phpVersion'] = (version_compare(PHP_VERSION, '7.0', '>='));
-        $checks['environment']['pcre'] = (Validation::alphaNumeric('passbolt'));
+        $checks['environment']['phpVersion'] = version_compare(PHP_VERSION, '7.0', '>=');
+        $checks['environment']['pcre'] = Validation::alphaNumeric('passbolt');
         $checks['environment']['mbstring'] = extension_loaded('mbstring');
         $checks['environment']['gnupg'] = extension_loaded('gnupg');
         $checks['environment']['intl'] = extension_loaded('intl');
@@ -224,10 +229,10 @@ class Healthchecks
     /**
      * Gpg checks
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function gpg($checks = [])
+    public static function gpg(?array $checks = []): array
     {
         return GpgHealthchecks::all($checks);
     }
@@ -238,10 +243,10 @@ class Healthchecks
      * - ssl.hostValid
      * - ssl.notSelfSigned
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function ssl($checks = [])
+    public static function ssl(?array $checks = []): array
     {
         return SslHealthchecks::all($checks);
     }
@@ -252,7 +257,7 @@ class Healthchecks
      * @param string $path the directory path
      * @return bool
      */
-    private static function _checkRecursiveDirectoryWritable($path)
+    private static function _checkRecursiveDirectoryWritable(string $path): bool
     {
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path),
@@ -272,10 +277,11 @@ class Healthchecks
 
     /**
      * Get schema tables list. (per version number).
+     *
      * @param int $version passbolt major version number.
      * @return array
      */
-    public static function getSchemaTables($version = 2)
+    public static function getSchemaTables(int $version = 2): array
     {
         // List of tables for passbolt v1.
         $tables = [

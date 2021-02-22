@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,8 +17,10 @@
 namespace Passbolt\AccountSettings\Controller\Themes;
 
 use App\Controller\AppController;
-use Cake\ORM\TableRegistry;
 
+/**
+ * @property AccountSettingsTable AccountSettings
+ */
 class ThemesIndexController extends AppController
 {
     /**
@@ -26,8 +30,8 @@ class ThemesIndexController extends AppController
      */
     public function index()
     {
-        $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
-        $themes = $AccountSettings->findAllThemes();
+        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
+        $themes = $this->AccountSettings->findAllThemes();
         $this->success(__('The operation was successful.'), $themes);
     }
 }

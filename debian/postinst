@@ -29,7 +29,7 @@ declare -A sql_values
 declare -A nginx_values
 
 # We want to extract php version in the form: "php7.x"
-PHP_MAJOR_MINOR="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[0-3]\).*:\1:')"
+PHP_MAJOR_MINOR="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[2-4]\).*:\1:')"
 PHP_VERSION="php${PHP_MAJOR_MINOR}"
 
 NGINX_CONF_EXAMPLE="/usr/share/passbolt/examples/nginx-passbolt.conf"
@@ -154,11 +154,11 @@ configure_mysql() {
   $MYSQL "CREATE DATABASE IF NOT EXISTS ${sql_values[db_passbolt_dbname]} \
          DEFAULT CHARACTER SET utf8 COLLATE utf8_bin ;"
 
-  $MYSQL "CREATE USER IF NOT EXISTS '${sql_values[db_passbolt_username]}'@'127.0.0.1' \
+  $MYSQL "CREATE USER IF NOT EXISTS '${sql_values[db_passbolt_username]}'@'localhost' \
          IDENTIFIED BY '${sql_values[db_passbolt_password]}' ;"
 
   $MYSQL "GRANT ALL PRIVILEGES ON ${sql_values[db_passbolt_dbname]}.* \
-         TO '${sql_values[db_passbolt_username]}'@'127.0.0.1' ;"
+         TO '${sql_values[db_passbolt_username]}'@'localhost' ;"
 }
 
 
@@ -167,7 +167,7 @@ configure_mysql() {
 ###########################################
 
 configure_nginx_config_file() {
-  if [ -d "$NGINX_SITES_AVAILABLE" ] && [ -d "$NGINX_SITES_ENABLED" ]; then
+  if [ -d "$NGINX_SITES_AVAILABLE" ] && [ -d "$NGINX_SITES_ENABLED" ] && [ ! -f "$NGINX_CONF" ]; then
     _echo "nginx: activating http configuration file"
 
     # install passbolt virtual host configuration
@@ -194,7 +194,7 @@ configure_nginx_local_certs() {
   local_cert_key_file="${PASSBOLT_SSL_KEY_PATH}/$(basename "${nginx_values[cert_key_file]}")"
 
   # apply changes to nginx virtual host file, and ssl include file
-  sed -i "s|listen 80;|listen 443;|g" "$NGINX_CONF"
+  sed -i "s|listen 80;|listen 443 ssl http2;|g" "$NGINX_CONF"
   sed -i "s|# include __PASSBOLT_SSL__|include ${NGINX_SSL};|g" "$NGINX_CONF"
   sed -i "s|ssl_certificate __CERT_PATH__|ssl_certificate ${local_cert_file};|g" "$NGINX_SSL"
   sed -i "s|ssl_certificate_key __KEY_PATH__|ssl_certificate_key ${local_cert_key_file};|g" "$NGINX_SSL"
@@ -249,6 +249,15 @@ case "$deb_action" in
 
   configure)
 
+    # Run the migrations process on upgrade
+    if is_upgrade; then
+      su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
+      su -c '/usr/share/php/passbolt/bin/cake cache clear_all' -s /bin/bash www-data
+      db_purge
+      db_stop
+      exit 0
+    fi
+
     get_mysql_values
     get_nginx_values
 
@@ -265,11 +274,6 @@ case "$deb_action" in
     configure_nginx
     info_message
     db_stop
-
-    # Run the migrations process on upgrade
-    if is_upgrade; then
-      su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
-    fi
 esac
 
 #DEBHELPER#

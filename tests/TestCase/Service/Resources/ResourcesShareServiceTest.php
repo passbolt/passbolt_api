@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -33,7 +35,30 @@ use Cake\Utility\Hash;
  */
 class ResourcesShareServiceTest extends AppTestCase
 {
+    /**
+     * @var ResourcesTable $Resources
+     */
     public $Resources;
+
+    /**
+     * @var FavoritesTable $Favorites
+     */
+    public $Favorites;
+
+    /**
+     * @var PermissionsTable $Permissions
+     */
+    public $Permissions;
+
+    /**
+     * @var UsersTable $Users
+     */
+    public $Users;
+
+    /**
+     * @var ResourcesShareService $service
+     */
+    public $service;
 
     public $fixtures = [
         'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
@@ -77,9 +102,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    /* ************************************************************** */
     /* SHARE */
-    /* ************************************************************** */
 
     public function testShareSuccess()
     {
@@ -273,7 +296,7 @@ hcciUFw5
             try {
                 $this->service->share($uac, $resourceApacheId, $permissions, $secrets);
             } catch (ValidationException $e) {
-                $this->assertEquals("Could not validate resource data.", $e->getMessage());
+                $this->assertEquals('Could not validate resource data.', $e->getMessage());
                 $error = Hash::get($e->getErrors(), $case['errorField']);
                 $this->assertNotNull($error, "Expected error not found : {$case['errorField']}. Errors: " . json_encode($e->getErrors()));
 
@@ -299,9 +322,7 @@ hcciUFw5
         $this->service->share($uac, $resourceId, $data);
     }
 
-    /* ************************************************************** */
     /* SHARE DRY RUN */
-    /* ************************************************************** */
 
     public function testShareDryRunSuccess()
     {
@@ -428,7 +449,7 @@ hcciUFw5
             try {
                 $this->service->shareDryRun($uac, $resourceApacheId, $case['data']);
             } catch (ValidationException $e) {
-                $this->assertEquals("Could not validate resource data.", $e->getMessage());
+                $this->assertEquals('Could not validate resource data.', $e->getMessage());
                 $error = Hash::get($e->getErrors(), $case['errorField']);
                 $this->assertNotNull($error, "Expected error not found : {$case['errorField']}. Errors: " . json_encode($e->getErrors()));
 
@@ -438,18 +459,18 @@ hcciUFw5
         }
     }
 
-    public function testShareDryRunErrorRuleResourceIsNotSoftDeleted()
+    public function testShareDryRunErrorRuleResourceIsSoftDeleted()
     {
         $userAId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions']]);
         $data = [[
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'type' => Permission::OWNER]];
+            'type' => Permission::OWNER,
+        ]];
         $this->expectException(NotFoundException::class);
-        $this->service->shareDryRun($uac, $resource, $data);
+        $this->service->shareDryRun($uac, $resourceId, $data);
     }
 }

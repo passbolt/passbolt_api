@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,10 +19,9 @@ namespace Passbolt\Folders\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
-use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Traits\Folders\FoldersRelationsFindersTrait;
@@ -28,16 +29,15 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersRelationsFindersTrait;
 /**
  * FoldersRelations Model
  *
- * @method FoldersRelation get($primaryKey, $options = [])
- * @method FoldersRelation newEntity($data = null, array $options = [])
- * @method FoldersRelation[] newEntities(array $data, array $options = [])
- * @method FoldersRelation|false save(EntityInterface $entity, $options = [])
- * @method FoldersRelation saveOrFail(EntityInterface $entity, $options = [])
- * @method FoldersRelation patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method FoldersRelation[] patchEntities($entities, array $data, array $options = [])
- * @method FoldersRelation findOrCreate($search, callable $callback = null, $options = [])
- *
- * @mixin TimestampBehavior
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Passbolt\Folders\Model\Table\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Passbolt\Folders\Model\Table\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Passbolt\Folders\Model\Table\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @mixin \Passbolt\Folders\Model\Table\TimestampBehavior
  */
 class FoldersRelationsHistoryTable extends Table
 {
@@ -47,7 +47,7 @@ class FoldersRelationsHistoryTable extends Table
     /**
      * List of allowed item models on which a folder relation can be plugged.
      */
-    const ALLOWED_FOREIGN_MODELS = [
+    public const ALLOWED_FOREIGN_MODELS = [
         FoldersRelation::FOREIGN_MODEL_FOLDER,
         FoldersRelation::FOREIGN_MODEL_RESOURCE,
     ];
@@ -87,10 +87,10 @@ class FoldersRelationsHistoryTable extends Table
     /**
      * Default validation rules.
      *
-     * @param Validator $validator Validator instance.
-     * @return Validator
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
@@ -123,13 +123,15 @@ class FoldersRelationsHistoryTable extends Table
 
     /**
      * Return a FoldersRelationsHistory entity.
-     * @param array $data entity data
      *
-     * @return FoldersRelation
+     * @param array $data entity data
+     * @return \Passbolt\Folders\Model\Entity\FoldersRelation
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): FoldersRelation
     {
-        return $this->newEntity($data, [
+        $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+
+        return $foldersRelationsTable->newEntity($data, [
             'accessibleFields' => [
                 'id' => true,
                 'foreign_model' => true,
@@ -144,23 +146,24 @@ class FoldersRelationsHistoryTable extends Table
      * Create a new FoldersRelationHistory.
      *
      * @param array $data the data
-     *
-     * @return FolderRelationsHistory|bool
-     * @throws ValidationException
-     * @throws InternalErrorException
+     * @return \Passbolt\Folders\Model\Entity\FoldersRelation
+     * @throws \App\Error\Exception\ValidationException
+     * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(array $data)
+    public function create(array $data): FoldersRelation
     {
         // Check validation rules.
         $folderRelationHistory = $this->buildEntity($data);
         if (!empty($folderRelationHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate folders_relations_history data.', true), $folderRelationHistory, $this);
+            $msg = __('Could not validate folders_relations_history data.');
+            throw new ValidationException($msg, $folderRelationHistory, $this);
         }
         $folderRelationHistory = $this->save($folderRelationHistory);
 
         // Check for validation errors. (associated models too).
         if (!empty($folderRelationHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate folders_relations_history data.'), $folderRelationHistory, $this);
+            $msg = __('Could not validate folders_relations_history data.');
+            throw new ValidationException($msg, $folderRelationHistory, $this);
         }
 
         // Check for errors while saving.

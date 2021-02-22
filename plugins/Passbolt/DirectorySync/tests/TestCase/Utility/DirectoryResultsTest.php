@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -12,7 +14,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Test\TestCase\Actions;
+namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
 use Cake\Core\Configure;
 use LdapTools\Object\LdapObjectType;
@@ -23,7 +25,6 @@ use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
 class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
 {
-
     public function setUp()
     {
         parent::setUp();

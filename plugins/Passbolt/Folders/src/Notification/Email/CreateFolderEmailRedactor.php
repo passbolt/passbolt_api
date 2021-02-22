@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,7 +17,6 @@
 
 namespace Passbolt\Folders\Notification\Email;
 
-use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -35,10 +36,10 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * @var string
      * @see Template/Email/html/LU/folder_create.ctp
      */
-    const TEMPLATE = 'Passbolt/Folders.LU/folder_create';
+    public const TEMPLATE = 'Passbolt/Folders.LU/folder_create';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
@@ -53,7 +54,7 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT,
@@ -61,10 +62,10 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Event $event Event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event Event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -84,15 +85,15 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Folder $folder Folder entity
-     * @param UserAccessControl $userAccessControl UserAccessControl
-     * @return Email
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder Folder entity
+     * @param \App\Utility\UserAccessControl $uac UserAccessControl
+     * @return \App\Notification\Email\Email
      */
-    private function createEmail(Folder $folder, UserAccessControl $userAccessControl)
+    private function createEmail(Folder $folder, UserAccessControl $uac)
     {
-        $user = $this->usersTable->findFirstForEmail($userAccessControl->userId());
+        $user = $this->usersTable->findFirstForEmail($uac->getId());
 
-        $subject = __("You added the folder {0}", $folder->name);
+        $subject = __('You added the folder {0}', $folder->name);
 
         return new Email(
             $user->username,

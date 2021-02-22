@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,14 +17,12 @@
 
 namespace App\Error\Exception;
 
-use Cake\ORM\Table;
-
 interface ExceptionWithTableDetailInterface
 {
     /**
      * Get the table associated to the exception
      *
-     * @return Table
+     * @return \Cake\ORM\Table
      */
     public function getTable();
 }

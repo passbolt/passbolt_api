@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,7 +18,6 @@ namespace Passbolt\EmailDigest\Utility\Digest;
 
 use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
-use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
  * Default digest to fall back to building a single email
@@ -25,7 +26,7 @@ use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 class SingleDigest extends AbstractDigest implements DigestInterface
 {
     /**
-     * @var EmailPreviewFactory
+     * @var \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory
      */
     private $emailPreviewFactory;
 
@@ -36,9 +37,10 @@ class SingleDigest extends AbstractDigest implements DigestInterface
 
     /**
      * Digest constructor.
-     * @param EmailPreviewFactory|null $emailPreviewFactory email preview factory
+     *
+     * @param \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory|null $emailPreviewFactory email preview factory
      */
-    public function __construct(EmailPreviewFactory $emailPreviewFactory = null)
+    public function __construct(?EmailPreviewFactory $emailPreviewFactory = null)
     {
         $this->emailPreviewFactory = $emailPreviewFactory ?? new EmailPreviewFactory();
     }
@@ -46,7 +48,7 @@ class SingleDigest extends AbstractDigest implements DigestInterface
     /**
      * Add an email
      *
-     * @param Entity $emailQueueEntity An email entity
+     * @param \Cake\ORM\Entity $emailQueueEntity An email entity
      * @return $this
      */
     public function addEmailEntity(Entity $emailQueueEntity)
@@ -58,7 +60,8 @@ class SingleDigest extends AbstractDigest implements DigestInterface
 
     /**
      * Process and set the content of the emails (as EmailDigest).
-     * @return EmailDigestInterface[]
+     *
+     * @return \Passbolt\EmailDigest\Utility\Digest\EmailDigestInterface[]
      */
     public function marshalEmails()
     {
@@ -76,7 +79,7 @@ class SingleDigest extends AbstractDigest implements DigestInterface
     /**
      * Single email digest can always add any email.
      *
-     * @param Entity $emailQueueEntity An email entity
+     * @param \Cake\ORM\Entity $emailQueueEntity An email entity
      * @return bool
      */
     public function canAddToDigest(Entity $emailQueueEntity)

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,35 +18,36 @@
 namespace Passbolt\MultiFactorAuthentication\Service;
 
 use App\Model\Entity\User;
-use Exception;
-use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Throwable;
 
 class IsMfaEnabledService
 {
     /**
-     * @var GetMfaAccountSettingsService
+     * @var \Passbolt\MultiFactorAuthentication\Service\GetMfaAccountSettingsService
      */
     private $getMfaAccountSettingsService;
+
     /**
-     * @var GetMfaOrgSettingsService
+     * @var \Passbolt\MultiFactorAuthentication\Service\GetMfaOrgSettingsService
      */
     private $getMfaOrgSettingsService;
 
     /**
-     * @param GetMfaOrgSettingsService $getMfaOrgSettingsService Service to retrieve MfaOrgSettings
-     * @param GetMfaAccountSettingsService $getMfaAccountSettingsService Service to retrieve MfaAccountSettings
+     * @param \Passbolt\MultiFactorAuthentication\Service\GetMfaOrgSettingsService|null $getMfaOrgSettingsService Service to retrieve MfaOrgSettings
+     * @param \Passbolt\MultiFactorAuthentication\Service\GetMfaAccountSettingsService|null $getMfaAccountSettingsService Service to retrieve MfaAccountSettings
      */
-    public function __construct(GetMfaOrgSettingsService $getMfaOrgSettingsService, GetMfaAccountSettingsService $getMfaAccountSettingsService)
-    {
-        $this->getMfaAccountSettingsService = $getMfaAccountSettingsService;
-        $this->getMfaOrgSettingsService = $getMfaOrgSettingsService;
+    public function __construct(
+        ?GetMfaOrgSettingsService $getMfaOrgSettingsService = null,
+        ?GetMfaAccountSettingsService $getMfaAccountSettingsService = null
+    ) {
+        $this->getMfaAccountSettingsService = $getMfaAccountSettingsService ?? new GetMfaAccountSettingsService();
+        $this->getMfaOrgSettingsService = $getMfaOrgSettingsService ?? new GetMfaOrgSettingsService();
     }
 
     /**
-     * @param User $user User to check if mfa is enabled
+     * @param \App\Model\Entity\User $user User to check if mfa is enabled
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function isEnabledForUser(User $user)
     {
@@ -67,9 +70,9 @@ class IsMfaEnabledService
     }
 
     /**
-     * @param User $user User to get settings for
-     * @return MfaAccountSettings
-     * @throws Exception
+     * @param \App\Model\Entity\User $user User to get settings for
+     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
+     * @throws \Exception
      */
     private function getMfaAccountSettings(User $user)
     {

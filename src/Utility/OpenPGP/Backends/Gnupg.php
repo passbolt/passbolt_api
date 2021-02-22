@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -37,7 +39,6 @@ use OpenPGP_SecretKeyPacket as OpenPGP_SecretKeyPacket;
  *
  *  - Velocity : Openpgp-php is library implemented in PHP which is not as fast as Php Gnupg.
  *  So for all encryption and decryption operations, we will prefer Php Gnupg.
- *
  */
 class Gnupg extends OpenPGPBackend
 {
@@ -49,7 +50,7 @@ class Gnupg extends OpenPGPBackend
     /**
      * Constructor.
      *
-     * @throws Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     public function __construct()
     {
@@ -69,7 +70,7 @@ class Gnupg extends OpenPGPBackend
      * Set a key for encryption.
      *
      * @param string $armoredKey ASCII armored key data
-     * @throws Exception if the key cannot be used to encrypt
+     * @throws \Cake\Core\Exception\Exception if the key cannot be used to encrypt
      * @return bool true if success
      */
     public function setEncryptKey(string $armoredKey)
@@ -101,8 +102,8 @@ class Gnupg extends OpenPGPBackend
      * Set a key for encryption.
      *
      * @param string $fingerprint fingerprint
-     * @throws Exception if key is not present in keyring
-     * @throws Exception if there was an issue to use the key to encrypt
+     * @throws \Cake\Core\Exception\Exception if key is not present in keyring
+     * @throws \Cake\Core\Exception\Exception if there was an issue to use the key to encrypt
      * @return bool true if success
      */
     public function setEncryptKeyFromFingerprint(string $fingerprint)
@@ -124,9 +125,9 @@ class Gnupg extends OpenPGPBackend
      *
      * @param string $armoredKey ASCII armored key data
      * @param string $passphrase to decrypt secret key
-     * @throws Exception if the key cannot be found in the keyring
-     * @throws Exception if the key is using a passphrase
-     * @throws Exception if the key cannot be used to decrypt
+     * @throws \Cake\Core\Exception\Exception if the key cannot be found in the keyring
+     * @throws \Cake\Core\Exception\Exception if the key is using a passphrase
+     * @throws \Cake\Core\Exception\Exception if the key cannot be used to decrypt
      * @return bool true if success
      */
     public function setDecryptKey(string $armoredKey, string $passphrase)
@@ -161,9 +162,9 @@ class Gnupg extends OpenPGPBackend
      *
      * @param string $fingerprint fingerprint of a key in the keyring
      * @param string $passphrase to decrypt secret key
-     * @throws Exception if the key cannot be found in the keyring
-     * @throws Exception if the key is using a passphrase
-     * @throws Exception if the key cannot be used to decrypt
+     * @throws \Cake\Core\Exception\Exception if the key cannot be found in the keyring
+     * @throws \Cake\Core\Exception\Exception if the key is using a passphrase
+     * @throws \Cake\Core\Exception\Exception if the key cannot be used to decrypt
      * @return bool true if success
      */
     public function setDecryptKeyFromFingerprint(string $fingerprint, string $passphrase)
@@ -185,11 +186,11 @@ class Gnupg extends OpenPGPBackend
      *
      * @param string $armoredKey ASCII armored key data
      * @param string $passphrase passphrase
-     * @throws Exception if the key is not already in the keyring
-     * @throws Exception if the passphrase is not empty
-     * @throws Exception if the key cannot be used for signing
+     * @throws \Cake\Core\Exception\Exception if the key is not already in the keyring
+     * @throws \Cake\Core\Exception\Exception if the passphrase is not empty
+     * @throws \Cake\Core\Exception\Exception if the key cannot be used for signing
      * @return bool
-     * @throws Exception
+     * @throws \Cake\Core\Exception\Exception
      */
     public function setSignKey(string $armoredKey, string $passphrase)
     {
@@ -221,9 +222,9 @@ class Gnupg extends OpenPGPBackend
     /**
      * Set key to be used for signing
      *
-     * @throws Exception if the key is not already in the keyring
-     * @throws Exception if the passphrase is not empty
-     * @throws Exception if the key cannot be used for signing
+     * @throws \Cake\Core\Exception\Exception if the key is not already in the keyring
+     * @throws \Cake\Core\Exception\Exception if the passphrase is not empty
+     * @throws \Cake\Core\Exception\Exception if the key cannot be used for signing
      * @param string $fingerprint fingerprint
      * @param string $passphrase passphrase
      * @return true if success
@@ -261,8 +262,8 @@ class Gnupg extends OpenPGPBackend
         }
 
         // If we don't manage to unarmor the key, we consider it's not a valid one.
-        $keyUnarmored = OpenPGP::unarmor($armoredKey, self::PUBLIC_KEY_MARKER);
-        if ($keyUnarmored === false) {
+        $keyUnarmored = $this->unarmor($armoredKey, self::PUBLIC_KEY_MARKER);
+        if ($keyUnarmored === false || $keyUnarmored === null) {
             return false;
         }
 
@@ -295,8 +296,8 @@ class Gnupg extends OpenPGPBackend
         }
 
         // If we don't manage to unarmor the key, we consider it's not a valid one.
-        $keyUnarmored = OpenPGP::unarmor($armoredKey, self::PRIVATE_KEY_MARKER);
-        if ($keyUnarmored == false) {
+        $keyUnarmored = $this->unarmor($armoredKey, self::PRIVATE_KEY_MARKER);
+        if ($keyUnarmored === false) {
             return false;
         }
 
@@ -347,16 +348,17 @@ class Gnupg extends OpenPGPBackend
         } catch (Exception $e) {
             return false;
         }
-        $unarmored = OpenPGP::unarmor($armored, self::MESSAGE_MARKER);
 
-        return !($unarmored === false || $unarmored === null);
+        $unarmored = $this->unarmor($armored, self::MESSAGE_MARKER);
+
+        return $unarmored !== false;
     }
 
     /**
      * Get public key information.
      *
      * @param string $armoredKey the ASCII armored key block
-     * @throws Exception if the armored key cannot be parsed
+     * @throws \Cake\Core\Exception\Exception if the armored key cannot be parsed
      * @return array key information (see getKeyInfo)
      */
     public function getPublicKeyInfo(string $armoredKey)
@@ -390,14 +392,22 @@ class Gnupg extends OpenPGPBackend
      */
     public function getKeyInfo(string $armoredKey)
     {
-        // Unarmor the key.
-        $keyUnarmored = OpenPGP::unarmor($armoredKey, $this->getGpgMarker($armoredKey));
+        $keyUnarmored = $this->unarmor($armoredKey, $this->getGpgMarker($armoredKey));
+        if ($keyUnarmored === false) {
+            throw new Exception(__('Invalid key. No public key package found.'));
+        }
 
         // Get the message.
-        $msg = OpenPGP_Message::parse($keyUnarmored);
+        $msg = @OpenPGP_Message::parse($keyUnarmored); // phpcs:ignore
+        if (empty($msg->packets)) {
+            throw new Exception(__('Invalid key. No public key package found.'));
+        }
 
         // Parse public key.
-        $publicKey = OpenPGP_PublicKeyPacket::parse($keyUnarmored);
+        $publicKey = @OpenPGP_PublicKeyPacket::parse($keyUnarmored); // phpcs:ignore
+        if ($publicKey === null) {
+            throw new Exception(__('Invalid key. No public key package found.'));
+        }
 
         // Get Packets for public key.
         $publicKeyPacket = $msg->packets[0];
@@ -415,6 +425,9 @@ class Gnupg extends OpenPGPBackend
                     $userIds[] = sprintf('%s', $signature);
                 }
             }
+        }
+        if (empty($userIds)) {
+            throw new Exception(__('Invalid key. No user ID found.'));
         }
 
         // Retrieve algorithm type.
@@ -465,7 +478,7 @@ class Gnupg extends OpenPGPBackend
      * Import a key into the local keyring.
      *
      * @param string $armoredKey the ASCII armored key block
-     * @throws Exception if the key could not be imported
+     * @throws \Cake\Core\Exception\Exception if the key could not be imported
      * @return string key fingerprint
      */
     public function importKeyIntoKeyring(string $armoredKey)
@@ -492,8 +505,8 @@ class Gnupg extends OpenPGPBackend
      *
      * @param string $text plain text to be encrypted.
      * @param bool $sign whether the encrypted message should be signed.
-     * @throws Exception if no key was set to encrypt and optionally to sign
-     * @throws Exception if there is an issue with the key to encrypt and optionally to sign
+     * @throws \Cake\Core\Exception\Exception if no key was set to encrypt and optionally to sign
+     * @throws \Cake\Core\Exception\Exception if there is an issue with the key to encrypt and optionally to sign
      * @return string encrypted text
      */
     public function encrypt(string $text, bool $sign = false)
@@ -533,7 +546,7 @@ class Gnupg extends OpenPGPBackend
      *
      * @param string $text ASCII armored encrypted text to be decrypted.
      * @param bool $verifySignature should signature be verified
-     * @throws Exception if decryption fails
+     * @throws \Cake\Core\Exception\Exception if decryption fails
      * @return string decrypted text
      */
     public function decrypt(string $text, bool $verifySignature = false)
@@ -578,7 +591,7 @@ class Gnupg extends OpenPGPBackend
      * @param string $fingerprint The fingerprint of the key to verify for.
      * @param mixed $plainText (optional) if this parameter is passed, it will be filled with the plain text.
      * @return void
-     * @throws Exception If the armored signed message cannot be verified.
+     * @throws \Cake\Core\Exception\Exception If the armored signed message cannot be verified.
      */
     public function verify($armored, $fingerprint, &$plainText = null)
     {
@@ -597,8 +610,8 @@ class Gnupg extends OpenPGPBackend
      * Sign a text.
      *
      * @param string $text plain text to be signed.
-     * @throws Exception if no key was set to sign
-     * @throws Exception if there is an issue with the key to sign
+     * @throws \Cake\Core\Exception\Exception if no key was set to sign
+     * @throws \Cake\Core\Exception\Exception if there is an issue with the key to sign
      * @return string signed text
      */
     public function sign(string $text)
@@ -650,5 +663,35 @@ class Gnupg extends OpenPGPBackend
     {
         $this->_encryptKeyFingerprint = null;
         $this->_gpg->clearencryptkeys();
+    }
+
+    /**
+     * Forked from OpenPGP::unarmor
+     * Fail if key doesn't contain CRC instead of triggering error
+     *
+     * @param string $text key
+     * @param string $header header
+     * @return false|string
+     */
+    private function unarmor(string $text, string $header = 'PGP PUBLIC KEY BLOCK')
+    {
+        // @codingStandardsIgnoreStart
+        $header = OpenPGP::header($header);
+        $text = str_replace(["\r\n", "\r"], ["\n", ''], $text);
+        if (
+            ($pos1 = strpos($text, $header)) !== false &&
+            ($pos1 = strpos($text, "\n\n", $pos1 += strlen($header))) !== false
+        ) {
+            $pos2 = strpos($text, "\n=", $pos1 += 2);
+            if ($pos2 === false) {
+                // no CRC, consider the key invalid
+                return false;
+            }
+
+            return base64_decode($text = substr($text, $pos1, $pos2 - $pos1));
+        }
+
+        return false;
+        // @codingStandardsIgnoreEnd
     }
 }

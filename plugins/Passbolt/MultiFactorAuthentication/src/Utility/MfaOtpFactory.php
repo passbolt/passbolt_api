@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,7 +21,6 @@ use BaconQrCode\Common\ErrorCorrectionLevel;
 use BaconQrCode\Encoder\Encoder;
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
-use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
 use OTPHP\TOTP;
@@ -31,10 +32,10 @@ class MfaOtpFactory
      * Return Issuer
      * The domain name without http(s):// and trailing /
      *
-     * @param string $url Router::url will be used if empty
+     * @param string|null $url Router::url will be used if empty
      * @return string
      */
-    public static function getIssuer($url = null)
+    public static function getIssuer(?string $url = null): string
     {
         if (!isset($url) || !is_string($url)) {
             $url = Router::url('/', true);
@@ -49,10 +50,10 @@ class MfaOtpFactory
     /**
      * Generate a random TOTP
      *
-     * @param UserAccessControl $uac user access control
+     * @param \App\Utility\UserAccessControl $uac user access control
      * @return string provisioning uri
      */
-    public static function generateTOTP(UserAccessControl $uac)
+    public static function generateTOTP(UserAccessControl $uac): string
     {
         try {
             $secret = trim(Base32::encode(random_bytes(256)), '='); // 256 random bytes Base32 without padding
@@ -74,13 +75,17 @@ class MfaOtpFactory
      * Build QR code inline image
      *
      * @param string $provisioningUri provisioning uri
-     * @param int $width width
-     * @param int $height height
-     * @param string $encoding enconding
+     * @param int|null $width width default 256
+     * @param int|null $height height default 256
+     * @param string|null $encoding encoding default ISO-8859-1
      * @return string
      */
-    public static function getQrCodeInline(string $provisioningUri, $width = 256, $height = 256, $encoding = Encoder::DEFAULT_BYTE_MODE_ECODING)
-    {
+    public static function getQrCodeInline(
+        string $provisioningUri,
+        ?int $width = 256,
+        ?int $height = 256,
+        ?string $encoding = Encoder::DEFAULT_BYTE_MODE_ECODING
+    ): string {
         $renderer = new Png();
         $renderer->setHeight($width);
         $renderer->setWidth($height);

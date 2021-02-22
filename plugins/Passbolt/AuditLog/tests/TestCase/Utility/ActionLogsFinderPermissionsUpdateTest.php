@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -38,16 +40,10 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         'app.Base/Groups',
         'app.Base/GroupsUsers',
         'app.Base/Resources',
+        'app.Base/ResourceTypes',
         'app.Base/Permissions',
         'app.Base/Secrets',
         'app.Base/Favorites',
-        'app.Base/EmailQueue',
-        'plugin.Passbolt/Log.Base/Actions',
-        'plugin.Passbolt/Log.Base/ActionLogs',
-        'plugin.Passbolt/Log.Base/EntitiesHistory',
-        'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretAccesses',
-        'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
     public function setUp()
@@ -57,7 +53,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
     }
 
-    public function testActionLogsFinderPermissionCreated()
+    public function testAuditLogsActionLogsFinderPermissionCreated()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateShare(
@@ -85,7 +81,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $this->assertEquals($actionLogs[0]['data']['permissions']['added'][0]['user']['id'], UuidFactory::uuid('user.id.betty'));
     }
 
-    public function testActionLogsFinderPermissionUpdated()
+    public function testAuditLogsActionLogsFinderPermissionUpdated()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateShare(
@@ -114,7 +110,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $this->assertEquals($actionLogs[0]['data']['permissions']['updated'][0]['user']['id'], UuidFactory::uuid('user.id.betty'));
     }
 
-    public function testActionLogsFinderPermissionRemoved()
+    public function testAuditLogsActionLogsFinderPermissionRemoved()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateShare(

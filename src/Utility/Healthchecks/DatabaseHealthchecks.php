@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -24,10 +26,10 @@ class DatabaseHealthchecks
     /**
      * Run all databases health checks
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function all($checks = [])
+    public static function all(?array $checks = []): array
     {
         // init results to false by default
         $checks = self::canConnect($checks);
@@ -41,10 +43,10 @@ class DatabaseHealthchecks
     /**
      * Check if application can connect to database
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function canConnect($checks = [])
+    public static function canConnect(?array $checks = []): array
     {
         $checks['database']['connect'] = false;
         try {
@@ -67,10 +69,10 @@ class DatabaseHealthchecks
     /**
      * Is the database engine supported
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function supportedBackend($checks = [])
+    public static function supportedBackend(?array $checks = []): array
     {
         $checks['database']['supportedBackend'] = false;
         $connection = ConnectionManager::get('default');
@@ -85,10 +87,10 @@ class DatabaseHealthchecks
     /**
      * Check if tables are present
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function tableCount($checks = [])
+    public static function tableCount(?array $checks = []): array
     {
         $checks['database']['info']['tablesCount'] = 0;
         $checks['database']['tablesCount'] = false;
@@ -110,10 +112,10 @@ class DatabaseHealthchecks
      * Check if some default data is present
      * We only check the number of roles
      *
-     * @param array $checks List of checks
+     * @param array|null $checks List of checks
      * @return array
      */
-    public static function defaultContent($checks = [])
+    public static function defaultContent(?array $checks = []): array
     {
         $checks['database']['defaultContent'] = false;
         try {

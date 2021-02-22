@@ -16,7 +16,7 @@
 <h3><?= __('Passbolt Cloud'); ?></h3>
 <p><?= __('Get passbolt in the cloud, hosted on our secure servers, while keeping 100% data ownership.'); ?></p>
 <p>
-    <a href="https://www.passbolt.com/services/cloud?pk_campaign=selfhosted&pk_kwd=cta_login" class="button dim passboltcloud" target="_blank" rel="noopener">
+    <a href="https://www.passbolt.com/services/cloud?pk_campaign=selfhosted&pk_kwd=cta_login" class="button dim passboltcloud" target="_blank" rel="noopener noreferrer">
         <i class="fa fa-fw fa-cloud"></i>
         <span><?= __('read more'); ?></span>
     </a>

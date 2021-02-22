@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,10 +17,8 @@
 
 namespace Passbolt\Folders\Test\TestCase\Service\FoldersRelations;
 
-use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -35,8 +35,6 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -55,8 +53,6 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -89,13 +85,11 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         $this->service = new FoldersRelationsRemoveItemFromUserTreeService();
     }
 
-    /* ************************************************************** */
     /* FOLDERS */
-    /* ************************************************************** */
 
     public function RemoveItemFromUserTreeSuccess_Folder1_NoParentNoChildren()
     {
-        list($folderA, $userAId, $userBId) = $this->insertFixture_Folder1();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_Folder1();
 
         $this->service->removeItemFromUserTree($folderA->id, $userBId, true);
 
@@ -121,7 +115,7 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
 
     public function RemoveItemFromUserTreeSuccess_Folder2_HavingAParent()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder2();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder2();
         new UserAccessControl(Role::USER, $userAId);
 
         $this->service->removeItemFromUserTree($folderB->id, $userBId, true);
@@ -159,7 +153,7 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
 
     public function RemoveItemFromUserTreeSuccess_Folder3_HavingAChild()
     {
-        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder3();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder3();
 
         $this->service->removeItemFromUserTree($folderA->id, $userBId, true);
 
@@ -196,7 +190,7 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
 
     public function RemoveItemFromUserTreeSuccess_Folder4_HavingChildren()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_Folder4();
+        [$folderA, $folderB, $folderC, $userAId, $userBId] = $this->insertFixture_Folder4();
 
         $this->service->removeItemFromUserTree($folderA->id, $userBId, true);
 
@@ -241,13 +235,11 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
     }
 
-    /* ************************************************************** */
     /* RESOURCES */
-    /* ************************************************************** */
 
     public function testRemoveItemFromUserTreeSuccess_Resource1_NoParent()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_Resource1();
+        [$r1, $userAId, $userBId] = $this->insertFixture_Resource1();
 
         $this->service->removeItemFromUserTree($r1->id, $userBId);
 
@@ -272,7 +264,7 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
 
     public function testRemoveItemFromUserTreeSuccess_Resource2_HavingAParent()
     {
-        list($folderA, $r1, $userAId, $userBId) = $this->insertFixture_Resource2();
+        [$folderA, $r1, $userAId, $userBId] = $this->insertFixture_Resource2();
 
         $this->service->removeItemFromUserTree($r1->id, $userBId);
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,7 +15,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller\Users;
+namespace Passbolt\Folders\Test\TestCase\Controller\Groups;
 
 use App\Model\Entity\Permission;
 use App\Test\Fixture\Base\AvatarsFixture;
@@ -29,9 +31,6 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UuidFactory;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
-use Passbolt\Folders\Test\Fixture\PermissionsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -44,17 +43,12 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
     use GroupsModelTrait;
     use PermissionsModelTrait;
 
-    private $Permissions;
-
     public $fixtures = [
         AvatarsFixture::class,
         FavoritesFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
-        PermissionsFixture::class,
         ProfilesFixture::class,
         RolesFixture::class,
         SecretsFixture::class,
@@ -71,9 +65,9 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
         parent::setUp();
     }
 
-    public function testGroupsDeleteSuccess_PersonalFolder()
+    public function testFoldersGroupsDeleteSuccess_PersonalFolder()
     {
-        list($folderA, $g1, $userAId) = $this->insertFixture_PersonalFolder();
+        [$folderA, $g1, $userAId] = $this->insertFixture_PersonalFolder();
         $this->authenticateAs('admin');
 
         $this->deleteJson("/groups/$g1->id.json?api-version=v2");
@@ -100,9 +94,9 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
         return [$folderA, $g1, $userAId];
     }
 
-    public function testGroupsDeleteError_SoleOwnerFolder_FolderSharedWithUser()
+    public function testFoldersGroupsDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
-        list($folderA, $g1, $userAId, $userBId) = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
+        [$folderA, $g1, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
         $this->authenticateAs('admin');
 
         $this->deleteJson("/groups/$g1->id.json?api-version=v2");

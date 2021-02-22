@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -20,20 +22,39 @@ use Cake\Core\Configure;
 class HomeController extends AppController
 {
     /**
-     * Password workspace page action
+     * This entry point serves the API javascript application.
+     * Display a skeleton of an app in the background at first
      *
      * @return void
      */
-    public function view()
+    public function apiApp()
     {
         $this->viewBuilder()
             ->setLayout('default')
             ->setTemplatePath('/Home')
-            ->setTemplate('home');
+            ->setTemplate('api-app');
 
         $this->set('theme', $this->User->theme());
         $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
+
+        $this->success();
+    }
+
+    /**
+     * This entry point serves a page with no script so that the extension can take over
+     * Display a skeleton of an app in the background
+     *
+     * @return void
+     */
+    public function apiExtApp()
+    {
+        $this->viewBuilder()
+            ->setLayout('default')
+            ->setTemplatePath('/Home')
+            ->setTemplate('api-ext-app');
+
+        $this->set('theme', $this->User->theme());
+        $this->set('title', Configure::read('passbolt.meta.description'));
 
         $this->success();
     }

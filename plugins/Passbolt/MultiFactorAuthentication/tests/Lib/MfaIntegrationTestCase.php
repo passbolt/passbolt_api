@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -34,10 +36,8 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/OrganizationSettings',
         'plugin.Passbolt/AccountSettings.AccountSettings',
-        'app.Base/AuthenticationTokens', 'app.Base/Users',
-        'app.Base/Roles',
+        'app.Base/Users', 'app.Base/Roles',
     ];
 
     /**
@@ -53,7 +53,7 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
      * @param string $user firstname
      * @param string|null $provider provider
      */
-    public function mockMfaVerified(string $user = 'ada', string $provider = null, $remember = true)
+    public function mockMfaVerified(string $user = 'ada', ?string $provider = null, ?bool $remember = true)
     {
         if (!isset($provider)) {
             throw new InternalErrorException('Cannot mock mfa verification without provider.');

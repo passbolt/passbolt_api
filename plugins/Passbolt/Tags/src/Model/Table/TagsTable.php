@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -19,32 +21,27 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
 use Cake\Database\Expression\QueryExpression;
-use Cake\Datasource\EntityInterface;
-use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
-use Passbolt\Tags\Model\Entity\Tag;
 
 /**
  * Tags Model
  *
  * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsToMany $Resources
- * @property ResourcesTagsTable|\Cake\ORM\Association\HasMany $ResourcesTags
- *
- * @method Tag get($primaryKey, $options = [])
- * @method Tag newEntity($data = null, array $options = [])
- * @method Tag[] newEntities(array $data, array $options = [])
- * @method Tag|bool save(EntityInterface $entity, $options = [])
- * @method Tag patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method Tag[] patchEntities($entities, array $data, array $options = [])
- * @method Tag findOrCreate($search, callable $callback = null, $options = [])
+ * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable|\Cake\ORM\Association\HasMany $ResourcesTags
+ * @method \Passbolt\Tags\Model\Table\Tag get($primaryKey, ?array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag|bool save(\Passbolt\Tags\Model\Table\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag patchEntity(\Passbolt\Tags\Model\Table\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag findOrCreate($search, callable $callback = null, ?array $options = [])
  */
 class TagsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -74,26 +71,21 @@ class TagsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
-            ->add('slug', 'scalar', [
-                'rule' => 'isScalar',
-                'last' => true,
-                'message' => __('The tag should be a string'),
-            ])
-            ->maxLength('slug', 128, __('Tag can not be more than 128 characters in length.'))
+            ->notEmptyString('slug')
             ->requirePresence('slug', 'create')
-            ->notEmpty('slug');
+            ->utf8('first_name', __('The tag should be a valid utf8 string.'))
+            ->maxLength('slug', 128, __('Tag can not be more than 128 characters in length.'));
 
         $validator
             ->boolean('is_shared')
-            ->requirePresence('is_shared', 'create')
-            ->notEmpty('is_shared');
+            ->requirePresence('is_shared', 'create');
 
         return $validator;
     }
@@ -130,11 +122,11 @@ class TagsTable extends Table
 
     /**
      * Retrieve all the tags by slugs.
-     * @param array $slugs The slugs to search
-     * @return Query
      *
+     * @param array|null $slugs The slugs to search
+     * @return \Cake\ORM\Query
      */
-    public function findAllBySlugs(array $slugs = [])
+    public function findAllBySlugs(?array $slugs = [])
     {
         return $this->find()
             ->where(['slug IN' => $slugs]);
@@ -144,10 +136,10 @@ class TagsTable extends Table
      * Decorate a query with the necessary tag finder conditions
      * Usefull to do a contain[tag] and filter[has-tags] on resources for example
      *
-     * @param Query $query The query to decorate
+     * @param \Cake\ORM\Query $query The query to decorate
      * @param array $options Options
      * @param string $userId The user identifier to decorate for
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public static function decorateForeignFind(Query $query, array $options, string $userId)
     {
@@ -218,12 +210,12 @@ class TagsTable extends Table
     /**
      * Build tag entities or fail
      *
-     * @param string $userId uuid owner of the tags
+     * @param string|null $userId uuid owner of the tags
      * @param array $tags list of tag slugs
-     * @throws BadRequestException if the validation fails
+     * @throws \Cake\Http\Exception\BadRequestException if the validation fails
      * @return array $tags list of tag entities
      */
-    public function buildEntitiesOrFail(string $userId = null, array $tags)
+    public function buildEntitiesOrFail(?string $userId = null, array $tags)
     {
         $collection = [];
         if (!empty($tags)) {
@@ -237,6 +229,9 @@ class TagsTable extends Table
                         'resources_tags' => true,
                     ],
                 ]);
+                if ($collection[$i]->getErrors()) {
+                    continue;
+                }
                 // If not shared, add the user_id in the resources_tags join table
                 // @codingStandardsIgnoreStart
                 $notShared = @mb_substr($slug, 0, 1, 'utf-8') !== '#';
@@ -295,7 +290,7 @@ class TagsTable extends Table
      * Find or create a tag with the given slug
      *
      * @param string $slug The slug to search for
-     * @param UserAccessControl $control User Access Control
+     * @param \App\Utility\UserAccessControl $control User Access Control
      * @return mixed
      */
     public function findOrCreateTag(string $slug, UserAccessControl $control)

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,14 +18,13 @@ namespace App\Model\Traits\Cleanup;
 
 trait ResourcesCleanupTrait
 {
-
     /**
      * Delete all records where associated users are soft deleted
      *
-     * @param bool $dryRun false
-     * @return number of affected records
+     * @param bool|null $dryRun false
+     * @return int number of affected records
      */
-    public function cleanupSoftDeletedResources($dryRun = false)
+    public function cleanupSoftDeletedResources(?bool $dryRun = false): int
     {
         return $this->cleanupSoftDeleted('Resources', $dryRun);
     }
@@ -31,10 +32,10 @@ trait ResourcesCleanupTrait
     /**
      * Delete all records where associated users are deleted
      *
-     * @param bool $dryRun false
-     * @return number of affected records
+     * @param bool|null $dryRun false
+     * @return int number of affected records
      */
-    public function cleanupHardDeletedResources($dryRun = false)
+    public function cleanupHardDeletedResources(?bool $dryRun = false): int
     {
         return $this->cleanupHardDeleted('Resources', $dryRun);
     }

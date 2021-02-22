@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,6 +18,7 @@ namespace App\Controller\Groups;
 
 use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
+use App\Model\Entity\Group;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
@@ -23,23 +26,31 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Response;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\GroupsTable Groups
+ * @property \App\Model\Table\GroupsUsersTable GroupsUsers
+ * @property \App\Model\Table\PermissionsTable Permissions
+ * @property \App\Model\Table\ResourcesTable Resources
+ */
 class GroupsDeleteController extends AppController
 {
-    const DELETE_SUCCESS_EVENT_NAME = 'GroupsDeleteController.delete.success';
+    public const DELETE_SUCCESS_EVENT_NAME = 'GroupsDeleteController.delete.success';
 
     /**
      * Before filter
      *
-     * @param Event $event An Event instance
+     * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(Event $event): ?Response
     {
         $this->loadModel('Groups');
         $this->loadModel('GroupsUsers');
@@ -55,7 +66,7 @@ class GroupsDeleteController extends AppController
      * @param string $id group uuid
      * @return void
      */
-    public function dryrun($id)
+    public function dryrun(string $id): void
     {
         $group = $this->_validateRequestData($id);
         $this->_validateDelete($group);
@@ -67,9 +78,11 @@ class GroupsDeleteController extends AppController
      * Group delete action
      *
      * @param string $id group uuid
+     * @throws \Cake\Http\Exception\InternalErrorException if group cannot be deleted
+     * @throws \Exception
      * @return void
      */
-    public function delete($id)
+    public function delete(string $id)
     {
         $this->GroupsUsers->getConnection()->transactional(function () use ($id) {
             $group = $this->_validateRequestData($id);
@@ -87,12 +100,12 @@ class GroupsDeleteController extends AppController
      * Assert request sanity and return the sanitized data
      *
      * @param string $id group uuid
-     * @throws ForbiddenException if current group is not an admin
-     * @throws BadRequestException if the group uuid id invalid
-     * @throws NotFoundException if the group does not exist or is already deleted
+     * @throws \Cake\Http\Exception\ForbiddenException if current group is not an admin
+     * @throws \Cake\Http\Exception\BadRequestException if the group uuid id invalid
+     * @throws \Cake\Http\Exception\NotFoundException if the group does not exist or is already deleted
      * @return \App\Model\Entity\Group $group entity
      */
-    protected function _validateRequestData($id)
+    protected function _validateRequestData(string $id)
     {
         // Admin can delete all groups
         if ($this->User->role() !== Role::ADMIN) {
@@ -103,7 +116,9 @@ class GroupsDeleteController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The group id must be a valid uuid.'));
         }
-        $group = $this->Groups->findView($id, ['contain' => ['group_user' => true]])->first();
+
+        /** @var \App\Model\Entity\Group $group */
+        $group = $this->Groups->findView($id, ['contain' => ['groups_users' => true]])->first();
         if (empty($group)) {
             throw new NotFoundException(__('The group does not exist or has been already deleted.'));
         }
@@ -112,12 +127,13 @@ class GroupsDeleteController extends AppController
     }
 
     /**
-     * Validate the delete operation.
-     * @param Group $group The target group
-     * @throws CustomValidationException if the group is sole owner of a shared resource
+     * Validate the delete operation
+     *
+     * @param \App\Model\Entity\Group $group The target group
+     * @throws \App\Error\Exception\CustomValidationException if the group is sole owner of a shared resource
      * @return void
      */
-    protected function _validateDelete($group)
+    protected function _validateDelete(Group $group)
     {
         // Check business rules
         // Returning the validation error is not meaningful enough so we need to
@@ -128,7 +144,11 @@ class GroupsDeleteController extends AppController
             $msg = __('The group cannot be deleted.') . ' ';
 
             if (isset($errors['id']['soleOwnerOfSharedContent'])) {
-                $resourcesIds = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
+                $resourcesIds = $this->Permissions
+                    ->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)
+                    ->extract('aco_foreign_key')
+                    ->toArray();
+                $body = [];
                 if ($resourcesIds) {
                     $findResourcesOptions = [];
                     $findResourcesOptions['contain']['permissions.user.profile'] = true;
@@ -139,7 +159,10 @@ class GroupsDeleteController extends AppController
                 }
 
                 if (Configure::read('passbolt.plugins.folders.enabled')) {
-                    $foldersIds = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $group->id)->extract('aco_foreign_key')->toArray();
+                    $foldersIds = $this->Permissions
+                        ->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $group->id)
+                        ->extract('aco_foreign_key')
+                        ->toArray();
                     if ($foldersIds) {
                         $findFoldersOptions = [];
                         $findFoldersOptions['contain']['permissions.user.profile'] = true;
@@ -158,11 +181,12 @@ class GroupsDeleteController extends AppController
 
     /**
      * Transfer the resources permissions which blocked the group delete
-     * @param {Group} $group entity
-     * @throws BadRequestException if the array of manager is
+     *
+     * @param \App\Model\Entity\Group $group entity
+     * @throws \Cake\Http\Exception\BadRequestException if the array of manager is
      * @return void
      */
-    protected function _transferContentOwners($group)
+    protected function _transferContentOwners(Group $group): void
     {
         $owners = $this->request->getData('transfer.owners');
         if (empty($owners)) {
@@ -179,9 +203,15 @@ class GroupsDeleteController extends AppController
         $contentIdsToUpdate = Hash::extract($owners, '{n}.aco_foreign_key');
         sort($contentIdsToUpdate);
 
-        $contentIdBlockingDelete = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
+        $contentIdBlockingDelete = $this->Permissions
+            ->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)
+            ->extract('aco_foreign_key')
+            ->toArray();
         if (Configure::read('passbolt.plugins.folders.enabled')) {
-            $foldersIdsBlockingDelete = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $group->id)->extract('aco_foreign_key')->toArray();
+            $foldersIdsBlockingDelete = $this->Permissions
+                ->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $group->id)
+                ->extract('aco_foreign_key')
+                ->toArray();
             $contentIdBlockingDelete = array_merge($contentIdBlockingDelete, $foldersIdsBlockingDelete);
         }
         sort($contentIdBlockingDelete);
@@ -191,8 +221,14 @@ class GroupsDeleteController extends AppController
             throw new BadRequestException('The transfer is not authorized');
         }
 
-        // Update all the permissions given as parameter as long as they are relative to a resource which blocked the delete process.
-        $this->Permissions->updateAll(['type' => Permission::OWNER], ['id IN' => $permissionsIdsToUpdate, 'aco_foreign_key IN' => $contentIdBlockingDelete]);
+        // Update all the permissions given as parameter as long as they are relative to a resource
+        // which blocked the delete process.
+        $this->Permissions->updateAll([
+            'type' => Permission::OWNER,
+        ], [
+            'id IN' => $permissionsIdsToUpdate,
+            'aco_foreign_key IN' => $contentIdBlockingDelete,
+        ]);
     }
 
     /**
@@ -201,7 +237,7 @@ class GroupsDeleteController extends AppController
      * @param \App\Model\Entity\Group $group Group
      * @return void
      */
-    protected function _notifyUsers($group)
+    protected function _notifyUsers(Group $group)
     {
         $event = new Event(static::DELETE_SUCCESS_EVENT_NAME, $this, [
             'group' => $group,

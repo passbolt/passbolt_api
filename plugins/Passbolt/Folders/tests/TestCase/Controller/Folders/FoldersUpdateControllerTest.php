@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -13,7 +15,7 @@
  * @since         2.13.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Controller;
+namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
 use App\Test\Fixture\Base\AvatarsFixture;
@@ -27,8 +29,6 @@ use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestTrait;
-use Passbolt\Folders\Test\Fixture\FoldersFixture;
-use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -47,8 +47,6 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public $fixtures = [
         AvatarsFixture::class,
-        FoldersFixture::class,
-        FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -60,7 +58,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUpdateSuccess_UpdateName()
     {
-        list($folderA, $userAId) = $this->insertFixture_UpdateName();
+        [$folderA, $userAId] = $this->insertFixture_UpdateName();
 
         $data = ['name' => 'A updated'];
         $this->authenticateAs('ada');
@@ -93,9 +91,9 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUpdateError_ValidationErrors()
     {
-        list($folderA, $userAId) = $this->insertFixture_UpdateName();
+        [$folderA, $userAId] = $this->insertFixture_UpdateName();
         $this->authenticateAs('ada');
-        $data = ['name' => ""];
+        $data = ['name' => ''];
         $this->putJson("/folders/$folderA->id.json?api-version=2", $data);
         $this->assertError(400, 'Could not validate folder data.');
     }
@@ -109,9 +107,9 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testResourcesUpdateError_InsufficientPermission()
+    public function testFoldersResourcesUpdateError_InsufficientPermission()
     {
-        list($folderA, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $data = [
             'name' => ['A updated'],
         ];
@@ -140,7 +138,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->assertAuthenticationError();
     }
 
-    public function testUpdateResourcesError_FolderDoesNotExist()
+    public function testFoldersUpdateResourcesError_FolderDoesNotExist()
     {
         $this->authenticateAs('ada');
         $folderId = UuidFactory::uuid();
@@ -148,9 +146,9 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->assertError(404, 'The folder does not exist.');
     }
 
-    public function testUpdateResourcesError_NoAccessToFolder()
+    public function testFoldersUpdateResourcesError_NoAccessToFolder()
     {
-        list($folderA, $userAId, $userBId) = $this->insertFixture_InsufficientPermission();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $this->authenticateAs('dame');
         $data = ['name' => 'A updated'];
         $this->putJson("/folders/$folderA->id.json", $data);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -16,11 +18,16 @@ namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
 use App\Model\Entity\Permission;
+use App\Model\Entity\Resource;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\ResourcesTable $Resources
+ * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
+ */
 class ResourcesTagsAddController extends AppController
 {
     /**
@@ -28,11 +35,11 @@ class ResourcesTagsAddController extends AppController
      * Providing an empty list of tags delete all the personal tags
      *
      * @param string $resourceId The identifier of the resource to add a comment to
-     * @throws BadRequestException
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\BadRequestException
+     * @throws \Cake\Http\Exception\NotFoundException
      * @return void
      */
-    public function addPost($resourceId)
+    public function addPost(string $resourceId)
     {
         if (!Validation::uuid($resourceId)) {
             throw new BadRequestException(__('The resource id is not valid.'));
@@ -41,7 +48,7 @@ class ResourcesTagsAddController extends AppController
         $this->loadModel('Resources');
         $this->loadModel('Passbolt/Tags.Tags');
         $userId = $this->User->id();
-        $data = $this->request->getData('Tags', []);
+        $data = $this->_formatRequestData();
 
         $options = ['contain' => ['all_tags' => 1, 'permission' => 1]];
         $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
@@ -62,12 +69,34 @@ class ResourcesTagsAddController extends AppController
     }
 
     /**
+     * Get and format the request data.
+     *
+     * @return array
+     */
+    protected function _formatRequestData()
+    {
+        $data = $this->request->getData();
+
+        // Data given in V1 format.
+        // @deprecated with v2
+        if (isset($data['Tags'])) {
+            return $data['Tags'];
+        }
+        if (isset($data['tags'])) {
+            return $data['tags'];
+        }
+
+        return [];
+    }
+
+    /**
      * Patch the resource tags entities of a resource for a given user
-     * @param resource $resource The resource to patch the tags for
+     *
+     * @param \App\Model\Entity\Resource $resource The resource to patch the tags for
      * @param array $data The list
      * @return void
      */
-    private function patchTagsEntities($resource, $data)
+    private function patchTagsEntities(Resource $resource, array $data): void
     {
         $userId = $this->User->id();
         $isOwner = $resource->permission->type === Permission::OWNER;
@@ -81,7 +110,8 @@ class ResourcesTagsAddController extends AppController
             if ($tagFoundIndex === false) {
                 // If the user is not owner of the resource he cannot edit shared tags
                 if ($tag->is_shared && !$isOwner) {
-                    throw new BadRequestException(__('You do not have the permission to edit shared tags on this resource.'));
+                    $msg = __('You do not have the permission to edit shared tags on this resource.');
+                    throw new BadRequestException($msg);
                 } else {
                     unset($resource->tags[$i]);
                 }
@@ -93,7 +123,8 @@ class ResourcesTagsAddController extends AppController
         // If the user is not owner of the resource he cannot edit shared tags
         if (!$isOwner) {
             if (!empty(preg_grep('/(^#|,#)/', $data))) {
-                throw new BadRequestException(__('You do not have the permission to edit shared tags on this resource.'));
+                $msg = __('You do not have the permission to edit shared tags on this resource.');
+                throw new BadRequestException();
             }
         }
 

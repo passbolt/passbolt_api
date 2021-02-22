@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -14,16 +16,10 @@
  */
 namespace Passbolt\Log\Test\Lib;
 
-use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourcesTable;
-use App\Model\Table\SecretsTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAction;
 use Cake\Core\Configure;
-use Cake\ORM\AssociationCollection;
 use Cake\ORM\TableRegistry;
-use Passbolt\Log\Model\Entity\ActionLog;
-use Passbolt\Log\Model\Table\EntitiesHistoryTable;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
 use Passbolt\Log\Test\Lib\Traits\EntitiesHistoryTrait;
 
@@ -32,22 +28,34 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
     use ActionLogsTrait;
     use EntitiesHistoryTrait;
 
-    /** @var ResourcesTable */
+    /**
+     * @var ResourcesTable
+     */
     protected $Resources;
 
-    /** @var PermissionsTable */
+    /**
+     * @var PermissionsTable
+     */
     protected $Permissions;
 
-    /** @var SecretsTable */
+    /**
+     * @var SecretsTable
+     */
     protected $Secrets;
 
-    /** @var SecretAccesses */
+    /**
+     * @var SecretAccesses
+     */
     protected $SecretAccesses;
 
-    /** @var EntitiesHistoryTable */
+    /**
+     * @var EntitiesHistoryTable
+     */
     protected $EntitiesHistory;
 
-    /** @var ActionLog */
+    /**
+     * @var ActionLog
+     */
     protected $ActionLogs;
 
     public function setUp()

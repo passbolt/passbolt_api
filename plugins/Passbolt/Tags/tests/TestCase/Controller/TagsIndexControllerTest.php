@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -17,7 +19,7 @@ namespace Passbolt\Tags\Test\TestCase\Controller;
 use Cake\Utility\Hash;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class TagIndexControllerTest extends TagPluginIntegrationTestCase
+class TagsIndexControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
@@ -27,7 +29,7 @@ class TagIndexControllerTest extends TagPluginIntegrationTestCase
 
     // A user not logged in should not be able to see tags
 
-    public function testTagIndexNotLoggedIn()
+    public function testTagsIndexNotLoggedIn()
     {
         $this->getJson('/tags.json?api-version=v2');
         $this->assertResponseError();
@@ -38,7 +40,7 @@ class TagIndexControllerTest extends TagPluginIntegrationTestCase
 
     // A user should see personal and shared tags or resources via direct and group permissions
 
-    public function testTagIndexSuccess()
+    public function testTagsIndexSuccess()
     {
         $this->authenticateAs('ada');
         $this->getJson('/tags.json?api-version=v2');
@@ -52,7 +54,7 @@ class TagIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // A user should not see other users personal tags or shared tags of resource they don't have access to
-    public function testTagIndexSuccessDoubleCheck()
+    public function testTagsIndexSuccessDoubleCheck()
     {
         $this->authenticateAs('betty');
         $this->getJson('/tags.json?api-version=v2');

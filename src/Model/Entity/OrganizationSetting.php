@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -29,7 +31,6 @@ use Cake\ORM\Entity;
  */
 class OrganizationSetting extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -43,5 +44,5 @@ class OrganizationSetting extends Entity
         'modified_by' => true,
     ];
 
-    const UUID_NAMESPACE = 'organization.settings.property.id.';
+    public const UUID_NAMESPACE = 'organization.settings.property.id.';
 }

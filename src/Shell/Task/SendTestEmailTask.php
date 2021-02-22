@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -25,17 +27,18 @@ class SendTestEmailTask extends AppShell
      * Name of the transport configuration that we'll use.
      * (will be created on the fly).
      */
-    const TRANSPORT_CONFIG_NAME = 'debugEmail';
+    public const TRANSPORT_CONFIG_NAME = 'debugEmail';
 
     /**
      * Transport class to be used for testing.
      * We use our own DebugSmtp that will get the server communication trace.
      */
-    const TRANSPORT_CLASS = 'DebugSmtp';
+    public const TRANSPORT_CLASS = 'DebugSmtp';
 
     /**
      * Instance of the Email component.
-     * @var Cake/Mailer/Email Email
+     *
+     * @var \App\Shell\Task\Cake /Mailer/Email Email
      */
     public $email = null;
 
@@ -86,7 +89,7 @@ class SendTestEmailTask extends AppShell
 
         $this->_displayTrace();
         $this->out($this->nl(0));
-        $this->_success("The message has been successfully sent!");
+        $this->_success('The message has been successfully sent!');
 
         return true;
     }
@@ -95,12 +98,13 @@ class SendTestEmailTask extends AppShell
      * Get email from config and return it as a human readable string.
      * The Email from parameter in the config can take either a string or an array. The purpose
      * of this function is to provided a standardized way to display the from field.
+     *
      * @return array|string
      */
     protected static function _getEmailFromAsString()
     {
         $config = Email::getConfig('default');
-        $from = isset($config['from']) ? $config['from'] : '';
+        $from = $config['from'] ?? '';
         if (is_array($from)) {
             $emailFrom = key($from);
             $nameFrom = $from[$emailFrom];
@@ -113,6 +117,7 @@ class SendTestEmailTask extends AppShell
 
     /**
      * Display configuration options.
+     *
      * @return void
      */
     protected function _displayConfiguration()
@@ -135,6 +140,7 @@ class SendTestEmailTask extends AppShell
 
     /**
      * Get recipient email address.
+     *
      * @return string
      */
     protected function _getRecipient()
@@ -149,6 +155,7 @@ class SendTestEmailTask extends AppShell
 
     /**
      * Send email and display the trace.
+     *
      * @param string $to email address to send the email to
      * @param string $subject the subject of the email
      * @param string $message the content of the email
@@ -173,6 +180,7 @@ class SendTestEmailTask extends AppShell
 
     /**
      * Display trace of the communication with the server.
+     *
      * @return void
      */
     protected function _displayTrace()
@@ -197,6 +205,7 @@ class SendTestEmailTask extends AppShell
 
     /**
      * Remove credentials (username and password) from a string.
+     *
      * @param string $str string where to remove the credentials
      * @return mixed
      */
@@ -218,12 +227,13 @@ class SendTestEmailTask extends AppShell
 
     /**
      * Get default message (email content).
+     *
      * @return string
      */
     protected function _getDefaultMessage()
     {
         $message = "Congratulations!\n" .
-        "If you receive this email, it means that your passbolt smtp configuration is working fine.";
+        'If you receive this email, it means that your passbolt smtp configuration is working fine.';
 
         return $message;
     }
@@ -231,6 +241,7 @@ class SendTestEmailTask extends AppShell
     /**
      * Set a custom transport class name.
      * In the context of this debugger, we'll use our own class name.
+     *
      * @param string $customTransportClassName name of the custom transport class to use
      * @return void
      */
@@ -245,6 +256,7 @@ class SendTestEmailTask extends AppShell
     /**
      * Check if Smtp is set as the transporter in the configuration.
      * Exit if smtp is not set and display an error message.
+     *
      * @return bool
      */
     protected function _checkSmtpIsSet()
@@ -252,9 +264,11 @@ class SendTestEmailTask extends AppShell
         $transportConfig = TransportFactory::getConfig('default');
         $className = Hash::get($transportConfig, 'className');
         if ($className != 'Smtp') {
-            $this->_error(__('Your email transport configuration is not set to use "Smtp". ({0} is set instead)', $className));
+            $msg = __('Your email transport configuration is not set to use "Smtp". ({0} is set instead)', $className);
+            $this->_error($msg);
             $this->_error(__('This email debug task is only for SMTP configurations.'));
-            $this->abort(__('To fix this, edit EmailTransport.default.className property in /config/passbolt.php, and set className to "Smtp"'));
+            $msg = __('To fix this, edit EmailTransport.default.className in passbolt.php, and set className to "Smtp"');// phpcs:ignore
+            $this->abort($msg);
         }
 
         return true;
@@ -263,6 +277,7 @@ class SendTestEmailTask extends AppShell
     /**
      * Check if a default from is provided in the configuration.
      * Exit if none is provided and display an error message.
+     *
      * @return bool
      */
     protected function _checkFromIsSet()
@@ -271,7 +286,9 @@ class SendTestEmailTask extends AppShell
         $from = Hash::get($emailConfig, 'from');
         if (empty($from)) {
             $this->_error(__('Your email configuration doesn\'t define a default "from"'));
-            $this->abort(__('To fix this, edit Email.default.from property in /config/passbolt.php, and add \'from\' => [\'passbolt@your_organization.com\' => \'Passbolt\']'));
+            $msg = __('To fix this, edit Email.default.from property in /config/passbolt.php') . ' ';
+            $msg .= _('And add \'from\' => [\'passbolt@your_organization.com\' => \'Passbolt\']');
+            $this->abort($msg);
         }
 
         return true;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -36,16 +38,10 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
         'app.Base/Groups',
         'app.Base/GroupsUsers',
         'app.Base/Resources',
+        'app.Base/ResourceTypes',
         'app.Base/Permissions',
         'app.Base/Secrets',
         'app.Base/Favorites',
-        'app.Base/EmailQueue',
-        'plugin.Passbolt/Log.Base/Actions',
-        'plugin.Passbolt/Log.Base/ActionLogs',
-        'plugin.Passbolt/Log.Base/EntitiesHistory',
-        'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretAccesses',
-        'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
     public function setUp()
@@ -55,7 +51,7 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
         $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
     }
 
-    public function testActionLogsFinderResourceSecretUpdated()
+    public function testAuditLogsActionLogsFinderResourceSecretUpdated()
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateResourceSecretUpdate($uac, UuidFactory::uuid('resource.id.apache'));

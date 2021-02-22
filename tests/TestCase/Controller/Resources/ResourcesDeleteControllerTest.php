@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,14 +19,13 @@ namespace App\Test\TestCase\Controller\Resources;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles', 'app.Base/Gpgkeys',
-        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue',
+        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites',
     ];
 
     public function setUp()
@@ -37,7 +38,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertSuccess();
     }
 
@@ -54,7 +55,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -62,7 +63,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.april');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -70,14 +71,14 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertError(403, 'You do not have the permission to delete this resource.');
     }
 
     public function testResourcesDeleteErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->deleteJson("/resources/$resourceId.json?api-version=v1");
+        $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertAuthenticationError();
     }
 }

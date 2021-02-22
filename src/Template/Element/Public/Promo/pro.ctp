@@ -16,7 +16,7 @@
 <h3><?= __('Passbolt Pro'); ?></h3>
 <p><?= __('Passbolt Pro provides premium features, and our team will help you setup and support your install.'); ?></p>
 <p>
-    <a href="https://www.passbolt.com/services/pro?pk_campaign=selfhosted&pk_kwd=cta_login" class="button dim passboltpro" target="_blank" rel="noopener">
+    <a href="https://www.passbolt.com/services/pro?pk_campaign=selfhosted&pk_kwd=cta_login" class="button dim passboltpro" target="_blank" rel="noopener noreferrer">
         <i class="fa fa-fw fa-cubes"></i>
         <span><?= __('read more'); ?></span>
     </a>

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -12,7 +14,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace Passbolt\Reports\Utility;
+namespace Passbolt\Reports\Service;
 
 use InvalidArgumentException;
 
@@ -24,14 +26,14 @@ use InvalidArgumentException;
 class ReportViewService
 {
     /**
-     * @var ReportPool
+     * @var \Passbolt\Reports\Service\ReportPool
      */
     private $reportPool;
 
     /**
-     * @param ReportPool $reportPool An instance of ReportPool
+     * @param \Passbolt\Reports\Service\ReportPool $reportPool An instance of ReportPool
      */
-    public function __construct(ReportPool $reportPool = null)
+    public function __construct(?ReportPool $reportPool = null)
     {
         $this->reportPool = $reportPool ?? ReportPool::getInstance();
     }
@@ -40,10 +42,11 @@ class ReportViewService
      * Build a object implementing ReportInterface for given slug
      *
      * @param string $reportSlug Slug of the report
-     * @param array $parameters The report parameters
-     * @return ReportInterface
+     * @param array|null $parameters The report parameters
+     * @throws \ReflectionException
+     * @return \Passbolt\Reports\Utility\ReportInterface
      */
-    public function getReport(string $reportSlug, array $parameters = [])
+    public function getReport(string $reportSlug, ?array $parameters = [])
     {
         $reports = $this->reportPool->getReports();
         $reportClass = $reports[$reportSlug] ?? false;
@@ -54,6 +57,9 @@ class ReportViewService
 
         $reflectionClass = new \ReflectionClass($reportClass);
 
-        return $reflectionClass->newInstance(...$parameters);
+        /** @var \Passbolt\Reports\Utility\ReportInterface $report */
+        $report = $reflectionClass->newInstance(...$parameters);
+
+        return $report;
     }
 }

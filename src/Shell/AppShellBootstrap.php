@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,7 +19,6 @@ namespace App\Shell;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
-use Cake\Event\EventManager;
 
 /**
  * App Shell Bootstrap
@@ -31,13 +32,15 @@ class AppShellBootstrap
 {
     /**
      * Instance of class used for singleton.
+     *
      * @var
      */
     private static $instance;
 
     /**
      * Init function.
-     * @return AppShellBootstrap
+     *
+     * @return \App\Shell\AppShellBootstrap
      */
     public static function init()
     {
@@ -52,6 +55,7 @@ class AppShellBootstrap
     /**
      * Init the UserAction component if it's not already initialized.
      * This is to avoid errors while executing tasks that don't implement UserAction.
+     *
      * @return void
      */
     private function _initUserAction()

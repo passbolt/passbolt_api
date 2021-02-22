@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -22,24 +24,24 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Controller\UserSettings\MfaUserSettingsDeleteController;
 
 class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    const TEMPLATE_SELF = 'Passbolt/MultiFactorAuthentication.LU/mfa_user_settings_reset_self';
-    const TEMPLATE_ADMIN = 'Passbolt/MultiFactorAuthentication.LU/mfa_user_settings_reset_admin';
+    public const TEMPLATE_SELF = 'Passbolt/MultiFactorAuthentication.LU/mfa_user_settings_reset_self';
+    public const TEMPLATE_ADMIN = 'Passbolt/MultiFactorAuthentication.LU/mfa_user_settings_reset_admin';
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 
     /**
      * MfaUserSettingsResetEmailRedactor constructor.
-     * @param UsersTable $usersTable user table
+     *
+     * @param \App\Model\Table\UsersTable $usersTable user table
      */
     public function __construct(UsersTable $usersTable)
     {
@@ -47,9 +49,9 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     }
 
     /**
-     * @param User $user user who got their settings deleted
-     * @param UserAccessControl $uac of user who deleted the settings
-     * @return Email
+     * @param \App\Model\Entity\User $user user who got their settings deleted
+     * @param \App\Utility\UserAccessControl $uac of user who deleted the settings
+     * @return \App\Notification\Email\Email
      */
     public function createEmail(User $user, UserAccessControl $uac)
     {
@@ -61,8 +63,8 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     }
 
     /**
-     * @param User $user user who deleted their own settings
-     * @return Email
+     * @param \App\Model\Entity\User $user user who deleted their own settings
+     * @return \App\Notification\Email\Email
      */
     private function createEmailSelfDelete(User $user)
     {
@@ -78,9 +80,9 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     }
 
     /**
-     * @param User $user user who got their settings deleted
-     * @param UserAccessControl $uac of user who deleted the settings
-     * @return Email
+     * @param \App\Model\Entity\User $user user who got their settings deleted
+     * @param \App\Utility\UserAccessControl $uac of user who deleted the settings
+     * @return \App\Notification\Email\Email
      */
     private function createEmailAdminDelete(User $user, UserAccessControl $uac)
     {
@@ -98,10 +100,10 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     }
 
     /**
-     * @param Event $event user settings reset event
-     * @return EmailCollection
+     * @param \Cake\Event\Event $event user settings reset event
+     * @return \App\Notification\Email\EmailCollection
      */
-    public function onSubscribedEvent(Event $event)
+    public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
         $email = $this->createEmail($event->getData('target'), $event->getData('uac'));
@@ -112,7 +114,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     /**
      * @return array
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT,

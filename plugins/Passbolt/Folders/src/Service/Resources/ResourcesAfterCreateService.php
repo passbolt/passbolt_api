@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -15,37 +17,34 @@
 
 namespace Passbolt\Folders\Service\Resources;
 
-use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Exception;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
 
 class ResourcesAfterCreateService
 {
     /**
-     * @var FoldersTable
+     * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
     private $foldersTable;
 
     /**
-     * @var FoldersRelationsCreateService
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService
      */
     private $foldersRelationsCreateService;
 
     /**
-     * @var UserHasPermissionService
+     * @var \App\Service\Permissions\UserHasPermissionService
      */
     private $userHasPermissionService;
 
@@ -60,14 +59,13 @@ class ResourcesAfterCreateService
     }
 
     /**
-     *
-     * @param UserAccessControl $uac The current user.
+     * @param \App\Utility\UserAccessControl $uac The current user.
      * @param resource $resource The created resource.
      * @param array $data The data sent by the user to create the resource.
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    public function afterCreate(UserAccessControl $uac, Resource $resource, array $data = [])
+    public function afterCreate(UserAccessControl $uac, Resource $resource, ?array $data = [])
     {
         $folderParentId = Hash::get($data, 'folder_parent_id', null);
 
@@ -79,8 +77,14 @@ class ResourcesAfterCreateService
         }
 
         try {
-            $userId = $uac->userId();
-            $this->foldersRelationsCreateService->create($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $userId, $folderParentId);
+            $userId = $uac->getId();
+            $this->foldersRelationsCreateService->create(
+                $uac,
+                FoldersRelation::FOREIGN_MODEL_RESOURCE,
+                $resource->id,
+                $userId,
+                $folderParentId
+            );
             $resource->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
             throw new InternalErrorException(__('Could not create the resource, please try again later.'), 500, $e);
@@ -90,14 +94,14 @@ class ResourcesAfterCreateService
     /**
      * Validate the parent folder
      *
-     * @param UserAccessControl $uac The current user
+     * @param \App\Utility\UserAccessControl $uac The current user
      * @param resource $resource The created resource.
-     * @param string $folderParentId The parent folder to validate
+     * @param string|null $folderParentId The parent folder to validate
      * @return void
-     * @throws CustomValidationException If the parent folder does not exist.
-     * @throws ForbiddenException If the user is not allowed to insert content in the parent folder.
+     * @throws \App\Error\Exception\CustomValidationException If the parent folder does not exist.
+     * @throws \Cake\Http\Exception\ForbiddenException If the user is not allowed to insert content in the parent folder.
      */
-    private function validateParentFolder(UserAccessControl $uac, Resource $resource, string $folderParentId = null)
+    private function validateParentFolder(UserAccessControl $uac, Resource $resource, ?string $folderParentId = null)
     {
         if (!Validation::uuid($folderParentId)) {
             $errors = ['uuid' => 'The folder parent id is not valid.'];
@@ -119,8 +123,13 @@ class ResourcesAfterCreateService
         }
 
         // The user should have at least UPDATE permission on the destination parent folder to insert content into.
-        $userId = $uac->userId();
-        $isAllowedToCreateIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
+        $userId = $uac->getId();
+        $isAllowedToCreateIn = $this->userHasPermissionService->check(
+            PermissionsTable::FOLDER_ACO,
+            $folderParentId,
+            $userId,
+            Permission::UPDATE
+        );
         if (!$isAllowedToCreateIn) {
             $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
 
