@@ -1,0 +1,5 @@
+files:
+  - source: /src/Locale/en_US/*.po
+    ignore:
+      - /src/Locale/en_US/cake_console.po
+    translation: /src/Locale/%locale_with_underscore%/%original_file_name%

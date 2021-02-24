@@ -1,0 +1,153 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2021-02-24 15:46+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: /var/www/passbolt/plugins/Passbolt/DirectorySync/src/Shell/DirectorySyncShell.php:84
+msgid "Test ldap connection and objects."
+msgstr ""
+
+#: /var/www/passbolt/plugins/Passbolt/DirectorySync/src/Shell/DirectorySyncShell.php:88
+msgid "Synchronize users and groups."
+msgstr ""
+
+#: /var/www/passbolt/plugins/Passbolt/DirectorySync/src/Shell/DirectorySyncShell.php:92
+msgid "Synchronize users"
+msgstr ""
+
+#: /var/www/passbolt/plugins/Passbolt/DirectorySync/src/Shell/DirectorySyncShell.php:96
+msgid "Synchronize groups"
+msgstr ""
+
+#: /var/www/passbolt/plugins/Passbolt/DirectorySync/src/Shell/DirectorySyncShell.php:100
+msgid "List all the ignored record during the directory synchronization process."
+msgstr ""
+
+#: /var/www/passbolt/plugins/Passbolt/DirectorySync/src/Shell/DirectorySyncShell.php:104
+msgid "Start ignoring a record during the directory synchronization process."
+msgstr ""
+
+#: /var/www/passbolt/plugins/Passbolt/DirectorySync/src/Shell/DirectorySyncShell.php:108
+msgid "Stop ignoring a record during the directory synchronization process."
+msgstr ""
+
+#: /var/www/passbolt/plugins/Passbolt/DirectorySync/src/Shell/DirectorySyncShell.php:112
+msgid "Debug configuration helper"
+msgstr ""
+
+#: Shell/PassboltShell.php:95
+msgid "Identify and fix database relational integrity issues."
+msgstr ""
+
+#: Shell/PassboltShell.php:100
+msgid "Drop all the tables. Dangerous but useful for a full reinstall."
+msgstr ""
+
+#: Shell/PassboltShell.php:105
+msgid "Run a healthcheck for this passbolt instance."
+msgstr ""
+
+#: Shell/PassboltShell.php:110
+msgid "Installation shell for the passbolt application."
+msgstr ""
+
+#: Shell/PassboltShell.php:115
+msgid "Init the GnuPG keyring."
+msgstr ""
+
+#: Shell/PassboltShell.php:121
+msgid "Check the license."
+msgstr ""
+
+#: Shell/PassboltShell.php:127
+msgid "Run database migrations."
+msgstr ""
+
+#: Shell/PassboltShell.php:132
+msgid "Utility to export mysql database backups."
+msgstr ""
+
+#: Shell/PassboltShell.php:137
+msgid "Utility to import mysql database backups."
+msgstr ""
+
+#: Shell/PassboltShell.php:142
+msgid "Register a new user."
+msgstr ""
+
+#: Shell/PassboltShell.php:147
+msgid "Try to send a test email and display debug information."
+msgstr ""
+
+#: Shell/PassboltShell.php:152
+msgid "Revalidate the data of the passbolt installation."
+msgstr ""
+
+#: Shell/PassboltShell.php:157
+msgid "Show application logs."
+msgstr ""
+
+#: Shell/PassboltShell.php:162
+msgid "Provide version number"
+msgstr ""
+
+#: Shell/Task/DatacheckTask.php:50
+#: Shell/Task/DatacheckTask.php:54
+msgid "Hide passing checks details."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:60
+msgid "Hide passing checks."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:64
+msgid "Hide warnings."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:68
+msgid "Hide help messages."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:72
+msgid "Hide section titles."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:79
+msgid "Run environment tests only."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:83
+msgid "Run configFiles tests only."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:87
+msgid "Run core tests only."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:91
+msgid "Run SSL tests only."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:95
+msgid "Run database tests only."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:99
+msgid "Run gpg tests only."
+msgstr ""
+
+#: Shell/Task/HealthcheckTask.php:103
+msgid "Run passbolt app tests only."
+msgstr ""
+

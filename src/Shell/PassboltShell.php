@@ -74,7 +74,7 @@ class PassboltShell extends AppShell
         $this->out('  / ____/ /_/ (__  |__  ) /_/ / /_/ / / /    ');
         $this->out(' /_/    \__,_/____/____/_.___/\____/_/\__/   ');
         $this->out('');
-        $this->out(' Open source password manager for teams');
+        $this->out(' ' . __('Open source password manager for teams'));
         $this->hr();
     }
 
