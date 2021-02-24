@@ -1,3 +1,8 @@
+passbolt-pro-server (3.0.1-1) buster; urgency=medium
+  * Fix resources population of resource_type_id field migration
+
+ -- Daniel Del Rio <daniel@passbolt.com>  Wed, 24 Feb 2021 13:43:00 +0000
+
 passbolt-pro-server (3.0.0-2) buster; urgency=medium
   * Drop support for api format v1, api-version parameter is deprecated
   * Remove title from api response envelope format
