@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [3.0.1] - 2021-02-24
+### Fixed
+- Fix resources population of resource_type_id field migration
+
 ## [3.0.0] - 2021-02-18
 ### Deprecated
 - Drop support for API format v1, api-version parameter is deprecated
@@ -772,6 +776,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AD: Admin
 
 [Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.0.0...HEAD
+[3.0.1]: https://github.com/passbolt/passbolt_api/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.13.5...v3.0.0
 [2.13.5]: https://github.com/passbolt/passbolt_api/compare/v2.13.1...v2.13.5
 [2.13.1]: https://github.com/passbolt/passbolt_api/compare/v2.13.0...v2.13.1
