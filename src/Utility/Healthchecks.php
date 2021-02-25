@@ -80,7 +80,7 @@ class Healthchecks
         $checks['application']['robotsIndexDisabled'] = ($robots !== false);
         $checks['application']['sslForce'] = Configure::read('passbolt.ssl.force');
         $https = !strpos(Configure::read('App.fullBaseUrl'), 'https');
-        $checks['application']['sslFullBaseUrl'] = ($https === false);
+        $checks['application']['sslFullBaseUrl'] = ($https !== false);
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
         $checks['application']['registrationClosed'] = !Configure::read('passbolt.registration.public');
         $checks['application']['jsProd'] = (Configure::read('passbolt.js.build') === 'production');
