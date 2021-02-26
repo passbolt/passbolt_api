@@ -103,7 +103,6 @@ ubuntu-testing:
     DISTRIBUTION: focal
     COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
-    COLD_START: "true"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
@@ -114,7 +113,6 @@ ubuntu-stable:
     DISTRIBUTION: focal
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
-    COLD_START: "true"
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
       when: on_success
