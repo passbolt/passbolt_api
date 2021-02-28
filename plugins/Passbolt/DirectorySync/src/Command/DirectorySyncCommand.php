@@ -26,7 +26,7 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 class DirectorySyncCommand extends PassboltCommand
 {
     /**
-     * All commands are extend the present command.
+     * All the plugins commands extend the present command.
      * There execution in the console should called by "directory_sync this-command".
      * This method prepends the name of the command if required.
      *
@@ -70,6 +70,8 @@ class DirectorySyncCommand extends PassboltCommand
             $this->error(__('aborting'), $io);
             $this->abort();
         }
+
+        return $this->successCode();
     }
 
     /**

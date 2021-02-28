@@ -14,62 +14,56 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\DirectorySync\Shell\Task;
+namespace Passbolt\DirectorySync\Command;
 
-use App\Shell\AppShell;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
 
-class DebugTask extends AppShell
+class DebugCommand extends DirectorySyncCommand
 {
     protected $DirectoryEntries;
     protected $Groups;
     protected $Users;
 
     /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @throws \Exception
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Debug configuration helper'));
 
         return $parser;
     }
 
     /**
-     * Main shell entry point
-     *
-     * @return bool true if successful
-     * @throws \Exception
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
         try {
             $directoryOrgSettings = DirectoryOrgSettings::get();
             $ldapDirectory = new LdapDirectory($directoryOrgSettings);
             $userFilter = $ldapDirectory->getUserFiltersAsString();
             $groupFilter = $ldapDirectory->getGroupFiltersAsString();
 
-            $this->out(__('<info>Configuration source:</info> {0}', $directoryOrgSettings->getSource()));
-            echo $this->nl(1);
-            $this->info(__('The following filters are in use'));
-            $this->out(__("users:\n{0}", [$userFilter]));
-            echo $this->nl(1);
-            $this->out(__("groups:\n{0}", [$groupFilter]));
-            echo $this->nl(1);
+            $io->out(__('<info>Configuration source:</info> {0}', $directoryOrgSettings->getSource()));
+            $io->nl();
+            $io->info(__('The following filters are in use'));
+            $io->out(__("users:\n{0}", [$userFilter]));
+            $io->nl();
+            $io->out(__("groups:\n{0}", [$groupFilter]));
+            $io->nl();
         } catch (\Exception $e) {
-            $this->err($e->getMessage());
+            $this->error($e->getMessage(), $io);
 
-            return false;
+            return $this->errorCode();
         }
 
-        return true;
+        return $this->successCode();
     }
 }

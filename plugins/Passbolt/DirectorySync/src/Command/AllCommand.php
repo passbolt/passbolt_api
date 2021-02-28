@@ -14,24 +14,22 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\DirectorySync\Shell\Task;
+namespace Passbolt\DirectorySync\Command;
 
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Passbolt\DirectorySync\Actions\AllSyncAction;
 
-class AllTask extends SyncTask
+class AllCommand extends DirectorySyncCommand
 {
+    use SyncCommandTrait;
+
     /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @throws \Exception
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Directory Sync'))
             ->addOption('dry-run', [
                 'help' => 'Don\'t save the changes',
@@ -43,31 +41,27 @@ class AllTask extends SyncTask
     }
 
     /**
-     * Main shell entry point
-     *
-     * @return bool true if successful
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
         $reports = [];
 
         try {
             $this->model = 'Users';
-            $dryRun = $this->param('dry-run');
+            $dryRun = $args->getOption('dry-run');
             $allSyncAction = new AllSyncAction();
             $reports = $allSyncAction->execute($dryRun);
         } catch (\Exception $exception) {
-            $this->abort($exception->getMessage());
+            $this->error($exception->getMessage(), $io);
 
-            return false;
+            return $this->errorCode();
         }
 
-        $this->model = 'Users';
-        $this->_displayReports($reports['users']);
+        $this->displayReports($reports['users'], 'Users', $io);
+        $this->displayReports($reports['groups'], 'Groups', $io);
 
-        $this->model = 'Groups';
-        $this->_displayReports($reports['groups']);
-
-        return true;
+        return $this->successCode();
     }
 }

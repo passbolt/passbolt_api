@@ -16,34 +16,31 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Command;
 
-use Passbolt\DirectorySync\Command\DirectorySyncCommand;
+use App\Test\Factory\UserFactory;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncConsoleIntegrationTestCase;
 
-class DirectorySyncCommandTest extends DirectorySyncConsoleIntegrationTestCase
+class DebugCommandTest extends DirectorySyncConsoleIntegrationTestCase
 {
     /**
      * Test the help option
      *
      * @return void
      */
-    public function testDirectorySyncCommandHelp(): void
+    public function testDebugCommandHelp(): void
     {
-        $this->exec('directory_sync -h');
+        $this->exec('directory_sync debug -h');
         $this->assertExitSuccess();
-        $this->assertOutputContains('The directory shell offer synchronizations tasks from the CLI.');
-        $this->assertOutputContains('cake directory_sync');
+        $this->assertOutputContains('Debug configuration helper');
     }
 
-    public function testDirectorySyncCommand()
+    public function testDebugCommand(): void
     {
-        $this->exec('directory_sync');
-        $this->assertExitSuccess();
-    }
+        $this->markTestSkipped('Will need to get back to this.');
 
-    public function testDirectorySyncCommandAsAdmin()
-    {
-        DirectorySyncCommand::$userIsRoot = true;
-        $this->exec('directory_sync');
-        $this->assertExitError();
+        UserFactory::make()->admin()->persist();
+
+        $this->useCommandRunner();
+        $this->exec('directory_sync debug');
+        $this->assertExitSuccess();
     }
 }

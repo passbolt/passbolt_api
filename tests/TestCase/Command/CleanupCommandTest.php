@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
+use App\Command\CleanupCommand;
+use App\Test\Factory\UserFactory;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
@@ -32,6 +34,8 @@ class CleanupCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+
+        CleanupCommand::resetCleanups();
     }
 
     /**
@@ -50,6 +54,7 @@ class CleanupCommandTest extends TestCase
      */
     public function testCleanupCommandFixMode()
     {
+        UserFactory::make()->admin()->persist();
         $this->exec('passbolt cleanup');
         $this->assertExitSuccess();
         $this->assertOutputContains('Cleanup shell');
@@ -61,6 +66,7 @@ class CleanupCommandTest extends TestCase
      */
     public function testCleanupCommandDryRun()
     {
+        UserFactory::make()->admin()->persist();
         $this->exec('passbolt cleanup --dry-run');
         $this->assertExitSuccess();
         $this->assertOutputContains('Cleanup shell');

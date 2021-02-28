@@ -87,15 +87,15 @@ class GroupSyncAction extends SyncAction
     /**
      * Get group from data.
      *
-     * @param array $data data
+     * @param string $groupName group name
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function getGroupFromData(array $data)
+    public function getGroupFromData(string $groupName)
     {
         // If not group already associated, find if there is a corresponding group in the database.
         $existingGroup = $this->Groups->find()
             ->select(['id', 'name', 'deleted', 'created', 'modified'])
-            ->where(['name' => $data['group']['name']])
+            ->where(['name' => $groupName])
             ->order(['Groups.modified' => 'DESC'])
             ->first();
         if (!isset($existingGroup) || empty($existingGroup)) {

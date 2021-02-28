@@ -16,34 +16,19 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Command;
 
-use Passbolt\DirectorySync\Command\DirectorySyncCommand;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncConsoleIntegrationTestCase;
 
-class DirectorySyncCommandTest extends DirectorySyncConsoleIntegrationTestCase
+class IgnoreListCommandTest extends DirectorySyncConsoleIntegrationTestCase
 {
     /**
      * Test the help option
      *
      * @return void
      */
-    public function testDirectorySyncCommandHelp(): void
+    public function testIgnoreListCommandHelp(): void
     {
-        $this->exec('directory_sync -h');
+        $this->exec('directory_sync ignore_list -h');
         $this->assertExitSuccess();
-        $this->assertOutputContains('The directory shell offer synchronizations tasks from the CLI.');
-        $this->assertOutputContains('cake directory_sync');
-    }
-
-    public function testDirectorySyncCommand()
-    {
-        $this->exec('directory_sync');
-        $this->assertExitSuccess();
-    }
-
-    public function testDirectorySyncCommandAsAdmin()
-    {
-        DirectorySyncCommand::$userIsRoot = true;
-        $this->exec('directory_sync');
-        $this->assertExitError();
+        $this->assertOutputContains('List records ignored during directory synchronization process.');
     }
 }

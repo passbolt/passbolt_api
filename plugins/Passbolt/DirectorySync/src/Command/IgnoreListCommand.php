@@ -14,51 +14,32 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\DirectorySync\Shell\Task;
+namespace Passbolt\DirectorySync\Command;
 
-use App\Shell\AppShell;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
 
-class IgnoreListTask extends AppShell
+class IgnoreListCommand extends DirectorySyncCommand
 {
     /**
-     * Initializes the Shell
-     * acts as constructor for subclasses
-     * allows configuration of tasks prior to shell execution
-     *
-     * @return void
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
+     * @inheritDoc
      */
-    public function initialize(): void
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        parent::initialize();
-    }
-
-    /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @throws \Exception
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
-     */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
-    {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('List records ignored during directory synchronization process.'));
 
         return $parser;
     }
 
     /**
-     * Main shell entry point
-     *
-     * @return bool true if successful
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $io = $this->getIo();
+        parent::execute($args, $io);
+
         // Output some data as a table.
 
         $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
@@ -86,17 +67,17 @@ class IgnoreListTask extends AppShell
             $records[] = [$record->foreign_model, $name, $record->created->timeAgoInWords(), $record->id];
         }
         if (count($records) === 1) {
-            $this->success(__('No record is being ignored. The next job will try to synchronize all records.'));
+            $this->success(__('No record is being ignored. The next job will try to synchronize all records.'), $io);
 
-            return true;
+            return $this->successCode();
         }
 
         $io->helper('Table')->output($records);
-        $this->out('');
-        $this->out('[help] you can stop ignoring records with the following command.');
-        $this->out('       ./bin/cake directory_sync ignore-create [ID]');
-        $this->out('');
+        $io->out();
+        $io->out('[help] you can stop ignoring records with the following command.');
+        $io->out('       ./bin/cake directory_sync ignore-create [ID]');
+        $io->out();
 
-        return true;
+        return $this->successCode();
     }
 }

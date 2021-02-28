@@ -27,7 +27,12 @@ class CleanupCommand extends PassboltCommand
     /**
      * @var array The list of cleanup jobs to perform.
      */
-    private static $cleanups = [
+    private static $cleanups;
+
+    /**
+     * @var array The list of default cleanup jobs to perform.
+     */
+    private static $defaultCleanups = [
         'GroupsUsers' => [
             'Soft Deleted Users',
             'Hard Deleted Users',
@@ -76,14 +81,30 @@ class CleanupCommand extends PassboltCommand
      * ]
      * @return void
      */
-    public static function addCleanups(array $cleanups)
+    public static function addCleanups(array $cleanups): void
     {
+        if (!isset(self::$cleanups)) {
+            self::resetCleanups();
+        }
+
         foreach ($cleanups as $modelName => $modelCleanups) {
             if (!array_key_exists($modelName, self::$cleanups)) {
                 self::$cleanups[$modelName] = [];
             }
             self::$cleanups[$modelName] = array_merge(self::$cleanups[$modelName], $cleanups[$modelName]);
         }
+    }
+
+    /**
+     * When running tests, a plugin might modify the list of cleanups, leading
+     * to errors in the following tests. This methods helps setting the list of
+     * cleanups to its default set of values.
+     *
+     * @return void
+     */
+    public static function resetCleanups(): void
+    {
+        self::$cleanups = self::$defaultCleanups;
     }
 
     /**
@@ -103,6 +124,8 @@ class CleanupCommand extends PassboltCommand
         $this->loadModel('GroupsUsers');
         $this->loadModel('Permissions');
         $this->loadModel('AuthenticationTokens');
+
+        self::resetCleanups();
     }
 
     /**

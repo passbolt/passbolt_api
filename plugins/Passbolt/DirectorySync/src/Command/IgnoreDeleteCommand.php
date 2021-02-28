@@ -14,40 +14,22 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\DirectorySync\Shell\Task;
+namespace Passbolt\DirectorySync\Command;
 
-use App\Shell\AppShell;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
-class IgnoreDeleteTask extends AppShell
+class IgnoreDeleteCommand extends DirectorySyncCommand
 {
     /**
-     * Initializes the Shell
-     * acts as constructor for subclasses
-     * allows configuration of tasks prior to shell execution
-     *
-     * @return void
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
+     * @inheritDoc
      */
-    public function initialize(): void
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        parent::initialize();
-    }
-
-    /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @throws \Exception
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
-     */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
-    {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Stop ignoring a record.'))
             ->addOption('id', [
                 'help' => 'The record UUID.',
@@ -62,17 +44,19 @@ class IgnoreDeleteTask extends AppShell
     }
 
     /**
-     * Main shell entry point
-     *
-     * @return bool true if successful
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $foreignModel = $this->param('model');
-        $foreignKey = $this->param('id');
+        parent::execute($args, $io);
+
+        $foreignModel = $args->getOption('model');
+        $foreignKey = $args->getOption('id');
 
         if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
-            $this->err(__('The record model is not valid.'));
+            $io->err(__('The record model is not valid.'));
+
+            return $this->errorCode();
         }
         try {
             $DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
@@ -81,13 +65,13 @@ class IgnoreDeleteTask extends AppShell
                 throw new RecordNotFoundException(__('The record could not be found.'));
             }
             $DirectoryIgnore->delete($ignored);
-            $this->success(__('The record will stop being ignored in the next directory synchronization.'));
+            $this->success(__('The record will stop being ignored in the next directory synchronization.'), $io);
 
-            return true;
+            return $this->successCode();
         } catch (RecordNotFoundException $exception) {
-            $this->err($exception->getMessage());
+            $io->err($exception->getMessage());
 
-            return false;
+            return $this->successCode();
         }
     }
 }

@@ -24,6 +24,7 @@ use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Migrations\Command\MigrationsMigrateCommand;
+use Passbolt\License\Command\LicenseCheckCommand;
 use PassboltTestData\Command\InsertCommand;
 
 class InstallCommand extends PassboltCommand
@@ -97,8 +98,8 @@ class InstallCommand extends PassboltCommand
         }
 
         // Normal mode
-        if (!$this->_licenseCheck()) {
-            return false;
+        if (!$this->licenseCheck($args, $io)) {
+            return $this->errorCode();
         }
         if (!$this->healthchecks($args, $io)) {
             return $this->errorCode();
@@ -136,18 +137,16 @@ class InstallCommand extends PassboltCommand
      * Check the license is valid.
      * Dispatch to plugin Passbolt/license.license_check
      *
+     * @param \Cake\Console\Arguments $args Arguments
+     * @param \Cake\Console\ConsoleIo $io ConsoleIo
      * @return bool status
      */
-    protected function _licenseCheck()
+    protected function licenseCheck(Arguments $args, ConsoleIo $io): bool
     {
         if (Configure::read('passbolt.plugins.license')) {
-            $cmd = $this->_formatCmd('passbolt license_check');
-            $code = $this->dispatchShell($cmd);
-            if ($code === self::CODE_SUCCESS) {
-                return true;
-            } else {
-                return false;
-            }
+            $options = $this->formatOptions($args);
+
+            return $this->executeCommand(LicenseCheckCommand::class, $options, $io) === $this->successCode();
         }
 
         return true;

@@ -14,57 +14,33 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\DirectorySync\Shell\Task;
+namespace Passbolt\DirectorySync\Command;
 
-use App\Shell\AppShell;
-use Cake\ORM\TableRegistry;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
 
-class TestTask extends AppShell
+class TestCommand extends DirectorySyncCommand
 {
-    protected $DirectoryEntries;
-    protected $Groups;
-    protected $Users;
-
     /**
-     * Initialize.
-     *
-     * @return void
+     * @inheritDoc
      */
-    public function initialize(): void
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        parent::initialize();
-        $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-    }
-
-    /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @throws \Exception
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
-     */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
-    {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Test Sync'));
 
         return $parser;
     }
 
     /**
-     * Main shell entry point
-     *
-     * @return bool true if successful
-     * @throws \Exception
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
         try {
             $directoryOrgSettings = DirectoryOrgSettings::get();
             $ldapDirectory = new LdapDirectory($directoryOrgSettings);
@@ -74,53 +50,53 @@ class TestTask extends AppShell
                 'groups' => array_values($directoryResults->getGroups()),
             ];
         } catch (\Exception $e) {
-             $this->err($e->getMessage());
+             $io->err($e->getMessage());
 
-            return false;
+            return $this->errorCode();
         }
 
-        $this->displayEntries($data);
+        $this->displayEntries($data, $io);
 
         $tree = $ldapDirectory->getFilteredDirectoryResults()->getFlattenedTree();
-        $this->displayFlattenedTree($tree);
+        $this->displayFlattenedTree($tree, $io);
 
         $data['users'] = $directoryResults->getInvalidUsers();
         $data['groups'] = $directoryResults->getInvalidGroups();
-        $this->displayInvalidEntries($data);
+        $this->displayInvalidEntries($data, $io);
 
-        return true;
+        return $this->successCode();
     }
 
     /**
      * Display flattened tree.
      *
      * @param array $flattenedTree flattened tree content.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayFlattenedTree($flattenedTree)
+    protected function displayFlattenedTree($flattenedTree, ConsoleIo $io)
     {
         $output = [];
         $output[] = __('<info>Root</info>');
         foreach ($flattenedTree as $row) {
             if ($row->isUser()) {
-                $output[] = ' ' . '|- ' . $this->_userToString($row);
+                $output[] = ' ' . '|- ' . $this->userToString($row);
             } else {
                 $level = $row->level;
-                $output[] = ' ' . str_repeat('|  ', $row->level) . '|- ' . "<info>{$this->_groupToString($row)}</info>";
+                $output[] = ' ' . str_repeat('|  ', $row->level) . '|- ' . "<info>{$this->groupToString($row)}</info>";
                 foreach ($row->group['users'] as $user) {
-                    $output[] = ' ' . str_repeat('|  ', $level + 1) . '|- ' . $this->_userToString($user);
+                    $output[] = ' ' . str_repeat('|  ', $level + 1) . '|- ' . $this->userToString($user);
                 }
             }
         }
 
-        $io = $this->getIo();
-        $io->out($io->nl(1));
-        $this->info(__('The entities are organized with the following structure'));
-        $io->out($io->nl(1));
+        $io->nl();
+        $io->info(__('The entities are organized with the following structure'));
+        $io->nl();
         foreach ($output as $o) {
             $io->out($o);
         }
-        $io->out($io->nl(1));
+        $io->nl();
     }
 
     /**
@@ -129,7 +105,7 @@ class TestTask extends AppShell
      * @param mixed $group group
      * @return string|null
      */
-    protected function _groupToString($group)
+    protected function groupToString($group)
     {
         if (!$group->hasErrors()) {
             $groupStr = __(
@@ -150,7 +126,7 @@ class TestTask extends AppShell
      * @param mixed $user user
      * @return string|null
      */
-    protected function _userToString($user)
+    protected function userToString($user)
     {
         if (!$user->hasErrors()) {
             $userStr = __(
@@ -170,9 +146,10 @@ class TestTask extends AppShell
      * Display valid objects.
      *
      * @param array $data data
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayEntries($data)
+    protected function displayEntries($data, $io)
     {
         $output = [];
         $output[] = [__('groups'), __('users')];
@@ -182,19 +159,18 @@ class TestTask extends AppShell
             // Handle user.
             $groupStr = '';
             if (isset($data['groups'][$i])) {
-                $groupStr = $this->_groupToString($data['groups'][$i]);
+                $groupStr = $this->groupToString($data['groups'][$i]);
             }
 
             $userStr = '';
             if (isset($data['users'][$i])) {
-                $userStr = $this->_userToString($data['users'][$i]);
+                $userStr = $this->userToString($data['users'][$i]);
             }
 
             $output[] = [$groupStr, $userStr];
         }
 
-        $this->info(__('The following groups and users have been found'));
-        $io = $this->getIo();
+        $io->info(__('The following groups and users have been found'));
         $io->out($io->nl(1));
         $io->helper('Table')->output($output);
     }
@@ -203,38 +179,39 @@ class TestTask extends AppShell
      * Display invalid objects.
      *
      * @param array $data data
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayInvalidEntries(array $data)
+    protected function displayInvalidEntries(array $data, ConsoleIo $io)
     {
         if (count($data['users'])) {
-            $this->hr();
-            $this->err(
+            $io->hr();
+            $io->err(
                 __(
                     '{0} users returned by your directory are invalid and will be ignored during synchronization',
                     count($data['users'])
                 )
             );
-            $this->err(__('bin/cake directory_sync test --verbose for more details'));
-            $this->hr();
+            $io->err(__('bin/cake directory_sync test --verbose for more details'));
+            $io->hr();
             foreach ($data['users'] as $user) {
-                $this->verbose(__('Error: ') . $user->getErrorsAsString());
-                $this->verbose(json_encode($user->toArray(), JSON_PRETTY_PRINT));
+                $io->verbose(__('Error: ') . $user->getErrorsAsString());
+                $io->verbose(json_encode($user->toArray(), JSON_PRETTY_PRINT));
             }
         }
 
         if (count($data['groups'])) {
-            $this->hr();
-            $this->err(
+            $io->hr();
+            $io->err(
                 __(
                     '{0} group(s) returned by your directory are invalid and will be ignored during synchronization',
                     count($data['groups'])
                 )
             );
-            $this->hr();
+            $io->hr();
             foreach ($data['groups'] as $group) {
-                $this->verbose(__('Error: ') . $group->getErrorsAsString());
-                $this->verbose(json_encode($group->toArray(), JSON_PRETTY_PRINT));
+                $io->verbose(__('Error: ') . $group->getErrorsAsString());
+                $io->verbose(json_encode($group->toArray(), JSON_PRETTY_PRINT));
             }
         }
     }

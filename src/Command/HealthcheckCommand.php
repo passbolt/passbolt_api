@@ -153,13 +153,13 @@ class HealthcheckCommand extends PassboltCommand
         $io->out(str_repeat(chr(0x08), count($checks)) . str_repeat(' ', count($checks)), 0);
 
         // Print results
-        $io->out('');
+        $io->out();
         $io->hr();
         foreach ($checks as $check) {
             $fn = 'assert' . ucfirst($check);
             $this->{$fn}($results);
         }
-        $io->out('');
+        $io->out();
         $this->summary();
 
         return $this->successCode();

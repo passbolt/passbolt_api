@@ -53,7 +53,7 @@ class ConsoleCommand extends Command
         }
 
         $io->out('You can exit with <info>`CTRL-C`</info> or <info>`exit`</info>');
-        $io->out('');
+        $io->out();
 
         Log::drop('debug');
         Log::drop('error');

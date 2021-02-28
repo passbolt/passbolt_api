@@ -14,14 +14,14 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\DirectorySync\Shell\Task;
+namespace Passbolt\DirectorySync\Command;
 
 use App\Error\Exception\ValidationException;
-use App\Shell\AppShell;
+use Cake\Console\ConsoleIo;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
-abstract class SyncTask extends AppShell
+trait SyncCommandTrait
 {
     protected $model;
     protected $pad = 10;
@@ -30,58 +30,61 @@ abstract class SyncTask extends AppShell
      * Display reports
      *
      * @param array $reports list of reports
+     * @param string $model Model concerned.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _displayReports($reports)
+    protected function displayReports($reports, string $model, ConsoleIo $io)
     {
-        $this->hr();
-        $this->out($this->model);
-        $this->hr();
-        $this->out(__('Created:'));
+        $io->hr();
+        $io->out($model);
+        $io->hr();
+        $io->out(__('Created:'));
         $created = $reports->getByAction(Alias::ACTION_CREATE);
         if (!count($created)) {
-            $this->success(str_pad('[success]', $this->pad) . __('No new item to create.'));
+            $this->success(str_pad('[success]', $this->pad) . __('No new item to create.'), $io);
         }
         foreach ($created as $i => $report) {
-            $this->_displayReport($report);
+            $this->displayReport($report, $io);
         }
-        $this->out('');
-        $this->out(__('Deleted:'));
+        $io->out();
+        $io->out(__('Deleted:'));
         $deleted = $reports->getByAction(Alias::ACTION_DELETE);
         if (!count($deleted)) {
-            $this->success(str_pad('[success]', $this->pad) . __('No new item to delete'));
+            $this->success(str_pad('[success]', $this->pad) . __('No new item to delete'), $io);
         }
         foreach ($deleted as $i => $report) {
-            $this->_displayReport($report);
+            $this->displayReport($report, $io);
         }
-        $this->out('');
-        $this->info(
+        $io->out();
+        $io->info(
             __(
                 'For more explanation on sync error messages, see: {0}',
                 ['https://help.passbolt.com/configure/ldap/ldap-common-sync-error-messages']
             )
         );
-        $this->out('');
+        $io->out();
     }
 
     /**
      * Display report
      *
      * @param \Passbolt\DirectorySync\Shell\Task\ActionReport $report report
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _displayReport($report)
+    protected function displayReport($report, ConsoleIo $io)
     {
         $msg = str_pad('[' . $report->getStatus() . ']', $this->pad);
         $msg .= $report->getMessage();
         $data = $report->getData();
         switch ($report->getStatus()) {
             case Alias::STATUS_ERROR:
-                $this->err($msg);
+                $io->err($msg);
                 if ($data instanceof SyncError) {
                     $exception = $data->getException();
                     if ($exception instanceof ValidationException) {
-                        $this->_displayValidationError($exception->getErrors());
+                        $this->displayValidationError($exception->getErrors(), $io);
                         $id = $exception->getEntity()->id;
                         $model = $this->model;
                     } else {
@@ -90,16 +93,16 @@ abstract class SyncTask extends AppShell
                     }
 
                     $p = str_pad('', $this->pad);
-                    $this->out($p . __('To ignore this error in the next sync please run'));
-                    $this->out($p . "./bin/cake directory_sync ignore-create --id=$id --model=$model");
+                    $io->out($p . __('To ignore this error in the next sync please run'));
+                    $io->out($p . "./bin/cake directory_sync ignore-create --id=$id --model=$model");
                 }
                 break;
             case Alias::STATUS_SYNC:
             case Alias::STATUS_SUCCESS:
-                $this->success($msg);
+                $this->success($msg, $io);
                 break;
             case Alias::STATUS_IGNORE:
-                $this->warn($msg);
+                $io->warning($msg);
                 break;
         }
     }
@@ -108,18 +111,19 @@ abstract class SyncTask extends AppShell
      * Display the entity validation errors
      *
      * @param array $errors validation errors
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _displayValidationError($errors)
+    protected function displayValidationError($errors, ConsoleIo $io): void
     {
         foreach ($errors as $fieldname => $error) {
             foreach ($error as $rule => $message) {
                 if (is_array($message)) {
-                    $this->_displayValidationError($error);
+                    $this->displayValidationError($error, $io);
                     break;
                 } else {
                     $message = str_pad('', $this->pad) . ucfirst(str_replace('_', ' ', $fieldname)) . ': ' . $message;
-                    $this->err($message);
+                    $io->err($message);
                 }
             }
         }

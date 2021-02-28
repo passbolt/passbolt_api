@@ -14,39 +14,24 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\DirectorySync\Shell\Task;
+namespace Passbolt\DirectorySync\Command;
 
 use App\Error\Exception\ValidationException;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
-class IgnoreCreateTask extends SyncTask
+class IgnoreCreateCommand extends DirectorySyncCommand
 {
-    /**
-     * Initializes the Shell
-     * acts as constructor for subclasses
-     * allows configuration of tasks prior to shell execution
-     *
-     * @return void
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-    }
+    use SyncCommandTrait;
 
     /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @throws \Exception
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Add a record as to be ignored.'))
             ->addOption('id', [
                 'help' => 'The record UUID.',
@@ -61,34 +46,36 @@ class IgnoreCreateTask extends SyncTask
     }
 
     /**
-     * Main shell entry point
-     *
-     * @return bool true if successful
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
         $this->pad = 0;
-        $foreignModel = $this->param('model');
-        $foreignKey = $this->param('id');
+        $foreignModel = $args->getOption('model');
+        $foreignKey = $args->getOption('id');
 
         if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
-            $this->err(__('The record model is not valid.'));
+            $io->error(__('The record model is not valid.'));
+
+            return $this->errorCode();
         }
         try {
             $DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
             $DirectoryIgnore->createOrFail($foreignModel, $foreignKey);
-            $this->success(__('The record will be ignored in the next directory synchronization.'));
+            $this->success(__('The record will be ignored in the next directory synchronization.'), $io);
 
-            return true;
+            return $this->successCode();
         } catch (ValidationException $exception) {
-            $this->err($exception->getMessage());
-            $this->_displayValidationError($exception->getEntity()->getErrors());
+            $io->err($exception->getMessage());
+            $this->displayValidationError($exception->getEntity()->getErrors(), $io);
 
-            return false;
+            return $this->errorCode();
         } catch (\Exception $exception) {
-            $this->err($exception->getMessage());
+            $io->err($exception->getMessage());
 
-            return false;
+            return $this->errorCode();
         }
     }
 }

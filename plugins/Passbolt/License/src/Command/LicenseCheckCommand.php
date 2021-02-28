@@ -14,10 +14,13 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\License\Shell\Task;
+namespace Passbolt\License\Command;
 
-use App\Shell\AppShell;
+use App\Command\PassboltCommand;
 use Cake\Chronos\Date;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\License\Utility\LicenseKey;
@@ -25,95 +28,88 @@ use Passbolt\License\Utility\LicenseKey;
 /**
  * License Check shell command.
  */
-class LicenseCheckTask extends AppShell
+class LicenseCheckCommand extends PassboltCommand
 {
     /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Check the license.'));
 
         return $parser;
     }
 
     /**
-     * main() method.
-     *
-     * @return bool|int|null Success or error code.
-     * @throws \Exception
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
         $file = Configure::read('passbolt.plugins.license.license');
 
         if (!file_exists($file)) {
-            $this->out('');
-            $this->_error(__('License error: License not found in {0}', $file), false);
+            $io->out();
+            $this->error(__('License error: License not found in {0}', $file), $io);
 
-            return false;
+            return $this->errorCode();
         }
 
         $license = new LicenseKey(file_get_contents($file));
         $validFormat = $license->validateFormat();
 
         if (!$validFormat) {
-            $this->out('');
-            $this->_error(__('Subscription key error: {0}', $license->getFirstErrorMessage()), false);
-            $this->_displayErrorFooter();
+            $io->out();
+            $this->error(__('Subscription key error: {0}', $license->getFirstErrorMessage()), $io);
+            $this->displayErrorFooter($io);
 
-            return false;
+            return $this->errorCode();
         }
 
         $validData = $license->validateData();
         if (!$validData) {
-            $this->out('');
-            $this->_error(__('Subscription key metadata error: {0}', $license->getFirstErrorMessage()), false);
+            $io->out();
+            $this->error(__('Subscription key metadata error: {0}', $license->getFirstErrorMessage()), $io);
         }
 
-        $this->_displayInfo($license);
+        $this->displayInfo($license, $io);
 
         // Conclusion.
         if (!$validData) {
-            $this->_displayErrorFooter();
+            $this->displayErrorFooter($io);
 
-            return false;
+            return $this->errorCode();
         }
 
-        $this->_displayValidFooter();
+        $this->displayValidFooter($io);
 
-        return true;
+        return $this->successCode();
     }
 
     /**
      * Display info for a valid license.
      *
      * @param \Passbolt\License\Utility\LicenseKey $license the license object
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      * @throws \Exception
      */
-    protected function _displayInfo(LicenseKey $license)
+    protected function displayInfo(LicenseKey $license, ConsoleIo $io)
     {
         $data = $license->getData();
         $users = TableRegistry::getTableLocator()->get('Users');
 
-        echo $this->nl();
-        $this->out(__('Thanks for choosing Passbolt Pro'));
-        $this->out(__('Below are your subscription key details'));
-        echo $this->nl();
+        $io->nl();
+        $io->out(__('Thanks for choosing Passbolt Pro'));
+        $io->out(__('Below are your subscription key details'));
+        $io->nl();
 
         // Customer id output.
         $customerIdStr = __('<error>Not Available</error>');
         if (isset($data['customer_id'])) {
             $customerIdStr = "<info>{$data['customer_id']}</info>";
         }
-        $this->out(__("Customer id:\t{0}", $customerIdStr));
+        $io->out(__("Customer id:\t{0}", $customerIdStr));
 
         // Users quantity output.
         $usersQtyStr = __('<error>Not Available</error>');
@@ -132,12 +128,12 @@ class LicenseCheckTask extends AppShell
                 $usersQtyStr = __('<info>{0} (currently: {1})</info>', $data['users'], $usersQty);
             }
         }
-        $this->out(__("Users limit:\t{0}", $usersQtyStr));
+        $io->out(__("Users limit:\t{0}", $usersQtyStr));
 
         // Created date output.
         if (isset($data['created'])) {
             $date = Date::createFromTimestamp(strtotime($data['created']));
-            $this->out(__("Valid from:\t<info>{0}</info>", $date->toFormattedDateString()));
+            $io->out(__("Valid from:\t<info>{0}</info>", $date->toFormattedDateString()));
         }
 
         // Expiry date output.
@@ -145,11 +141,11 @@ class LicenseCheckTask extends AppShell
             $date = Date::createFromTimestamp(strtotime($data['expiry']));
             $expired = $date->lt(new Date());
             if ($expired) {
-                $this->out(__("Expires on:\t<error>{0} (expired)</error>", $date->toFormattedDateString()));
+                $io->out(__("Expires on:\t<error>{0} (expired)</error>", $date->toFormattedDateString()));
             } else {
                 $diffDays = $date->diffInDays(new Date());
                 $msg = __("Expires on:\t<info>{0} (in {1} days)</info>", $date->toFormattedDateString(), $diffDays);
-                $this->out($msg);
+                $io->out($msg);
             }
         }
     }
@@ -157,26 +153,28 @@ class LicenseCheckTask extends AppShell
     /**
      * Display valid footer.
      *
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _displayValidFooter()
+    protected function displayValidFooter(ConsoleIo $io)
     {
-        echo $this->nl();
-        $this->out(__('For any question / feedback / subscription renewal,'));
-        $this->out(__('kindly contact us at <info>sales@passbolt.com</info>'));
-        echo $this->nl();
+        $io->nl();
+        $io->out(__('For any question / feedback / subscription renewal,'));
+        $io->out(__('kindly contact us at <info>sales@passbolt.com</info>'));
+        $io->nl();
     }
 
     /**
      * Display error footer.
      *
+     * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function _displayErrorFooter()
+    protected function displayErrorFooter(ConsoleIo $io)
     {
-        echo $this->nl();
-        $this->_error(__('It looks like you could use some help.'));
-        $this->_error(__('We are here for you. You can contact us at sales@passbolt.com'));
-        echo $this->nl();
+        $io->nl();
+        $this->error(__('It looks like you could use some help.'), $io);
+        $this->error(__('We are here for you. You can contact us at sales@passbolt.com'), $io);
+        $io->nl();
     }
 }

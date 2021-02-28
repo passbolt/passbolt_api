@@ -14,12 +14,17 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\DirectorySync\Shell\Task;
+namespace Passbolt\DirectorySync\Command;
 
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 
-class GroupsTask extends SyncTask
+class GroupsCommand extends DirectorySyncCommand
 {
+    use SyncCommandTrait;
+
     /**
      * Initializes the Shell
      * acts as constructor for subclasses
@@ -36,17 +41,10 @@ class GroupsTask extends SyncTask
     }
 
     /**
-     * Gets the option parser instance and configures it.
-     *
-     * By overriding this method you can configure the ConsoleOptionParser before returning it.
-     *
-     * @throws \Exception
-     * @return \Cake\Console\ConsoleOptionParser
-     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * @inheritDoc
      */
-    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
         $parser->setDescription(__('Sync groups'))
             ->addOption('dry-run', [
                 'help' => 'Don\'t save the changes',
@@ -58,25 +56,24 @@ class GroupsTask extends SyncTask
     }
 
     /**
-     * Main shell entry point
-     *
-     * @return bool true if successful
+     * @inheritDoc
      */
-    public function main()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        parent::execute($args, $io);
+
         try {
-            $this->model = 'Groups';
-            $dryRun = $this->param('dry-run');
+            $dryRun = $args->getOption('dry-run');
             $action = new GroupSyncAction();
             $action->setDryRun($dryRun);
             $reports = $action->execute();
-            $this->_displayReports($reports);
+            $this->displayReports($reports, 'Groups', $io);
         } catch (\Exception $exception) {
-            $this->abort($exception->getMessage());
+            $this->error($exception->getMessage(), $io);
 
-            return false;
+            return $this->errorCode();
         }
 
-        return true;
+        return $this->successCode();
     }
 }
