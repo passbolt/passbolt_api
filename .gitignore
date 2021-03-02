@@ -13,6 +13,7 @@
 /config/gpg/*.asc
 /config/gpg/*.key
 /config/license
+/config/subscription_key.txt
 /config/ldap.php
 /config/DirectorySync/schema/*
 

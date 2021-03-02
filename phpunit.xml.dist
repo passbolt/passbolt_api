@@ -5,7 +5,7 @@
       <directory suffix=".php">./src/</directory>
       <directory suffix=".php">./plugins/AccountSettings/src/</directory>
       <directory suffix=".php">./plugins/DirectorySync/src/</directory>
-      <directory suffix=".php">./plugins/License/src/</directory>
+      <directory suffix=".php">./plugins/Ee/src/</directory>
       <directory suffix=".php">./plugins/MultiFactorAuthentication/src/</directory>
       <directory suffix=".php">./plugins/Tags/src/</directory>
       <directory suffix=".php">./plugins/WebInstaller/src/</directory>
@@ -30,7 +30,7 @@
     <testsuite name="plugins">
       <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
       <directory>./plugins/Passbolt/DirectorySync/tests/TestCase</directory>
-      <directory>./plugins/Passbolt/License/tests/TestCase</directory>
+      <directory>./plugins/Passbolt/Ee/tests/TestCase</directory>
       <directory>./plugins/Passbolt/MultiFactorAuthentication/tests/TestCase</directory>
       <directory>./plugins/Passbolt/Tags/tests/TestCase</directory>
       <directory>./plugins/Passbolt/Log/tests/TestCase</directory>

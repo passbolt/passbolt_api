@@ -33,6 +33,8 @@ class WebInstallerController extends Controller
 {
     /**
      * The web installer model
+     *
+     * @var \Passbolt\WebInstaller\Utility\WebInstaller
      */
     protected $webInstaller;
 
@@ -106,13 +108,13 @@ class WebInstallerController extends Controller
      */
     protected function getNavigationSections(): array
     {
-        $pluginLicenseEnabled = !empty(Configure::read('passbolt.plugins.license'));
+        $pluginEeEnabled = !empty(Configure::read('passbolt.plugins.ee'));
         $hasAdmin = $this->webInstaller->getSettings('hasAdmin');
         $sections = [];
 
         $sections['system_check'] = __('System check');
-        if ($pluginLicenseEnabled) {
-            $sections['license_key'] = __('Subscription key');
+        if ($pluginEeEnabled) {
+            $sections['subscription_key'] = __('Subscription key');
         }
         $sections['database'] = __('Database');
         $sections['server_keys'] = __('Server keys');

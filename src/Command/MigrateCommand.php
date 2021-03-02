@@ -20,7 +20,9 @@ use Cake\Command\CacheClearallCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Cake\Core\Configure;
 use Migrations\Command\MigrationsMigrateCommand;
+use Passbolt\Ee\Command\SubscriptionCheckCommand;
 
 /**
  * Migrate command.
@@ -68,6 +70,11 @@ class MigrateCommand extends PassboltCommand
             return $this->errorCode();
         }
 
+        // Normal mode
+        if (!$this->subscriptionCheck($args, $io)) {
+            return $this->errorCode();
+        }
+
         // Migration task
         $io->out(' ' . __('Running migration scripts.'));
         $io->hr();
@@ -106,6 +113,29 @@ class MigrateCommand extends PassboltCommand
             $result = $this->executeCommand(MysqlExportCommand::class, $this->formatOptions($args, ['--force']), $io);
 
             return $result === self::CODE_SUCCESS;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check the license is valid.
+     * Dispatch to plugin Passbolt/license.subscription_check
+     *
+     * @param \Cake\Console\Arguments $args The command arguments.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
+     * @return bool status
+     */
+    protected function subscriptionCheck(Arguments $args, ConsoleIo $io): bool
+    {
+        if (Configure::read('passbolt.plugins.ee')) {
+            $code = $this->executeCommand(
+                SubscriptionCheckCommand::class,
+                $this->formatOptions($args),
+                $io
+            );
+
+            return ($code === self::CODE_SUCCESS);
         }
 
         return true;

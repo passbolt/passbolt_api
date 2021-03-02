@@ -258,6 +258,60 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         }
     }
 
+    /**
+     * @dataProvider provideFoldersIndexFilterHasParentSuccessRelations
+     * @param mixed $hasParentFilterId
+     * @param array $expectedFolderChildrenIds
+     * @return void
+     */
+    public function testFoldersIndexFilterHasParentAndFilterSuccess($hasParentFilterId, array $expectedFolderChildrenIds)
+    {
+        $this->insertFixtureCase3();
+        $this->authenticateAs('ada');
+
+        $queryParameters = http_build_query([
+            'api-version' => 2,
+            'filter' => [
+                'has-parent' => $hasParentFilterId,
+                'search' => UuidFactory::uuid('folder.id.name'),
+            ],
+        ]);
+
+        $this->getJson('/folders.json?' . $queryParameters);
+        $this->assertSuccess();
+
+        $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+
+        foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
+            $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
+        }
+    }
+
+    /**
+     * @dataProvider provideFoldersIndexFilterHasParentSuccessRelations
+     * @param mixed $hasParentFilterId
+     * @param array $expectedFolderChildrenIds
+     * @return void
+     */
+    public function testFoldersIndexFilterHasParentAndFilterSuccess_NoResult($hasParentFilterId, array $expectedFolderChildrenIds)
+    {
+        $this->insertFixtureCase3();
+        $this->authenticateAs('ada');
+
+        $queryParameters = http_build_query([
+            'api-version' => 2,
+            'filter' => [
+                'has-parent' => $hasParentFilterId,
+                'search' => 'nope',
+            ],
+        ]);
+
+        $this->getJson('/folders.json?' . $queryParameters);
+        $this->assertSuccess();
+
+        $this->assertEmpty(Hash::extract($this->_responseJsonBody, '{n}.id'));
+    }
+
     public function testFoldersIndexSuccess_ContainChildrenResources()
     {
         $userId = UuidFactory::uuid('user.id.ada');

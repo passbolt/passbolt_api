@@ -1,10 +1,77 @@
-passbolt-pro-server (3.0.0-1) stretch; urgency=medium
+passbolt-pro-server (3.0.0-2) buster; urgency=medium
+  * Drop support for api format v1, api-version parameter is deprecated
+  * Remove title from api response envelope format
+  * Drop support for PHP < v7.3, application require PHP v7.3 by default
+  * Drop support for Composer < v2, application requires Composer v2 by default
+  * Add dark theme to the community edition
+  * Add new system check utilities in ./bin, for example ./bin/status-report
+  * Add web installer automatically populates mysql credentials (VM / Debian Package)
+  * Add support for multiple resource types
+  * Add resource with encrypted description as resource type
+  * Add generic cron job task in ./bin/cron
+  * Add support for untracked personal shell scripts under ./bin/my
+  * Add support for configurable footer link in config
+  * Add permissions filters on resource view and index
+  * Add permissions contain options on resource view
+  * Update OpenPGP-PHP dependencies to provide PHP 7.4 compatibility
+  * Remove unmaintained user agent parser library
+  * Fix PHP 7.4 warnings
+  * Improve testsuite execution times
+  * Refactor testsuite to not install data model from fixtures but use migrations instead
+  * Refactor testsuite to remove unused fixtures
+  * Migrate administration and mfa settings screen to React
+  * Add placeholder application skeleton when webextension is still loading
+  * Redesign of login and recover screens
+  * Add Mysql 8 support
+  * Fix allow overriding rememberMe options in passbolt.php configuration file
+  * Fix all target blank link should contain rel noopener noreferrer
+  * Fix email sender, email subject should not exceed 255 characters.
+  * Fix secret access log on resource view with contain secret
+  * GITHUB-376 Fix missing route prefix on the recovery button
+  * GITHUB-373 Fix API format for create group (previously v1 instead of v2 format)
+  * GITHUB-372 Fix after modifying passwd, the modification time should be changed
+  * GITHUB-370 Fix metadata should be deleted for deleted resources
+  * GITHUB-369 Fix Notification Emails Have Wrong Tense In Subject/Body
+  * GITHUB-368 Clarify PHP extension requirements
+  * GITHUB-362 Fix wrong filename on healthcheck HELP message for assertConfigFiles
+  * GITHUB-356 As a user I shouldn't be able to export folders if export plugin is disabled
+  * GITHUB-350 Fix no mails are sent when providers offer AUTH PLAIN authentication only
+  * GITHUB-339 Fix web installer urls do not work when passbolt is installed in a directory
+  * Fix performance issues on resource / folder activity log
+
+ -- Diego Lendoiro <diego@passbolt.com>  Thu, 18 Feb 2021 15:37:00 +0000
+
+passbolt-pro-server (3.0.0-1) buster; urgency=medium
   * Cron job executes bin/cron script.
   * Add cake passbolt show_logs command to display error.log path.
   * Add bin/utils.sh script.
 
- -- Daniel Del Rio <daniel@passbolt.com>  Mon, 18 Jan 2020 16:02:00 +0000
+ -- Daniel Del Rio <daniel@passbolt.com>  Mon, 18 Jan 2021 16:02:00 +0000
 
+passbolt-pro-server (2.14.0-0) stretch; urgency=medium
+  * Add an option to the migrate shell task to avoid clearing the cache after the migration is completed
+  * PB-1429 Fix "ldap error messages are incorrect in case of validation issues"
+  * PB-1431 Fix "LDAP: a notification should not be sent to a group administrator requesting him to add a non-active user."
+  * Fix: user_id should be saved in action_logs table after successful login
+  * PB-1370 Folders: Fix Performance improvement while retrieving items associated folder_parent_id and personal status
+  * Fix user setup completed admin email notification
+  * PB-1391 Fix a resource modified field should be updated when its secret is modified
+  * Fix display a validation error when db password contains a quote or db name contain a dash
+  * PB-1413: Fix "User last_logged_in virtual field should be based on action logs"
+  * PB-1484: Fix "LDAP: The user of a ldap group that cannot be synced should not have their memberships synchronized"
+  * PB-1464 Add configuration option for Log module in order to blacklist the logging of certain entry points that cause too much volume.
+  * PB-1464 Remove 'AuthIsAuthenticated.isAuthenticated' log entries from db and prevent further logging.
+  * PB-1464 Add indexes in action_logs related tables in order to improve password history performances.
+  * Add an entry to secrets_history when a resource is shared with a new user.
+  * Appjs version bump v2.13.9
+
+ -- Kevin Muller <kevin@passbolt.com>  Tue, 25 Aug 2020 10:00:00 +0000
+passbolt-pro-server (2.13.5-1) stretch; urgency=medium
+  * Fix display a validation error when db password contains a quote or db name contain a dash
+  * Fix email notification settings bootstrap messes up non persistent database connection in wizard
+  * Bump dependencies versions
+
+ -- Diego Lendoiro <diego@passbolt.com>  Thu, 13 Aug 2020 10:00:00 +0000
 passbolt-pro-server (2.13.1-1) stretch; urgency=medium
   * pb-1347 as a passbolt server administrator i should be able to use advanced filters for the ldap queries.
   * folders audit log

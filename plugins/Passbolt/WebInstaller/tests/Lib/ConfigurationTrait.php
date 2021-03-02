@@ -27,7 +27,6 @@ trait ConfigurationTrait
     /*
      * Skip the test if the environment is production like:
      * - config/passbolt.php not writable
-     * - config/license not writable
      */
 
     protected function skipTestIfNotWebInstallerFriendly()
@@ -40,7 +39,6 @@ trait ConfigurationTrait
     /*
      * The environment is considered as production (and not friendly) like if :
      * - config/passbolt.php not writable
-     * - or config/license not writable
      */
 
     protected function isWebInstallerFriendly()
@@ -54,14 +52,6 @@ trait ConfigurationTrait
         $passboltConfigPath = CONFIG . 'passbolt.php';
         $passboltConfigFileIsWritable = file_exists($passboltConfigPath) ? is_writable($passboltConfigPath) : $configFolderWritable;
         if (!$passboltConfigFileIsWritable) {
-            $this->installerFriendly = false;
-
-            return $this->installerFriendly;
-        }
-
-        $passboltLicensePath = CONFIG . 'license';
-        $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ? is_writable($passboltLicensePath) : $configFolderWritable;
-        if (!$passboltLicenseFileIsWritable) {
             $this->installerFriendly = false;
 
             return $this->installerFriendly;
@@ -83,9 +73,6 @@ trait ConfigurationTrait
         if (file_exists(CONFIG . 'passbolt.php')) {
             $this->backupConfig['passboltConfig'] = file_get_contents(CONFIG . 'passbolt.php');
         }
-        if (file_exists(CONFIG . 'license')) {
-            $this->backupConfig['license'] = file_get_contents(CONFIG . 'license');
-        }
         $this->backupConfig['public'] = Configure::read('passbolt.gpg.serverKey.public');
         $this->backupConfig['private'] = Configure::read('passbolt.gpg.serverKey.private');
 
@@ -102,9 +89,6 @@ trait ConfigurationTrait
         if (!$this->isWebInstallerFriendly()) {
             return;
         }
-        if (file_exists(CONFIG . 'license')) {
-            chmod(CONFIG . 'license', 0777);
-        }
         if (file_exists(CONFIG . 'passbolt.php')) {
             chmod(CONFIG . 'passbolt.php', 0777);
         }
@@ -113,13 +97,6 @@ trait ConfigurationTrait
         } else {
             if (file_exists(CONFIG . 'passbolt.php')) {
                 unlink(CONFIG . 'passbolt.php');
-            }
-        }
-        if (isset($this->backupConfig['license'])) {
-            file_put_contents(CONFIG . 'license', $this->backupConfig['license']);
-        } else {
-            if (file_exists(CONFIG . 'license')) {
-                unlink(CONFIG . 'license');
             }
         }
         if (file_exists(TMP . 'tests' . DS . 'testkey.asc')) {

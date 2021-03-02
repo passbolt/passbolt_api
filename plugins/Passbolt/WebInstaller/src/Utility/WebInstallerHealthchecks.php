@@ -48,13 +48,6 @@ class WebInstallerHealthchecks
             is_writable($passboltConfigPath) : $configFolderWritable;
         $checks['webInstaller']['passboltConfigWritable'] = $passboltConfigFileIsWritable;
 
-        if (Configure::read('passbolt.plugins.license')) {
-            $passboltLicensePath = CONFIG . 'license';
-            $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ?
-                is_writable($passboltLicensePath) : $configFolderWritable;
-            $checks['webInstaller']['passboltLicenseWritable'] = $passboltLicenseFileIsWritable;
-        }
-
         $keyFolderWritable = is_writable(dirname(Configure::read('passbolt.gpg.serverKey.public')));
 
         $publicKeyPath = Configure::read('passbolt.gpg.serverKey.public');

@@ -67,12 +67,45 @@ trait ErrorTrait
     }
 
     /**
+     * Asserts that the json response is relative to a payment required error.
+     *
+     * @return void
+     */
+    public function assertPaymentRequiredError($msg = 'Payment Required')
+    {
+        $this->assertError(402, $msg);
+    }
+
+    /**
      * Asserts that the json response is relative to a forbidden error.
      *
+     * @param string $msg
      * @return void
      */
     public function assertBadRequestError($msg = 'Bad Request')
     {
         $this->assertError(400, $msg);
+    }
+
+    /**
+     * Asserts that the json response is relative to a forbidden error.
+     *
+     * @param string $msg
+     * @return void
+     */
+    public function assertNotFoundError($msg = 'Not Found')
+    {
+        $this->assertError(404, $msg);
+    }
+
+    /**
+     * Asserts that the json response is relative to a forbidden error.
+     *
+     * @param string $msg
+     * @return void
+     */
+    public function assertInternalError($msg = 'Internal Error')
+    {
+        $this->assertError(500, $msg);
     }
 }

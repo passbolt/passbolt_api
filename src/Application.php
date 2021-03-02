@@ -210,8 +210,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             $this->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
         }
 
-        $this->addPlugin('Passbolt/License', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/Pro', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin('Passbolt/Ee', ['bootstrap' => true, 'routes' => true]);
 
         // Add tags plugin if not configured.
         if (!WebInstallerMiddleware::isConfigured()) {
