@@ -18,7 +18,6 @@ namespace App\Controller\Auth;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;
-use Cake\Filesystem\File;
 use Cake\Http\Exception\InternalErrorException;
 
 class AuthVerifyController extends AppController
@@ -46,13 +45,16 @@ class AuthVerifyController extends AppController
             $msg = __('The public key information was not found in config.');
             throw new InternalErrorException($msg);
         }
-        $file = new File(Configure::read('passbolt.gpg.serverKey.public'));
-        if (!$file->exists()) {
+        $publicKeyFileName = Configure::read('passbolt.gpg.serverKey.public');
+        if (!file_exists($publicKeyFileName)) {
             throw new InternalErrorException(__('The public key for this passbolt instance was not found.'));
+        }
+        if (!is_readable($publicKeyFileName)) {
+            throw new InternalErrorException(__('The public key file {0} is not readable.', $publicKeyFileName));
         }
         $key = [
             'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'),
-            'keydata' => $file->read(),
+            'keydata' => file_get_contents($publicKeyFileName),
         ];
         $this->success(__('The operation was successful.'), $key);
     }

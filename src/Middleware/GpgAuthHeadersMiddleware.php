@@ -25,7 +25,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class GpgAuthHeadersMiddleware implements MiddlewareInterface
 {
     /**
-     * Checks and sets the CSRF token depending on the HTTP verb.
+     * Set GPGAuth Headers.
      *
      * @param \Cake\Http\ServerRequest $request The request.
      * @param \Cake\Http\Response $handler The response.

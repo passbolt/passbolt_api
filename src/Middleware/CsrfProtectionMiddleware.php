@@ -28,7 +28,7 @@ class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddl
      */
     protected function isHexadecimalToken(string $token): bool
     {
-        return preg_match('/^[0-9a-f]+$/', $token) === 1;
+        return true;
     }
 
     /**

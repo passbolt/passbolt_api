@@ -12,33 +12,21 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.0.0
+ * @since         3.1.0
  */
+namespace Passbolt\MultiFactorAuthentication;
 
-namespace App\Controller\Users;
+use Cake\Core\BasePlugin;
+use Cake\Http\MiddlewareQueue;
+use Passbolt\MultiFactorAuthentication\Middleware\MfaMiddleware;
 
-use App\Controller\AppController;
-
-class GetCsrfTokenController extends AppController
+class Plugin extends BasePlugin
 {
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
-        $this->Authentication->allowUnauthenticated(['get']);
-
-        return parent::beforeFilter($event);
-    }
-
-    /**
-     * Get the session csrf token.
-     *
-     * @return void
-     */
-    public function get(): void
-    {
-        $csrfToken = $this->getRequest()->getAttribute('csrfToken');
-        $this->success(__('The operation was successful.'), $csrfToken);
+        return $middlewareQueue->add(MfaMiddleware::class);
     }
 }

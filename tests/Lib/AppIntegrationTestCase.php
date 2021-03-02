@@ -82,6 +82,7 @@ abstract class AppIntegrationTestCase extends TestCase
     {
         parent::setUp();
         $this->enableCsrfToken();
+        $this->loadRoutes();
         Configure::write('passbolt.plugins.tags.enabled', false);
         Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
@@ -119,7 +120,7 @@ abstract class AppIntegrationTestCase extends TestCase
         if ($userFirstName === 'admin') {
             $data['role']['name'] = Role::ADMIN;
         }
-        $this->session(['Auth' => ['User' => $data]]);
+        $this->session(['Auth' => $data]);
     }
 
     /**
@@ -127,7 +128,7 @@ abstract class AppIntegrationTestCase extends TestCase
      */
     public function logInAs(User $user)
     {
-        $this->session(['Auth' => ['User' => $user->toArray()]]);
+        $this->session(['Auth' => $user->toArray()]);
     }
 
     /**

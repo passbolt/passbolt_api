@@ -43,8 +43,8 @@ class SessionPreventExtensionMiddleware implements MiddlewareInterface
      * another entry point (value stored previously in the SessionPreventExtensionMiddleware.time session variable).
      *
      * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $handler The response.
-     * @return \Cake\Http\Response A response
+     * @param \Cake\Http\Response $handler The handler.
+     * @return \Cake\Http\Response The response.
      */
     public function process(
         ServerRequestInterface $request,

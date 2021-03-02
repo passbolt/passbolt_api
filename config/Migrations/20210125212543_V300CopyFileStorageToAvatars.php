@@ -13,6 +13,9 @@
  * @since         3.0.0
  */
 
+use App\Utility\Filesystem\DirectoryUtility;
+use Cake\Core\Configure;
+use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Laminas\Diactoros\UploadedFile;
 use Migrations\AbstractMigration;
@@ -34,43 +37,58 @@ class V300CopyFileStorageToAvatars extends AbstractMigration
 
         $AvatarsTable = TableRegistry::getTableLocator()->get('Avatars');
 
-        $fileStorages = $FileStoragesTable->find()
-            ->where(['model' => 'Avatar']);
+        $fileStorages = $FileStoragesTable->find()->where(['model' => 'Avatar']);
 
+        $dropFileStorage = true;
 
         foreach ($fileStorages as $fileStorage) {
             $filePath = $this->getCleanFilePath($fileStorage->path);
             if (file_exists($filePath) && is_readable($filePath)) {
                 $avatar = $AvatarsTable->newEntity([
-                    'model_id' => $fileStorage->foreign_key,
+                    'profile_id' => $fileStorage->foreign_key,
                     'file' =>  new UploadedFile(
                         $filePath,
                         filesize($filePath),
                         \UPLOAD_ERR_OK,
+                        $filePath,
                     ),
                 ]);
 
-                $AvatarsTable->save($avatar);
-                $FileStoragesTable->delete($fileStorage);
-                unlink($filePath);
+                if (!$AvatarsTable->save($avatar)) {
+                    $dropFileStorage = false;
+                    Log::warning(__('The file_storage table will not be dropped.'), $filePath);
+                } else {
+                    $FileStoragesTable->delete($fileStorage);
+                }
+                if (!unlink($filePath)) {
+                    Log::warning(__('The avatar located at {0} could not be deleted.'), $filePath);
+                }
             }
         }
 
-        $this->table('file_storage')
-            ->drop()
-            ->save();
+        if ($dropFileStorage) {
+            $this->table('file_storage')->drop()->save();
+            $legacyAvatarFolder = Configure::read('ImageStorage.basePath') . 'Avatar';
+            $removeSuccessful = DirectoryUtility::removeRecursively($legacyAvatarFolder);
+            if ($removeSuccessful === false) {
+                Log::warning(__('The folder {0} could not be removed.'), $legacyAvatarFolder);
+            }
+        }
     }
 
     public function getCleanFilePath(string $path): string
     {
         if (strpos(substr($path, 0, 1), '/', 0) === false) {
             // Relative path
-            $path = ltrim($path, './'); // Cleanup relative paths with dot at the beginning
+            $path = Configure::read('ImageStorage.basePath') . ltrim($path, './'); // Cleanup relative paths with dot at the beginning
         } else {
             // Absolute path
             $path = ltrim($path, '/'); // Cleanup absolute path to avoid double slash
         }
 
-        return WWW_ROOT . $path;
+        return $path;
     }
+
+    public function down()
+    {}
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Avatars;
 
+use App\Model\Entity\Avatar;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use Cake\Core\Configure;
@@ -69,6 +70,19 @@ class CreateTest extends AppTestCase
 
         $avatar = $this->createAvatar($avatar);
 
+        $this->assertAvatarCachedFilesExist($avatar);
+    }
+
+    public function testAvatarCacheFilesCreatedAfterDirectoryDeleted()
+    {
+        $avatar = $this->createAvatar();
+        $this->assertAvatarCachedFilesExist($avatar);
+        $this->Avatars->getFilesystem()->deleteDirectory($this->Avatars->getOrCreateAvatarDirectory($avatar));
+        $this->assertAvatarCachedFilesExist($avatar);
+    }
+
+    private function assertAvatarCachedFilesExist(Avatar $avatar)
+    {
         $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar)));
         $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'medium')));
         $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'whateverFormatWillReturnSmall')));

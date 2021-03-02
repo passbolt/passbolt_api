@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Controller\Avatars;
 use App\Model\Table\AvatarsTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
+use App\View\Helper\AvatarHelper;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 
@@ -86,9 +87,16 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
 
         $expectedFileName =
             $this->Avatars->getCacheDirectory() .
-            $this->Avatars->getAvatarDirectory($avatar) . $format . '.jpg';
+            $this->Avatars->getOrCreateAvatarDirectory($avatar) . $format . '.jpg';
 
         $this->get('avatars/view/' . $avatar->id . '/' . $format);
         $this->assertFileResponse($expectedFileName);
+
+        // Ensure that the virtual field is correctly constructed.
+        $virtualField = [
+            AvatarsTable::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar, AvatarsTable::FORMAT_MEDIUM),
+            AvatarsTable::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar, AvatarsTable::FORMAT_SMALL),
+        ];
+        $this->assertSame($virtualField, $avatar->url);
     }
 }

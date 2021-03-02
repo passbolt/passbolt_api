@@ -16,10 +16,14 @@ declare(strict_types=1);
  */
 namespace App\Model\Entity;
 
+use App\View\Helper\AvatarHelper;
+use Cake\Core\Configure;
 use Cake\ORM\Entity;
 
 class Avatar extends Entity
 {
+    protected $_virtual = ['url'];
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -33,4 +37,22 @@ class Avatar extends Entity
     protected $_accessible = [
         '*' => true,
     ];
+
+    /**
+     * Url virtual field implementation.
+     *
+     * @return array
+     */
+    protected function _getUrl()
+    {
+        $sizes = Configure::read('FileStorage.imageSizes.Avatar');
+        $avatarsPath = [];
+        // Add path for each available size.
+        foreach ($sizes as $size => $filters) {
+            $avatarsPath[$size] = AvatarHelper::getAvatarUrl($this, $size);
+        }
+
+        // Transform original model to add paths.
+        return $avatarsPath;
+    }
 }

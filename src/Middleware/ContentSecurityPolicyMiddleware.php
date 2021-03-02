@@ -30,7 +30,7 @@ class ContentSecurityPolicyMiddleware implements MiddlewareInterface
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Server\RequestHandlerInterface $handler The handler.
-     * @return \Psr\Http\Message\ResponseInterface A response
+     * @return \Psr\Http\Message\ResponseInterface The response.
      */
     public function process(
         ServerRequestInterface $request,
@@ -46,7 +46,7 @@ class ContentSecurityPolicyMiddleware implements MiddlewareInterface
         }
 
         $defaultCsp = "default-src 'self'; ";
-        $defaultCsp .= "script-src 'self' 'unsafe-eval'; "; // eval needed by canjs for templates
+        $defaultCsp .= "script-src 'self'; "; // eval needed by canjs for templates
         $defaultCsp .= "style-src 'self' 'unsafe-inline'; "; // inline needed to perform extension iframe resizing
         $defaultCsp .= "img-src 'self' data:; ";
         $defaultCsp .= "frame-src 'self' https://*.duosecurity.com;";

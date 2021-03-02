@@ -135,7 +135,7 @@ class MigrateCommand extends PassboltCommand
                 $io
             );
 
-            return ($code === self::CODE_SUCCESS);
+            return $code === self::CODE_SUCCESS;
         }
 
         return true;
