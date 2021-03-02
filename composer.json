@@ -76,14 +76,15 @@
         "passbolt/passbolt_selenium_api": "^2.10.0",
         "passbolt/passbolt_test_data": "^2.14.1",
         "vierge-noire/cakephp-test-suite-light": "^1.0",
-        "vierge-noire/cakephp-test-migrator": "^1.0"
+        "vierge-noire/cakephp-test-migrator": "^1.0",
+        "vierge-noire/cakephp-fixture-factories": "^1.0"
     },
     "autoload": {
         "psr-4": {
             "App\\": "src",
             "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
             "Passbolt\\DirectorySync\\": "./plugins/Passbolt/DirectorySync/src",
-            "Passbolt\\License\\": "./plugins/Passbolt/License/src",
+            "Passbolt\\Ee\\": "plugins/Passbolt/Ee/src",
             "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/Passbolt/MultiFactorAuthentication/src",
             "Passbolt\\Tags\\": "./plugins/Passbolt/Tags/src",
@@ -102,7 +103,7 @@
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
             "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
             "Passbolt\\DirectorySync\\Test\\": "./plugins/Passbolt/DirectorySync/tests",
-            "Passbolt\\License\\Test\\": "./plugins/Passbolt/License/tests",
+            "Passbolt\\Ee\\Test\\": "plugins/Passbolt/Ee/tests",
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/Passbolt/MultiFactorAuthentication/tests",
             "Passbolt\\Tags\\Test\\": "./plugins/Passbolt/Tags/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests",

@@ -108,14 +108,14 @@ class MigrateTask extends AppShell
 
     /**
      * Check the license is valid.
-     * Dispatch to plugin Passbolt/license.license_check
+     * Dispatch to plugin Passbolt/license.subscription_check
      *
      * @return bool status
      */
     protected function _licenseCheck()
     {
-        if (Configure::read('passbolt.plugins.license')) {
-            $cmd = $this->_formatCmd('passbolt license_check');
+        if (Configure::read('passbolt.plugins.ee')) {
+            $cmd = $this->_formatCmd('passbolt subscription_check');
             $code = $this->dispatchShell($cmd);
             if ($code === self::CODE_SUCCESS) {
                 return true;

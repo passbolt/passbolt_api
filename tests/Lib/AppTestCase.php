@@ -28,6 +28,7 @@ use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
+use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 
@@ -44,6 +45,7 @@ abstract class AppTestCase extends TestCase
     use ProfilesModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
+    use UserAccessControlTrait;
     use UsersModelTrait;
 
     public static $stringMasks = [];

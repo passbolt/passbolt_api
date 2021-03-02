@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7bd6e761eb2f0d6a08a7aee80ea8c9e",
+    "content-hash": "66992e56574faa82d4c3e2801dfa4d06",
     "packages": [
         {
             "name": "aura/intl",
@@ -4305,6 +4305,61 @@
             "time": "2020-11-10T18:47:58+00:00"
         },
         {
+            "name": "fzaninotto/faker",
+            "version": "v1.9.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
+                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "require-dev": {
+                "ext-intl": "*",
+                "phpunit/phpunit": "^4.8.35 || ^5.7",
+                "squizlabs/php_codesniffer": "^2.9.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "support": {
+                "issues": "https://github.com/fzaninotto/Faker/issues",
+                "source": "https://github.com/fzaninotto/Faker/tree/v1.9.2"
+            },
+            "abandoned": true,
+            "time": "2020-12-11T09:56:16+00:00"
+        },
+        {
             "name": "jasny/twig-extensions",
             "version": "v1.2.0",
             "source": {
@@ -6926,6 +6981,65 @@
                 "source": "https://github.com/umpirsky/twig-php-function/tree/master"
             },
             "time": "2016-03-12T16:36:32+00:00"
+        },
+        {
+            "name": "vierge-noire/cakephp-fixture-factories",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vierge-noire/cakephp-fixture-factories.git",
+                "reference": "28d8f4d237fca5922197ab736a17574a1be7e000"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/28d8f4d237fca5922197ab736a17574a1be7e000",
+                "reference": "28d8f4d237fca5922197ab736a17574a1be7e000",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^3.7",
+                "fzaninotto/faker": "^1.9@dev",
+                "php": ">=7.0.0",
+                "vierge-noire/cakephp-test-suite-light": "^1.1"
+            },
+            "require-dev": {
+                "cakephp/bake": "^1.5",
+                "josegonzalez/dotenv": "dev-master",
+                "phpunit/phpunit": "^6.1",
+                "vierge-noire/cakephp-test-migrator": "^1.1"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "CakephpFixtureFactories\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Masson",
+                    "email": "nicolas@b-projects.tech"
+                },
+                {
+                    "name": "Juan Pablo Ramìrez",
+                    "email": "pabloelcolombiano@gmail.com"
+                }
+            ],
+            "description": "CakePHP Dynamic Fixtures",
+            "keywords": [
+                "cakephp",
+                "dynamic",
+                "fixtures",
+                "tests"
+            ],
+            "support": {
+                "issues": "https://github.com/vierge-noire/cakephp-fixture-factories/issues",
+                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v1.1.0"
+            },
+            "time": "2020-11-25T22:05:17+00:00"
         },
         {
             "name": "vierge-noire/cakephp-test-migrator",

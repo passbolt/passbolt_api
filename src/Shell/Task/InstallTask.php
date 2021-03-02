@@ -98,9 +98,6 @@ class InstallTask extends AppShell
         }
 
         // Normal mode
-        if (!$this->_licenseCheck()) {
-            return false;
-        }
         if (!$this->_healthchecks()) {
             return false;
         }
@@ -120,6 +117,12 @@ class InstallTask extends AppShell
             return false;
         }
 
+        /**
+         * No return here. Subscription check is tolerant.
+         * To be placed after the migrations.
+         */
+        $this->_subscriptionCheck();
+
         // Quick mode - backup for next time
         if (!$this->_quickBackup()) {
             return false;
@@ -134,21 +137,17 @@ class InstallTask extends AppShell
     }
 
     /**
-     * Check the license is valid.
-     * Dispatch to plugin Passbolt/license.license_check
+     * Check the that subscripion is valid.
+     * Dispatch to plugin Passbolt/Ee.subscription_check
+     * This always returns true. Subscription check is tolerant
      *
-     * @return bool status
+     * @return true always
      */
-    protected function _licenseCheck()
+    protected function _subscriptionCheck(): bool
     {
-        if (Configure::read('passbolt.plugins.license')) {
-            $cmd = $this->_formatCmd('passbolt license_check');
-            $code = $this->dispatchShell($cmd);
-            if ($code === self::CODE_SUCCESS) {
-                return true;
-            } else {
-                return false;
-            }
+        if (Configure::read('passbolt.plugins.ee')) {
+            $cmd = $this->_formatCmd('passbolt subscription_check');
+            $this->dispatchShell($cmd);
         }
 
         return true;
