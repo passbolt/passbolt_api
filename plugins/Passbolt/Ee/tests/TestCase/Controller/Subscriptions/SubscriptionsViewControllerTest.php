@@ -35,7 +35,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
      * @When accessing the endpoint
      * @Then an authentication error is returned
      */
-    public function testNotLoggedInError()
+    public function testSubscriptionsViewControllerError_NotAuthenticated()
     {
         $this->getJson('/ee/subscription/key.json');
         $this->assertAuthenticationError();
@@ -47,7 +47,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
      * @When accessing the endpoint
      * @Then an authentication error is returned
      */
-    public function testNotAdminLoggedInError()
+    public function testSubscriptionsViewControllerError_NotAdmin()
     {
         $this->authenticateAs('ada');
         $this->getJson('/ee/subscription/key.json');
@@ -60,7 +60,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
      * @When viewing the subscription
      * @Then the response is successful and contains the required fields
      */
-    public function testViewValid()
+    public function testSubscriptionsViewControllerSuccess()
     {
         $this->persistValidSubscription();
         $this->authenticateAs('admin');
@@ -76,7 +76,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
      * @When viewing the subscription
      * @Then a payment required error is returned
      */
-    public function testViewExpired()
+    public function testSubscriptionsViewControllerError_Expired()
     {
         $this->persistExpiredSubscription();
         $this->authenticateAs('admin');
@@ -91,7 +91,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
      * @When viewing the subscription
      * @Then a payment required error is returned
      */
-    public function testViewValidForTooFewUsers()
+    public function testSubscriptionsViewControllerError_TooFewUsers()
     {
         $this->persistExpiredSubscription();
         UserFactory::make(50)->active()->persist();
@@ -107,7 +107,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
      * @When viewing the subscription
      * @Then an internal error is returned
      */
-    public function testViewInvalid()
+    public function testSubscriptionsViewControllerError_Invalid()
     {
         $this->persistInvalidSubscription();
         $this->authenticateAs('admin');
@@ -122,7 +122,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
      * @When viewing the subscription
      * @Then an internal error is returned
      */
-    public function testViewGpgError()
+    public function testSubscriptionsViewControllerError_GpgError()
     {
         Configure::delete('passbolt.plugins.ee.subscriptionKey.public');
         $this->persistValidSubscription();

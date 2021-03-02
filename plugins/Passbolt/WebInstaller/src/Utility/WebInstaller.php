@@ -214,7 +214,6 @@ class WebInstaller
      */
     public function importSubscription(): void
     {
-        Log::warning(json_encode($this->settings));
         $asciiKey = $this->getSettings('subscription.subscription_key');
         $Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
         $uac = new UserAccessControl(Role::ADMIN, $this->getSettings('user.user_id'));

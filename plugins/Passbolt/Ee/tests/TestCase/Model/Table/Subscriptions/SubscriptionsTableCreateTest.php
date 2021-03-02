@@ -17,10 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\Ee\Test\TestCase\Model\Table\Subscriptions;
 
+use App\Model\Entity\OrganizationSetting;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionFormatException;
-use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
 /**
@@ -29,12 +29,12 @@ use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
  * @package Passbolt\Ee\Test\TestCase\Model\Table
  * @covers \Passbolt\Ee\Model\Table\SubscriptionsTable
  */
-class UpdateSubscriptionsTableTest extends TestCase
+class SubscriptionsTableCreateTest extends TestCase
 {
     use DummySubscriptionTrait;
 
     /**
-     * @var SubscriptionsTable $Subscriptions
+     * @var \Passbolt\Ee\Model\Table\SubscriptionsTable
      */
     public $Subscriptions;
 
@@ -52,17 +52,21 @@ class UpdateSubscriptionsTableTest extends TestCase
         unset($this->Subscriptions);
     }
 
-    public function testUpdateNonExistent()
+    public function testSubscriptionsTableCreateValidSubscriptionKey()
     {
+        $uac = $this->getDummyAdminUACMock();
+
         $asciiKey = $this->getValidSubscriptionKey();
-        $this->expectException(SubscriptionRecordNotFoundException::class);
-        $this->Subscriptions->update($asciiKey, $this->getDummyAdminUACMock());
+        $this->Subscriptions->create($asciiKey, $uac);
+
+        $subscription = $this->Subscriptions->getOrFail();
+        $this->assertInstanceOf(OrganizationSetting::class, $subscription);
     }
 
-    public function testUpdateValidWithInvalidSubscriptionKey()
+    public function testSubscriptionsTableCreateInvalidSubscriptionKey()
     {
         $this->expectException(SubscriptionFormatException::class);
-        $this->persistValidSubscription();
-        $this->Subscriptions->update('', $this->getDummyAdminUACMock());
+
+        $this->Subscriptions->create('', $this->getDummyAdminUACMock());
     }
 }

@@ -120,7 +120,7 @@ class SubscriptionKeyAsciiFormTest extends TestCase
      * @param string $subscriptionFileName
      * @param $expected
      */
-    public function testParse(string $subscriptionFileName, $expected)
+    public function testSubscriptionKeyAsciiForm_Parse(string $subscriptionFileName, $expected)
     {
         $key = $this->getDummySubscriptionKey($subscriptionFileName);
 

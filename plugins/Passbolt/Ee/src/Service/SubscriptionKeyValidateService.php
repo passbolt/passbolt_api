@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\Ee\Service;
 
-use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionFormatException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionSignatureException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionValidationException;
@@ -39,20 +38,6 @@ class SubscriptionKeyValidateService
      * @var \Passbolt\Ee\Form\SubscriptionKeyDtoForm
      */
     protected $subscriptionKeyDtoForm;
-
-    /**
-     * Key ascii.
-     *
-     * @var string
-     */
-    protected $_keyDto;
-
-    /**
-     * Subscription info.
-     *
-     * @var array
-     */
-    protected $_data = null;
 
     /**
      * SubscriptionKey constructor.
@@ -84,10 +69,6 @@ class SubscriptionKeyValidateService
 
         if (!$dataIsValid) {
             throw new SubscriptionValidationException($this->getFirstErrorMessage(), $keyDto);
-        }
-
-        if (count($this->getErrors()) > 0) {
-            throw new SubscriptionException($this->getFirstErrorMessage(), $keyDto);
         }
 
         return $keyDto;

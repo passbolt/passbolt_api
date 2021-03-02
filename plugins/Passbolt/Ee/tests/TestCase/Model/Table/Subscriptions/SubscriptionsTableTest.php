@@ -23,7 +23,6 @@ use Cake\Http\Exception\UnauthorizedException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Ee\Model\Entity\Subscription;
 use Passbolt\Ee\Test\Factory\SubscriptionFactory;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
@@ -59,21 +58,21 @@ class SubscriptionsTableTest extends TestCase
         unset($this->Subscriptions);
     }
 
-    public function testInsertMultipleShouldFail()
+    public function testSubscriptionsTableInsertMultipleShouldFail()
     {
         $this->expectException(PersistenceFailedException::class);
         $this->persistValidSubscription();
         $this->persistValidSubscription();
     }
 
-    public function testExists()
+    public function testSubscriptionsTableExists()
     {
         $this->assertFalse($this->Subscriptions->exists());
         $this->persistValidSubscription();
         $this->assertTrue($this->Subscriptions->exists());
     }
 
-    public function testFindAmongMultipleOrganisationSettings()
+    public function testSubscriptionsTableFindAmongMultipleOrganisationSettings()
     {
         $persistedSub = SubscriptionFactory::make()->persist();
         $retrievedSub = $this->Subscriptions->getOrFail();
@@ -81,7 +80,7 @@ class SubscriptionsTableTest extends TestCase
         $this->assertSame($persistedSub->id, $retrievedSub->id);
     }
 
-    public function testSaveValidSubscriptionWithoutUserAuthenticated()
+    public function testSubscriptionsTableSaveValidSubscriptionWithoutUserAuthenticated()
     {
         $this->expectException(UnauthorizedException::class);
         $value = $this->getValidSubscriptionKey();
@@ -90,7 +89,7 @@ class SubscriptionsTableTest extends TestCase
         $this->Subscriptions->getOrFail();
     }
 
-    public function testSaveValidSubscriptionWithDummyUserAuthenticated()
+    public function testSubscriptionsTableSaveValidSubscriptionWithDummyUserAuthenticated()
     {
         $this->expectException(UnauthorizedException::class);
 
@@ -102,7 +101,7 @@ class SubscriptionsTableTest extends TestCase
         $this->Subscriptions->getOrFail();
     }
 
-    public function testSaveValidSubscriptionWithAdminAuthenticated()
+    public function testSubscriptionsTableSaveValidSubscriptionWithAdminAuthenticated()
     {
         $uac = $this->getDummyAdminUACMock();
 
@@ -111,32 +110,5 @@ class SubscriptionsTableTest extends TestCase
         $this->Subscriptions->saveOrFail($entity, compact('uac'));
         $subscription = $this->Subscriptions->getOrFail();
         $this->assertInstanceOf(OrganizationSetting::class, $subscription);
-    }
-
-    public function testGetValueOrFailOnEmptySubscriptionTable()
-    {
-        $this->expectException(SubscriptionRecordNotFoundException::class);
-        $this->Subscriptions->getValueOrFail();
-    }
-
-    public function testGetValueOrFailOnNonExistentTable()
-    {
-        try {
-            $this->Subscriptions->setTable('nonexistent_table');
-            $this->Subscriptions->getValueOrFail();
-        } catch (SubscriptionRecordNotFoundException $e) {
-            $message = $e->getMessage();
-            TableRegistry::getTableLocator()->clear();
-        }
-        $this->assertSame(SubscriptionRecordNotFoundException::MESSAGE, $message);
-    }
-
-    public function testGetValueOrFailOnPopulatedSubscriptionTable()
-    {
-        $this->persistValidSubscription();
-        $this->assertSame(
-            trim($this->getValidSubscriptionKey()),
-            $this->Subscriptions->getValueOrFail()
-        );
     }
 }

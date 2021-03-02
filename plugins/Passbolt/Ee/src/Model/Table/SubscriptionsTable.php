@@ -123,35 +123,9 @@ class SubscriptionsTable extends OrganizationSettingsTable
     }
 
     /**
-     * @return string
-     */
-    public function getValueOrFail(): string
-    {
-        return $this->getOrFail()->get('value');
-    }
-
-    /**
-     * The soft way to retrieve the subscription.
-     * This should NOT throw errors if the table
-     * organization_settings is not found.
-     *
-     * @return string
-     */
-    public function getValue(): string
-    {
-        try {
-            $subscription = $this->find()->first();
-        } catch (\Exception $e) {
-            $subscription = null;
-        }
-
-        return is_null($subscription) ? '' : $subscription->get('value');
-    }
-
-    /**
      * @inheritDoc
      */
-    public function exists($conditions = [1 => 1]): bool
+    public function exists($conditions = ['1' => '1']): bool
     {
         return parent::exists($conditions);
     }
