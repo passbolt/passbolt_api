@@ -218,7 +218,7 @@ trait FoldersFindersTrait
     public function filterQueryBySearch(Query $query, string $name)
     {
         return $query->where([
-            ['name LIKE' => '%' . $name . '%'],
+            ['Folders.name LIKE' => '%' . $name . '%'],
         ]);
     }
 
