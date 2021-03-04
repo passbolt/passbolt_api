@@ -1,3 +1,8 @@
+passbolt-ce-server (3.0.1-1) buster; urgency=medium
+  * Fix resources population of resource_type_id field migration
+
+ -- Daniel Del Rio <daniel@passbolt.com>  Wed, 24 Feb 2021 13:50:00 +0000
+
 passbolt-ce-server (3.0.0-2) buster; urgency=medium
   * Drop support for API format v1, api-version parameter is deprecated
   * Remove title from API response envelope format
@@ -48,6 +53,17 @@ passbolt-ce-server (3.0.0-1) buster; urgency=medium
   * Add bin/utils.sh script.
 
  -- Daniel Del Rio <daniel@passbolt.com>  Fri, 22 Jan 2021 18:15:00 +0000
+
+passbolt-ce-server (2.13.5-1) stretch; urgency=medium
+  * Fix email notification settings bootstrap messes up non persistent database connection in wizard
+  * Bump dependencies versions
+
+ -- Diego Lendoiro <diego@passbolt.com>  Thu, 13 Aug 2020 10:24:00 +0000
+
+passbolt-ce-server (2.13.1-1) stretch; urgency=medium
+  * PB-1372 Fix user setup completed admin email notification
+
+ -- Diego Lendoiro <diego@passbolt.com>  Thu, 18 Feb 2021 15:52:00 +0000
 
 passbolt-ce-server (2.13.0-1) stretch; urgency=medium
   * PB-1168 Add baseline code and tests for Debian package build
