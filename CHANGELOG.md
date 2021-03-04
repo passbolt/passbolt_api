@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.0.2] - 2021-03-05
 ### Fixed
 - PB-5211 The fields Group object class and User object class in user directory have to be sent server side
+- GITHUB-378 Fix healthcheck ssl fullBaseUrl check
 
 ## [3.0.1] - 2021-02-24
 ### Fixed
