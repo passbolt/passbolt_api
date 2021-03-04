@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [3.0.2] - 2021-03-05
+### Fixed
+- PB-5211 The fields Group object class and User object class in user directory have to be sent server side
+
 ## [3.0.1] - 2021-02-24
 ### Fixed
 - Fix resources population of resource_type_id field migration
@@ -908,7 +912,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.0.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.0.2...HEAD
+[3.0.2]: https://github.com/passbolt/passbolt_api/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/passbolt/passbolt_api/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.14.0...v3.0.0
 [2.14.0]: https://github.com/passbolt/passbolt_api/compare/v2.13.5...v2.14.0
