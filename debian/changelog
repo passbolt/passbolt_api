@@ -1,3 +1,8 @@
+passbolt-ce-server (3.0.2-1) buster; urgency=medium
+  * GITHUB-378 Fix healthcheck ssl fullBaseUrl check
+
+ -- Daniel Del Rio <daniel@passbolt.com>  Fri, 4 Mar 2021 16:46:00 +0000
+
 passbolt-ce-server (3.0.1-1) buster; urgency=medium
   * Fix resources population of resource_type_id field migration
 
