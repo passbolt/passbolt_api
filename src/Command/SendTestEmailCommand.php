@@ -130,7 +130,7 @@ class SendTestEmailCommand extends PassboltCommand
         $io->hr();
         $io->out(__('Host: {0}', $transportConfig['host']));
         $io->out(__('Port: {0}', $transportConfig['port']));
-        $io->out(__('Username: {0}', $transportConfig['username']));
+        $io->out(__('Username: {0}', $transportConfig['username'] ?? ''));
         $io->out(__('Password: {0}', '*********'));
         $io->out(__('TLS: {0}', $transportConfig['tls'] == null ? 'false' : 'true'));
         $io->nl(0);
@@ -216,18 +216,29 @@ class SendTestEmailCommand extends PassboltCommand
      */
     protected function removeCredentials($str)
     {
+        $toReplace = [];
+        $replaceMask = '*****';
+        $replaceWith = [];
         $transportConfig = TransportFactory::getConfig('default');
-        $usernameClear = $transportConfig['username'];
-        $usernameEncoded = base64_encode($transportConfig['username']);
-        $passwordClear = base64_encode($transportConfig['password']);
-        $passwordEncoded = $transportConfig['password'];
-        $replaced = str_replace(
-            [$usernameClear, $usernameEncoded, $passwordClear, $passwordEncoded],
-            ['*****', '*****', '*****', '*****'],
-            $str
-        );
 
-        return $replaced;
+        if (isset($transportConfig['username'])) {
+            $usernameEncoded = base64_encode($transportConfig['username']);
+            $usernameClear = $transportConfig['username'];
+            $toReplace[] = $usernameClear;
+            $replaceWith[] = $replaceMask;
+            $toReplace[] = $usernameEncoded;
+            $replaceWith[] = $replaceMask;
+        }
+        if (isset($transportConfig['password'])) {
+            $passwordEncoded = base64_encode($transportConfig['password']);
+            $passwordClear = $transportConfig['password'];
+            $toReplace[] = $passwordEncoded;
+            $replaceWith[] = $replaceMask;
+            $toReplace[] = $passwordClear;
+            $replaceWith[] = $replaceMask;
+        }
+
+        return str_replace($toReplace, $replaceWith, $str);
     }
 
     /**
