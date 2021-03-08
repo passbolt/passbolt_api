@@ -17,29 +17,11 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Locales;
 
-use App\Model\Table\ResourcesTable;
 use Cake\I18n\I18n;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 class I18NTest extends TestCase
 {
-    /**
-     * @var ResourcesTable
-     */
-    public $Resources;
-
-    public function setUp(): void
-    {
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-    }
-
-    public function tearDown(): void
-    {
-        I18n::setLocale('en_US');
-        unset($this->Resources);
-    }
-
     public function dataForFrenchTranslation(): array
     {
         return [
@@ -49,7 +31,6 @@ class I18NTest extends TestCase
 
     /**
      * @dataProvider dataForFrenchTranslation
-     * @throws \Aura\Intl\Exception
      */
     public function testFrenchTranslation($en, $fr)
     {
