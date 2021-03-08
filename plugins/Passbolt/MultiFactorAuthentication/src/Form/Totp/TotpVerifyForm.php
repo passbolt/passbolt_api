@@ -74,12 +74,12 @@ class TotpVerifyForm extends MfaForm
             ->add('totp', ['numeric' => [
                 'rule' => 'numeric',
                 'last' => true,
-                'message' => 'The OTP should be composed of numbers only.',
+                'message' => __('The OTP should be composed of numbers only.'),
             ]])
             ->add('totp', ['minLength' => [
                 'rule' => ['minLength', 6],
                 'last' => true,
-                'message' => 'The OTP should be at least 6 characters long',
+                'message' => __('The OTP should be at least 6 characters long'),
             ]])
             ->add('totp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],

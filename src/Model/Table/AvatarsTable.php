@@ -78,7 +78,7 @@ class AvatarsTable extends Table
             ])
             ->add('file', 'validUploadedFile', [
                 'rule' => ['uploadedFile', ['optional' => false]],
-                'message' => 'File is no valid uploaded file',
+                'message' => __('File is no valid uploaded file'),
             ]);
 
         return $validator;

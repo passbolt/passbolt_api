@@ -51,7 +51,7 @@ class SubscriptionForm extends Form
             ->add('subscription_key', 'is_valid_subscription', [
                 'last' => true,
                 'rule' => [$this, 'checkSubscriptionIsValid'],
-                'message' => 'The subscription format is not valid.',
+                'message' => __('The subscription format is not valid.'),
             ]);
 
         return $validator;

@@ -231,7 +231,7 @@ class WebInstaller
         $migrations = new Migrations(['connection' => ConnectionManager::get('default')->configName()]);
         $migrated = $migrations->migrate();
         if (!$migrated) {
-            throw new \Exception('The database cannot be installed');
+            throw new \Exception(__('The database cannot be installed'));
         }
     }
 

@@ -69,7 +69,7 @@ $this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom'
                     </div>
 
                     <div class="input date">
-                        <label for="KeyExpire">Key Expire</label>
+                        <label for="KeyExpire"><?= __('Key Expire'); ?></label>
                         <input name="data[Key][expire]" class="required fluid" id="KeyExpire" disabled="disabled" required="required" type="text" placeholder="dd/mm/yyyy">
                         <span class="input-addon"><i class="fa fa-calendar fa-fw"></i></span>
                     </div>

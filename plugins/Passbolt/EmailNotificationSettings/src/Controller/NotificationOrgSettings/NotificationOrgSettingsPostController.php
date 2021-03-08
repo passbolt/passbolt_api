@@ -82,7 +82,7 @@ class NotificationOrgSettingsPostController extends AppController
         if (!$form->validate($data)) {
             $errors = $form->getErrors();
 
-            throw new CustomValidationException('The supplied email notification settings are not valid', $errors);
+            throw new CustomValidationException(__('The supplied email notification settings are not valid'), $errors);
         }
 
         $data = EmailNotificationSettingsForm::formatFormDataToOrgSettings($data);
