@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.1.0
  */
 
-namespace App\Test\TestCase\Template;
+namespace App\Test\TestCase\Locales;
 
 use App\Model\Table\ResourcesTable;
 use Cake\I18n\I18n;

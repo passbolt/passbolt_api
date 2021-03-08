@@ -36,6 +36,7 @@ use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
+use Cake\I18n\I18n;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
@@ -122,6 +123,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
+            I18n::setLocale('en_US');
         }
 
         $this->initEmails();
