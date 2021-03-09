@@ -1,8 +1,10 @@
 passbolt-pro-server (3.0.2-1) buster; urgency=medium
   * PB-5211 The fields Group object class and User object class in user directory have to be sent server side
   * GITHUB-378 Fix healthcheck ssl fullBaseUrl check
+  * Fix email digest email preview should accept empty (null) template
+  * Fix send test email command should accept undefined username and password
 
- -- Daniel Del Rio <daniel@passbolt.com>  Fri, 4 Mar 2021 16:13:00 +0000
+ -- Daniel Del Rio <daniel@passbolt.com>  Fri, 9 Mar 2021 16:13:00 +0000
 
 passbolt-pro-server (3.0.1-1) buster; urgency=medium
   * Fix resources population of resource_type_id field migration
