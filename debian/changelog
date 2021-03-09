@@ -1,3 +1,8 @@
+passbolt-ce-server (3.0.2-2) buster; urgency=medium
+  * Include missed commits
+
+ -- Daniel Del Rio <daniel@passbolt.com>  Fri, 9 Mar 2021 17:48:00 +0000
+
 passbolt-ce-server (3.0.2-1) buster; urgency=medium
   * GITHUB-378 Fix healthcheck ssl fullBaseUrl check
   * Fix email digest email preview should accept empty (null) template
