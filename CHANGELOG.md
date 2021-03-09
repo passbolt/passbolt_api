@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-5211 The fields Group object class and User object class in user directory have to be sent server side
 - GITHUB-378 Fix healthcheck ssl fullBaseUrl check
+- Fix email digest email preview should accept empty (null) template
+- Fix send test email command should accept undefined username and password
 
 ## [3.0.1] - 2021-02-24
 ### Fixed
