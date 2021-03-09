@@ -9,10 +9,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fix SQL error when filtering folders both by parent and name
 
-## [3.0.2] - 2021-03-05
+## [3.0.2] - 2021-03-09
 ### Fixed
 - PB-5211 The fields Group object class and User object class in user directory have to be sent server side
 - GITHUB-378 Fix healthcheck ssl fullBaseUrl check
+- Fix email digest email preview should accept empty (null) template
+- Fix send test email command should accept undefined username and password
 
 ## [3.0.1] - 2021-02-24
 ### Fixed
