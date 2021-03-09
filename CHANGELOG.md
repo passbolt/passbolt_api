@@ -4,9 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
-## [3.0.2] - 2021-03-05
+## [3.0.2] - 2021-03-09
 ### Fixed
 - GITHUB-378 Fix healthcheck ssl fullBaseUrl check
+- Fix email digest email preview should accept empty (null) template
+- Fix send test email command should accept undefined username and password
 
 ## [3.0.1] - 2021-02-24
 ### Fixed
