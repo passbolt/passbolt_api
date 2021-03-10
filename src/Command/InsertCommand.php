@@ -53,7 +53,7 @@ class InsertCommand extends PassboltCommand
 
         foreach ($commands as $command) {
             if (Configure::read('passbolt.edition') === 'ce') {
-                if (strpos($command, 'PassboltTestData.Pro') !== false) {
+                if (strpos($command, 'PassboltTestData\Command\Pro') !== false) {
                     continue;
                 }
             }
