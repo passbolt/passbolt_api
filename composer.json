@@ -1,7 +1,9 @@
 {
     "name": "passbolt/passbolt_api",
     "description": "Open source password manager for teams",
+    "homepage": "https://www.passbolt.com",
     "type": "application",
+    "license": "AGPL-3.0-or-later",
     "keywords": [
         "password",
         "passbolt"
@@ -12,8 +14,6 @@
         "php": "7.3"
       }
     },
-    "homepage": "https://www.passbolt.com",
-    "license": "AGPL-3.0-or-later",
     "authors": [
         {
             "name": "Passbolt Team",
@@ -28,12 +28,12 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/pabloelcolombiano/passbolt_selenium_api",
+            "url": "https://github.com/passbolt/passbolt-selenium-api",
             "no-api": true
         },
         {
             "type": "vcs",
-            "url": "https://github.com/pabloelcolombiano/passbolt_test_data",
+            "url": "https://github.com/passbolt/passbolt-test-data",
             "no-api": true
         },
         {
@@ -62,13 +62,14 @@
         "cakephp/authentication": "^2.6.0"
     },
     "require-dev": {
+        "phpstan/phpstan": "0.12.81",
         "psy/psysh": "@stable",
         "cakephp/debug_kit": "^4.4.1",
         "cakephp/bake": "^2.3.0",
         "phpunit/phpunit": "^9.5.2",
         "passbolt/cakephp-codesniffer": "dev-master",
-        "passbolt/passbolt_selenium_api": "dev-master",
-        "passbolt/passbolt_test_data": "dev-master",
+        "passbolt/passbolt-selenium-api": "^3.1.0",
+        "passbolt/passbolt-test-data": "^3.1.0",
         "vierge-noire/cakephp-fixture-factories": "^2.2",
         "vierge-noire/cakephp-test-migrator": "^2.1.2"
     },
@@ -97,22 +98,21 @@
         }
     },
     "scripts": {
-        "post-install-cmd": [
-            "App\\Console\\Installer::postInstall"
+        "post-install-cmd": "App\\Console\\Installer::postInstall",
+        "post-create-project-cmd": "App\\Console\\Installer::postInstall",
+        "check": [
+          "@test",
+          "@cs-check"
         ],
+        "cs-check": "phpcs --colors -p --ignore=*.js,*/templates/* ./src ./tests ./plugins",
+        "cs-fix": "phpcbf --colors --ignore=*.js,*/templates/* ./src ./tests ./plugins",
         "install-dev": [
           "@composer install --dev",
           "npm install",
           "./node_modules/.bin/grunt appjs-update",
           "./node_modules/.bin/grunt styleguide-update"
         ],
-        "post-create-project-cmd": "App\\Console\\Installer::postInstall",
-        "check": [
-            "@test",
-            "@cs-check"
-        ],
-        "cs-check": "phpcs --colors -p --standard=vendor/passbolt/cakephp-codesniffer/CakePHP --ignore=*.js,*/templates/* ./src ./tests ./plugins",
-        "cs-fix": "phpcbf --colors --standard=vendor/passbolt/cakephp-codesniffer/CakePHP --ignore=*.js,*/templates/* ./src ./tests ./plugins",
+        "stan": "phpstan analyse",
         "test": "phpunit --colors=always"
     },
     "prefer-stable": true

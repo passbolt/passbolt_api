@@ -53,7 +53,8 @@ class MysqlImportCommandTest extends TestCase
     /**
      * @Given A backup has been created creating a resource
      * @When I run "passbolt mysql_import"
-     * @Then the resource must have been imported.
+     * @Then the command must return success status code
+     * @And the resource must have been imported.
      */
     public function testMysqlImportCommandOnDump()
     {

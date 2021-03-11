@@ -31,11 +31,10 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $last_logged_in
  *
  * @property \App\Model\Entity\Role $role
- * @property \App\Model\Entity\FileStorage[] $file_storage
  * @property \App\Model\Entity\Gpgkey[] $gpgkeys
  * @property \App\Model\Entity\Profile[] $profiles
  * @property \App\Model\Entity\Profile $profile
- * @property \App\Model\Entity\GroupUser[] $groups_users
+ * @property \App\Model\Entity\GroupsUser[] $groups_users
  * @property \Passbolt\Log\Model\Entity\EntityHistory[] $entities_history
  */
 class User extends Entity

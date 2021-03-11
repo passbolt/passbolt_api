@@ -9,10 +9,6 @@
 	Copyright (c) 2021 Passbolt SA
 	https://www.passbolt.com
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c804760791534e62b90632215952eaf0)](https://www.codacy.com/app/passbolt/passbolt_api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=passbolt/passbolt_api&amp;utm_campaign=Badge_Grade)
-[![Build Status](https://travis-ci.org/passbolt/passbolt_api.svg?branch=master)](https://travis-ci.org/passbolt/passbolt_api)
-[![Coverage Status](https://coveralls.io/repos/github/passbolt/passbolt_api/badge.svg?branch=master)](https://coveralls.io/github/passbolt/passbolt_api?branch=master)
-
 ## License
 
 Passbolt - Open source password manager for teams
