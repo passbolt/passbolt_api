@@ -41,7 +41,7 @@ class EmailPreviewFactory
      * Create a snapshot of the email as it would be rendered from an email digest.
      *
      * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest Email digest to get a snapshot of
-     * @param string|bool $layout Layout file to use to render the email. No layout is used by default.
+     * @param string|false|null $layout Layout file name to set.
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview
      */
     public function renderEmailPreviewFromDigest(EmailDigestInterface $emailDigest, ?bool $layout = false)
@@ -57,7 +57,7 @@ class EmailPreviewFactory
      * Create a snapshot of the email as it would be rendered from an email.
      *
      * @param \Cake\ORM\Entity $emailData Email data to get a snapshot of
-     * @param string|bool $layout Layout file to use to render the email. No layout is used by default.
+     * @param string|false|null $layout Layout file name to set.
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview
      */
     public function renderEmailPreviewFromEmailEntity(Entity $emailData, ?bool $layout = false)
@@ -98,11 +98,11 @@ class EmailPreviewFactory
      *
      * @param \Cake\Mailer\Email $email An Email
      * @param string $template Template
-     * @param string|null $layout Layout
-     * @param string|null $theme Theme
+     * @param string|false|null $layout Layout file name to set.
+     * @param string|false|null $theme Theme name.
      * @return void
      */
-    private function configureEmailView(Email $email, string $template, ?string $layout = null, ?string $theme = null)
+    private function configureEmailView(Email $email, string $template, $layout = null, $theme = null)
     {
         $email->viewBuilder()
             ->setVar('title', 'Email digest preview')
