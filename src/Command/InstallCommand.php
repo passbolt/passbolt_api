@@ -117,12 +117,6 @@ class InstallCommand extends PassboltCommand
             return $this->errorCode();
         }
 
-        /**
-         * No return here. Subscription check is tolerant.
-         * To be placed after the migrations.
-         */
-        $this->subscriptionCheck($args, $io);
-
         // Quick mode - backup for next time
         if (!$this->quickBackup($args, $io)) {
             return $this->errorCode();

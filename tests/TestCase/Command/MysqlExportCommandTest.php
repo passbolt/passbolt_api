@@ -87,7 +87,7 @@ class MysqlExportCommandTest extends TestCase
         $testFile = 'foo';
 
         // The file gets created
-        $this->exec("passbolt mysql_export --dir {$testDir} --file {$testFile}");
+        $this->exec("passbolt mysql_export --dir {$testDir} --file {$testFile} --force");
         $this->assertExitSuccess();
 
         // Without force, exit an error.

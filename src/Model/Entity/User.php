@@ -34,7 +34,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Gpgkey[] $gpgkeys
  * @property \App\Model\Entity\Profile[] $profiles
  * @property \App\Model\Entity\Profile $profile
- * @property \App\Model\Entity\GroupUser[] $groups_users
+ * @property \App\Model\Entity\GroupsUser[] $groups_users
  * @property \Passbolt\Log\Model\Entity\EntityHistory[] $entities_history
  */
 class User extends Entity

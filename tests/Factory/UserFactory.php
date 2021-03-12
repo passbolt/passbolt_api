@@ -42,6 +42,7 @@ class UserFactory extends CakephpBaseFactory
         });
 
         $this
+            ->with('Roles')
             ->with('Profiles')
             ->with('Gpgkeys')
             ->with('GroupsUsers');

@@ -55,4 +55,18 @@ class RoleFactory extends CakephpBaseFactory
     {
         return $this->patchData(['name' => Role::ADMIN]);
     }
+
+    public function findOrCreate(): Role
+    {
+        $role = $this->getEntity();
+        $duplicate = $this->getRootTableRegistry()
+            ->findByName($role->name)
+            ->first();
+
+        if ($duplicate) {
+            return $duplicate;
+        } else {
+            return $this->persist();
+        }
+    }
 }
