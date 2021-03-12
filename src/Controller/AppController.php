@@ -116,7 +116,7 @@ class AppController extends Controller
         ];
         $this->set(compact('header', 'body'));
 
-        $this->viewBuilder()->setOption('serialize', ['header', 'body',]);
+        $this->viewBuilder()->setOption('serialize', ['header', 'body', 'pagination']);
         $this->setViewBuilderOptions();
     }
 

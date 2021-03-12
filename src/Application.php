@@ -197,7 +197,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         return $this
             ->addPlugin('EmailQueue')
-            ->addPlugin('Authentication');
+            ->addPlugin('Authentication')
+            ->addPlugin('BryanCrowe/ApiPagination');
     }
 
     /**

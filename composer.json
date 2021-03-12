@@ -59,7 +59,8 @@
         "lorenzo/cakephp-email-queue": "^4.0.0",
         "imagine/imagine": "^1.2.4",
         "league/flysystem": "^2.0.3",
-        "cakephp/authentication": "^2.6.0"
+        "cakephp/authentication": "^2.6.0",
+        "bcrowe/cakephp-api-pagination": "^2.1.0"
     },
     "require-dev": {
         "psy/psysh": "@stable",
