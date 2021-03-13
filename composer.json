@@ -78,7 +78,7 @@
         "passbolt/passbolt_selenium_api": "dev-master",
         "passbolt/passbolt_test_data": "dev-master",
         "vierge-noire/cakephp-fixture-factories": "^2.2",
-        "vierge-noire/cakephp-test-migrator": "^2.1.2"
+        "vierge-noire/cakephp-test-migrator": "^2.1.3"
     },
     "autoload": {
         "psr-4": {
