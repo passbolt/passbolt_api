@@ -62,7 +62,7 @@ class SubscriptionValidationException extends SubscriptionException
             return '';
         }
 
-        return ['subscription' => $this->keyDto];
+        return $this->keyDto;
     }
 
     /**
