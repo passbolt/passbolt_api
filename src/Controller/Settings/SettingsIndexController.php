@@ -43,6 +43,7 @@ class SettingsIndexController extends AppController
      */
     protected $alwaysWhiteListed = [
         'version',
+        'enabled',
     ];
 
     /**
