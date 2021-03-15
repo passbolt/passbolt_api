@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\EmailDigest\Command;
 
 use App\Command\PassboltCommand;
-use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
