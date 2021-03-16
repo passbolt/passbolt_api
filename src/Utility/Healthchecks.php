@@ -40,7 +40,7 @@ class Healthchecks
         $checks = Healthchecks::configFiles($checks);
         $checks = Healthchecks::core($checks);
         $checks = Healthchecks::ssl($checks);
-        $checks = Healthchecks::database($checks);
+        $checks = Healthchecks::database('default', $checks);
         $checks = Healthchecks::gpg($checks);
         $checks = Healthchecks::application($checks);
 
@@ -194,12 +194,13 @@ class Healthchecks
      * - info.tableCount: number of tables installed
      * - defaultContent: some default content (4 roles)
      *
+     * @param string|null $datasource Datasource name
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function database(?array $checks = []): array
+    public static function database(?string $datasource = 'default', ?array $checks = []): array
     {
-        return DatabaseHealthchecks::all($checks);
+        return DatabaseHealthchecks::all($datasource, $checks);
     }
 
     /**

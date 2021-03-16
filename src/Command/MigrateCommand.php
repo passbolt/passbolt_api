@@ -20,13 +20,14 @@ use Cake\Command\CacheClearallCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Migrations\Command\MigrationsMigrateCommand;
 
 /**
  * Migrate command.
  */
 class MigrateCommand extends PassboltCommand
 {
+    use DatabaseAwareCommandTrait;
+
     /**
      * @inheritDoc
      */
@@ -39,6 +40,8 @@ class MigrateCommand extends PassboltCommand
                 'boolean' => true,
                 'default' => false,
             ]);
+
+        $this->addDatasourceOption($parser);
 
         return $parser;
     }
@@ -66,11 +69,7 @@ class MigrateCommand extends PassboltCommand
         // Migration task
         $io->out(' ' . __('Running migration scripts.'));
         $io->hr();
-        $result = $this->executeCommand(
-            MigrationsMigrateCommand::class,
-            $this->formatOptions($args, ['--no-lock']),
-            $io
-        );
+        $result = $this->runMigrationsMigrateCommand($args, $io);
 
         if ($result === self::CODE_ERROR) {
             return $result;

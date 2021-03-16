@@ -23,18 +23,15 @@ use Cake\Datasource\ConnectionManager;
 
 class DropTablesCommand extends PassboltCommand
 {
+    use DatabaseAwareCommandTrait;
+
     /**
      * @inheritDoc
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser
-            ->setDescription(__('Drop all the tables. Dangerous but useful for a full reinstall.'))
-            ->addOption('datasource', [
-                'short' => 'd',
-                'default' => 'default',
-                'help' => __('Datasource name'),
-            ]);
+        $parser->setDescription(__('Drop all the tables. Dangerous but useful for a full reinstall.'));
+        $this->addDatasourceOption($parser, false);
 
         return $parser;
     }
