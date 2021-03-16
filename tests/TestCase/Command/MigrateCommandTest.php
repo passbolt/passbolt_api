@@ -71,7 +71,7 @@ class MigrateCommandTest extends TestCase
      */
     public function testMigrateCommandAsNonRootWithoutBackup()
     {
-        $this->exec('passbolt migrate -q');
+        $this->exec('passbolt migrate -q -d test');
         $this->assertExitSuccess();
         $this->assertOutputEmpty();
     }
@@ -84,7 +84,7 @@ class MigrateCommandTest extends TestCase
      */
     public function testMigrateCommandAsNonRootWithBackup()
     {
-        $this->exec('passbolt migrate -q --backup');
+        $this->exec('passbolt migrate -q --backup -d test');
         $this->assertExitSuccess();
         $this->assertOutputEmpty();
     }

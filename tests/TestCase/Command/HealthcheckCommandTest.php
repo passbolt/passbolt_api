@@ -50,7 +50,7 @@ class HealthcheckCommandTest extends TestCase
     }
 
     /**
-     * Basic test
+     * Will fail if run as root
      */
     public function testHealthcheckCommandRoot()
     {
@@ -62,9 +62,9 @@ class HealthcheckCommandTest extends TestCase
      */
     public function testHealthcheckCommand()
     {
-        $this->exec('passbolt healthcheck');
+        $this->exec('passbolt healthcheck -d test');
         $this->assertExitSuccess();
-        // Since the tests run with debug on, here will always be at least on error in the healthcheck.
+        // Since the tests run with debug on, here will always be at least one error in the healthcheck.
         $this->assertOutputContains('error(s) found. Hang in there!');
     }
 }
