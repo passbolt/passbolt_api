@@ -26,15 +26,16 @@ class DatabaseHealthchecks
     /**
      * Run all databases health checks
      *
+     * @param string|null $datasource Name of the connection
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function all(?array $checks = []): array
+    public static function all(string $datasource, ?array $checks = []): array
     {
         // init results to false by default
-        $checks = self::canConnect($checks);
-        $checks = self::supportedBackend($checks);
-        $checks = self::tableCount($checks);
+        $checks = self::canConnect($datasource, $checks);
+        $checks = self::supportedBackend($datasource, $checks);
+        $checks = self::tableCount($datasource, $checks);
         $checks = self::defaultContent($checks);
 
         return $checks;
@@ -43,14 +44,15 @@ class DatabaseHealthchecks
     /**
      * Check if application can connect to database
      *
+     * @param string $datasource Datasource name
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function canConnect(?array $checks = []): array
+    public static function canConnect(string $datasource, ?array $checks = []): array
     {
         $checks['database']['connect'] = false;
         try {
-            $connection = ConnectionManager::get('default');
+            $connection = ConnectionManager::get($datasource);
             $connection->connect();
             $checks['database']['connect'] = true;
         } catch (MissingConnectionException $connectionError) {
@@ -69,13 +71,14 @@ class DatabaseHealthchecks
     /**
      * Is the database engine supported
      *
+     * @param string $datasource Datasource name
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function supportedBackend(?array $checks = []): array
+    public static function supportedBackend(string $datasource, ?array $checks = []): array
     {
         $checks['database']['supportedBackend'] = false;
-        $connection = ConnectionManager::get('default');
+        $connection = ConnectionManager::get($datasource);
         $config = $connection->config();
         if ($config['driver'] === 'Cake\Database\Driver\Mysql') {
             $checks['database']['supportedBackend'] = true;
@@ -86,16 +89,17 @@ class DatabaseHealthchecks
 
     /**
      * Check if tables are present
-     *
+
+     * @param string $datasource Datasource name
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function tableCount(?array $checks = []): array
+    public static function tableCount(string $datasource, ?array $checks = []): array
     {
         $checks['database']['info']['tablesCount'] = 0;
         $checks['database']['tablesCount'] = false;
         try {
-            $connection = ConnectionManager::get('default');
+            $connection = ConnectionManager::get($datasource);
             $tables = $connection->execute('show tables')->fetchAll('assoc');
 
             if (isset($tables) && count($tables)) {

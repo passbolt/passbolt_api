@@ -24,6 +24,8 @@ use Cake\Core\Configure;
 
 class HealthcheckCommand extends PassboltCommand
 {
+    use DatabaseAwareCommandTrait;
+
     /**
      * Total number of errors for that check
      *
@@ -47,6 +49,11 @@ class HealthcheckCommand extends PassboltCommand
      * @var \Cake\Console\ConsoleIo
      */
     private $io;
+
+    /**
+     * @var \Cake\Console\Arguments
+     */
+    private $args;
 
     /**
      * @inheritDoc
@@ -104,6 +111,8 @@ class HealthcheckCommand extends PassboltCommand
                 'boolean' => true,
             ]);
 
+        $this->addDatasourceOption($parser);
+
         return $parser;
     }
 
@@ -115,6 +124,7 @@ class HealthcheckCommand extends PassboltCommand
         parent::execute($args, $io);
 
         $this->io = $io;
+        $this->args = $args;
 
         // Root user is not allowed to execute this command.
         if (!$this->assertNotRoot($io)) {
@@ -377,7 +387,8 @@ class HealthcheckCommand extends PassboltCommand
     public function assertDatabase($checks = null)
     {
         if (!isset($checks['database']) || !isset($checks['application'])) {
-            $checks = array_merge(Healthchecks::database(), Healthchecks::application());
+            $datasource = $this->args->getOption('datasource');
+            $checks = array_merge(Healthchecks::database($datasource), Healthchecks::application());
         }
         $this->title(__('Database'));
         $this->assert(
