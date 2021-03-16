@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '3.0.2',
-        'name' => 'Our House'
+        'version' => '3.1.0',
+        'name' => 'Love Over Entropy'
     ]
 ];
