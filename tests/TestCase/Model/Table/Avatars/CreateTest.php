@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Model\Table\Avatars;
 use App\Model\Entity\Avatar;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Utility\Filesystem\DirectoryUtility;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
@@ -37,11 +38,11 @@ class CreateTest extends AppTestCase
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
         $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars' . DS);
+        DirectoryUtility::removeRecursively($this->Avatars->getCacheDirectory());
     }
 
     public function tearDown(): void
     {
-        $this->destroyDir($this->Avatars->getCacheDirectory());
         unset($this->Avatars);
         parent::tearDown();
     }
@@ -56,7 +57,7 @@ class CreateTest extends AppTestCase
 
     /**
      * @dataProvider dataProviderForCreateAvatarFile
-     * @param \App\Model\Entity\Avatar|null $avatar
+     * @param bool $withExistingAvatar Create an Avatar if true.
      * @throws \Exception
      */
     public function testCreateAvatarFile(bool $withExistingAvatar)

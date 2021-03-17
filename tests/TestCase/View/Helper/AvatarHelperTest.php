@@ -30,27 +30,35 @@ class AvatarHelperTest extends AppIntegrationTestCase
 {
     use AvatarsModelTrait;
 
-    public const FULL_BASE_URL = 'http://mydomain.com';
+    /**
+     * @var string
+     */
+    public $fullBaseUrl;
 
     public function setUp(): void
     {
-        Configure::write('App.fullBaseUrl', self::FULL_BASE_URL);
+        $this->fullBaseUrl = Configure::readOrFail('App.fullBaseUrl');
+    }
+
+    public function tearDown(): void
+    {
+        unset($this->fullBaseUrl);
     }
 
     public function testGetDefaultAvatarUrl()
     {
         $this->assertSame(
-            self::FULL_BASE_URL . '/img/avatar/user.png',
+            $this->fullBaseUrl . '/img/avatar/user.png',
             AvatarHelper::getAvatarUrl()
         );
 
         $this->assertSame(
-            self::FULL_BASE_URL . '/img/avatar/user.png',
+            $this->fullBaseUrl . '/img/avatar/user.png',
             AvatarHelper::getAvatarUrl(null, AvatarsTable::FORMAT_SMALL)
         );
 
         $this->assertSame(
-            self::FULL_BASE_URL . '/img/avatar/user_medium.png',
+            $this->fullBaseUrl . '/img/avatar/user_medium.png',
             AvatarHelper::getAvatarUrl(null, AvatarsTable::FORMAT_MEDIUM)
         );
 
@@ -60,18 +68,27 @@ class AvatarHelperTest extends AppIntegrationTestCase
 
     public function testGetExistingAvatarUrl()
     {
+        $this->loadRoutes();
         $avatar = $this->createAvatar();
-        $expectedUrl = self::FULL_BASE_URL . '/avatars/view/' . $avatar->get('id') . '/' . AvatarsTable::FORMAT_SMALL;
-
-        // We are performing a unit test here. But the routes are loaded in the Middleware in CakePHP4
-        // Therefore an application needs to be build, which is here made using a call to a dummy url (an avatar one)
-        $this->get($expectedUrl);
-        $this->assertResponseOk();
+        $expectedUrl = $this->fullBaseUrl . '/avatars/view/' . $avatar->get('id') . '/' . AvatarsTable::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION;
+//        // We are performing a unit test here. But the routes are loaded in the Middleware in CakePHP4
+//        // Therefore an application needs to be build, which is here made using a call to a dummy url (an avatar one)
+//        $this->get($expectedUrl);
+//        $this->assertResponseOk();
 
         // We now test the AvatarHelper as such.
         $this->assertSame(
             $expectedUrl,
             AvatarHelper::getAvatarUrl($avatar)
         );
+    }
+
+    public function testGetValidImageFormats()
+    {
+        $expected = ['medium', 'small'];
+        $this->assertSame($expected, AvatarHelper::getValidImageFormats(false));
+
+        $expected = ['medium.jpg', 'small.jpg'];
+        $this->assertSame($expected, AvatarHelper::getValidImageFormats());
     }
 }

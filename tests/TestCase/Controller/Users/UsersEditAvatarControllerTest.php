@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Controller\Users;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -43,7 +44,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
     public function tearDown(): void
     {
-        $this->destroyDir($this->Avatars->getCacheDirectory());
+        DirectoryUtility::removeRecursively($this->Avatars->getCacheDirectory());
         unset($this->Avatars);
     }
 

@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Controller\Avatars;
 use App\Model\Table\AvatarsTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Utility\Filesystem\DirectoryUtility;
 use App\View\Helper\AvatarHelper;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -45,24 +46,36 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
         $this->assertFileExists($this->Avatars->getCacheDirectory());
         $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars');
+        DirectoryUtility::removeRecursively($this->Avatars->getCacheDirectory());
     }
 
     public function tearDown(): void
     {
-//        $this->destroyDir($this->Avatars->getCacheDirectory());
         unset($this->Avatars);
         parent::tearDown();
     }
 
-    public function formatDataProvider()
+    public function validFormatDataProvider()
     {
-        return [[AvatarsTable::FORMAT_SMALL], [AvatarsTable::FORMAT_MEDIUM]];
+        return [
+            [AvatarsTable::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION],
+            [AvatarsTable::FORMAT_MEDIUM . AvatarHelper::IMAGE_EXTENSION],
+        ];
+    }
+
+    public function nonValidFormatDataProvider()
+    {
+        return [
+            [AvatarsTable::FORMAT_SMALL],
+            [AvatarsTable::FORMAT_MEDIUM],
+            [AvatarsTable::FORMAT_MEDIUM . '.wrong_extension'],
+        ];
     }
 
     /**
      * Test view method on non existent Avatar
      *
-     * @dataProvider formatDataProvider
+     * @dataProvider validFormatDataProvider
      * @param string $format
      * @return void
      * @throws \PHPUnit\Exception
@@ -76,7 +89,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     /**
      * Test view method on non existent Avatar
      *
-     * @dataProvider formatDataProvider
+     * @dataProvider validFormatDataProvider
      * @param string $format
      * @return void
      * @throws \PHPUnit\Exception
@@ -87,7 +100,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
 
         $expectedFileName =
             $this->Avatars->getCacheDirectory() .
-            $this->Avatars->getOrCreateAvatarDirectory($avatar) . $format . '.jpg';
+            $this->Avatars->getOrCreateAvatarDirectory($avatar) . $format;
 
         $this->get('avatars/view/' . $avatar->id . '/' . $format);
         $this->assertFileResponse($expectedFileName);
@@ -98,5 +111,18 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
             AvatarsTable::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar, AvatarsTable::FORMAT_SMALL),
         ];
         $this->assertSame($virtualField, $avatar->url);
+    }
+
+    /**
+     * Test view on a non valid format.
+     *
+     * @dataProvider nonValidFormatDataProvider
+     */
+    public function testViewOnWrongFormat(string $format)
+    {
+        $avatar = $this->createAvatar();
+
+        $this->get('avatars/view/' . $avatar->id . '/' . $format);
+        $this->assertFileResponse($this->Avatars->getFallBackFileName());
     }
 }
