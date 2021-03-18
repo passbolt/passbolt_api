@@ -1,3 +1,8 @@
+passbolt-ce-server (3.1.0-1) buster; urgency=medium
+  * Add preview password plugin feature flag
+
+ -- Daniel Del Rio <daniel@passbolt.com>  Fri, 18 Mar 2021 10:28:00 +0000
+
 passbolt-ce-server (3.0.2-2) buster; urgency=medium
   * Include missed commits
 
