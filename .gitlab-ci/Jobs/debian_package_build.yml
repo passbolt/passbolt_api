@@ -84,7 +84,7 @@ debian-testing:
     COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/debian
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" || $CI_COMMIT_BRANCH == "release"'
       when: on_success
 
 debian-stable:
@@ -104,7 +104,7 @@ ubuntu-testing:
     COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" || $CI_COMMIT_BRANCH == "release"'
       when: on_success
 
 ubuntu-stable:
