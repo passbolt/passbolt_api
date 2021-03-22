@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fix SQL error when filtering folders both by parent and name
 
+## [3.1.0] - 2021-03-17
+### Added
+- Add preview password plugin feature flag
+
 ## [3.0.2] - 2021-03-09
 ### Fixed
 - PB-5211 The fields Group object class and User object class in user directory have to be sent server side
@@ -920,7 +924,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.0.2...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/passbolt/passbolt_api/compare/v3.0.2...v3.1.0
 [3.0.2]: https://github.com/passbolt/passbolt_api/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/passbolt/passbolt_api/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.14.0...v3.0.0
