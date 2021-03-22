@@ -16,17 +16,7 @@
     refs:
       - release
     variables:
-      - $PASSBOLT_FLAVOUR == "pro"
-
-pro-trigger-build:
-  variables:
-    TRIGGER_PROJECT_ID: $DOWNSTREAM_PROJECT_ID
-  extends: .build-template
-
-pro-vm-trigger-build:
-  variables:
-    TRIGGER_PROJECT_ID: $DOWNSTREAM_VM_PROJECT_ID
-  extends: .build-template
+      - $PASSBOLT_FLAVOUR == "ce"
 
 ce-trigger-build:
   variables:
