@@ -23,18 +23,17 @@ use Cake\Datasource\ConnectionManager;
 
 class MysqlImportCommand extends PassboltCommand
 {
+    use DatabaseAwareCommandTrait;
+
     /**
      * @inheritDoc
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser
-            ->setDescription(__('Utility to import a mysql database backups.'))
-            ->addOption('datasource', [
-                'short' => 'd',
-                'default' => 'default',
-                'help' => __('Datasource name'),
-            ])
+        $parser->setDescription(__('Utility to import a mysql database backups.'));
+
+        $this
+            ->addDatasourceOption($parser, false)
             ->addOption('file', [
                 'help' => 'The file to import the schema and data from',
                 'default' => null,
@@ -73,6 +72,7 @@ class MysqlImportCommand extends PassboltCommand
             $connection->query($sql);
         } catch (\Exception $e) {
             $this->error('Error: Something went wrong when importing the SQL file', $io);
+            $this->error($e->getMessage(), $io);
 
             return $this->errorCode();
         }

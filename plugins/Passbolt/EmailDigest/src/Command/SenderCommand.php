@@ -12,26 +12,32 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.13.0
  */
-namespace App\Command;
 
+namespace Passbolt\EmailDigest\Command;
+
+use App\Command\PassboltCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Cake\Datasource\ConnectionManager;
+use Cake\Core\Configure;
+use Passbolt\EmailDigest\Service\SendEmailBatchService;
 
-class DropTablesCommand extends PassboltCommand
+class SenderCommand extends PassboltCommand
 {
-    use DatabaseAwareCommandTrait;
-
     /**
      * @inheritDoc
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Drop all the tables. Dangerous but useful for a full reinstall.'));
-        $this->addDatasourceOption($parser, false);
+        $parser
+            ->setDescription(__('Sends a batch of queued emails as emails digests.'))
+            ->addOption('limit', [
+                'short' => 'l',
+                'help' => __('How many emails should be sent in this batch?'),
+                'default' => Configure::read('passbolt.plugins.emailDigest.batchSizeLimit'),
+            ]);
 
         return $parser;
     }
@@ -41,18 +47,10 @@ class DropTablesCommand extends PassboltCommand
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        parent::execute($args, $io);
+        $emailSenderService = new SendEmailBatchService();
 
-        $datasource = $args->getOption('datasource');
-        $connection = ConnectionManager::get($datasource);
-        $tables = $connection->execute('show tables')->fetchAll();
-        foreach ($tables as $table) {
-            $io->out(__('Dropping table ' . $table[0]));
-            $quotedTableName = $connection->getDriver()->quoteIdentifier($table[0]);
-            $connection->query("drop table {$quotedTableName};");
-        }
-        $this->success(__('{0} tables dropped', count($tables)), $io);
+        $emailSenderService->sendNextEmailsBatch($args->getOption('limit'));
 
-        return $this->successCode();
+        return self::CODE_SUCCESS;
     }
 }

@@ -23,6 +23,8 @@ use Cake\Datasource\ConnectionManager;
 
 class MysqlExportCommand extends PassboltCommand
 {
+    use DatabaseAwareCommandTrait;
+
     /**
      * Where the dumps get exported by default.
      */
@@ -33,13 +35,10 @@ class MysqlExportCommand extends PassboltCommand
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser
-            ->setDescription(__('Utility to export mysql database backups.'))
-            ->addOption('datasource', [
-                'short' => 'd',
-                'default' => 'default',
-                'help' => __('Datasource name'),
-            ])
+        $parser->setDescription(__('Utility to export mysql database backups.'));
+
+        $this
+            ->addDatasourceOption($parser, false)
             ->addOption('clear-previous', [
                 'boolean' => true,
                 'default' => false,

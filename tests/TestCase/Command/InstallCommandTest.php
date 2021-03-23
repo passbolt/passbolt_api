@@ -119,7 +119,7 @@ class InstallCommandTest extends TestCase
      */
     public function testInstallCommandNormalForceWithoutAdmin()
     {
-        $this->exec('passbolt install --force --no-admin --backup -q');
+        $this->exec('passbolt install --force --no-admin --backup -q -d test');
         $this->assertExitSuccess();
     }
 
@@ -130,7 +130,7 @@ class InstallCommandTest extends TestCase
      */
     public function testInstallCommandNormalForceWithDataImport()
     {
-        $this->exec('passbolt install --force --no-admin --backup -q --data alt0');
+        $this->exec('passbolt install --force --no-admin --backup -q --data alt0 -d test');
         $this->assertExitSuccess();
     }
 
@@ -143,20 +143,28 @@ class InstallCommandTest extends TestCase
     {
         $faker = Factory::create();
         $userName = $faker->email;
+        $firstName = $faker->firstNameFemale;
+        $lastName = $faker->lastName;
         $cmd = 'passbolt install --force --backup -q ';
-        $cmd .= ' --admin-first-name ' . $faker->firstNameFemale;
-        $cmd .= ' --admin-last-name ' . $faker->lastName;
+        $cmd .= ' --admin-first-name ' . $firstName;
+        $cmd .= ' --admin-last-name ' . $lastName;
         $cmd .= ' --admin-username ' . $userName;
+        $cmd .= ' -d test';
 
         $this->exec($cmd);
         $this->assertExitSuccess();
 
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
-        $admins = $UsersTable->find()->innerJoinWith('Roles', function (Query $q) {
-            return $q->where(['Roles.name' => Role::ADMIN]);
-        });
+        $admins = $UsersTable->find()
+            ->contain('Profiles')
+            ->innerJoinWith('Roles', function (Query $q) {
+                return $q->where(['Roles.name' => Role::ADMIN]);
+            });
         $this->assertSame(1, $admins->count());
-        $this->assertSame($userName, $admins->first()->get('username'));
-        $this->assertFalse($admins->first()->get('active'));
+        $admin = $admins->first();
+        $this->assertSame($userName, $admin->get('username'));
+        $this->assertSame($firstName, $admin->profile->first_name);
+        $this->assertSame($lastName, $admin->profile->last_name);
+        $this->assertFalse($admin->get('active'));
     }
 }

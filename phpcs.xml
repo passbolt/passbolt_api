@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<ruleset name="App">
+    <config name="installed_paths" value="../../passbolt/cakephp-codesniffer"/>
+    <rule ref="CakePHP"/>
+</ruleset>

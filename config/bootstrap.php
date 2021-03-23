@@ -58,6 +58,13 @@ try {
     Configure::load('default', 'default', false); // passbolt default config
     if (\file_exists(CONFIG . DS . 'passbolt.php')) {
         Configure::load('passbolt', 'default', true); // merge with default config
+
+         // Deduplicate multiple from address for email
+         // Can happen if from is also set as array in passbolt.php
+        $from = Configure::read('Email.default.from');
+        if (isset($from) && is_array($from) && count($from) > 1) {
+            Configure::write('Email.default.from', array_slice($from, -1, count($from))); // pick the last one
+        }
     }
     Configure::load('version', 'default', true);
 } catch (\Exception $e) {
