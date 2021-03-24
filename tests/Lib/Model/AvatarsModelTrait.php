@@ -58,21 +58,6 @@ trait AvatarsModelTrait
         return $AvatarsTable->saveOrFail($avatar);
     }
 
-    public function destroyDir(string $dir)
-    {
-        if (!is_dir($dir) || is_link($dir)) {
-            return unlink($dir);
-        }
-        foreach (scandir($dir) as $file) {
-            if ($file == '.' || $file == '..') {
-                continue;
-            }
-            $this->destroyDir($dir . DIRECTORY_SEPARATOR . $file);
-        }
-
-        return rmdir($dir);
-    }
-
     /**
      * Create a dummy upload file
      *
