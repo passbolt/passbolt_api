@@ -9,7 +9,7 @@
 
     # Passbolt unit test job common variables
     DEBUG: "true"
-    DATASOURCES_DEFAULT_DATABASE: $MYSQL_DATABASE
+    DATASOURCES_DEFAULT_DATABASE: non_existing_database # to ensure that all tests run on the test datasource
     DATASOURCES_DEFAULT_USERNAME: $MYSQL_USER
     DATASOURCES_DEFAULT_PASSWORD: $MYSQL_PASSWORD
     DATASOURCES_DEFAULT_HOST: 127.0.0.1

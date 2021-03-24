@@ -23,12 +23,13 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Migrations\Command\MigrationsMigrateCommand;
 use Passbolt\Ee\Command\SubscriptionCheckCommand;
 use PassboltTestData\Command\InsertCommand;
 
 class InstallCommand extends PassboltCommand
 {
+    use DatabaseAwareCommandTrait;
+
     /**
      * @inheritDoc
      */
@@ -75,6 +76,8 @@ class InstallCommand extends PassboltCommand
             ->addOption('admin-last-name', [
                 'help' => __('Admin\' last name. Will be requested in interactive mode.'),
             ]);
+
+        $this->addDatasourceOption($parser);
 
         return $parser;
     }
@@ -160,28 +163,24 @@ class InstallCommand extends PassboltCommand
     protected function userRegistration(Arguments $args, ConsoleIo $io): bool
     {
         if (!$args->getOption('no-admin')) {
-            $username = $args->getOption('admin-username');
-            $firstName = $args->getOption('admin-first-name');
-            $lastName = $args->getOption('admin-last-name');
-
             $io->nl();
             $io->out(__('Registering the admin user'));
             $io->hr();
 
-            $options = ['role' => Role::ADMIN];
-            $options['interactive'] = true;
-            $options['interactive-loop'] = RegisterUserCommand::DEFAULT_INTERACTIVE_LOOP;
-            $options['username'] = $username;
-            $options['first-name'] = $firstName;
-            $options['last-name'] = $lastName;
-            $options['quiet'] = $args->getOption('quiet');
+            $options = [
+                '--role', Role::ADMIN,
+                '--interactive',
+                '--interactive-loop', (string)RegisterUserCommand::DEFAULT_INTERACTIVE_LOOP,
+                '--username', $args->getOption('admin-username'),
+                '--first-name', $args->getOption('admin-first-name'),
+                '--last-name', $args->getOption('admin-last-name'),
+            ];
 
-            // At the time, CakePHP does not support passing options with values to $this->RegisterUserCommand
-            // Therefore the little trick here:
-            $args = new Arguments([], $options, []);
-            $command = new RegisterUserCommand();
-            $command->initialize();
-            $result = $command->execute($args, $io);
+            $result = $this->executeCommand(
+                RegisterUserCommand::class,
+                $this->formatOptions($args, $options),
+                $io
+            );
 
             return $result === self::CODE_SUCCESS;
         }
@@ -271,7 +270,7 @@ class InstallCommand extends PassboltCommand
         $io->nl();
         $io->out(__('Cleaning up existing tables if any.'));
         $io->hr();
-        $options = $this->formatOptions($args);
+        $options = $this->formatOptions($args, ['-d', $args->getOption('datasource')]);
 
         return $this->executeCommand(DropTablesCommand::class, $options, $io) === $this->successCode();
     }
@@ -288,9 +287,8 @@ class InstallCommand extends PassboltCommand
         $io->nl();
         $io->out(__('Install the schema and default data.'));
         $io->hr();
-        $options = $this->formatOptions($args, ['--no-lock']);
 
-        return $this->executeCommand(MigrationsMigrateCommand::class, $options, $io) === $this->successCode();
+        return $this->runMigrationsMigrateCommand($args, $io) === $this->successCode();
     }
 
     /**
@@ -385,7 +383,7 @@ class InstallCommand extends PassboltCommand
         }
 
         // Database checks
-        $checks = Healthchecks::database();
+        $checks = Healthchecks::database($args->getOption('datasource'));
         if (!$checks['database']['connect'] || !$checks['database']['supportedBackend']) {
             $this->error(__('There are some issues with the database configuration.'), $io);
             $this->error(__('Please run ./bin/cake passbolt healthcheck for more information and help.'), $io);
