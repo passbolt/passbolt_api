@@ -7,6 +7,67 @@
     "content-hash": "61248ac521e40f033ca876a91532b0e8",
     "packages": [
         {
+            "name": "bcrowe/cakephp-api-pagination",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bcrowe/cakephp-api-pagination.git",
+                "reference": "66a68436bcde4ce8d4841d6d5c5a7716e2daaa21"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bcrowe/cakephp-api-pagination/zipball/66a68436bcde4ce8d4841d6d5c5a7716e2daaa21",
+                "reference": "66a68436bcde4ce8d4841d6d5c5a7716e2daaa21",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^4.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "cakephp/cakephp-codesniffer": "~4.0.0",
+                "phpunit/phpunit": "^8.5",
+                "scrutinizer/ocular": "1.7"
+            },
+            "type": "cakephp-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BryanCrowe\\ApiPagination\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bryan Crowe",
+                    "email": "bryan@bryan-crowe.com",
+                    "homepage": "http://bryan-crowe.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "CakePHP 4 plugin that injects pagination information into API responses.",
+            "homepage": "https://github.com/bcrowe/cakephp-api-pagination",
+            "keywords": [
+                "api",
+                "cakephp",
+                "cakephp3",
+                "cakephp4",
+                "pagination"
+            ],
+            "support": {
+                "issues": "https://github.com/bcrowe/cakephp-api-pagination/issues",
+                "source": "https://github.com/bcrowe/cakephp-api-pagination/tree/2.1.0"
+            },
+            "time": "2021-03-22T19:38:30+00:00"
+        },
+        {
             "name": "brick/math",
             "version": "0.9.2",
             "source": {

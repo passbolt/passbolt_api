@@ -55,27 +55,6 @@ abstract class AppIntegrationTestCase extends TestCase
     use UsersModelTrait;
 
     /**
-     * The response for the most recent json request.
-     *
-     * @var Object|array
-     */
-    protected $_responseJson;
-
-    /**
-     * The response header for the most recent json request.
-     *
-     * @var Object
-     */
-    protected $_responseJsonHeader;
-
-    /**
-     * The response body for the most recent json request.
-     *
-     * @var Object
-     */
-    protected $_responseJsonBody;
-
-    /**
      * Setup.
      */
     public function setUp(): void
