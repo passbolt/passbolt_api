@@ -130,6 +130,7 @@ class InstallCommandTest extends TestCase
      */
     public function testInstallCommandNormalForceWithDataImport()
     {
+        $this->markTestSkipped(); // output gpg key in console
         $this->exec('passbolt install --force --no-admin --backup -q --data alt0 -d test');
         $this->assertExitSuccess();
     }
