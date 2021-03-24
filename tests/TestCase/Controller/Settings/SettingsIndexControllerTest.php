@@ -18,11 +18,10 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Settings;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Locale\Utility\LocaleUtility;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [];
-
     public function testSettingsIndexGetSuccess()
     {
         $this->authenticateAs('ada');
@@ -31,6 +30,8 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
         $this->assertGreaterThan(1, count((array)$this->_responseJsonBody->app));
         $this->assertTrue(isset($this->_responseJsonBody->app->version));
+        $this->assertSame('en-US', $this->_responseJsonBody->app->locale);
+        $this->assertSame(LocaleUtility::getAvailableLocales(), (array)$this->_responseJsonBody->passbolt->plugins->locale->options);
     }
 
     public function testSettingsIndexErrorNotAuthenticated()
@@ -40,5 +41,7 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
         $this->assertFalse(isset($this->_responseJsonBody->app->version));
         $this->assertTrue(isset($this->_responseJsonBody->app->url));
+        $this->assertSame('en-US', $this->_responseJsonBody->app->locale);
+        $this->assertSame(LocaleUtility::getAvailableLocales(), (array)$this->_responseJsonBody->passbolt->plugins->locale->options);
     }
 }

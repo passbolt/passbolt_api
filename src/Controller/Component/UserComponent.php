@@ -20,6 +20,7 @@ use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use donatj\UserAgent\UserAgentParser;
@@ -155,5 +156,18 @@ class UserComponent extends Component
         }
 
         return $defaultTheme;
+    }
+
+    /**
+     * Allow admins only.
+     *
+     * @throws \Cake\Http\Exception\ForbiddenException
+     * @return void
+     */
+    public function authorizeAdminsOnly(): void
+    {
+        if (!$this->isAdmin()) {
+            throw new ForbiddenException();
+        }
     }
 }

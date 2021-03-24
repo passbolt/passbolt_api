@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "61248ac521e40f033ca876a91532b0e8",
+    "content-hash": "32724c5c0a97a778bd8a4fc3f7a11ef0",
     "packages": [
         {
             "name": "brick/math",
@@ -3099,6 +3099,60 @@
                 "source": "https://github.com/cakephp/debug_kit"
             },
             "time": "2021-03-06T21:10:46+00:00"
+        },
+        {
+            "name": "cakephp/localized",
+            "version": "4.0.0-beta",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cakephp/localized.git",
+                "reference": "efb90ae35e02224d977db3fe5814610412d678c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cakephp/localized/zipball/efb90ae35e02224d977db3fe5814610412d678c9",
+                "reference": "efb90ae35e02224d977db3fe5814610412d678c9",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^4.0.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "cakephp/cakephp-codesniffer": "^4.0",
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "Cake\\Localized\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "CakePHP Community",
+                    "homepage": "https://github.com/cakephp/localized/graphs/contributors"
+                }
+            ],
+            "description": "CakePHP Localized Plugin",
+            "homepage": "https://github.com/cakephp/localized",
+            "keywords": [
+                "cakephp",
+                "i18n",
+                "l10n",
+                "localized"
+            ],
+            "support": {
+                "forum": "http://stackoverflow.com/tags/cakephp",
+                "irc": "irc://irc.freenode.org/cakephp",
+                "issues": "https://github.com/cakephp/localized/issues",
+                "source": "https://github.com/cakephp/localized"
+            },
+            "time": "2020-04-02T22:34:51+00:00"
         },
         {
             "name": "cakephp/twig-view",
@@ -7027,7 +7081,8 @@
     "stability-flags": {
         "singpolyma/openpgp-php": 20,
         "psy/psysh": 0,
-        "passbolt/cakephp-codesniffer": 20
+        "passbolt/cakephp-codesniffer": 20,
+        "cakephp/localized": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,

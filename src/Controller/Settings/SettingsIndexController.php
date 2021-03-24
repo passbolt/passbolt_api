@@ -22,6 +22,7 @@ use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use Passbolt\Locale\Service\GetRequestLocaleService;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -87,8 +88,21 @@ class SettingsIndexController extends AppController
      * @param string $role role of the user accessing the settings.
      * @return array
      */
-    protected function _getSettings(string $role)
+    protected function _getSettings(string $role): array
     {
+        $baseSettings = [
+            'app' => [
+                'url' => Router::url('/', true),
+                'locale' => (new GetRequestLocaleService($this->getRequest()))->getLocale(),
+            ],
+            'passbolt' => [
+                'legal' => Configure::read('passbolt.legal'),
+                'edition' => Configure::read('passbolt.edition'),
+                'registration' => [
+                    'public' => Configure::read('passbolt.registration.public'),
+                ],
+            ],
+        ];
         if ($role !== Role::GUEST) {
             // Build settings array.
             $settings = [
@@ -97,7 +111,6 @@ class SettingsIndexController extends AppController
                         'number' => Configure::read('passbolt.version'),
                         'name' => Configure::read('passbolt.name'),
                     ],
-                    'url' => Router::url('/', true),
                     'debug' => Configure::read('debug') ? 1 : 0,
                     'server_timezone' => date_default_timezone_get(),
                     // session timeout info in minutes
@@ -107,32 +120,19 @@ class SettingsIndexController extends AppController
                     ],
                 ],
                 'passbolt' => [
-                    'legal' => Configure::read('passbolt.legal'),
-                    'edition' => Configure::read('passbolt.edition'),
                     'plugins' => $this->_getWhiteListedPluginConfig($this->_getPluginWhiteList(false)),
-                    'registration' => [
-                        'public' => Configure::read('passbolt.registration.public'),
-                    ],
                 ],
             ];
         } else {
             // If user is Guest.
             $settings = [
-                'app' => [
-                    'url' => Router::url('/', true),
-                ],
                 'passbolt' => [
-                    'legal' => Configure::read('passbolt.legal'),
-                    'edition' => Configure::read('passbolt.edition'),
                     'plugins' => $this->_getWhiteListedPluginConfig($this->_getPluginWhiteList(true)),
-                    'registration' => [
-                        'public' => Configure::read('passbolt.registration.public'),
-                    ],
                 ],
             ];
         }
 
-        return $settings;
+        return array_merge_recursive($baseSettings, $settings);
     }
 
     /**

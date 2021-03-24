@@ -21,6 +21,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Locale\Utility\LocaleUtility;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
@@ -56,9 +57,16 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             'gpgkey' => [
                 'armored_key' => $armoredKey,
             ],
+            'locale' => 'fr_FR', // Putting on purpose an underscore, though convention is dashed.
         ];
         $this->postJson($url, $data);
         $this->assertSuccess();
+
+        // Check that the locale in the payload was stored in the user's settings.
+        $userLocale = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings')
+            ->getFirstPropertyOrFail(UuidFactory::uuid('user.id.ruth'), LocaleUtility::SETTING_PROPERTY)
+            ->value;
+        $this->assertSame('fr-FR', $userLocale);
     }
 
     /**

@@ -141,6 +141,18 @@ abstract class AppIntegrationTestCase extends TestCase
     }
 
     /**
+     * @return User
+     * @throws \Exception
+     */
+    public function logInAsAdmin()
+    {
+        $user = UserFactory::make()->admin()->persist();
+        $this->logInAs($user);
+
+        return $user;
+    }
+
+    /**
      * Calling this method will remove the CSRF token from the request.
      *
      * @return void

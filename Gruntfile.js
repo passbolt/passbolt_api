@@ -30,7 +30,9 @@ module.exports = function(grunt) {
     webroot: 'webroot/',
     img: 'webroot/img/',
     css: 'webroot/css/',
-    js: 'webroot/js/'
+    js: 'webroot/js/',
+    locales: 'resources/locales/',
+    cakephp_locales: 'vendor/cakephp/localized/resources/locales/'
   };
 
   /**
@@ -48,10 +50,11 @@ module.exports = function(grunt) {
   /**
    * Register project specific grunt tasks
    */
-  grunt.registerTask('default', ['dependencies-update', 'styleguide-update']);
+  grunt.registerTask('default', ['dependencies-update', 'styleguide-update', 'locales-update']);
   grunt.registerTask('styleguide-update', 'copy:styleguide');
   grunt.registerTask('styleguide-watch', ['watch:node-modules-styleguide']);
   grunt.registerTask('dependencies-update', 'copy:dependencies');
+  grunt.registerTask('locales-update', 'copy:locales');
 
   /**
    * Tasks definition
@@ -142,6 +145,15 @@ module.exports = function(grunt) {
           dest: paths.js + 'app',
           expand: true
         },]
+      },
+      locales: {
+        // CakePHP Locale Resources
+        files: [{
+          cwd: paths.cakephp_locales,
+          src: ['fr_FR/*.po'],
+          dest: paths.locales,
+          expand: true
+        }]
       }
     },
 

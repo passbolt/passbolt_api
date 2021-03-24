@@ -21,6 +21,8 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
+use Passbolt\Locale\Service\GetEmailLocaleService;
+use Passbolt\Locale\Utility\LocaleUtility;
 
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
@@ -59,6 +61,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
                     'first_name' => 'Aurore',
                     'last_name' => 'Avarguès-Weber',
                 ],
+                'locale' => 'fr-FR',
             ],
         ];
 
@@ -83,6 +86,12 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             $roles = TableRegistry::getTableLocator()->get('Roles');
             $role = $roles->get($user->get('role_id'));
             $this->assertEquals(Role::USER, $role->name);
+
+            // Check locale was stored
+            LocaleUtility::clearOrganisationLocale();
+            $expectedLocale = $data['locale'] ?? LocaleUtility::getOrganizationLocale();
+            $locale = (new GetEmailLocaleService($user->username))->getLocale();
+            $this->assertSame($expectedLocale, $locale);
         }
     }
 

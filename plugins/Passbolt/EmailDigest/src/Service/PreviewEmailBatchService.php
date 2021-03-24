@@ -56,8 +56,7 @@ class PreviewEmailBatchService
         ?EmailDigestService $emailDigestsService = null,
         ?EmailPreviewFactory $emailPreviewFactory = null
     ) {
-        $options = ['className' => EmailQueueTable::class];
-        $this->emailQueueTable = $emailQueueTable ?? TableRegistry::getTableLocator()->get('EmailQueue', $options);
+        $this->emailQueueTable = $emailQueueTable ?? TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
         $this->emailDigestsService = $emailDigestsService ?? new EmailDigestService();
         $this->emailPreviewFactory = $emailPreviewFactory ?? new EmailPreviewFactory();
     }

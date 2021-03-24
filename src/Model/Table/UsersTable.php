@@ -105,6 +105,10 @@ class UsersTable extends Table
             'className' => 'Passbolt/Log.ActionLogs',
             'foreignKey' => 'user_id',
         ]);
+        $this->hasMany('AccountSettings', [
+            'className' => 'Passbolt/AccountSettings.AccountSettings',
+            'foreignKey' => 'user_id',
+        ]);
     }
 
     /**

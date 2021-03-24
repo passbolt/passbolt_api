@@ -36,7 +36,6 @@ use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
-use Cake\I18n\I18n;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
@@ -123,7 +122,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
-            I18n::setLocale('en_US');
         }
 
         $this->initEmails();
@@ -215,6 +213,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         // Add Common plugins.
         $this->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Passbolt/Locale', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/ResourceTypes', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
