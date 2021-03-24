@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2ae0b08b78022b08dc912d434f6da5d2",
+    "content-hash": "9b0a9a9dd6d0aca588e8dc076b69c4f7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -55,6 +55,67 @@
                 "source": "https://github.com/Bacon/BaconQrCode/tree/master"
             },
             "time": "2017-10-17T09:59:25+00:00"
+        },
+        {
+            "name": "bcrowe/cakephp-api-pagination",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bcrowe/cakephp-api-pagination.git",
+                "reference": "66a68436bcde4ce8d4841d6d5c5a7716e2daaa21"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bcrowe/cakephp-api-pagination/zipball/66a68436bcde4ce8d4841d6d5c5a7716e2daaa21",
+                "reference": "66a68436bcde4ce8d4841d6d5c5a7716e2daaa21",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^4.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "cakephp/cakephp-codesniffer": "~4.0.0",
+                "phpunit/phpunit": "^8.5",
+                "scrutinizer/ocular": "1.7"
+            },
+            "type": "cakephp-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BryanCrowe\\ApiPagination\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bryan Crowe",
+                    "email": "bryan@bryan-crowe.com",
+                    "homepage": "http://bryan-crowe.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "CakePHP 4 plugin that injects pagination information into API responses.",
+            "homepage": "https://github.com/bcrowe/cakephp-api-pagination",
+            "keywords": [
+                "api",
+                "cakephp",
+                "cakephp3",
+                "cakephp4",
+                "pagination"
+            ],
+            "support": {
+                "issues": "https://github.com/bcrowe/cakephp-api-pagination/issues",
+                "source": "https://github.com/bcrowe/cakephp-api-pagination/tree/2.1.0"
+            },
+            "time": "2021-03-22T19:38:30+00:00"
         },
         {
             "name": "beberlei/assert",

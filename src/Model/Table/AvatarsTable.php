@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Entity\Avatar;
+use App\Utility\AvatarProcessing;
 use App\Utility\Filesystem\FilesystemTrait;
+use App\View\Helper\AvatarHelper;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -26,8 +28,6 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Imagine\Gd\Imagine;
-use Imagine\Image\Box;
 use League\Flysystem\FilesystemException;
 use Psr\Http\Message\UploadedFileInterface;
 
@@ -35,9 +35,9 @@ class AvatarsTable extends Table
 {
     use FilesystemTrait;
 
-    public const JPEG_QUALITY = 90;
     public const FORMAT_SMALL = 'small';
     public const FORMAT_MEDIUM = 'medium';
+    public const MAX_SIZE = '5MB';
 
     /**
      * @var string
@@ -77,8 +77,11 @@ class AvatarsTable extends Table
                 'rule' => ['extension', ['png', 'jpg', 'gif']],
             ])
             ->add('file', 'validUploadedFile', [
-                'rule' => ['uploadedFile', ['optional' => false]],
-                'message' => __('File is no valid uploaded file'),
+                'rule' => ['uploadedFile', ['maxSize' => self::MAX_SIZE]], // Max size in bytes
+                'message' => __(
+                    'Uploaded file is not valid, or exceeds max size of {0} bytes',
+                    self::MAX_SIZE
+                ),
             ]);
 
         return $validator;
@@ -112,7 +115,7 @@ class AvatarsTable extends Table
     public function beforeSave(Event $event, Avatar $avatar, \ArrayObject $options)
     {
         if (!$this->setData($avatar)) {
-            $avatar->setError('data', __('The data could not be saved in jpg format.'));
+            $avatar->setError('data', __('The data could not be saved in {0} format.', AvatarHelper::IMAGE_EXTENSION));
             $event->stopPropagation();
         }
     }
@@ -240,16 +243,12 @@ class AvatarsTable extends Table
         }
 
         try {
-            $smallImage = $this->getImagine()
-                ->read($this->getFilesystem()->readStream($this->getMediumAvatarFileName($avatar)))
-                ->resize(new Box(
-                    Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.width'),
-                    Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.height'),
-                ))
-                ->get('jpeg', [
-                    'quality' => self::JPEG_QUALITY,
-                ]);
-
+            $content = $this->getFilesystem()->read($this->getMediumAvatarFileName($avatar));
+            $smallImage = AvatarProcessing::resizeAndCrop(
+                $content,
+                Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.width'),
+                Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.height'),
+            );
             $this->getFilesystem()->write($this->getSmallAvatarFileName($avatar), $smallImage);
         } catch (\Exception $e) {
             Log::error(__('Error while saving small avatar with ID {0}', $avatar->get('id')));
@@ -271,24 +270,19 @@ class AvatarsTable extends Table
         if ($file === null) {
             return true;
         } elseif (is_array($file)) {
-            $stream = file_get_contents($file['tmp_name']);
+            $content = file_get_contents($file['tmp_name']);
         } elseif ($file instanceof UploadedFileInterface) {
-            $stream = $file->getStream()->getContents();
+            $content = $file->getStream()->getContents();
         } else {
             return false;
         }
 
         try {
-            $img = $this->getImagine()
-                ->load($stream)
-                ->resize(new Box(
-                    Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.width'),
-                    Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.height'),
-                ))
-                ->get('jpeg', [
-                    'quality' => self::JPEG_QUALITY,
-                ]);
-
+            $img = AvatarProcessing::resizeAndCrop(
+                $content,
+                Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.width'),
+                Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.height')
+            );
             $avatar->set('data', $img);
         } catch (\Exception $exception) {
             return false;
@@ -342,14 +336,6 @@ class AvatarsTable extends Table
     }
 
     /**
-     * @return \Imagine\Gd\Imagine
-     */
-    public function getImagine(): Imagine
-    {
-        return new Imagine();
-    }
-
-    /**
      * @param \App\Model\Entity\Avatar $avatar Avatar.
      * @param string $format Format.
      * @return string
@@ -358,10 +344,10 @@ class AvatarsTable extends Table
     {
         if (empty($avatar->get('data'))) {
             return $this->getFallBackFileName($format);
-        } elseif ($format === self::FORMAT_MEDIUM) {
-            return $this->getMediumAvatarFileName($avatar);
-        } else {
+        } elseif ($format === self::FORMAT_SMALL) {
             return $this->getSmallAvatarFileName($avatar);
+        } else {
+            return $this->getMediumAvatarFileName($avatar);
         }
     }
 
@@ -371,7 +357,7 @@ class AvatarsTable extends Table
      */
     public function getSmallAvatarFileName(Avatar $avatar): string
     {
-        return $this->getOrCreateAvatarDirectory($avatar) . self::FORMAT_SMALL . '.jpg';
+        return $this->getOrCreateAvatarDirectory($avatar) . self::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION;
     }
 
     /**
@@ -380,17 +366,37 @@ class AvatarsTable extends Table
      */
     public function getMediumAvatarFileName(Avatar $avatar): string
     {
-        return $this->getOrCreateAvatarDirectory($avatar) . self::FORMAT_MEDIUM . '.jpg';
+        return $this->getOrCreateAvatarDirectory($avatar) . self::FORMAT_MEDIUM . AvatarHelper::IMAGE_EXTENSION;
     }
 
     /**
      * The default avatar file.
      *
-     * @param string $format Format of the image.
+     * @param ?string $format Format of the image.
+     * @return string
+     * @throws \RuntimeException if the avatar config is not set in config/file_storage.php
+     */
+    public function getFallBackFileName(?string $format = null): string
+    {
+        if (empty($format)) {
+            $format = $this->getDefaultFormat();
+        }
+        try {
+            $fileName = Configure::readOrFail('FileStorage.imageDefaults.Avatar.' . $format);
+        } catch (\RuntimeException $e) {
+            $fileName = Configure::readOrFail('FileStorage.imageDefaults.Avatar.' . $this->getDefaultFormat());
+        }
+
+        return WWW_ROOT . $fileName;
+    }
+
+    /**
+     * The default avatar format
+     *
      * @return string
      */
-    public function getFallBackFileName(string $format): string
+    public function getDefaultFormat(): string
     {
-        return WWW_ROOT . Configure::readOrFail('FileStorage.imageDefaults.Avatar.' . $format);
+        return self::FORMAT_MEDIUM;
     }
 }

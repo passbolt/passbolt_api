@@ -20,8 +20,10 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
+use Authentication\Authenticator\Result;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
 
 class AuthLoginController extends AppController
 {
@@ -70,21 +72,21 @@ class AuthLoginController extends AppController
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
         }
 
+        // Custom X-GpgAuth-* http headers are stored in $result->getErrors
+        // They are translated into actual http headers as part of GpgAuthHeadersMiddleware::process
         $result = $this->Authentication->getResult();
-
         if ($result->isValid()) {
             $user = $result->getData();
-            UserAction::getInstance()->setUserAccessControl(new UserAccessControl(
-                $user['role']['name'],
-                $user['id']
-            ));
+            $uac = new UserAccessControl($user['role']['name'], $user['id']);
+            UserAction::getInstance()->setUserAccessControl($uac);
             $this->success(__('You are successfully logged in.'), $user);
         } else {
-            $message = 'The authentication failed.';
-            $debug = $this->response->getHeader('X-GPGAuth-Debug');
-            if (isset($debug) && count($debug) === 1) {
-                $message .= ' ' . $debug[0];
+            $errors = $result->getErrors();
+            $message = $errors['X-GPGAuth-Debug'] ?? 'The authentication failed.';
+            if ($result->getStatus() === Result::FAILURE_OTHER) {
+                throw new InternalErrorException($message);
             }
+
             $this->error($message);
         }
     }

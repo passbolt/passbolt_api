@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Test\Factory;
+namespace Passbolt\Log\Test\Factory;
 
+use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
@@ -10,7 +11,7 @@ use Faker\Generator;
 /**
  * ProfileFactory
  */
-class ProfileFactory extends CakephpBaseFactory
+class ActionLogFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -19,7 +20,7 @@ class ProfileFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'Profiles';
+        return 'Passbolt/Log.ActionLogs';
     }
 
     /**
@@ -32,12 +33,20 @@ class ProfileFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'first_name' => $faker->firstNameFemale,
-                'last_name' => $faker->lastName,
                 'user_id' => $faker->uuid,
+                'action_id' => $faker->uuid,
+                'context' => $faker->text(255),
+                'status' => 1,
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];
         });
+    }
+
+    /**
+     * @return $this
+     */
+    public function loginAction()
+    {
+        return $this->patchData(['action_id' => UuidFactory::uuid('AuthLogin.loginPost')]);
     }
 }
