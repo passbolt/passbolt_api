@@ -56,6 +56,7 @@ class AvatarsTable extends Table
 
         $this->setCacheDirectory(TMP . 'avatars' . DS);
 
+        $this->addBehavior('Timestamp');
         $this->belongsTo('Profiles');
     }
 
