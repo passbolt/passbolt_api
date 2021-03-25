@@ -89,8 +89,13 @@ class InstallCommandTest extends TestCase
     {
         // Create a backup
         $cmd = "
-            INSERT INTO avatars (id, profile_id)
-            VALUES ('0da907bd-5c57-5acc-ba39-c6ebe091f613', '0da907bd-5c57-5acc-ba39-c6ebe091f613');
+            INSERT INTO `avatars` (id, profile_id, created, modified)
+            VALUES (
+                '0da907bd-5c57-5acc-ba39-c6ebe091f613',
+                '0da907bd-5c57-5acc-ba39-c6ebe091f613',
+                '2021-03-25 05:48:54',
+                '2021-03-25 05:48:54'
+            );
         ";
         file_put_contents(CACHE . 'database' . DS . 'backup_foo.sql', $cmd);
 

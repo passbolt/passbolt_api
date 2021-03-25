@@ -40,10 +40,19 @@ class V300AddAvatarsTable extends AbstractMigration
                 'limit' => 36,
                 'null' => false,
             ])
+            ->addColumn('created', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => false,
+            ])
+            ->addColumn('modified', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => false,
+            ])
             ->addIndex([
                 'profile_id',
             ])
-            ->addTimestamps()
             ->create();
     }
 

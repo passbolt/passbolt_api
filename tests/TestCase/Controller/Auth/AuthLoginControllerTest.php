@@ -201,7 +201,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
                 $this->assertTrue(isset($headers['X-GPGAuth-Debug']), 'A debug message should be set in the headers');
                 $this->assertFalse(
                     strpos($headers['X-GPGAuth-Debug'], 'Invalid verify token format') === false,
-                    'The debug message should contain "Invalid verify token format"'
+                    'The debug message should contain "Invalid verify token format" got: ' . $headers['X-GPGAuth-Debug']
                 );
             } else {
                 $this->assertTrue(isset($headers['X-GPGAuth-Verify-Response']), 'The verify response header should be set for ' . $token);
