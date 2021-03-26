@@ -29,7 +29,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
     public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',];
     public $AuthenticationTokens;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $this->Users = TableRegistry::getTableLocator()->get('Users');

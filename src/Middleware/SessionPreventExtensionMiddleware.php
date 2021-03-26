@@ -17,11 +17,14 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
-use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class SessionPreventExtensionMiddleware
+class SessionPreventExtensionMiddleware implements MiddlewareInterface
 {
     /**
      * Ensure the call to the /auth/is-authenticated route does not extend the
@@ -40,12 +43,13 @@ class SessionPreventExtensionMiddleware
      * another entry point (value stored previously in the SessionPreventExtensionMiddleware.time session variable).
      *
      * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $response The response.
-     * @param callable $next Callback to invoke the next middleware.
-     * @return \Cake\Http\Response A response
+     * @param \Cake\Http\Response $handler The handler.
+     * @return \Cake\Http\Response The response.
      */
-    public function __invoke(ServerRequest $request, Response $response, $next)
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
         $session = $request->getSession();
 
         if ($this->shouldSessionExtensionPrevented($request)) {
@@ -57,7 +61,7 @@ class SessionPreventExtensionMiddleware
             $session->write('SessionPreventExtensionMiddleware.time', time());
         }
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 
     /**

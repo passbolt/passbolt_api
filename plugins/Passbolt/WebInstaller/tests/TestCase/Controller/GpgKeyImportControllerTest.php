@@ -23,7 +23,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
 {
     use GpgkeysModelTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
@@ -35,7 +35,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/gpg_key_import');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Copy paste the private key below', $data);
+        $this->assertStringContainsString('Copy paste the private key below', $data);
     }
 
     public function testWebInstallerGpgKeyImportPostSuccess()
@@ -55,7 +55,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/gpg_key_import', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('The data entered are not correct', $data);
+        $this->assertStringContainsString('The data entered are not correct', $data);
     }
 
     public function testWebInstallerGpgKeyImportPostError_PublicKey()
@@ -66,7 +66,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/gpg_key_import', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('The data entered are not correct', $data);
-        $this->assertContains('The key is not a valid public key', $data);
+        $this->assertStringContainsString('The data entered are not correct', $data);
+        $this->assertStringContainsString('The key is not a valid public key', $data);
     }
 }

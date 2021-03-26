@@ -21,6 +21,7 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
+use Cake\ORM\TableRegistry;
 
 /**
  * Class DummySubscriptionTrait
@@ -33,7 +34,6 @@ trait DummySubscriptionTrait
 
     protected function setUpPathAndPublicSubscriptionKey()
     {
-        $this->loadPlugins(['Passbolt/Ee']);
         $this->baseTestPath = PLUGINS . 'Passbolt' . DS . 'Ee' . DS . 'tests';
         $subscriptionDevPublicKey = $this->baseTestPath . DS . 'data' . DS . 'gpg' . DS . 'subscription_dev_public.key';
         Configure::write('passbolt.plugins.ee.subscriptionKey.public', $subscriptionDevPublicKey);
@@ -127,8 +127,9 @@ trait DummySubscriptionTrait
     public function persistSubscription(string $keyFileName): EntityInterface
     {
         $uac = $this->getDummyAdminUACMock();
+        $SubscriptionsTable = TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
 
-        $entity = $this->Subscriptions->newEntity(
+        $entity = $SubscriptionsTable->newEntity(
             [
                 'value' => $this->getAsciiKey($keyFileName),
             ],
@@ -137,7 +138,7 @@ trait DummySubscriptionTrait
             ]
         );
 
-        return $this->Subscriptions->saveOrFail($entity, compact('uac'));
+        return $SubscriptionsTable->saveOrFail($entity, compact('uac'));
     }
 
     public function getAsciiKey(string $keyFileName): string

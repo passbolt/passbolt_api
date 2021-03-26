@@ -229,9 +229,9 @@ trait SyncTrait
     protected function getEntityFromData(array $data)
     {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
-            return $this->getGroupFromData($data);
+            return $this->getGroupFromData($data['group']['name'] ?? '');
         }
 
-        return $this->getUserFromData($data);
+        return $this->getUserFromData($data['user']['username'] ?? '');
     }
 }

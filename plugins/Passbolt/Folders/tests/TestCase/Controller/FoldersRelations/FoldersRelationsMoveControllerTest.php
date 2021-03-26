@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\FoldersRelations;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -50,7 +49,6 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,

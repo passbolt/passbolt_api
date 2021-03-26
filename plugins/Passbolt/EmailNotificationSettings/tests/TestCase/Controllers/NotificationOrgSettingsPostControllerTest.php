@@ -24,7 +24,7 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -32,7 +32,7 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->unloadNotificationSettings();

@@ -27,7 +27,7 @@ abstract class AccountSettingsPluginIntegrationTestCase extends AppIntegrationTe
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $configPath = PLUGINS . 'Passbolt' . DS . 'AccountSettings' . DS . 'config' . DS . 'config.php';

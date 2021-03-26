@@ -33,13 +33,13 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         'app.Base/Roles',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadNotificationSettings();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->unloadNotificationSettings();
@@ -53,7 +53,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
     public function testNotificationOrgSettingsGetControllerNotLoggedIn()
     {
         $this->getJson('/settings/emails/notifications.json?api-version=v2');
-        $this->assertForbiddenError('You need to login to access this location.');
+        $this->assertAuthenticationError();
     }
 
     /**

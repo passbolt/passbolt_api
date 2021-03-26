@@ -16,24 +16,28 @@ declare(strict_types=1);
  */
 namespace App\Middleware;
 
-use App\Auth\GpgAuthenticate;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
+use App\Authenticator\GpgAuthenticator;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class GpgAuthHeadersMiddleware
+class GpgAuthHeadersMiddleware implements MiddlewareInterface
 {
     /**
-     * Checks and sets the CSRF token depending on the HTTP verb.
+     * Set GPGAuth Headers.
      *
      * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $response The response.
-     * @param callable $next Callback to invoke the next middleware.
+     * @param \Cake\Http\Response $handler The response.
      * @return \Cake\Http\Response A response
      */
-    public function __invoke(ServerRequest $request, Response $response, $next)
-    {
-        $response = $next($request, $response);
-        $allowedHeaders = GpgAuthenticate::HTTP_HEADERS_WHITELIST;
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
+        /** @var \Cake\Http\Response $response */
+        $response = $handler->handle($request);
+        $allowedHeaders = GpgAuthenticator::HTTP_HEADERS_WHITELIST;
 
         $response = $response
             ->withHeader('X-GPGAuth-Version', '1.3.0')
@@ -42,6 +46,11 @@ class GpgAuthHeadersMiddleware
             ->withHeader('X-GPGAuth-Verify-URL', '/auth/verify')
             ->withHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json')
             ->withHeader('Access-Control-Expose-Headers', $allowedHeaders);
+
+        $authenticationHeaders = $request->getAttribute('authenticationResult')->getErrors() ?? [];
+        foreach ($authenticationHeaders as $header => $msg) {
+            $response = $response->withHeader($header, $msg);
+        }
 
         return $response;
     }

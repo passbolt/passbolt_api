@@ -16,15 +16,25 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
+use Cake\Mailer\TransportFactory;
+use Cake\TestSuite\EmailTrait;
+use Passbolt\WebInstaller\Controller\EmailController;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class EmailControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    use EmailTrait;
+
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
         $this->initWebInstallerSession();
+    }
+
+    public function tearDown(): void
+    {
+        TransportFactory::drop(EmailController::TRANSPORT_CONFIG_NAME);
     }
 
     public function testWebInstallerEmailViewSuccess()
@@ -32,14 +42,32 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/email');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Email configuration', $data);
+        $this->assertStringContainsString('Email configuration', $data);
     }
 
     public function testWebInstallerEmailPostSuccess()
     {
-        // Problem how to test valid config in the test without
-        // leaking credentials :)
-        $this->markTestIncomplete();
+        $postData = [
+            'sender_name' => 'Passbolt Test',
+            'sender_email' => 'test@passbolt.com',
+            'host' => 'unreachable_host',
+            'tls' => true,
+            'port' => 123,
+            'username' => 'test@passbolt.com',
+            'password' => 'password',
+            'send_test_email' => true,
+            'email_test_to' => 'receiver@passbolt.test',
+        ];
+
+        $this->post('/install/email', $postData);
+        $this->assertResponseOk();
+        $this->assertMailSentFrom('test@passbolt.com');
+        $this->assertMailSentTo('receiver@passbolt.test');
+        $this->assertMailCount(1);
+        $this->assertMailContains('Congratulations!');
+        $this->assertMailContains(
+            'If you receive this email, it means that your passbolt smtp configuration is working fine.'
+        );
     }
 
     public function testWebInstallerEmailPostError_InvalidData()
@@ -56,7 +84,8 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/email', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('The data entered are not correct', $data);
+        $this->assertStringContainsString('The data entered are not correct', $data);
+        $this->assertMailCount(0);
     }
 
     public function testWebInstallerEmailPostError_CannotSendTestEmail()
@@ -75,6 +104,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/email', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Email could not be sent', $data);
+        $this->assertStringContainsString('Enter your SMTP server settings.', $data);
+        $this->assertMailCount(1);
     }
 }

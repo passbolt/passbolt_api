@@ -34,14 +34,14 @@ class SoftDeleteTest extends TagTestCase
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Resources);
         unset($this->Tags);

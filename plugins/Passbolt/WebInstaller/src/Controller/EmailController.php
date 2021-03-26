@@ -17,14 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Exception\Exception;
-use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
+use Cake\TestSuite\TestEmailTransport;
 use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
 {
-    public $components = ['Flash'];
-
     /**
      * Transport class to be used for testing.
      * We use our own DebugSmtp that will get the server communication trace.
@@ -88,7 +87,9 @@ class EmailController extends WebInstallerController
         try {
             $this->validateData($data);
         } catch (Exception $e) {
-            return $this->_error($e->getMessage());
+            $this->_error($e->getMessage());
+
+            return;
         }
 
         if (isset($data['send_test_email'])) {
@@ -124,7 +125,7 @@ class EmailController extends WebInstallerController
      */
     protected function sendTestEmail($data)
     {
-        $this->email = new Email('default');
+        $this->email = new Mailer('default');
         $this->_setTransport(self::TRANSPORT_CLASS, $data);
 
         try {
@@ -134,7 +135,7 @@ class EmailController extends WebInstallerController
                 ])
                 ->setTo($data['email_test_to'])
                 ->setSubject(__('passbolt test email'))
-                ->send($this->_getDefaultMessage());
+                ->deliver($this->_getDefaultMessage());
         } catch (\Exception $e) {
             $trace = $this->email->getTransport()->getTrace();
             $this->set([
@@ -158,6 +159,9 @@ class EmailController extends WebInstallerController
      */
     protected function _setTransport($customTransportClassName, $data)
     {
+        if ($this->isRunningOnTestEnvironment()) {
+            return;
+        }
         $transportConfig = TransportFactory::getConfig('default');
         $transportConfig['className'] = $customTransportClassName;
         $transportConfig['host'] = $data['host'];
@@ -180,5 +184,16 @@ class EmailController extends WebInstallerController
             __('If you receive this email, it means that your passbolt smtp configuration is working fine.');
 
         return $message;
+    }
+
+    /**
+     * We exceptionally need here to detect test environment in order to make
+     * the sending of email testable.
+     *
+     * @return bool
+     */
+    protected function isRunningOnTestEnvironment(): bool
+    {
+        return TransportFactory::getConfig('default')['className'] === TestEmailTransport::class;
     }
 }

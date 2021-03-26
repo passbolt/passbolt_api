@@ -64,7 +64,7 @@ class UserLogsController extends AppController
         }
 
         // Get pagination options.
-        $options = $this->Paginator->mergeOptions(null, $this->paginate);
+        $options = $this->Paginator->mergeOptions('', $this->paginate);
 
         try {
             $actionLogFinder = new ActionLogsFinder();

@@ -54,7 +54,7 @@ class DirectoryEntriesTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -98,7 +98,7 @@ class DirectoryEntriesTable extends Table
         $validator
             ->scalar('id')
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->utf8('directory_name', __('The directory name is not a valid utf8 string.'))
@@ -108,12 +108,12 @@ class DirectoryEntriesTable extends Table
                 __('The directory_name length should be maximum {0} characters.', self::DN_MAX_LENGTH)
             )
             ->requirePresence('directory_name', 'create', __('A directory_name is required.'))
-            ->notEmpty('directory_name', __('The directory_name cannot be empty.'));
+            ->notEmptyString('directory_name', __('The directory_name cannot be empty.'));
 
         $validator
             ->scalar('foreign_key')
             ->uuid('foreign_key')
-            ->allowEmpty('foreign_key');
+            ->allowEmptyString('foreign_key');
 
         $validator
             ->scalar('foreign_model')
@@ -129,7 +129,7 @@ class DirectoryEntriesTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
     {
         return $rules;
     }

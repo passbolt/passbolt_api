@@ -40,7 +40,7 @@ class SubscriptionKeyDtoForm extends Form
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('customer_id', 'string')
@@ -57,7 +57,7 @@ class SubscriptionKeyDtoForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('users', 'create', __('A users quantity is required.'))
@@ -68,13 +68,13 @@ class SubscriptionKeyDtoForm extends Form
                 'message' => __('The users limit is exceeded.'),
             ])
             ->requirePresence('created', 'create', __('A creation date is required.'))
-            ->notEmptyString('created', __('A creation date is required.'))
+            ->notEmptyDateTime('created', __('A creation date is required.'))
             ->add('created', 'is_created_in_past', [
                 'rule' => [$this, 'checkCreatedInPast'],
                 'message' => __('The key should have been created in the past.'),
             ])
             ->requirePresence('expiry', 'create', __('An expiry date is required.'))
-            ->notEmptyString('expiry', __('An expiry date is required.'))
+            ->notEmptyDate('expiry', __('An expiry date is required.'))
             ->add('expiry', 'is_not_expired', [
                 'last' => true,
                 'rule' => [$this, 'checkNotExpired'],
@@ -97,7 +97,7 @@ class SubscriptionKeyDtoForm extends Form
      * @param array|null $context not in use
      * @return bool
      */
-    public function checkUsersLimitIsInRange(string $value, ?array $context = null): bool
+    public function checkUsersLimitIsInRange($value, ?array $context = null): bool
     {
         try {
             /** @var \App\Model\Table\UsersTable $Users */

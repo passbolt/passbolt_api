@@ -42,7 +42,7 @@ class SubscriptionsTableTest extends TestCase
      */
     public $Subscriptions;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -53,7 +53,7 @@ class SubscriptionsTableTest extends TestCase
         OrganizationSettingFactory::make(2)->persist();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Subscriptions);
     }

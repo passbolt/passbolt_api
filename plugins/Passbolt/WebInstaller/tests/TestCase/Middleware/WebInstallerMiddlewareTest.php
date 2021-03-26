@@ -16,21 +16,30 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Middleware;
 
+use Cake\Core\Configure;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
 {
     public function testWebInstallerMiddleware_testConfiguredRedirect()
     {
+        $backUpConfigured = Configure::read('passbolt.webInstaller.configured');
+        Configure::write('passbolt.webInstaller.configured', true);
         $this->get('/users');
         $this->assertResponseCode(302);
         $this->assertRedirectContains('/auth/login');
+        Configure::write('passbolt.webInstaller.configured', $backUpConfigured);
     }
 
     public function testWebInstallerMiddleware_testConfiguredForbidden()
     {
+        $backUpConfigured = Configure::read('passbolt.webInstaller.configured');
+        Configure::write('passbolt.webInstaller.configured', true);
+        // We load the plugin here manually in order to ensure the routes to be defined.
+        $this->loadPlugins(['Passbolt/WebInstaller' => ['bootstrap' => true, 'routes' => true]]);
         $this->get('/install');
         $this->assertResponseCode(403);
+        Configure::write('passbolt.webInstaller.configured', $backUpConfigured);
     }
 
     public function testWebInstallerMiddleware_testMockNotConfiguredStartPage()
@@ -39,7 +48,7 @@ class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
         $this->get('/install');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('<div id="container" class="page setup start', $data);
+        $this->assertStringContainsString('<div id="container" class="page setup start', $data);
     }
 
     public function testWebInstallerMiddleware_testNotConfiguredRedirect()

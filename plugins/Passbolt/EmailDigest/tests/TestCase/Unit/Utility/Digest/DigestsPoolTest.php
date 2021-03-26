@@ -30,7 +30,7 @@ class DigestsPoolTest extends TestCase
      */
     private $digestsPool;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->digestsPool = DigestsPool::getInstance();
         parent::setUp();

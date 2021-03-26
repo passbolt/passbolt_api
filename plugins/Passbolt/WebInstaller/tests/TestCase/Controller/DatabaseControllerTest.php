@@ -20,7 +20,7 @@ use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class DatabaseControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->dropAllTables();
@@ -28,7 +28,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->initWebInstallerSession();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->restoreTestConnection();
@@ -39,7 +39,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/database');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Database configuration', $data);
+        $this->assertStringContainsString('Database configuration', $data);
     }
 
     public function testWebInstallerDatabasePostSuccess()
@@ -60,7 +60,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/database', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('The data entered are not correct', $data);
+        $this->assertStringContainsString('The data entered are not correct', $data);
     }
 
     public function testWebInstallerDatabasePostError_CannotConnectToTheDatabase()
@@ -72,6 +72,6 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/database', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('A connection could not be established with the credentials provided. Please verify the settings.', $data);
+        $this->assertStringContainsString('A connection could not be established with the credentials provided. Please verify the settings.', $data);
     }
 }

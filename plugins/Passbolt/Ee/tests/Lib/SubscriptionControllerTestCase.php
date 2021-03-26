@@ -39,7 +39,7 @@ class SubscriptionControllerTestCase extends AppIntegrationTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setUpPathAndPublicSubscriptionKey();
@@ -49,7 +49,7 @@ class SubscriptionControllerTestCase extends AppIntegrationTestCase
     /**
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Subscriptions);
     }

@@ -34,7 +34,7 @@ class DirectoryReportsItemsTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::exists('DirectoryReportsItems') ? [] : ['className' => DirectoryReportsItemsTable::class];
@@ -46,7 +46,7 @@ class DirectoryReportsItemsTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->DirectoryReportsItems);
 

@@ -33,7 +33,7 @@ class SubscriptionKeyDtoFormTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadPlugins(['Passbolt/Ee']);
@@ -90,7 +90,7 @@ class SubscriptionKeyDtoFormTest extends TestCase
      */
     public function testSubscriptionKeyValidator($data, $errorMessages)
     {
-        UserFactory::make()->persist();
+        UserFactory::make()->user()->persist();
 
         $form = new SubscriptionKeyDtoForm();
         $isValid = $form->execute($this->mergeWithStandardData($data));

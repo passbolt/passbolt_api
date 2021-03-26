@@ -31,7 +31,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     ];
     public $AuthenticationTokens;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
@@ -83,7 +83,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->postJson($url, $data);
         $this->assertError();
         $this->assertNotEmpty($this->_responseJsonBody);
-        $this->assertContains('_isUnique', $this->_getBodyAsString());
+        $this->assertStringContainsString('_isUnique', $this->_getBodyAsString());
     }
 
     /**

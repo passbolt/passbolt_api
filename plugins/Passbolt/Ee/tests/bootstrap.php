@@ -28,6 +28,7 @@ if (file_exists($root . '/config/bootstrap.php')) {
     require $root . '/config/bootstrap.php';
 
     \CakephpTestMigrator\Migrator::migrate();
+    \CakephpTestSuiteLight\Sniffer\SnifferRegistry::get('test')->markAllTablesAsDirty();
 
     return;
 }

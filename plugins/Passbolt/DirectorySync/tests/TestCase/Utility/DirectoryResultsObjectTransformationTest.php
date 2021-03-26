@@ -29,7 +29,7 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }

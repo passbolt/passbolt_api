@@ -158,7 +158,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=&contain[tag]=');
         $this->assertError(400);
         $response = json_decode($this->_getBodyAsString());
-        $this->assertContains('Invalid filter.', $response->header->message);
+        $this->assertStringContainsString('Invalid filter.', $response->header->message);
     }
 
     // An error message should be shown if the tag in the tag filter is too long
@@ -169,6 +169,6 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=&contain[tag]=' . $tag);
         $this->assertError(400);
         $response = json_decode($this->_getBodyAsString());
-        $this->assertContains('Invalid filter.', $response->header->message);
+        $this->assertStringContainsString('Invalid filter.', $response->header->message);
     }
 }

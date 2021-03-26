@@ -29,7 +29,7 @@ use Passbolt\Ee\Test\Lib\SubscriptionControllerTestCase;
  */
 class SubscriptionsUpdateControllerTest extends SubscriptionControllerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->persistValidSubscription();
@@ -102,7 +102,7 @@ class SubscriptionsUpdateControllerTest extends SubscriptionControllerTestCase
     {
         $this->authenticateAs('admin');
         $data = $this->getValidSubscriptionKey();
-        UserFactory::make(50)->active()->persist();
+        UserFactory::make(50)->user()->active()->persist();
         $this->putJson('/ee/subscription/key.json', compact('data'));
         $this->assertPaymentRequiredError('The users limit is exceeded.');
     }

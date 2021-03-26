@@ -20,7 +20,7 @@ namespace App\Controller;
 use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
@@ -34,6 +34,7 @@ use Cake\Routing\Router;
  * @property \App\Controller\Component\UserComponent $User
  * @property \App\Controller\Component\QueryStringComponent $QueryString
  * @property \Cake\Controller\Component\AuthComponent $Auth
+ * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller
@@ -55,19 +56,21 @@ class AppController extends Controller
         $this->loadComponent('QueryString');
 
         /*
-         * Auth Component
+         * Authentication Component
          */
-        $this->loadComponent('Auth', [
-            'authenticate' => [
-                'Gpg',
-            ],
-            'loginAction' => [
-                'prefix' => 'Auth',
-                'controller' => 'AuthLogin',
-                'action' => 'loginGet',
-                '_method' => 'GET',
-                'plugin' => null,
-            ],
+        $loginUrl = Router::url([
+            'prefix' => 'Auth',
+            'plugin' => null,
+            'controller' => 'AuthLogin',
+            'action' => 'loginGet',
+            '_method' => 'GET',
+            '_ext' => $this->getRequest()->is('json') ? 'json' : null,
+        ]);
+
+        $this->loadComponent('Authentication.Authentication', [
+            'unauthenticatedRedirect' => $loginUrl,
+            'logoutRedirect' => $loginUrl,
+            'queryParam' => 'redirect',
         ]);
 
         // Init user action.
@@ -81,12 +84,9 @@ class AppController extends Controller
     }
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(EventInterface $event)
     {
         $safeMode = !Configure::read('debug');
         $safeMode = $safeMode && preg_match('/^https/', Configure::read('App.fullBaseUrl'));
@@ -105,19 +105,18 @@ class AppController extends Controller
      */
     protected function success($message = null, $body = null)
     {
-        $this->set([
-            'header' => [
-                'id' => UserAction::getInstance()->getUserActionId(),
-                'status' => 'success',
-                'servertime' => time(),
-                'action' => UserAction::getInstance()->getActionId(),
-                'message' => $message,
-                'url' => Router::url(),
-                'code' => 200,
-            ],
-            'body' => $body,
-            '_serialize' => ['header', 'body'],
-        ]);
+        $header = [
+            'id' => UserAction::getInstance()->getUserActionId(),
+            'status' => 'success',
+            'servertime' => time(),
+            'action' => UserAction::getInstance()->getActionId(),
+            'message' => $message,
+            'url' => Router::url(),
+            'code' => 200,
+        ];
+        $this->set(compact('header', 'body'));
+
+        $this->viewBuilder()->setOption('serialize', ['header', 'body', 'pagination']);
         $this->setViewBuilderOptions();
     }
 
@@ -135,19 +134,18 @@ class AppController extends Controller
             $this->response = $this->response->withStatus($errorCode);
         }
 
-        $this->set([
-            'header' => [
-                'id' => UserAction::getInstance()->getUserActionId(),
-                'status' => 'error',
-                'servertime' => time(),
-                'action' => UserAction::getInstance()->getActionId(),
-                'message' => $message,
-                'url' => Router::url(),
-                'code' => $errorCode,
-            ],
-            'body' => $body,
-            '_serialize' => ['header', 'body'],
-        ]);
+        $header = [
+            'id' => UserAction::getInstance()->getUserActionId(),
+            'status' => 'error',
+            'servertime' => time(),
+            'action' => UserAction::getInstance()->getActionId(),
+            'message' => $message,
+            'url' => Router::url(),
+            'code' => $errorCode,
+        ];
+        $this->set(compact('header', 'body'));
+
+        $this->viewBuilder()->setOption('serialize', ['header', 'body',]);
         $this->setViewBuilderOptions();
     }
 

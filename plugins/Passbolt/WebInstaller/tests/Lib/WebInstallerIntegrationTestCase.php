@@ -38,16 +38,15 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
      */
     public $Subscriptions;
 
-    public function setUp()
+    public function setUp(): void
     {
         TableRegistry::getTableLocator()->clear();
         parent::setUp();
-        $this->loadPlugins(['Passbolt/WebInstaller', 'Passbolt/Ee']);
         $this->_recover = false;
         $this->Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         if ($this->_recover) {

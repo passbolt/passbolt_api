@@ -226,7 +226,7 @@ class FoldersDeleteService
         $canDelete = $this->userHasPermissionService
             ->check(PermissionsTable::RESOURCE_ACO, $resourceId, $userId, Permission::UPDATE);
         if (!$canDelete) {
-            throw new ForbiddenException('You cannot delete this resource');
+            throw new ForbiddenException(__('You cannot delete this resource'));
         }
 
         $resource = $this->resourcesTable->get($resourceId);

@@ -103,7 +103,7 @@ trait GroupsFindersTrait
         // If contains user_group_user.
         if (isset($options['contain']['my_group_user'])) {
             $query->contain('MyGroupUser', function ($q) use ($options) {
-                return $q->where(['MyGroupUser.user_id' => $options['my_user_id']]);
+                return $q->where(['MyGroupUser.user_id' => $options['my_user_id'] ?? '']);
             });
         }
 
@@ -217,7 +217,7 @@ trait GroupsFindersTrait
         // If there is only one user use a left join
         if (count($usersIds) == 1) {
             $query->leftJoinWith('GroupsUsers');
-            $query->where(['GroupsUsers.user_id' => $usersIds[0]]);
+            $query->where(['GroupsUsers.user_id' => $usersIds[0] ?? '']);
             // If we want to retrieve only managers.
             if ($areManager) {
                 $query->where(['GroupsUsers.is_admin' => true]);

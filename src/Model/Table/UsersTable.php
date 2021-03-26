@@ -38,7 +38,6 @@ use Cake\Validation\Validator;
  * Users Model
  *
  * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsTo $Roles
- * @property \Burzum\FileStorage\Model\Table\FileStorageTable|\Cake\ORM\Association\HasMany $FileStorage
  * @property \App\Model\Table\GpgkeysTable|\Cake\ORM\Association\HasMany $Gpgkeys
  * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasMany $Permissions
  * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
@@ -81,9 +80,6 @@ class UsersTable extends Table
             'joinType' => 'INNER',
         ]);
         $this->hasMany('AuthenticationTokens', [
-            'foreignKey' => 'user_id',
-        ]);
-        $this->hasMany('FileStorage', [
             'foreignKey' => 'user_id',
         ]);
         $this->hasOne('Gpgkeys', [
@@ -293,8 +289,6 @@ class UsersTable extends Table
         // Populates fields required for Avatar, if needed.
         if (!empty(Hash::get($data, 'profile.avatar'))) {
             if (!empty(Hash::get($data, 'profile.avatar.file'))) {
-                $data['profile']['avatar']['user_id'] = $user->id;
-                $data['profile']['avatar']['foreign_key'] = $user->profile->id;
                 // Force creation of new Avatar.
                 $user->profile->avatar = new Avatar();
             } else {

@@ -38,14 +38,14 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
     use GpgkeysModelTrait;
     use DummySubscriptionTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->skipTestIfNotWebInstallerFriendly();
         $this->backupConfiguration();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->restoreConfiguration();

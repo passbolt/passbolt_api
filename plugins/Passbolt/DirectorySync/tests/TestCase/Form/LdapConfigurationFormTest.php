@@ -31,7 +31,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
-        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars',
+        'app.Base/GroupsUsers', 'app.Base/Permissions',
         'app.Base/Favorites',
     ];
 

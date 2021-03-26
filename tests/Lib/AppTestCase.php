@@ -53,7 +53,7 @@ abstract class AppTestCase extends TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.tags.enabled', false);
@@ -65,7 +65,7 @@ abstract class AppTestCase extends TestCase
     /**
      * Tear dow
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->clearPlugins();
         parent::tearDown();

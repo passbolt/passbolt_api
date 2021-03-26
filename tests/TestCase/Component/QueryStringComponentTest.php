@@ -34,7 +34,7 @@ class QueryStringComponentTest extends TestCase
      */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->registryMock = $this->createMock(ComponentRegistry::class);
 

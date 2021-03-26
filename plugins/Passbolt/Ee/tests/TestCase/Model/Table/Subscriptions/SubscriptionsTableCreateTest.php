@@ -38,7 +38,7 @@ class SubscriptionsTableCreateTest extends TestCase
      */
     public $Subscriptions;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -47,7 +47,7 @@ class SubscriptionsTableCreateTest extends TestCase
         $this->Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Subscriptions);
     }

@@ -54,7 +54,7 @@ class TotpVerifyForm extends MfaForm
      * @param \Cake\Form\Schema $schema schema
      * @return $this|\Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('totp', ['type' => 'string']);
@@ -66,20 +66,20 @@ class TotpVerifyForm extends MfaForm
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('totp', __('An OTP is required.'))
-            ->notEmpty('totp', __('The OTP should not be empty.'))
+            ->notEmptyString('totp', __('The OTP should not be empty.'))
             ->add('totp', ['numeric' => [
                 'rule' => 'numeric',
                 'last' => true,
-                'message' => 'The OTP should be composed of numbers only.',
+                'message' => __('The OTP should be composed of numbers only.'),
             ]])
             ->add('totp', ['minLength' => [
                 'rule' => ['minLength', 6],
                 'last' => true,
-                'message' => 'The OTP should be at least 6 characters long',
+                'message' => __('The OTP should be at least 6 characters long'),
             ]])
             ->add('totp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],

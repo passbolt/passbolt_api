@@ -219,7 +219,7 @@ class FoldersCreateService
         try {
             $this->foldersTable->get($folderParentId);
         } catch (RecordNotFoundException $e) {
-            $errors = ['folder_exists' => 'The folder parent must exist.'];
+            $errors = ['folder_exists' => __('The folder parent must exist.')];
 
             $folder->setError('folder_parent_id', $errors);
 
@@ -231,7 +231,7 @@ class FoldersCreateService
         $isAllowedToMoveIn = $this->userHasPermissionService
             ->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
         if (!$isAllowedToMoveIn) {
-            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+            $errors = ['has_folder_access' => __('You are not allowed to create content into the parent folder.')];
 
             $folder->setError('folder_parent_id', $errors);
 

@@ -18,14 +18,17 @@ namespace Passbolt\MultiFactorAuthentication\Middleware;
 
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class MfaMiddleware
+class MfaMiddleware implements MiddlewareInterface
 {
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
@@ -33,11 +36,18 @@ class MfaMiddleware
     private $mfaSettings;
 
     /**
-     * @inheritDoc
+     * Mfa Middleware.
+     *
+     * @param \Cake\Http\ServerRequest $request The request.
+     * @param \Cake\Http\Response $handler The handler.
+     * @return \Cake\Http\Response The response.
      */
-    public function __invoke(ServerRequest $request, Response $response, $next)
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
         if ($this->requiredMfaCheck($request)) {
+            $response = $handler->handle($request);
             // Clear any dubious cookie if mfa check required
             if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
                 $secure = Configure::read('passbolt.security.cookies.secure') || $request->is('ssl');
@@ -50,7 +60,7 @@ class MfaMiddleware
                 ->withLocation($this->getVerifyUrl($request));
         }
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 
     /**
@@ -60,7 +70,7 @@ class MfaMiddleware
     protected function requiredMfaCheck(ServerRequest $request)
     {
         // User is not logged in
-        $user = $request->getSession()->read('Auth.User');
+        $user = $request->getSession()->read('Auth');
         if (!isset($user)) {
             return false;
         }

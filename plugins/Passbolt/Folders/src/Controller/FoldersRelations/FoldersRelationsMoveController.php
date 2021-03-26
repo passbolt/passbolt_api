@@ -62,14 +62,14 @@ class FoldersRelationsMoveController extends AppController
     private function getAndValidateFolderParentId(?array $data = [])
     {
         if (!array_key_exists('folder_parent_id', $data)) {
-            $errors = ['folder_parent_id' => ['_required' => 'A folder parent id is required.']];
+            $errors = ['folder_parent_id' => ['_required' => __('A folder parent id is required.')]];
             $this->handleValidationErrors($errors);
         }
 
         $folderParentId = $data['folder_parent_id'];
 
         if (!is_null($folderParentId) && !Validation::uuid($folderParentId)) {
-            $errors = ['folder_parent_id' => ['uuid' => 'The folder parent id is not valid.']];
+            $errors = ['folder_parent_id' => ['uuid' => __('The folder parent id is not valid.')]];
             $this->handleValidationErrors($errors);
         }
 

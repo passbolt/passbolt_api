@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Test\Factory;
 
 use App\Model\Entity\Role;
+use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 /**
  * UserFactory
@@ -28,17 +30,23 @@ class UserFactory extends CakephpBaseFactory
      *
      * @return void
      */
-    protected function setDefaultTemplate()
+    protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'username' => $faker->userName . '@passbolt.com',
                 'active' => true,
                 'deleted' => false,
+                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];
         });
 
-        $this->with('Roles');
+        $this
+            ->with('Roles')
+            ->with('Profiles')
+            ->with('Gpgkeys')
+            ->with('GroupsUsers');
     }
 
     /**
@@ -47,11 +55,7 @@ class UserFactory extends CakephpBaseFactory
      */
     public function withRole(string $name)
     {
-        $this->without('Roles');
-
-        return $this->patchData([
-            'role_id' => RoleFactory::make()->getRootTableRegistry()->findOrCreate(compact('name'))->id,
-        ]);
+        return $this->with('Roles', compact('name'));
     }
 
     /**
@@ -60,6 +64,22 @@ class UserFactory extends CakephpBaseFactory
     public function admin()
     {
         return $this->withRole(Role::ADMIN);
+    }
+
+    /**
+     * @return $this
+     */
+    public function user()
+    {
+        return $this->withRole(Role::USER);
+    }
+
+    /**
+     * @return $this
+     */
+    public function guest()
+    {
+        return $this->withRole(Role::GUEST);
     }
 
     /**
@@ -76,5 +96,14 @@ class UserFactory extends CakephpBaseFactory
     public function active()
     {
         return $this->patchData(['active' => true]);
+    }
+
+    /**
+     * @param int $n
+     * @return self
+     */
+    public function withLogIn(int $n = 1): self
+    {
+        return $this->with('ActionLogs', ActionLogFactory::make($n)->loginAction());
     }
 }

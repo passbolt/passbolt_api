@@ -20,31 +20,44 @@ use App\Controller\AppController;
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
-use Cake\Event\Event;
 
 /**
- * @property UsersTable Users
+ * @property \App\Model\Table\UsersTable Users
  */
 class UsersIndexController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function initialize(): void
     {
-        $this->loadModel('Users');
-
-        return parent::beforeFilter($event);
+        parent::initialize();
+        $this->loadComponent('BryanCrowe/ApiPagination.ApiPagination', [
+            'model' => 'Users',
+        ]);
     }
+
+    public $paginate = [
+        'sortableFields' => [
+            'Profiles.first_name',
+            'Profiles.last_name',
+            'Profiles.created',
+            'Profiles.modified',
+            'Users.username',
+            'Users.modified',
+            'Users.last_logged_in',
+        ],
+        'limit' => 1000000, // Default number of resources per page,
+        'maxLimit' => 1000000, // Maximum amount of items returned (CakePHP default = 100)
+    ];
 
     /**
      * @return void
      */
     public function index()
     {
+        $this->loadModel('Users');
+
         $findIndexOptions = (new FindIndexOptions())
             ->allowContains([
                 'last_logged_in', 'groups_users', 'gpgkey', 'profile', 'role',
@@ -68,7 +81,7 @@ class UsersIndexController extends AppController
         );
 
         $users = $this->Users->findIndex($this->User->role(), $computedFindIndexOptions);
-
+        $this->paginate($users);
         $this->success(__('The operation was successful.'), $users);
     }
 }

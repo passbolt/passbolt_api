@@ -43,7 +43,7 @@ class EmailSenderTest extends TestCase
      */
     private $purifySubject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->emailQueueMock = $this->createMock(EmailQueueTable::class);
         $this->purifySubject = false;

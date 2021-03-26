@@ -31,7 +31,7 @@ class CleanupTest extends AppTestCase
     public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
     public $options;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
@@ -45,7 +45,7 @@ class CleanupTest extends AppTestCase
         ]];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->GroupsUsers);
         unset($this->Groups);

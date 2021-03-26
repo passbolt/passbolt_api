@@ -31,7 +31,7 @@ class SubscriptionForm extends Form
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('subscription_key', 'text');
@@ -43,7 +43,7 @@ class SubscriptionForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('subscription_key', 'create', __('A subscription key is required.'))
@@ -51,7 +51,7 @@ class SubscriptionForm extends Form
             ->add('subscription_key', 'is_valid_subscription', [
                 'last' => true,
                 'rule' => [$this, 'checkSubscriptionIsValid'],
-                'message' => 'The subscription format is not valid.',
+                'message' => __('The subscription format is not valid.'),
             ]);
 
         return $validator;
@@ -94,7 +94,7 @@ class SubscriptionForm extends Form
      * @param array $data formdata
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         return true;
     }

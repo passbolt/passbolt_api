@@ -71,14 +71,14 @@ class UserSyncAction extends SyncAction
     /**
      * Get user from data.
      *
-     * @param array $data data
+     * @param string $username username
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    protected function getUserFromData(array $data)
+    protected function getUserFromData(string $username)
     {
         $existingUser = $this->Users->find()
             ->select(['id', 'username', 'active', 'deleted', 'created', 'modified'])
-            ->where(['username' => $data['user']['username']])
+            ->where(compact('username'))
             ->order(['Users.modified' => 'DESC'])
             ->first();
         if (!isset($existingUser) || empty($existingUser)) {

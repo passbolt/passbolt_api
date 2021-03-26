@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Test\Factory;
 
+use App\Model\Entity\Role;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -11,6 +12,10 @@ use Faker\Generator;
  */
 class RoleFactory extends CakephpBaseFactory
 {
+    protected $uniqueProperties = [
+        'name',
+    ];
+
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -27,12 +32,41 @@ class RoleFactory extends CakephpBaseFactory
      *
      * @return void
      */
-    protected function setDefaultTemplate()
+    protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'name' => $faker->name,
             ];
         });
+    }
+
+    public function guest()
+    {
+        return $this->patchData(['name' => Role::GUEST]);
+    }
+
+    public function user()
+    {
+        return $this->patchData(['name' => Role::USER]);
+    }
+
+    public function admin()
+    {
+        return $this->patchData(['name' => Role::ADMIN]);
+    }
+
+    public function findOrCreate(): Role
+    {
+        $role = $this->getEntity();
+        $duplicate = $this->getRootTableRegistry()
+            ->findByName($role->name)
+            ->first();
+
+        if ($duplicate) {
+            return $duplicate;
+        } else {
+            return $this->persist();
+        }
     }
 }

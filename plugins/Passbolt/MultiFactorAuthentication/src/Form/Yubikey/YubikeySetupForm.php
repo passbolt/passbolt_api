@@ -30,11 +30,11 @@ class YubikeySetupForm extends YubikeyVerifyForm
      * @param \Cake\Validation\Validator $validator validation rules
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('hotp', __('An OTP is required.'))
-            ->notEmpty('hotp', __('The OTP should not be empty.'))
+            ->notEmptyString('hotp', __('The OTP should not be empty.'))
             ->add('hotp', ['isValidModhex' => [
                 'rule' => [$this, 'isValidModhex'],
                 'last' => true,
@@ -54,7 +54,7 @@ class YubikeySetupForm extends YubikeyVerifyForm
      * @param array $data user submited data
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         try {
             // Save yubikey id to ensure next time use

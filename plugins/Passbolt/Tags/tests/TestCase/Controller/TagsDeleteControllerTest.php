@@ -101,7 +101,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
         $this->delete("/tags/$tagId.json?api-version=v2");
         $this->assertResponseCode(403);
         $result = $this->_getBodyAsString();
-        $this->assertContains('Missing CSRF token cookie', $result);
+        $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
     }
 
     /**

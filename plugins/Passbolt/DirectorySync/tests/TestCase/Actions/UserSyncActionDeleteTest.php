@@ -26,7 +26,7 @@ class UserSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
 {
     use AssertUsersTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->initAction();
@@ -55,7 +55,7 @@ class UserSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
         $this->assertReportEmpty($report);
         $this->assertDirectoryIgnoreEmpty();
         $this->assertDirectoryEntryEmpty();
-        $this->assertTrue(true, true); // there is no spoon.
+        $this->assertTrue(true); // there is no spoon.
     }
 
     /**

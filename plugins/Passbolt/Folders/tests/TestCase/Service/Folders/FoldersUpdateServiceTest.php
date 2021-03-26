@@ -21,7 +21,6 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
@@ -60,8 +59,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
-        GroupsFixture::class,
+    GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,
@@ -84,7 +82,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = new FoldersUpdateService();
@@ -96,7 +94,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->unloadNotificationSettings();

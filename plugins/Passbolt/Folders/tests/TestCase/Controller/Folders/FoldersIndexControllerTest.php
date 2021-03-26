@@ -31,7 +31,6 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
-use Burzum\FileStorage\Test\Fixture\FileStorageFixture;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
@@ -59,10 +58,9 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         ResourceTypesFixture::class,
         SecretsFixture::class,
         GroupsFixture::class,
-        FileStorageFixture::class,
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
@@ -336,7 +334,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $folder = $result[0];
 
         $this->assertFolderAttributes($folder);
-        $this->assertAttributeNotEmpty('children_resources', $folder);
+        $this->assertNotEmpty($folder->children_resources);
         $this->assertCount(2, $folder->children_resources);
         foreach ($folder->children_resources as $childResource) {
             $this->assertResourceAttributes($childResource);
@@ -369,7 +367,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $folder = $result[0];
 
         $this->assertFolderAttributes($folder);
-        $this->assertAttributeNotEmpty('children_folders', $folder);
+        $this->assertNotEmpty($folder->children_folders);
         $this->assertCount(2, $folder->children_folders);
         foreach ($folder->children_folders as $childFolder) {
             $this->assertFolderAttributes($childFolder);

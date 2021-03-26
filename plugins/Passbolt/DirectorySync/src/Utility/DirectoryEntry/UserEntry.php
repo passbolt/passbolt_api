@@ -120,15 +120,15 @@ class UserEntry extends DirectoryEntry
         parent::_validate();
 
         if (empty($this->user['username'])) {
-            $this->_addError('email', 'user email could not be retrieved');
+            $this->_addError('email', __('user email could not be retrieved'));
         } elseif (!Validation::email($this->user['username'], false)) {
-            $this->_addError('email', 'user email does not seem to have a valid email format');
+            $this->_addError('email', __('user email does not seem to have a valid email format'));
         }
         if (empty($this->user['profile']['first_name'])) {
-            $this->_addError('first_name', 'user first name could not be retrieved');
+            $this->_addError('first_name', __('user first name could not be retrieved'));
         }
         if (empty($this->user['profile']['last_name'])) {
-            $this->_addError('last_name', 'user last name could not be retrieved');
+            $this->_addError('last_name', __('user last name could not be retrieved'));
         }
 
         return !$this->hasErrors();

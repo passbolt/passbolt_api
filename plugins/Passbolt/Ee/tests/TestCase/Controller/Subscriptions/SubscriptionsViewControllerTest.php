@@ -94,7 +94,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
     public function testSubscriptionsViewControllerError_TooFewUsers()
     {
         $this->persistExpiredSubscription();
-        UserFactory::make(50)->active()->persist();
+        UserFactory::make(50)->user()->active()->persist();
         $this->authenticateAs('admin');
         $this->getJson('/ee/subscription/key.json');
         $this->assertPaymentRequiredError('The users limit is exceeded.');

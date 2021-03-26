@@ -27,6 +27,31 @@ use Cake\Http\Exception\InternalErrorException;
 class ResourcesIndexController extends AppController
 {
     /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('BryanCrowe/ApiPagination.ApiPagination', [
+            'model' => 'Resources',
+        ]);
+    }
+
+    public $paginate = [
+        'sortableFields' => [
+            'Resources.name',
+            'Resources.username',
+            'Resources.uri',
+            'Resources.modified',
+        ],
+        'order' => [
+            'Resources.name' => 'asc', // Default sorted field
+        ],
+        'limit' => 1000000, // Default number of resources per page,
+        'maxLimit' => 1000000, // Maximum amount of items returned (CakePHP default = 100)
+    ];
+
+    /**
      * Resource Index action
      *
      * @return void
@@ -42,7 +67,7 @@ class ResourcesIndexController extends AppController
                 'permission', 'permissions', 'permissions.user.profile', 'permissions.group',
             ],
             'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id'],
-            'order' => ['Resource.modified'],
+            'order' => ['Resource.modified'], // This is deprecated, use $paginate, left for retro-compatibility.
         ];
 
         if (Configure::read('passbolt.plugins.tags.enabled')) {
@@ -57,6 +82,7 @@ class ResourcesIndexController extends AppController
         // Retrieve the resources.
         $resources = $this->Resources->findIndex($this->User->id(), $options);
         $this->_logSecretAccesses($resources->all()->toArray());
+        $this->paginate($resources);
         $this->success(__('The operation was successful.'), $resources);
     }
 

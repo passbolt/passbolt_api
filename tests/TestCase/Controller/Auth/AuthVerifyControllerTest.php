@@ -28,7 +28,8 @@ class AuthVerifyControllerTest extends AppIntegrationTestCase
     {
         $this->get('/auth/verify.json');
         $data = json_decode($this->_getBodyAsString());
-        $this->assertEquals($data->body->fingerprint, Configure::read('passbolt.gpg.serverKey.fingerprint'));
+        $this->assertEquals(Configure::read('passbolt.gpg.serverKey.fingerprint'), $data->body->fingerprint);
+        $this->assertTextContains('-----BEGIN PGP PUBLIC KEY BLOCK-----', $data->body->keydata);
         $this->assertResponseOk();
     }
 
@@ -42,7 +43,7 @@ class AuthVerifyControllerTest extends AppIntegrationTestCase
         $this->assertResponseFailure();
         $data = $this->_getBodyAsString();
         $expect = 'The public key for this passbolt instance was not found.';
-        $this->assertContains($expect, $data);
+        $this->assertStringContainsString($expect, $data);
     }
 
     /**

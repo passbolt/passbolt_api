@@ -21,7 +21,7 @@ use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class SubscriptionKeyControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
@@ -45,7 +45,7 @@ class SubscriptionKeyControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/subscription');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Passbolt Pro activation.', $data);
+        $this->assertStringContainsString('Passbolt Pro activation.', $data);
     }
 
     public function testWebInstallerSubscriptionKeyPostSuccess()
@@ -73,7 +73,7 @@ class SubscriptionKeyControllerTest extends WebInstallerIntegrationTestCase
             $this->post('/install/subscription', $postData);
             $data = $this->_getBodyAsString();
             $this->assertResponseOk();
-            $this->assertContains('The subscription format is not valid', $data);
+            $this->assertStringContainsString('The subscription format is not valid', $data);
         }
         $this->assertTrue(true);
     }
@@ -88,8 +88,8 @@ class SubscriptionKeyControllerTest extends WebInstallerIntegrationTestCase
             $this->post('/install/subscription', $postData);
             $data = $this->_getBodyAsString();
             $this->assertResponseOk();
-            $this->assertContains('The subscription format is not valid', $data);
-            $this->assertContains('The subscription is expired', $data);
+            $this->assertStringContainsString('The subscription format is not valid', $data);
+            $this->assertStringContainsString('The subscription is expired', $data);
         }
         $this->assertTrue(true);
     }

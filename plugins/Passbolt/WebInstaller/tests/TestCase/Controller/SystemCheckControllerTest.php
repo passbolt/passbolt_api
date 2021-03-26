@@ -20,7 +20,7 @@ use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->skipTestIfNotWebInstallerFriendly();
