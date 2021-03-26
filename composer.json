@@ -67,8 +67,7 @@
         "bacon/bacon-qr-code": "^1.0",
         "enygma/yubikey": "^3.3",
         "duosecurity/duo_php": "^1.0",
-        "ldaptools/ldaptools": "^0.25.2",
-        "cakephp/authentication": "^2.6.0"
+        "ldaptools/ldaptools": "^0.25.2"
     },
     "require-dev": {
         "phpstan/phpstan": "0.12.81",
