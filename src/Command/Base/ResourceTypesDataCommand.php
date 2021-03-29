@@ -73,7 +73,7 @@ class ResourceTypesDataCommand extends DataCommand
                     ],
                     "secret" => [
                         "type" => "string",
-                        "maxLength" => 4064
+                        "maxLength" => 4096
                     ],
                 ]),
                 'created' => date("Y-m-d H:i:s"),
@@ -121,7 +121,7 @@ class ResourceTypesDataCommand extends DataCommand
                         "properties" => [
                             "password" => [
                                 "type" => "string",
-                                "maxLength" => 4064
+                                "maxLength" => 4096
                             ],
                             "description" => [
                                 "anyOf" => [[
