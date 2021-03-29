@@ -347,7 +347,11 @@ class LdapConfigurationForm extends Form
 
         $User = TableRegistry::getTableLocator()->get('Users');
         if (isset($settings['defaultUser'])) {
-            $defaultUser = $User->find()->where(['Users.username' => $settings['defaultUser']])->first();
+            $defaultUser = $User->find()->where([
+                'Users.username' => $settings['defaultUser'],
+                'Users.deleted' => false,
+                'Users.active' => true,
+            ])->first();
             if (empty($defaultUser)) {
                 $settings['defaultUser'] = '';
             } else {
@@ -356,8 +360,11 @@ class LdapConfigurationForm extends Form
         }
         if (isset($settings['defaultGroupAdminUser'])) {
             $defaultGroupAdminUser = $User->find()
-                ->where(['Users.username' => $settings['defaultGroupAdminUser']])
-                ->first();
+                ->where([
+                    'Users.username' => $settings['defaultGroupAdminUser'],
+                    'Users.deleted' => false,
+                    'Users.active' => true,
+                ])->first();
             if (empty($defaultGroupAdminUser)) {
                 $settings['defaultGroupAdminUser'] = '';
             } else {
