@@ -77,7 +77,7 @@
         "phpunit/phpunit": "^9.5.2",
         "passbolt/cakephp-codesniffer": "dev-master",
         "passbolt/passbolt-selenium-api": "^3.1.0",
-        "passbolt/passbolt-test-data": "^3.1.0",
+        "passbolt/passbolt-test-data": "^3.2.0",
         "vierge-noire/cakephp-fixture-factories": "^2.2",
         "vierge-noire/cakephp-test-migrator": "^2.1.3"
     },
