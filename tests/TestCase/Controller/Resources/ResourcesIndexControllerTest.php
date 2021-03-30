@@ -33,8 +33,11 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions',
     ];
 
+    public $autoFixtures = false;
+
     public function testSuccess()
     {
+        $this->loadFixtures();
         $this->authenticateAs('ada');
         $this->getJson('/resources.json?api-version=2');
         $this->assertSuccess();
@@ -51,6 +54,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
     public function testContainSuccess()
     {
+        $this->loadFixtures();
         $this->authenticateAs('ada');
         $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[permissions.user.profile]=1&contain[permissions.group]=1&contain[secret]=1';
         $this->getJson("/resources.json?$urlParameter&api-version=2");
@@ -94,6 +98,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
     public function testFilterIsFavoriteSuccess()
     {
+        $this->loadFixtures();
         $this->authenticateAs('dame');
         $urlParameter = 'filter[is-favorite]=1';
         $this->getJson("/resources.json?$urlParameter&api-version=2");
@@ -114,6 +119,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
     public function testFilterIsSharedWithGroupSuccess()
     {
+        $this->loadFixtures();
         $this->authenticateAs('irene');
         $groupDId = UuidFactory::uuid('group.id.developer');
         $urlParameter = "filter[is-shared-with-group]=$groupDId";
@@ -138,6 +144,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
     public function testFilterIsSharedWithMeSuccess()
     {
+        $this->loadFixtures();
         $this->authenticateAs('ada');
         $urlParameter = 'filter[is-shared-with-me]=1';
         $this->getJson("/resources.json?$urlParameter&api-version=2");
@@ -160,6 +167,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
     public function testFilterHasIdSuccess()
     {
+        $this->loadFixtures();
         $this->authenticateAs('ada');
         $resourceAId = UuidFactory::uuid('resource.id.apache');
         $resourceBId = UuidFactory::uuid('resource.id.bower');

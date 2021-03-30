@@ -8,9 +8,9 @@ use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
- * ProfileFactory
+ * FavoriteFactory
  */
-class ProfileFactory extends CakephpBaseFactory
+class FavoriteFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -19,7 +19,7 @@ class ProfileFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'Profiles';
+        return 'Favorites';
     }
 
     /**
@@ -32,9 +32,9 @@ class ProfileFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'first_name' => $faker->firstNameFemale,
-                'last_name' => $faker->lastName,
                 'user_id' => $faker->uuid,
+                'foreign_key' => $faker->uuid,
+                'foreign_model' => $faker->uuid,
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];

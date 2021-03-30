@@ -18,7 +18,6 @@ namespace App\Test\TestCase\Command;
 
 use App\Command\MysqlExportCommand;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
@@ -61,10 +60,16 @@ class MysqlImportCommandTest extends TestCase
         // Create a file with a simple sql command
         $dir = MysqlExportCommand::CACHE_DATABASE_DIRECTORY;
         $fileName = 'dummy_dump.sql';
-        $avatarId = UuidFactory::uuid();
-        $profileId = UuidFactory::uuid();
-        $sql = "INSERT INTO `avatars` (id, profile_id) VALUES ('$avatarId', '$profileId');";
-        file_put_contents($dir . DS . $fileName, $sql);
+        $cmd = "
+            INSERT INTO `avatars` (id, profile_id, created, modified)
+            VALUES (
+                '0da907bd-5c57-5acc-ba39-c6ebe091f613',
+                '0da907bd-5c57-5acc-ba39-c6ebe091f613',
+                '2021-03-25 05:48:54',
+                '2021-03-25 05:48:54'
+            );
+        ";
+        file_put_contents($dir . DS . $fileName, $cmd);
 
         // Import that file
         $this->exec("passbolt mysql_import --file $fileName --dir $dir -d test");

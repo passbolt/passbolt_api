@@ -19,6 +19,34 @@ use PHPUnit\Framework\Assert;
 trait JsonRequestTrait
 {
     /**
+     * The response for the most recent json request.
+     *
+     * @var Object|array
+     */
+    protected $_responseJson;
+
+    /**
+     * The response header for the most recent json request.
+     *
+     * @var Object
+     */
+    protected $_responseJsonHeader;
+
+    /**
+     * The response body for the most recent json request.
+     *
+     * @var Object
+     */
+    protected $_responseJsonBody;
+
+    /**
+     * The response body for the most recent json request.
+     *
+     * @var Object
+     */
+    protected $_responseJsonPagination;
+
+    /**
      * Asserts that the latest json request is a success.
      *
      * @return void
@@ -105,5 +133,6 @@ trait JsonRequestTrait
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;
+        $this->_responseJsonPagination = $this->_responseJson->pagination ?? null;
     }
 }

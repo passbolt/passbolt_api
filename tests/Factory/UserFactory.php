@@ -8,6 +8,7 @@ use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
+use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 /**
  * UserFactory
@@ -37,8 +38,8 @@ class UserFactory extends CakephpBaseFactory
                 'username' => $faker->userName . '@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => Chronos::now(),
-                'modified' => Chronos::now(),
+                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];
         });
 
@@ -77,6 +78,14 @@ class UserFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
+    public function guest()
+    {
+        return $this->withRole(Role::GUEST);
+    }
+
+    /**
+     * @return $this
+     */
     public function inactive()
     {
         return $this->patchData(['active' => false]);
@@ -88,6 +97,15 @@ class UserFactory extends CakephpBaseFactory
     public function active()
     {
         return $this->patchData(['active' => true]);
+    }
+
+    /**
+     * @param int $n
+     * @return self
+     */
+    public function withLogIn(int $n = 1): self
+    {
+        return $this->with('ActionLogs', ActionLogFactory::make($n)->loginAction());
     }
 
     /**

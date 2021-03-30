@@ -169,6 +169,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      * Add core plugin
      * - DebugKit if debug mode is on
      * - Migration plugin
+     * - Authentication
      *
      * @return $this
      */
@@ -178,16 +179,16 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (Configure::read('debug') && Configure::read('debugKit')) {
             $this->addPlugin('DebugKit', ['bootstrap' => true]);
         }
-        // Enable Migration Plugin
-        $this->addPlugin('Migrations');
 
-        return $this;
+        return $this
+            ->addPlugin('Migrations')
+            ->addPlugin('Authentication');
     }
 
     /**
      * Add vendor plugins
      * - EmailQueue
-     * - Authentication
+     * - ApiPagination
      *
      * @return $this
      */
@@ -195,7 +196,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         return $this
             ->addPlugin('EmailQueue')
-            ->addPlugin('Authentication');
+            ->addPlugin('BryanCrowe/ApiPagination');
     }
 
     /**
