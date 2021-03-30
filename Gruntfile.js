@@ -140,6 +140,12 @@ module.exports = function(grunt) {
           src: ['api_main.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
           expand: true
+        },{
+          // Translation files
+          cwd: paths.node_modules_styleguide + 'src/locales',
+          src: ['**'],
+          dest: paths.webroot + 'locales',
+          expand: true
         }, {
           // Javascript applications
           cwd: paths.node_modules_styleguide + 'build/js/dist',
