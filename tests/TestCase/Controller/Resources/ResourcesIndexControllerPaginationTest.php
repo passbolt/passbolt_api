@@ -20,11 +20,11 @@ namespace App\Test\TestCase\Controller\Resources;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Utility\PaginationTrait;
+use App\Test\Lib\Utility\PaginationTestTrait;
 
 class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
 {
-    use PaginationTrait;
+    use PaginationTestTrait;
 
     /**
      * setUp method
@@ -59,8 +59,8 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
             ['Resources.username', 'desc', 'username'],
             ['Resources.uri', 'asc', 'uri'],
             ['Resources.uri', 'desc', 'uri'],
-            ['Resources.modified', 'asc', 'modified', true],
-            ['Resources.modified', 'desc', 'modified', true],
+            ['Resources.modified', 'asc', 'modified'],
+            ['Resources.modified', 'desc', 'modified'],
         ];
     }
 
@@ -73,13 +73,12 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
      * @Then I should see 9 resources sorted according to $direction 'asc' resp. 'desc'.
      * @dataProvider dataProviderForSortingDirection
      * @param string|null $sortedField Sorted field.
-     * @param string|null $direction Sorting direction.
+     * @param string $direction Sorting direction.
      * @param string|null $path Path where to find the sorted field in the response data.
-     * @param bool|null $isDateTime The sorted field is a datetime.
      * @return void
      * @throws \Exception
      */
-    public function testResourcesIndexPagination(?string $sortedField = null, ?string $direction = null, ?string $path = null, ?bool $isDateTime = false)
+    public function testResourcesIndexPagination(?string $sortedField = null, string $direction = 'asc', ?string $path = null)
     {
         $numberOfResources = 19;
         $limit = 10;
@@ -108,13 +107,64 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
 
         $this->getJson("/resources.json?$paginationParameter&api-version=2");
 
-        $sortedField = $sortedField ?? $this->defaultSortField;
         $this->assertSuccess();
         $this->assertCountPaginatedEntitiesEquals($expectedCurrent);
-        $this->assertBodyContentIsSorted(
-            $direction ?? $this->defaultSortDirection,
-            $path ?? 'name',
-            $isDateTime
-        );
+        $this->assertBodyContentIsSorted($path ?? 'name', $direction);
+    }
+
+    public function testResourcesIndexWithLegacyOrderPagination()
+    {
+        $numberOfResources = 11;
+        $limit = 10;
+        $expectedCurrent = $limit;
+
+        $user = UserFactory::make()->user()->persist();
+        ResourceFactory::make($numberOfResources)
+            ->withCreatorAndPermission($user->id)
+            ->with('Modifier')
+            ->persist();
+        $this->logInAs($user);
+
+        $paginationParameter = [
+            'limit=' . $limit,
+            'order[]=Resource.modified DESC',
+        ];
+
+        $paginationParameter = implode('&', $paginationParameter);
+
+        $this->getJson("/resources.json?$paginationParameter&api-version=2");
+
+        $this->assertSuccess();
+        $this->assertCountPaginatedEntitiesEquals($expectedCurrent);
+        $this->assertBodyContentIsSorted('modified', 'desc');
+    }
+
+    public function testResourcesIndexWithLegacyOrderAndApiComponentPagination()
+    {
+        $numberOfResources = 11;
+        $limit = 10;
+        $expectedCurrent = $limit;
+
+        $user = UserFactory::make()->user()->persist();
+        ResourceFactory::make($numberOfResources)
+            ->withCreatorAndPermission($user->id)
+            ->with('Modifier')
+            ->persist();
+        $this->logInAs($user);
+
+        $paginationParameter = [
+            'limit=' . $limit,
+            'order[]=Resource.modified DESC',
+            'direction=asc',
+            'sort=Resources.modified',
+        ];
+
+        $paginationParameter = implode('&', $paginationParameter);
+
+        $this->getJson("/resources.json?$paginationParameter&api-version=2");
+
+        $this->assertSuccess();
+        $this->assertCountPaginatedEntitiesEquals($expectedCurrent);
+        $this->assertBodyContentIsSorted('modified');
     }
 }

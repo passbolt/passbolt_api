@@ -25,9 +25,13 @@ use Cake\Validation\Validation;
 /**
  * Query String Component
  * Class used for extracting query string parameters
+ *
+ * @property \App\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class QueryStringComponent extends Component
 {
+    public $components = ['ApiPagination'];
+
     /**
      * Get query Items
      *
@@ -74,6 +78,10 @@ class QueryStringComponent extends Component
             $query['contain']['last_logged_in'] = $query['contain']['LastLoggedIn'];
             unset($query['contain']['LastLoggedIn']);
         }
+        // Sorting is now handled by the ApiPaginationComponent
+        if (isset($query['order'])) {
+            unset($query['order']);
+        }
 
         return $query;
     }
@@ -87,6 +95,7 @@ class QueryStringComponent extends Component
     public static function normalizeQueryItems(array $query): array
     {
         // order should always be an array even when one value is provided
+        // this is deprecated, order is now handled by the ApiPaginationComponent
         if (isset($query['order']) && !is_array($query['order'])) {
             $query['order'] = [$query['order']];
         }
@@ -522,6 +531,7 @@ class QueryStringComponent extends Component
      * @param array|null $allowedQueryItems whitelist
      * @return bool true if validate
      * @throws \Cake\Core\Exception\Exception if the group name does not validate
+     * @deprecated Use the ApiPaginationComponent
      */
     public static function validateOrders(?array $orders = null, ?array $allowedQueryItems = null): bool
     {
@@ -610,6 +620,7 @@ class QueryStringComponent extends Component
      * @param array $query items
      * @throws \Cake\Core\Exception\Exception if order is invalid
      * @return array updated query items
+     * @deprecated Use the ApiPagiantionComponent
      */
     public static function finalizeOrder(array $query): array
     {
@@ -651,6 +662,7 @@ class QueryStringComponent extends Component
      * Return true if valid order
      *
      * @param mixed $orderName like Groups.name
+     * @deprecated Order is now handled by the ApiPaginationComponent
      * @return bool true if valid order
      */
     public static function isOrder($orderName): bool

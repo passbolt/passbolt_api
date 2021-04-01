@@ -32,7 +32,7 @@ class ResourcesIndexController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadComponent('BryanCrowe/ApiPagination.ApiPagination', [
+        $this->loadComponent('ApiPagination', [
             'model' => 'Resources',
         ]);
     }
@@ -47,8 +47,6 @@ class ResourcesIndexController extends AppController
         'order' => [
             'Resources.name' => 'asc', // Default sorted field
         ],
-        'limit' => 1000000, // Default number of resources per page,
-        'maxLimit' => 1000000, // Maximum amount of items returned (CakePHP default = 100)
     ];
 
     /**
@@ -67,7 +65,6 @@ class ResourcesIndexController extends AppController
                 'permission', 'permissions', 'permissions.user.profile', 'permissions.group',
             ],
             'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id'],
-            'order' => ['Resource.modified'], // This is deprecated, use $paginate, left for retro-compatibility.
         ];
 
         if (Configure::read('passbolt.plugins.tags')) {

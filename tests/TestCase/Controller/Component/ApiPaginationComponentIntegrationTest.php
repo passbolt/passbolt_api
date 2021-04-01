@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.1.0
+ * @since         3.2.0
  */
 
 namespace App\Test\TestCase\Controller\Component;
@@ -20,13 +20,13 @@ namespace App\Test\TestCase\Controller\Component;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Utility\PaginationTrait;
+use App\Test\Lib\Utility\PaginationTestTrait;
 use Cake\TestSuite\IntegrationTestTrait;
 
-class PaginationComponentTest extends AppIntegrationTestCase
+class ApiPaginationComponentIntegrationTest extends AppIntegrationTestCase
 {
     use IntegrationTestTrait;
-    use PaginationTrait;
+    use PaginationTestTrait;
 
     /**
      * setUp method
@@ -92,42 +92,18 @@ class PaginationComponentTest extends AppIntegrationTestCase
         $paginationParameter = implode('&', $paginationParameter);
 
         $this->getJson("/resources.json?$paginationParameter&api-version=2");
-
         $this->assertSuccess();
         $this->assertCount(9, $this->_responseJsonBody);
 
-        $expectedSortedField = array_merge(
-            [$this->defaultSortField => $this->defaultSortDirection],
-            (isset($sortedField) ? [$sortedField => $direction] : [])
-        );
         $expectedPagination = (object)[
             'count' => $numberOfResources,
-            'current' => $expectedCurrent,
-            'perPage' => $limit,
             'page' => $page,
-            'requestedPage' => $page,
-            'pageCount' => 4,
-            'start' => 31,
-            'end' => 39,
-            'prevPage' => true,
-            'nextPage' => false,
-            'sort' => $sortedField,
-            'direction' => $direction,
-            'sortDefault' => 'Resources.name',
-            'directionDefault' => 'asc',
-            'completeSort' => (object)$expectedSortedField,
             'limit' => $limit,
-            'scope' => null,
-            'finder' => 'all',
         ];
 
         $this->assertEquals($expectedPagination, $this->_responseJsonPagination);
         $this->assertCountPaginatedEntitiesEquals($expectedCurrent);
-        $this->assertBodyContentIsSorted(
-            $direction,
-            'modified',
-            true
-        );
+        $this->assertBodyContentIsSorted('modified', $direction);
     }
 
     /**
@@ -135,7 +111,7 @@ class PaginationComponentTest extends AppIntegrationTestCase
      * @When I paginate on page 2 with 10 resources by page
      * @Then the response will return an error.
      */
-    public function testDataRequestedOutOfLimits()
+    public function testDataRequestedOutOfLimits(): void
     {
         $numberOfResources = 1;
         $limit = 10;
@@ -153,5 +129,17 @@ class PaginationComponentTest extends AppIntegrationTestCase
         $this->getJson("/resources.json?$paginationParameter&api-version=2");
         $this->assertResponseError();
         $this->assertResponseContains('Not Found');
+    }
+
+    /**
+     * @Given I am logged in
+     * @When I paginate on a non authorized field
+     * @Then the response will return an error.
+     */
+    public function testSortOnNotAllowedField(): void
+    {
+        $this->logInAsUser();
+        $this->getJson('/resources.json?sort=Resources.foo&api-version=2');
+        $this->assertResponseError('Invalid order. "Resources.id" is not in the list of allowed order.');
     }
 }
