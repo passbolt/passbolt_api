@@ -37,7 +37,7 @@ class DirectorySettingsController extends DirectoryController
     public function view()
     {
         if (!$this->User->isAdmin()) {
-            throw new ForbiddenException(__('You are not authorized to access that location'));
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
 
         try {
@@ -59,19 +59,19 @@ class DirectorySettingsController extends DirectoryController
     public function update()
     {
         if (!$this->User->isAdmin()) {
-            throw new ForbiddenException(__('You are not authorized to access that location'));
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
 
         $data = $this->request->getData();
         $form = new LdapConfigurationForm();
         if (!$form->validate($data)) {
             $errors = $form->getErrors();
-            throw new CustomValidationException('The settings are not valid', $errors);
+            throw new CustomValidationException(__('Could not validate settings.'), $errors);
         }
         try {
             $form->execute($data);
         } catch (\Exception $e) {
-            throw new BadRequestException('The settings cannot be saved. ' . $e->getMessage());
+            throw new BadRequestException(__('Could not save the settings. {0}', $e->getMessage()));
         }
 
         $uac = $this->User->getAccessControl();
@@ -90,14 +90,14 @@ class DirectorySettingsController extends DirectoryController
     public function test()
     {
         if (!$this->User->isAdmin()) {
-            throw new ForbiddenException(__('You are not authorized to access that location'));
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
 
         $data = $this->request->getData();
         $form = new LdapConfigurationForm();
         if (!$form->validate($data)) {
             $errors = $form->getErrors();
-            throw new CustomValidationException('The settings are not valid', $errors);
+            throw new CustomValidationException('Could not validate settings.', $errors);
         }
         try {
             $form->execute($data);
@@ -145,7 +145,7 @@ class DirectorySettingsController extends DirectoryController
     public function disable()
     {
         if (!$this->User->isAdmin()) {
-            throw new ForbiddenException(__('You are not authorized to access that location'));
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
 
         $uac = $this->User->getAccessControl();

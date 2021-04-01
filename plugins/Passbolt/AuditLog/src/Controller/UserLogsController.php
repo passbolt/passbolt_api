@@ -60,7 +60,7 @@ class UserLogsController extends AppController
     {
         // Check request sanity
         if (!Validation::uuid($resourceId)) {
-            throw new BadRequestException(__('The resource id is not valid.'));
+            throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
 
         // Get pagination options.

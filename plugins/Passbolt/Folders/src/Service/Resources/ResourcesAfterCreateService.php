@@ -87,7 +87,7 @@ class ResourcesAfterCreateService
             );
             $resource->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
-            throw new InternalErrorException(__('Could not create the resource, please try again later.'), 500, $e);
+            throw new InternalErrorException('Could not create the resource, please try again later.', 500, $e);
         }
     }
 
@@ -104,7 +104,7 @@ class ResourcesAfterCreateService
     private function validateParentFolder(UserAccessControl $uac, Resource $resource, ?string $folderParentId = null)
     {
         if (!Validation::uuid($folderParentId)) {
-            $errors = ['uuid' => __('The folder parent id is not valid.')];
+            $errors = ['uuid' => __('The folder parent identifier should be a valid UUID.')];
 
             $resource->setError('folder_parent_id', $errors);
 
@@ -115,7 +115,7 @@ class ResourcesAfterCreateService
         try {
             $this->foldersTable->get($folderParentId);
         } catch (RecordNotFoundException $e) {
-            $errors = ['folder_exists' => __('The folder parent must exist.')];
+            $errors = ['folder_exists' => __('The folder parent does not exist.')];
 
             $resource->setError('folder_parent_id', $errors);
 

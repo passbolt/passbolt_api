@@ -74,7 +74,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         $this->authenticateAs('ada');
         $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid()));
         $this->assertResponseCode(403);
-        $this->assertResponseError('You are not allowed to access this location');
+        $this->assertResponseError('You are not allowed to access this location.');
     }
 
     public function testMfaUserSettingsDeleteCheckIfGivenUserIdIsValid()

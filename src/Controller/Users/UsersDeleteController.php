@@ -194,7 +194,7 @@ class UsersDeleteController extends AppController
                         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
                         $folders = $foldersTable->findIndex($user->id, $findFoldersOptions);
                         $body['errors']['folders']['sole_owner'] = $folders;
-                        $msg .= $errors['id']['soleOwnerOfSharedContent'];
+                        $msg .= ' ' . $errors['id']['soleOwnerOfSharedContent'];
                     }
                 }
             }

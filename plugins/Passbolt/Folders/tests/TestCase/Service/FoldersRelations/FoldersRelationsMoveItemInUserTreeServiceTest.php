@@ -29,6 +29,7 @@ use App\Test\Fixture\Base\SecretsFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsMoveItemInUserTreeService;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
@@ -82,8 +83,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent does not exist.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.folder_exists'));
         }
     }
 
@@ -162,8 +162,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['cycle' => 'The folder cannot be moved into one of its descendants.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.cycle'));
         }
     }
 
@@ -588,8 +587,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['has_access' => 'You are not allowed to move an item in read only into the parent folder.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.has_access'));
         }
     }
 
@@ -619,8 +617,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.has_folder_access'));
         }
     }
 
@@ -650,8 +647,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.has_folder_access'));
         }
     }
 
@@ -683,8 +679,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['has_access' => 'You are not allowed to move this item.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.has_access'));
         }
     }
 
@@ -778,8 +773,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['cycle' => 'The folder cannot be moved into one of its descendants.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.cycle'));
         }
     }
 
@@ -817,8 +811,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent does not exist.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.folder_exists'));
         }
     }
 
@@ -1149,8 +1142,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.has_folder_access'));
         }
     }
 
@@ -1179,8 +1171,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to move this item out of its parent folder.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.has_folder_access'));
         }
     }
 

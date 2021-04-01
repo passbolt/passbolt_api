@@ -28,7 +28,7 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
         <div class="col7">
             <?php if (!$mfaPossible) : ?>
             <h4><?= __('Sorry no multi factor authentication is enabled for this organization.'); ?></h4>
-            <p><?= __('Please contact your administrator to enable MFA.'); ?></p>
+            <p><?= __('Please contact your administrator to enable multi-factor authentication.'); ?></p>
             <?php else : ?>
             <h4><?= __('Please select a provider'); ?></h4>
             <ul class="mfa-providers">

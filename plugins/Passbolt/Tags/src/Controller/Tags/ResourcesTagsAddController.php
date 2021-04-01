@@ -42,7 +42,7 @@ class ResourcesTagsAddController extends AppController
     public function addPost(string $resourceId)
     {
         if (!Validation::uuid($resourceId)) {
-            throw new BadRequestException(__('The resource id is not valid.'));
+            throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
 
         $this->loadModel('Resources');
@@ -64,7 +64,7 @@ class ResourcesTagsAddController extends AppController
             $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
             $this->success(__('The operation was successful.'), $resource->tags);
         } else {
-            throw new InternalErrorException(__('The tags could not be saved. Try again later.'));
+            throw new InternalErrorException('Could not save the tags, try again later.');
         }
     }
 

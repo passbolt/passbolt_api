@@ -38,10 +38,15 @@ class FoldersRelationsMoveController extends AppController
     {
         $foreignModel = ucfirst(strtolower($foreignModel));
         if (!in_array($foreignModel, FoldersRelationsTable::ALLOWED_FOREIGN_MODELS)) {
-            throw new BadRequestException(__('The foreign model is not valid.'));
+            $msg = __(
+                'The object type should be one of the following: {0}.',
+                implode(', ', FoldersRelationsTable::ALLOWED_FOREIGN_MODELS)
+            );
+            throw new BadRequestException($msg);
         }
         if (!Validation::uuid($foreignId)) {
-            throw new BadRequestException(__('The {0} id is not valid.', strtolower($foreignModel)));
+            $msg = __('The object identifier should be a valid UUID.', strtolower($foreignModel));
+            throw new BadRequestException($msg);
         }
 
         $moveItemInUserTree = new FoldersRelationsMoveItemInUserTreeService();
@@ -50,7 +55,7 @@ class FoldersRelationsMoveController extends AppController
         $folderParentId = $this->getAndValidateFolderParentId($this->getRequest()->getParsedBody());
         $moveItemInUserTree->move($uac, $foreignModel, $foreignId, $folderParentId);
 
-        $this->success(__('The {0} has been moved successfully.', strtolower($foreignModel)));
+        $this->success(__('The object has been moved successfully.', strtolower($foreignModel)));
     }
 
     /**
@@ -62,14 +67,14 @@ class FoldersRelationsMoveController extends AppController
     private function getAndValidateFolderParentId(?array $data = [])
     {
         if (!array_key_exists('folder_parent_id', $data)) {
-            $errors = ['folder_parent_id' => ['_required' => __('A folder parent id is required.')]];
+            $errors = ['folder_parent_id' => ['_required' => __('A folder parent identifier is required.')]];
             $this->handleValidationErrors($errors);
         }
 
         $folderParentId = $data['folder_parent_id'];
 
         if (!is_null($folderParentId) && !Validation::uuid($folderParentId)) {
-            $errors = ['folder_parent_id' => ['uuid' => __('The folder parent id is not valid.')]];
+            $errors = ['folder_parent_id' => ['uuid' => __('The folder parent identifier should be a valid UUID.')]];
             $this->handleValidationErrors($errors);
         }
 

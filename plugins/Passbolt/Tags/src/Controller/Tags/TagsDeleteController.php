@@ -65,7 +65,7 @@ class TagsDeleteController extends AppController
 
         $this->_deletePersonalTag($tag->get('id'));
 
-        $this->success(__('The tag was deleted.'));
+        $this->success(__('The tag has been deleted successfully.'));
     }
 
     /**

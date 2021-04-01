@@ -52,7 +52,7 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
 
         // look for invalid structured string
         if (json_last_error() != JSON_ERROR_NONE) {
-            throw new InternalErrorException(__('The Email Notification Settings configs are invalid'));
+            throw new InternalErrorException('The Email Notification Settings configs are invalid');
         }
 
         $this->organizationSettingsTable->createOrUpdateSetting(EmailNotificationSettings::NAMESPACE, $data, $uac);
@@ -75,7 +75,7 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
 
         // look for invalid structured string
         if (json_last_error() != JSON_ERROR_NONE) {
-            throw new InternalErrorException(__('The Email Notification Settings configs are invalid'));
+            throw new InternalErrorException('The Email Notification Settings configs are invalid');
         }
 
         return $settings;

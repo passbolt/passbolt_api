@@ -130,7 +130,7 @@ class FoldersRelationsCreateService
     {
         $errors = $folderRelation->getErrors();
         if (!empty($errors)) {
-            $msg = __('Could not validate the user folder relation data.');
+            $msg = __('Could not validate folder relation data.');
             throw new ValidationException($msg, $folderRelation, $this->foldersRelationsTable);
         }
     }

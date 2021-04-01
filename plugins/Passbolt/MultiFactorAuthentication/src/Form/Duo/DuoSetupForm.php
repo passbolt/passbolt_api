@@ -35,7 +35,7 @@ class DuoSetupForm extends DuoVerifyForm
         try {
             MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_DUO, []);
         } catch (ValidationException $e) {
-            throw new InternalErrorException(__('Could not save Duo settings. Please try again later.'));
+            throw new InternalErrorException('Could not save the Duo settings.');
         }
 
         return true;

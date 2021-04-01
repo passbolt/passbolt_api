@@ -74,20 +74,16 @@ class ResourcesTagsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('user_id')
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
             ->allowEmptyString('user_id');
 
         $validator
-            ->uuid('resource_id')
-            ->notEmptyString('resource_id');
-
-        $validator
-            ->uuid('resource_id')
-            ->notEmptyString('resource_id');
+            ->uuid('resource_id', __('The resource identifier should be a valid UUID.'))
+            ->notEmptyString('resource_id', __('The resource identifier should not be empty.'));
 
         return $validator;
     }

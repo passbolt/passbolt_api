@@ -46,6 +46,15 @@ class DirectoryIgnoreTable extends Table
     use TableCleanupTrait;
 
     /**
+     * @var string[]
+     */
+    public static $SUPPORTED_FOREIGN_MODEL = [
+        'Users',
+        'Groups',
+        'DirectoryEntries',
+    ];
+
+    /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -89,16 +98,19 @@ class DirectoryIgnoreTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->uuid('id')
-            ->requirePresence('id');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->requirePresence('id', __('An identifier is required.'));
 
         $validator
-            ->scalar('foreign_model')
-            ->requirePresence('foreign_model')
-            ->inList('foreign_model', [
-                'Users', 'Groups', 'DirectoryEntries',
-            ]);
+            ->inList(
+                'foreign_model',
+                self::$SUPPORTED_FOREIGN_MODEL,
+                __(
+                    'The object type should be one of the following: {0}.',
+                    implode(', ', self::$SUPPORTED_FOREIGN_MODEL)
+                )
+            )
+            ->requirePresence('foreign_model', __('An object type is required.'));
 
         return $validator;
     }
@@ -128,7 +140,7 @@ class DirectoryIgnoreTable extends Table
             'AssociatedRecordExists',
             [
                 'errorField' => 'id',
-                'message' => __('The associated record could not be found'),
+                'message' => __('The associated record could not be found.'),
             ]
         );
 
@@ -190,7 +202,7 @@ class DirectoryIgnoreTable extends Table
             throw new ValidationException(__('This is not a valid record to ignore.'), $ignore, $this);
         }
         if (!$this->save($ignore, ['checkrules' => false])) {
-            throw new InternalErrorException(__('Could not ignore the record. Please try again later.'));
+            throw new InternalErrorException('Could not ignore the record, please try again later.');
         }
 
         return $ignore;

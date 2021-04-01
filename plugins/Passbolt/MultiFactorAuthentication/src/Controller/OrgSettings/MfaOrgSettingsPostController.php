@@ -36,7 +36,7 @@ class MfaOrgSettingsPostController extends MfaController
     public function post()
     {
         if ($this->User->role() !== Role::ADMIN) {
-            throw new ForbiddenException(__('You are not allowed to access this location'));
+            throw new ForbiddenException(__('You are not allowed to access this location.'));
         }
         if (!$this->request->is('json')) {
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));

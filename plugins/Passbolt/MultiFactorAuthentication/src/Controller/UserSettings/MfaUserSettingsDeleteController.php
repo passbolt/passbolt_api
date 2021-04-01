@@ -53,7 +53,7 @@ class MfaUserSettingsDeleteController extends MfaController
         $userId = $this->getRequest()->getParam('userId', null);
 
         if (!$this->isAllowed($userId)) {
-            throw new ForbiddenException(__('You are not allowed to access this location'));
+            throw new ForbiddenException(__('You are not allowed to access this location.'));
         }
 
         return parent::beforeFilter($event);

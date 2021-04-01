@@ -172,7 +172,7 @@ class FoldersCreateService
         try {
             $this->permissionsCreateService->create($uac, $permissionData);
         } catch (Exception $error) {
-            throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $error);
+            throw new InternalErrorException('Could not create the folder, please try again later.', 500, $error);
         }
     }
 
@@ -199,7 +199,7 @@ class FoldersCreateService
                 ->create($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $folderParentId);
             $folder->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
-            throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $e);
+            throw new InternalErrorException('Could not create the folder, please try again later.', 500, $e);
         }
     }
 

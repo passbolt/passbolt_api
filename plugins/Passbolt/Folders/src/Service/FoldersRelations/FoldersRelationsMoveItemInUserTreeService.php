@@ -101,7 +101,7 @@ class FoldersRelationsMoveItemInUserTreeService
     {
         $exists = $this->foldersRelationsTable->isItemInUserTree($uac->getId(), $foreignId, $foreignModel);
         if (!$exists) {
-            throw new NotFoundException(__('The {0} does not exist.', strtolower($foreignModel)));
+            throw new NotFoundException(__('The object to move does not exist.'));
         }
     }
 

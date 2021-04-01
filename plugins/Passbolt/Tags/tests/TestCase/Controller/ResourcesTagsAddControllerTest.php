@@ -103,7 +103,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertError(400);
         $response = json_decode($this->_getBodyAsString());
-        $msg = 'Tag can not be more than 128 characters in length.';
+        $msg = 'The tag length should be maximum 128 characters.';
         $this->assertEquals($response->body[0]->slug->maxLength, $msg);
     }
 

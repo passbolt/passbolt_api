@@ -102,7 +102,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400);
         $this->assertUserIsNotSoftDeleted($userAId);
         $this->assertFolder($folderA->id);
-        $this->assertStringContainsString('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
+        $this->assertStringContainsString('transfer the ownership', $this->_responseJsonHeader->message);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertEquals(1, count($errors->folders->sole_owner));

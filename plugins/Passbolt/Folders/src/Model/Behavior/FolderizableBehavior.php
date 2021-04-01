@@ -272,10 +272,7 @@ class FolderizableBehavior extends Behavior
         $new = $entity->isNew() !== false;
         foreach ($events['Model.afterSave'] as $field => $when) {
             if (!in_array($when, ['always', 'new', 'existing'])) {
-                $msg = __(
-                    'When should be one of "always", "new" or "existing". The passed value "{0}" is invalid',
-                    $when
-                );
+                $msg = 'When should be one of "always", "new" or "existing". The passed value "{0}" is invalid';
                 throw new UnexpectedValueException($msg);
             }
             if ($when === 'always' || ($when === 'new' && $new) || ($when === 'existing' && !$new)) {

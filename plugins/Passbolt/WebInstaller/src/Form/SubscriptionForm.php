@@ -47,7 +47,7 @@ class SubscriptionForm extends Form
     {
         $validator
             ->requirePresence('subscription_key', 'create', __('A subscription key is required.'))
-            ->notEmptyString('subscription_key', __('A subscription key is required.'))
+            ->notEmptyString('subscription_key', __('The subscription key should not be empty.'))
             ->add('subscription_key', 'is_valid_subscription', [
                 'last' => true,
                 'rule' => [$this, 'checkSubscriptionIsValid'],

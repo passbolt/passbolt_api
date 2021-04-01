@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2021-04-02 13:39+0000\n"
+"POT-Creation-Date: 2021-04-02 14:05+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -149,10 +149,16 @@ msgstr ""
 msgid "\"{0}\" is not a valid group filter."
 msgstr ""
 
+msgid "\"{0}\" is not a valid parent filter."
+msgstr ""
+
 msgid "\"{0}\" is not a valid resource id for filter {1}."
 msgstr ""
 
 msgid "\"{0}\" is not a valid group id for filter {1}."
+msgstr ""
+
+msgid "\"{0}\" is not a valid parent id for filter {1}."
 msgstr ""
 
 msgid "\"{0}\" is not a valid timestamp for filter {1}."
@@ -1328,10 +1334,574 @@ msgstr ""
 msgid "This theme is not supported."
 msgstr ""
 
+msgid "The folder id is not valid."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because he has not yet activated his account."
+msgstr ""
+
+msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
+msgstr ""
+
+msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because the membership has been removed in passbolt"
+msgstr ""
+
+msgid "The user {0} was successfully added to the group {1}."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because of validation issues."
+msgstr ""
+
+msgid "The user {0} could not be added to the group {1} because of an internal error."
+msgstr ""
+
+msgid "The user {0} was successfully removed from the group {1}."
+msgstr ""
+
+msgid "The user {0} could not be removed from the group {1} because it is the only group manager."
+msgstr ""
+
+msgid "The user {0} could not be removed from the group {1} because some validation issues."
+msgstr ""
+
+msgid "The user {0} could not be removed from the group {1} because of an internal error."
+msgstr ""
+
+msgid "The user {0} was successfully synced with the group {1}."
+msgstr ""
+
+msgid "The user {0} was not synced with existing membership for group {1} because the membership was created before."
+msgstr ""
+
+msgid "The {0} {1} was mapped with an existing {0} in passbolt."
+msgstr ""
+
+msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after."
+msgstr ""
+
+msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
+msgstr ""
+
+msgid "The {0} {1} was not synced because the directory {0} is marked as to be ignored."
+msgstr ""
+
+msgid "The {0} {1} was successfully added to passbolt."
+msgstr ""
+
+msgid "The {0} {1} could not be added because of data validation issues."
+msgstr ""
+
+msgid "The {0} {1} could not be added because of an internal error. Please try again later."
+msgstr ""
+
+msgid "The previously deleted {0} {1} was not re-added to passbolt."
+msgstr ""
+
+msgid "The previously deleted {0} {1} was re-added to passbolt."
+msgstr ""
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of validation errors."
+msgstr ""
+
+msgid "The deleted {0} {1} could not be re-added to passbolt because of an internal error."
+msgstr ""
+
+msgid "The directory {0} {1} was not deleted because it is ignored."
+msgstr ""
+
+msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
+msgstr ""
+
+msgid "The directory {0} {1} was already deleted in passbolt."
+msgstr ""
+
+msgid "The user {0} could not be deleted because they are the only owner of one or more passwords."
+msgstr ""
+
+msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
+msgstr ""
+
+msgid "The {0} {1} was successfully deleted."
+msgstr ""
+
+msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
+msgstr ""
+
+msgid "The record model is not valid."
+msgstr ""
+
+msgid "The record is currently ignored as part of directory synchronization."
+msgstr ""
+
+msgid "The record is currently not ignored as part of directory synchronization."
+msgstr ""
+
+msgid "The record will be ignored in the next directory synchronization."
+msgstr ""
+
+msgid "The record id is not valid."
+msgstr ""
+
+msgid "The record does not exist."
+msgstr ""
+
+msgid "The record could not be unmarked as ignored. Please try again later."
+msgstr ""
+
+msgid "The record will not be ignored in the next directory synchronization."
+msgstr ""
+
+msgid "Could not validate settings."
+msgstr ""
+
+msgid "Could not save the settings. {0}"
+msgstr ""
+
+msgid "The directory structure cannot be retrieved."
+msgstr ""
+
+msgid "There was an issue while retrieving the invalid entries."
+msgstr ""
+
+msgid "The synchronization was done successfully."
+msgstr ""
+
+msgid "The simulation was done successfully."
+msgstr ""
+
+msgid "A directory type is required."
+msgstr ""
+
+msgid "The directory type should not be empty."
+msgstr ""
+
+msgid "The directory type should be one of the following: {0}."
+msgstr ""
+
+msgid "A domain name is required."
+msgstr ""
+
+msgid "The domain name should not be empty."
+msgstr ""
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The username should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The password should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "A server is required."
+msgstr ""
+
+msgid "The server should not be empty."
+msgstr ""
+
+msgid "The server should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "A port number is required."
+msgstr ""
+
+msgid "The port number should not be empty."
+msgstr ""
+
+msgid "The port number should be numeric."
+msgstr ""
+
+msgid "The port number should be between 0 and 65535"
+msgstr ""
+
+msgid "A connection type is required."
+msgstr ""
+
+msgid "The connection type should not be empty."
+msgstr ""
+
+msgid "The connection type should be one of the following: {0}."
+msgstr ""
+
+msgid "The identifier of the default admin user is required."
+msgstr ""
+
+msgid "The identifier of the default admin user should not be empty."
+msgstr ""
+
+msgid "The identifier of the default admin user should be a valid UUID."
+msgstr ""
+
+msgid "The admin user does not exist."
+msgstr ""
+
+msgid "The identifier of the default group admin user is required."
+msgstr ""
+
+msgid "The identifier of the default group admin user should not be empty."
+msgstr ""
+
+msgid "The identifier of the default group admin user should be a valid UUID."
+msgstr ""
+
+msgid "The group admin user does not exist."
+msgstr ""
+
+msgid "The group object class should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The user object class should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The user path should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The email prefix/suffix setting should be a valid boolean."
+msgstr ""
+
+msgid "The email prefix should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The email suffix should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The users parent group should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The groups parent group should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The enabled users only setting should be a boolean."
+msgstr ""
+
+msgid "The sync of created users setting should be a boolean."
+msgstr ""
+
+msgid "The sync of deleted user setting should be a boolean."
+msgstr ""
+
+msgid "The sync of created groups setting should be a boolean."
+msgstr ""
+
+msgid "The sync of deleted groups setting should be a boolean."
+msgstr ""
+
+msgid "The sync of updated groups setting should be a boolean."
+msgstr ""
+
+msgid "The directory name should be a valid UTF8 string."
+msgstr ""
+
+msgid "The directory_name length should be maximum {0} characters."
+msgstr ""
+
+msgid "A directory name is required."
+msgstr ""
+
+msgid "The directory should not be empty."
+msgstr ""
+
+msgid "The object identifier should be a valid UUID."
+msgstr ""
+
+msgid "An object type is required."
+msgstr ""
+
+msgid "Could not validate directory entry data."
+msgstr ""
+
+msgid "An identifier is required."
+msgstr ""
+
+msgid "The object type should be one of the following: {0}."
+msgstr ""
+
+msgid "The associated record could not be found."
+msgstr ""
+
+msgid "This record is already marked as to be ignored."
+msgstr ""
+
+msgid "This is not a valid record to ignore."
+msgstr ""
+
+msgid "The parent identifier should be a valid UUID."
+msgstr ""
+
+msgid "A parent identifier is required."
+msgstr ""
+
+msgid "The child identifier should be a valid UUID."
+msgstr ""
+
+msgid "The child identifier is required."
+msgstr ""
+
+msgid "A group name is required."
+msgstr ""
+
+msgid "A group member does not match the expected DN format."
+msgstr ""
+
+msgid "The email should be a valid email address."
+msgstr ""
+
 msgid "You are not allowed to access this location."
 msgstr ""
 
+msgid "Subscription key data is required."
+msgstr ""
+
+msgid "The subscription was created."
+msgstr ""
+
+msgid "The subscription was updated."
+msgstr ""
+
+msgid "The subscription is valid."
+msgstr ""
+
+msgid "Subscription key could not be found."
+msgstr ""
+
+msgid "The subscription cannot be verified. Invalid signature."
+msgstr ""
+
+msgid "A subscription key is required."
+msgstr ""
+
+msgid "The subscription key should not be empty."
+msgstr ""
+
+msgid "The subscription cannot be verified. Parse error."
+msgstr ""
+
+msgid "The subscription format is not valid."
+msgstr ""
+
+msgid "The subscription format is not valid. Invalid format."
+msgstr ""
+
+msgid "The subscription key cannot be verified. The passbolt OpenPGP public key could not be found."
+msgstr ""
+
+msgid "A users quantity is required."
+msgstr ""
+
+msgid "The users quantity should not be empty."
+msgstr ""
+
+msgid "The users limit is exceeded."
+msgstr ""
+
+msgid "The key should have been created in the past."
+msgstr ""
+
+msgid "An expiry date is required."
+msgstr ""
+
+msgid "The subscription is expired."
+msgstr ""
+
+msgid "An email is required."
+msgstr ""
+
+msgid "A customer identifier is required."
+msgstr ""
+
+msgid "A subscription identifier is required."
+msgstr ""
+
+msgid "The format of the subscription id is not valid."
+msgstr ""
+
+msgid "Only admin can create or update subscription information."
+msgstr ""
+
+msgid "The subscription key format is not valid."
+msgstr ""
+
+msgid "Only administrators can view the subscription details."
+msgstr ""
+
+msgid "Only administrators can update the subscription details."
+msgstr ""
+
 msgid "The notification settings for the organization were updated."
+msgstr ""
+
+msgid "The supplied email notification settings are not valid"
+msgstr ""
+
+msgid "The folder has been added successfully."
+msgstr ""
+
+msgid "The folder has been deleted successfully."
+msgstr ""
+
+msgid "The folder has been updated successfully."
+msgstr ""
+
+msgid "The object has been moved successfully."
+msgstr ""
+
+msgid "A folder parent identifier is required."
+msgstr ""
+
+msgid "The folder parent identifier should be a valid UUID."
+msgstr ""
+
+msgid "Could not validate move data."
+msgstr ""
+
+msgid "The folder identifier should be a valid UUID."
+msgstr ""
+
+msgid "The folder identifier should not be empty."
+msgstr ""
+
+msgid "Could not validate folder history data."
+msgstr ""
+
+msgid "The child object type should be one of the following: {0}."
+msgstr ""
+
+msgid "A child object type is required."
+msgstr ""
+
+msgid "The child object type cannot be empty."
+msgstr ""
+
+msgid "The child object identifier should be a valid UUID."
+msgstr ""
+
+msgid "The child object identifier is required."
+msgstr ""
+
+msgid "The child object identifier should not be empty."
+msgstr ""
+
+msgid "The user id should not be empty."
+msgstr ""
+
+msgid "Could not validate folders relations history data."
+msgstr ""
+
+msgid "The child object type is required."
+msgstr ""
+
+msgid "The child object type should not be empty."
+msgstr ""
+
+msgid "The child object identifier required."
+msgstr ""
+
+msgid "A folder relation already exists for the given child object and user."
+msgstr ""
+
+msgid "The child object does not exist."
+msgstr ""
+
+msgid "The identifier of the user who created the folder should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who created the folder is required."
+msgstr ""
+
+msgid "The identifier of the user who created the folder should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who modified the folder should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the folder is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the folder should not be empty."
+msgstr ""
+
+msgid "You added the folder {0}"
+msgstr ""
+
+msgid "{0} deleted the folder {1}"
+msgstr ""
+
+msgid "{0} shared the folder {1}"
+msgstr ""
+
+msgid "{0} edited the folder {1}"
+msgstr ""
+
+msgid "An email notification setting should be a boolean."
+msgstr ""
+
+msgid "Could not validate folder data."
+msgstr ""
+
+msgid "The folder parent must exist."
+msgstr ""
+
+msgid "You are not allowed to create content into the parent folder."
+msgstr ""
+
+msgid "You are not allowed to delete this folder."
+msgstr ""
+
+msgid "The folder does not exist."
+msgstr ""
+
+msgid "You cannot delete this resource"
+msgstr ""
+
+msgid "You are not allowed to update the permissions of this folder."
+msgstr ""
+
+msgid "You are not allowed to update this folder."
+msgstr ""
+
+msgid "Could not validate folder relation data."
+msgstr ""
+
+msgid "The object to move does not exist."
+msgstr ""
+
+msgid "You are not allowed to move this item out of its parent folder."
+msgstr ""
+
+msgid "You are not allowed to move this item."
+msgstr ""
+
+msgid "You are not allowed to move an item in read only into the parent folder."
+msgstr ""
+
+msgid "The folder parent does not exist."
+msgstr ""
+
+msgid "You have created a new folder"
+msgstr ""
+
+msgid "Name: {0}"
+msgstr ""
+
+msgid "view it in passbolt"
+msgstr ""
+
+msgid "log in passbolt"
+msgstr ""
+
+msgid "shared a folder with you"
+msgstr ""
+
+msgid "{0} updated the folder {1}"
 msgstr ""
 
 msgid "The action log identifier should be a valid UUID."
@@ -1385,9 +1955,6 @@ msgstr ""
 msgid "The object type should not be empty."
 msgstr ""
 
-msgid "The object identifier should be a valid UUID."
-msgstr ""
-
 msgid "The object identifier should not be empty."
 msgstr ""
 
@@ -1404,9 +1971,6 @@ msgid "The operation type should not be empty."
 msgstr ""
 
 msgid "Could not validate entity history data."
-msgstr ""
-
-msgid "An identifier is required."
 msgstr ""
 
 msgid "The type must be one of the following: {0}."
@@ -1434,6 +1998,282 @@ msgid "Could not validate secret access data."
 msgstr ""
 
 msgid "Could not validate secret history data."
+msgstr ""
+
+msgid "This functionality is not available using AJAX/JSON."
+msgstr ""
+
+msgid "This authentication provider is not enabled for your organization."
+msgstr ""
+
+msgid "This authentication provider is already setup. Disable it first"
+msgstr ""
+
+msgid "Multi Factor Authentication is configured!"
+msgstr ""
+
+msgid "MFA authentication is required."
+msgstr ""
+
+msgid "The multi-factor authentication is not required."
+msgstr ""
+
+msgid "No valid multi-factor authentication settings found for this provider."
+msgstr ""
+
+msgid "The multi-factor authentication was a success."
+msgstr ""
+
+msgid "The multi factor authentication settings for the organization were updated."
+msgstr ""
+
+msgid "Please setup the TOTP application."
+msgstr ""
+
+msgid "Please provide the one-time password."
+msgstr ""
+
+msgid "The user id is not valid."
+msgstr ""
+
+msgid "No multi-factor authentication settings defined for the user."
+msgstr ""
+
+msgid "The multi-factor authentication settings for the user were deleted."
+msgstr ""
+
+msgid "Please setup the Yubikey settings."
+msgstr ""
+
+msgid "A signature is required."
+msgstr ""
+
+msgid "The signature should not be empty."
+msgstr ""
+
+msgid "This is not a valid signature response."
+msgstr ""
+
+msgid "Something went wrong when validating the one-time password."
+msgstr ""
+
+msgid "This OTP provision uri is not valid."
+msgstr ""
+
+msgid "An OTP is required."
+msgstr ""
+
+msgid "The OTP should not be empty."
+msgstr ""
+
+msgid "This OTP is not valid."
+msgstr ""
+
+msgid "The OTP should be composed of numbers only."
+msgstr ""
+
+msgid "The OTP should be at least {0} characters long."
+msgstr ""
+
+msgid "This yubikey is not associated with this user."
+msgstr ""
+
+msgid "Your multi-factor authentication settings were reset by you."
+msgstr ""
+
+msgid "Multi-factor authentication settings were reset."
+msgstr ""
+
+msgid "Your multi-factor authentication settings were reset by an administrator."
+msgstr ""
+
+msgid "No MFA provider set."
+msgstr ""
+
+msgid "MFA verification date is not set for this provider."
+msgstr ""
+
+msgid "MFA setting OTP provisioning uri is not set."
+msgstr ""
+
+msgid "MFA setting Yubikey Id is not set."
+msgstr ""
+
+msgid "The multi-factor authentication settings data should not be empty."
+msgstr ""
+
+msgid "The multi-factor authentication providers list is missing."
+msgstr ""
+
+msgid "Unknown MFA provider: {0}."
+msgstr ""
+
+msgid "Could not validate multi-factor authentication provider configuration."
+msgstr ""
+
+msgid "No configuration set for Duo integration key."
+msgstr ""
+
+msgid "No configuration set for Duo host name."
+msgstr ""
+
+msgid "No configuration set for Duo secret key."
+msgstr ""
+
+msgid "No configuration set for Duo salt."
+msgstr ""
+
+msgid "Duo salt should be between 40 and 128 characters in length."
+msgstr ""
+
+msgid "This is not a valid Duo secret key."
+msgstr ""
+
+msgid "This is not a valid Duo host name."
+msgstr ""
+
+msgid "This is not a valid Duo integration key."
+msgstr ""
+
+msgid "Could not validate Duo configuration"
+msgstr ""
+
+msgid "No configuration set for Yubikey OTP secret key."
+msgstr ""
+
+msgid "No configuration set for Yubikey OTP clientId."
+msgstr ""
+
+msgid "Yubikey OTP clientId should be an integer."
+msgstr ""
+
+msgid "Yubikey OTP secret key is not valid."
+msgstr ""
+
+msgid "Could not validate Yubikey configuration."
+msgstr ""
+
+msgid "Duo multi-factor authentication"
+msgstr ""
+
+msgid "Duo multi-factor authentication is enabled!"
+msgstr ""
+
+msgid "When logging in you will be asked to perform Duo Authentication."
+msgstr ""
+
+msgid "Since"
+msgstr ""
+
+msgid "Multi factor authentication"
+msgstr ""
+
+msgid "Sorry no multi factor authentication is enabled for this organization."
+msgstr ""
+
+msgid "Please contact your administrator to enable multi-factor authentication."
+msgstr ""
+
+msgid "Please select a provider"
+msgstr ""
+
+msgid "What is multi-factor authentication?"
+msgstr ""
+
+msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
+msgstr ""
+
+msgid "learn more"
+msgstr ""
+
+msgid "Time based One Time Password (TOTP)"
+msgstr ""
+
+msgid "Scan this bar code"
+msgstr ""
+
+msgid "Enter the six digit number as presented on your phone or tablet."
+msgstr ""
+
+msgid "Requirements"
+msgstr ""
+
+msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "Getting started with Time based One Time Password (TOTP)"
+msgstr ""
+
+msgid "How does it work?"
+msgstr ""
+
+msgid "diagram showing how it works"
+msgstr ""
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr ""
+
+msgid "When using a new browser, you need an additional code from your phone."
+msgstr ""
+
+msgid "Once you enter this code, you can log in."
+msgstr ""
+
+msgid "cancel"
+msgstr ""
+
+msgid "get started!"
+msgstr ""
+
+msgid "Time based One Time Password (TOTP) is enabled!"
+msgstr ""
+
+msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
+msgstr ""
+
+msgid "Multi factor authentication verification"
+msgstr ""
+
+msgid "Remember this device for a month."
+msgstr ""
+
+msgid "Yubikey One Time Password"
+msgstr ""
+
+msgid "Plug in the yubikey and put your finger on it."
+msgstr ""
+
+msgid "Yubikey One Time Password is enabled!"
+msgstr ""
+
+msgid "When logging in from a new device you will need a unique code generated by your yubikey."
+msgstr ""
+
+msgid "verify"
+msgstr ""
+
+msgid "Or try with another provider"
+msgstr ""
+
+msgid "Manage providers"
+msgstr ""
+
+msgid "Turn off"
+msgstr ""
+
+msgid "Your multi-factor authentication is disabled."
+msgstr ""
+
+msgid "Multi-factor authentication settings were reset for your account by an administrator."
+msgstr ""
+
+msgid "Please contact your administrator if you didn't request this action."
+msgstr ""
+
+msgid "Log in passbolt"
 msgstr ""
 
 msgid "5 minutes"
@@ -1491,6 +2331,48 @@ msgid "Role"
 msgstr ""
 
 msgid "No"
+msgstr ""
+
+msgid "You do not have the permission to edit shared tags on this resource."
+msgstr ""
+
+msgid "The tag id is not valid."
+msgstr ""
+
+msgid "The tag does not exist."
+msgstr ""
+
+msgid "You do not have the permission to delete shared tags."
+msgstr ""
+
+msgid "The tag has been deleted successfully."
+msgstr ""
+
+msgid "You do not have the permission to update shared tags."
+msgstr ""
+
+msgid "The tag has been updated successfully."
+msgstr ""
+
+msgid "The tag should not be empty."
+msgstr ""
+
+msgid "A tag is required."
+msgstr ""
+
+msgid "The tag should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The tag length should be maximum {0} characters."
+msgstr ""
+
+msgid "The shared status should be a valid boolean."
+msgstr ""
+
+msgid "A shared status is required."
+msgstr ""
+
+msgid "Could not validate tags data."
 msgstr ""
 
 msgid "The data entered are not correct"
@@ -1553,22 +2435,10 @@ msgstr ""
 msgid "The host name should be a valid BMP-UTF8 string."
 msgstr ""
 
-msgid "A port number is required."
-msgstr ""
-
-msgid "The port number should be numeric."
-msgstr ""
-
 msgid "The port number should be between {0} and {1}."
 msgstr ""
 
-msgid "The username should be a valid BMP-UTF8 string."
-msgstr ""
-
 msgid "The password should not contain quotes."
-msgstr ""
-
-msgid "The password should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "A database name is required."
@@ -1691,6 +2561,9 @@ msgstr ""
 msgid "The database schema does not match the one expected"
 msgstr ""
 
+msgid "The database cannot be installed"
+msgstr ""
+
 msgid "There was a problem creating the first user"
 msgstr ""
 
@@ -1713,6 +2586,9 @@ msgid "The server OpenPGP public key file is writable."
 msgstr ""
 
 msgid "The server OpenPGP public key file is not writable."
+msgstr ""
+
+msgid "Ensure the file {0} is writable by the webserver user."
 msgstr ""
 
 msgid "The server OpenPGP private key file is writable."
@@ -1862,6 +2738,9 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
+msgid "Key Expire"
+msgstr ""
+
 msgid "Import an existing key or {0} a new one."
 msgstr ""
 
@@ -1878,12 +2757,6 @@ msgid "Or select a file from your computer"
 msgstr ""
 
 msgid "Some binary things are happening..."
-msgstr ""
-
-msgid "Passbolt Pro activation."
-msgstr ""
-
-msgid "Copy paste your Passbolt Pro subscription key here"
 msgstr ""
 
 msgid "Choose your preferences."
@@ -1908,6 +2781,12 @@ msgid "Force SSL?"
 msgstr ""
 
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
+msgstr ""
+
+msgid "Passbolt Pro activation."
+msgstr ""
+
+msgid "Copy paste your Passbolt Pro subscription key here"
 msgstr ""
 
 msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
@@ -2090,9 +2969,6 @@ msgstr ""
 msgid "Edit group members"
 msgstr ""
 
-msgid "log in passbolt"
-msgstr ""
-
 msgid "{0} deleted the user {1}"
 msgstr ""
 
@@ -2100,9 +2976,6 @@ msgid "The user {0} {1} ({2}) is now deleted from your organisation in passbolt.
 msgstr ""
 
 msgid "This user was a member of the following group(s) you manage:"
-msgstr ""
-
-msgid "view it in passbolt"
 msgstr ""
 
 msgid "{0} deleted a group"
@@ -2163,9 +3036,6 @@ msgid "{0} deleted {1} groups you were a member of."
 msgstr ""
 
 msgid "You have saved a new password"
-msgstr ""
-
-msgid "Name: {0}"
 msgstr ""
 
 msgid "Username: {0}"
