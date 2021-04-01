@@ -52,7 +52,7 @@ use Cake\Routing\Router;
                                         'class' => 'required fluid',
                                     ]);
                                     ?>
-                                <div class="message"><?= __('Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If Force SSL is active, your server has to be configured for HTTPS. It is highly recommended that you do so.') ?></div>
+                                <div class="message"><?= __('Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so.') ?></div>
                             </div>
                         </div>
                     </div>

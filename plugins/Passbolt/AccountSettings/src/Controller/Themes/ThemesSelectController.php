@@ -34,7 +34,7 @@ class ThemesSelectController extends AppController
     {
         $theme = $this->request->getData('value');
         if (!isset($theme) || empty($theme)) {
-            throw new BadRequestException(__('A value for the theme must be provided.'));
+            throw new BadRequestException(__('A value for the theme should be provided.'));
         }
 
         /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */

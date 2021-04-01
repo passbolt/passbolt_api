@@ -57,7 +57,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
         // If it's not in keyring try to import it
         // Check if file containing the private key exist
         if ($keyFilePath === null) {
-            throw new InternalErrorException(__('The secret key file is not defined.'));
+            throw new InternalErrorException('The secret key file is not defined.');
         }
         if (!file_exists($keyFilePath)) {
             $msg = __('The OpenPGP server key defined in the config is not found in the file system.');

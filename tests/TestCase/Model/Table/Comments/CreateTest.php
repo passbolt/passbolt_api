@@ -109,10 +109,9 @@ class CreateTest extends AppTestCase
     public function testValidationContent()
     {
         $testCases = [
-            'scalar' => self::getScalarTestCases(),
+            'utf8Extended' => self::getUtf8ExtendedTestCases(50),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
-            'utf8Extended' => self::getUtf8ExtendedTestCases(50),
             'lengthBetween' => self::getLengthBetweenTestCases(1, 255),
         ];
         $this->assertFieldFormatValidation($this->Comments, 'content', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);

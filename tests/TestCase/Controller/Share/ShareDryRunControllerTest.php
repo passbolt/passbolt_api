@@ -176,7 +176,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
         $this->postJson("/share/simulate/resource/$resourceId.json");
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
     public function testErrorDoesNotExistResource()

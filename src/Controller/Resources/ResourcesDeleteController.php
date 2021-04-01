@@ -55,7 +55,7 @@ class ResourcesDeleteController extends AppController
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The resource id is not valid.'));
+            throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
 
         $this->loadModel('Resources');
@@ -77,11 +77,11 @@ class ResourcesDeleteController extends AppController
         // Update the entity to delete=1, clear uri/desc/username and drop associated permissions
         if (!$this->Resources->softDelete($this->User->id(), $resource)) {
             $this->_handleDeleteError($resource);
-            throw new InternalErrorException(__('Could not delete the resource. Please try again later.'));
+            throw new InternalErrorException('Could not delete the resource. Please try again later.');
         }
 
         $this->_notifyUser($originalResource, $users);
-        $this->success(__('The resource was deleted'));
+        $this->success(__('The resource has been deleted successfully.'));
     }
 
     /**

@@ -108,7 +108,7 @@ class SetupStartController extends AppController
         /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = $this->AuthenticationTokens->find('activeUserRegistrationToken', $finderOptions)->first();
         if (empty($token)) {
-            throw new BadRequestException(__('The authentication token is not valid'));
+            throw new BadRequestException(__('The authentication token is not valid.'));
         }
 
         return $token;

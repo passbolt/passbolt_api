@@ -74,18 +74,18 @@ class SecretsHistoryTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('resource_id')
-            ->requirePresence('resource_id', 'create')
-            ->notEmptyString('resource_id');
+            ->uuid('resource_id', __('The resource identifier should be a valid UUID.'))
+            ->requirePresence('resource_id', 'create', __('The resource identifier is required.'))
+            ->notEmptyString('resource_id', __('The resource identifier should not be empty.'));
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->notEmptyString('user_id');
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         return $validator;
     }
@@ -120,19 +120,19 @@ class SecretsHistoryTable extends Table
         // Check validation rules.
         $secretHistory = $this->buildEntity($data);
         if (!empty($secretHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate secret_history data.', true), $secretHistory, $this);
+            throw new ValidationException(__('Could not validate secret history data.', true), $secretHistory, $this);
         }
 
         $secretHistory = $this->save($secretHistory);
 
         // Check for validation errors. (associated models too).
         if (!empty($secretHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate secret_history data.'), $secretHistory, $this);
+            throw new ValidationException(__('Could not validate secret history data.'), $secretHistory, $this);
         }
 
         // Check for errors while saving.
         if (!$secretHistory) {
-            throw new InternalErrorException(__('The secret_history could not be saved.'));
+            throw new InternalErrorException('Could not save the secret history.');
         }
 
         return $secretHistory;

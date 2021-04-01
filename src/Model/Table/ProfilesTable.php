@@ -68,20 +68,20 @@ class ProfilesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->requirePresence('first_name', 'create', __('A first name is required'))
-            ->notEmptyString('first_name')
-            ->utf8('first_name', __('First name should be a valid utf8 string.'))
-            ->maxLength('first_name', 255, __('The first name length should be maximum 254 characters.'));
+            ->requirePresence('first_name', 'create', __('A first name is required.'))
+            ->notEmptyString('first_name', __('The first name should not be empty.'))
+            ->utf8('first_name', __('The first name should be a valid BMP-UTF8 string.'))
+            ->maxLength('first_name', 255, __('The first name length should be maximum {0} characters.', 255));
 
         $validator
-            ->requirePresence('last_name', 'create', __('A last name is required'))
-            ->notEmptyString('last_name')
-            ->utf8('last_name', __('Last name should be a valid utf8 string.'))
-            ->maxLength('last_name', 255, __('The last name length should be maximum 254 characters.'));
+            ->requirePresence('last_name', 'create', __('A last name is required.'))
+            ->notEmptyString('last_name', __('The last name should not be empty.'))
+            ->utf8('last_name', __('The last name should be a valid BMP-UTF8 string.'))
+            ->maxLength('last_name', 255, __('The last name length should be maximum {0} characters.', 255));
 
         return $validator;
     }

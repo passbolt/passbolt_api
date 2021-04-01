@@ -58,12 +58,11 @@ class UserAgentsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->scalar('name')
-            ->utf8('name', __('The user agent should be a UTF8 compatible string.'))
+            ->utf8('name', __('The name should be a valid BMP-UTF8 string.'))
             ->allowEmptyString('name');
 
         return $validator;

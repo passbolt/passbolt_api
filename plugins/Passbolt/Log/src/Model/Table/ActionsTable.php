@@ -60,12 +60,12 @@ class ActionsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should be not be empty.'), 'create');
 
         $validator
-            ->ascii('name', __('name should be ascii'))
-            ->requirePresence('name');
+            ->ascii('name', __('The name should be a valid ASCII string.'))
+            ->requirePresence('name', __('A name is required.'));
 
         return $validator;
     }
@@ -117,7 +117,7 @@ class ActionsTable extends Table
 
         // Check for errors while saving.
         if (!$actionSaved) {
-            throw new InternalErrorException(__('The action could not be saved.'));
+            throw new InternalErrorException('Could not save the action.');
         }
 
         return $actionSaved;

@@ -235,7 +235,7 @@ class GpgAuthenticator extends SessionAuthenticator
         //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_2', '');
         $this->addHeader('X-GPGAuth-Progress', 'stage2');
         if (!$this->_checkNonce($this->_data['user_token_result'])) {
-            return $this->_error(__('The user token result is not a valid UUID.'));
+            return $this->_error(__('The user token result should be a valid UUID.'));
         }
 
         // extract the UUID to get the database records
@@ -287,7 +287,7 @@ class GpgAuthenticator extends SessionAuthenticator
     }
 
     /**
-     * Initialize GPG keyring and load the config
+     * Initialize OpenPGP keyring and load the config
      *
      * @throws \Cake\Http\Exception\InternalErrorException if config is missing or key is not set nor usable to decrypt
      * @return void
@@ -301,7 +301,7 @@ class GpgAuthenticator extends SessionAuthenticator
 
         // Check if config contains fingerprint
         if (!is_string($fingerprint) || !GpgkeysTable::isValidFingerprint($fingerprint)) {
-            throw new InternalErrorException(__('The GnuPG config for the server is not available or incomplete.'));
+            throw new InternalErrorException('The GnuPG config for the server is not available or incomplete.');
         }
 
         // set the key to be used for decrypting
@@ -336,7 +336,7 @@ class GpgAuthenticator extends SessionAuthenticator
                 $this->_gpg->importKeyIntoKeyring($this->_user->gpgkey->armored_key);
                 $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
             } catch (Exception $exception) {
-                $msg = __('The OpenPGP key for the user could not be imported in GnuPG.');
+                $msg = __('Could not import the user OpenPGP key.');
                 throw new InternalErrorException($msg);
             }
         }
@@ -433,7 +433,7 @@ class GpgAuthenticator extends SessionAuthenticator
             return $this->_error($errorMsg . __('it is not a UUID.'));
         }
         if ($length != 36) {
-            return $this->_error($errorMsg . __('using wrong token data length.'));
+            return $this->_error($errorMsg . __('wrong token data length.'));
         }
 
         return true;

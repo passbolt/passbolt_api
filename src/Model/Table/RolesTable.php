@@ -69,17 +69,17 @@ class RolesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', 'create');
 
         $validator
-            ->scalar('name')
+            ->ascii('name', __('The name should be a valid ASCII string.'))
             ->requirePresence('name', 'create')
             ->notEmptyString('name')
             ->add('name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->scalar('description')
+            ->utf8('description', __('The description should be a valid BMP-UTF8 string.'))
             ->allowEmptyString('description');
 
         return $validator;
@@ -94,7 +94,7 @@ class RolesTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['name']));
+        $rules->add($rules->isUnique(['name'], __('A role already exists for the given name.')));
 
         return $rules;
     }
@@ -122,7 +122,7 @@ class RolesTable extends Table
     public function getIdByName(string $roleName)
     {
         if (!$this->isValidRoleName($roleName)) {
-            $msg = __('The role name should be from the list of allowed role names');
+            $msg = __('The role name should be from the list of allowed role names.');
             throw new \InvalidArgumentException($msg);
         }
         $role = $this->find('all')

@@ -43,7 +43,7 @@ trait ResourcesFindersTrait
     public function findIndex(string $userId, ?array $options = [])
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         $query = $this->find();
@@ -197,10 +197,10 @@ trait ResourcesFindersTrait
     public function findView(string $userId, string $resourceId, ?array $options = [])
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
+            throw new \InvalidArgumentException('The parameter userId should be a valid UUID.');
         }
         if (!Validation::uuid($resourceId)) {
-            throw new \InvalidArgumentException(__('The parameter resourceId should be a valid uuid.'));
+            throw new \InvalidArgumentException('The parameter resourceId should be a valid UUID.');
         }
 
         $query = $this->findIndex($userId, $options)
@@ -218,7 +218,7 @@ trait ResourcesFindersTrait
     public function findAllByGroupAccess(string $groupId)
     {
         if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
         }
 
         $query = $this->find()
@@ -241,14 +241,14 @@ trait ResourcesFindersTrait
     public function findAllByIds(string $userId, array $resourceIds = [], ?array $options = [])
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         if (empty($resourceIds)) {
-            throw new \InvalidArgumentException(__('The resources ids array can not be empty.'));
+            throw new \InvalidArgumentException('The resources ids array can not be empty.');
         } else {
             foreach ($resourceIds as $resourceId) {
                 if (!Validation::uuid($resourceId)) {
-                    $msg = __('The resources ids arrays should contain only valid uuid.');
+                    $msg = 'The array of resources identifiers should contain only valid UUID.';
                     throw new \InvalidArgumentException($msg);
                 }
             }
@@ -338,7 +338,7 @@ trait ResourcesFindersTrait
     private function _filterQuerySharedWithGroup(Query $query, string $groupId)
     {
         if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
         }
 
         $resourcesSharedWithGroupSubQuery = $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $groupId)

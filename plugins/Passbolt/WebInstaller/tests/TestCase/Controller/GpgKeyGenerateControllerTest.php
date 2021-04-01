@@ -35,7 +35,7 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/gpg_key');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertStringContainsString('Create a new GPG key for your server', $data);
+        $this->assertStringContainsString('Create a new OpenPGP key for your server', $data);
     }
 
     public function testWebInstallerGpgKeyGeneratePostSuccess()

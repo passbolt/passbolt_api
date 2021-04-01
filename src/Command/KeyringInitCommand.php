@@ -56,14 +56,14 @@ class KeyringInitCommand extends PassboltCommand
             if ($armoredKey === false) {
                 throw new Exception(__('Could not read the file: {0}', $filePath));
             }
-            // Import the private key in the GPG keyring
+            // Import the private key in the OpenPGP keyring
             $gpg = OpenPGPBackendFactory::get();
 
             $io->out('Importing ' . $filePath);
             $gpg->importKeyIntoKeyring($armoredKey);
         } catch (Exception $e) {
             $this->error($e->getMessage(), $io);
-            $this->error('The server OpenPGP key could not be imported into the GnuPG keyring.', $io);
+            $this->error('Could not import the server OpenPGP key into the keyring.', $io);
 
             return $this->errorCode();
         }

@@ -54,7 +54,7 @@ $text .= ' ';
 if ($invitedByYou) {
     $text .= __('This user was invited by you {0}.', $invitedWhen);
 } else if ($user->username === $invitedBy->username) {
-    $text .= __('This user signed up themselves, since you have open registration active.');
+    $text .= __('This user signed up themselves, since the public registration is enabled.');
 } else {
     $text .= __('This user was invited by {0} {1}.', $invitedBy->profile->first_name, $invitedWhen);
 }
