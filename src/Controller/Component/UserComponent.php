@@ -164,10 +164,10 @@ class UserComponent extends Component
      * @throws \Cake\Http\Exception\ForbiddenException
      * @return void
      */
-    public function authorizeAdminsOnly(): void
+    public function assertIsAdmin(): void
     {
         if (!$this->isAdmin()) {
-            throw new ForbiddenException();
+            throw new ForbiddenException(__('Access restricted to administrators.'));
         }
     }
 }

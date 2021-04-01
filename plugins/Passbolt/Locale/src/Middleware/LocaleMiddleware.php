@@ -16,8 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Locale\Middleware;
 
-use Passbolt\Locale\Service\GetRequestLocaleService;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\RequestLocaleParserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -28,6 +27,12 @@ class LocaleMiddleware implements MiddlewareInterface
     /**
      * Locale Middleware.
      *
+     * Set the locale based on the locale found in the
+     * 1. request locale query
+     * 2. account setting
+     * 3. organization setting
+     * 4. Default locale
+     *
      * @param \Cake\Http\ServerRequest $request The request.
      * @param \Cake\Http\Response $handler The handler.
      * @return \Cake\Http\Response The response.
@@ -36,24 +41,9 @@ class LocaleMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        $this->setLocale($request);
+        $service = new RequestLocaleParserService($request);
+        $service->setLocale($service->getLocale());
 
         return $handler->handle($request);
-    }
-
-    /**
-     * Set the locale based on the locale found in the
-     * 1. request locale query
-     * 2. account setting
-     * 3. organization setting
-     * 4. Default locale
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request The ongoing request.
-     * @return void
-     */
-    public function setLocale(ServerRequestInterface $request): void
-    {
-        $service = new GetRequestLocaleService($request);
-        LocaleUtility::setLocaleIfValid($service->getLocale());
     }
 }

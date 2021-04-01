@@ -19,7 +19,8 @@ namespace Passbolt\Locale\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\GetOrgLocaleService;
+use Passbolt\Locale\Service\LocaleService;
 
 class OrganizationLocalesSelectControllerTest extends AppIntegrationTestCase
 {
@@ -37,14 +38,14 @@ class OrganizationLocalesSelectControllerTest extends AppIntegrationTestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        LocaleUtility::clearOrganisationLocale();
+        GetOrgLocaleService::clearOrganisationLocale();
     }
 
     public function testOrganizationLocalesSelectAsGuestFails()
     {
         $this->logInAsUser();
         $this->postJson('/locale/settings.json');
-        $this->assertForbiddenError();
+        $this->assertForbiddenError('Access restricted to administrators.');
     }
 
     public function testOrganizationLocalesSelectSuccess()
@@ -55,7 +56,7 @@ class OrganizationLocalesSelectControllerTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
         $this->assertSame(
             $value,
-            $this->organizationSettings->getByProperty(LocaleUtility::SETTING_PROPERTY)->get('value')
+            $this->organizationSettings->getByProperty(LocaleService::SETTING_PROPERTY)->get('value')
         );
     }
 
@@ -64,6 +65,6 @@ class OrganizationLocalesSelectControllerTest extends AppIntegrationTestCase
         $this->logInAsAdmin();
         $value = 'foo-BAR';
         $this->postJson('/locale/settings.json', compact('value'));
-        $this->assertBadRequestError('The locale foo-BAR is not supported.');
+        $this->assertBadRequestError('This is not a valid locale.');
     }
 }

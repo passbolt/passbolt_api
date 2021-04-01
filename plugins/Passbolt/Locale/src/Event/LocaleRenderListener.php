@@ -19,7 +19,7 @@ namespace Passbolt\Locale\Event;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\I18n\I18n;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\LocaleService;
 
 class LocaleRenderListener implements EventListenerInterface
 {
@@ -54,10 +54,11 @@ class LocaleRenderListener implements EventListenerInterface
         /** @var \Cake\View\View $View */
         $View = $event->getSubject();
         $locale = $View->get(LocaleEmailQueueListener::VIEW_VAR_KEY);
-        if (LocaleUtility::localeIsValid($locale)) {
+        $service = new LocaleService();
+        if ($service->isValidLocale($locale)) {
             // Remember the locale before render.
             self::$localeBeforeRender = self::$localeBeforeRender ?? I18n::getLocale();
-            LocaleUtility::setLocale($locale);
+            $service->setLocale($locale);
         }
     }
 
@@ -68,7 +69,8 @@ class LocaleRenderListener implements EventListenerInterface
      */
     public function resetLocaleAfterLayoutIfDefinedInTemplateVar(): void
     {
-        LocaleUtility::setLocaleIfValid(self::$localeBeforeRender);
+        $service = new LocaleService();
+        $service->setLocaleIfIsValid(self::$localeBeforeRender);
         self::$localeBeforeRender = null;
     }
 }

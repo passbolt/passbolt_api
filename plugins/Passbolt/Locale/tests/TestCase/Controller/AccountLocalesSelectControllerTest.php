@@ -20,7 +20,8 @@ namespace Passbolt\Locale\Test\TestCase\Controller;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\GetOrgLocaleService;
+use Passbolt\Locale\Service\LocaleService;
 
 class AccountLocalesSelectControllerTest extends AppIntegrationTestCase
 {
@@ -38,7 +39,7 @@ class AccountLocalesSelectControllerTest extends AppIntegrationTestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        LocaleUtility::clearOrganisationLocale();
+        GetOrgLocaleService::clearOrganisationLocale();
     }
 
     public function testAccountLocalesSelectAsGuestFails()
@@ -57,7 +58,7 @@ class AccountLocalesSelectControllerTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
         $this->assertSame(
             $value,
-            $this->accountSettings->getByProperty($user->id, LocaleUtility::SETTING_PROPERTY)->get('value')
+            $this->accountSettings->getByProperty($user->id, LocaleService::SETTING_PROPERTY)->get('value')
         );
     }
 
@@ -67,6 +68,6 @@ class AccountLocalesSelectControllerTest extends AppIntegrationTestCase
 
         $value = 'foo-BAR';
         $this->postJson('/account/settings/locales.json', compact('value'));
-        $this->assertBadRequestError('The locale foo-BAR is not supported.');
+        $this->assertBadRequestError('This is not a valid locale.');
     }
 }

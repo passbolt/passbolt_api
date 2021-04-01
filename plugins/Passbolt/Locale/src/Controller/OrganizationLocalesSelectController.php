@@ -19,7 +19,7 @@ namespace Passbolt\Locale\Controller;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use Cake\Http\Exception\BadRequestException;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\SetOrgLocaleService;
 
 /**
  * @property \App\Model\Table\OrganizationSettingsTable $OrganizationSettings
@@ -34,17 +34,14 @@ class OrganizationLocalesSelectController extends AppController
      */
     public function select()
     {
-        $this->User->authorizeAdminsOnly();
+        $this->User->assertIsAdmin();
 
-        $this->loadComponent('Passbolt/Locale.Locale');
-        $locale = $this->Locale->handleRequestData();
+        $service = new SetOrgLocaleService();
 
-        $this->loadModel('OrganizationSettings');
         try {
-            $setting = $this->OrganizationSettings->createOrUpdateSetting(
-                LocaleUtility::SETTING_PROPERTY,
-                $locale,
-                $this->User->getAccessControl()
+            $setting = $service->save(
+                $this->User->getAccessControl(),
+                $this->getRequest()->getData($service::REQUEST_DATA_KEY)
             );
         } catch (ValidationException $e) {
             throw new BadRequestException(__('This is not a valid locale.'));

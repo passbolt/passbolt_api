@@ -19,55 +19,56 @@ namespace Passbolt\Locale\Test\TestCase\Service;
 
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
-use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
-use Passbolt\Locale\Service\GetEmailLocaleService;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\GetOrgLocaleService;
+use Passbolt\Locale\Service\GetUserLocaleService;
+use Passbolt\Locale\Test\Lib\DummySystemLocaleTestTrait;
 
-class GetEmailLocaleServiceTest extends TestCase
+class GetUserLocaleServiceTest extends TestCase
 {
+    use DummySystemLocaleTestTrait;
+
     public function setUp(): void
     {
         $this->loadPlugins(['Passbolt/Locale']);
+        $this->addFooSystemLocale();
     }
 
     public function tearDown(): void
     {
-        LocaleUtility::clearOrganisationLocale();
+        GetOrgLocaleService::clearOrganisationLocale();
+        $this->removeFooSystemLocale();
     }
 
-    public function dataForTestGetEmailLocaleServiceGetLocale(): array
+    public function dataForTestGetUserLocaleServiceGetLocale(): array
     {
         return [
             ['hasLocaleSetting@test.test', 'fr-FR'],
-            ['hasNoSetting@test.test', 'de'],
-            ['foo', 'de'],
-            ['', 'de'],
+            ['hasNoSetting@test.test', 'foo'],
+            ['i_am_not_an_email', 'foo'],
+            ['', 'foo'],
         ];
     }
 
     /**
-     * @param string|null $recipient The email's recipient
-     * @param string|null $expected
+     * @param string $recipient The email's recipient
+     * @param string $expected
      * @throws \Exception
-     * @dataProvider dataForTestGetEmailLocaleServiceGetLocale
+     * @dataProvider dataForTestGetUserLocaleServiceGetLocale
      */
-    public function testGetEmailLocaleServiceGetLocaleInEmail(?string $recipient, ?string $expected = null): void
+    public function testGetUserLocaleServiceGetLocaleInEmail(string $recipient, string $expected): void
     {
-        Configure::write('passbolt.plugins.locale.options', LocaleUtility::getAvailableLocales() + ['de' => 'German']);
-
         UserFactory::make(['username' => $recipient])
-            ->user()
             ->withLocale('fr-FR')
             ->persist();
 
-        OrganizationSettingFactory::make()->locale('de')->persist();
+        OrganizationSettingFactory::make()->locale('foo')->persist();
 
-        $service = new GetEmailLocaleService('hasLocaleSetting@test.test');
+        $service = new GetUserLocaleService();
 
         $this->assertSame(
             $expected,
-            $service->getLocale()
+            $service->getLocale('hasLocaleSetting@test.test')
         );
     }
 }

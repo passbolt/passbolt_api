@@ -19,8 +19,7 @@ namespace Passbolt\Locale\Event;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Passbolt\Locale\Service\GetEmailLocaleService;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\GetUserLocaleService;
 
 class LocaleEmailQueueListener implements EventListenerInterface
 {
@@ -55,9 +54,9 @@ class LocaleEmailQueueListener implements EventListenerInterface
             return;
         }
 
-        $emailLocaleService = new GetEmailLocaleService($entity->get('email'));
-        $locale = $emailLocaleService->getLocale();
-        if (!LocaleUtility::localeIsValid($locale)) {
+        $service = new GetUserLocaleService();
+        $locale = $service->getLocale($entity->get('email'));
+        if (!$service->isValidLocale($locale)) {
             return;
         }
 

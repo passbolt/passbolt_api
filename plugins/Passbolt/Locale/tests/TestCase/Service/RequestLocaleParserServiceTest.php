@@ -18,32 +18,36 @@ declare(strict_types=1);
 namespace Passbolt\Locale\Test\TestCase\Service;
 
 use App\Test\Factory\OrganizationSettingFactory;
-use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
-use Passbolt\Locale\Service\GetRequestLocaleService;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\GetOrgLocaleService;
+use Passbolt\Locale\Service\RequestLocaleParserService;
+use Passbolt\Locale\Test\Lib\DummySystemLocaleTestTrait;
 use Psr\Http\Message\ServerRequestInterface;
 
-class GetRequestLocaleServiceTest extends TestCase
+class RequestLocaleParserServiceTest extends TestCase
 {
+    use DummySystemLocaleTestTrait;
+
     public function setUp(): void
     {
         $this->loadPlugins(['Passbolt/Locale']);
+        $this->addFooSystemLocale();
     }
 
     public function tearDown(): void
     {
-        LocaleUtility::clearOrganisationLocale();
+        GetOrgLocaleService::clearOrganisationLocale();
+        $this->removeFooSystemLocale();
     }
 
-    public function dataForTestGetRequestLocaleServiceGetLocale(): array
+    public function dataForTestRequestLocaleParserServiceGetLocale(): array
     {
         return [
             ['fr-FR', 'fr-FR'],
             ['fr_FR', 'fr-FR'],
-            ['xx-YY', 'de'],
-            ['', 'de'],
-            [null, 'de'],
+            ['xx-YY', 'foo'],
+            ['', 'foo'],
+            [null, 'foo'],
         ];
     }
 
@@ -54,19 +58,17 @@ class GetRequestLocaleServiceTest extends TestCase
      * @param string|null $localeInTheUrl
      * @param string|null $expected
      * @throws \Exception
-     * @dataProvider dataForTestGetRequestLocaleServiceGetLocale
+     * @dataProvider dataForTestRequestLocaleParserServiceGetLocale
      */
-    public function testGetRequestLocaleServiceGetLocaleWithUrl(?string $localeInTheUrl, ?string $expected = 'de'): void
+    public function testRequestLocaleParserServiceGetLocaleWithUrl(?string $localeInTheUrl, ?string $expected): void
     {
-        Configure::write('passbolt.plugins.locale.options', LocaleUtility::getAvailableLocales() + ['de' => 'German']);
-
-        $organizationLocale = 'de';
+        $organizationLocale = 'foo';
         OrganizationSettingFactory::make()->locale($organizationLocale)->persist();
 
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getQueryParams')->willReturn([GetRequestLocaleService::QUERY_KEY => $localeInTheUrl]);
+        $request->method('getQueryParams')->willReturn([RequestLocaleParserService::QUERY_KEY => $localeInTheUrl]);
 
-        $service = new GetRequestLocaleService($request);
+        $service = new RequestLocaleParserService($request);
 
         $this->assertSame(
             $expected,

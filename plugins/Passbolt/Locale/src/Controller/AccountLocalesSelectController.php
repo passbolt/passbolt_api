@@ -19,11 +19,10 @@ namespace Passbolt\Locale\Controller;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use Cake\Http\Exception\BadRequestException;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\SetUserLocaleService;
 
 /**
  * @property \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings
- * @property \Passbolt\Locale\Controller\Component\LocaleComponent $Locale
  */
 class AccountLocalesSelectController extends AppController
 {
@@ -34,15 +33,12 @@ class AccountLocalesSelectController extends AppController
      */
     public function select()
     {
-        $this->loadComponent('Passbolt/Locale.Locale');
-        $locale = $this->Locale->handleRequestData();
+        $service = new SetUserLocaleService();
 
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
         try {
-            $setting = $this->AccountSettings->createOrUpdateSetting(
+            $setting = $service->save(
                 $this->User->id(),
-                LocaleUtility::SETTING_PROPERTY,
-                $locale
+                $this->getRequest()->getData($service::REQUEST_DATA_KEY)
             );
         } catch (ValidationException $e) {
             throw new BadRequestException(__('This is not a valid locale.'));

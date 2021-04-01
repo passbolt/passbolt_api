@@ -21,7 +21,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\LocaleService;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
@@ -64,7 +64,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
         // Check that the locale in the payload was stored in the user's settings.
         $userLocale = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings')
-            ->getFirstPropertyOrFail(UuidFactory::uuid('user.id.ruth'), LocaleUtility::SETTING_PROPERTY)
+            ->getFirstPropertyOrFail(UuidFactory::uuid('user.id.ruth'), LocaleService::SETTING_PROPERTY)
             ->value;
         $this->assertSame('fr-FR', $userLocale);
     }

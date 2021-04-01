@@ -19,14 +19,12 @@ namespace Passbolt\Locale\Event;
 use App\Controller\Setup\SetupCompleteController;
 use App\Controller\Users\UsersRegisterController;
 use App\Error\Exception\ValidationException;
-use App\Model\Entity\User;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\Http\Exception\BadRequestException;
-use Cake\ORM\TableRegistry;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Cake\Log\Log;
+use Passbolt\Locale\Service\SetUserLocaleService;
 
-class StoreUserLocaleListener implements EventListenerInterface
+class SaveUserLocaleListener implements EventListenerInterface
 {
     public const LOCALE_KEY = 'locale';
 
@@ -52,29 +50,13 @@ class StoreUserLocaleListener implements EventListenerInterface
     {
         $locale = $event->getData('data')[static::LOCALE_KEY] ?? null;
         $user = $event->getData('user');
-        $locale = LocaleUtility::dasherizeLocale($locale);
-        if (LocaleUtility::localeIsValid($locale)) {
-            $this->storeLocale($locale, $user);
-        }
-    }
-
-    /**
-     * @param string $locale Locale to store
-     * @param \App\Model\Entity\User $user User
-     * @return void
-     */
-    public function storeLocale(string $locale, User $user): void
-    {
-        try {
-            TableRegistry::getTableLocator()
-                ->get('Passbolt/AccountSettings.AccountSettings')
-                ->createOrUpdateSetting(
-                    $user->id,
-                    LocaleUtility::SETTING_PROPERTY,
-                    $locale
-                );
-        } catch (ValidationException $e) {
-            throw new BadRequestException(__('This is not a valid locale.'));
+        $service = new SetUserLocaleService();
+        if ($service->isValidLocale($locale)) {
+            try {
+                $service->save($user->id, $locale);
+            } catch (ValidationException $e) {
+                Log::error($e->getMessage());
+            }
         }
     }
 }

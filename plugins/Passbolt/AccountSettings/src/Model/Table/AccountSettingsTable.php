@@ -22,6 +22,7 @@ use App\Model\Table\UsersTable;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -142,8 +143,7 @@ class AccountSettingsTable extends Table
 
         $props = [];
         foreach ($whitelist as $i => $item) {
-            $settingNamespace = AccountSetting::UUID_NAMESPACE . $item;
-            $props[] = UuidFactory::uuid($settingNamespace);
+            $props[] = $this->propertyToPropertyId($item);
         }
 
         return $this->find()
@@ -165,13 +165,9 @@ class AccountSettingsTable extends Table
             throw new BadRequestException(__('The user id must be a valid uuid.'));
         }
 
-        $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
-
-        $entity = $this->find()
-            ->where(['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)])
+        return $this->find('byProperty', compact('property'))
+            ->where([$this->aliasField('user_id') => $userId])
             ->firstOrFail();
-
-        return $entity;
     }
 
     /**
@@ -191,8 +187,7 @@ class AccountSettingsTable extends Table
             throw new BadRequestException(__('The user id must be a valid uuid.'));
         }
 
-        $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
-        $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
+        $settingFinder = ['user_id' => $userId, 'property_id' => $this->propertyToPropertyId($property)];
         $settingValues = ['value' => $value, 'property' => $property];
         $settingItem = $this->find()
             ->where($settingFinder)
@@ -242,11 +237,38 @@ class AccountSettingsTable extends Table
      */
     public function getByProperty(string $userId, string $property)
     {
-        $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
-        $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
-
         return $this->find()
-            ->where($settingFinder)
+            ->find('byProperty', compact('property'))
+            ->where([$this->aliasField('user_id') => $userId])
             ->first();
+    }
+
+    /**
+     * Convert a property in property_id
+     *
+     * @param string $property Property to convert
+     * @return string
+     */
+    public function propertyToPropertyId(string $property): string
+    {
+        return UuidFactory::uuid(AccountSetting::UUID_NAMESPACE . $property);
+    }
+
+    /**
+     * Find setting per property
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @param array $options Option with property
+     * @return \Cake\ORM\Query
+     */
+    public function findByProperty(Query $query, array $options): Query
+    {
+        if (!isset($options['property'])) {
+            throw new InternalErrorException(__('The parameter {0} is not set.', 'property'));
+        }
+
+        $property = $options['property'];
+
+        return $query->where([$this->aliasField('property_id') => $this->propertyToPropertyId($property)]);
     }
 }

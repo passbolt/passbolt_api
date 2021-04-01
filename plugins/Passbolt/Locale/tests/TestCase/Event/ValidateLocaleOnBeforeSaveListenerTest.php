@@ -21,7 +21,8 @@ use App\Error\Exception\ValidationException;
 use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\GetOrgLocaleService;
+use Passbolt\Locale\Service\LocaleService;
 
 class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
 {
@@ -32,7 +33,7 @@ class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
 
     public function tearDown(): void
     {
-        LocaleUtility::clearOrganisationLocale();
+        GetOrgLocaleService::clearOrganisationLocale();
     }
 
     public function dataForTestEmailLocaleServiceGetLocale(): array
@@ -64,10 +65,10 @@ class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
         $setting = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings')
             ->createOrUpdateSetting(
                 UserFactory::make()->persist()->id,
-                LocaleUtility::SETTING_PROPERTY,
+                LocaleService::SETTING_PROPERTY,
                 $locale
             );
 
-        $this->assertSame(LocaleUtility::dasherizeLocale($locale), $setting->get('value'));
+        $this->assertSame('fr-FR', $setting->get('value'));
     }
 }

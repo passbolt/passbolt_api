@@ -17,12 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Service;
 
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Passbolt\Locale\Utility\LocaleUtility;
 use Psr\Http\Message\ServerRequestInterface;
 
-class GetRequestLocaleService
+class RequestLocaleParserService extends LocaleService
 {
     public const QUERY_KEY = 'locale';
 
@@ -54,12 +52,12 @@ class GetRequestLocaleService
         if ($locale) {
             return $locale;
         }
-        $locale = $this->readAccountLocale();
+        $locale = $this->getUserLocale();
         if ($locale) {
             return $locale;
         }
 
-        return LocaleUtility::getOrganizationLocale();
+        return GetOrgLocaleService::getLocale();
     }
 
     /**
@@ -68,11 +66,11 @@ class GetRequestLocaleService
      *
      * @return string|null
      */
-    private function readUriLocale(): ?string
+    protected function readUriLocale(): ?string
     {
-        $locale = $this->getRequest()->getQueryParams()[self::QUERY_KEY] ?? '';
-        if (LocaleUtility::localeIsValid($locale)) {
-            return LocaleUtility::dasherizeLocale($locale);
+        $locale = $this->request->getQueryParams()[self::QUERY_KEY] ?? '';
+        if ($this->isValidLocale($locale)) {
+            return $this->dasherizeLocale($locale);
         }
 
         return null;
@@ -83,44 +81,25 @@ class GetRequestLocaleService
      *
      * @return string|null
      */
-    private function readAccountLocale(): ?string
+    protected function getUserLocale(): ?string
     {
-        if (empty($this->getUserId())) {
-            return null;
-        }
-        try {
-            $setting = TableRegistry::getTableLocator()
-                ->get('Passbolt/AccountSettings.AccountSettings')
-                ->getByProperty($this->getUserId(), LocaleUtility::SETTING_PROPERTY);
-        } catch (\Exception $e) {
-            // Do nothing if the table is not found.
+        $username = $this->getUsername();
+        if ($username === null) {
             return null;
         }
 
-        if ($setting) {
-            return $setting->get('value');
-        }
-
-        return null;
+        return (new GetUserLocaleService())->getLocale($username);
     }
 
     /**
-     * @return \Psr\Http\Message\ServerRequestInterface
-     */
-    private function getRequest(): ServerRequestInterface
-    {
-        return $this->request;
-    }
-
-    /**
-     * Get the authenticated user id, or null if not authenticated.
+     * Get the authenticated username, or null if not authenticated.
      *
      * @return string
      */
-    private function getUserId(): ?string
+    protected function getUsername(): ?string
     {
-        $result = $this->getRequest()->getAttribute('authenticationResult');
-        if (empty($result)) {
+        $result = $this->request->getAttribute('authenticationResult');
+        if ($result === null) {
             return null;
         }
 
@@ -129,6 +108,6 @@ class GetRequestLocaleService
             return null;
         }
 
-        return Hash::get($user, 'id');
+        return Hash::get($user, 'username');
     }
 }

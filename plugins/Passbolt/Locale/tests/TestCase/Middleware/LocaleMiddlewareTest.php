@@ -21,7 +21,7 @@ use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\I18n\I18n;
-use Passbolt\Locale\Service\GetRequestLocaleService;
+use Passbolt\Locale\Service\RequestLocaleParserService;
 
 class LocaleMiddlewareTest extends AppIntegrationTestCase
 {
@@ -31,48 +31,50 @@ class LocaleMiddlewareTest extends AppIntegrationTestCase
         I18n::setLocale(I18n::DEFAULT_LOCALE);
     }
 
-    public function testLocaleMiddlewareUnauthenticatedRequestWithOrgaSetting()
+    public function testLocaleMiddlewareUnauthenticatedRequestWithOrgSetting()
     {
-        $locale = 'foo';
+        $locale = 'fr_FR';
         OrganizationSettingFactory::make()->locale($locale)->persist();
 
         $this->getJson('/auth/is-authenticated.json');
-
-        $this->assertSame(I18n::DEFAULT_LOCALE, I18n::getLocale());
+        $this->assertAuthenticationError();
+        $this->assertSame($locale, I18n::getLocale());
     }
 
     public function testLocaleMiddlewareUnauthenticatedRequestWithQuerySetting(): void
     {
-        $locale = 'fr-FR';
-        $localeKey = GetRequestLocaleService::QUERY_KEY;
-        OrganizationSettingFactory::make()->locale('bar')->persist();
+        $locale = 'fr_FR';
+        $localeKey = RequestLocaleParserService::QUERY_KEY;
+        OrganizationSettingFactory::make()->locale($locale)->persist();
 
         $this->getJson('/auth/is-authenticated.json?' . $localeKey . '=' . $locale);
-
-        $this->assertSame('fr_FR', I18n::getLocale());
+        $this->assertAuthenticationError();
+        $this->assertSame($locale, I18n::getLocale());
     }
 
     public function testLocaleMiddlewareAuthenticatedWithAccountSetting(): void
     {
-        $locale = 'fr-FR';
-        OrganizationSettingFactory::make()->locale('bar')->persist();
+        $locale = 'fr_FR';
+        OrganizationSettingFactory::make()->locale($locale)->persist();
 
         $user = UserFactory::make()->user()->withLocale($locale)->persist();
 
         $this->logInAs($user);
         $this->getJson('/auth/is-authenticated.json');
-        $this->assertSame('fr_FR', I18n::getLocale());
+        $this->assertResponseSuccess();
+        $this->assertSame($locale, I18n::getLocale());
     }
 
     public function testLocaleMiddlewareAuthenticatedWithAccountSettingAndQuerySettings(): void
     {
-        $locale = 'fr-FR';
-        $localeKey = GetRequestLocaleService::QUERY_KEY;
-        OrganizationSettingFactory::make()->locale('bar')->persist();
+        $locale = 'fr_FR';
+        $localeKey = RequestLocaleParserService::QUERY_KEY;
+        OrganizationSettingFactory::make()->locale($locale)->persist();
         $user = UserFactory::make()->user()->withLocale('foo')->persist();
 
         $this->logInAs($user);
         $this->getJson('/auth/is-authenticated.json?' . $localeKey . '=' . $locale);
+        $this->assertResponseSuccess();
         $this->assertSame('fr_FR', I18n::getLocale());
     }
 }

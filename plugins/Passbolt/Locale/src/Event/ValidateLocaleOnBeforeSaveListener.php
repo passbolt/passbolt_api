@@ -21,7 +21,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\LocaleService;
 
 class ValidateLocaleOnBeforeSaveListener implements EventListenerInterface
 {
@@ -44,31 +44,25 @@ class ValidateLocaleOnBeforeSaveListener implements EventListenerInterface
      */
     public function beforeSaveLocaleSetting(EventInterface $event, EntityInterface $entity): void
     {
-        if (!$this->entityIsLocaleSetting($entity)) {
+        if (!$this->isLocaleSetting($entity)) {
             return;
         }
 
-        if (!LocaleUtility::localeIsValid($entity->get('value'))) {
+        $localeService = new LocaleService();
+
+        // Validate the value
+        if (!$localeService->isValidLocale($entity->get('value'))) {
             $entity->setError('value', __('This is not a valid {0}.', 'locale'));
             $event->stopPropagation();
 
             return;
         }
 
-        $this->dasherizeLocale($entity);
-    }
-
-    /**
-     * Dasherize the locale before saving
-     *
-     * @param \Cake\Datasource\EntityInterface $entity Entity.
-     * @return void
-     */
-    public function dasherizeLocale(EntityInterface $entity): void
-    {
-        if ($this->entityIsLocaleSetting($entity)) {
-            $entity->set('value', LocaleUtility::dasherizeLocale($entity->get('value')));
-        }
+        // Dasherize the value before save
+        $entity->set(
+            'value',
+            $localeService->dasherizeLocale($entity->get('value'))
+        );
     }
 
     /**
@@ -78,10 +72,10 @@ class ValidateLocaleOnBeforeSaveListener implements EventListenerInterface
      * @param \Cake\Datasource\EntityInterface $entity Entity to assess
      * @return bool
      */
-    public function entityIsLocaleSetting(EntityInterface $entity): bool
+    public function isLocaleSetting(EntityInterface $entity): bool
     {
         if ($entity instanceof AccountSetting || $entity instanceof OrganizationSetting) {
-            if ($entity->get('property') === LocaleUtility::SETTING_PROPERTY) {
+            if ($entity->get('property') === LocaleService::SETTING_PROPERTY) {
                 return true;
             }
         }

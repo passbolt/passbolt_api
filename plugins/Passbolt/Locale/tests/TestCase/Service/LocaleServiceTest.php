@@ -15,13 +15,18 @@ declare(strict_types=1);
  * @since         3.2.0
  */
 
-namespace Passbolt\Locale\Test\TestCase\Utility;
+namespace Passbolt\Locale\Test\TestCase\Service;
 
 use Cake\TestSuite\TestCase;
-use Passbolt\Locale\Utility\LocaleUtility;
+use Passbolt\Locale\Service\LocaleService;
 
-class LocaleUtilityTest extends TestCase
+class LocaleServiceTest extends TestCase
 {
+    public function setUp(): void
+    {
+        $this->loadPlugins(['Passbolt/Locale']);
+    }
+
     public function dataForTestLocaleUtilityLocaleIsValid(): array
     {
         return [
@@ -40,9 +45,10 @@ class LocaleUtilityTest extends TestCase
      */
     public function testLocaleUtilityLocaleIsValid(?string $locale, bool $expected): void
     {
+        $service = new LocaleService();
         $this->assertSame(
             $expected,
-            LocaleUtility::localeIsValid($locale)
+            $service->isValidLocale($locale)
         );
     }
 }
