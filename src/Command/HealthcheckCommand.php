@@ -567,8 +567,8 @@ class HealthcheckCommand extends PassboltCommand
         if ($checks['gpg']['gpgKey']) {
             $this->assert(
                 $checks['gpg']['gpgKeyNotDefault'],
-                __('The server gpg key is not the default one'),
-                __('Do not use the default gpg key for the server'),
+                __('The server OpenPGP key is not the default one'),
+                __('Do not use the default OpenPGP key for the server'),
                 [
                     __('Create a key, export it and add the fingerprint to config/passbolt.php'),
                     __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
@@ -577,8 +577,8 @@ class HealthcheckCommand extends PassboltCommand
         } else {
             $this->assert(
                 $checks['gpg']['gpgKey'],
-                __('The server gpg key is set'),
-                __('The server gpg key is not set'),
+                __('The server OpenPGP key is set'),
+                __('The server OpenPGP key is not set'),
                 [
                     __('Create a key, export it and add the fingerprint to config/passbolt.php'),
                     __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),

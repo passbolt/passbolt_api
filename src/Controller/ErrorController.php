@@ -60,7 +60,7 @@ class ErrorController extends AppController
             // render a legacy JSON view by default
             $apiVersion = $this->request->getQuery('api-version');
             if ($apiVersion === 'v1') {
-                throw new InternalErrorException(__('API v1 support is deprecated in this version.'));
+                throw new InternalErrorException('API v1 support is deprecated in this version.');
             }
         }
         $this->viewBuilder()->setTemplatePath('Error');

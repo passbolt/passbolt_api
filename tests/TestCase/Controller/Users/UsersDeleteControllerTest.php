@@ -77,7 +77,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->deleteJson("/users/$userAId/dry-run.json?api-version=v2");
             $this->assertError(400);
             $this->assertStringContainsString(
-                'You need to transfer the user group manager role',
+                'sole group manager',
                 $this->_responseJsonHeader->message
             );
     }
@@ -121,22 +121,22 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->authenticateAs('admin');
             $userId = '0';
             $this->deleteJson("/users/$userId.json?api-version=v2");
-            $this->assertError(400, 'The user id must be a valid uuid.');
+            $this->assertError(400, 'The user identifier should be a valid UUID.');
 
             $this->authenticateAs('admin');
             $userId = 'true';
             $this->deleteJson("/users/$userId.json?api-version=v2");
-            $this->assertError(400, 'The user id must be a valid uuid.');
+            $this->assertError(400, 'The user identifier should be a valid UUID.');
 
             $this->authenticateAs('admin');
             $userId = 'null';
             $this->deleteJson("/users/$userId.json?api-version=v2");
-            $this->assertError(400, 'The user id must be a valid uuid.');
+            $this->assertError(400, 'The user identifier should be a valid UUID.');
 
             $this->authenticateAs('admin');
             $userId = '🔥';
             $this->deleteJson("/users/$userId.json?api-version=v2");
-            $this->assertError(400, 'The user id must be a valid uuid.');
+            $this->assertError(400, 'The user identifier should be a valid UUID.');
     }
 
     public function testUsersDeleteUserDoesNotExistError()
@@ -192,7 +192,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertError(400);
             $this->assertUserIsNotSoftDeleted($userKId);
             $this->assertResourceIsNotSoftDeleted($resourceMId);
-            $this->assertStringContainsString('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
+            $this->assertStringContainsString('sole owner of shared content', $this->_responseJsonHeader->message);
 
             $errors = $this->_responseJsonBody->errors;
             $this->assertFalse(isset($errors->groups));
@@ -225,7 +225,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $transfer['owners'][] = ['id' => 'invalid-uuid', 'aco_foreign_key' => $resourceOId];
             $this->deleteJson("/users/$userKId.json?api-version=v2", ['transfer' => $transfer]);
 
-            $this->assertError(400, 'The permissions ids must be valid uuids.');
+            $this->assertError(400, 'The permissions identifiers must be valid UUID.');
             $this->assertUserIsNotSoftDeleted($userKId);
     }
 
@@ -467,7 +467,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
             $transfer['managers'][] = ['id' => 'invalid-uuid', 'group_id' => $groupBId];
             $this->deleteJson("/users/$userOId.json?api-version=v2", ['transfer' => $transfer]);
-            $this->assertError(400, 'The groups users ids must be valid uuids.');
+            $this->assertError(400, 'The groups users identifiers must be valid UUID.');
             $this->assertUserIsNotSoftDeleted($userOId);
     }
 

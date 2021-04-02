@@ -116,8 +116,8 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id', __('User id by must be a valid UUID.'))
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The user identifier by should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
@@ -129,17 +129,19 @@ class UsersTable extends Table
             );
 
         $validator
-            ->boolean('active');
+            ->boolean('active', __('The active status should be a valid boolean.'));
 
         $validator
-            ->uuid('role_id', __('Role id by must be a valid UUID.'))
-            ->requirePresence('role_id', 'create');
+            ->uuid('role_id', __('The role identifier should be a valid UUID.'))
+            ->requirePresence('role_id', 'create', __('A role identifier is required.'));
 
         $validator
-            ->boolean('deleted');
+            ->boolean('deleted', __('The deleted status should be a valid boolean.'));
 
         $validator
-            ->requirePresence('profile', 'create');
+            ->requirePresence('profile', 'create', 'A profile is required.')
+            // @todo translation comment: is it still something necessary?
+            ->allowEmptyString('profile', __('The profile should not be empty.'), false);
 
         return $validator;
     }
@@ -176,8 +178,8 @@ class UsersTable extends Table
     {
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
-            ->notEmptyString('username', __('A username is required.'))
-            ->maxLength('username', 255, __('The username length should be maximum 254 characters.'))
+            ->notEmptyString('username', __('The username should not be empty.'))
+            ->maxLength('username', 255, __('The username length should be maximum 255 characters.'))
             ->email(
                 'username',
                 Configure::read('passbolt.email.validate.mx'),
@@ -198,19 +200,19 @@ class UsersTable extends Table
     {
         // Add rule
         $rules->add($rules->isUnique(['username', 'deleted']), 'uniqueUsername', [
-            'message' => __('This username is already in use.'),
+            'message' => __('The username is already in use.'),
         ]);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
-            'message' => __('This is not a valid role.'),
+            'message' => __('The role identifier does not exist.'),
         ]);
 
         // Delete rules
-        $msg = __('You need to transfer the ownership for the shared content owned by this user before deleting them.');
+        $msg = __('The user should not be sole owner of shared content, transfer the ownership to other users.');
         $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedContent', [
             'errorField' => 'id',
             'message' => $msg,
         ]);
-        $msg = __('You need to transfer the user group manager role to other users before deleting them.');
+        $msg = __('The user should not be sole group manager of group(s), transfer the management to other users.');
         $rules->addDelete(new IsNotSoleManagerOfNonEmptyGroupRule(), 'soleManagerOfNonEmptyGroup', [
             'errorField' => 'id',
             'message' => $msg,
@@ -449,7 +451,7 @@ class UsersTable extends Table
         // Check for internal error on save
         $user = $this->save($user, ['checkRules' => false]);
         if (!$user) {
-            throw new InternalErrorException(__('The user could not be saved.'));
+            throw new InternalErrorException('Could not save the user, try again later.');
         }
 
         // Generate an authentication token

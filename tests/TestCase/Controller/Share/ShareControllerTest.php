@@ -212,7 +212,7 @@ hcciUFw5
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
         $this->putJson("/share/resource/$resourceId.json");
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
     public function testErrorDoesNotExistResource()

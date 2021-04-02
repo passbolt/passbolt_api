@@ -86,7 +86,7 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
         $this->assertBadRequestError('The supplied email notification settings are not valid');
         $responseBody = $this->_responseJsonBody;
         $this->assertObjectHasAttribute($config, $responseBody);
-        $this->assertEquals('Send comment add should be a boolean.', $responseBody->{$config}->boolean);
+        $this->assertEquals('The send on comment added setting should be a boolean.', $responseBody->{$config}->boolean);
     }
 
     /**

@@ -50,7 +50,7 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                                         'templates' => [
                                             'inputContainer' => '<div class="input text host">{{content}}</div>',
                                         ],
-                                        'placeholder' => __('host name or ip'),
+                                        'placeholder' => __('host name or ip address'),
                                         'label' => false,
                                         'class' => 'required fluid',
                                     ]); ?>
@@ -61,7 +61,7 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                                         'inputContainer' => '<div class="input text port">{{content}}</div>',
                                     ],
                                     'required' => 'required',
-                                    'placeholder' => __('3306'),
+                                    'placeholder' => '3306',
                                     'label' => false,
                                     'class' => 'required fluid',
                                     'default' => '3306',

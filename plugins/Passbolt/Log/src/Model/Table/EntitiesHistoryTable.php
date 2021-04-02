@@ -80,29 +80,36 @@ class EntitiesHistoryTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('action_log_id', __('action_log_id should be a uuid'))
-            ->notEmptyString('action_log_id', __('action_log_id should not be empty'))
-            ->requirePresence('action_log_id', 'create', __('action_log_id is required'));
+            ->uuid('action_log_id', __('The action log identifier should be a valid UUID.'))
+            ->notEmptyString('action_log_id', __('The action log identifier should not be empty.'))
+            ->requirePresence('action_log_id', 'create', __('An action log identifier is required.'));
 
         $validator
-            ->ascii('foreign_model', __('foreign_model should be ascii'))
-            ->maxLength('foreign_model', 36, __('foreign_model should not exceed 255 characters'))
-            ->requirePresence('foreign_model', 'create', __('foreign_model is required'))
-            ->notEmptyString('foreign_model', __('foreign_model should not be empty'));
+            ->ascii('foreign_model', __('The object type should be a valid ASCII string.'))
+            ->maxLength('foreign_model', 36, __('The object type length should be maximum {0} characters.', 36))
+            ->requirePresence('foreign_model', 'create', __('A object type is required.'))
+            ->notEmptyString('foreign_model', __('The object type should not be empty.'));
 
         $validator
-            ->uuid('foreign_key', __('foreign_key should be a uuid'))
-            ->notEmptyString('foreign_key', __('foreign_key should not be empty'))
-            ->requirePresence('foreign_key', 'create', __('foreign_key is required'));
+            ->uuid('foreign_key', __('The object identifier should be a valid UUID.'))
+            ->notEmptyString('foreign_key', __('The object identifier should not be empty.'))
+            ->requirePresence('foreign_key', 'create', __('An object identifier is required.'));
 
         $validator
-            ->inList('crud', EntityHistory::CRUD, __('The crud provided is not supported'))
-            ->requirePresence('crud', 'create', __('crud is required'))
-            ->notEmptyString('crud', __('crud should not be empty'));
+            ->inList(
+                'crud',
+                EntityHistory::CRUD,
+                __(
+                    'The operation type should be one of the following: {0}.',
+                    implode(', ', EntityHistory::CRUD)
+                )
+            )
+            ->requirePresence('crud', 'create', __('An operation type is required.'))
+            ->notEmptyString('crud', __('The operation type should not be empty.'));
 
         return $validator;
     }
@@ -161,19 +168,19 @@ class EntitiesHistoryTable extends Table
         // Check validation rules.
         $log = $this->buildEntity($data, $userAction);
         if (!empty($log->getErrors())) {
-            throw new ValidationException(__('Could not validate entity_history data.', true), $log, $this);
+            throw new ValidationException(__('Could not validate entity history data.', true), $log, $this);
         }
 
         $entityHistory = $this->save($log, ['associated' => ['PermissionsHistory']]);
 
         // Check for validation errors. (associated models too).
         if (!empty($log->getErrors())) {
-            throw new ValidationException(__('Could not validate entity_history data.'), $entityHistory, $this);
+            throw new ValidationException(__('Could not validate entity history data.'), $entityHistory, $this);
         }
 
         // Check for errors while saving.
         if (!$entityHistory) {
-            throw new InternalErrorException(__('The entity_history could not be saved.'));
+            throw new InternalErrorException('Could not save the entity history.');
         }
 
         return $entityHistory;

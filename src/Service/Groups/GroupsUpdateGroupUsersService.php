@@ -251,7 +251,7 @@ class GroupsUpdateGroupUsersService
             ->count();
 
         if ($groupManagersCount < 1) {
-            $errors = ['at_least_one_group_manager' => __('At least one group manager must be provided.')];
+            $errors = ['at_least_one_group_manager' => __('At least one group manager should be provided.')];
             $this->handleValidationErrors($errors);
         }
     }

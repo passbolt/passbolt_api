@@ -77,23 +77,26 @@ class AccountSettingsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->scalar('property')
-            ->maxLength('property', 256)
-            ->requirePresence('property', 'create')
-            ->notEmptyString('property')
-            ->add('property', ['isValidProperty' => [
-                'rule' => [$this, 'isValidProperty'],
-                'message' => __('This setting is not supported.'),
-            ]]);
+            ->inList(
+                'property',
+                AccountSetting::SUPPORTED_PROPERTIES,
+                __(
+                    'The setting type should be one of the following: {0}.',
+                    implode(', ', AccountSetting::SUPPORTED_PROPERTIES)
+                )
+            )
+            ->requirePresence('property', 'create', __('A setting type is required.'))
+            ->notEmptyString('property', __('The setting type should not be empty'));
 
         $validator
-            ->utf8Extended('value')
-            ->requirePresence('value', 'create')
-            ->notEmptyString('value');
+            ->utf8Extended('value', __('The setting value should be a valid UTF8 string.'))
+            ->maxLength('value', 10240, __('The setting value length should be maximum {0} characters.', 10240))
+            ->requirePresence('value', 'create', __('A value setting is required.'))
+            ->notEmptyString('value', __('The setting value should not be empty.'));
 
         // Theme validation
         $validator = $this->themeValidationDefault($validator);
@@ -137,7 +140,7 @@ class AccountSettingsTable extends Table
     public function findIndex(string $userId, array $whitelist)
     {
         if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user id must be a valid uuid.'));
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
 
         $props = [];
@@ -162,7 +165,7 @@ class AccountSettingsTable extends Table
     public function getFirstPropertyOrFail(string $userId, string $property)
     {
         if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user id must be a valid uuid.'));
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
 
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
@@ -188,7 +191,7 @@ class AccountSettingsTable extends Table
     public function createOrUpdateSetting(string $userId, string $property, string $value)
     {
         if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user id must be a valid uuid.'));
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
 
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
@@ -210,7 +213,7 @@ class AccountSettingsTable extends Table
             if ($settingItem->getErrors()) {
                 throw new ValidationException(__('This is not a valid setting.'), $settingItem, $this);
             }
-            throw new InternalErrorException(__('Could not save the setting, please try again later.'));
+            throw new InternalErrorException('Could not save the setting, please try again later.');
         }
 
         return $settingItem;

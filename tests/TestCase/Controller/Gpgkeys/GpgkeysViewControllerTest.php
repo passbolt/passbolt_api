@@ -46,7 +46,7 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $this->getJson('/gpgkeys/notuuid.json');
-        $this->assertError(400, 'The gpg key id should be a uuid.');
+        $this->assertError(400, 'The OpenPGP key identifier should be a valid UUID.');
     }
 
     public function testGpgkeysViewGpgkeyDoesNotExistError()
@@ -54,6 +54,6 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $uuid = UuidFactory::uuid('gpgkey.id.notagpgkey');
         $this->getJson('/gpgkeys/' . $uuid . '.json');
-        $this->assertError(404, 'The gpg key does not exist.');
+        $this->assertError(404, 'The OpenPGP key does not exist.');
     }
 }

@@ -90,7 +90,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
         $this->getJson("/permissions/resource/$resourceId.json");
-        $this->assertError(400, 'The id is not valid for model Resource');
+        $this->assertError(400, 'The identifier should be a valid UUID.');
     }
 
     public function testPermissionsViewErrorSoftDeletedResource()

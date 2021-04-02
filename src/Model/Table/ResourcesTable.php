@@ -129,21 +129,21 @@ class ResourcesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->utf8Extended('name', __('The name is not a valid utf8 string.'))
+            ->utf8Extended('name', __('The name should be a valid UTF8 string.'))
             ->maxLength(
                 'name',
                 self::NAME_MAX_LENGTH,
                 __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH)
             )
             ->requirePresence('name', 'create', __('A name is required.'))
-            ->allowEmptyString('name', __('The name cannot be empty.'), false);
+            ->allowEmptyString('name', __('The name should not be empty.'), false);
 
         $validator
-            ->utf8Extended('username', __('The username is not a valid utf8 string.'))
+            ->utf8Extended('username', __('The username should be a valid UTF8 string.'))
             ->maxLength(
                 'username',
                 self::USERNAME_MAX_LENGTH,
@@ -152,7 +152,7 @@ class ResourcesTable extends Table
             ->allowEmptyString('username');
 
         $validator
-            ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
+            ->utf8('uri', __('The uri should be a valid BMP-UTF8 string.'))
             ->maxLength(
                 'uri',
                 self::URI_MAX_LENGTH,
@@ -161,7 +161,7 @@ class ResourcesTable extends Table
             ->allowEmptyString('uri');
 
         $validator
-            ->utf8Extended('description', __('The description is not a valid utf8 string.'))
+            ->utf8Extended('description', __('The description should be a valid UTF8 string.'))
             ->maxLength(
                 'description',
                 self::DESCRIPTION_MAX_LENGTH,
@@ -170,33 +170,59 @@ class ResourcesTable extends Table
             ->allowEmptyString('description');
 
         $validator
-            ->boolean('deleted')
-            ->allowEmptyString('deleted', null, false);
+            ->boolean('deleted', __('The deleted status should be a valid boolean.'))
+            ->allowEmptyString('deleted', __('The deleted status should not be empty'), false);
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->allowEmptyString('created_by', null, false);
+            ->uuid('created_by', __('The identifier of the user who created the resource should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the resource is required.')
+            )
+            ->allowEmptyString(
+                'created_by',
+                __('The identifier of the user who created the resource should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by', 'create')
-            ->allowEmptyString('modified_by', null, false);
+            ->uuid(
+                'modified_by',
+                __('The identifier of the user who last modified the resource should be a valid UUID.')
+            )
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who last modified the resource required.')
+            )
+            ->allowEmptyString(
+                'modified_by',
+                __('The identifier of the user who last modified the resource should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('resource_type_id', __('The resource type id by must be a valid UUID.'))
-            ->requirePresence('resource_type_id', 'create', __('A type is required.'));
+            ->uuid('resource_type_id', __('The resource type identifier should be a valid UUID.'))
+            ->requirePresence('resource_type_id', 'create', __('A resource type identifier is required.'));
 
         // Associated fields
         $validator
             ->requirePresence('permissions', 'create', __('The permissions are required.'))
-            ->allowEmptyString('permissions', __('The permissions cannot be empty.'), false)
-            ->hasAtMost('permissions', 1, __('Only the permission of the owner must be provided.'), 'create');
+            // @todo Secrets is an array
+            ->allowEmptyString('permissions', __('The permissions should not be empty.'), false)
+            ->hasAtMost(
+                'permissions',
+                1,
+                __('The permissions should contain only the permission of the owner.'),
+                'create'
+            );
 
         $validator
-            ->requirePresence('secrets', 'create', __('A secret is required.'))
-            ->allowEmptyString('secrets', __('The secret cannot be empty.'), false)
-            ->hasAtMost('secrets', 1, __('Only the secret of the owner must be provided.'), 'create');
+            ->requirePresence('secrets', 'create', __('The owner secret is required.'))
+            // @todo Secrets is an array
+            ->allowEmptyString('secrets', __('The secrets should not be empty.'), false)
+            ->hasAtMost('secrets', 1, __('The secrets should contain only the secret of the owner.'), 'create');
 
         return $validator;
     }
@@ -212,32 +238,32 @@ class ResourcesTable extends Table
     {
         // Create and Update rules
         $rules->add($rules->existsIn(['resource_type_id'], 'ResourceTypes'), 'resource_type_exists', [
-            'message' => __('This is not a valid resource type.'),
+            'message' => __('The resource type does not exist.'),
         ]);
 
         // Create rules.
         $rules->addCreate([$this, 'isOwnerPermissionProvidedRule'], 'owner_permission_provided', [
             'errorField' => 'permissions',
-            'message' => __('At least one owner permission must be provided.'),
+            'message' => __('The permissions should contain the owner permission.'),
         ]);
         $rules->addCreate([$this, 'isOwnerSecretProvidedRule'], 'owner_secret_provided', [
             'errorField' => 'secrets',
-            'message' => __('The secret of the owner is required.'),
+            'message' => __('The secrets should contain the owner secret.'),
         ]);
 
         // Update rules.
         $rules->addUpdate([$this, 'isSecretsProvidedRule'], 'secrets_provided', [
             'errorField' => 'secrets',
-            'message' => __('The secrets of all the users having access to the resource are required.'),
+            'message' => __('The secrets should contain the secrets of all the users having access to the resource.'),
         ]);
         $rules->addUpdate(new IsNotSoftDeletedRule(), 'resource_is_not_soft_deleted', [
             'table' => 'Resources',
             'errorField' => 'id',
-            'message' => __('The resource cannot be soft deleted.'),
+            'message' => __('The resource does not exist.'),
         ]);
         $rules->addUpdate([$this, 'isOwnerPermissionProvidedRule'], 'at_least_one_owner', [
             'errorField' => 'permissions',
-            'message' => __('At least one owner permission must be provided.'),
+            'message' => __('The permissions should contain at least the owner permission.'),
         ]);
 
         return $rules;
@@ -323,11 +349,11 @@ class ResourcesTable extends Table
     {
         // The softDelete will perform an update to the entity to soft delete it.
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         if ($resource->deleted) {
             $resource->setError('deleted', [
-                'is_not_soft_deleted' => __('The resource cannot be soft deleted.'),
+                'is_not_soft_deleted' => __('The resource should not be already soft deleted.'),
             ]);
 
             return false;

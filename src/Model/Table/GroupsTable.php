@@ -96,28 +96,44 @@ class GroupsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->utf8Extended('name', __('The name is not a valid utf8 string.'))
-            ->lengthBetween('name', [0, 255], __('The name length should be maximum {0} characters.', 255))
+            ->utf8Extended('name', __('The name should be a valid UTF8 string.'))
+            ->maxLength('name', 255, __('The name length should be maximum {0} characters.', 255))
             ->requirePresence('name', 'create', __('A name is required.'))
-            ->allowEmptyString('name', __('The name cannot be empty.'), false);
+            ->allowEmptyString('name', __('The name should not be empty.'), false);
 
         $validator
-            ->boolean('deleted')
-            ->requirePresence('deleted', 'create');
+            ->boolean('deleted', __('The deleted status should be a valid boolean.'))
+            ->requirePresence('deleted', 'create', __('A deleted status is required'));
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->allowEmptyString('created_by', null, false);
+            ->uuid('created_by', __('The identifier of the user who created the group should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the group is required.')
+            )
+            ->allowEmptyString(
+                'created_by',
+                __('The identifier of the user who created the group should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by', true, __('Modified by field is required.'))
-            ->allowEmptyString('modified_by', null, false);
+            ->uuid('modified_by', __('The identifier of the user who modified the group should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                true,
+                __('The identifier of the user who modified the group is required.')
+            )
+            ->allowEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the group should not be empty.'),
+                false
+            );
 
         return $validator;
     }
@@ -135,31 +151,31 @@ class GroupsTable extends Table
         $rules->addCreate(
             $rules->isUnique(
                 ['name', 'deleted'],
-                __('The name provided is already used by another group.')
+                __('The name is already used by another group.')
             ),
             'group_unique'
         );
         $rules->addCreate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
             'errorField' => 'groups_users',
-            'message' => __('A group manager must be provided.'),
+            'message' => __('A group manager should be provided.'),
         ]);
 
         // Update rules.
         $rules->addUpdate(
             $rules->isUnique(
                 ['name', 'deleted'],
-                __('The name provided is already used by another group.')
+                __('The name is already used by another group.')
             ),
             'group_unique'
         );
         $rules->addUpdate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
             'table' => 'Groups',
             'errorField' => 'id',
-            'message' => __('The group cannot be soft deleted.'),
+            'message' => __('The group should not be soft deleted.'),
         ]);
 
         // Delete rules
-        $msg = __('You need to transfer the ownership for the shared content owned by this user before deleting them.');
+        $msg = __('The group should not be sole owner of shared content, transfer the ownership to other users.');
         $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedContent', [
             'errorField' => 'id',
             'message' => $msg,
@@ -230,7 +246,7 @@ class GroupsTable extends Table
 
         // Check for errors while saving.
         if (!$groupSaved) {
-            throw new InternalErrorException(__('The group could not be saved.'));
+            throw new InternalErrorException('Could not save the group, try again later.');
         }
 
         // Dispatch event.

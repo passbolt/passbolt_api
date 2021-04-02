@@ -46,16 +46,16 @@ class OptionsConfigurationForm extends Form
     {
         $validator
             ->requirePresence('full_base_url', 'create', __('A full base url is required.'))
-            ->notEmptyString('full_base_url', __('A full base url is required.'))
-            ->utf8('full_base_url', __('The full base url is not a valid utf8 string.'));
+            ->notEmptyString('full_base_url', __('The full base url should not be empty'))
+            ->utf8('full_base_url', __('The full base url should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->requirePresence('public_registration', 'create', __('A public registration value is required.'))
-            ->boolean('public_registration');
+            ->requirePresence('public_registration', 'create', __('A public registration setting is required.'))
+            ->boolean('public_registration', __('The public registration setting should be a valid boolean.'));
 
         $validator
-            ->requirePresence('force_ssl', 'create', __('A force ssl value is required.'))
-            ->boolean('force_ssl');
+            ->requirePresence('force_ssl', 'create', __('A force ssl status is required.'))
+            ->boolean('force_ssl', __('The force ssl setting should be a valid boolean.'));
 
         return $validator;
     }

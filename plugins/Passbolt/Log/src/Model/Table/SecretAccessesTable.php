@@ -69,23 +69,23 @@ class SecretAccessesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->allowEmptyString('user_id', null, false);
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
-            ->uuid('resource_id')
-            ->requirePresence('resource_id', 'create')
-            ->allowEmptyString('resource_id', null, false);
+            ->uuid('resource_id', __('The resource identifier should be a valid UUID.'))
+            ->requirePresence('resource_id', 'create', __('A resource identifier is required.'))
+            ->notEmptyString('resource_id', __('The resource identifier should not be empty.'));
 
         $validator
-            ->uuid('secret_id')
-            ->requirePresence('secret_id', 'create')
-            ->allowEmptyString('secret_id', null, false);
+            ->uuid('secret_id', __('The secret identifier should be a valid UUID.'))
+            ->requirePresence('secret_id', 'create', __('A secret identifier is required.'))
+            ->notEmptyString('secret_id', __('The secret identifier should not be empty.'));
 
         return $validator;
     }
@@ -128,19 +128,19 @@ class SecretAccessesTable extends Table
         // Check validation rules.
         $secretAccess = $this->buildEntity($data);
         if (!empty($secretAccess->getErrors())) {
-            throw new ValidationException(__('Could not validate secret_access data.', true), $secretAccess, $this);
+            throw new ValidationException(__('Could not validate secret access data.', true), $secretAccess, $this);
         }
 
         $secretAccessSaved = $this->save($secretAccess);
 
         // Check for validation errors. (associated models too).
         if (!empty($secretAccess->getErrors())) {
-            throw new ValidationException(__('Could not validate secret_access data.'), $secretAccess, $this);
+            throw new ValidationException(__('Could not validate secret access data.'), $secretAccess, $this);
         }
 
         // Check for errors while saving.
         if (!$secretAccessSaved) {
-            throw new InternalErrorException(__('The secret_access could not be saved.'));
+            throw new InternalErrorException('Could not save the secret access.');
         }
 
         return $secretAccessSaved;

@@ -52,42 +52,42 @@ class EmailConfigurationForm extends Form
     {
         $validator
             ->requirePresence('sender_name', 'create', __('A sender name is required.'))
-            ->notEmptyString('sender_name', __('A sender name is required.'))
-            ->utf8('sender_name', __('The sender name is not a valid utf8 string.'));
+            ->notEmptyString('sender_name', __('The sender name should not be empty.'))
+            ->utf8('sender_name', __('The sender name should be a valid BMP-UTF8 string.'));
 
         $validator
             ->requirePresence('sender_email', 'create', __('A sender email is required.'))
-            ->notEmptyString('sender_email', __('A sender email is required.'))
-            ->utf8('sender_email', __('The sender email is not a valid utf8 string.'))
+            ->notEmptyString('sender_email', __('The sender email should not be empty.'))
+            ->utf8('sender_email', __('The sender email should be a valid BMP-UTF8 string.'))
             ->email(
                 'sender_email',
                 Configure::read('passbolt.email.validate.mx'),
-                __('The sender email is not a valid email address')
+                __('The sender email should be a valid email address.')
             );
 
         $validator
             ->requirePresence('host', 'create', __('A host name is required.'))
-            ->notEmptyString('host', __('A host name is required.'))
-            ->utf8('host', __('The host is not a valid utf8 string.'));
+            ->notEmptyString('host', __('The host name should not be empty.'))
+            ->utf8('host', __('The host name should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->requirePresence('tls', 'create', __('A TLS value is required.'))
-            ->boolean('tls');
+            ->requirePresence('tls', 'create', __('A TLS setting is required.'))
+            ->boolean('tls', __('The TLS setting should be a valid boolean.'));
 
         $validator
             ->requirePresence('port', 'create', __('A port number is required.'))
-            ->numeric('port', __('Port number should be numeric'))
-            ->range('port', [0, 65535], __('Port should be between 0 and 65535'));
+            ->numeric('port', __('The port number should be numeric.'))
+            ->range('port', [0, 65535], __('The port number should be between {0} and {1}.', '0', '65535'));
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->allowEmptyString('username')
-            ->utf8('username', __('The username is not a valid utf8 string.'));
+            ->utf8('username', __('The username should be a valid BMP-UTF8 string.'));
 
         $validator
             ->requirePresence('password', 'create', __('A password is required.'))
             ->allowEmptyString('password')
-            ->utf8('password', __('The password is not a valid utf8 string.'));
+            ->utf8('password', __('The password should be a valid BMP-UTF8 string.'));
 
         $validator
             ->email(

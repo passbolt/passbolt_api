@@ -56,7 +56,7 @@ class ContentSecurityPolicyMiddleware implements MiddlewareInterface
         } elseif (is_string($cspFromConfig)) {
             $csp = $cspFromConfig;
         } else {
-            throw new InternalErrorException(__('The CSP policy defined in settings is invalid.'));
+            throw new InternalErrorException('The CSP policy defined in settings is invalid.');
         }
 
         $response = $response->withAddedHeader('Content-Security-Policy', $csp);

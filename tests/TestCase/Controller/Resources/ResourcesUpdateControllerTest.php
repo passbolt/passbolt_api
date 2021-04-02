@@ -179,7 +179,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
         $this->putJson("/resources/$resourceId.json?api-version=v2");
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
     public function testUpdateResourcesError_ValidationErrors()

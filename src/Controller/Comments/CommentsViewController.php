@@ -44,12 +44,12 @@ class CommentsViewController extends AppController
         $foreignModelName = ucfirst($foreignModelName);
         // Check model sanity.
         if (!in_array($foreignModelName, CommentsTable::ALLOWED_FOREIGN_MODELS)) {
-            throw new InvalidArgumentException(__('Invalid model name'));
+            throw new InvalidArgumentException('Invalid model name');
         }
 
         // Check uuid sanity.
         if (!Validation::uuid($foreignKey)) {
-            throw new InvalidArgumentException(__('Invalid id'));
+            throw new InvalidArgumentException('Invalid id');
         }
 
         // Retrieve and sanity the query options.

@@ -85,7 +85,7 @@ class GroupsDeleteController extends AppController
             $this->_transferContentOwners($group);
             $this->_validateDelete($group);
             if (!$this->Groups->softDelete($group, ['checkRules' => false])) {
-                throw new InternalErrorException(__('Could not delete the group, please try again later.'));
+                throw new InternalErrorException('Could not delete the group, please try again later.');
             }
             $this->_notifyUsers($group);
             $this->success(__('The group was deleted successfully.'));
@@ -110,7 +110,7 @@ class GroupsDeleteController extends AppController
             }
         }
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The group id must be a valid uuid.'));
+            throw new BadRequestException(__('The group identifier should be a valid UUID.'));
         }
 
         /** @var \App\Model\Entity\Group $group */
@@ -192,7 +192,7 @@ class GroupsDeleteController extends AppController
         $permissionsIdsToUpdate = Hash::extract($owners, '{n}.id');
         foreach ($permissionsIdsToUpdate as $id) {
             if (!Validation::uuid($id)) {
-                throw new BadRequestException(__('The permissions ids must be valid uuids.'));
+                throw new BadRequestException(__('The permissions identifiers must be valid UUID.'));
             }
         }
 

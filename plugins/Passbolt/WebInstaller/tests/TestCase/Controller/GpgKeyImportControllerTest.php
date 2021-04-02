@@ -35,7 +35,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/gpg_key_import');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertStringContainsString('Copy paste the private key below', $data);
+        $this->assertStringContainsString('Copy paste the OpenPGP private key below', $data);
     }
 
     public function testWebInstallerGpgKeyImportPostSuccess()
@@ -67,6 +67,6 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertStringContainsString('The data entered are not correct', $data);
-        $this->assertStringContainsString('The key is not a valid public key', $data);
+        $this->assertStringContainsString('The key is not a valid OpenPGP public key.', $data);
     }
 }
