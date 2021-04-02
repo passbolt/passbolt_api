@@ -96,28 +96,26 @@ class DirectoryEntriesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->uuid('id')
-            ->allowEmptyString('id', 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->utf8('directory_name', __('The directory name is not a valid utf8 string.'))
-            ->lengthBetween(
+            ->utf8('directory_name', __('The directory name should be a valid UTF8 string.'))
+            ->maxLength(
                 'directory_name',
-                [0, self::DN_MAX_LENGTH],
+                self::DN_MAX_LENGTH,
                 __('The directory_name length should be maximum {0} characters.', self::DN_MAX_LENGTH)
             )
-            ->requirePresence('directory_name', 'create', __('A directory_name is required.'))
-            ->notEmptyString('directory_name', __('The directory_name cannot be empty.'));
+            ->requirePresence('directory_name', 'create', __('A directory name is required.'))
+            ->notEmptyString('directory_name', __('The directory should not be empty.'));
 
         $validator
-            ->scalar('foreign_key')
-            ->uuid('foreign_key')
+            ->uuid('foreign_key', __('The object identifier should be a valid UUID.'))
             ->allowEmptyString('foreign_key');
 
         $validator
             ->scalar('foreign_model')
-            ->requirePresence('foreign_model', 'create');
+            ->requirePresence('foreign_model', 'create', __('An object type is required.'));
 
         return $validator;
     }
@@ -219,19 +217,19 @@ class DirectoryEntriesTable extends Table
         // Check validation rules.
         $directoryEntry = $this->buildEntityFromData($data);
         if (!empty($directoryEntry ->getErrors())) {
-            throw new ValidationException(__('Could not validate directoryEntry.'), $directoryEntry, $this);
+            throw new ValidationException(__('Could not validate directory entry data.'), $directoryEntry, $this);
         }
 
         $de = $this->save($directoryEntry);
 
         // Check for validation errors. (associated models too).
         if (!empty($directoryEntry->getErrors())) {
-            throw new ValidationException(__('Could not validate directoryEntry data.'), $directoryEntry, $this);
+            throw new ValidationException(__('Could not validate directory entry data.'), $directoryEntry, $this);
         }
 
         // Check for errors while saving.
         if (!$de) {
-            throw new InternalErrorException(__('The directoryEntry could not be saved.'));
+            throw new InternalErrorException('Could not save the directory entry.');
         }
 
         return $de;

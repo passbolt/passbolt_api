@@ -115,7 +115,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->assertBadRequestError('Could not validate tag data.');
         $response = json_decode(json_encode($this->_responseJsonBody), true);
         $this->assertTrue(Hash::check($response, 'slug.maxLength'));
-        $this->assertEquals('Tag can not be more than 128 characters in length.', Hash::get($response, 'slug.maxLength'));
+        $this->assertEquals('The tag length should be maximum 128 characters.', Hash::get($response, 'slug.maxLength'));
     }
 
     /**

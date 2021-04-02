@@ -24,6 +24,7 @@ use LdapTools\LdapManager;
 use LdapTools\Object\LdapObjectCollection;
 use LdapTools\Object\LdapObjectType;
 use LdapTools\Query\LdapQueryBuilder;
+use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
 /**
@@ -138,7 +139,10 @@ class LdapDirectory implements DirectoryInterface
     {
         $type = $this->getDirectoryType();
         if ($type !== LdapConnection::TYPE_AD && $type !== LdapConnection::TYPE_OPENLDAP) {
-            throw new \Exception(__('Config error: the type of directory can be only ad or openldap'));
+            throw new \Exception(__(
+                'The directory type should be one of the following: {0}.',
+                implode(', ', LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)
+            ));
         }
         $mapping = $this->directorySettings->getFieldsMapping($type);
 

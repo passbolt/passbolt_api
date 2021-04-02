@@ -131,7 +131,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'name');
         $this->assertNotNull($error, 'The test should return an error of the given field.');
-        $this->assertEquals('The name cannot be empty.', $error['_empty']);
+        $this->assertEquals('The name should not be empty.', $error['_empty']);
     }
 
     public function testFoldersCreateFolder_CommonError2_ParentFolderDoesNotExist()

@@ -72,19 +72,16 @@ class DirectoryRelationsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->uuid('id')
-            ->requirePresence('id');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->requirePresence('id', __('An identifier is required.'));
 
         $validator
-            ->scalar('parent_key')
-            ->uuid('parent_key')
-            ->requirePresence('parent_key');
+            ->uuid('parent_key', __('The parent identifier should be a valid UUID.'))
+            ->requirePresence('parent_key', __('A parent identifier is required.'));
 
         $validator
-            ->scalar('child_key')
-            ->uuid('child_key')
-            ->requirePresence('child_key');
+            ->uuid('child_key', __('The child identifier should be a valid UUID.'))
+            ->requirePresence('child_key', __('The child identifier is required.'));
 
         return $validator;
     }

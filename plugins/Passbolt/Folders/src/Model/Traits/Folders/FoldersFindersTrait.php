@@ -44,7 +44,7 @@ trait FoldersFindersTrait
     public function findIndex(string $userId, ?array $options = [])
     {
         if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         $query = $this->find();

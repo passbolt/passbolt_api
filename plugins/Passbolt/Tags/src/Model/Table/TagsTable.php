@@ -74,18 +74,18 @@ class TagsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->notEmptyString('slug')
-            ->requirePresence('slug', 'create')
-            ->utf8('first_name', __('The tag should be a valid utf8 string.'))
-            ->maxLength('slug', 128, __('Tag can not be more than 128 characters in length.'));
+            ->notEmptyString('slug', __('The tag should not be empty.'))
+            ->requirePresence('slug', 'create', __('A tag is required.'))
+            ->utf8Extended('slug', __('The tag should be a valid BMP-UTF8 string.'))
+            ->maxLength('slug', 128, __('The tag length should be maximum {0} characters.', 128));
 
         $validator
-            ->boolean('is_shared')
-            ->requirePresence('is_shared', 'create');
+            ->boolean('is_shared', __('The shared status should be a valid boolean.'))
+            ->requirePresence('is_shared', 'create', __('A shared status is required.'));
 
         return $validator;
     }
@@ -253,7 +253,7 @@ class TagsTable extends Table
             }
         }
         if (!empty($errors)) {
-            throw new CustomValidationException(__('Could not validate the tags.'), $errors);
+            throw new CustomValidationException(__('Could not validate tags data.'), $errors);
         }
 
         return $collection;

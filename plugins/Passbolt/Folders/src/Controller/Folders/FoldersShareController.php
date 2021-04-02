@@ -47,7 +47,7 @@ class FoldersShareController extends AppController
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = $foldersUpdatePermissionsService->share($uac, $id, $data);
 
-        $this->success(__('The folder `{0}` has been updated successfully.', $folder->name), $folder);
+        $this->success(__('The operation was successful.', $folder->name), $folder);
     }
 
     /**

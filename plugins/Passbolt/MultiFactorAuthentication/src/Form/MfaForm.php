@@ -54,7 +54,7 @@ class MfaForm extends Form
     {
         if (!$this->validate($data)) {
             throw new CustomValidationException(
-                __('Something went wrong when validating the OTP.'),
+                __('Something went wrong when validating the one-time password.'),
                 $this->getErrors()
             );
         }

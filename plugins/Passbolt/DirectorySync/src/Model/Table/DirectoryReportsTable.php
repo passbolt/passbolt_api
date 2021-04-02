@@ -65,8 +65,8 @@ class DirectoryReportsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
             ->scalar('status')
@@ -102,7 +102,7 @@ class DirectoryReportsTable extends Table
             'ParentDirectoryReports',
             [
                 'errorField' => 'parent_id',
-                'message' => __('The associated record could not be found'),
+                'message' => __('The associated record could not be found.'),
             ]
         );
 

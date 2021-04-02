@@ -67,7 +67,7 @@ class TagsUpdateController extends AppController
 
         $updatedTag = $this->_updatePersonalTag($tag);
 
-        $this->success(__('The tag was updated.'), $updatedTag);
+        $this->success(__('The tag has been updated successfully.'), $updatedTag);
     }
 
     /**

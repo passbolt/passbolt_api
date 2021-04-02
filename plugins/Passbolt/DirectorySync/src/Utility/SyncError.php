@@ -39,7 +39,7 @@ class SyncError implements \Serializable
     public function __construct(?Entity $entity = null, ?\Exception $exception = null)
     {
         if (!isset($data) && !isset($entity) && !isset($exception)) {
-            throw new InternalErrorException(__('This is not a valid SyncError, no data provided'));
+            throw new InternalErrorException('This is not a valid SyncError, no data provided');
         }
         $this->entity = $entity;
         $this->exception = $exception;

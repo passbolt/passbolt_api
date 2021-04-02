@@ -149,7 +149,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
-            $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
+            $errors = ['name' => ['_empty' => 'The name should not be empty.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }

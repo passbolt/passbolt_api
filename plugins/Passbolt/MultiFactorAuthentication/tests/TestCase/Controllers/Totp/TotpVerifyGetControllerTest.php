@@ -46,7 +46,7 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->authenticateAs('ada');
         $this->get('/mfa/verify/totp');
         $this->assertResponseError();
-        $this->assertResponseContains('MFA is not required');
+        $this->assertResponseContains('The multi-factor authentication is not required');
     }
 
     /**
@@ -61,7 +61,7 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->authenticateAs('ada');
         $this->get('/mfa/verify/totp');
         $this->assertResponseError();
-        $this->assertResponseContains('No valid MFA settings');
+        $this->assertResponseContains('No valid multi-factor authentication settings found for this provider.');
     }
 
     /**
@@ -93,7 +93,7 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/mfa/verify/totp.json?api-version=v2');
         $this->assertResponseOk();
-        $this->assertResponseContains('Please provide the one time password.');
+        $this->assertResponseContains('Please provide the one-time password.');
     }
 
     /**
@@ -108,6 +108,6 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/mfa/verify/totp.json?api-version=v2');
         $this->assertError();
-        $this->assertResponseContains('No valid MFA settings');
+        $this->assertResponseContains('No valid multi-factor authentication settings found for this provider.');
     }
 }

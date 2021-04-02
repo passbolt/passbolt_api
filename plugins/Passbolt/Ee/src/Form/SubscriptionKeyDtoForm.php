@@ -61,7 +61,7 @@ class SubscriptionKeyDtoForm extends Form
     {
         $validator
             ->requirePresence('users', 'create', __('A users quantity is required.'))
-            ->notEmptyString('users', __('A users quantity is required.'))
+            ->notEmptyString('users', __('The users quantity should not be empty.'))
             ->add('users', 'is_within_range', [
                 'last' => true,
                 'rule' => [$this, 'checkUsersLimitIsInRange'],
@@ -81,10 +81,10 @@ class SubscriptionKeyDtoForm extends Form
                 'message' => __('The subscription is expired.'),
             ])
             ->requirePresence('email', 'create', __('An email is required.'))
-            ->email('email', false, __('The format of the email is not valid.'))
-            ->requirePresence('customer_id', 'create', __('A customer id is required.'))
+            ->email('email', false, __('The email should be a valid email address.'))
+            ->requirePresence('customer_id', 'create', __('A customer identifier is required.'))
             ->ascii('customer_id', 'The format of the customer_id is not valid.')
-            ->requirePresence('subscription_id', 'create', __('A customer id is required.'))
+            ->requirePresence('subscription_id', 'create', __('A subscription identifier is required.'))
             ->ascii('subscription_id', __('The format of the subscription id is not valid.'));
 
         return $validator;

@@ -359,7 +359,7 @@ class DirectoryOrgSettings
     }
 
     /**
-     * Encrypt a data for the server gpg key.
+     * Encrypt a data for the server OpenPGP key.
      *
      * @param string $data The message to encrypt
      * @return string

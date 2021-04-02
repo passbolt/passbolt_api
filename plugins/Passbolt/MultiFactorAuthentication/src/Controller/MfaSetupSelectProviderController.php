@@ -34,6 +34,6 @@ class MfaSetupSelectProviderController extends MfaController
                 ->setTemplatePath(ucfirst(MfaSettings::MFA))
                 ->setTemplate('select');
         }
-        $this->success(__('Please a provider to setup.'), $body);
+        $this->success(__('The operation was successful.'), $body);
     }
 }

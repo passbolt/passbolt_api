@@ -95,29 +95,29 @@ class FoldersRelationsTable extends Table
     public function validationDefault(Validator $validator): \Cake\Validation\Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
             ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS, __(
-                'The foreign model must be one of the following: {0}.',
+                'The child object type should be one of the following: {0}.',
                 implode(', ', self::ALLOWED_FOREIGN_MODELS)
             ))
-            ->requirePresence('foreign_model', 'create', __('The foreign model is required.'))
-            ->notEmptyString('foreign_model', __('The foreign model cannot be empty'));
+            ->requirePresence('foreign_model', 'create', __('The child object type is required.'))
+            ->notEmptyString('foreign_model', __('The child object type should not be empty.'));
 
         $validator
-            ->uuid('foreign_id')
-            ->requirePresence('foreign_id', 'create', __('The foreign id is required.'))
-            ->notEmptyString('foreign_id', __('The foreign id cannot be empty.'), false);
+            ->uuid('foreign_id', __('The child object identifier should be a valid UUID.'))
+            ->requirePresence('foreign_id', 'create', __('The child object identifier required.'))
+            ->notEmptyString('foreign_id', __('The child object identifier should not be empty.'), false);
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->notEmptyString('user_id', __('The user id cannot be empty.'), false);
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'), false);
 
         $validator
-            ->uuid('folder_parent_id')
+            ->uuid('folder_parent_id', __('The folder parent identifier should be a valid UUID.'))
             ->allowEmptyString('folder_parent_id');
 
         return $validator;
@@ -135,13 +135,13 @@ class FoldersRelationsTable extends Table
         $rules->addCreate(
             $rules->isUnique(
                 ['foreign_id', 'user_id'],
-                __('A folder relation already exists for the given foreign model and user.')
+                __('A folder relation already exists for the given child object and user.')
             ),
             'folder_relation_unique'
         );
         $rules->addCreate([$this, 'foreignIdExistsRule'], 'foreign_model_exists', [
             'errorField' => 'foreign_id',
-            'message' => __('The foreign model does not exist.'),
+            'message' => __('The child object does not exist.'),
         ]);
         $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
             'errorField' => 'user_id',

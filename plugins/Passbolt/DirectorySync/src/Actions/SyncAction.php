@@ -117,7 +117,7 @@ class SyncAction
             throw new \Exception('Configuration issue. A default admin user cannot be found.');
         }
         if (isset($parentId) && !Validation::uuid($parentId)) {
-            throw new \Exception('The task parent Id is invalid, it should be a uuid.');
+            throw new \Exception('The parent task identifier should be a valid UUID.');
         }
         $this->parentId = $parentId;
     }

@@ -112,24 +112,40 @@ class FoldersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->utf8Extended('name', __('The name is not a valid utf8 string.'))
+            ->utf8Extended('name', __('The name should be a valid UTF8 string.'))
             ->maxLength('name', 64, __('The name length should be maximum {0} characters.', 64))
             ->requirePresence('name', 'create', __('A name is required.'))
-            ->allowEmptyString('name', __('The name cannot be empty.'), false);
+            ->allowEmptyString('name', __('The name should not be empty.'), false);
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by', null, false);
+            ->uuid('created_by', __('The identifier of the user who created the folder should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the folder is required.')
+            )
+            ->notEmptyString(
+                'created_by',
+                __('The identifier of the user who created the folder should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by', 'create')
-            ->notEmptyString('modified_by', null, false);
+            ->uuid('modified_by', __('The identifier of the user who modified the folder should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who modified the folder is required.')
+            )
+            ->notEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the folder should not be empty.'),
+                false
+            );
 
         return $validator;
     }

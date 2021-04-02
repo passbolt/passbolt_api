@@ -101,18 +101,18 @@ class FoldersHistoryTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('folder_id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('folder_id', __('The folder identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The folder identifier should not be empty.'), 'create');
 
         $validator
-            ->utf8Extended('name', __('The name is not a valid utf8 string.'))
+            ->utf8Extended('name', __('The name should be a valid UTF8 string.'))
             ->maxLength('name', 64, __('The name length should be maximum {0} characters.', 64))
             ->requirePresence('name', 'create', __('A name is required.'))
-            ->allowEmptyString('name', __('The name cannot be empty.'), false);
+            ->allowEmptyString('name', __('The name should not be empty.'), false);
 
         return $validator;
     }
@@ -151,18 +151,18 @@ class FoldersHistoryTable extends Table
         // Check validation rules.
         $folderHistory = $this->buildEntity($data);
         if (!empty($folderHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate folder_history data.', true), $folderHistory, $this);
+            throw new ValidationException(__('Could not validate folder history data.', true), $folderHistory, $this);
         }
         $folderHistory = $this->save($folderHistory);
 
         // Check for validation errors. (associated models too).
         if (!empty($folderHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate folder_history data.'), $folderHistory, $this);
+            throw new ValidationException(__('Could not validate folder history data.'), $folderHistory, $this);
         }
 
         // Check for errors while saving.
         if (!$folderHistory) {
-            throw new InternalErrorException(__('The folder_history could not be saved.'));
+            throw new InternalErrorException('Could not save the folder history.');
         }
 
         return $folderHistory;

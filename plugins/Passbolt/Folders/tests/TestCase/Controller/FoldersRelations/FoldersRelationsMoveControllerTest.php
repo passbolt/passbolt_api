@@ -127,7 +127,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         $this->authenticateAs('ada');
         $itemId = UuidFactory::uuid();
         $this->putJson("/move/invalid/$itemId.json?api-version=2");
-        $this->assertError(400, 'The foreign model is not valid.');
+        $this->assertError(400, 'The object type should be one of the following: Folder, Resource.');
     }
 
     public function testFoldersRelationsMoveError_NotValidForeignId()
@@ -135,7 +135,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         $this->authenticateAs('ada');
         $itemId = 'invalid-id';
         $this->putJson("/move/folder/$itemId.json?api-version=2");
-        $this->assertError(400, 'The folder id is not valid.');
+        $this->assertError(400, 'The object identifier should be a valid UUID.');
     }
 
     public function testFoldersRelationsMoveError_ValidationErrors_FolderParentIdRequired()
@@ -146,7 +146,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         $this->assertError(400, 'Could not validate move data.');
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'folder_parent_id');
-        $this->assertEquals('A folder parent id is required.', $error['_required']);
+        $this->assertEquals('A folder parent identifier is required.', $error['_required']);
     }
 
     public function functiontestFoldersRelationsMoveError_ValidationErrors()
@@ -176,7 +176,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         $itemId = UuidFactory::uuid();
         $data['folder_parent_id'] = UuidFactory::uuid();
         $this->putJson("/move/folder/{$itemId}.json?api-version=2", $data);
-        $this->assertError(404, 'The folder does not exist.');
+        $this->assertError(404, 'The object to move does not exist.');
     }
 
     public function testFoldersRelationsUpdateResourcesError_NoAccessToFolder()
@@ -185,6 +185,6 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         $this->authenticateAs('dame');
         $data = ['folder_parent_id' => FoldersRelation::ROOT];
         $this->putJson("/move/folder/$folderA->id.json", $data);
-        $this->assertError(404, 'The folder does not exist.');
+        $this->assertError(404, 'The object to move does not exist.');
     }
 }

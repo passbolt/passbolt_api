@@ -465,7 +465,7 @@ class FoldersRelationsAddItemToUserTreeService
         // If a cycle is found but it does not include a personal folder, then we have an integrity issue with the graph.
         // The cleanup task should identify and solve this issue.
         if (is_null($personalFolderRelation)) {
-            $msg = __("Strongly connected components found in the tree of ({0}), but it is not related to a personal folder.", $userId); // phpcs:ignore
+            $msg = "Strongly connected components found in the tree of ($userId), but it is not related to a personal folder."; // phpcs:ignore
             throw new InternalErrorException($msg);
         }
 

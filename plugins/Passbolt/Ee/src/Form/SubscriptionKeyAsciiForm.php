@@ -78,7 +78,7 @@ class SubscriptionKeyAsciiForm extends Form
     {
         $validator
             ->requirePresence('key_ascii', 'create', __('A subscription key is required.'))
-            ->notEmptyString('key_ascii', __('A subscription key is required.'))
+            ->notEmptyString('key_ascii', __('The subscription key should not be empty.'))
             ->add('key_ascii', 'is_valid_subscription_format', [
                 'last' => true,
                 'rule' => [$this, 'checkSubscriptionFormat'],
@@ -188,7 +188,7 @@ class SubscriptionKeyAsciiForm extends Form
      */
     protected function _verifySignature(string $subscriptionSigned)
     {
-        $msg = __('The subscription key cannot be verified. The passbolt public key could not be found.');
+        $msg = __('The subscription key cannot be verified. The passbolt OpenPGP public key could not be found.');
         $subscription = null;
         $filePublicKey = Configure::read('passbolt.plugins.ee.subscriptionKey.public');
         if (!$filePublicKey || !file_exists($filePublicKey)) {

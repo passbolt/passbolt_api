@@ -13,7 +13,7 @@
     ?>
 <div class="login-form ">
     <h1>
-        <?= __('Plug the yubikey into a USB port and touch it.'); ?>
+        <?= __('Plug in the yubikey and put your finger on it.'); ?>
     </h1>
     <?= $this->form->create($verifyForm, $formContext); ?>
     <?= $this->form->control('hotp', [

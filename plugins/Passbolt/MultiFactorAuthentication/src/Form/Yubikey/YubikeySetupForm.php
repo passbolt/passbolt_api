@@ -63,7 +63,7 @@ class YubikeySetupForm extends YubikeyVerifyForm
             $data = [MfaAccountSettings::YUBIKEY_ID => $keyid];
             MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_YUBIKEY, $data);
         } catch (ValidationException $e) {
-            throw new InternalErrorException(__('Could not save the Yubikey OTP settings. Please try again later.'));
+            throw new InternalErrorException('Could not save the Yubikey OTP settings. Please try again later.');
         }
 
         return true;

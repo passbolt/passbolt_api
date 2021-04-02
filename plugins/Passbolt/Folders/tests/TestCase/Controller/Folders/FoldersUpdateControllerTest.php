@@ -84,7 +84,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->authenticateAs('ada');
         $folderId = 'invalid-id';
         $this->putJson("/move/folder/$folderId.json?api-version=2");
-        $this->assertError(400, 'The folder id is not valid.');
+        $this->assertError(400, 'The object identifier should be a valid UUID.');
     }
 
     public function testFoldersUpdateError_ValidationErrors()
