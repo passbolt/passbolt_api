@@ -49,7 +49,7 @@ class OpenPGPBackendFactory
                 }
                 break;
             default:
-                throw new InternalErrorException(__('This OpenPGP backend is not supported'));
+                throw new InternalErrorException('This OpenPGP backend is not supported');
         }
     }
 

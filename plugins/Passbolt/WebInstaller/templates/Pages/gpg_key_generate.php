@@ -5,7 +5,7 @@ $this->Html->script('vendors/openpgp.min.js', ['block' => 'scriptBottom']);
 $this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element('header', [
-    'title' => __('Create a new server key or {0} an existing one.', [
+    'title' => __('Create a new server OpenPGP key or {0} an existing one.', [
         '<a href="' . Router::url($stepInfo['import_key_cta'], true) . '" class="button primary">' . __('import') . '</a>',
     ]),
 ]) ?>
@@ -21,7 +21,7 @@ $this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom'
         <div class="grid grid-responsive-12">
             <div class="row">
                 <div class="col6">
-                    <h3><?= __('Create a new GPG key for your server'); ?></h3>
+                    <h3><?= __('Create a new OpenPGP key for your server'); ?></h3>
                     <?= $this->Flash->render() ?>
                     <?php
                     echo $this->Form->control('public_key_armored', ['type' => 'hidden']);

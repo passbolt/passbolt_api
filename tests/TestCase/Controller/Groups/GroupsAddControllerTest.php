@@ -139,34 +139,34 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $errors = [
             'group name is missing' => [
                 'errorField' => 'name._empty',
-                'errorMessage' => 'The name cannot be empty.',
+                'errorMessage' => 'The name should not be empty.',
                 'data' => $this->_getDummyPostData(['name' => '']),
             ],
             'group name already exist' => [
                 'errorField' => 'name.group_unique',
-                'errorMessage' => 'The name provided is already used by another group.',
+                'errorMessage' => 'The name is already used by another group.',
                 'data' => $this->_getDummyPostData(['name' => 'Freelancer']),
             ],
             'group name invalid' => [
                 'errorField' => 'name.utf8Extended',
-                'errorMessage' => 'The name is not a valid utf8 string.',
+                'errorMessage' => 'The name should be a valid UTF8 string.',
                 'data' => $this->_getDummyPostData(['name' => ['test']]),
             ],
             'at least one group manager' => [
                 'errorField' => 'groups_users.at_least_one_admin',
-                'errorMessage' => 'A group manager must be provided.',
+                'errorMessage' => 'A group manager should be provided.',
                 'data' => $this->_getDummyPostData(['groups_users' => [
                     ['user_id' => UuidFactory::uuid('user.id.ada')],
                 ]]),
             ],
             'nos users provided' => [
                 'errorField' => 'groups_users.at_least_one_admin',
-                'errorMessage' => 'A group manager must be provided.',
+                'errorMessage' => 'A group manager should be provided.',
                 'data' => ['name' => 'New group name'],
             ],
             'group user id not valid' => [
                 'errorField' => 'groups_users.0.user_id.uuid',
-                'errorMessage' => 'The provided value is invalid',
+                'errorMessage' => 'The user identifier should be a valid UUID.',
                 'data' => $this->_getDummyPostData(['groups_users' => [
                     ['user_id' => 'invalid-id'],
                 ]]),

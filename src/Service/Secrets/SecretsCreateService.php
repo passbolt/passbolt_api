@@ -89,7 +89,7 @@ class SecretsCreateService
     {
         $errors = $secret->getErrors();
         if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate the secret data.'), $secret, $this->secretsTable);
+            throw new ValidationException(__('Could not validate secret data.'), $secret, $this->secretsTable);
         }
     }
 }

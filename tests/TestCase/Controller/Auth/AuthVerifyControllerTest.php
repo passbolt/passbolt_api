@@ -42,7 +42,7 @@ class AuthVerifyControllerTest extends AppIntegrationTestCase
         $this->get('/auth/verify.json');
         $this->assertResponseFailure();
         $data = $this->_getBodyAsString();
-        $expect = 'The public key for this passbolt instance was not found.';
+        $expect = 'The OpenPGP public key for this passbolt instance was not found.';
         $this->assertStringContainsString($expect, $data);
     }
 

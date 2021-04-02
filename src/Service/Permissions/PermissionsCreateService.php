@@ -133,7 +133,7 @@ class PermissionsCreateService
     {
         $errors = $permission->getErrors();
         if (!empty($errors)) {
-            $msg = __('Could not validate the permission data.');
+            $msg = __('Could not validate permission data.');
             throw new ValidationException($msg, $permission, $this->permissionsTable);
         }
     }

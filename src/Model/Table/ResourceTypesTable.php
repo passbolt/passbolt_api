@@ -70,31 +70,31 @@ class ResourceTypesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
+            ->uuid('id', __('The identifier should be a valid UUID.'))
             ->notEmptyString('id', 'create');
 
         $validator
-            ->utf8('name')
-            ->requirePresence('name', 'create')
+            ->utf8('name', __('The name should be a valid BMP-UTF8 string.'))
+            ->requirePresence('name', 'create', __('A name is required.'))
             ->maxLength(
                 'name',
                 self::NAME_MAX_LENGTH,
                 __('The name length should be maximum {0} characters.', self::NAME_MAX_LENGTH)
             )
-            ->notEmptyString('name', __('The name can not be empty'));
+            ->notEmptyString('name', __('The name should not be empty.'));
 
         $validator
-            ->utf8('slug')
-            ->requirePresence('slug', 'create')
+            ->utf8('slug', __('The slug should be a valid BMP-UTF8 string.'))
+            ->requirePresence('slug', 'create', __('A slug is required.'))
             ->maxLength(
                 'slug',
                 self::SLUG_MAX_LENGTH,
                 __('The slug length should be maximum {0} characters.', self::SLUG_MAX_LENGTH)
             )
-            ->notEmptyString('slug', __('The slug can not be empty'));
+            ->notEmptyString('slug', __('The slug should not be empty'));
 
         $validator
-            ->utf8('description')
+            ->utf8('description', __('The description should be a valid BMP-UTF8 string.'))
             ->maxLength(
                 'name',
                 self::DESCRIPTION_MAX_LENGTH,
@@ -103,12 +103,12 @@ class ResourceTypesTable extends Table
             ->allowEmptyString('description');
 
         $validator
-            ->utf8('definition')
+            ->utf8('definition', __('The definition should be a valid BMP-UTF8 string.'))
             ->requirePresence('definition', 'create', __('A definition is required.'))
-            ->notEmptyString('definition', __('The definition cannot be empty.'))
+            ->notEmptyString('definition', __('The definition should not be empty.'))
             ->add('definition', 'isValidJson', [
                 'rule' => [$this, 'isValidJson'],
-                'message' => __('The message is not a valid JSON.'),
+                'message' => __('The message should be valid JSON message.'),
             ]);
 
         return $validator;

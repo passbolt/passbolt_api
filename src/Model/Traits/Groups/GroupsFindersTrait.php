@@ -268,7 +268,7 @@ trait GroupsFindersTrait
     public function findView(string $groupId, ?array $options = []): Query
     {
         if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException(__('The parameter groupId should be a valid uuid.'));
+            throw new \InvalidArgumentException('The parameter groupId should be a valid UUID.');
         }
 
         return $this->findIndex($options)->where(['Groups.id' => $groupId]);
@@ -284,11 +284,11 @@ trait GroupsFindersTrait
     public function findAllByIds(array $groupsIds, ?array $options = []): Query
     {
         if (empty($groupsIds)) {
-            throw new \InvalidArgumentException(__('The parameter groupIds cannot be empty.'));
+            throw new \InvalidArgumentException('The parameter groupIds cannot be empty.');
         }
         foreach ($groupsIds as $groupId) {
             if (!Validation::uuid($groupId)) {
-                throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
+                throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
             }
         }
 

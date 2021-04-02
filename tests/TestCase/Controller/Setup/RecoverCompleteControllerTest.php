@@ -73,7 +73,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/recover/complete/nope.json';
         $data = [];
         $this->postJson($url, $data);
-        $this->assertError(400, 'The user id is not valid.');
+        $this->assertError(400, 'The user identifier should be a valid UUID.');
     }
 
     /**
@@ -104,23 +104,23 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $fails = [
             'empty array' => [
                 'data' => [],
-                'message' => 'An authentication token must be provided.',
+                'message' => 'An authentication token should be provided.',
             ],
             'null' => [
                 'data' => null,
-                'message' => 'An authentication token must be provided.',
+                'message' => 'An authentication token should be provided.',
             ],
             'array with null' => [
                 'data' => ['token' => null],
-                'message' => 'An authentication token must be provided.',
+                'message' => 'An authentication token should be provided.',
             ],
             'int' => [
                 'data' => ['token' => 100],
-                'message' => 'The authentication token should be a valid uuid.',
+                'message' => 'The authentication token should be a valid UUID.',
             ],
             'string' => [
                 'data' => ['token' => 'nope'],
-                'message' => 'The authentication token should be a valid uuid.',
+                'message' => 'The authentication token should be a valid UUID.',
             ],
             'expired token' => [
                 'data' => ['token' => $tokenExpired],

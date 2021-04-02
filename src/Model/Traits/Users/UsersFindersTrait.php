@@ -99,7 +99,7 @@ trait UsersFindersTrait
     private function _filterQueryByResourceAccess(\Cake\ORM\Query $query, string $resourceId)
     {
         if (!Validation::uuid($resourceId)) {
-            throw new InvalidArgumentException(__('The resource id should be a valid uuid.'));
+            throw new InvalidArgumentException('The resource identifier should be a valid UUID.');
         }
 
         // The query requires a join with Permissions not constraint with the default condition added by the HasMany
@@ -180,7 +180,7 @@ trait UsersFindersTrait
     private function _filterQueryByHasNotPermission(Query $query, string $resourceId)
     {
         if (!Validation::uuid($resourceId)) {
-            throw new InvalidArgumentException(__('The resource id should be a valid uuid.'));
+            throw new InvalidArgumentException('The resource identifier should be a valid UUID.');
         }
 
         $permissionQuery = $this->Permissions->find()
@@ -215,11 +215,11 @@ trait UsersFindersTrait
 
         // Options must contain a role
         if (!isset($role)) {
-            $msg = __('User table findIndex should have a role set in options.');
+            $msg = 'User table findIndex should have a role set in options.';
             throw new InvalidArgumentException($msg);
         }
         if (!$this->Roles->isValidRoleName($role)) {
-            throw new InvalidArgumentException(__('The role name is not valid.'));
+            throw new InvalidArgumentException('The role name is not valid.');
         }
 
         // Default associated data
@@ -308,10 +308,10 @@ trait UsersFindersTrait
     public function findView(string $userId, string $roleName)
     {
         if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         if (!$this->Roles->isValidRoleName($roleName)) {
-            throw new InvalidArgumentException(__('The role name is not valid.'));
+            throw new InvalidArgumentException('The role name is not valid.');
         }
 
         // Same rule than index apply with a specific id requested
@@ -329,10 +329,10 @@ trait UsersFindersTrait
     public function findDelete(string $userId, string $roleName)
     {
         if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         if (!$this->Roles->isValidRoleName($roleName)) {
-            throw new InvalidArgumentException(__('The role name is not valid.'));
+            throw new InvalidArgumentException('The role name is not valid.');
         }
 
         return $this->findIndex($roleName)->where(['Users.id' => $userId]);
@@ -350,7 +350,7 @@ trait UsersFindersTrait
     {
         // Options must contain an id
         if (!isset($options['fingerprint'])) {
-            throw new Exception(__('User table findAuth should have a fingerprint id set in options.'));
+            throw new Exception('User table findAuth should have a fingerprint id set in options.');
         }
 
         // auth query is always done as guest
@@ -372,7 +372,7 @@ trait UsersFindersTrait
     public function findRecover(string $username, ?array $options = [])
     {
         if (!Validation::email($username, Configure::read('passbolt.email.validate.mx'))) {
-            throw new InvalidArgumentException(__('The username should be a valid email.'));
+            throw new InvalidArgumentException('The username should be a valid email.');
         }
 
         // show active first and do not count deleted ones
@@ -395,7 +395,7 @@ trait UsersFindersTrait
     public function findSetup(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // show active first and do not count deleted ones
@@ -425,7 +425,7 @@ trait UsersFindersTrait
     public function findSetupRecover(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // show active first and do not count deleted ones
@@ -455,7 +455,7 @@ trait UsersFindersTrait
     public function findFirstForEmail(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         /** @var \App\Model\Entity\User $user */
