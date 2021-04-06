@@ -82,6 +82,8 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
         $this->authenticateAs('admin');
         $this->getJson('/ee/subscription/key.json');
         $this->assertPaymentRequiredError('The subscription is expired.');
+        $this->assertResponseContains('customer_id');
+        $this->assertResponseContains('subscription_id');
         $this->assertSubscriptionExists();
     }
 
@@ -98,6 +100,8 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
         $this->authenticateAs('admin');
         $this->getJson('/ee/subscription/key.json');
         $this->assertPaymentRequiredError('The users limit is exceeded.');
+        $this->assertResponseContains('customer_id');
+        $this->assertResponseContains('subscription_id');
         $this->assertSubscriptionExists();
     }
 
