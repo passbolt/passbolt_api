@@ -19,3 +19,5 @@ plugins/* usr/share/php/passbolt/plugins/
 src/* usr/share/php/passbolt/src/
 vendor/* usr/share/php/passbolt/vendor/
 webroot/* usr/share/php/passbolt/webroot/
+templates/* usr/share/php/passbolt/templates/
+resources/* usr/share/php/passbolt/resources/
