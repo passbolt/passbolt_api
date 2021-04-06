@@ -54,7 +54,7 @@ class SubscriptionValidationException extends SubscriptionException
     }
 
     /**
-     * @return array|null[]|\Passbolt\Ee\Model\Dto\SubscriptionKeyDto[]|string
+     * @return array|string
      */
     public function getErrors()
     {
@@ -62,7 +62,7 @@ class SubscriptionValidationException extends SubscriptionException
             return '';
         }
 
-        return $this->keyDto;
+        return $this->keyDto->toArray();
     }
 
     /**
