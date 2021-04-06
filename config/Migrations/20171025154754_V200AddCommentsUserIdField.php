@@ -26,9 +26,8 @@ class V200AddCommentsUserIdField extends AbstractMigration
     {
         // Add column user_id.
         $this->table('comments')
-             ->addColumn('user_id', 'char', [
+             ->addColumn('user_id', 'uuid', [
                  'default' => null,
-                 'limit' => 36,
                  'null' => false,
              ])
              ->save();

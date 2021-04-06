@@ -24,7 +24,11 @@ class V200MigrateUUID extends AbstractMigration
      */
     public function up()
     {
+        
+        // The new  uuid type maps to char(36) so skip this
+        return;
         // Cakephp requires CHAR(36) and not VARCHAR(36)
+
         // in order to auto populates id fields
 
         // not doing: email queue, file_storage

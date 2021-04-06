@@ -19,8 +19,7 @@ namespace Passbolt\WebInstaller\Utility;
 use App\Utility\Healthchecks;
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
-use Cake\Utility\Hash;
-
+use Cake\Database\Exception\MissingConnectionExceptionn;
 class DatabaseConfiguration
 {
     /**
@@ -33,7 +32,7 @@ class DatabaseConfiguration
     {
         return [
             'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            'driver' => $data['driver'],
             'persistent' => false,
             'host' => $data['host'],
             'port' => $data['port'],
@@ -73,12 +72,12 @@ class DatabaseConfiguration
         $connection = ConnectionManager::get('default');
 
         try {
-            $connection->execute('SHOW TABLES')->fetchAll('assoc');
-        } catch (\Throwable $e) {
+            $connection->connect();
+            return true;
+        } catch (\Exception $e) {
             return false;
         }
 
-        return true;
     }
 
     /**
@@ -88,10 +87,7 @@ class DatabaseConfiguration
      */
     public static function getTables()
     {
-        $connection = ConnectionManager::get('default');
-        $tables = $connection->execute('SHOW TABLES')->fetchAll();
-
-        return Hash::extract($tables, '{n}.0');
+        return ConnectionManager::get('default')->getSchemaCollection()->listTables();
     }
 
     /**

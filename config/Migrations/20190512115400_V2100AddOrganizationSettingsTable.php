@@ -28,16 +28,25 @@ class V2100AddOrganizationSettingsTable extends AbstractMigration
         if ($this->hasTable('organization_settings')) {
             return;
         }
-
-        $this->table('organization_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'char', [
+        $encoding= "utf8mb4";
+        $collation = "utf8mb4_unicode_ci";
+        switch($this->getAdapter()->getOptions()["adapter"]) {
+            case "pgsql": {
+                $encoding = "utf8";
+                $collation = "utf8_unicode_ci";
+                break;
+                }
+           default:
+     	       $encoding= "utf8mb4";
+               $collation = "utf8mb4_unicode_ci";
+        }
+        $this->table('organization_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
+            ->addColumn('id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('property_id', 'char', [
+            ->addColumn('property_id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
             ])
             ->addColumn('property', 'string', [
@@ -60,14 +69,12 @@ class V2100AddOrganizationSettingsTable extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
-            ->addColumn('created_by', 'string', [
+            ->addColumn('created_by', 'uuid', [ 
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('modified_by', 'string', [
+            ->addColumn('modified_by', 'uuid', [ 
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
             ])
             ->addIndex(['property_id'])

@@ -136,7 +136,7 @@ class V300AddResourceTypesDefaultData extends AbstractMigration
                 'modified' => date("Y-m-d H:i:s"),
             ],
         ];
-        $this->table('resource_types')->insert($defaultResourceTypes)->save();
+        $this->table('resource_types')->insert($defaultResourceTypes)->saveData();
     }
 }
 // @codingStandardsIgnoreEnd

@@ -25,12 +25,21 @@ class V300AddResourceTypesToResources extends AbstractMigration
      */
     public function up()
     {
-        $defaultType = $this->fetchAll("SELECT `id` FROM `resource_types` WHERE `slug`='password-string'");
-        if (empty($defaultType) || !Validation::uuid($defaultType[0])) {
-           return;
+	$defaultType = "";
+        switch($this->getAdapter()->getOptions()["adapter"]) {
+        case "pgsql": {
+            $defaultType = $this->fetchAll("SELECT id FROM resource_types WHERE slug='password-string'");
+            break;
+            }
+        default:
+            $defaultType = $this->fetchAll("SELECT `id` FROM `resource_types` WHERE `slug`='password-string'");
         }
 
-        $this->execute("UPDATE `resources` SET `resource_type_id`='{$defaultType[0]['id']}' WHERE `resource_type_id` IS NULL");
+        if (empty($defaultType) || !Validation::uuid($defaultType[0]['id'])) {
+            return;
+        }
+
+        $this->execute("UPDATE resources SET resource_type_id='{$defaultType[0]['id']}' WHERE resource_type_id IS NULL");
     }
 }
 // @codingStandardsIgnoreEnd

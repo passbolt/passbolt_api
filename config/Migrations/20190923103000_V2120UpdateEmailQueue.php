@@ -13,7 +13,7 @@
  * @since         2.12.0
  */
 use Migrations\AbstractMigration;
-use Phinx\Db\Adapter\MysqlAdapter;
+//use Phinx\Db\Adapter\MysqlAdapter;
 
 class V2120UpdateEmailQueue extends AbstractMigration
 {
@@ -29,7 +29,7 @@ class V2120UpdateEmailQueue extends AbstractMigration
                 'limit' => 100,
             ])
             ->changeColumn('template_vars', 'text', [
-                'limit' => MysqlAdapter::TEXT_LONG,
+     //           'limit' => MysqlAdapter::TEXT_LONG,
                 'default' => null,
                 'null' => false,
             ])

@@ -23,21 +23,30 @@ class V270AddSecretsHistoryTable extends AbstractMigration
      * @return void
      */
     public function up()
-    {
-        $this->table('secrets_history', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-             ->addColumn('id', 'char', [
+    {   
+        $encoding= "utf8mb4";
+        $collation = "utf8mb4_unicode_ci";
+        switch($this->getAdapter()->getOptions()["adapter"]) {
+            case "pgsql": {
+                $encoding = "utf8";
+                $collation = "utf8_unicode_ci";
+                break;
+                }
+           default:
+     	       $encoding= "utf8mb4";
+               $collation = "utf8mb4_unicode_ci";
+        }
+        $this->table('secrets_history', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
+             ->addColumn('id', 'uuid', [
                  'default' => null,
-                 'limit' => 36,
                  'null' => false,
              ])
-            ->addColumn('user_id', 'char', [
+            ->addColumn('user_id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('resource_id', 'char', [
+            ->addColumn('resource_id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
             ])
              ->addIndex([

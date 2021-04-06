@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Command;
 
 use App\Command\CleanupCommand;
 use App\Test\Factory\UserFactory;
+use CakephpTestMigrator\Migrator;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
@@ -54,6 +55,7 @@ class CleanupCommandTest extends TestCase
      */
     public function testCleanupCommandFixMode()
     {
+        Migrator::migrate();
         UserFactory::make()->admin()->persist();
         $this->exec('passbolt cleanup');
         $this->assertExitSuccess();

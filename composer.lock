@@ -6851,16 +6851,16 @@
         },
         {
             "name": "vierge-noire/cakephp-fixture-factories",
-            "version": "v2.2",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierge-noire/cakephp-fixture-factories.git",
-                "reference": "160eb8bcbfe0f302a6c8f638a6a387ecb9272f0d"
+                "reference": "aff688a4d2413ae7f7e833f7f517a0f6c52bf7e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/160eb8bcbfe0f302a6c8f638a6a387ecb9272f0d",
-                "reference": "160eb8bcbfe0f302a6c8f638a6a387ecb9272f0d",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/aff688a4d2413ae7f7e833f7f517a0f6c52bf7e8",
+                "reference": "aff688a4d2413ae7f7e833f7f517a0f6c52bf7e8",
                 "shasum": ""
             },
             "require": {
@@ -6906,9 +6906,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vierge-noire/cakephp-fixture-factories/issues",
-                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.2"
+                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.2.1"
             },
-            "time": "2021-02-09T17:20:41+00:00"
+            "time": "2021-04-15T10:20:05+00:00"
         },
         {
             "name": "vierge-noire/cakephp-test-migrator",

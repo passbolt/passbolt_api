@@ -23,11 +23,22 @@ class V270AddPermissionsHistoryTable extends AbstractMigration
      * @return void
      */
     public function up()
-    {
-        $this->table('permissions_history', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-             ->addColumn('id', 'string', [
+    {   
+        $encoding= "utf8mb4";
+        $collation = "utf8mb4_unicode_ci";
+        switch($this->getAdapter()->getOptions()["adapter"]) {
+            case "pgsql": {
+                $encoding = "utf8";
+                $collation = "utf8_unicode_ci";
+                break;
+                }
+           default:
+     	       $encoding= "utf8mb4";
+               $collation = "utf8mb4_unicode_ci";
+        }
+        $this->table('permissions_history', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
+             ->addColumn('id', 'uuid', [
                  'default' => null,
-                 'limit' => 36,
                  'null' => false,
              ])
              ->addColumn('aco', 'string', [
@@ -35,9 +46,8 @@ class V270AddPermissionsHistoryTable extends AbstractMigration
                  'limit' => 30,
                  'null' => false,
              ])
-             ->addColumn('aco_foreign_key', 'string', [
+             ->addColumn('aco_foreign_key', 'uuid', [
                  'default' => null,
-                 'limit' => 36,
                  'null' => false,
              ])
              ->addColumn('aro', 'string', [
@@ -45,9 +55,8 @@ class V270AddPermissionsHistoryTable extends AbstractMigration
                  'limit' => 30,
                  'null' => false,
              ])
-             ->addColumn('aro_foreign_key', 'string', [
+             ->addColumn('aro_foreign_key', 'uuid', [
                  'default' => null,
-                 'limit' => 36,
                  'null' => true,
              ])
              ->addColumn('type', 'integer', [
