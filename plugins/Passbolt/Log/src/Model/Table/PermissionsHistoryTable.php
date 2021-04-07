@@ -24,6 +24,28 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+/**
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $PermissionsHistoryGroups
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $PermissionsHistoryUsers
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $PermissionsHistoryResources
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ */
 class PermissionsHistoryTable extends Table
 {
     /**

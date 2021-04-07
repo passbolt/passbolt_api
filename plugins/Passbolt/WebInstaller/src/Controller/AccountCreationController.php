@@ -58,7 +58,9 @@ class AccountCreationController extends WebInstallerController
         try {
             $data = $this->getAndValidateData();
         } catch (Exception $e) {
-            return $this->_error($e->getMessage());
+            $this->_error($e->getMessage());
+
+            return;
         }
 
         $this->webInstaller->setSettingsAndSave('first_user', $data);

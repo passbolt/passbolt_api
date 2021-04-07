@@ -72,7 +72,8 @@
         "passbolt/passbolt-selenium-api": "^3.1.0",
         "passbolt/passbolt-test-data": "^3.2.0",
         "vierge-noire/cakephp-fixture-factories": "^2.2",
-        "vierge-noire/cakephp-test-migrator": "^2.1.3"
+        "vierge-noire/cakephp-test-migrator": "^2.1.3",
+        "dereuromark/cakephp-ide-helper": "^1.10"
     },
     "autoload": {
         "psr-4": {
@@ -113,7 +114,7 @@
           "./node_modules/.bin/grunt appjs-update",
           "./node_modules/.bin/grunt styleguide-update"
         ],
-        "stan": "phpstan analyse",
+        "stan": "phpstan analyse --memory-limit=-1",
         "test": "phpunit --colors=always"
     },
     "prefer-stable": true

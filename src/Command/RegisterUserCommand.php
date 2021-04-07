@@ -28,9 +28,9 @@ use Cake\Routing\Router;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 /**
- * @property UsersTable Users
- * @property RolesTable Roles
- * @property AuthenticationTokensTable AuthenticationTokens
+ * @property \App\Command\UsersTable $Users
+ * @property \App\Command\RolesTable $Roles
+ * @property \App\Command\AuthenticationTokensTable $AuthenticationTokens
  */
 class RegisterUserCommand extends PassboltCommand
 {
