@@ -174,7 +174,7 @@ class Healthchecks
             ]);
             $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
             $response = @file_get_contents($url, false, $context); // phpcs:ignore
-            if ($response !== false && isset($response)) {
+            if ($response !== false && !empty($response)) {
                 $json = json_decode($response);
                 if (isset($json->body)) {
                     $checks['core']['fullBaseUrlReachable'] = ($json->body === 'OK');

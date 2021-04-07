@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * UserAgent Entity
  *
  * @property string $id
- * @property string $name
+ * @property string|null $name
  */
 class UserAgent extends Entity
 {

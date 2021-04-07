@@ -23,6 +23,7 @@ use Cake\Http\Exception\InternalErrorException;
 
 /**
  * @property \App\Model\Table\ResourcesTable $Resources
+ * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class ResourcesIndexController extends AppController
 {

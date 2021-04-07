@@ -129,10 +129,10 @@ class GroupsUpdateGroupUsersService
      * @param int $rowIndexRef The row index in the request data
      * @param string $groupId The target group
      * @param array $data The group user data
-     * @return \App\Model\Entity\GroupsUser
+     * @return \App\Model\Entity\GroupsUser|null
      * @throws \Exception
      */
-    private function addGroupUser(UserAccessControl $uac, int $rowIndexRef, string $groupId, array $data): GroupsUser
+    private function addGroupUser(UserAccessControl $uac, int $rowIndexRef, string $groupId, array $data): ?GroupsUser
     {
         $permissionData = [
             'group_id' => $groupId,
@@ -145,6 +145,8 @@ class GroupsUpdateGroupUsersService
         } catch (ValidationException $e) {
             $errors = [$rowIndexRef => $e->getErrors()];
             $this->handleValidationErrors($errors);
+
+            return null;
         }
     }
 

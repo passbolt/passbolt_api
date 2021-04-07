@@ -28,6 +28,12 @@ use Cake\ORM\Entity;
  * @property string $data
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property string $secret_id
+ * @property \App\Model\Entity\Secret $secret
+ * @property \App\Model\Entity\Resource $resource
+ * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\Resource $secret_access_resource
+ * @property \Passbolt\Log\Model\Entity\EntityHistory $entities_history
  */
 class SecretAccess extends Entity
 {

@@ -31,16 +31,24 @@ use Cake\Validation\Validator;
 /**
  * Secrets Model
  *
- * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Secret get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Secret newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Secret[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Secret|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Secret patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Secret[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Secret findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Secret get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Secret newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Secret[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Secret|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Secret patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Secret[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Secret findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \Passbolt\Log\Model\Table\SecretsHistoryTable&\Cake\ORM\Association\BelongsTo $SecretsHistory
+ * @property \Passbolt\Log\Model\Table\SecretAccessesTable&\Cake\ORM\Association\HasMany $SecretAccesses
+ * @method \App\Model\Entity\Secret newEmptyEntity()
+ * @method \App\Model\Entity\Secret saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class SecretsTable extends Table
 {

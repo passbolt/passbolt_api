@@ -33,15 +33,21 @@ use DateTimeInterface;
 /**
  * Model to store and validate OpenPGP public keys
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Gpgkey get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Gpgkey get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Gpgkey newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Gpgkey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Gpgkey newEmptyEntity()
+ * @method \App\Model\Entity\Gpgkey saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class GpgkeysTable extends Table
 {

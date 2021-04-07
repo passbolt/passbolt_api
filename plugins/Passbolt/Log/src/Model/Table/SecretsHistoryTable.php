@@ -22,6 +22,26 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+/**
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $SecretsHistoryUsers
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $SecretsHistoryResources
+ * @method \Passbolt\Log\Model\Entity\SecretHistory newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\SecretHistory newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ */
 class SecretsHistoryTable extends Table
 {
     /**
