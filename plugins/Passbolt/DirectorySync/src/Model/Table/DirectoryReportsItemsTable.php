@@ -11,15 +11,21 @@ use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 /**
  * DirectoryReportsItems Model
  *
- * @property \Passbolt\DirectorySync\Model\Table\ReportsTable|\Cake\ORM\Association\BelongsTo $Reports
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get($primaryKey, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem newEntity($data = null, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Reports
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem newEntity(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem newEmptyEntity()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class DirectoryReportsItemsTable extends Table
 {

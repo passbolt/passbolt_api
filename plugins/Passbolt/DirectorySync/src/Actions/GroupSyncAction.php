@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Actions;
 
-use Cake\Event\EventDispatcherTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
@@ -25,7 +24,6 @@ use Passbolt\DirectorySync\Utility\Alias;
 
 class GroupSyncAction extends SyncAction
 {
-    use EventDispatcherTrait;
     use GroupUsersSyncTrait;
     use SyncAddTrait;
     use SyncDeleteTrait;
@@ -47,16 +45,6 @@ class GroupSyncAction extends SyncAction
     public $defaultGroupAdmin;
 
     /**
-     * GroupSyncAction constructor.
-     *
-     * @throws \Exception
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * BeforeExecute.
      *
      * @return void
@@ -72,9 +60,7 @@ class GroupSyncAction extends SyncAction
     }
 
     /**
-     * Execute sync.
-     *
-     * @return void
+     * @inheritDoc
      */
     protected function _execute()
     {

@@ -22,6 +22,9 @@ use Cake\TestSuite\TestCase;
 use Passbolt\Ee\Service\SubscriptionKeyGetService;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
+/**
+ * @uses \Passbolt\Ee\Command\SubscriptionCheckCommand
+ */
 class SubscriptionCheckCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;

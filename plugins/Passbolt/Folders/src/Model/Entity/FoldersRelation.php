@@ -27,6 +27,12 @@ use Cake\ORM\Entity;
  * @property string|null $folder_parent_id
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property string $user_id
+ * @property \App\Model\Entity\Resource $resource
+ * @property \Cake\ORM\Entity $folder
+ * @property \Cake\ORM\Entity|null $folders_parent
+ * @property \App\Model\Entity\User $user
+ * @property \Cake\ORM\Entity $folders_relations_history
  */
 class FoldersRelation extends Entity
 {

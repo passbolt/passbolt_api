@@ -23,7 +23,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\GroupsTable Groups
+ * @property \App\Model\Table\GroupsTable $Groups
  */
 class GroupsViewController extends AppController
 {

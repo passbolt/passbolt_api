@@ -66,7 +66,7 @@ class SubscriptionKeyDto
      * @param \Cake\I18n\FrozenDate $expiry expiry date
      * @param \Cake\I18n\FrozenDate $created creation date
      */
-    public function __construct(
+    final public function __construct(
         string $data,
         string $customerId,
         string $subscriptionId,

@@ -53,7 +53,7 @@ class SubscriptionKeyAsciiForm extends Form
     {
         $this->_gpg = OpenPGPBackendFactory::get();
 
-        return parent::__construct($eventManager);
+        parent::__construct($eventManager);
     }
 
     /**

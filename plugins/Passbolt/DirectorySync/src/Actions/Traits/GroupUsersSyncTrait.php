@@ -22,6 +22,7 @@ use App\Model\Entity\Role;
 use App\Service\Groups\GroupsUpdateGroupUsersService;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
+use Cake\Event\EventDispatcherTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
@@ -31,6 +32,8 @@ use Passbolt\DirectorySync\Utility\SyncError;
 
 trait GroupUsersSyncTrait
 {
+    use EventDispatcherTrait;
+
     /**
      * Handle groupUsers once a group is created.
      *

@@ -25,12 +25,15 @@ use Passbolt\DirectorySync\Utility\Alias;
  *
  * @property string $id
  * @property string $foreign_model
- * @property string $foreign_key
+ * @property string|null $foreign_key
  * @property string $directory_name distinguished name
- * @property \Cake\I18n\FrozenTime $directory_created
- * @property \Cake\I18n\FrozenTime $directory_modified
+ * @property \Cake\I18n\FrozenTime|null $directory_created
+ * @property \Cake\I18n\FrozenTime|null $directory_modified
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\ORM\Entity|null $directory_ignore
+ * @property \App\Model\Entity\User|null $user
+ * @property \App\Model\Entity\Group|null $group
  */
 class DirectoryEntry extends Entity
 {

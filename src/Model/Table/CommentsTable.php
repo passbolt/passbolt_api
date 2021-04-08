@@ -35,16 +35,24 @@ use Cake\Validation\Validator;
 /**
  * Comments Model
  *
- * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
- * @method \App\Model\Entity\Comment get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Comment newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Comment[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Comment|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Comment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Comment[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Comment findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Comment get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Comment newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Comment[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Comment|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Comment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Comment[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Comment findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
+ * @method \App\Model\Entity\Comment newEmptyEntity()
+ * @method \App\Model\Entity\Comment saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class CommentsTable extends Table
 {

@@ -26,6 +26,7 @@ use Cake\ORM\Entity;
  * @property bool $is_shared
  *
  * @property \App\Model\Entity\Resource[] $resources
+ * @property \Cake\ORM\Entity[] $resources_tags
  */
 class Tag extends Entity
 {

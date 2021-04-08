@@ -20,6 +20,9 @@ namespace Passbolt\AuditLog\Test\TestCase\Controller;
 use App\Utility\UuidFactory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
+/**
+ * @uses \Passbolt\AuditLog\Controller\UserLogsController
+ */
 class UserLogsControllerTest extends LogIntegrationTestCase
 {
     public $fixtures = [

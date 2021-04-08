@@ -31,6 +31,21 @@ use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionFormatException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Ee\Model\Entity\Subscription;
 
+/**
+ * @method \Passbolt\Ee\Model\Entity\Subscription newEmptyEntity()
+ * @method \Passbolt\Ee\Model\Entity\Subscription newEntity(array $data, array $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription get($primaryKey, $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Ee\Model\Entity\Subscription[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ */
 class SubscriptionsTable extends OrganizationSettingsTable
 {
     /**
@@ -76,7 +91,7 @@ class SubscriptionsTable extends OrganizationSettingsTable
      * Ensure that an administration is provided in options before saving.
      *
      * @param \Cake\Event\Event $event the event
-     * @param \Cake\Datasource\EntityInterface $entity entity
+     * @param \Passbolt\Ee\Model\Entity\Subscription $entity entity
      * @param \ArrayObject $options options
      * @return void
      */

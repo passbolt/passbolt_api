@@ -21,6 +21,11 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 
+/**
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\RolesTable $Roles
+ * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ */
 class UsersCommand extends DirectorySyncCommand
 {
     use SyncCommandTrait;

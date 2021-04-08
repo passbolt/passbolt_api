@@ -26,6 +26,7 @@ use Passbolt\Ee\Test\Lib\SubscriptionControllerTestCase;
  *
  * @package Passbolt\Ee\Test\TestCase\Controller\Subscriptions
  * @covers \Passbolt\Ee\Controller\Subscriptions\SubscriptionsViewController::view
+ * @uses \Passbolt\Ee\Controller\Subscriptions\SubscriptionsUpdateController
  */
 class SubscriptionsUpdateControllerTest extends SubscriptionControllerTestCase
 {

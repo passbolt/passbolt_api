@@ -31,7 +31,7 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
  *
  * @package App\Utility
  */
-class SyncAction
+abstract class SyncAction
 {
     /**
      * @var string DirectoryReport uuid
@@ -93,6 +93,13 @@ class SyncAction
     protected $summary;
 
     protected $report;
+
+    /**
+     * Execute sync.
+     *
+     * @return void
+     */
+    abstract protected function _execute();
 
     /**
      * SyncAction constructor.

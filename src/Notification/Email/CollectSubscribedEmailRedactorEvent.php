@@ -34,7 +34,7 @@ class CollectSubscribedEmailRedactorEvent extends Event
      * @param null $subject Subject of the dispatched event
      * @param null $data Data for the event
      */
-    public function __construct($name, $subject = null, $data = null)
+    final public function __construct($name, $subject = null, $data = null)
     {
         if (!$subject instanceof EmailSubscriptionManager) {
             throw new InvalidArgumentException('$subject must be an instance of ' . EmailSubscriptionManager::class);

@@ -26,6 +26,11 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 class DirectorySyncCommand extends PassboltCommand
 {
     /**
+     * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
+     */
+    public $directoryOrgSettings;
+
+    /**
      * All the plugins commands extend the present command.
      * There execution in the console should called by "directory_sync this-command".
      * This method prepends the name of the command if required.

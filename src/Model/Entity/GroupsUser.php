@@ -9,13 +9,13 @@ use Cake\ORM\Entity;
  * GroupsUser Entity
  *
  * @property string $id
- * @property string $group_id
- * @property string $user_id
+ * @property string|null $group_id
+ * @property string|null $user_id
  * @property bool $is_admin
  * @property \Cake\I18n\FrozenTime $created
  *
- * @property \App\Model\Entity\Group $group
- * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\Group|null $group
+ * @property \App\Model\Entity\User|null $user
  */
 class GroupsUser extends Entity
 {

@@ -28,6 +28,9 @@ use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
+/**
+ * @uses \Passbolt\DirectorySync\Controller\DirectorySettingsController
+ */
 class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
 {
     use UserAccessControlTrait;

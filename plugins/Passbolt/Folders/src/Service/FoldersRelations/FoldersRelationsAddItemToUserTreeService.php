@@ -319,7 +319,7 @@ class FoldersRelationsAddItemToUserTreeService
      */
     private function sortReconstructChangesByPriorities(UserAccessControl $uac, array $changes)
     {
-        usort($changes, function ($changeA, $changeB) use ($uac) {
+        usort($changes, function ($changeA, $changeB) {
             // Operator relations should be applied in priority.
             if ($changeA['inOperatorTree']) {
                 return -1;

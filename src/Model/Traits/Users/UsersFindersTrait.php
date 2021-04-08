@@ -214,10 +214,6 @@ trait UsersFindersTrait
         $query = $event->getQuery();
 
         // Options must contain a role
-        if (!isset($role)) {
-            $msg = 'User table findIndex should have a role set in options.';
-            throw new InvalidArgumentException($msg);
-        }
         if (!$this->Roles->isValidRoleName($role)) {
             throw new InvalidArgumentException('The role name is not valid.');
         }

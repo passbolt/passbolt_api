@@ -24,7 +24,11 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $name
  * @property string $slug
- * @property string $definition
+ * @property string|null $definition
+ * @property string|null $description
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
+ * @property \App\Model\Entity\Resource[] $resources
  */
 class ResourceType extends Entity
 {

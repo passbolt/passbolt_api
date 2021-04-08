@@ -32,12 +32,18 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersRelationsFindersTrait;
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEntity($data = null, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Passbolt\Folders\Model\Table\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Passbolt\Folders\Model\Table\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Passbolt\Folders\Model\Table\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities($entities, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, callable $callback = null, ?array $options = [])
- * @mixin \Passbolt\Folders\Model\Table\TimestampBehavior
+ * @method \Cake\ORM\Query findById(string $id)
+ * @method \Cake\ORM\Query findByForeignId(string $id)
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Folders
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $FoldersParents
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
  */
 class FoldersRelationsHistoryTable extends Table
 {

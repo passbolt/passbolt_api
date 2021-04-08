@@ -13,10 +13,10 @@ use Cake\ORM\Entity;
  * @property string $status
  * @property string $model
  * @property string $action
- * @property string $data
+ * @property string|null $data
  * @property \Cake\I18n\FrozenTime $created
  *
- * @property \Passbolt\DirectorySync\Model\Entity\Report $report
+ * @property \Cake\ORM\Entity $report
  */
 class DirectoryReportsItem extends Entity
 {

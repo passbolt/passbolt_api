@@ -1,4 +1,10 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var string $hostName
+ * @var mixed $setupForm
+ * @var string $sigRequest
+ */
     use Cake\Core\Configure;
     use Cake\Routing\Router;
 

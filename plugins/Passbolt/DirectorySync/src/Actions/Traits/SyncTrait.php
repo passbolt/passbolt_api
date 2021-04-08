@@ -22,6 +22,10 @@ use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Utility\Alias;
 
+/**
+ * @method array|\Cake\Datasource\EntityInterface|null getUserFromData(string $username)
+ * @method array|\Cake\Datasource\EntityInterface|null getGroupFromData(string $name)
+ */
 trait SyncTrait
 {
     /**
@@ -176,7 +180,7 @@ trait SyncTrait
             }
 
             // If the entity exist but is already deleted
-            if (isset($existingEntity) && $existingEntity->deleted) {
+            if ($existingEntity->deleted) {
                 $this->handleAddDeleted($data, $entry, $existingEntity);
                 continue;
             }

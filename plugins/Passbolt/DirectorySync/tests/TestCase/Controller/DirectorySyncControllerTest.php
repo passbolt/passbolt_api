@@ -19,6 +19,9 @@ namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 
+/**
+ * @uses \Passbolt\DirectorySync\Controller\DirectorySyncController
+ */
 class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
 {
     public $fixtures = [

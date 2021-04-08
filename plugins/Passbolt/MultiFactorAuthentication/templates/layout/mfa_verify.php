@@ -11,6 +11,7 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.4.0
+ * @var \App\View\AppView $this
  */
 use Cake\Core\Configure;
 ?>

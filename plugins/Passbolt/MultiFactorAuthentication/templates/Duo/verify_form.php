@@ -1,4 +1,11 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var string $hostName
+ * @var mixed $providers
+ * @var string $sigRequest
+ * @var mixed $verifyForm
+ */
     use Cake\Core\Configure;
     use Cake\Routing\Router;
     use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;

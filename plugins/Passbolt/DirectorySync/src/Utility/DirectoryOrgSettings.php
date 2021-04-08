@@ -38,6 +38,11 @@ class DirectoryOrgSettings
     protected $settings;
 
     /**
+     * @var \App\Model\Table\OrganizationSettingsTable
+     */
+    public $OrganizationSetting;
+
+    /**
      * DirectoryOrgSettings constructor.
      *
      * @param array|null $settings settings

@@ -27,6 +27,9 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
+/**
+ * @property array|mixed $defaultGroupAdmin
+ */
 trait SyncAddTrait
 {
     /**
@@ -143,6 +146,7 @@ trait SyncAddTrait
 
         $status = Alias::STATUS_ERROR;
         $reportData = null;
+        $entity = null;
         try {
             $reportData = $entity = $this->createEntity($data, $entry);
             $status = Alias::STATUS_SUCCESS;
@@ -192,6 +196,7 @@ trait SyncAddTrait
         // if the entity was created in ldap and then deleted in passbolt
         // do not try to recreate
         $status = Alias::STATUS_ERROR;
+        $entity = null;
         if ($data['directory_created']->lt($existingEntity->modified)) {
             $this->DirectoryEntries->updateForeignKey($entry, null);
             $reportData = new SyncError($entry, null);
@@ -203,7 +208,6 @@ trait SyncAddTrait
         } else {
             // if the entity was delete in passbolt and then created in ldap
             // try to recreate
-            $entity = null;
             try {
                 $reportData = $entity = $this->createEntity($data, $entry);
                 $status = Alias::STATUS_SUCCESS;

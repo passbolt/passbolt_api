@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2661e965e2b24a4e7e7f28082c65b583",
+    "content-hash": "4619a598f27c2a0ed433617a18f584b8",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -405,16 +405,16 @@
         },
         {
             "name": "cakephp/chronos",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/chronos.git",
-                "reference": "5929b743aec34b3a2f74c70c383706f7f12e2725"
+                "reference": "1d187c71587c97520c00491f626e0f255144953e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/chronos/zipball/5929b743aec34b3a2f74c70c383706f7f12e2725",
-                "reference": "5929b743aec34b3a2f74c70c383706f7f12e2725",
+                "url": "https://api.github.com/repos/cakephp/chronos/zipball/1d187c71587c97520c00491f626e0f255144953e",
+                "reference": "1d187c71587c97520c00491f626e0f255144953e",
                 "shasum": ""
             },
             "require": {
@@ -460,7 +460,7 @@
                 "issues": "https://github.com/cakephp/chronos/issues",
                 "source": "https://github.com/cakephp/chronos"
             },
-            "time": "2021-02-06T03:37:44+00:00"
+            "time": "2021-04-07T01:06:46+00:00"
         },
         {
             "name": "cakephp/migrations",
@@ -1668,16 +1668,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.30",
+            "version": "2.0.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "136b9ca7eebef78be14abf90d65c5e57b6bc5d36"
+                "reference": "233a920cb38636a43b18d428f9a8db1f0a1a08f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/136b9ca7eebef78be14abf90d65c5e57b6bc5d36",
-                "reference": "136b9ca7eebef78be14abf90d65c5e57b6bc5d36",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/233a920cb38636a43b18d428f9a8db1f0a1a08f4",
+                "reference": "233a920cb38636a43b18d428f9a8db1f0a1a08f4",
                 "shasum": ""
             },
             "require": {
@@ -1757,7 +1757,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/2.0.30"
+                "source": "https://github.com/phpseclib/phpseclib/tree/2.0.31"
             },
             "funding": [
                 {
@@ -1773,7 +1773,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-17T05:42:04+00:00"
+            "time": "2021-04-06T13:56:45+00:00"
         },
         {
             "name": "psr/container",
@@ -4071,16 +4071,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.0.11",
+            "version": "2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "a5a5632da0b1c2d6fa9a3b65f1f4e90d1f04abb9"
+                "reference": "6c12ce263da71641903e399c3ce8ecb08fd375fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/a5a5632da0b1c2d6fa9a3b65f1f4e90d1f04abb9",
-                "reference": "a5a5632da0b1c2d6fa9a3b65f1f4e90d1f04abb9",
+                "url": "https://api.github.com/repos/composer/composer/zipball/6c12ce263da71641903e399c3ce8ecb08fd375fb",
+                "reference": "6c12ce263da71641903e399c3ce8ecb08fd375fb",
                 "shasum": ""
             },
             "require": {
@@ -4148,7 +4148,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.0.11"
+                "source": "https://github.com/composer/composer/tree/2.0.12"
             },
             "funding": [
                 {
@@ -4164,7 +4164,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-24T13:57:23+00:00"
+            "time": "2021-04-01T08:14:59+00:00"
         },
         {
             "name": "composer/semver",
@@ -4459,6 +4459,84 @@
                 "source": "https://github.com/dealerdirect/phpcodesniffer-composer-installer"
             },
             "time": "2020-12-07T18:04:37+00:00"
+        },
+        {
+            "name": "dereuromark/cakephp-ide-helper",
+            "version": "1.10.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dereuromark/cakephp-ide-helper.git",
+                "reference": "03817857d7c4e24e6cae2369fa1b6089c5c1951f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dereuromark/cakephp-ide-helper/zipball/03817857d7c4e24e6cae2369fa1b6089c5c1951f",
+                "reference": "03817857d7c4e24e6cae2369fa1b6089c5c1951f",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/bake": "^2.1.0",
+                "cakephp/cakephp": "^4.0.2",
+                "php": ">=7.2",
+                "sebastian/diff": "^3.0.1 || ^4.0.1",
+                "squizlabs/php_codesniffer": "^3.5.2"
+            },
+            "require-dev": {
+                "cakephp/migrations": "^3.0.0",
+                "cakephp/plugin-installer": "^1.3",
+                "dereuromark/cakephp-shim": "dev-master as 2.0.0",
+                "fig-r/psr2r-sniffer": "dev-master"
+            },
+            "type": "cakephp-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "IdeHelper\\": "src/",
+                    "IdeHelper\\Test\\Fixture\\": "tests/Fixture/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Scherer",
+                    "homepage": "https://www.dereuromark.de",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Other contributors",
+                    "homepage": "https://github.com/dereuromark/cakephp-ide-helper/graphs/contributors",
+                    "role": "Developer"
+                }
+            ],
+            "description": "CakePHP IdeHelper Plugin to improve auto-completion",
+            "homepage": "https://github.com/dereuromark/cakephp-ide-helper/",
+            "keywords": [
+                "annotations",
+                "autocomplete",
+                "cakephp",
+                "ide",
+                "phpdoc",
+                "phpstorm",
+                "plugin"
+            ],
+            "support": {
+                "issues": "https://github.com/dereuromark/cakephp-ide-helper/issues",
+                "source": "https://github.com/dereuromark/cakephp-ide-helper/"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dereuromark",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-03-02T16:46:42+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",

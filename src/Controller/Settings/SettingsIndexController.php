@@ -156,7 +156,7 @@ class SettingsIndexController extends AppController
             }
 
             $whiteListOptions = Hash::extract($pluginConf, self::SETTINGS_VISIBILITY_KEY . '.' . $confKey);
-            if (isset($whiteListOptions) && is_array($whiteListOptions)) {
+            if (is_array($whiteListOptions)) {
                 foreach ($whiteListOptions as $whiteList) {
                     $res[] = $pluginName . '.' . $whiteList;
                 }

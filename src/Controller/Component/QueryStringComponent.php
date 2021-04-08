@@ -25,6 +25,8 @@ use Cake\Validation\Validation;
 /**
  * Query String Component
  * Class used for extracting query string parameters
+ *
+ * @method \App\Controller\AppController getController()
  */
 class QueryStringComponent extends Component
 {

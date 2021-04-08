@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var array $body
+ */
     use Cake\Core\Configure;
     use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 

@@ -25,7 +25,8 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property TagsTable Tags
+ * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable $ResourcesTags
+ * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
  */
 class TagsDeleteController extends AppController
 {

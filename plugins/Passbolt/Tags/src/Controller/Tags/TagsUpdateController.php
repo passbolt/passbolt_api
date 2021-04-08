@@ -26,7 +26,8 @@ use Cake\Validation\Validation;
 use Passbolt\Tags\Model\Entity\Tag;
 
 /**
- * @property TagsTable Tags
+ * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
+ * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable $ResourcesTags
  */
 class TagsUpdateController extends AppController
 {

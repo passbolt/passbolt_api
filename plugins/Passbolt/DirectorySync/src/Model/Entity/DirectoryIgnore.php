@@ -25,6 +25,9 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $foreign_model
  * @property \Cake\I18n\FrozenTime $created
+ * @property \App\Model\Entity\User|null $user
+ * @property \App\Model\Entity\Group|null $group
+ * @property \Cake\ORM\Entity|null $directory_entry
  */
 class DirectoryIgnore extends Entity
 {
