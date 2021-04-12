@@ -19,6 +19,9 @@ namespace Passbolt\EmailDigest\Test\TestCase\Command;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
+/**
+ * @uses \Passbolt\EmailDigest\Command\SenderCommand
+ */
 class SenderCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;

@@ -24,6 +24,25 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Passbolt\DirectorySync\Utility\Alias;
 
+/**
+ * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasOne $GroupUser
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasOne $UserDirectoryEntry
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasOne $GroupDirectoryEntry
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation newEmptyEntity()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation newEntity(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class DirectoryRelationsTable extends Table
 {
     use TableCleanupTrait;

@@ -21,6 +21,10 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 
+/**
+ * @property \App\Model\Table\GroupsTable $Groups
+ * @property \App\Model\Table\UsersTable $Users
+ */
 class GroupsCommand extends DirectorySyncCommand
 {
     use SyncCommandTrait;

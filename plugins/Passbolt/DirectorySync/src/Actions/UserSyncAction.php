@@ -35,16 +35,6 @@ class UserSyncAction extends SyncAction
     public const ENTITY_TYPE = Alias::MODEL_USERS;
 
     /**
-     * UserSyncAction constructor.
-     *
-     * @throws \Exception
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Things to do after the constructor and before the sync job
      *
      * @return void
@@ -56,9 +46,7 @@ class UserSyncAction extends SyncAction
     }
 
     /**
-     * Execute sync.
-     *
-     * @return void
+     * @inheritDoc
      */
     protected function _execute()
     {

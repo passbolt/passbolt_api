@@ -20,7 +20,7 @@ namespace Passbolt\Folders\Controller\Folders;
 use App\Controller\AppController;
 
 /**
- * @property FoldersTable Folders
+ * @property \Passbolt\Folders\Model\Table\FoldersTable $Folders
  */
 class FoldersIndexController extends AppController
 {

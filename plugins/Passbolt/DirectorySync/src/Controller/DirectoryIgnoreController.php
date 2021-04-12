@@ -26,6 +26,9 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
+/**
+ * @property \Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable $DirectoryIgnore
+ */
 class DirectoryIgnoreController extends DirectoryController
 {
     /**
@@ -49,6 +52,7 @@ class DirectoryIgnoreController extends DirectoryController
         }
 
         $this->loadModel('Passbolt/DirectorySync.DirectoryIgnore');
+        $ignored = null;
         try {
             $ignored = $this->DirectoryIgnore->get($foreignKey);
             $result = $this->DirectoryIgnore->delete($ignored);

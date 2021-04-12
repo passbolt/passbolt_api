@@ -29,17 +29,23 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 /**
  * DirectoryEntries Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Groups
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $DirectoryIgnore
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry get($primaryKey, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry newEntity($data = null, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Users
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\HasOne $Groups
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasOne $DirectoryIgnore
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry newEntity(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry newEmptyEntity()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class DirectoryEntriesTable extends Table
 {

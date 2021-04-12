@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var mixed $yubikeySetupForm
+ */
     use Cake\Core\Configure;
     use Cake\Routing\Router;
 

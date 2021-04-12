@@ -145,7 +145,7 @@ class FoldersRelationsRepairStronglyConnectedComponents
      */
     private function sortFolderRelationsByPriority(UserAccessControl $uac, array $foldersRelations): array
     {
-        usort($foldersRelations, function ($folderRelationA, $folderRelationB) use ($uac) {
+        usort($foldersRelations, function ($folderRelationA, $folderRelationB) {
             // Operator relations should be broken with the lowest priority.
             if ($folderRelationA['inOperatorTree']) {
                 return 1;

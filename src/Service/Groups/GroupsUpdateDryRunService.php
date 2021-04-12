@@ -151,6 +151,8 @@ class GroupsUpdateDryRunService
             $group->setError('groups_users', $e->getErrors());
             $this->handleValidationErrors($group);
         }
+
+        return [];
     }
 
     /**

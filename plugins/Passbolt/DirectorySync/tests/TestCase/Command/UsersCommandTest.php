@@ -18,6 +18,9 @@ namespace Passbolt\DirectorySync\Test\TestCase\Command;
 
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncConsoleIntegrationTestCase;
 
+/**
+ * @uses \Passbolt\DirectorySync\Command\UsersCommand
+ */
 class UsersCommandTest extends DirectorySyncConsoleIntegrationTestCase
 {
     /**

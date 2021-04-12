@@ -249,7 +249,7 @@ class MfaOrgSettings
      */
     public function validate(array $data)
     {
-        if (!isset($data) || empty($data)) {
+        if (empty($data)) {
             $msg = __('The multi-factor authentication settings data should not be empty.');
             throw new CustomValidationException($msg);
         }

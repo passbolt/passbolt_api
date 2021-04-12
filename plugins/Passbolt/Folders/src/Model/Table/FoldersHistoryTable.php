@@ -34,6 +34,12 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
  * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities($entities, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\Folder findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasOne $Permission
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
+ * @property \Passbolt\Folders\Model\Table\FoldersRelationsTable&\Cake\ORM\Association\HasMany $FoldersRelations
+ * @property \Passbolt\Folders\Model\Table\FoldersTable&\Cake\ORM\Association\BelongsToMany $ChildrenFolders
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsToMany $ChildrenResources
  */
 class FoldersHistoryTable extends Table
 {

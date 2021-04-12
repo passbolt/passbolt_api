@@ -23,9 +23,12 @@ use Cake\ORM\Entity;
  * Directory Relation Entity
  *
  * @property string $id
- * @property string $parent_key
- * @property string $child_key
+ * @property string|null $parent_key
+ * @property string|null $child_key
  * @property \Cake\I18n\FrozenTime $created
+ * @property \App\Model\Entity\GroupsUser|null $group_user
+ * @property \Cake\ORM\Entity|null $user_directory_entry
+ * @property \Cake\ORM\Entity|null $group_directory_entry
  */
 class DirectoryRelation extends Entity
 {

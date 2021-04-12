@@ -30,15 +30,22 @@ use Cake\Validation\Validator;
 /**
  * Tags Model
  *
- * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsToMany $Resources
- * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable|\Cake\ORM\Association\HasMany $ResourcesTags
- * @method \Passbolt\Tags\Model\Table\Tag get($primaryKey, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag newEntity($data = null, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag|bool save(\Passbolt\Tags\Model\Table\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag patchEntity(\Passbolt\Tags\Model\Table\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsToMany $Resources
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasMany $ResourcesTags
+ * @method \Passbolt\Tags\Model\Entity\Tag get($primaryKey, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag newEntity(array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag newEmptyEntity()
+ * @method \Passbolt\Tags\Model\Entity\Tag saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findBySlug(string $slug)
  */
 class TagsTable extends Table
 {
@@ -144,7 +151,7 @@ class TagsTable extends Table
     public static function decorateForeignFind(Query $query, array $options, string $userId)
     {
         if (isset($options['contain']['all_tags'])) {
-            $query->contain('Tags', function (Query $q) use ($userId) {
+            $query->contain('Tags', function (Query $q) {
                 return $q->order(['slug']);
             });
         }

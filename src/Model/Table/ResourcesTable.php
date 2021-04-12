@@ -34,17 +34,28 @@ use Cake\Validation\Validator;
 /**
  * Resources Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Creator
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Modifier
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasMany $Secrets
- * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasOne $Permissions
- * @method \App\Model\Entity\Resource get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Resource[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Resource|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Resource patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Resource[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Resource findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
+ * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\HasMany $Secrets
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
+ * @method \App\Model\Entity\Resource get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Resource[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Resource|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Resource patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Resource[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Resource findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \App\Model\Table\FavoritesTable&\Cake\ORM\Association\HasOne $Favorites
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasOne $Permission
+ * @property \App\Model\Table\ResourceTypesTable&\Cake\ORM\Association\BelongsTo $ResourceTypes
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\BelongsTo $EntitiesHistory
+ * @method \App\Model\Entity\Resource newEmptyEntity()
+ * @method \App\Model\Entity\Resource newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Resource saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class ResourcesTable extends Table
 {

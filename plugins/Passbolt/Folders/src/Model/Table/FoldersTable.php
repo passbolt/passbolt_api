@@ -26,16 +26,30 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 /**
  * Folders Model
  *
- * @method \Passbolt\Folders\Model\Entity\Folder get($primaryKey, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder newEntity($data = null, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder|false save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Table\Folder findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder get($primaryKey, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder newEntity(array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Passbolt\Folders\Model\Behavior\FolderizableBehavior
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasOne $Permission
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
+ * @property \Passbolt\Folders\Model\Table\FoldersRelationsTable&\Cake\ORM\Association\HasMany $FoldersRelations
+ * @property \Passbolt\Folders\Model\Table\FoldersTable&\Cake\ORM\Association\BelongsToMany $ChildrenFolders
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsToMany $ChildrenResources
+ * @property \Passbolt\Folders\Model\Table\FoldersHistoryTable&\Cake\ORM\Association\BelongsTo $FoldersHistory
+ * @method \Passbolt\Folders\Model\Entity\Folder newEmptyEntity()
+ * @method \Passbolt\Folders\Model\Entity\Folder[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
  */
 class FoldersTable extends Table
 {

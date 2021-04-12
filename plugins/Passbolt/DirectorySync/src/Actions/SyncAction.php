@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Actions;
 
 use App\Model\Entity\Role;
-use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
@@ -31,7 +30,7 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
  *
  * @package App\Utility
  */
-class SyncAction
+abstract class SyncAction
 {
     /**
      * @var string DirectoryReport uuid
@@ -95,6 +94,13 @@ class SyncAction
     protected $report;
 
     /**
+     * Execute sync.
+     *
+     * @return void
+     */
+    abstract protected function _execute();
+
+    /**
      * SyncAction constructor.
      *
      * @param string $parentId parent id
@@ -151,7 +157,6 @@ class SyncAction
      */
     public function beforeExecute()
     {
-        $this->started = FrozenTime::now();
         $this->report = $this->DirectoryReports->create($this->parentId);
     }
 
@@ -160,7 +165,6 @@ class SyncAction
      */
     public function afterExecute()
     {
-        $this->ended = FrozenTime::now();
         $this->report->status = DirectoryReport::STATUS_DONE;
         $this->DirectoryReports->save($this->report);
     }

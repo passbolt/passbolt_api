@@ -273,7 +273,9 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         try {
             Application::addPlugin('Bake');
-            $this->addPlugin('CakephpFixtureFactories');
+            $this
+                ->addPlugin('CakephpFixtureFactories')
+                ->addPlugin('IdeHelper');
         } catch (MissingPluginException $e) {
             // Do not halt if the plugin is missing
         }

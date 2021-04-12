@@ -23,17 +23,23 @@ use Cake\Validation\Validator;
 /**
  * ResourcesTags Model
  *
- * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \Passbolt\Tags\Model\Table\TagsTable|\Cake\ORM\Association\BelongsTo $Tags
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag get($primaryKey, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag newEntity($data = null, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Tags
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag get($primaryKey, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag newEntity(array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag newEmptyEntity()
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class ResourcesTagsTable extends Table
 {

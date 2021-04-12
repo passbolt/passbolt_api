@@ -39,6 +39,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * @see \Passbolt\Folders\Controller\Folders\FoldersIndexController
+ * @uses \Passbolt\Folders\Controller\Folders\FoldersIndexController
  */
 class FoldersIndexControllerTest extends FoldersIntegrationTestCase
 {

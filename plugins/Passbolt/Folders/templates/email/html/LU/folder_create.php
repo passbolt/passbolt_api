@@ -12,6 +12,8 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  * @see \Passbolt\Folders\Notification\Email\CreateFolderEmailRedactor
+ * @var \App\View\AppView $this
+ * @var array $body
  */
 
 use App\Utility\Purifier;

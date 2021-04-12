@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var mixed $providers
+ * @var mixed $verifyForm
+ */
     use Cake\Core\Configure;
     use Cake\Routing\Router;
     use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;

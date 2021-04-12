@@ -9,13 +9,14 @@ use Cake\ORM\Entity;
  * DirectoryReport Entity
  *
  * @property string $id
- * @property string $parent_id
+ * @property string|null $parent_id
  * @property string $status
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \Passbolt\DirectorySync\Model\Entity\ParentDirectoryReport $parent_directory_report
- * @property \Passbolt\DirectorySync\Model\Entity\ChildDirectoryReport[] $child_directory_reports
+ * @property \Passbolt\DirectorySync\Model\Entity\DirectoryReport|null $parent_directory_report
+ * @property \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] $child_directory_reports
+ * @property \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] $directory_reports_items
  */
 class DirectoryReport extends Entity
 {

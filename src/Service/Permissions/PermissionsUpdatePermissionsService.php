@@ -119,7 +119,7 @@ class PermissionsUpdatePermissionsService
      * @param string $aco The type of entity
      * @param string $acoForeignkey The target entity id
      * @param array $data The permission data
-     * @return \App\Model\Entity\Permission
+     * @return \App\Model\Entity\Permission|null
      * @throws \Exception
      */
     private function addPermission(
@@ -128,7 +128,7 @@ class PermissionsUpdatePermissionsService
         string $aco,
         string $acoForeignkey,
         array $data
-    ): Permission {
+    ): ?Permission {
         $permissionData = [
             'aco' => $aco,
             'aco_foreign_key' => $acoForeignkey,
@@ -143,6 +143,8 @@ class PermissionsUpdatePermissionsService
             $errors = [$rowIndexRef => $e->getErrors()];
             $this->handleValidationErrors($errors);
         }
+
+        return null;
     }
 
     /**

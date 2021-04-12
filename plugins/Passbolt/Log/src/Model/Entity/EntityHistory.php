@@ -27,6 +27,10 @@ use Cake\ORM\Entity;
  * @property string $crud
  * @property \Cake\I18n\FrozenTime $created
  * @property \Passbolt\Log\Model\Entity\ActionLog $action_log
+ * @property \Passbolt\Log\Model\Entity\PermissionHistory $permissions_history
+ * @property \Passbolt\Log\Model\Entity\SecretHistory $secrets_history
+ * @property \App\Model\Entity\Resource $resource
+ * @property \Passbolt\Log\Model\Entity\SecretAccess $secret_access
  */
 class EntityHistory extends Entity
 {

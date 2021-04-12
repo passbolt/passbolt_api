@@ -22,6 +22,9 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Actions\AllSyncAction;
 
+/**
+ * @property \App\Model\Table\UsersTable $Users
+ */
 class DirectorySyncController extends DirectoryController
 {
     /**

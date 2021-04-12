@@ -25,6 +25,25 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\Log\Model\Entity\ActionLog;
 
+/**
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \Passbolt\Log\Model\Table\ActionsTable&\Cake\ORM\Association\BelongsTo $Actions
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasMany $EntitiesHistory
+ * @method \Passbolt\Log\Model\Entity\ActionLog newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\ActionLog newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class ActionLogsTable extends Table
 {
     /**

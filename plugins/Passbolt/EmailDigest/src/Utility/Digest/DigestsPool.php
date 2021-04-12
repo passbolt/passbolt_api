@@ -43,7 +43,7 @@ class DigestsPool
     /**
      * Access to constructor is restricted because it is a singleton.
      */
-    private function __construct()
+    final private function __construct()
     {
     }
 

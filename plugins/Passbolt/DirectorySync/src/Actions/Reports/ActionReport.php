@@ -210,8 +210,7 @@ class ActionReport implements \Serializable
     {
         return $model === Alias::MODEL_USERS
             || $model === Alias::MODEL_GROUPS
-            || $model === Alias::MODEL_GROUPS_USERS
-            || $model === SyncAction::MEMBERS;
+            || $model === Alias::MODEL_GROUPS_USERS;
     }
 
     /**

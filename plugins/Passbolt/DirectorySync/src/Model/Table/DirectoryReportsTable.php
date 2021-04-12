@@ -6,23 +6,30 @@ namespace Passbolt\DirectorySync\Model\Table;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
 
 /**
  * DirectoryReports Model
  *
- * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable|\Cake\ORM\Association\BelongsTo $ParentDirectoryReports
- * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable|\Cake\ORM\Association\HasMany $ChildDirectoryReports
- * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable|\Cake\ORM\Association\HasMany $DirectoryReportsItems
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport get($primaryKey, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport newEntity($data = null, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable&\Cake\ORM\Association\BelongsTo $ParentDirectoryReports
+ * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable&\Cake\ORM\Association\HasMany $ChildDirectoryReports
+ * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsItemsTable&\Cake\ORM\Association\HasMany $DirectoryReportsItems
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport newEntity(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport newEmptyEntity()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class DirectoryReportsTable extends Table
 {
