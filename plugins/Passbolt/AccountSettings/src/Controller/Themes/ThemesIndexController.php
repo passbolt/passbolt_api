@@ -19,7 +19,7 @@ namespace Passbolt\AccountSettings\Controller\Themes;
 use App\Controller\AppController;
 
 /**
- * @property AccountSettingsTable AccountSettings
+ * @property \Passbolt\AccountSettings\Controller\Themes\AccountSettingsTable $AccountSettings
  */
 class ThemesIndexController extends AppController
 {

@@ -22,7 +22,7 @@ use Cake\ORM\Entity;
  * Comment Entity
  *
  * @property string $id
- * @property string $parent_id
+ * @property string|null $parent_id
  * @property string $user_id
  * @property string $foreign_key
  * @property string $foreign_model
@@ -31,6 +31,10 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
  * @property string $modified_by
+ * @property \App\Model\Entity\Resource $resource
+ * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\User|null $creator
+ * @property \App\Model\Entity\User|null $modifier
  */
 class Comment extends Entity
 {

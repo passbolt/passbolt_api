@@ -20,6 +20,15 @@ use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
 
+/**
+ * @property string $id
+ * @property string|resource|null $data
+ * @property string $profile_id
+ * @property \Cake\I18n\FrozenTime $created_at
+ * @property \Cake\I18n\FrozenTime|null $updated_at
+ * @property \App\Model\Entity\Profile $profile
+ * @property-read array $url
+ */
 class Avatar extends Entity
 {
     protected $_virtual = ['url'];

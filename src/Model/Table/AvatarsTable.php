@@ -31,6 +31,23 @@ use Cake\Validation\Validator;
 use League\Flysystem\FilesystemException;
 use Psr\Http\Message\UploadedFileInterface;
 
+/**
+ * @property \App\Model\Table\ProfilesTable&\Cake\ORM\Association\BelongsTo $Profiles
+ * @method \App\Model\Entity\Avatar newEmptyEntity()
+ * @method \App\Model\Entity\Avatar newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Avatar[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Avatar get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Avatar findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Avatar patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Avatar[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Avatar|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Avatar saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class AvatarsTable extends Table
 {
     use FilesystemTrait;

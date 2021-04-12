@@ -22,7 +22,8 @@ use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
 
 /**
- * @property \App\Model\Table\UsersTable Users
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class UsersIndexController extends AppController
 {

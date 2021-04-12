@@ -25,6 +25,27 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\Log\Model\Entity\EntityHistory;
 
+/**
+ * @property \Passbolt\Log\Model\Table\ActionLogsTable&\Cake\ORM\Association\BelongsTo $ActionLogs
+ * @property \Passbolt\Log\Model\Table\PermissionsHistoryTable&\Cake\ORM\Association\BelongsTo $PermissionsHistory
+ * @property \Passbolt\Log\Model\Table\SecretsHistoryTable&\Cake\ORM\Association\BelongsTo $SecretsHistory
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \Passbolt\Log\Model\Table\SecretAccessesTable&\Cake\ORM\Association\BelongsTo $SecretAccesses
+ * @method \Passbolt\Log\Model\Entity\EntityHistory newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\EntityHistory newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class EntitiesHistoryTable extends Table
 {
     /**
@@ -166,7 +187,7 @@ class EntitiesHistoryTable extends Table
         $data = array_merge($defaultData, $data);
 
         // Check validation rules.
-        $log = $this->buildEntity($data, $userAction);
+        $log = $this->buildEntity($data);
         if (!empty($log->getErrors())) {
             throw new ValidationException(__('Could not validate entity history data.', true), $log, $this);
         }

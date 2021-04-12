@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Utility;
 
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Ramsey\Uuid\Uuid;
 
 class UuidFactory
@@ -41,7 +40,7 @@ class UuidFactory
                 $uuid4 = Uuid::uuid4();
 
                 return $uuid4->toString();
-            } catch (UnsatisfiedDependencyException $e) {
+            } catch (\Throwable $e) {
                 trigger_error('Cannot generate a random UUID, some dependencies are missing.', E_USER_ERROR);
             }
         } else {

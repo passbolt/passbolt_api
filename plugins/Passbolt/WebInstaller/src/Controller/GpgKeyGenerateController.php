@@ -62,7 +62,9 @@ class GpgKeyGenerateController extends WebInstallerController
         try {
             $this->validateData($data);
         } catch (Exception $e) {
-            return $this->_error($e->getMessage());
+            $this->_error($e->getMessage());
+
+            return;
         }
         $this->webInstaller->setSettingsAndSave('gpg', $data);
 
