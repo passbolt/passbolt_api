@@ -43,7 +43,7 @@ class SubscriptionCheckCommand extends PassboltCommand
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Check the license.'));
+        $parser->setDescription(__('Check the subscription.'));
 
         return $parser;
     }

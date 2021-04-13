@@ -49,8 +49,19 @@ class SubscriptionCheckCommandTest extends TestCase
     {
         $this->exec('passbolt subscription_check -h');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Check the license.');
+        $this->assertOutputContains('Check the subscription.');
         $this->assertOutputContains('cake passbolt subscription_check');
+    }
+
+    /**
+     * Check that the license_check command is aliased for backward compatibility
+     */
+    public function testLicenseCheckCommandHelp()
+    {
+        $this->exec('passbolt license_check -h');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Check the subscription.');
+        $this->assertOutputContains('cake passbolt license_check');
     }
 
     /**
