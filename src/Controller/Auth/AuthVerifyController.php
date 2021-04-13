@@ -42,15 +42,15 @@ class AuthVerifyController extends AppController
         $configMissing = (Configure::read('passbolt.gpg.serverKey.public') === null);
         $configMissing = ($configMissing || Configure::read('passbolt.gpg.serverKey.public') === null);
         if ($configMissing) {
-            $msg = __('The public key information was not found in config.');
+            $msg = __('The OpenPGP public key information was not found in config.');
             throw new InternalErrorException($msg);
         }
         $publicKeyFileName = Configure::read('passbolt.gpg.serverKey.public');
         if (!file_exists($publicKeyFileName)) {
-            throw new InternalErrorException(__('The public key for this passbolt instance was not found.'));
+            throw new InternalErrorException('The OpenPGP public key for this passbolt instance was not found.');
         }
         if (!is_readable($publicKeyFileName)) {
-            throw new InternalErrorException(__('The public key file {0} is not readable.', $publicKeyFileName));
+            throw new InternalErrorException("The OpenPGP public key file '$publicKeyFileName' is not readable.");
         }
         $key = [
             'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'),

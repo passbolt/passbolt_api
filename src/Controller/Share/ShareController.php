@@ -110,7 +110,7 @@ class ShareController extends AppController
     protected function _assertRequestParameters(string $resourceId): void
     {
         if (!Validation::uuid($resourceId)) {
-            throw new BadRequestException(__('The resource id is not valid.'));
+            throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
         // Retrieve the resource to simulate the share with.
         try {

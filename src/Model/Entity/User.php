@@ -33,9 +33,14 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Role $role
  * @property \App\Model\Entity\Gpgkey[] $gpgkeys
  * @property \App\Model\Entity\Profile[] $profiles
- * @property \App\Model\Entity\Profile $profile
+ * @property \App\Model\Entity\Profile|null $profile
  * @property \App\Model\Entity\GroupsUser[] $groups_users
  * @property \Passbolt\Log\Model\Entity\EntityHistory[] $entities_history
+ * @property \App\Model\Entity\AuthenticationToken[] $authentication_tokens
+ * @property \App\Model\Entity\Gpgkey|null $gpgkey
+ * @property \App\Model\Entity\Group[] $groups
+ * @property \App\Model\Entity\Permission[] $permissions
+ * @property \Passbolt\Log\Model\Entity\ActionLog[] $action_logs
  */
 class User extends Entity
 {

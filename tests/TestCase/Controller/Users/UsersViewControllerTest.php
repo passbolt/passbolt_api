@@ -79,7 +79,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $this->getJson('/users/notuuid.json');
-        $this->assertError(400, 'The user id should be a uuid or "me".');
+        $this->assertError(400, 'The user identifier should be a valid UUID or "me".');
     }
 
     public function testUsersViewUserDoesNotExistError()

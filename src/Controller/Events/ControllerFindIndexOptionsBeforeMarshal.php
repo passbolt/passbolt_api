@@ -40,7 +40,7 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
      * @param null $subject Subject must be an instance of Table
      * @param null $data Data
      */
-    public function __construct($name, $subject = null, $data = null)
+    final public function __construct($name, $subject = null, $data = null)
     {
         $this->setController($subject);
         $this->setOptions($data['options'] ?? null);

@@ -26,6 +26,7 @@ use Cake\Validation\Validation;
  * Query String Component
  * Class used for extracting query string parameters
  *
+ * @method \App\Controller\AppController getController()
  * @property \App\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class QueryStringComponent extends Component
@@ -104,7 +105,7 @@ class QueryStringComponent extends Component
         // we accept 'TRUE', 'true', '1' as true and the rest is set to false
         if (isset($query['filter'])) {
             if (!is_array($query['filter'])) {
-                throw new BadRequestException(__('Invalid query string. Filter should be an array.'));
+                throw new BadRequestException(__('Invalid query string. The filter parameter should be an array.'));
             }
             foreach ($query['filter'] as $filterName => $filter) {
                 if (substr($filterName, 0, 3) === 'is-') {
@@ -128,7 +129,7 @@ class QueryStringComponent extends Component
         // idem with contain clauses
         if (isset($query['contain'])) {
             if (!is_array($query['contain'])) {
-                throw new BadRequestException(__('Invalid query string. Contain should be an array.'));
+                throw new BadRequestException(__('Invalid query string. The contain parameter should be an array.'));
             }
             foreach ($query['contain'] as $containName => $contain) {
                 $query['contain'][$containName] = self::normalizeBoolean($contain);
@@ -629,7 +630,7 @@ class QueryStringComponent extends Component
             foreach ($query['order'] as $order) {
                 $output = preg_split("/(\.|( ))/", $order);
                 if (count($output) < 2 && count($output) > 3) {
-                    throw new Exception(__('"{0}" is not a valid order...', $order));
+                    throw new Exception(__('"{0}" is not a valid order.', $order));
                 }
                 $key = Inflector::pluralize($output[0]) . '.' . $output[1];
                 if (count($output) == 2) {

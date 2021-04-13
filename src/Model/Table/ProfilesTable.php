@@ -24,15 +24,22 @@ use Cake\Validation\Validator;
 /**
  * Profiles Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Profile get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Profile newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Profile[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Profile|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Profile patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Profile[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Profile findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Profile get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Profile newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Profile[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Profile|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Profile patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Profile[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Profile findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \App\Model\Table\AvatarsTable&\Cake\ORM\Association\HasOne $Avatars
+ * @method \App\Model\Entity\Profile newEmptyEntity()
+ * @method \App\Model\Entity\Profile saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Profile[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Profile[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Profile[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Profile[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class ProfilesTable extends Table
 {
@@ -68,20 +75,20 @@ class ProfilesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->requirePresence('first_name', 'create', __('A first name is required'))
-            ->notEmptyString('first_name')
-            ->utf8('first_name', __('First name should be a valid utf8 string.'))
-            ->maxLength('first_name', 255, __('The first name length should be maximum 254 characters.'));
+            ->requirePresence('first_name', 'create', __('A first name is required.'))
+            ->notEmptyString('first_name', __('The first name should not be empty.'))
+            ->utf8('first_name', __('The first name should be a valid BMP-UTF8 string.'))
+            ->maxLength('first_name', 255, __('The first name length should be maximum {0} characters.', 255));
 
         $validator
-            ->requirePresence('last_name', 'create', __('A last name is required'))
-            ->notEmptyString('last_name')
-            ->utf8('last_name', __('Last name should be a valid utf8 string.'))
-            ->maxLength('last_name', 255, __('The last name length should be maximum 254 characters.'));
+            ->requirePresence('last_name', 'create', __('A last name is required.'))
+            ->notEmptyString('last_name', __('The last name should not be empty.'))
+            ->utf8('last_name', __('The last name should be a valid BMP-UTF8 string.'))
+            ->maxLength('last_name', 255, __('The last name length should be maximum {0} characters.', 255));
 
         return $validator;
     }

@@ -125,7 +125,7 @@ class GroupsUsersCreateService
     {
         $errors = $groupUser->getErrors();
         if (!empty($errors)) {
-            $msg = __('Could not validate the group user data.');
+            $msg = __('Could not validate group user data.');
             throw new ValidationException($msg, $groupUser, $this->groupsUsersTable);
         }
     }

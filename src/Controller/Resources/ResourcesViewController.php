@@ -42,7 +42,7 @@ class ResourcesViewController extends AppController
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The resource id is not valid.'));
+            throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
         $this->loadModel('Resources');
 
@@ -85,7 +85,7 @@ class ResourcesViewController extends AppController
                 $SecretAccesses = $Secrets->getAssociation('SecretAccesses');
                 $SecretAccesses->create($secret, $this->User->getAccessControl());
             } catch (Exception $e) {
-                throw new InternalErrorException(__('Could not log secret access entry.'));
+                throw new InternalErrorException('Could not log secret access entry.');
             }
         }
     }

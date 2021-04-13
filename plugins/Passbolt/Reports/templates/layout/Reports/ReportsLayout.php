@@ -11,6 +11,8 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
+ * @var \App\View\AppView $this
+ * @var mixed $report
  */
 use Cake\Core\Configure;
 ?>

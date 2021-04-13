@@ -19,6 +19,9 @@ namespace Passbolt\EmailDigest\Test\TestCase\Command;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
+/**
+ * @uses \Passbolt\EmailDigest\Command\PreviewCommand
+ */
 class PreviewCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;

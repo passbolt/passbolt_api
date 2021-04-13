@@ -24,6 +24,28 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+/**
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $PermissionsHistoryGroups
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $PermissionsHistoryUsers
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $PermissionsHistoryResources
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ */
 class PermissionsHistoryTable extends Table
 {
     /**
@@ -94,35 +116,43 @@ class PermissionsHistoryTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->requirePresence('id', 'create')
-            ->notEmptyString('id', __('The id cannot be empty.'));
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->requirePresence('id', 'create', __('An identifier is required.'))
+            ->notEmptyString('id', __('The identifier should not be empty.'));
 
         $validator
             ->inList('aco', PermissionsTable::ALLOWED_ACOS, __(
-                'The aco must be one of the following: {0}.',
+                'The type of the access control object should be one of the following: {0}.',
                 implode(', ', PermissionsTable::ALLOWED_ACOS)
             ))
-            ->requirePresence('aco', 'create', __('The aco is required.'))
-            ->notEmptyString('aco', __('The aco cannot be empty.'));
+            ->requirePresence('aco', 'create', __('The type of the access control object is required.'))
+            ->notEmptyString('aco', __('The type of the access control object should not be empty.'));
 
         $validator
-            ->uuid('aco_foreign_key')
-            ->requirePresence('aco_foreign_key', 'create')
-            ->notEmptyString('aco_foreign_key');
+            ->uuid('aco_foreign_key', __('The identifier of the access control object should be a valid UUID.'))
+            ->requirePresence(
+                'aco_foreign_key',
+                'create',
+                __('The identifier of the access control object is required.')
+            )
+            ->notEmptyString('aco_foreign_key', __('The identifier of the access control object should not be empty.'));
 
         $validator
             ->inList('aro', PermissionsTable::ALLOWED_AROS, __(
-                'The aro must be one of the following: {0}.',
+                'The access request object type should be one of the following: {0}.',
                 implode(', ', PermissionsTable::ALLOWED_AROS)
             ))
-            ->requirePresence('aro', 'create', __('The aro is required.'))
-            ->notEmptyString('aro', __('The aro cannot be empty.'));
+            ->requirePresence('aro', 'create', __('The type of the access request object is required.'))
+            ->notEmptyString('aro', __('The access request object type should not be empty.'));
 
         $validator
-            ->uuid('aro_foreign_key')
-            ->requirePresence('aro_foreign_key', 'create')
-            ->notEmptyString('aro_foreign_key');
+            ->uuid('aro_foreign_key', __('The identifier of the access request object should be a valid UUID.'))
+            ->requirePresence(
+                'aro_foreign_key',
+                'create',
+                __('The identifier of the access request object is required.')
+            )
+            ->notEmptyString('aro_foreign_key', __('The identifier of the access request object should not be empty.'));
 
         $validator
             ->inList('type', PermissionsTable::ALLOWED_TYPES, __(
@@ -130,7 +160,7 @@ class PermissionsHistoryTable extends Table
                 implode(', ', PermissionsTable::ALLOWED_TYPES)
             ))
             ->requirePresence('type', 'create', __('The type is required.'))
-            ->notEmptyString('type', __('The type cannot be empty.'));
+            ->notEmptyString('type', __('The type should not be empty.'));
 
         return $validator;
     }
@@ -168,19 +198,19 @@ class PermissionsHistoryTable extends Table
         // Check validation rules.
         $log = $this->buildEntity($data);
         if (!empty($log->getErrors())) {
-            throw new ValidationException(__('Could not validate permission_history data.', true), $log, $this);
+            throw new ValidationException(__('Could not validate permission history data.', true), $log, $this);
         }
 
         $permissionHistory = $this->save($log);
 
         // Check for validation errors. (associated models too).
         if (!empty($log->getErrors())) {
-            throw new ValidationException(__('Could not validate permission_history data.'), $permissionHistory, $this);
+            throw new ValidationException(__('Could not validate permission history data.'), $permissionHistory, $this);
         }
 
         // Check for errors while saving.
         if (!$permissionHistory) {
-            throw new InternalErrorException(__('The permission_history could not be saved.'));
+            throw new InternalErrorException('Could not save permission history.');
         }
 
         return $permissionHistory;

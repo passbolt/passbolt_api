@@ -101,7 +101,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $postData = ['content' => $commentContent];
         $resourceId = 'testBadUuid';
         $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
         $this->assertEmpty($this->_responseJsonBody);
     }
 

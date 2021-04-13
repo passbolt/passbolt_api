@@ -21,6 +21,9 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesSelectController
+ */
 class ThemesSelectControllerTest extends AppIntegrationTestCase
 {
     public $AccountSettings;
@@ -86,7 +89,7 @@ class ThemesSelectControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $postData = ['value' => ''];
         $this->postJson('/account/settings/themes.json', $postData);
-        $this->assertError(400, 'A value for the theme must be provided.');
+        $this->assertError(400, 'A value for the theme should be provided.');
     }
 
     public function testThemesSelectErrorNotAuthenticated()

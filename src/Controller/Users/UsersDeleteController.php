@@ -32,11 +32,11 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\UsersTable Users
- * @property \App\Model\Table\GroupsTable Groups
- * @property \App\Model\Table\GroupsUsersTable GroupsUsers
- * @property \App\Model\Table\PermissionsTable Permissions
- * @property \App\Model\Table\ResourcesTable Resources
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\GroupsTable $Groups
+ * @property \App\Model\Table\GroupsUsersTable $GroupsUsers
+ * @property \App\Model\Table\PermissionsTable $Permissions
+ * @property \App\Model\Table\ResourcesTable $Resources
  */
 class UsersDeleteController extends AppController
 {
@@ -90,12 +90,12 @@ class UsersDeleteController extends AppController
             $this->_transferContentOwners($user);
             $this->_validateDelete($user);
             if (!$this->Users->softDelete($user, ['checkRules' => false])) {
-                throw new InternalErrorException(__('Could not delete the user, please try again later.'));
+                throw new InternalErrorException('Could not delete the user, please try again later.');
             }
         });
 
         $this->_notifyUsers($user, $groupIdsNotOnlyMember);
-        $this->success(__('The user was deleted successfully.'));
+        $this->success(__('The user has been deleted successfully.'));
     }
 
     /**
@@ -115,7 +115,7 @@ class UsersDeleteController extends AppController
             throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The user id must be a valid uuid.'));
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
         // An admin cannot delete themeselves
         if ($id === $this->User->id()) {
@@ -149,7 +149,7 @@ class UsersDeleteController extends AppController
         if (!$this->Users->checkRules($user, RulesChecker::DELETE)) {
             $errors = $user->getErrors();
             $body = [];
-            $msg = __('The user cannot be deleted.') . ' ';
+            $msg = __('The user cannot be deleted.');
 
             if (isset($errors['id']['soleManagerOfNonEmptyGroup'])) {
                 $groupIds = $this->GroupsUsers
@@ -160,7 +160,7 @@ class UsersDeleteController extends AppController
                 $findGroupsOptions['contain']['groups_users.user.profile'] = true;
                 $groups = $this->Groups->findAllByIds($groupIds, $findGroupsOptions);
                 $body['errors']['groups']['sole_manager'] = $groups;
-                $msg .= $errors['id']['soleManagerOfNonEmptyGroup'];
+                $msg .= ' ' . $errors['id']['soleManagerOfNonEmptyGroup'];
             }
 
             if (isset($errors['id']['soleOwnerOfSharedContent'])) {
@@ -174,7 +174,7 @@ class UsersDeleteController extends AppController
                     $findResourcesOptions['contain']['permissions.group'] = true;
                     $resources = $this->Resources->findAllByIds($user->id, $resourcesIds, $findResourcesOptions);
                     $body['errors']['resources']['sole_owner'] = $resources;
-                    $msg .= $errors['id']['soleOwnerOfSharedContent'];
+                    $msg .= ' ' . $errors['id']['soleOwnerOfSharedContent'];
                 }
             }
 
@@ -208,7 +208,7 @@ class UsersDeleteController extends AppController
         $groupsUsersIdsToUpdate = Hash::extract($managers, '{n}.id');
         foreach ($groupsUsersIdsToUpdate as $id) {
             if (!Validation::uuid($id)) {
-                throw new BadRequestException(__('The groups users ids must be valid uuids.'));
+                throw new BadRequestException(__('The groups users identifiers must be valid UUID.'));
             }
         }
 
@@ -253,7 +253,7 @@ class UsersDeleteController extends AppController
         $permissionsIdsToUpdate = Hash::extract($owners, '{n}.id');
         foreach ($permissionsIdsToUpdate as $id) {
             if (!Validation::uuid($id)) {
-                throw new BadRequestException(__('The permissions ids must be valid uuids.'));
+                throw new BadRequestException(__('The permissions identifiers must be valid UUID.'));
             }
         }
 

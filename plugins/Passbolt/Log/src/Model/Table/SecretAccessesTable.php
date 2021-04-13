@@ -22,6 +22,27 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+/**
+ * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\BelongsTo $Secrets
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $SecretAccessResources
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\BelongsTo $EntitiesHistory
+ * @method \Passbolt\Log\Model\Entity\SecretAccess newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\SecretAccess newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class SecretAccessesTable extends Table
 {
     /**
@@ -69,23 +90,23 @@ class SecretAccessesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->allowEmptyString('user_id', null, false);
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
-            ->uuid('resource_id')
-            ->requirePresence('resource_id', 'create')
-            ->allowEmptyString('resource_id', null, false);
+            ->uuid('resource_id', __('The resource identifier should be a valid UUID.'))
+            ->requirePresence('resource_id', 'create', __('A resource identifier is required.'))
+            ->notEmptyString('resource_id', __('The resource identifier should not be empty.'));
 
         $validator
-            ->uuid('secret_id')
-            ->requirePresence('secret_id', 'create')
-            ->allowEmptyString('secret_id', null, false);
+            ->uuid('secret_id', __('The secret identifier should be a valid UUID.'))
+            ->requirePresence('secret_id', 'create', __('A secret identifier is required.'))
+            ->notEmptyString('secret_id', __('The secret identifier should not be empty.'));
 
         return $validator;
     }
@@ -128,19 +149,19 @@ class SecretAccessesTable extends Table
         // Check validation rules.
         $secretAccess = $this->buildEntity($data);
         if (!empty($secretAccess->getErrors())) {
-            throw new ValidationException(__('Could not validate secret_access data.', true), $secretAccess, $this);
+            throw new ValidationException(__('Could not validate secret access data.', true), $secretAccess, $this);
         }
 
         $secretAccessSaved = $this->save($secretAccess);
 
         // Check for validation errors. (associated models too).
         if (!empty($secretAccess->getErrors())) {
-            throw new ValidationException(__('Could not validate secret_access data.'), $secretAccess, $this);
+            throw new ValidationException(__('Could not validate secret access data.'), $secretAccess, $this);
         }
 
         // Check for errors while saving.
         if (!$secretAccessSaved) {
-            throw new InternalErrorException(__('The secret_access could not be saved.'));
+            throw new InternalErrorException('Could not save the secret access.');
         }
 
         return $secretAccessSaved;

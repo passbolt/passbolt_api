@@ -70,7 +70,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->logInAs($user);
         $data = [];
         $this->postJson('/users/notauuid.json', $data);
-        $this->assertError(400, 'The user id must be a valid uuid.');
+        $this->assertError(400, 'The user identifier should be a valid UUID.');
     }
 
     public function testUsersEditUsersNoDataIdError()
@@ -79,7 +79,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->logInAs($user);
         $data = [];
         $this->postJson('/users/' . $user->id . '.json', $data);
-        $this->assertError(400, 'Some user data must be provided.');
+        $this->assertError(400, 'Some user data should be provided.');
     }
 
     public function testUsersEditUsersDataNotMatchError()
@@ -90,7 +90,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.betty'),
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
-        $this->assertError(400, 'Some user data must be provided.');
+        $this->assertError(400, 'Some user data should be provided.');
     }
 
     public function testUsersEditUsersDoesNotExistError()
@@ -120,7 +120,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertError(400, 'Could not validate user data.');
         $error = $this->_responseJsonBody->profile->first_name->utf8;
-        $this->assertEquals($error, 'First name should be a valid utf8 string.');
+        $this->assertNotNull($error, 'First name should be a valid utf8 string.');
     }
 
     public function testUsersEditUsersSuccess()
@@ -212,7 +212,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'gpgkey' => [],
         ];
         $this->postJson('/users/' . $user->id . '.json?api-version=v2', $data);
-        $this->assertBadRequestError('Updating the gpgkey is not allowed.');
+        $this->assertBadRequestError('Updating the OpenPGP key is not allowed.');
     }
 
     public function testUsersEditGroupsNotAllowedError()

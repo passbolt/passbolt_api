@@ -23,6 +23,7 @@ use Cake\Http\Exception\InternalErrorException;
 
 /**
  * @property \App\Model\Table\ResourcesTable $Resources
+ * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class ResourcesIndexController extends AppController
 {
@@ -104,7 +105,7 @@ class ResourcesIndexController extends AppController
                         ->getAssociation('SecretAccesses')
                         ->create($secret, $this->User->getAccessControl());
                 } catch (\Exception $e) {
-                    throw new InternalErrorException(__('Could not log secret access entry.'));
+                    throw new InternalErrorException('Could not log secret access entry.');
                 }
             }
         }

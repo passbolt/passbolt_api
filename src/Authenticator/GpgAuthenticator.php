@@ -92,14 +92,29 @@ class GpgAuthenticator extends SessionAuthenticator
 
     /**
      * Return a failed result with the headers collected in the
-     * identification process.
+     * messages result property. These headers are then translated into actual http headers
+     * in the GpgAuthHeadersMiddleware
+     *
+     * @see GpgAuthHeadersMiddleware
+     * @param string $status Result::FAILURE_*
+     * @return \Authentication\Authenticator\ResultInterface
+     */
+    private function authenticationFailedResult(string $status): ResultInterface
+    {
+        return new Result(null, $status, $this->headers);
+    }
+
+    /**
+     * Return a success result with the headers collected in the
+     * messages result property. These headers are then translated into actual http headers
+     * in the GpgAuthHeadersMiddleware
      *
      * @see GpgAuthHeadersMiddleware
      * @return \Authentication\Authenticator\ResultInterface
      */
-    private function authenticationFailedResult(): ResultInterface
+    private function authenticationSuccessResult(): ResultInterface
     {
-        return new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND, $this->headers);
+        return new Result($this->_user->toArray(), Result::SUCCESS, $this->headers);
     }
 
     /**
@@ -107,41 +122,45 @@ class GpgAuthenticator extends SessionAuthenticator
      * See. https://www.passbolt.com/help/tech/auth
      *
      * @param \Cake\Http\ServerRequest $request interface for accessing request parameters
-     * @throws \Cake\Http\Exception\InternalErrorException if the config or key is not set or not usable
      * @return mixed User|false the user or false if authentication failed
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
-        if (!$this->_initForAllSteps($request)) {
-            return $this->authenticationFailedResult();
-        }
+        try {
+            // Init keyring and try to pre-identify the user using fingerprint
+            if (!$this->_initForAllSteps($request)) {
+                return $this->authenticationFailedResult(Result::FAILURE_IDENTITY_NOT_FOUND);
+            }
 
-        // Step 0. Server authentication
-        // The user is asking the server to identify itself by decrypting a token
-        // that was encrypted by the client using the server public key
-        if (isset($this->_data['server_verify_token'])) {
-            $this->_stage0();
+            // Step 0. Server authentication
+            // The user is asking the server to identify itself by decrypting a token
+            // that was encrypted by the client using the server public key
+            if (isset($this->_data['server_verify_token'])) {
+                $this->_stage0();
 
-            return $this->authenticationFailedResult();
-        }
+                return $this->authenticationFailedResult(Result::FAILURE_CREDENTIALS_MISSING);
+            }
 
-        // Stage 1.
-        // The user request an authentication by claiming he owns a given public key
-        // We therefore send an encrypted message that must be returned next time in order to verify
-        if (!isset($this->_data['user_token_result'])) {
-            $this->_stage1();
+            // Stage 1.
+            // The user request an authentication by claiming he owns a given public key
+            // We therefore send an encrypted message that must be returned next time in order to verify
+            if (!isset($this->_data['user_token_result'])) {
+                $this->_stage1();
 
-            return $this->authenticationFailedResult();
-        } else {
+                return $this->authenticationFailedResult(Result::FAILURE_CREDENTIALS_MISSING);
+            }
+
             // Stage 2.
             // Check if the token provided at stage 1 have been decrypted and is still valid
             if (!$this->_stage2()) {
-                return $this->authenticationFailedResult();
+                return $this->authenticationFailedResult(Result::FAILURE_CREDENTIALS_INVALID);
             }
+        } catch (InternalErrorException $exception) {
+            return $this->authenticationFailedResult(Result::FAILURE_OTHER);
         }
 
         // Return the user to be set as active
-        return new Result($this->_user->toArray(), Result::SUCCESS, $this->headers);
+        return $this->authenticationSuccessResult();
     }
 
     /**
@@ -216,7 +235,7 @@ class GpgAuthenticator extends SessionAuthenticator
         //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_2', '');
         $this->addHeader('X-GPGAuth-Progress', 'stage2');
         if (!$this->_checkNonce($this->_data['user_token_result'])) {
-            return $this->_error(__('The user token result is not a valid UUID.'));
+            return $this->_error(__('The user token result should be a valid UUID.'));
         }
 
         // extract the UUID to get the database records
@@ -268,7 +287,7 @@ class GpgAuthenticator extends SessionAuthenticator
     }
 
     /**
-     * Initialize GPG keyring and load the config
+     * Initialize OpenPGP keyring and load the config
      *
      * @throws \Cake\Http\Exception\InternalErrorException if config is missing or key is not set nor usable to decrypt
      * @return void
@@ -282,7 +301,7 @@ class GpgAuthenticator extends SessionAuthenticator
 
         // Check if config contains fingerprint
         if (!is_string($fingerprint) || !GpgkeysTable::isValidFingerprint($fingerprint)) {
-            throw new InternalErrorException(__('The GnuPG config for the server is not available or incomplete.'));
+            throw new InternalErrorException('The GnuPG config for the server is not available or incomplete.');
         }
 
         // set the key to be used for decrypting
@@ -317,7 +336,7 @@ class GpgAuthenticator extends SessionAuthenticator
                 $this->_gpg->importKeyIntoKeyring($this->_user->gpgkey->armored_key);
                 $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
             } catch (Exception $exception) {
-                $msg = __('The OpenPGP key for the user could not be imported in GnuPG.');
+                $msg = __('Could not import the user OpenPGP key.');
                 throw new InternalErrorException($msg);
             }
         }
@@ -414,7 +433,7 @@ class GpgAuthenticator extends SessionAuthenticator
             return $this->_error($errorMsg . __('it is not a UUID.'));
         }
         if ($length != 36) {
-            return $this->_error($errorMsg . __('using wrong token data length.'));
+            return $this->_error($errorMsg . __('wrong token data length.'));
         }
 
         return true;

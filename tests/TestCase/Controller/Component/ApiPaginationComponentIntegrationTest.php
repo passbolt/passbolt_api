@@ -73,7 +73,7 @@ class ApiPaginationComponentIntegrationTest extends AppIntegrationTestCase
 
         $user = UserFactory::make()->user()->persist();
         ResourceFactory::make($numberOfResources)
-            ->withCreatorAndPermission($user->id)
+            ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();
         $this->logInAs($user);
@@ -118,7 +118,7 @@ class ApiPaginationComponentIntegrationTest extends AppIntegrationTestCase
         $page = 2;
 
         $user = UserFactory::make()->user()->persist();
-        ResourceFactory::make($numberOfResources)->withCreatorAndPermission($user->id)->persist();
+        ResourceFactory::make($numberOfResources)->withCreatorAndPermission($user)->persist();
         $this->logInAs($user);
 
         $paginationParameter = implode('&', [

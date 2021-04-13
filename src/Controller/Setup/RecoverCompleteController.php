@@ -33,8 +33,8 @@ class RecoverCompleteController extends SetupCompleteController
      * @throws \Cake\Http\Exception\BadRequestException if no authentication token was provided
      * @throws \Cake\Http\Exception\BadRequestException if the authentication token is not a uuid
      * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
-     * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
-     * @throws \Cake\Http\Exception\BadRequestException if the gpg key does not belong to the user
+     * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key is not provided or not a valid OpenPGP key
+     * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key does not belong to the user
      * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
      * @param string $userId uuid of the user
      * @return void
@@ -55,10 +55,10 @@ class RecoverCompleteController extends SetupCompleteController
         // Deactivate the authentication token
         $token->active = false;
         if (!$this->AuthenticationTokens->save($token, ['checkRules' => false])) {
-            throw new InternalErrorException(__('Could not update the authentication token data.'));
+            throw new InternalErrorException('Could not update the authentication token data.');
         }
 
-        $this->success(__('The recovery was completed successfully!'));
+        $this->success(__('The recovery was completed successfully.'));
     }
 
     /**
@@ -72,11 +72,11 @@ class RecoverCompleteController extends SetupCompleteController
     protected function _getAndAssertUser(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user id is not valid. It should be a uuid.'));
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
         $user = $this->Users->findSetupRecover($userId);
         if (empty($user)) {
-            $msg = __('The user does not exist or has not completed the setup or was deleted.');
+            $msg = __('The user does not exist, has not completed the setup or was deleted.');
             throw new BadRequestException($msg);
         }
 
