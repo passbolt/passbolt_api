@@ -22,6 +22,9 @@ use Passbolt\Ee\Command\SubscriptionCheckCommand;
 
 class Plugin extends BasePlugin
 {
+    /**
+     * @inheritDoc
+     */
     public function console($commands): CommandCollection
     {
         // Alias license_check to subscription_check for retro compatibility

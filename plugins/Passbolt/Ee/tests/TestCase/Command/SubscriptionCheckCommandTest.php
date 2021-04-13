@@ -109,7 +109,7 @@ class SubscriptionCheckCommandTest extends TestCase
     {
         $this->persistInvalidSubscription();
         $this->exec('passbolt subscription_check');
-        $this->assertExitSuccess();
+        $this->assertExitError();
         $this->assertOutputContains('Subscription key signature error.');
     }
 
@@ -120,7 +120,7 @@ class SubscriptionCheckCommandTest extends TestCase
     {
         $this->persistExpiredSubscription();
         $this->exec('passbolt subscription_check');
-        $this->assertExitSuccess();
+        $this->assertExitError();
         $this->assertOutputContains('The subscription is expired.');
     }
 
@@ -132,7 +132,7 @@ class SubscriptionCheckCommandTest extends TestCase
         UserFactory::make(3)->user()->persist();
         $this->persistValidSubscription();
         $this->exec('passbolt subscription_check');
-        $this->assertExitSuccess();
+        $this->assertExitError();
         $this->assertOutputContains('The users limit is exceeded.');
     }
 }

@@ -10,6 +10,15 @@ user=${1:-www-data}
 source "$DIR"/utils.sh
 
 cd "$DIR"
+
+###### Subscription check #######
+run_as "$DIR/cake passbolt license_check" "$user"
+exit_status=$?
+if [ $exit_status -ne 0 ]; then
+    exit $exit_status
+fi
+##################################
+
 run_as "git pull origin master" "$user"
 run_as "composer install --no-dev -n" "$user"
 run_as "$DIR/cake passbolt migrate --backup" "$user"
