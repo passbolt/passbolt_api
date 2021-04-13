@@ -29,7 +29,7 @@ class ReportPool
     /**
      * Instance of class used for singleton.
      *
-     * @var
+     * @var \Passbolt\Reports\Service\ReportPool
      */
     private static $instance;
 
@@ -39,14 +39,6 @@ class ReportPool
      * @var array
      */
     private static $reports = [];
-
-    /**
-     * ReportPool constructor.
-     */
-    private function __construct()
-    {
-        return $this;
-    }
 
     /**
      * Get ReportPool singleton.

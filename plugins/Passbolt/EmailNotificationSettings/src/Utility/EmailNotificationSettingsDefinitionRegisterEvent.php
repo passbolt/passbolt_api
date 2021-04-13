@@ -51,7 +51,7 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
 
     /**
      * @param \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm $emailNotificationSettingsForm An instance of EmailNotificationSettingsForm
-     * @return $this
+     * @return static
      */
     public static function create(EmailNotificationSettingsForm $emailNotificationSettingsForm)
     {

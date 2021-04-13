@@ -682,12 +682,12 @@ class HealthcheckCommand extends PassboltCommand
      * Display a success or error message depending on given condition
      *
      * @param bool $condition to check
-     * @param string $success to display when success
-     * @param string $error to display when error
-     * @param string $help string optional help message
+     * @param string|string[] $success to display when success
+     * @param string|string[] $error to display when error
+     * @param string|string[]|null $help string optional help message
      * @return void
      */
-    protected function assert($condition, $success, $error, $help = null)
+    protected function assert(bool $condition, $success, $error, $help = null)
     {
         if ($condition) {
             $this->display($success, 'pass');
@@ -702,12 +702,12 @@ class HealthcheckCommand extends PassboltCommand
      * Display a success or warning message depending on given condition
      *
      * @param bool $condition to check
-     * @param string $success message to display when success
-     * @param string $warning message to display if fails
-     * @param string $help optional help message
+     * @param string|string[] $success message to display when success
+     * @param string|string[] $warning message to display if fails
+     * @param string|string[]|null $help optional help message
      * @return void
      */
-    protected function warning($condition, $success, $warning, $help = null)
+    protected function warning(bool $condition, $success, $warning, $help = null)
     {
         if ($this->_displayOptions['hide-warning']) {
             return;
@@ -723,7 +723,7 @@ class HealthcheckCommand extends PassboltCommand
     /**
      * Display one or more help messages
      *
-     * @param array|string $help messages
+     * @param string|string[]|null $help messages
      * @return void
      */
     protected function help($help = null)
@@ -742,11 +742,11 @@ class HealthcheckCommand extends PassboltCommand
     /**
      * Display a message for given case
      *
-     * @param string $msg message
+     * @param string|string[] $msg message
      * @param string $case pass or fail
      * @return void
      */
-    protected function display($msg, $case)
+    protected function display($msg, string $case)
     {
         switch ($case) {
             case 'pass':
@@ -779,7 +779,7 @@ class HealthcheckCommand extends PassboltCommand
      * @param string $title message
      * @return void
      */
-    protected function title($title)
+    protected function title(string $title)
     {
         if ($this->_displayOptions['hide-title']) {
             return;

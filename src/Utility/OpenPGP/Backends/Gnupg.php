@@ -420,6 +420,7 @@ class Gnupg extends OpenPGPBackend
 
         // Get userId.
         $userIds = [];
+        /** @phpstan-ignore-next-line  */
         foreach ($msg->signatures() as $signatures) {
             foreach ($signatures as $signature) {
                 if ($signature instanceof \OpenPGP_UserIDPacket) {

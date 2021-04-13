@@ -23,6 +23,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\PermissionHistory;
 
 /**
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
@@ -169,9 +170,9 @@ class PermissionsHistoryTable extends Table
      * Return a permissions_history entity.
      *
      * @param array $data entity data
-     * @return \Passbolt\Log\Model\Table\EntityHistory
+     * @return \Passbolt\Log\Model\Entity\PermissionHistory
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): PermissionHistory
     {
         return $this->newEntity($data, [
             'accessibleFields' => [
@@ -189,11 +190,11 @@ class PermissionsHistoryTable extends Table
      * Create a new permissions_history.
      *
      * @param array $data the data
-     * @return \Passbolt\Log\Model\Table\UserAction|bool
+     * @return \Passbolt\Log\Model\Entity\PermissionHistory
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(array $data)
+    public function create(array $data): PermissionHistory
     {
         // Check validation rules.
         $log = $this->buildEntity($data);

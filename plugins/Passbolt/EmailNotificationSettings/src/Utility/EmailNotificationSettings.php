@@ -35,7 +35,7 @@ class EmailNotificationSettings
     /**
      * The settings.
      *
-     * @var array
+     * @var array|null
      */
     private static $settings;
 

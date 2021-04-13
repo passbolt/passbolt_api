@@ -33,7 +33,7 @@ class CommandBootstrap
     /**
      * Instance of class used for singleton.
      *
-     * @var
+     * @var \App\Command\CommandBootstrap
      */
     private static $instance;
 
