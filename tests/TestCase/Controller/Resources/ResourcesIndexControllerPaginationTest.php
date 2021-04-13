@@ -120,7 +120,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
 
         $user = UserFactory::make()->user()->persist();
         ResourceFactory::make($numberOfResources)
-            ->withCreatorAndPermission($user->id)
+            ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();
         $this->logInAs($user);
@@ -147,7 +147,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
 
         $user = UserFactory::make()->user()->persist();
         ResourceFactory::make($numberOfResources)
-            ->withCreatorAndPermission($user->id)
+            ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();
         $this->logInAs($user);
