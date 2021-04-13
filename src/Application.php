@@ -295,6 +295,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         // Define where users should be redirected to when they are not authenticated
         // The login url is provided in string format because the routes are not loaded yet
+        /** @var \Cake\Http\ServerRequest $request */
         if (!$request->is('json')) {
             $loginUrl = '/auth/login';
             $service->setConfig([

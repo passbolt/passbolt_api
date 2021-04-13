@@ -28,9 +28,9 @@ use Cake\Routing\Router;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 /**
- * @property \App\Command\UsersTable $Users
- * @property \App\Command\RolesTable $Roles
- * @property \App\Command\AuthenticationTokensTable $AuthenticationTokens
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\RolesTable $Roles
+ * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  */
 class RegisterUserCommand extends PassboltCommand
 {
@@ -106,7 +106,7 @@ class RegisterUserCommand extends PassboltCommand
         // Who is creating the user?
         // use the oldest admin or temporary non existing one
         $admin = $this->Users->findFirstAdmin();
-        if (isset($admin)) {
+        if (!is_null($admin)) {
             $accessControl = new UserAccessControl(Role::ADMIN, $admin->id);
         } else {
             // Act as an admin but without a user set
@@ -229,12 +229,12 @@ class RegisterUserCommand extends PassboltCommand
         if (EmailNotificationSettings::get('send.user.create')) {
             $message = __(
                 "To start registration follow the link provided in your mailbox or here: \n{0}",
-                Router::url('/setup/install/' . $user->id . '/' . $token->token, true)
+                Router::url('/setup/install/' . $user->id . '/' . $token->get('token'), true)
             );
         } else {
             $message = __(
                 "To start registration follow the link provided here: \n{0}",
-                Router::url('/setup/install/' . $user->id . '/' . $token->token, true)
+                Router::url('/setup/install/' . $user->id . '/' . $token->get('token'), true)
             );
         }
 

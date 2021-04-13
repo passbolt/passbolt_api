@@ -1,5 +1,5 @@
 parameters:
-    level: 1
+    level: 3
     checkMissingIterableValueType: false
     treatPhpDocTypesAsCertain: false
     paths:

@@ -27,9 +27,9 @@ class OpenPGPBackendFactory
     public const GNUPG = 'gnupg';
 
     /**
-     * @var \App\Utility\OpenPGP\OpenPGPBackend
+     * @var \App\Utility\OpenPGP\OpenPGPBackend|null
      */
-    private static $instance = null;
+    private static $instance;
 
     /**
      * Instantiate an OpenPGP Backend

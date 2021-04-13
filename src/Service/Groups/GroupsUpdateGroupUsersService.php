@@ -43,6 +43,7 @@ class GroupsUpdateGroupUsersService
     public function __construct()
     {
         $this->groupsUsersCreateService = new GroupsUsersCreateService();
+        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
@@ -175,6 +176,7 @@ class GroupsUpdateGroupUsersService
      */
     private function getGroupUser(int $rowIndexRef, string $groupId, string $groupUserId): GroupsUser
     {
+        /** @var \App\Model\Entity\GroupsUser|null $groupUser */
         $groupUser = $this->groupsUsersTable->findByIdAndGroupId($groupUserId, $groupId)->first();
         if (!$groupUser) {
             $errors = [$rowIndexRef => ['id' => ['exists' => __('The group user does not exist.')]]];

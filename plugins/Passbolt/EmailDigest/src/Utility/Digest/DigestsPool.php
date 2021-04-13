@@ -36,7 +36,7 @@ class DigestsPool
     private static $instance;
 
     /**
-     * @var \Passbolt\EmailDigest\Utility\Digest\DigestInterface[]
+     * @var array
      */
     private $digests = [];
 

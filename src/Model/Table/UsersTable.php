@@ -355,6 +355,7 @@ class UsersTable extends Table
             ->extract('aco_foreign_key')
             ->toArray();
         if (!empty($resourceIds)) {
+            /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
         }
@@ -463,6 +464,7 @@ class UsersTable extends Table
         }
 
         // Generate an authentication token
+        /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens */
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $token = $AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
 

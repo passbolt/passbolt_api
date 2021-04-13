@@ -49,6 +49,8 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findByResourceId(string $resourceId)
+ * @method \Cake\ORM\Query findByResourceIdAndUserId(string $resourceId, string $userId)
  */
 class SecretsTable extends Table
 {

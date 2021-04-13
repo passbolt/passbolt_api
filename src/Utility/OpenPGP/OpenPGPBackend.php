@@ -12,22 +12,22 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
     use OpenPGPCommonAssertsTrait;
 
     /**
-     * @var string fingerprint of the key set to decrypt
+     * @var string|null fingerprint of the key set to decrypt
      */
     protected $_decryptKeyFingerprint;
 
     /**
-     * @var string fingerprint of the key set to encrypt
+     * @var string|null fingerprint of the key set to encrypt
      */
     protected $_encryptKeyFingerprint;
 
     /**
-     * @var string fingerprint of the key set to encrypt
+     * @var string|null fingerprint of the key set to encrypt
      */
     protected $_signKeyFingerprint;
 
     /**
-     * @var string fingerprint of the key set to verify signature
+     * @var string|null fingerprint of the key set to verify signature
      */
     protected $_verifyKeyFingerprint;
 
@@ -156,7 +156,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      * @param string $fingerprint key fingerprint
      * @return void
      */
-    public function setVerifyKeyFromFingerprint(string $fingerprint)
+    public function setVerifyKeyFromFingerprint(string $fingerprint): void
     {
         $this->_verifyKeyFingerprint = $fingerprint;
     }

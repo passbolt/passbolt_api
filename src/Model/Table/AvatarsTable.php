@@ -46,6 +46,7 @@ use Psr\Http\Message\UploadedFileInterface;
  * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AvatarsTable extends Table
@@ -189,7 +190,7 @@ class AvatarsTable extends Table
      * Formatter for Avatar entities.
      * Used mainly to populate an avatar when no there is no result with the default avatar url.
      *
-     * @param array $avatars list of avatars (\App\Model\Entity\Avatar)
+     * @param \Cake\Collection\CollectionInterface $avatars list of avatars (\App\Model\Entity\Avatar)
      * @return mixed
      */
     public static function formatResults(CollectionInterface $avatars)

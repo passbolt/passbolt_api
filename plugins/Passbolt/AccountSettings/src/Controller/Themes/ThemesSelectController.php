@@ -37,7 +37,6 @@ class ThemesSelectController extends AppController
             throw new BadRequestException(__('A value for the theme should be provided.'));
         }
 
-        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
         $this->loadModel('Passbolt/AccountSettings.AccountSettings');
         try {
             $setting = $this->AccountSettings->createOrUpdateSetting($this->User->id(), 'theme', $theme);

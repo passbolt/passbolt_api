@@ -260,6 +260,7 @@ class CommentsTable extends Table
 
         // Retrieve the resource.
         // This will break if the resource doesn't exist, if it is soft deleted, or if the user is not allowed to access it.
+        /** @var \App\Model\Table\ResourcesTable $ResourcesTable */
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $foreignModelLookup = $ResourcesTable->findView($userId, $foreignKey)->first();
         if (empty($foreignModelLookup)) {

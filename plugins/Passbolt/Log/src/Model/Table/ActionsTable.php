@@ -23,6 +23,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\Action;
 
 /**
  * @property \Passbolt\Log\Model\Table\ActionLogsTable&\Cake\ORM\Association\HasMany $ActionLogs
@@ -107,11 +108,11 @@ class ActionsTable extends Table
      *
      * @param string $id action id
      * @param string $name name of the action
-     * @return \App\Model\Entity\Action|bool
+     * @return \Passbolt\Log\Model\Entity\Action
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(string $id, string $name)
+    public function create(string $id, string $name): Action
     {
         $data = [
             'id' => $id,
@@ -169,7 +170,7 @@ class ActionsTable extends Table
      *
      * @param string $id id of the action
      * @param string $name name of the action
-     * @return \Cake\Orm\Entity $action the action
+     * @return \Cake\ORM\Entity $action the action
      */
     public function findOrCreateAction(string $id, string $name)
     {
