@@ -88,7 +88,7 @@ trait ThemeSettingsTrait
 
         $themeFolders = array_diff(scandir($themesPath), ['.', '..']);
         if (empty($themeFolders)) {
-            throw new InternalErrorException(__('No themes installed.'));
+            throw new InternalErrorException('No themes installed.');
         }
         $response = [];
         foreach ($themeFolders as $dir) {
@@ -102,8 +102,8 @@ trait ThemeSettingsTrait
                     'preview' => Router::url('/img/themes/' . $defaultPreviewImageName, true),
                 ];
             } else {
-                $msg = __('ThemesIndexController: Could not load theme {0}.', $dir) . ' ';
-                $msg .= __('The main css file or preview image is missing');
+                $msg = "ThemesIndexController: Could not load theme $dir. ";
+                $msg .= 'The main css file or preview image is missing';
                 Log::error($msg);
             }
         }

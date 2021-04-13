@@ -97,7 +97,7 @@ class UserAction
         }
 
         if (!isset(self::$instance)) {
-            throw new Exception(__('UserAction has not been initialized yet.'));
+            throw new Exception('UserAction has not been initialized yet.');
         }
 
         return self::$instance;

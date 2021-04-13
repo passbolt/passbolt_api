@@ -44,23 +44,38 @@ module.exports = function(grunt) {
   /**
    * Load baseline NPM tasks
    */
+  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   /**
    * Register project specific grunt tasks
    */
-  grunt.registerTask('default', ['dependencies-update', 'styleguide-update', 'locales-update']);
+  grunt.registerTask('default', ['dependencies-update', 'styleguide-update', 'locale-externalize']);
   grunt.registerTask('styleguide-update', 'copy:styleguide');
   grunt.registerTask('styleguide-watch', ['watch:node-modules-styleguide']);
   grunt.registerTask('dependencies-update', 'copy:dependencies');
-  grunt.registerTask('locales-update', 'copy:locales');
+  grunt.registerTask('locale-externalize', 'shell:externalize_locale');
 
   /**
    * Tasks definition
    */
   grunt.initConfig({
     pkg: pkg,
+
+    /**
+     * Shell commands
+     */
+    shell: {
+      options: {stderr: false},
+
+      externalize_locale: {
+        command: [
+          './bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_US --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes',
+          'find resources/locales/en_US -name "*.pot" -exec sh -c \'mv "$1" "${1%.pot}.po"\' _ {} \\;'
+        ].join(' && ')
+      },
+    },
 
     copy: {
       dependencies: {
@@ -137,6 +152,12 @@ module.exports = function(grunt) {
           cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
           src: ['api_main.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
+          expand: true
+        },{
+          // Translation files
+          cwd: paths.node_modules_styleguide + 'src/locales',
+          src: ['**'],
+          dest: paths.webroot + 'locales',
           expand: true
         }, {
           // Javascript applications

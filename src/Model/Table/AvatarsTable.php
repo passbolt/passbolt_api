@@ -31,6 +31,23 @@ use Cake\Validation\Validator;
 use League\Flysystem\FilesystemException;
 use Psr\Http\Message\UploadedFileInterface;
 
+/**
+ * @property \App\Model\Table\ProfilesTable&\Cake\ORM\Association\BelongsTo $Profiles
+ * @method \App\Model\Entity\Avatar newEmptyEntity()
+ * @method \App\Model\Entity\Avatar newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Avatar[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Avatar get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Avatar findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Avatar patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Avatar[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Avatar|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Avatar saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Avatar[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class AvatarsTable extends Table
 {
     use FilesystemTrait;
@@ -38,6 +55,8 @@ class AvatarsTable extends Table
     public const FORMAT_SMALL = 'small';
     public const FORMAT_MEDIUM = 'medium';
     public const MAX_SIZE = '5MB';
+    public const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+    public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif'];
 
     /**
      * @var string
@@ -69,18 +88,26 @@ class AvatarsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->requirePresence('file', __('A file is required'))
-            ->allowEmptyString('file', __('File should not be empty'), false)
+            ->requirePresence('file', __('A file is required.'))
+            ->allowEmptyString('file', __('The file should not be empty'), false)
             ->add('file', 'validMimeType', [
-                'rule' => ['mimeType', ['image/jpeg', 'image/png', 'image/gif']],
+                'rule' => ['mimeType', self::ALLOWED_MIME_TYPES],
+                'message' => __(
+                    'The file mime type should be one of the following: {0}.',
+                    implode(', ', self::ALLOWED_MIME_TYPES)
+                ),
             ])
             ->add('file', 'validExtension', [
-                'rule' => ['extension', ['png', 'jpg', 'gif']],
+                'rule' => ['extension', self::ALLOWED_EXTENSIONS],
+                'message' => __(
+                    'The file extension should be one of the following: {0}.',
+                    implode(', ', self::ALLOWED_EXTENSIONS)
+                ),
             ])
             ->add('file', 'validUploadedFile', [
                 'rule' => ['uploadedFile', ['maxSize' => self::MAX_SIZE]], // Max size in bytes
                 'message' => __(
-                    'Uploaded file is not valid, or exceeds max size of {0} bytes',
+                    'The file is not valid, or exceeds max size of {0} bytes.',
                     self::MAX_SIZE
                 ),
             ]);
@@ -116,7 +143,7 @@ class AvatarsTable extends Table
     public function beforeSave(Event $event, Avatar $avatar, \ArrayObject $options)
     {
         if (!$this->setData($avatar)) {
-            $avatar->setError('data', __('The data could not be saved in {0} format.', AvatarHelper::IMAGE_EXTENSION));
+            $avatar->setError('data', __('Could not save the data in {0} format.', AvatarHelper::IMAGE_EXTENSION));
             $event->stopPropagation();
         }
     }
@@ -213,7 +240,7 @@ class AvatarsTable extends Table
             try {
                 $this->storeInCache($avatar);
             } catch (\Exception $exception) {
-                Log::warning(__('The avatar could not be saved in cache.'));
+                Log::warning(__('Could not save the avatar in cache.'));
 
                 return $this->getFallBackFileName($format);
             }
@@ -239,7 +266,7 @@ class AvatarsTable extends Table
         try {
             $this->getFilesystem()->write($this->getMediumAvatarFileName($avatar), $avatar->get('data'));
         } catch (\Exception $e) {
-            Log::error(__('Error while saving medium avatar with ID {0}', $avatar->get('id')));
+            Log::error('Error while saving medium avatar with ID {0}', $avatar->get('id'));
             Log::error($e->getMessage());
         }
 
@@ -252,7 +279,7 @@ class AvatarsTable extends Table
             );
             $this->getFilesystem()->write($this->getSmallAvatarFileName($avatar), $smallImage);
         } catch (\Exception $e) {
-            Log::error(__('Error while saving small avatar with ID {0}', $avatar->get('id')));
+            Log::error('Error while saving small avatar with ID {0}', $avatar->get('id'));
             Log::error($e->getMessage());
         }
     }
@@ -314,10 +341,7 @@ class AvatarsTable extends Table
         $this->cacheDirectory = $cacheDirectory;
         $this->setFilesystem($cacheDirectory);
         if (!is_writable($cacheDirectory)) {
-            Log::warning(__(
-                'The directory {0} is not writable. Avatars cannot be cached nor read.',
-                $cacheDirectory
-            ));
+            Log::warning("The directory $cacheDirectory is not writable. Avatars cannot be cached nor read.");
         }
     }
 

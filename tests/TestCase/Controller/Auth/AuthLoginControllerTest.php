@@ -70,7 +70,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
 
     /**
      * Test error 500 if the GnuPG fingerprint config for the server is invalid.
-     * It can happen if a sysop changed the server key fingerprint without loading this key in the gpg keyring post installation.
+     * It can happen if a sysop changed the server key fingerprint without loading this key in the OpenPGP keyring post installation.
      */
     public function testAuthLoginControllerLoginBadServerKeyFingerprint()
     {

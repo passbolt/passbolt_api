@@ -32,16 +32,22 @@ use Cake\Validation\Validator;
 /**
  * GroupsUsers Model
  *
- * @property \App\Model\Table\GroupsTable|\App\Model\Table\BelongsTo $Groups
- * @property \App\Model\Table\UsersTable|\App\Model\Table\BelongsTo $Users
- * @method \App\Model\Table\GroupsUser get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\GroupsUser get($primaryKey, $options = [])
+ * @method \App\Model\Entity\GroupsUser newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\GroupsUser[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\GroupsUser|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\GroupsUser[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\GroupsUser findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\GroupsUser newEmptyEntity()
+ * @method \App\Model\Entity\GroupsUser saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class GroupsUsersTable extends Table
 {
@@ -78,23 +84,23 @@ class GroupsUsersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('group_id')
-            ->requirePresence('group_id', 'create')
-            ->notEmptyString('group_id');
+            ->uuid('group_id', __('The group identifier should be a valid UUID.'))
+            ->requirePresence('group_id', 'create', __('A group identifier is required.'))
+            ->notEmptyString('group_id', __('The group identifier should not be empty.'));
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->notEmptyString('user_id');
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
-            ->boolean('is_admin')
-            ->requirePresence('is_admin')
-            ->notEmptyString('is_admin');
+            ->boolean('is_admin', __('The group manager status should be a valid boolean.'))
+            ->requirePresence('is_admin', true, __('A group manager status is required.'))
+            ->notEmptyString('is_admin', __('The group manager status should not be empty.'));
 
         return $validator;
     }
@@ -165,7 +171,7 @@ class GroupsUsersTable extends Table
     public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the non empty groups where the user given as parameter is the sole manager
@@ -196,7 +202,7 @@ class GroupsUsersTable extends Table
     public function findGroupsWhereUserIsSoleManager(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the groups where the user given as parameter is the sole manager
@@ -249,7 +255,7 @@ class GroupsUsersTable extends Table
     public function findGroupsWhereUserOnlyMember(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the groups where the user given as parameter is the only member
@@ -298,7 +304,7 @@ class GroupsUsersTable extends Table
     public function findGroupsWhereUserNotOnlyMember(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the groups where the user given as parameter is the only member
@@ -395,7 +401,7 @@ class GroupsUsersTable extends Table
      * Delete all groups_users records where groups are soft deleted
      *
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
     public function cleanupSoftDeletedGroups($dryRun = false)
     {
@@ -406,7 +412,7 @@ class GroupsUsersTable extends Table
      * Delete all groups_users records where groups are deleted
      *
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
     public function cleanupHardDeletedGroups($dryRun = false)
     {

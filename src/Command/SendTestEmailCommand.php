@@ -176,7 +176,7 @@ class SendTestEmailCommand extends PassboltCommand
         } catch (\Exception $e) {
             $this->displayTrace($io);
             $io->nl(0);
-            $this->error(__('A test email could not be sent.'), $io);
+            $this->error(__('Could not send the test email.'), $io);
             $this->error(__('Error: {0}', $e->getMessage()), $io);
             $this->abort();
         }

@@ -22,6 +22,26 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+/**
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $SecretsHistoryUsers
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $SecretsHistoryResources
+ * @method \Passbolt\Log\Model\Entity\SecretHistory newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\SecretHistory newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ */
 class SecretsHistoryTable extends Table
 {
     /**
@@ -74,18 +94,18 @@ class SecretsHistoryTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('resource_id')
-            ->requirePresence('resource_id', 'create')
-            ->notEmptyString('resource_id');
+            ->uuid('resource_id', __('The resource identifier should be a valid UUID.'))
+            ->requirePresence('resource_id', 'create', __('The resource identifier is required.'))
+            ->notEmptyString('resource_id', __('The resource identifier should not be empty.'));
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->notEmptyString('user_id');
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         return $validator;
     }
@@ -120,19 +140,19 @@ class SecretsHistoryTable extends Table
         // Check validation rules.
         $secretHistory = $this->buildEntity($data);
         if (!empty($secretHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate secret_history data.', true), $secretHistory, $this);
+            throw new ValidationException(__('Could not validate secret history data.', true), $secretHistory, $this);
         }
 
         $secretHistory = $this->save($secretHistory);
 
         // Check for validation errors. (associated models too).
         if (!empty($secretHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate secret_history data.'), $secretHistory, $this);
+            throw new ValidationException(__('Could not validate secret history data.'), $secretHistory, $this);
         }
 
         // Check for errors while saving.
         if (!$secretHistory) {
-            throw new InternalErrorException(__('The secret_history could not be saved.'));
+            throw new InternalErrorException('Could not save the secret history.');
         }
 
         return $secretHistory;

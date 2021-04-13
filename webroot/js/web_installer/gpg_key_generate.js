@@ -142,7 +142,7 @@ ready(function () {
   };
 
   /**
-   * Generate a gpg key.
+   * Generate an OpenPGP key.
    * @param {string} name The user id name
    * @param {string} email The user id email
    * @param {string} comment The user id comment

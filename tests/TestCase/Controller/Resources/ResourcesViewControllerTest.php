@@ -116,7 +116,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
         $this->getJson("/resources/$resourceId.json");
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
     public function testErrorNotFound()

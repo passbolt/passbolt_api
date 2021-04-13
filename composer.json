@@ -116,7 +116,7 @@
           "./node_modules/.bin/grunt appjs-update",
           "./node_modules/.bin/grunt styleguide-update"
         ],
-        "stan": "phpstan analyse",
+        "stan": "phpstan analyse --memory-limit=-1",
         "test": "phpunit --colors=always"
     },
     "prefer-stable": true

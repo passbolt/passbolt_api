@@ -320,10 +320,10 @@ class InstallCommand extends PassboltCommand
             }
             // Check if keyring is present and writable
             if (!$checks['gpg']['gpgHome']) {
-                throw new Exception(__('The GPG keyring location is not set.'));
+                throw new Exception(__('The OpenPGP keyring location is not set.'));
             }
             if (!$checks['gpg']['gpgHomeWritable']) {
-                throw new Exception(__('The GPG keyring location is not writable.'));
+                throw new Exception(__('The OpenPGP keyring location is not writable.'));
             }
 
             // In production don't accept default GPG server key

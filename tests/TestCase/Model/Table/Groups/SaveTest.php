@@ -80,7 +80,7 @@ class SaveTest extends AppTestCase
     {
         $testCases = [
             'utf8Extended' => self::getUtf8ExtendedTestCases(255),
-            'lengthBetween' => self::getLengthBetweenTestCases(1, 255),
+            'maxLength' => self::getMaxLengthTestCases(255),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];

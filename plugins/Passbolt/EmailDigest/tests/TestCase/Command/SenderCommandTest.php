@@ -25,6 +25,9 @@ use Cake\TestSuite\TestCase;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
+/**
+ * @uses \Passbolt\EmailDigest\Command\SenderCommand
+ */
 class SenderCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;

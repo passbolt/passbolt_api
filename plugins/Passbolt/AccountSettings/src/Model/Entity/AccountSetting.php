@@ -12,10 +12,11 @@ use Cake\ORM\Entity;
  * @property string $user_id
  * @property string $property
  * @property string $value
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime|null $created
+ * @property \Cake\I18n\FrozenTime|null $modified
  *
- * @property \Passbolt\AccountSettings\Model\Entity\User $user
+ * @property \App\Model\Entity\User $user
+ * @property string $property_id
  */
 class AccountSetting extends Entity
 {

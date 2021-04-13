@@ -24,20 +24,24 @@ use Cake\ORM\Entity;
  *
  * @property string $id
  * @property string $name
- * @property string $username
- * @property string $uri
- * @property string $description
+ * @property string|null $username
+ * @property string|null $uri
+ * @property string|null $description
  * @property bool $deleted
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
  * @property string $modified_by
  *
- * @property \App\Model\Entity\User $creator
- * @property \App\Model\Entity\User $modifier
- * @property \App\Model\Entity\Permission $permission
+ * @property \App\Model\Entity\User|null $creator
+ * @property \App\Model\Entity\User|null $modifier
+ * @property \App\Model\Entity\Permission|null $permission
  * @property \App\Model\Entity\Permission[] $permissions
  * @property \App\Model\Entity\Secret[] $secrets
+ * @property string|null $resource_type_id
+ * @property \App\Model\Entity\Favorite|null $favorite
+ * @property \App\Model\Entity\ResourceType|null $resource_type
+ * @property \Passbolt\Log\Model\Entity\EntityHistory $entities_history
  */
 class Resource extends Entity
 {

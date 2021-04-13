@@ -24,15 +24,22 @@ use Cake\Validation\Validator;
 /**
  * Roles Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $Users
- * @method \App\Model\Entity\Role get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Role newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Role[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Role|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Role patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Role[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Role findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
+ * @method \App\Model\Entity\Role get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Role newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Role[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Role|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Role patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Role[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Role findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasMany $ControllerLogs
+ * @method \App\Model\Entity\Role newEmptyEntity()
+ * @method \App\Model\Entity\Role saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class RolesTable extends Table
 {
@@ -69,17 +76,17 @@ class RolesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', 'create');
 
         $validator
-            ->scalar('name')
+            ->ascii('name', __('The name should be a valid ASCII string.'))
             ->requirePresence('name', 'create')
             ->notEmptyString('name')
             ->add('name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->scalar('description')
+            ->utf8('description', __('The description should be a valid BMP-UTF8 string.'))
             ->allowEmptyString('description');
 
         return $validator;
@@ -94,7 +101,7 @@ class RolesTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['name']));
+        $rules->add($rules->isUnique(['name'], __('A role already exists for the given name.')));
 
         return $rules;
     }
@@ -122,7 +129,7 @@ class RolesTable extends Table
     public function getIdByName(string $roleName)
     {
         if (!$this->isValidRoleName($roleName)) {
-            $msg = __('The role name should be from the list of allowed role names');
+            $msg = __('The role name should be from the list of allowed role names.');
             throw new \InvalidArgumentException($msg);
         }
         $role = $this->find('all')

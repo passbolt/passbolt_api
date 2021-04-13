@@ -25,7 +25,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property ResourceTypesTable ResourceTypes
+ * @property \App\Model\Table\ResourceTypesTable $ResourceTypes
  */
 class ResourceTypesViewController extends AppController
 {
@@ -44,7 +44,7 @@ class ResourceTypesViewController extends AppController
             throw new NotFoundException();
         }
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The resource id is not valid.'));
+            throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
         try {
             $this->loadModel('ResourceTypes');
