@@ -101,8 +101,8 @@ class PassboltCommand extends Command
             'help' => __d('cake_console', 'Init the GnuPG keyring.'),
         ]);
 
-        if (Configure::read('passbolt.plugins.license')) {
-            $parser->addArgument('license_check', [
+        if (Configure::read('passbolt.plugins.ee')) {
+            $parser->addArgument('subscription_check', [
                 'help' => __d('cake_console', 'Check the license.'),
             ]);
         }

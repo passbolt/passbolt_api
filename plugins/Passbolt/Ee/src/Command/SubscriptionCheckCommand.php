@@ -43,7 +43,7 @@ class SubscriptionCheckCommand extends PassboltCommand
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Check the license.'));
+        $parser->setDescription(__('Check the subscription.'));
 
         return $parser;
     }
@@ -65,21 +65,21 @@ class SubscriptionCheckCommand extends PassboltCommand
             $this->error($e->getMessage(), $io);
             $this->displayErrorFooter($io);
 
-            return $this->successCode();
+            return $this->errorCode();
         } catch (SubscriptionFormatException $e) {
             $io->out();
             $this->error(__('Subscription key format error.'), $io);
             $this->error($e->getMessage(), $io);
             $this->displayErrorFooter($io);
 
-            return $this->successCode();
+            return $this->errorCode();
         } catch (SubscriptionSignatureException $e) {
             $io->out();
             $this->error(__('Subscription key signature error.'), $io);
             $this->error($e->getMessage(), $io);
             $this->displayErrorFooter($io);
 
-            return $this->successCode();
+            return $this->errorCode();
         } catch (SubscriptionValidationException $e) {
             $io->out();
             $this->error(__('Subscription key validation error.'), $io);
@@ -87,7 +87,7 @@ class SubscriptionCheckCommand extends PassboltCommand
             $this->displayInfo($e->getDto(), $io);
             $this->displayErrorFooter($io);
 
-            return $this->successCode();
+            return $this->errorCode();
         }
 
         $this->displayInfo($subscription, $io);

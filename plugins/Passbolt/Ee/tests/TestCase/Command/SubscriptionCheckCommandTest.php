@@ -49,8 +49,19 @@ class SubscriptionCheckCommandTest extends TestCase
     {
         $this->exec('passbolt subscription_check -h');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Check the license.');
+        $this->assertOutputContains('Check the subscription.');
         $this->assertOutputContains('cake passbolt subscription_check');
+    }
+
+    /**
+     * Check that the license_check command is aliased for backward compatibility
+     */
+    public function testLicenseCheckCommandHelp()
+    {
+        $this->exec('passbolt license_check -h');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Check the subscription.');
+        $this->assertOutputContains('cake passbolt license_check');
     }
 
     /**
@@ -98,7 +109,7 @@ class SubscriptionCheckCommandTest extends TestCase
     {
         $this->persistInvalidSubscription();
         $this->exec('passbolt subscription_check');
-        $this->assertExitSuccess();
+        $this->assertExitError();
         $this->assertOutputContains('Subscription key signature error.');
     }
 
@@ -109,7 +120,7 @@ class SubscriptionCheckCommandTest extends TestCase
     {
         $this->persistExpiredSubscription();
         $this->exec('passbolt subscription_check');
-        $this->assertExitSuccess();
+        $this->assertExitError();
         $this->assertOutputContains('The subscription is expired.');
     }
 
@@ -121,7 +132,7 @@ class SubscriptionCheckCommandTest extends TestCase
         UserFactory::make(3)->user()->persist();
         $this->persistValidSubscription();
         $this->exec('passbolt subscription_check');
-        $this->assertExitSuccess();
+        $this->assertExitError();
         $this->assertOutputContains('The users limit is exceeded.');
     }
 }
