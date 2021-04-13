@@ -27,11 +27,23 @@ class LocaleServiceTest extends TestCase
         $this->loadPlugins(['Passbolt/Locale']);
     }
 
+    /**
+     * Staticly check that the supported locales are well defined in the config.
+     */
+    public function testGetSystemLocales(): void
+    {
+        $this->assertSame([
+            'en-UK',
+            'fr-FR',
+        ], LocaleService::getSystemLocales());
+    }
+
     public function dataForTestLocaleUtilityLocaleIsValid(): array
     {
         return [
-            ['en-US', true],
-            ['en_US', true],
+            ['en-UK', true],
+            ['en_UK', true],
+            ['fr_FR', true],
             ['xx-YY', false],
             ['', false],
             [null, false],

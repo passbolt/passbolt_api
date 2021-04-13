@@ -28,7 +28,7 @@ class LocaleMiddlewareTest extends AppIntegrationTestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        I18n::setLocale(I18n::DEFAULT_LOCALE);
+        I18n::setLocale(\Locale::getDefault());
     }
 
     public function testLocaleMiddlewareUnauthenticatedRequestWithOrgSetting()

@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\Locale\Test\Lib;
 
 use Cake\Core\Configure;
-use Passbolt\Locale\Service\LocaleService;
 
 trait DummySystemLocaleTestTrait
 {
@@ -26,9 +25,13 @@ trait DummySystemLocaleTestTrait
      */
     public function addFooSystemLocale(): void
     {
+        $newOptions = array_merge(
+            Configure::readOrFail('passbolt.plugins.locale.options'),
+            [['locale' => 'foo','label' => 'foo-FOO',]]
+        );
         Configure::write(
             'passbolt.plugins.locale.options',
-            LocaleService::getSystemLocales() + ['foo' => 'foo-FOO']
+            $newOptions
         );
     }
 
@@ -37,8 +40,8 @@ trait DummySystemLocaleTestTrait
      */
     public function removeFooSystemLocale(): void
     {
-        $options = Configure::read('passbolt.plugins.locale.options');
-        unset($options['foo']);
+        $options = Configure::readOrFail('passbolt.plugins.locale.options');
+        array_pop($options);
         Configure::write('passbolt.plugins.locale.options', $options);
     }
 }

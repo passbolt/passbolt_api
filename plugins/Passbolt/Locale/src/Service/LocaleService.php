@@ -22,6 +22,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\I18n\I18n;
 use Cake\Log\Log;
+use Cake\Utility\Hash;
 
 class LocaleService
 {
@@ -37,7 +38,10 @@ class LocaleService
      */
     public static function getSystemLocales(): array
     {
-        return Configure::readOrFail('passbolt.plugins.locale.options');
+        return Hash::extract(
+            Configure::readOrFail('passbolt.plugins.locale.options'),
+            '{n}.locale'
+        );
     }
 
     /**
@@ -49,7 +53,7 @@ class LocaleService
      */
     public function isValidLocale(?string $locale = ''): bool
     {
-        return in_array($this->dasherizeLocale($locale), array_keys(static::getSystemLocales()));
+        return in_array($this->dasherizeLocale($locale), static::getSystemLocales());
     }
 
     /**

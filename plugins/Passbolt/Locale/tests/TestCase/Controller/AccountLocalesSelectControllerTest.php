@@ -53,7 +53,7 @@ class AccountLocalesSelectControllerTest extends AppIntegrationTestCase
         $user = UserFactory::make()->user()->persist();
         $this->logInAs($user);
 
-        $value = 'en-US';
+        $value = 'en-UK';
         $this->postJson('/account/settings/locales.json', compact('value'));
         $this->assertResponseSuccess();
         $this->assertSame(

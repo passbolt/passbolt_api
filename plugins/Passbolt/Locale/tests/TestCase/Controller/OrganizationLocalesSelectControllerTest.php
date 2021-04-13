@@ -51,7 +51,7 @@ class OrganizationLocalesSelectControllerTest extends AppIntegrationTestCase
     public function testOrganizationLocalesSelectSuccess()
     {
         $this->logInAsAdmin();
-        $value = 'en-US';
+        $value = 'en-UK';
         $this->postJson('/locale/settings.json', compact('value'));
         $this->assertResponseSuccess();
         $this->assertSame(

@@ -13,8 +13,14 @@ return [
                     ],
                 ],
                 'options' => [
-                    'en-US' => 'English (default)',
-                    'fr-FR' => 'Français',
+                    [
+                        'locale' => 'en-UK',
+                        'label' => 'English',
+                    ],
+                    [
+                        'locale' => 'fr-FR',
+                        'label' => 'Français',
+                    ],
                 ],
             ],
         ],

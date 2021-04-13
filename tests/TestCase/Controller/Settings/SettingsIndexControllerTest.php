@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Settings;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\Locale\Service\LocaleService;
+use Cake\Core\Configure;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
@@ -30,8 +30,11 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
         $this->assertGreaterThan(1, count((array)$this->_responseJsonBody->app));
         $this->assertTrue(isset($this->_responseJsonBody->app->version));
-        $this->assertSame('en-US', $this->_responseJsonBody->app->locale);
-        $this->assertSame(LocaleService::getSystemLocales(), (array)$this->_responseJsonBody->passbolt->plugins->locale->options);
+        $this->assertSame('en-UK', $this->_responseJsonBody->app->locale);
+        $this->assertEquals(
+            json_decode(json_encode(Configure::read('passbolt.plugins.locale.options'))),
+            $this->_responseJsonBody->passbolt->plugins->locale->options
+        );
     }
 
     public function testSettingsIndexErrorNotAuthenticated()
@@ -41,7 +44,10 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
         $this->assertFalse(isset($this->_responseJsonBody->app->version));
         $this->assertTrue(isset($this->_responseJsonBody->app->url));
-        $this->assertSame('en-US', $this->_responseJsonBody->app->locale);
-        $this->assertSame(LocaleService::getSystemLocales(), (array)$this->_responseJsonBody->passbolt->plugins->locale->options);
+        $this->assertSame('en-UK', $this->_responseJsonBody->app->locale);
+        $this->assertEquals(
+            json_decode(json_encode(Configure::read('passbolt.plugins.locale.options'))),
+            $this->_responseJsonBody->passbolt->plugins->locale->options
+        );
     }
 }

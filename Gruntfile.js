@@ -71,8 +71,8 @@ module.exports = function(grunt) {
 
       externalize_locale: {
         command: [
-          './bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_US --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes',
-          'find resources/locales/en_US -name "*.pot" -exec sh -c \'mv "$1" "${1%.pot}.po"\' _ {} \\;'
+          './bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes',
+          'find resources/locales/en_UK -name "*.pot" -exec sh -c \'mv "$1" "${1%.pot}.po"\' _ {} \\;'
         ].join(' && ')
       },
     },
