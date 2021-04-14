@@ -104,7 +104,7 @@ class DatabaseHealthchecks
             $tables = $connection->execute('show tables')->fetchAll('assoc');
 
             if ($tables !== false && count($tables)) {
-                $checks['database']['tablesCount'] = (count($tables) > 0);
+                $checks['database']['tablesCount'] = true;
                 $checks['database']['info']['tablesCount'] = count($tables);
             }
         } catch (DatabaseException $connectionError) {
