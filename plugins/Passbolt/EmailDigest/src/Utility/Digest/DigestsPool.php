@@ -54,7 +54,7 @@ class DigestsPool
      */
     public static function getInstance()
     {
-        if (!static::$instance) {
+        if (!isset(static::$instance)) {
             static::$instance = new static();
         }
 

@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
 use Cake\Collection\Collection;
+use Cake\Collection\CollectionInterface;
 use Cake\ORM\Query;
 
 /**
@@ -84,9 +85,9 @@ class ShareSearchController extends AppController
      * Format the result alphabetically.
      *
      * @param \Cake\Collection\Collection $aros The collection of groups and users to sort.
-     * @return \Cake\Collection\CollectionInterface|string
+     * @return \Cake\Collection\CollectionInterface
      */
-    private function _formatResult(Collection $aros)
+    private function _formatResult(Collection $aros): CollectionInterface
     {
         $sortIterator = $aros->sortBy(function ($item) {
             if ($item instanceof Group) {

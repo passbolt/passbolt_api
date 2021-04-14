@@ -153,7 +153,7 @@ class EmailNotificationSettings
      */
     protected static function getConfigSettingsSource()
     {
-        if (!static::$configSettingsSource) {
+        if (!isset(static::$configSettingsSource)) {
             static::$configSettingsSource = new ConfigEmailNotificationSettingsSource();
         }
 
@@ -177,7 +177,7 @@ class EmailNotificationSettings
      */
     protected static function getDbSettingsSource()
     {
-        if (!static::$dbSettingsSource) {
+        if (!isset(static::$dbSettingsSource)) {
             static::$dbSettingsSource = new DbEmailNotificationSettingsSource();
         }
 
@@ -199,7 +199,7 @@ class EmailNotificationSettings
      */
     protected static function getDefaultSettingsSource()
     {
-        if (!static::$defaultSettingsSource) {
+        if (!isset(static::$defaultSettingsSource)) {
             static::$defaultSettingsSource = DefaultEmailNotificationSettingsSource::fromCakeForm(
                 new EmailNotificationSettingsForm(EventManager::instance())
             );
