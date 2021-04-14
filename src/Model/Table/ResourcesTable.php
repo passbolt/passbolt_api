@@ -425,6 +425,7 @@ class ResourcesTable extends Table
         if (Configure::read('passbolt.plugins.tags.enabled')) {
             $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
             $ResourcesTags->deleteAll(['resource_id' => $resource->id]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
             $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
             $Tags->deleteAllUnusedTags();
         }
@@ -461,6 +462,7 @@ class ResourcesTable extends Table
                 'resource_id' => $resourceId,
                 'user_id IN' => $usersId,
             ]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
             $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
             $Tags->deleteAllUnusedTags();
         }
@@ -500,6 +502,7 @@ class ResourcesTable extends Table
             if (Configure::read('passbolt.plugins.tags.enabled')) {
                 $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
                 $ResourcesTags->deleteAll(['resource_id IN' => $resourceIds]);
+                /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
                 $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
                 $Tags->deleteAllUnusedTags();
             }

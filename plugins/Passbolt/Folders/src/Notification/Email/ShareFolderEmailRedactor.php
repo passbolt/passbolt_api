@@ -48,6 +48,7 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->usersTable = TableRegistry::getTableLocator()->get('Users');
     }
 

@@ -136,7 +136,7 @@ class SubscriptionKeyAsciiForm extends Form
      * @return \Passbolt\Ee\Model\Dto\SubscriptionKeyDto
      * @throws \Exception If the subscription format is not valid
      */
-    public function parse(?string $keyAscii = null)
+    public function parse(?string $keyAscii = null): SubscriptionKeyDto
     {
         if (empty($keyAscii) && !empty($this->getData('key_ascii'))) {
             $keyAscii = $this->getData('key_ascii');
@@ -182,14 +182,14 @@ class SubscriptionKeyAsciiForm extends Form
      * Verify the subscription signature
      *
      * @param string $subscriptionSigned The signed subscription to verify.
-     * @return array The subscription info.
+     * @return string The subscription info.
      * @throws \Exception If the gpg public subscription key cannot be imported into the keyring
      * @throws \Exception If the subscription cannot be verified
      */
-    protected function _verifySignature(string $subscriptionSigned)
+    protected function _verifySignature(string $subscriptionSigned): string
     {
         $msg = __('The subscription key cannot be verified. The passbolt OpenPGP public key could not be found.');
-        $subscription = null;
+        $subscription = '';
         $filePublicKey = Configure::read('passbolt.plugins.ee.subscriptionKey.public');
         if (!$filePublicKey || !file_exists($filePublicKey)) {
             throw new SubscriptionSignatureException($subscriptionSigned, $msg);

@@ -41,6 +41,7 @@ class MfaVerifiedToken
         string $sessionId,
         ?bool $remember = false
     ): string {
+        /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens */
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $entityData = [
             'user_id' => $uac->getId(),

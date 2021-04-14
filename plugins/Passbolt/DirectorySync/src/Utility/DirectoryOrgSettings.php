@@ -20,11 +20,14 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class DirectoryOrgSettings
 {
+    use ModelAwareTrait;
+
     /**
      * The organisation settings property name.
      *
@@ -40,7 +43,7 @@ class DirectoryOrgSettings
     /**
      * @var \App\Model\Table\OrganizationSettingsTable
      */
-    public $OrganizationSetting;
+    public $OrganizationSettings;
 
     /**
      * DirectoryOrgSettings constructor.
@@ -49,7 +52,7 @@ class DirectoryOrgSettings
      */
     public function __construct(?array $settings = [])
     {
-        $this->OrganizationSetting = TableRegistry::getTableLocator()->get('OrganizationSettings');
+        $this->loadModel('OrganizationSettings');
 
         // If settings is not empty, we merge with the plugin default settings.
         // It is important to leave settings empty if no settings are set. This permits
@@ -84,6 +87,7 @@ class DirectoryOrgSettings
      */
     private static function loadSettingsFromDatabase()
     {
+        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $data = $OrganizationSettings->getFirstSettingOrFail(self::ORG_SETTINGS_PROPERTY);
         $settings = json_decode($data->value, true);
@@ -141,6 +145,7 @@ class DirectoryOrgSettings
      */
     public static function disable($uac)
     {
+        /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $OrganizationSettings->deleteSetting(self::ORG_SETTINGS_PROPERTY, $uac);
     }
@@ -360,7 +365,7 @@ class DirectoryOrgSettings
             $settings = Hash::insert($settings, 'ldap.domains.org_domain.password', self::encrypt($password));
         }
         $data = json_encode($settings);
-        $this->OrganizationSetting->createOrUpdateSetting(self::ORG_SETTINGS_PROPERTY, $data, $uac);
+        $this->OrganizationSettings->createOrUpdateSetting(self::ORG_SETTINGS_PROPERTY, $data, $uac);
     }
 
     /**

@@ -30,6 +30,12 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
+/**
+ * Trait GroupUsersSyncTrait
+ *
+ * @package Passbolt\DirectorySync\Actions\Traits
+ * @property \Passbolt\DirectorySync\Model\Table\DirectoryRelationsTable $DirectoryRelations
+ */
 trait GroupUsersSyncTrait
 {
     use EventDispatcherTrait;
@@ -78,10 +84,11 @@ trait GroupUsersSyncTrait
         $toRemove = $this->retrieveUsersToRemove($data);
         $toSync = $this->retrieveUsersToSync($data, $group);
 
-        $Resources = TableRegistry::getTableLocator()->get('Resources');
-
         if (!empty($toAdd)) {
             // Check if group has access to passwords already.
+            /** @var \App\Model\Table\ResourcesTable $Resources */
+            $Resources = TableRegistry::getTableLocator()->get('Resources');
+            /** @phpstan-ignore-next-line */
             $accessibleResources = $Resources->findAllByGroupAccess($group->id)->count();
             if ($accessibleResources === 0) {
                 // If no password is shared with this group already, we can proceed.
@@ -416,7 +423,9 @@ trait GroupUsersSyncTrait
                 continue;
             }
 
+            /** @var \App\Model\Entity\GroupsUser|null $gp */
             $gp = $this->GroupsUsers->findById($groupUserId)->contain(['Users'])->first();
+            $username = $gp->get('user')->username;
             $groupsUsersChanges = [[
                 'id' => $groupUserId,
                 'delete' => true,
@@ -428,7 +437,7 @@ trait GroupUsersSyncTrait
                 $this->DirectoryRelations->delete($directoryRelation);
                 // Send report.
                 $this->addReportItem(new ActionReport(
-                    __('The user {0} was successfully removed from the group {1}.', $gp->user->username, $group->name),
+                    __('The user {0} was successfully removed from the group {1}.', $username, $group->name),
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_DELETE,
                     Alias::STATUS_SUCCESS,
@@ -437,16 +446,16 @@ trait GroupUsersSyncTrait
             } catch (CustomValidationException $exception) {
                 $errors = $group->getErrors();
                 if (isset($errors['groups_users']['at_least_one_admin'])) {
-                    $msg = __('The user {0} could not be removed from the group {1} because it is the only group manager.', $gp->user->username, $group->name);//phpcs:ignore
+                    $msg = __('The user {0} could not be removed from the group {1} because it is the only group manager.', $username, $group->name);//phpcs:ignore
                 } else {
-                    $msg = __('The user {0} could not be removed from the group {1} because some validation issues.', $gp->user->username, $group->name);//phpcs:ignore
+                    $msg = __('The user {0} could not be removed from the group {1} because some validation issues.', $username, $group->name);//phpcs:ignore
                 }
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport($msg, Alias::MODEL_GROUPS_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $error));//phpcs:ignore
             } catch (\Exception $exception) {
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport(
-                    __('The user {0} could not be removed from the group {1} because of an internal error.', $gp->user->username, $group->name),//phpcs:ignore
+                    __('The user {0} could not be removed from the group {1} because of an internal error.', $username, $group->name),//phpcs:ignore
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_ERROR,

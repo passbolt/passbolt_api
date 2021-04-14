@@ -228,7 +228,7 @@ trait ResourcesFindersTrait
      * @param string $groupId uuid The group to fetch the resources for
      * @return \Cake\ORM\Query
      */
-    public function findAllByGroupAccess(string $groupId)
+    public function findAllByGroupAccess(string $groupId): Query
     {
         if (!Validation::uuid($groupId)) {
             throw new \InvalidArgumentException('The group identifier should be a valid UUID.');

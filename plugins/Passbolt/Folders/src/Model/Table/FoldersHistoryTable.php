@@ -21,19 +21,20 @@ use App\Error\Exception\ValidationException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Folders\Model\Entity\FolderHistory;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 
 /**
  * FoldersHistory Model
  *
- * @method \Passbolt\Folders\Model\Entity\Folder get($primaryKey, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder newEntity($data = null, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder|false save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory get($primaryKey, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory newEntity($data = null, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory[] newEntities(array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory|false save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory[] patchEntities($entities, array $data, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory findOrCreate($search, callable $callback = null, ?array $options = [])
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasOne $Permission
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
@@ -127,9 +128,9 @@ class FoldersHistoryTable extends Table
      * Return a FoldersHistory entity.
      *
      * @param array $data entity data
-     * @return \Passbolt\Folders\Model\Table\Folder
+     * @return \Passbolt\Folders\Model\Entity\FolderHistory
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): FolderHistory
     {
         return $this->newEntity($data, [
             'accessibleFields' => [
@@ -144,11 +145,11 @@ class FoldersHistoryTable extends Table
      * Create a new FolderHistory.
      *
      * @param array $data the data
-     * @return \Passbolt\Folders\Model\Table\FoldersHistory|bool
+     * @return \Passbolt\Folders\Model\Entity\FolderHistory
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(array $data)
+    public function create(array $data): FolderHistory
     {
         // Folder.Id becomes FolderHistory.FolderId
         $data['folder_id'] = $data['id'];

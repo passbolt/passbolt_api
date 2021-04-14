@@ -32,14 +32,14 @@ class DirectoryResults
     /**
      * Raw ldap groups as returned by ldap directory.
      *
-     * @var array
+     * @var array|\LdapTools\Object\LdapObjectCollection
      */
     private $ldapGroups;
 
     /**
      * Raw ldap users as returned by ldap directory.
      *
-     * @var array
+     * @var array|\LdapTools\Object\LdapObjectCollection
      */
     private $ldapUsers;
 
@@ -72,14 +72,14 @@ class DirectoryResults
     /**
      * Invalid users which will be ignored.
      *
-     * @var
+     * @var array
      */
     private $invalidUsers;
 
     /**
      * Invalid groups which will be ignored.
      *
-     * @var
+     * @var array
      */
     private $invalidGroups;
 
@@ -240,7 +240,9 @@ class DirectoryResults
     {
         $idAttribute = $this->mappingRules[$ldapObject->getType()]['id'];
         if (!$ldapObject->has($idAttribute) && $ldapObject->has('dn')) {
-            $ldapObject->add($idAttribute, UuidFactory::uuid($ldapObject->getDn()));
+            /** @var string $dn */
+            $dn = $ldapObject->get('dn');
+            $ldapObject->add($idAttribute, UuidFactory::uuid($dn));
         }
 
         return $ldapObject;

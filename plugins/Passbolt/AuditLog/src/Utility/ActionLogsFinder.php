@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AuditLog\Utility;
 
+use App\Model\Entity\Resource;
 use App\Model\Table\AvatarsTable;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
@@ -37,6 +38,7 @@ class ActionLogsFinder
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
     }
 
@@ -378,11 +380,13 @@ class ActionLogsFinder
      *
      * @param \App\Utility\UserAccessControl $uac user
      * @param string $resourceId resource id
-     * @return bool whether or not he has access to the resource
+     * @return Resource whether or not he has access to the resource
      */
-    protected function _checkUserCanAccessResource(UserAccessControl $uac, string $resourceId)
+    protected function _checkUserCanAccessResource(UserAccessControl $uac, string $resourceId): Resource
     {
+        /** @var \App\Model\Table\ResourcesTable $Resource */
         $Resource = TableRegistry::getTableLocator()->get('Resources');
+        /** @var Resource|null $resource */
         $resource = $Resource->findView($uac->getId(), $resourceId)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
@@ -432,6 +436,7 @@ class ActionLogsFinder
         }
 
         // Check that the folder exists and is accessible.
+        /** @var \Passbolt\Folders\Model\Table\FoldersTable $Folders */
         $Folders = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $folder = $Folders->findView($user->getId(), $folderId, $options)->first();
 

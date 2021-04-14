@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AuditLog\Utility;
 
+use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -275,6 +276,7 @@ class ActionLogResultsParser
 
                 if (Configure::read('passbolt.plugins.folders.enabled')) {
                     if (isset($permission->permissions_history_folder)) {
+                        /** @phpstan-ignore-next-line */
                         $permission->folder = $permission->permissions_history_folder;
                         unset($permission->permissions_history_folder);
                     }
@@ -302,7 +304,7 @@ class ActionLogResultsParser
 
                 if (Configure::read('passbolt.plugins.folders.enabled')) {
                     if (! isset($data['folder'])) {
-                        $data['folder'] = $permission->folder;
+                        $data['folder'] = $permission->get('folder');
                     }
                 }
             }
@@ -316,11 +318,13 @@ class ActionLogResultsParser
      * Get the corresponding user object with its profile and avatar from a user id.
      *
      * @param string $userId user id.
-     * @return array|\Cake\Datasource\EntityInterface|null user object
+     * @return \App\Model\Entity\User|null user object
      */
-    protected function _getUserObject(string $userId)
+    protected function _getUserObject(string $userId): ?User
     {
+        /** @var \App\Model\Table\UsersTable $User */
         $User = TableRegistry::getTableLocator()->get('Users');
+        /** @var \App\Model\Entity\User|null $u */
         $u = $User
             ->find()
             ->select(['Users.id', 'Users.username'])

@@ -122,16 +122,18 @@ class OrganizationSettingsTable extends Table
      * Find all the settings for a given property
      *
      * @param string $property The name of the property to get
-     * @return \Cake\Datasource\EntityInterface|array The first result from the ResultSet.
+     * @return \App\Model\Entity\OrganizationSetting The first result from the ResultSet.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getFirstSettingOrFail(string $property)
+    public function getFirstSettingOrFail(string $property): OrganizationSetting
     {
         $settingNamespace = OrganizationSetting::UUID_NAMESPACE . $property;
-
-        return $this->find()
+        /** @var \App\Model\Entity\OrganizationSetting $setting */
+        $setting = $this->find()
             ->where(['property_id' => UuidFactory::uuid($settingNamespace)])
             ->firstOrFail();
+
+        return $setting;
     }
 
     /**

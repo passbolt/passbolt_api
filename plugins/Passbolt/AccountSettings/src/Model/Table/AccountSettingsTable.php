@@ -164,10 +164,10 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId uuid
      * @param string $property The name of the property to get
-     * @return \Cake\Datasource\EntityInterface|array The first result from the ResultSet.
+     * @return \Passbolt\AccountSettings\Model\Entity\AccountSetting The first result from the ResultSet.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getFirstPropertyOrFail(string $userId, string $property)
+    public function getFirstPropertyOrFail(string $userId, string $property): AccountSetting
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
@@ -175,6 +175,7 @@ class AccountSettingsTable extends Table
 
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
 
+        /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting $entity */
         $entity = $this->find()
             ->where(['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)])
             ->firstOrFail();

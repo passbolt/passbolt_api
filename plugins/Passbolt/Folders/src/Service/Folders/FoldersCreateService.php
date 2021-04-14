@@ -64,6 +64,7 @@ class FoldersCreateService
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
         $this->permissionsCreateService = new PermissionsCreateService();
@@ -78,7 +79,7 @@ class FoldersCreateService
      * @return \Passbolt\Folders\Model\Entity\Folder
      * @throws \Exception If an unexpected error occurred
      */
-    public function create(UserAccessControl $uac, ?array $data = [])
+    public function create(UserAccessControl $uac, ?array $data = []): Folder
     {
         $folder = null;
 
@@ -101,9 +102,9 @@ class FoldersCreateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param array $data The folder data
-     * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
+     * @return \Passbolt\Folders\Model\Entity\Folder
      */
-    private function createFolder(UserAccessControl $uac, array $data)
+    private function createFolder(UserAccessControl $uac, array $data): Folder
     {
         $folder = $this->buildFolderEntity($uac, $data);
         $this->handleValidationErrors($folder);
@@ -118,9 +119,9 @@ class FoldersCreateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param array $data The folder data
-     * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
+     * @return \Passbolt\Folders\Model\Entity\Folder
      */
-    private function buildFolderEntity(UserAccessControl $uac, array $data)
+    private function buildFolderEntity(UserAccessControl $uac, array $data): Folder
     {
         $userId = $uac->getId();
         $data = [

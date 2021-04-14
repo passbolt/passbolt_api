@@ -59,7 +59,7 @@ class DirectoryEntry extends Entity
     /**
      * Get associated entity.
      *
-     * @return \App\Model\Entity\Group|\Passbolt\DirectorySync\Model\Entity\User|null
+     * @return \App\Model\Entity\Group|\App\Model\Entity\User|null
      */
     public function getAssociatedEntity()
     {

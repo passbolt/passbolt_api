@@ -22,6 +22,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\DirectorySync\Model\Entity\DirectoryRelation;
 use Passbolt\DirectorySync\Utility\Alias;
 
 /**
@@ -208,9 +209,9 @@ class DirectoryRelationsTable extends Table
      * Create a directory Relation
      *
      * @param array $data data
-     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryRelation
      */
-    public function create(array $data)
+    public function create(array $data): DirectoryRelation
     {
         $entity = $this->newEntity($data, [
             'accessibleFields' => [

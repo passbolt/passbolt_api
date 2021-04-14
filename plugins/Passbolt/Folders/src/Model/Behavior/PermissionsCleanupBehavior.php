@@ -21,6 +21,8 @@ use Cake\ORM\Behavior;
 
 /**
  * Decorate the PermissionsTable class to add cleanup functions
+ *
+ * @method \App\Model\Table\PermissionsTable table()
  */
 class PermissionsCleanupBehavior extends Behavior
 {
@@ -28,10 +30,10 @@ class PermissionsCleanupBehavior extends Behavior
      * Delete all records where associated folders are deleted
      *
      * @param bool $dryRun false
-     * @return \Passbolt\Folders\Model\Behavior\number of affected records
+     * @return int number of affected records
      */
-    public function cleanupHardDeletedFolders(?bool $dryRun = false)
+    public function cleanupHardDeletedFolders(?bool $dryRun = false): int
     {
-        return $this->_table->cleanupHardDeletedAco('Folders', $dryRun);
+        return $this->table()->cleanupHardDeletedAco('Folders', $dryRun);
     }
 }

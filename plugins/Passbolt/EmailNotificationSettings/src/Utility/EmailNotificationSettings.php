@@ -40,7 +40,7 @@ class EmailNotificationSettings
     private static $settings;
 
     /**
-     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource
+     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource|null
      */
     private static $configSettingsSource;
 
@@ -50,7 +50,7 @@ class EmailNotificationSettings
     private static $dbSettingsSource;
 
     /**
-     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource
+     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource|null
      */
     private static $defaultSettingsSource;
 

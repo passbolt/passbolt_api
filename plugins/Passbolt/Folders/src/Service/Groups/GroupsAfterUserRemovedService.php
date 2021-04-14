@@ -47,6 +47,7 @@ class GroupsAfterUserRemovedService
     {
         $this->foldersRelationsRemoveItemFromUserTree = new FoldersRelationsRemoveItemFromUserTreeService();
         $this->userHasPermissionService = new UserHasPermissionService();
+        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 

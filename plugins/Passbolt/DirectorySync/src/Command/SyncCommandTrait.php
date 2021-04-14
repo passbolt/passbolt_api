@@ -18,6 +18,7 @@ namespace Passbolt\DirectorySync\Command;
 
 use App\Error\Exception\ValidationException;
 use Cake\Console\ConsoleIo;
+use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
@@ -29,7 +30,7 @@ trait SyncCommandTrait
     /**
      * Display reports
      *
-     * @param array $reports list of reports
+     * @param \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection $reports list of reports
      * @param string $model Model concerned.
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
@@ -69,11 +70,11 @@ trait SyncCommandTrait
     /**
      * Display report
      *
-     * @param \Passbolt\DirectorySync\Shell\Task\ActionReport $report report
+     * @param \Passbolt\DirectorySync\Actions\Reports\ActionReport $report report
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayReport($report, ConsoleIo $io)
+    protected function displayReport(ActionReport $report, ConsoleIo $io)
     {
         $msg = str_pad('[' . $report->getStatus() . ']', $this->pad);
         $msg .= $report->getMessage();

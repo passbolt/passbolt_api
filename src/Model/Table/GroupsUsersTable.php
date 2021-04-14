@@ -49,6 +49,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
  * @method \Cake\ORM\Query findByGroupId(string $groupId)
  * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
  */

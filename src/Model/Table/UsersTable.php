@@ -60,6 +60,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
  */
 class UsersTable extends Table
 {
@@ -410,6 +411,7 @@ class UsersTable extends Table
         if (Configure::read('passbolt.plugins.tags.enabled')) {
             $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
             $ResourcesTags->deleteAll(['user_id' => $user->id]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
             $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
             $Tags->deleteAllUnusedTags();
         }

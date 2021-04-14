@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 class FoldersRelationsDeleteService
 {
     /**
-     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsTable
+     * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
     private $foldersRelationsTable;
 
@@ -31,6 +31,7 @@ class FoldersRelationsDeleteService
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
     }
 

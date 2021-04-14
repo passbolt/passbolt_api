@@ -33,18 +33,13 @@ class MfaUserSettingsDeleteController extends MfaController
     public const MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT = 'mfa.user_account.settings.delete';
 
     /**
-     * @var \App\Model\Table\UsersTable
-     */
-    private $UsersTable;
-
-    /**
      * @return void
      */
     public function initialize(): void
     {
         parent::initialize();
 
-        $this->UsersTable = $this->loadModel('Users');
+        $this->loadModel('Users');
     }
 
     /**
@@ -72,9 +67,9 @@ class MfaUserSettingsDeleteController extends MfaController
             throw new BadRequestException(__('The user id is not valid.'));
         }
 
-        /** @var \App\Model\Entity\User $user */
         try {
-            $user = $this->UsersTable->findView($userId, $this->User->role())->firstOrFail();
+            /** @var \App\Model\Entity\User $user */
+            $user = $this->Users->findView($userId, $this->User->role())->firstOrFail();
         } catch (RecordNotFoundException $exception) {
             throw new BadRequestException(__('The user id is not valid.'));
         }

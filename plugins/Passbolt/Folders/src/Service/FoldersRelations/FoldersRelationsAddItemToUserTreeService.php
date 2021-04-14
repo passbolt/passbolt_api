@@ -18,21 +18,23 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Service\FoldersRelations;
 
 use App\Utility\UserAccessControl;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 
 class FoldersRelationsAddItemToUserTreeService
 {
+    use ModelAwareTrait;
+
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    private $foldersTable;
+    private $Folders;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private $FoldersRelations;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService
@@ -54,13 +56,13 @@ class FoldersRelationsAddItemToUserTreeService
      */
     public function __construct()
     {
-        $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        $this->loadModel('Passbolt/Folders.Folders');
+        $this->loadModel('Passbolt/Folders.FoldersRelations');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
         $this->folderRelationsDetectStronglyConnectedComponents =
             new FoldersRelationsDetectStronglyConnectedComponents();
         $this->foldersRelationsRepairStronglyConnectedComponents =
             new FoldersRelationsRepairStronglyConnectedComponents();
-        $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
     }
 
     /**
@@ -79,12 +81,12 @@ class FoldersRelationsAddItemToUserTreeService
         string $foreignId,
         string $userId
     ): void {
-        $exists = $this->foldersRelationsTable->isItemInUserTree($userId, $foreignId);
+        $exists = $this->FoldersRelations->isItemInUserTree($userId, $foreignId);
         if ($exists) {
             return;
         }
 
-        $this->foldersRelationsTable->getConnection()->transactional(
+        $this->FoldersRelations->getConnection()->transactional(
             function () use (&$uac, $foreignModel, $foreignId, $userId) {
             // Add the item at the root of the target user tree.
                 $this->foldersRelationsCreateService
@@ -177,9 +179,9 @@ class FoldersRelationsAddItemToUserTreeService
         $folderParentsIds = $this->getPotentialParentIdsFor($foreignId, $userId);
 
         foreach ($folderParentsIds as $folderParentId) {
-            $inOperatorTree = $this->foldersRelationsTable->isItemInUserTree($uac->getId(), $folderParentId);
-            $usedCount = $this->foldersRelationsTable->countRelationUsage($foreignId, $folderParentId);
-            $created = $this->foldersTable->getCreatedDate($folderParentId);
+            $inOperatorTree = $this->FoldersRelations->isItemInUserTree($uac->getId(), $folderParentId);
+            $usedCount = $this->FoldersRelations->countRelationUsage($foreignId, $folderParentId);
+            $created = $this->Folders->getCreatedDate($folderParentId);
 
             $changes[] = [
                 'type' => 'parent',
@@ -211,10 +213,10 @@ class FoldersRelationsAddItemToUserTreeService
         // R = USERS_ITEMS ⋂ FOLDER_PARENTS
 
         // USERS_ITEMS
-        $userItems = $this->foldersRelationsTable
+        $userItems = $this->FoldersRelations
             ->findByUserIdAndForeignModel($userId, FoldersRelation::FOREIGN_MODEL_FOLDER);
         // FOLDER_PARENTS
-        $query = $this->foldersRelationsTable->findByForeignId($foreignId);
+        $query = $this->FoldersRelations->findByForeignId($foreignId);
         // R = USERS_ITEMS ⋂ FOLDER_PARENTS
         $query->where([
             'folder_parent_id IN' => $userItems->select('foreign_id'),
@@ -254,12 +256,12 @@ class FoldersRelationsAddItemToUserTreeService
         $changes = [];
         $folderChildrenIds = $this->getPotentialChildrenIdsFor($foreignId, $userId);
         foreach ($folderChildrenIds as $folderChildId) {
-            $inOperatorTree = $this->foldersRelationsTable
+            $inOperatorTree = $this->FoldersRelations
                 ->isItemInUserTree($uac->getId(), $folderChildId);
-            $usedCount = $this->foldersRelationsTable
+            $usedCount = $this->FoldersRelations
                 ->findByForeignIdAndFolderParentId($foreignId, $folderChildId)
                 ->count();
-            $created = $this->foldersTable
+            $created = $this->Folders
                 ->findById($folderChildId)
                 ->select('created')
                 ->extract('created')
@@ -294,10 +296,10 @@ class FoldersRelationsAddItemToUserTreeService
         // R = USERS_ITEMS ⋂ CHILDREN
 
         // USERS_ITEMS = All the items the target user can see
-        $userItems = $this->foldersRelationsTable
+        $userItems = $this->FoldersRelations
             ->findByUserIdAndForeignModel($userId, FoldersRelation::FOREIGN_MODEL_FOLDER);
         // CHILDREN
-        $query = $this->foldersRelationsTable->findByFolderParentId($foreignId);
+        $query = $this->FoldersRelations->findByFolderParentId($foreignId);
         // R = USERS_ITEMS ⋂ CHILDREN
         $query->where(['foreign_id IN' => $userItems->select('foreign_id')]);
 
@@ -364,7 +366,7 @@ class FoldersRelationsAddItemToUserTreeService
     ): void {
         // If no one see the newly added item in the proposed parent, then this change is not valid anymore.
         // It happens when the item has already been organized already by a change with a higher priority.
-        $exists = $this->foldersRelationsTable
+        $exists = $this->FoldersRelations
             ->exists(['foreign_id' => $foreignId, 'folder_parent_id' => $change['foreignId']]);
         if (!$exists) {
             return;
@@ -375,14 +377,14 @@ class FoldersRelationsAddItemToUserTreeService
         $potentialFolderParentsIds = $this->getPotentialParentIdsFor($foreignId, $userId);
         array_splice($potentialFolderParentsIds, array_search($change['foreignId'], $potentialFolderParentsIds), 1);
         if (!empty($potentialFolderParentsIds)) {
-            $this->foldersRelationsTable->moveItemFrom($foreignId, $potentialFolderParentsIds, FoldersRelation::ROOT);
+            $this->FoldersRelations->moveItemFrom($foreignId, $potentialFolderParentsIds, FoldersRelation::ROOT);
         }
 
         // Move the item to the proposed parent folder for all users seeing the proposed parent folder and the target
         // item.
-        $usersIdsHavingAccessToFolderParent = $this->foldersRelationsTable
+        $usersIdsHavingAccessToFolderParent = $this->FoldersRelations
             ->getUsersIdsHavingAccessToMultipleItems([$foreignId, $change['foreignId']]);
-        $this->foldersRelationsTable
+        $this->FoldersRelations
             ->moveItemFor($foreignId, $usersIdsHavingAccessToFolderParent, $change['foreignId']);
 
         // If the newly added item is a folder, detect and fix conflicts.
@@ -432,7 +434,7 @@ class FoldersRelationsAddItemToUserTreeService
         }
 
         $folderRelationToBreak = $this->identifyCycleFolderRelationToBreak($userId, $scc);
-        $this->foldersRelationsTable->moveItemFrom(
+        $this->FoldersRelations->moveItemFrom(
             $folderRelationToBreak['foreign_id'],
             [$folderRelationToBreak['folder_parent_id']],
             FoldersRelation::ROOT
@@ -455,7 +457,7 @@ class FoldersRelationsAddItemToUserTreeService
 
         // Look for a personal folder. A cycle cannot be created in a user tree if it doesn't involve a personal folder.
         foreach ($foldersRelations as $folderRelation) {
-            $isPersonal = $this->foldersRelationsTable->isItemPersonal($folderRelation['folder_parent_id']);
+            $isPersonal = $this->FoldersRelations->isItemPersonal($folderRelation['folder_parent_id']);
             if ($isPersonal) {
                 $personalFolderRelation = $folderRelation;
                 break;
@@ -510,7 +512,7 @@ class FoldersRelationsAddItemToUserTreeService
     {
         // If no one see the proposed child into the newly added item, then this change is not valid anymore.
         // It happens when the proposed child has been invalided by a previous change with a higher priority.
-        $exists = $this->foldersRelationsTable
+        $exists = $this->FoldersRelations
             ->exists(['foreign_id' => $change['foreignId'], 'folder_parent_id' => $foreignId]);
         if (!$exists) {
             return;
@@ -518,9 +520,9 @@ class FoldersRelationsAddItemToUserTreeService
 
         // Move the proposed child item into the newly added item for all users seeing the proposed child and the newly
         // added item.
-        $usersIdsHavingAccessToItemAndProposedChild = $this->foldersRelationsTable
+        $usersIdsHavingAccessToItemAndProposedChild = $this->FoldersRelations
             ->getUsersIdsHavingAccessToMultipleItems([$foreignId, $change['foreignId']]);
-        $this->foldersRelationsTable
+        $this->FoldersRelations
             ->moveItemFor($change['foreignId'], $usersIdsHavingAccessToItemAndProposedChild, $foreignId);
 
         // Detect and fix conflicts.

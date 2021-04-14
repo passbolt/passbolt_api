@@ -62,6 +62,7 @@ class IgnoreCreateCommand extends DirectorySyncCommand
             return $this->errorCode();
         }
         try {
+            /** @var \Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable $DirectoryIgnore */
             $DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
             $DirectoryIgnore->createOrFail($foreignModel, $foreignKey);
             $this->success(__('The record will be ignored in the next directory synchronization.'), $io);

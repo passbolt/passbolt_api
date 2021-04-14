@@ -191,6 +191,7 @@ class UsersDeleteController extends AppController
                         $findFoldersOptions['contain']['permissions.user.profile'] = true;
                         $findFoldersOptions['contain']['permissions.group'] = true;
                         $findFoldersOptions['filter']['has-id'] = $foldersIds;
+                        /** @var \Passbolt\Folders\Model\Table\FoldersTable $foldersTable */
                         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
                         $folders = $foldersTable->findIndex($user->id, $findFoldersOptions);
                         $body['errors']['folders']['sole_owner'] = $folders;

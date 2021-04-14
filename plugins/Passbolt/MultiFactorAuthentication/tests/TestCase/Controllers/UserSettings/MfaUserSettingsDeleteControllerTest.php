@@ -37,7 +37,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         RolesFixture::class,
         ProfilesFixture::class,
         GpgkeysFixture::class,
-    GroupsUsersFixture::class,
+        GroupsUsersFixture::class,
     ];
 
     public const TESTED_ROUTE = '/mfa/setup/%s.json?api-version=v2';
