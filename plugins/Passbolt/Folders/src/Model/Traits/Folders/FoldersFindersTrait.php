@@ -229,7 +229,7 @@ trait FoldersFindersTrait
      * @param array $parentIds Array of parent ids
      * @return \Cake\ORM\Query
      */
-    public function filterQueryByParentIds(Query $query, array $parentIds)
+    public function filterQueryByParentIds(Query $query, array $parentIds): Query
     {
         if (empty($parentIds)) {
             return $query;
@@ -251,7 +251,7 @@ trait FoldersFindersTrait
             if (!empty($parentIds)) {
                 $conditions[] = ['folder_parent_id IN' => $parentIds];
             }
-            if ($includeRoot) {
+            if ($includeRoot === true) {
                 $conditions[] = ['folder_parent_id IS NULL'];
             }
 
