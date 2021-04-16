@@ -26,20 +26,10 @@ class V300AddResourceTypesTable extends AbstractMigration
     {
         $encoding= "utf8mb4";
         $collation = "utf8mb4_unicode_ci";
-        switch($this->getAdapter()->getOptions()["adapter"]) {
-            case "pgsql": {
-                $encoding = "utf8";
-                $collation = "utf8_unicode_ci";
-                break;
-                }
-           default:
-     	       $encoding= "utf8mb4";
-               $collation = "utf8mb4_unicode_ci";
-        }
+
         $this->table('resource_types', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
-            ->addColumn('id', 'char', [
+            ->addColumn('id', 'uuid', [
              'default' => null,
-             'limit' => 36,
              'null' => false,
             ])
             ->addColumn('slug', 'char', [

@@ -27,12 +27,13 @@ class V200MigrateUUID extends AbstractMigration
         
         // The new  uuid type maps to char(36) so skip this
         return;
+
         // Cakephp requires CHAR(36) and not VARCHAR(36)
 
         // in order to auto populates id fields
 
         // not doing: email queue, file_storage
-
+/*
         $this->table('authentication_tokens')
             ->changeColumn('id', 'char', ['limit' => 36])
             ->changeColumn('token', 'char', ['limit' => 36])
@@ -107,5 +108,7 @@ class V200MigrateUUID extends AbstractMigration
             ->changeColumn('id', 'char', ['limit' => 36])
             ->changeColumn('role_id', 'char', ['limit' => 36])
             ->save();
+            */
     }
+
 }
