@@ -18,9 +18,9 @@ namespace App\Test\TestCase\Command;
 
 use App\Command\CleanupCommand;
 use App\Test\Factory\UserFactory;
-use CakephpTestMigrator\Migrator;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestMigrator\Migrator;
 
 class CleanupCommandTest extends TestCase
 {

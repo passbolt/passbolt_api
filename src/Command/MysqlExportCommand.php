@@ -77,7 +77,7 @@ class MysqlExportCommand extends PassboltCommand
         /** @var string $datasource */
         $datasource = $args->getOption('datasource');
         try {
-            /** @var Connection $connection */
+            /** @var \Cake\Database\Connection $connection */
             $connection = ConnectionManager::get($datasource);
         } catch (MissingDatasourceConfigException $e) {
             $this->error($e->getMessage(), $io);
@@ -114,7 +114,7 @@ class MysqlExportCommand extends PassboltCommand
     /**
      * Perform a mysqldump command
      *
-     * @param array $config connection manager config
+     * @param array $connection connection manager config
      * @param string $dir directory path
      * @param string $file file name
      * @param \Cake\Console\ConsoleIo $io Console IO.
@@ -186,9 +186,15 @@ class MysqlExportCommand extends PassboltCommand
         return $status;
     }
 
+    /**
+     * Check if the driver is supported by Passbolt.
+     *
+     * @param \Cake\Database\DriverInterface $driver Driver to assess.
+     * @return bool
+     */
     protected function isSupportedDriver(DriverInterface $driver): bool
     {
-        return ($driver instanceof Mysql || $driver instanceof Postgres);
+        return $driver instanceof Mysql || $driver instanceof Postgres;
     }
 
     /**

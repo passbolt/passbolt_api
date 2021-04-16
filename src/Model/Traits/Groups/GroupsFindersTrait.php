@@ -16,10 +16,10 @@ declare(strict_types=1);
  */
 namespace App\Model\Traits\Groups;
 
+use App\Utility\UuidFactory;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
-use App\Utility\UuidFactory;
-use \Cake\Database\Expression\IdentifierExpression;
 use Cake\Validation\Validation;
 
 trait GroupsFindersTrait
@@ -206,7 +206,9 @@ trait GroupsFindersTrait
     {
         // Count the members of the groups in a subquery.
         $subQuery = $this->getAssociation('GroupsUsers')->find();
-        $subQuery->select(['count' => $subQuery->func()->count('*')])->where(['GroupsUsers.group_id' => new IdentifierExpression('Groups.id')]);
+        $subQuery
+            ->select(['count' => $subQuery->func()->count('*')])
+            ->where(['GroupsUsers.group_id' => new IdentifierExpression('Groups.id')]);
 
         // Add the user_count field to the Groups query.
         $query->select(['user_count' => $subQuery])->enableAutoFields();
@@ -238,13 +240,12 @@ trait GroupsFindersTrait
 
         // Find all the groups that have the given users.
         $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $having = $query->getConnection()->getDriver()->quoteIdentifier('COUNT(GroupsUsers.group_id)');
         $subQuery = $GroupsUsers->find()
             ->select('GroupsUsers.group_id')
             ->where(['GroupsUsers.user_id IN' => $usersIds])
             ->group('GroupsUsers.group_id')
-            ->having([
-                $query->getConnection()->getDriver()->quoteIdentifier('COUNT(GroupsUsers.group_id)') => count($usersIds)
-            ]);
+            ->having([$having => count($usersIds)]);
 
         // If we want to retrieve only managers.
         if ($areManager) {

@@ -58,13 +58,12 @@ trait UsersFindersTrait
         }
 
         // Otherwise use a subquery to find all the users that are members of all the listed groups
+        $having = $query->getConnection()->getDriver()->quoteIdentifier('COUNT(GroupsUsers.user_id)');
         $subQuery = $this->GroupsUsers->find()
             ->select('GroupsUsers.user_id')
             ->where(['GroupsUsers.group_id IN' => $groupsIds])
             ->group('GroupsUsers.user_id')
-            ->having([
-                $query->getConnection()->getDriver()->quoteIdentifier('COUNT(GroupsUsers.user_id)') => count($groupsIds)
-            ]);
+            ->having([$having => count($groupsIds)]);
 
         // Execute the sub query and extract the user ids.
         $matchingUserIds = Hash::extract($subQuery->toArray(), '{n}.user_id');
@@ -543,7 +542,7 @@ trait UsersFindersTrait
             ])
             ->where([
                  'ActionLogs.action_id' => $loginActionId,
-                 'ActionLogs.status'     => 1,
+                 'ActionLogs.status' => 1,
             ])
             ->group('user_id');
 
@@ -555,7 +554,7 @@ trait UsersFindersTrait
                 'alias' => 'JoinedUsersLastLoggedIn',
                 'type' => 'LEFT',
                 'conditions' => [
-                    'Users.id' => new IdentifierExpression('JoinedUsersLastLoggedIn.user_id')
+                    'Users.id' => new IdentifierExpression('JoinedUsersLastLoggedIn.user_id'),
                 ],
             ]);
 

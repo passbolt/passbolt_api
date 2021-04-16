@@ -19,7 +19,7 @@ namespace Passbolt\WebInstaller\Utility;
 use App\Utility\Healthchecks;
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
-use Cake\Database\Exception\MissingConnectionExceptionn;
+
 class DatabaseConfiguration
 {
     /**
@@ -73,11 +73,11 @@ class DatabaseConfiguration
 
         try {
             $connection->connect();
+
             return true;
         } catch (\Exception $e) {
             return false;
         }
-
     }
 
     /**

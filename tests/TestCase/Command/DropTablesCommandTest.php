@@ -57,7 +57,7 @@ class DropTablesCommandTest extends TestCase
         $this->assertExitSuccess();
 
         // Assert that all tables were dropped.
-	$tables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
+        $tables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
         $this->assertEmpty($tables);
 
         // Run migrations to recreate the lost tables.

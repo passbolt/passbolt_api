@@ -20,7 +20,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Datasource\ConnectionManager;
-use CakephpTestMigrator\Migrator;
+
 class DropTablesCommand extends PassboltCommand
 {
     use DatabaseAwareCommandTrait;
@@ -45,13 +45,14 @@ class DropTablesCommand extends PassboltCommand
 
         $datasource = $args->getOption('datasource');
         $connection = ConnectionManager::get($datasource);
-        $tables = ConnectionManager::get('default')->getSchemaCollection()->listTables(); 
+        $tables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
         foreach ($tables as $table) {
             $io->out(__('Dropping table ' . $table));
             $quotedTableName = $connection->getDriver()->quoteIdentifier($table);
             $connection->query("drop table {$quotedTableName};");
         }
         $this->success(__('{0} tables dropped', count($tables)), $io);
+
         return $this->successCode();
     }
 }

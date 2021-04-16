@@ -14,17 +14,23 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.3.0
  */
-namespace App\Database\Type;
+namespace Passbolt\EmailNotificationSettings\Database\Type;
+
 use Cake\Database\Driver\Postgres;
 use Cake\Database\DriverInterface;
 use Cake\Database\Type\BaseType;
-class TemplateVarsType extends BaseType
+
+class SerializedType extends BaseType
 {
+    public const NULL_CHAR = "\0";
+
+    public const NULL_CHAR_SUBSTITUTE = '~~NULL_BYTE~~';
+
     /**
      * Decodes a JSON string
      *
      * @param mixed $value json string to decode
-     * @param Driver $driver database driver
+     * @param \Cake\Database\DriverInterface $driver database driver
      * @return mixed|null|string|void
      */
     public function toPHP($value, DriverInterface $driver)
@@ -34,17 +40,17 @@ class TemplateVarsType extends BaseType
         }
 
         if (is_a($driver, Postgres::class)) {
-            $value = str_replace("~~NULL_BYTE~~", "\0", $value);
+            $value = str_replace(self::NULL_CHAR_SUBSTITUTE, self::NULL_CHAR, $value);
         }
-        file_put_contents("/tmp/test",$value);
+
         return unserialize($value);
     }
 
     /**
      * Marshal - Encodes a JSON string
      *
-     * @param mixed $value json string to decode
-     * @return mixed|null|string
+     * @param string|null $value json string to decode
+     * @return null|string
      */
     public function marshal($value): ?string
     {
@@ -60,17 +66,17 @@ class TemplateVarsType extends BaseType
      * Serialize per default.
      *
      * @param mixed $value string or object to encode
-     * @param DriverInterface $driver database driver
+     * @param \Cake\Database\DriverInterface $driver database driver
      * @return null|string
      */
-    public function toDatabase($value, DriverInterface $driver)
+    public function toDatabase($value, DriverInterface $driver): ?string
     {
         if ($value === null) {
             return null;
         }
 
         if (is_a($driver, Postgres::class)) {
-            $value = str_replace("\0", "~~NULL_BYTE~~", $value);
+            $value = str_replace(self::NULL_CHAR, self::NULL_CHAR_SUBSTITUTE, $value);
         }
 
         return $value;

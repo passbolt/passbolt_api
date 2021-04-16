@@ -80,7 +80,7 @@ class DatabaseHealthchecks
         $checks['database']['supportedBackend'] = false;
         $connection = ConnectionManager::get($datasource);
         $config = $connection->config();
-        if ($config['driver'] === 'Cake\Database\Driver\Mysql' || $config['driver'] === 'Cake\Database\Driver\Postgres') {
+        if (in_array($config['driver'], ['Cake\Database\Driver\Mysql', 'Cake\Database\Driver\Postgres'])) {
             $checks['database']['supportedBackend'] = true;
         }
 

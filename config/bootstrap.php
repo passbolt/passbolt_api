@@ -199,7 +199,3 @@ define('PROCESS_USER', $user['name']);
 define('PASSBOLT_PRO', Configure::read('passbolt.edition') === 'pro');
 
 require __DIR__ . '/file_storage.php';
-
-// Set the EmailQueue Serialization type
-Configure::write('EmailQueue.serialization_type', 'email_queue.hybrid');
-Type::map('email_queue.hybrid', \App\Database\Type\TemplateVarsType::class);
