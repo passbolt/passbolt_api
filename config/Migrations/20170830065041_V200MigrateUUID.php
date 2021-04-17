@@ -25,85 +25,83 @@ class V200MigrateUUID extends AbstractMigration
     public function up()
     {
         // Cakephp requires CHAR(36) and not VARCHAR(36)
-        // uuid maps to char(36) on mysql and to uuid on postgres
         // in order to auto populates id fields
+
         // not doing: email queue, file_storage
 
         $this->table('authentication_tokens')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('token', 'uuid')
-            ->changeColumn('user_id', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('token', 'char', ['limit' => 36])
+            ->changeColumn('user_id', 'char', ['limit' => 36])
             ->save();
 
         $this->table('comments')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('parent_id', 'uuid', ['null' => true, 'default' => null])
-            ->changeColumn('foreign_id', 'uuid', ['default' => null])
-            ->changeColumn('created_by', 'uuid', ['default' => null,  'null' => true])
-            ->changeColumn('modified_by','uuid', ['default' => null, 'null' => true])
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('parent_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
+            ->changeColumn('foreign_id', 'char', ['limit' => 36, 'default' => null])
+            ->changeColumn('created_by', 'char', ['default' => null, 'limit' => 36, 'null' => true])
+            ->changeColumn('modified_by', 'char', ['default' => null, 'limit' => 36, 'null' => true])
             ->save();
 
         $this->table('favorites')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('user_id', 'uuid', ['null' => true, 'default' => null])
-            ->changeColumn('foreign_id','uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('user_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
+            ->changeColumn('foreign_id', 'char', ['limit' => 36])
             ->save();
 
         $this->table('gpgkeys')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('user_id', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('user_id', 'char', ['limit' => 36])
             ->save();
 
         $this->table('groups')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('created_by', 'uuid')
-            ->changeColumn('modified_by', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('created_by', 'char', ['limit' => 36])
+            ->changeColumn('modified_by', 'char', ['limit' => 36])
             ->save();
 
         $this->table('groups_users')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('group_id', 'uuid',['null' => true, 'default' => null])
-            ->changeColumn('user_id', 'uuid', ['null' => true, 'default' => null])
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('group_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
+            ->changeColumn('user_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
             ->save();
 
         $this->table('permissions')
-            ->changeColumn('id', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
             ->save();
 
         $this->table('permissions_types')
-            ->changeColumn('id', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
             ->save();
 
         $this->table('profiles')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('user_id', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('user_id', 'char', ['limit' => 36])
             ->save();
 
         $this->table('resources')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('created_by', 'uuid')
-            ->changeColumn('modified_by', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('created_by', 'char', ['limit' => 36])
+            ->changeColumn('modified_by', 'char', ['limit' => 36])
             ->save();
 
         $this->table('roles')
-            ->changeColumn('id', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
             ->save();
 
         $this->table('secrets')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('user_id', 'uuid')
-            ->changeColumn('resource_id', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('user_id', 'char', ['limit' => 36])
+            ->changeColumn('resource_id', 'char', ['limit' => 36])
             ->save();
 
         $this->table('user_agents')
-            ->changeColumn('id', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
             ->save();
 
         $this->table('users')
-            ->changeColumn('id', 'uuid')
-            ->changeColumn('role_id', 'uuid')
+            ->changeColumn('id', 'char', ['limit' => 36])
+            ->changeColumn('role_id', 'char', ['limit' => 36])
             ->save();
-
     }
-
 }

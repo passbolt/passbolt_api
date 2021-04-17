@@ -24,8 +24,6 @@ class V240AddAuthenticationTokenType extends AbstractMigration
      */
     public function up()
     {
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
         // Delete all authentication token to make sure there is no token without type
         $this->query('DELETE from authentication_tokens');
 
@@ -34,15 +32,15 @@ class V240AddAuthenticationTokenType extends AbstractMigration
                 'default' => null,
                 'limit' => 16,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->addColumn('data', 'text', [
                 'default' => null,
                 'limit' => null,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
 

@@ -24,473 +24,508 @@ class V202ForceColumnsCharset extends AbstractMigration
      */
     public function up()
     {
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
-   /*
         $this->table('authentication_tokens')
-            ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('token', 'uuid', [
+            ->changeColumn('token', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('user_id', 'uuid', [
+            ->changeColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
-*/
+
         $this->table('comments')
-           /* ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('parent_id', 'uuid', [
+            ->changeColumn('parent_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('foreign_key', 'uuid', [
+            ->changeColumn('foreign_key', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('foreign_model', 'uuid', [
+            ->changeColumn('foreign_model', 'string', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('user_id', 'uuid', [
+            ->changeColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('content', 'string', [
                 'default' => null,
                 'limit' => 256,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])/*
-            ->changeColumn('created_by', 'uuid', [
-                'default' => null,
-                'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('modified_by', 'uuid', [
-                'default' => null,
-                'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
-            ->save();
-
-        $this->table('favorites')
-         /*   ->changeColumn('id', 'uuid', [
-                'default' => null,
-                'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])
-            ->changeColumn('user_id', 'uuid', [
-                'default' => null,
-                'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])
-            ->changeColumn('foreign_key', 'uuid', [
-                'default' => null,
-                'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
-            ->changeColumn('foreign_model', 'string', [ // not an uuid
+            ->changeColumn('created_by', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->changeColumn('modified_by', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->save();
+
+        $this->table('favorites')
+            ->changeColumn('id', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->changeColumn('user_id', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => true,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->changeColumn('foreign_key', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->changeColumn('foreign_model', 'string', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
 
         $this->table('file_storage')
-            /*->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('user_id', 'uuid', [
+            ->changeColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('foreign_key', 'uuid', [
+            ->changeColumn('foreign_key', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('model', 'string', [
                 'default' => null,
                 'limit' => 128,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('filename', 'string', [
                 'default' => null,
                 'limit' => 255,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('mime_type', 'string', [
                 'default' => null,
                 'limit' => 128,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('extension', 'string', [
                 'default' => null,
                 'limit' => 5,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('hash', 'string', [
                 'default' => null,
                 'limit' => 64,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('path', 'string', [
                 'default' => null,
                 'limit' => null,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('adapter', 'string', [
                 'comment' => 'Gaufrette Storage Adapter Class',
                 'default' => null,
                 'limit' => 32,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
 
         $this->table('gpgkeys')
-           /* ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('user_id', 'uuid', [
+            ->changeColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('armored_key', 'text', [
                 'default' => null,
                 'limit' => null,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('uid', 'string', [
                 'default' => null,
                 'limit' => 128,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('key_id', 'string', [
                 'default' => null,
                 'limit' => 8,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('fingerprint', 'string', [
                 'default' => null,
                 'limit' => 51,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('type', 'string', [
                 'default' => null,
                 'limit' => 16,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
 
         $this->table('groups')
-           /* ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('name', 'string', [
                 'default' => null,
                 'limit' => 255,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            /*->changeColumn('modified_by', 'uuid', [
+            ->changeColumn('modified_by', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->save();
-/*
+
         $this->table('groups_users')
-            ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('group_id', 'uuid', [
+            ->changeColumn('group_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('user_id', 'uuid', [
+            ->changeColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
-*/
+
         $this->table('permissions')
-  /*          ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('aco', 'string', [
                 'default' => null,
                 'limit' => 30,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])/*
-            ->changeColumn('aco_foreign_key', 'uuid', [
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->changeColumn('aco_foreign_key', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('aro', 'string', [
                 'default' => null,
                 'limit' => 30,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])/*
-            ->changeColumn('aro_foreign_key', 'uuid', [
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->changeColumn('aro_foreign_key', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->save();
 
         $this->table('profiles')
-            /*->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('user_id', 'uuid', [
+            ->changeColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('first_name', 'string', [
                 'default' => null,
                 'limit' => 255,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('last_name', 'string', [
                 'default' => null,
                 'limit' => 255,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
 
         $this->table('resources')
-            /*->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('name', 'string', [
                 'default' => null,
                 'limit' => 64,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('username', 'string', [
                 'default' => null,
                 'limit' => 64,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('uri', 'string', [
                 'default' => null,
                 'limit' => 1024,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('description', 'text', [
                 'default' => null,
                 'limit' => null,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])/*
-            ->changeColumn('created_by', 'uuid', [
-                'default' => null,
-                'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('modified_by', 'uuid', [
+            ->changeColumn('created_by', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->changeColumn('modified_by', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->save();
 
         $this->table('roles')
-          /*  ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('name', 'string', [
                 'default' => null,
                 'limit' => 50,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->changeColumn('description', 'string', [
                 'default' => null,
                 'limit' => 255,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
 
         $this->table('secrets')
-           /* ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('user_id', 'uuid', [
+            ->changeColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('resource_id', 'uuid', [
+            ->changeColumn('resource_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('data', 'text', [
                 'default' => null,
                 'limit' => null,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
 
         $this->table('user_agents')
-          /*  ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('name', 'string', [
                 'default' => null,
                 'limit' => 512,
                 'null' => true,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
 
         $this->table('users')
-           /* ->changeColumn('id', 'uuid', [
+            ->changeColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->changeColumn('role_id', 'uuid', [
+            ->changeColumn('role_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
-            ])*/
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
             ->changeColumn('username', 'string', [
                 'default' => null,
                 'limit' => 255,
                 'null' => false,
-                'encoding' => $encoding,
-                'collation' => $collation
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
             ])
             ->save();
     }

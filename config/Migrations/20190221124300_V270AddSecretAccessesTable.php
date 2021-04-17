@@ -23,34 +23,26 @@ class V270AddSecretAccessesTable extends AbstractMigration
      * @return void
      */
     public function up()
-    {   
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
-        switch($this->getAdapter()->getOptions()["adapter"]) {
-            case "pgsql": {
-                $encoding = "utf8";
-                $collation = "utf8_unicode_ci";
-                break;
-                }
-           default:
-     	       $encoding= "utf8mb4";
-               $collation = "utf8mb4_unicode_ci";
-        }
-        $this->table('secret_accesses', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
-             ->addColumn('id', 'uuid', [
+    {
+        $this->table('secret_accesses', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+             ->addColumn('id', 'char', [
                  'default' => null,
+                 'limit' => 36,
                  'null' => false,
              ])
-            ->addColumn('user_id', 'uuid', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('resource_id', 'uuid', [
+            ->addColumn('resource_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('secret_id', 'uuid', [
+            ->addColumn('secret_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
             ->addColumn('created', 'datetime', [

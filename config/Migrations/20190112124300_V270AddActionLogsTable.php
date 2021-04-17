@@ -24,20 +24,20 @@ class V270AddActionLogsTable extends AbstractMigration
      */
     public function up()
     {
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
-
-        $this->table('action_logs', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
-             ->addColumn('id', 'uuid', [
+        $this->table('action_logs', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+             ->addColumn('id', 'char', [
                  'default' => null,
+                 'limit' => 36,
                  'null' => false,
              ])
-            ->addColumn('user_id', 'uuid', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => true,
             ])
-            ->addColumn('action_id', 'uuid', [
+            ->addColumn('action_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
             ->addColumn('context', 'string', [

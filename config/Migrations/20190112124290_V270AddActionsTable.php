@@ -23,13 +23,11 @@ class V270AddActionsTable extends AbstractMigration
      * @return void
      */
     public function up()
-    {   
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
-
-        $this->table('actions', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
-             ->addColumn('id', 'uuid', [
+    {
+        $this->table('actions', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+             ->addColumn('id', 'char', [
                  'default' => null,
+                 'limit' => 36,
                  'null' => false,
              ])
             ->addColumn('name', 'string', [

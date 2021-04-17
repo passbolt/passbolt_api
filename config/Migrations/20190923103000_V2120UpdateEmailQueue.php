@@ -29,7 +29,7 @@ class V2120UpdateEmailQueue extends AbstractMigration
                 'limit' => 100,
             ])
             ->changeColumn('template_vars', 'text', [
-                'limit' => ($this->getAdapter()->getOptions()["adapter"] === "mysql") ? MysqlAdapter::TEXT_LONG : null,
+                'limit' => MysqlAdapter::TEXT_LONG,
                 'default' => null,
                 'null' => false,
             ])

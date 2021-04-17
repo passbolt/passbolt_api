@@ -26,19 +26,20 @@ class V210InstallAccountSettingsPlugin extends AbstractMigration
      */
     public function up()
     {
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
-        $this->table('account_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
-            ->addColumn('id', 'uuid', [
+        $this->table('account_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+            ->addColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('user_id', 'uuid', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('property_id', 'uuid', [
+            ->addColumn('property_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
             ->addColumn('property', 'string', [

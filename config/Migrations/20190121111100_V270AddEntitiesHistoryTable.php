@@ -23,26 +23,26 @@ class V270AddEntitiesHistoryTable extends AbstractMigration
      * @return void
      */
     public function up()
-    {   
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
-
-        $this->table('entities_history', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
-             ->addColumn('id', 'uuid', [
-                 'default' => null,
-                 'null' => false,
-             ])
-             ->addColumn('action_log_id', 'uuid', [
-                 'default' => null,
-                 'null' => false,
-             ])
-             ->addColumn('foreign_model', 'string', [ // Not an uuid
+    {
+        $this->table('entities_history', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+             ->addColumn('id', 'char', [
                  'default' => null,
                  'limit' => 36,
                  'null' => false,
              ])
-             ->addColumn('foreign_key', 'uuid', [
+             ->addColumn('action_log_id', 'char', [
                  'default' => null,
+                 'limit' => 36,
+                 'null' => false,
+             ])
+             ->addColumn('foreign_model', 'string', [
+                 'default' => null,
+                 'limit' => 36,
+                 'null' => false,
+             ])
+             ->addColumn('foreign_key', 'char', [
+                 'default' => null,
+                 'limit' => 36,
                  'null' => false,
              ])
              ->addColumn('crud', 'char', [

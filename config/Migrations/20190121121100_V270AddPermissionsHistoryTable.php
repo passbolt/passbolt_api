@@ -23,12 +23,11 @@ class V270AddPermissionsHistoryTable extends AbstractMigration
      * @return void
      */
     public function up()
-    {   
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
-        $this->table('permissions_history', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
-             ->addColumn('id', 'uuid', [
+    {
+        $this->table('permissions_history', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+             ->addColumn('id', 'string', [
                  'default' => null,
+                 'limit' => 36,
                  'null' => false,
              ])
              ->addColumn('aco', 'string', [
@@ -36,8 +35,9 @@ class V270AddPermissionsHistoryTable extends AbstractMigration
                  'limit' => 30,
                  'null' => false,
              ])
-             ->addColumn('aco_foreign_key', 'uuid', [
+             ->addColumn('aco_foreign_key', 'string', [
                  'default' => null,
+                 'limit' => 36,
                  'null' => false,
              ])
              ->addColumn('aro', 'string', [
@@ -45,8 +45,9 @@ class V270AddPermissionsHistoryTable extends AbstractMigration
                  'limit' => 30,
                  'null' => false,
              ])
-             ->addColumn('aro_foreign_key', 'uuid', [
+             ->addColumn('aro_foreign_key', 'string', [
                  'default' => null,
+                 'limit' => 36,
                  'null' => true,
              ])
              ->addColumn('type', 'integer', [

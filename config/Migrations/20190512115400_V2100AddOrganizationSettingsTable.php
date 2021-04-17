@@ -28,16 +28,16 @@ class V2100AddOrganizationSettingsTable extends AbstractMigration
         if ($this->hasTable('organization_settings')) {
             return;
         }
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
 
-        $this->table('organization_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
-            ->addColumn('id', 'uuid', [
+        $this->table('organization_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+            ->addColumn('id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('property_id', 'uuid', [
+            ->addColumn('property_id', 'char', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
             ->addColumn('property', 'string', [
@@ -60,12 +60,14 @@ class V2100AddOrganizationSettingsTable extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
-            ->addColumn('created_by', 'uuid', [ 
+            ->addColumn('created_by', 'string', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('modified_by', 'uuid', [ 
+            ->addColumn('modified_by', 'string', [
                 'default' => null,
+                'limit' => 36,
                 'null' => false,
             ])
             ->addIndex(['property_id'])

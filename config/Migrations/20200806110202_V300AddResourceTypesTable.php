@@ -24,12 +24,10 @@ class V300AddResourceTypesTable extends AbstractMigration
      */
     public function up()
     {
-        $encoding= "utf8mb4";
-        $collation = "utf8mb4_unicode_ci";
-
-        $this->table('resource_types', ['id' => false, 'primary_key' => ['id'], 'collation' => $collation])
-            ->addColumn('id', 'uuid', [
+        $this->table('resource_types', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+            ->addColumn('id', 'char', [
              'default' => null,
+             'limit' => 36,
              'null' => false,
             ])
             ->addColumn('slug', 'char', [
