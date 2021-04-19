@@ -81,12 +81,20 @@ class V320PostgresUUID extends AbstractMigration
         $this->table('organization_settings')
         ->changeColumn('id', 'uuid')
         ->changeColumn('property_id', 'uuid')
+        ->changeColumn('created_by', 'uuid')
+        ->changeColumn('modified_by', 'uuid')
         ->save();
 
         $this->table('permissions')
         ->changeColumn('aco_foreign_key', 'uuid')
         ->changeColumn('aro_foreign_key', 'uuid', ['null' => true])
         ->changeColumn('id', 'uuid')
+        ->save();
+
+        $this->table('permissions_history')
+        ->changeColumn('id','uuid')
+        ->changeColumn('aco_foreign_key','uuid')
+        ->changeColumn('aro_foreign_key','uuid', ['null' => true, 'default' => null])
         ->save();
 
         $this->table('profiles')
