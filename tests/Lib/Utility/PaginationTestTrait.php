@@ -19,17 +19,12 @@ namespace App\Test\Lib\Utility;
 
 use Cake\Utility\Hash;
 
-trait PaginationTrait
+trait PaginationTestTrait
 {
     /**
      * @var string
      */
     public $defaultSortField;
-
-    /**
-     * @var string
-     */
-    public $defaultSortDirection = 'asc';
 
     /**
      * @param int $expected Number of entities expected in the response
@@ -43,34 +38,14 @@ trait PaginationTrait
      * Assert that an array of entities of modelName is sorted
      * along $sortedField in the provided $direction.
      *
-     * @param string $direction Sort direction.
      * @param string $path Path where to find the sorted field in the response data.
-     * @param bool|null $sortedFieldIsDateString Needed when comparing date strings.
+     * @param string|null $direction Sort direction.
      */
-    private function assertBodyContentIsSorted(string $direction, string $path, ?bool $sortedFieldIsDateString = false)
+    private function assertBodyContentIsSorted(string $path, string $direction = 'asc')
     {
-        $nRecords = count($this->_responseJsonBody);
-        for ($i = 1; $i < $nRecords; $i++) {
-            $entity1 = $this->convertObjectToArrayRecursively($this->_responseJsonBody[$i - 1]);
-            $entity2 = $this->convertObjectToArrayRecursively($this->_responseJsonBody[$i]);
-
-            $field1 = Hash::get($entity1, $path);
-            $field2 = Hash::get($entity2, $path);
-
-            $this->assertIsString($field1);
-            $this->assertIsString($field2, "This is not a string $field2");
-
-            if ($sortedFieldIsDateString) {
-                $field1 = strtotime($field1);
-                $field2 = strtotime($field2);
-            }
-
-            if ($direction === 'desc') {
-                $this->greaterThanOrEqual($field2, $field1);
-            } else {
-                $this->greaterThanOrEqual($field1, $field2);
-            }
-        }
+        $response = $this->convertObjectToArrayRecursively($this->_responseJsonBody);
+        $sortedResponse = Hash::sort($response, '{n}.' . $path, $direction);
+        $this->assertSame($sortedResponse, $response);
     }
 
     /**

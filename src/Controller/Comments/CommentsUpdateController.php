@@ -28,7 +28,7 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\CommentsTable Comments
+ * @property \App\Model\Table\CommentsTable $Comments
  */
 class CommentsUpdateController extends AppController
 {

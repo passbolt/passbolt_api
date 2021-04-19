@@ -32,14 +32,21 @@ use Passbolt\AccountSettings\Model\Table\Traits\ThemeSettingsTrait;
 /**
  * AccountSettings Model
  *
- * @property \Passbolt\AccountSettings\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get($primaryKey, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEntity($data = null, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get($primaryKey, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEntity(array $data, array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEmptyEntity()
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AccountSettingsTable extends Table
 {

@@ -756,7 +756,7 @@ class HealthcheckCommand extends PassboltCommand
                 $msg = ' <success>[' . __('PASS') . ']</success> ' . $msg;
                 break;
             case 'fail':
-                $msg = ' <fail>[' . __('FAIL') . '] ' . $msg . '</fail>';
+                $msg = ' <error>[' . __('FAIL') . '] ' . $msg . '</error>';
                 break;
             case 'warn':
                 $msg = ' <warning>[' . __('WARN') . '] ' . $msg . '</warning>';
@@ -765,7 +765,7 @@ class HealthcheckCommand extends PassboltCommand
                 if ($this->_displayOptions['hide-help']) {
                     return;
                 }
-                $msg = '  <info>[' . __('HELP') . ']</info> ' . $msg;
+                $msg = ' <info>[' . __('HELP') . ']</info> ' . $msg;
                 break;
             default:
                 throw new \Exception('Task output case not defined: ' . $case . ' ' . $msg);

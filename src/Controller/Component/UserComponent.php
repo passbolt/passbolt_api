@@ -26,7 +26,7 @@ use donatj\UserAgent\UserAgentParser;
 use Exception;
 
 /**
- * @property \Authentication\Controller\Component\AuthenticationComponent Authentication
+ * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
  */
 class UserComponent extends Component
 {

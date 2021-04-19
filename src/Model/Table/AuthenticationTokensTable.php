@@ -30,15 +30,21 @@ use Cake\Validation\Validator;
 /**
  * AuthenticationTokens Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\AuthenticationToken get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\AuthenticationToken get($primaryKey, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\AuthenticationToken newEmptyEntity()
+ * @method \App\Model\Entity\AuthenticationToken saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class AuthenticationTokensTable extends Table
 {

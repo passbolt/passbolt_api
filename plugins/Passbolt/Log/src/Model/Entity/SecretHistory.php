@@ -19,6 +19,16 @@ namespace Passbolt\Log\Model\Entity;
 
 use Cake\ORM\Entity;
 
+/**
+ * @property string $id
+ * @property string $user_id
+ * @property string $resource_id
+ * @property \Passbolt\Log\Model\Entity\EntityHistory|null $entities_history
+ * @property \App\Model\Entity\Resource $resource
+ * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\User $secrets_history_user
+ * @property \App\Model\Entity\Resource $secrets_history_resource
+ */
 class SecretHistory extends Entity
 {
     /**

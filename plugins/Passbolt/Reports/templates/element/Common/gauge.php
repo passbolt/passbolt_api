@@ -1,4 +1,11 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var string $radd
+ * @var mixed $status
+ * @var string $text
+ * @var string $value
+ */
 use Passbolt\Reports\Utility\AbstractSingleReport;
 
 $this->Html->script('vendors/jquery.min.js', ['block' => 'scriptBottom']);

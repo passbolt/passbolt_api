@@ -21,6 +21,9 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesSelectController
+ */
 class ThemesSelectControllerTest extends AppIntegrationTestCase
 {
     public $AccountSettings;

@@ -63,6 +63,7 @@ class Gnupg extends OpenPGPBackend
         }
 
         $this->_gpg = new \gnupg();
+        /** @phpstan-ignore-next-line */
         $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
     }
 

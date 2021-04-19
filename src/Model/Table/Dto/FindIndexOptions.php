@@ -70,7 +70,7 @@ class FindIndexOptions
      * @param array|null $order orders Orders
      * @param array|null $contain contains Contains
      */
-    public function __construct(?array $filter = [], ?array $order = [], ?array $contain = [])
+    final public function __construct(?array $filter = [], ?array $order = [], ?array $contain = [])
     {
         $this->filter = $filter;
         $this->order = $order;

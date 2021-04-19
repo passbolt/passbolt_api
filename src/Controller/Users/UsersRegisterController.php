@@ -24,7 +24,7 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 
 /**
- * @property \App\Model\Table\UsersTable Users
+ * @property \App\Model\Table\UsersTable $Users
  */
 class UsersRegisterController extends AppController
 {

@@ -7,6 +7,7 @@
   script:
     - composer install --dev --no-interaction
     - composer cs-check
+    - composer stan
 
 check-style-strict:
   extends: .cs-check
