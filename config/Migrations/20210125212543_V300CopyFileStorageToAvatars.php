@@ -34,17 +34,18 @@ class V300CopyFileStorageToAvatars extends AbstractMigration
         $FileStoragesTable = TableRegistry::getTableLocator()
             ->get('FileStorages')
             ->setTable('file_storage');
-        $this->getAdapter()->commitTransaction();
-
-        $fileStorages = $FileStoragesTable->find()->where(['model' => 'Avatar']);
-	$records = array();
-        $dropFileStorage = true;
 
         $AvatarsTable = TableRegistry::getTableLocator()->get('Avatars');
+	$this->getAdapter()->commitTransaction();
+
+        $fileStorages = $FileStoragesTable->find()->where(['model' => 'Avatar']);
+
+        $dropFileStorage = true;
+
         foreach ($fileStorages as $fileStorage) {
             $filePath = $this->getCleanFilePath($fileStorage->path);
             if (file_exists($filePath) && is_readable($filePath)) {
-                array_push($records,$AvatarsTable->newEntity([
+                $avatar = $AvatarsTable->newEntity([
                     'profile_id' => $fileStorage->foreign_key,
                     'file' =>  new UploadedFile(
                         $filePath,
@@ -52,22 +53,19 @@ class V300CopyFileStorageToAvatars extends AbstractMigration
                         \UPLOAD_ERR_OK,
                         $filePath,
                     ),
-                ]));
-	    }
-	}
+                ]);
 
-                if (!$AvatarsTable->saveMany($records)) {
+                if (!$AvatarsTable->save($avatar)) {
                     $dropFileStorage = false;
                     Log::warning(__('The file_storage table will not be dropped.'), $filePath);
                 } else {
-
                     $FileStoragesTable->delete($fileStorage);
                 }
                 if (!unlink($filePath)) {
                     Log::warning(__('The avatar located at {0} could not be deleted.'), $filePath);
                 }
-
-
+            }
+        }
 
         if ($dropFileStorage) {
             $this->table('file_storage')->drop()->save();
