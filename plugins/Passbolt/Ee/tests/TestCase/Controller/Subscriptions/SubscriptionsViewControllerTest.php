@@ -117,7 +117,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
         $this->persistInvalidSubscription();
         $this->authenticateAs('admin');
         $this->getJson('/ee/subscription/key.json');
-        $this->assertInternalError(SubscriptionSignatureException::MESSAGE);
+        $this->assertBadRequestError(SubscriptionSignatureException::MESSAGE);
         $this->assertSubscriptionExists();
     }
 
@@ -133,7 +133,7 @@ class SubscriptionsViewControllerTest extends SubscriptionControllerTestCase
         $this->persistValidSubscription();
         $this->authenticateAs('admin');
         $this->getJson('/ee/subscription/key.json');
-        $this->assertInternalError(SubscriptionSignatureException::MESSAGE);
+        $this->assertBadRequestError(SubscriptionSignatureException::MESSAGE);
         $this->assertSubscriptionExists();
     }
 }
