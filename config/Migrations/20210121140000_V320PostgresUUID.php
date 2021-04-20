@@ -34,12 +34,12 @@ class V320PostgresUUID extends AbstractMigration
         ->changeColumn('token', 'uuid')
         ->changeColumn('user_id', 'uuid')
         ->save();
-
+/*
         $this->table('avatars')
         ->changeColumn('id', 'uuid')
         ->changeColumn('profile_id', 'uuid')
         ->save();
-
+ */
         $this->table('comments')
         ->changeColumn('created_by', 'uuid')
         ->changeColumn('foreign_key', 'uuid')
