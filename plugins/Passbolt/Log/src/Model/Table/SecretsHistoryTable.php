@@ -21,6 +21,7 @@ use App\Error\Exception\ValidationException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\SecretHistory;
 
 /**
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
@@ -114,9 +115,9 @@ class SecretsHistoryTable extends Table
      * Return a SecretsHistory entity.
      *
      * @param array $data entity data
-     * @return \Passbolt\Log\Model\Table\EntityHistory
+     * @return \Passbolt\Log\Model\Entity\SecretHistory
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): SecretHistory
     {
         return $this->newEntity($data, [
             'accessibleFields' => [
@@ -131,11 +132,11 @@ class SecretsHistoryTable extends Table
      * Create a new SecretHistory.
      *
      * @param array $data the data
-     * @return \Passbolt\Log\Model\Table\UserAction|bool
+     * @return \Passbolt\Log\Model\Entity\SecretHistory
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(array $data)
+    public function create(array $data): SecretHistory
     {
         // Check validation rules.
         $secretHistory = $this->buildEntity($data);

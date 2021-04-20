@@ -20,9 +20,9 @@ namespace App\Controller\Comments;
 use App\Controller\AppController;
 use App\Model\Table\CommentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
-use InvalidArgumentException;
 
 /**
  * @property \App\Model\Table\CommentsTable $Comments
@@ -44,12 +44,12 @@ class CommentsViewController extends AppController
         $foreignModelName = ucfirst($foreignModelName);
         // Check model sanity.
         if (!in_array($foreignModelName, CommentsTable::ALLOWED_FOREIGN_MODELS)) {
-            throw new InvalidArgumentException('Invalid model name');
+            throw new BadRequestException('Invalid model name');
         }
 
         // Check uuid sanity.
         if (!Validation::uuid($foreignKey)) {
-            throw new InvalidArgumentException('Invalid id');
+            throw new BadRequestException('Invalid id');
         }
 
         // Retrieve and sanity the query options.

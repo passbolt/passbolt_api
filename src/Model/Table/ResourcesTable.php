@@ -55,6 +55,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findByIdAndDeleted(string $id, bool $delete)
  */
 class ResourcesTable extends Table
 {
@@ -309,6 +310,7 @@ class ResourcesTable extends Table
         }
 
         // Retrieve the users who are allowed to access the resource.
+        /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
         $usersFindOptions['filter']['has-access'] = [$entity->id];
         $allowedUsersIds = $Users->findIndex(Role::USER, $usersFindOptions)

@@ -22,21 +22,23 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsUpdateDryRunService
 {
+    use ModelAwareTrait;
+
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    private $groupsTable;
+    private $Groups;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private $GroupsUsers;
 
     /**
      * @var \App\Service\Groups\GroupsUpdateGroupUsersService
@@ -46,23 +48,23 @@ class GroupsUpdateDryRunService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private $Permissions;
 
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $secretsTable;
+    private $Secrets;
 
     /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
+        $this->loadModel('Groups');
+        $this->loadModel('GroupsUsers');
+        $this->loadModel('Permissions');
+        $this->loadModel('Secrets');
         $this->groupsUpdateGroupUsersService = new GroupsUpdateGroupUsersService();
-        $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
     }
 
     /**
@@ -84,7 +86,7 @@ class GroupsUpdateDryRunService
         $usersMissingSecrets = [];
         $operatorSecretsToEncrypt = [];
 
-        $this->groupsTable->getConnection()->transactional(
+        $this->Groups->getConnection()->transactional(
             function () use ($uac, $group, $changes, &$usersMissingSecrets, &$operatorSecretsToEncrypt) {
                 $updateGroupsUsersResult = $this->updateGroupUsers($uac, $group, $changes);
                 $addedGroupUsers = Hash::get($updateGroupsUsersResult, 'added', []);
@@ -111,8 +113,9 @@ class GroupsUpdateDryRunService
      */
     private function getGroup(string $groupId): Group
     {
-        $group = $this->groupsTable->findById($groupId)->first();
-        if (empty($group) || $group->deleted) {
+        /** @var \App\Model\Entity\Group|null $group */
+        $group = $this->Groups->findById($groupId)->first();
+        if (empty($group) || $group->get('deleted')) {
             throw new NotFoundException(__('The group does not exist.'));
         }
 
@@ -140,7 +143,7 @@ class GroupsUpdateDryRunService
         }
 
         // Only a group manager can add new members to a group.
-        $canAdd = $this->groupsUsersTable->isManager($uac->getId(), $group->id);
+        $canAdd = $this->GroupsUsers->isManager($uac->getId(), $group->id);
         if (!$canAdd) {
             return [];
         }
@@ -166,7 +169,7 @@ class GroupsUpdateDryRunService
     {
         $errors = $group->getErrors();
         if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate group data.'), $group, $this->groupsTable);
+            throw new ValidationException(__('Could not validate group data.'), $group, $this->Groups);
         }
     }
 
@@ -209,7 +212,7 @@ class GroupsUpdateDryRunService
      */
     private function getResourcesIdsGroupHasAccess(Group $group): array
     {
-        return $this->permissionsTable->findAllByAro(PermissionsTable::RESOURCE_ACO, $group->id)
+        return $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $group->id)
             ->select('aco_foreign_key')
             ->extract('aco_foreign_key')
             ->toArray();
@@ -234,7 +237,7 @@ class GroupsUpdateDryRunService
         $userMissingSecrets = [];
 
         // Retrieve the resources ids a user has a secret for.
-        $resourcesIdsUserHasSecrets = $this->secretsTable->find()
+        $resourcesIdsUserHasSecrets = $this->Secrets->find()
             ->where([
                 'user_id' => $userId,
                 'resource_id IN' => $resourcesIdsGroupHasAccess,
@@ -274,7 +277,7 @@ class GroupsUpdateDryRunService
         $resourceIds = array_unique(Hash::extract($usersMissingSecrets, '{n}.resource_id'));
 
         // Retrieve the secrets the operator will have to encrypt.
-        $query = $this->secretsTable->find()
+        $query = $this->Secrets->find()
             ->where([
                 'resource_id IN' => $resourceIds,
                 'user_id' => $uac->getId() ?? '',

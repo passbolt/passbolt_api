@@ -27,16 +27,18 @@ use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 
 class ResourcesShareService
 {
+    use ModelAwareTrait;
+
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private $GroupsUsers;
 
     /**
      * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
@@ -51,7 +53,7 @@ class ResourcesShareService
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $resourcesTable;
+    private $Resources;
 
     /**
      * @var \App\Service\Secrets\SecretsUpdateSecretsService
@@ -68,10 +70,10 @@ class ResourcesShareService
      */
     public function __construct()
     {
-        $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->loadModel('GroupsUsers');
+        $this->loadModel('Resources');
         $this->permissionsGetUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();
-        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
         $this->userHasPermissionService = new UserHasPermissionService();
     }
@@ -83,14 +85,14 @@ class ResourcesShareService
      * @param string $resourceId The target resource
      * @param array $changes The list of permissions changes to apply
      * @param array $secrets The list of new secrets to add
-     * @return \App\Model\Entity\Resource
+     * @return Resource
      * @throws \Exception
      */
     public function share(UserAccessControl $uac, string $resourceId, array $changes = [], array $secrets = [])
     {
         $resource = $this->getResource($resourceId);
 
-        $this->resourcesTable->getConnection()->transactional(function () use ($uac, $resource, $changes, $secrets) {
+        $this->Resources->getConnection()->transactional(function () use ($uac, $resource, $changes, $secrets) {
             $updatePermissionsResult = $this->updatePermissions($uac, $resource, $changes);
             $this->updateSecrets($uac, $resource, $secrets);
             $this->postAccessesGranted($uac, $updatePermissionsResult['added']);
@@ -104,12 +106,13 @@ class ResourcesShareService
      * Retrieve the resource.
      *
      * @param string $resourceId The resource identifier to retrieve.
-     * @return \App\Model\Entity\Resource
+     * @return Resource
      * @throws \Cake\Http\Exception\NotFoundException If the resource does not exist.
      */
-    private function getResource(string $resourceId)
+    private function getResource(string $resourceId): Resource
     {
-        $resource = $this->resourcesTable->findByIdAndDeleted($resourceId, false)->first();
+        /** @var Resource|null $resource */
+        $resource = $this->Resources->findByIdAndDeleted($resourceId, false)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
@@ -121,7 +124,7 @@ class ResourcesShareService
      * Update the permissions of a resource.
      *
      * @param \App\Utility\UserAccessControl $uac The current user
-     * @param \App\Model\Entity\Resource $resource The target resource
+     * @param Resource $resource The target resource
      * @param array $changes The list of permissions changes to apply
      * @return array
      * [
@@ -131,29 +134,32 @@ class ResourcesShareService
      * ]
      * @throws \Exception If something unexpected occurred
      */
-    private function updatePermissions(UserAccessControl $uac, \App\Model\Entity\Resource $resource, array $changes)
+    private function updatePermissions(UserAccessControl $uac, Resource $resource, array $changes)
     {
+        $result = [];
         try {
-            return $this->permissionsUpdatePermissionsService
+            $result = $this->permissionsUpdatePermissionsService
                 ->updatePermissions($uac, PermissionsTable::RESOURCE_ACO, $resource->id, $changes);
         } catch (CustomValidationException $e) {
             $resource->setError('permissions', $e->getErrors());
             $this->handleValidationErrors($resource);
         }
+
+        return $result;
     }
 
     /**
      * Handle resource validation errors.
      *
-     * @param \App\Model\Entity\Resource $resource The target resource
+     * @param Resource $resource The target resource
      * @return void
      * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
-    private function handleValidationErrors(\App\Model\Entity\Resource $resource)
+    private function handleValidationErrors(Resource $resource)
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->resourcesTable);
+            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->Resources);
         }
     }
 
@@ -201,7 +207,7 @@ class ResourcesShareService
     {
         $eventData = ['permission' => $permission, 'accessControl' => $uac];
         $event = new Event('Service.ResourcesShare.afterAccessGranted', $this, $eventData);
-        $this->resourcesTable->getEventManager()->dispatch($event);
+        $this->Resources->getEventManager()->dispatch($event);
     }
 
     /**
@@ -235,7 +241,7 @@ class ResourcesShareService
     {
         $eventData = ['permission' => $permission, 'accessControl' => $uac];
         $event = new Event('Service.ResourcesShare.afterAccessRevoked', $this, $eventData);
-        $this->resourcesTable->getEventManager()->dispatch($event);
+        $this->Resources->getEventManager()->dispatch($event);
     }
 
     /**
@@ -244,11 +250,11 @@ class ResourcesShareService
      * @param Resource $resource The target resource
      * @param string $groupId The target group
      * @return void
-     * @throws \App\Service\Resources\Exception
+     * @throws \Exception
      */
     private function postGroupAccessRevoked(Resource $resource, string $groupId)
     {
-        $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
+        $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
             $this->postUserAccessRevoked($resource, $groupUserId);
         }
@@ -272,7 +278,7 @@ class ResourcesShareService
             return;
         }
 
-        $this->resourcesTable->deleteLostAccessAssociatedData($resource->id, [$userId]);
+        $this->Resources->deleteLostAccessAssociatedData($resource->id, [$userId]);
     }
 
     /**
@@ -300,7 +306,7 @@ class ResourcesShareService
             ->getUsersIdsHavingAccessTo($resourceId);
         $userIdsHavingAccessAfter = [];
 
-        $this->resourcesTable->getConnection()->transactional(
+        $this->Resources->getConnection()->transactional(
             function () use ($uac, $resource, $changes, &$userIdsHavingAccessAfter) {
                 $this->updatePermissions($uac, $resource, $changes);
                 $userIdsHavingAccessAfter = $this->permissionsGetUsersIdsHavingAccessToService

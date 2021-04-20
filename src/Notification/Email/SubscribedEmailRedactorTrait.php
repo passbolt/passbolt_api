@@ -35,7 +35,7 @@ trait SubscribedEmailRedactorTrait
     }
 
     /**
-     * @var
+     * @var array
      */
     private $_defaultConfig = [];
 

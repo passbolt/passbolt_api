@@ -32,6 +32,7 @@ trait ControllerActionTrait
         $statusCode = $event->getSubject()->getResponse()->getStatusCode();
         $status = (int)($statusCode === 200);
         $userAction = UserAction::getInstance();
+        /** @var \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs */
         $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
         $ActionLogs->create($userAction, $status);
     }

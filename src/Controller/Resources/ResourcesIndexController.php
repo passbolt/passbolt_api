@@ -100,10 +100,7 @@ class ResourcesIndexController extends AppController
 
             foreach ($resource->secrets as $secret) {
                 try {
-                    $this->Resources
-                        ->getAssociation('Secrets')
-                        ->getAssociation('SecretAccesses')
-                        ->create($secret, $this->User->getAccessControl());
+                    $this->Resources->Secrets->SecretAccesses->create($secret, $this->User->getAccessControl());
                 } catch (\Exception $e) {
                     throw new InternalErrorException('Could not log secret access entry.');
                 }

@@ -82,7 +82,7 @@ class DatabaseController extends WebInstallerController
     /**
      * Index
      *
-     * @return void|mixed
+     * @return void
      */
     public function index(): void
     {

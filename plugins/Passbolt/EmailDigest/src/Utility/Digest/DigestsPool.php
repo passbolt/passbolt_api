@@ -36,7 +36,7 @@ class DigestsPool
     private static $instance;
 
     /**
-     * @var \Passbolt\EmailDigest\Utility\Digest\DigestInterface[]
+     * @var array
      */
     private $digests = [];
 
@@ -54,7 +54,7 @@ class DigestsPool
      */
     public static function getInstance()
     {
-        if (!static::$instance) {
+        if (!isset(static::$instance)) {
             static::$instance = new static();
         }
 

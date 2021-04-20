@@ -44,9 +44,9 @@ interface DigestInterface
      * Return a list of emails. Even if the digest return one, the digest must be in an array.
      * This function contains the strategy for the digest to use to compose the final emails
      *
-     * @return \Passbolt\EmailDigest\Utility\Digest\EmailDigestInterface[]
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      */
-    public function marshalEmails();
+    public function marshalEmails(): array;
 
     /**
      * Return a boolean indicating if the digest can handle the given email entity from email queue and marshal it into an email digest.

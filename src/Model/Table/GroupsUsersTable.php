@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\GroupsUser;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\GroupsCleanupTrait;
@@ -48,6 +49,8 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findByGroupId(string $groupId)
+ * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
  */
 class GroupsUsersTable extends Table
 {
@@ -362,9 +365,9 @@ class GroupsUsersTable extends Table
      * Return a groupUser entity.
      *
      * @param array $data entity data
-     * @return \App\Model\Table\GroupsUser
+     * @return \App\Model\Entity\GroupsUser
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): GroupsUser
     {
         if (!isset($data['is_admin'])) {
             $data['is_admin'] = false;

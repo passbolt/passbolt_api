@@ -73,8 +73,8 @@ class ResourceDigests implements EventListenerInterface
                 $digest = (new EmailDigest())
                     ->setSubject(__('Multiple passwords have been changed in passbolt'))
                     ->setTemplate(static::RESOURCE_CHANGES_TEMPLATE)
-                    ->setEmailRecipient($emailData->email)
-                    ->addTemplateVar('user', $emailData->template_vars['body']['user'])
+                    ->setEmailRecipient($emailData->get('email'))
+                    ->addTemplateVar('user', $emailData->get('template_vars')['body']['user'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
 
@@ -102,8 +102,8 @@ class ResourceDigests implements EventListenerInterface
                 $digest = (new EmailDigest())
                     ->setSubject(__('Multiple passwords have been shared with you in passbolt'))
                     ->setTemplate(static::RESOURCE_SHARE_MULTIPLE_TEMPLATE)
-                    ->setEmailRecipient($emailData->email)
-                    ->addTemplateVar('owner', $emailData->template_vars['body']['owner'])
+                    ->setEmailRecipient($emailData->get('email'))
+                    ->addTemplateVar('owner', $emailData->get('template_vars')['body']['owner'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
 

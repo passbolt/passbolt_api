@@ -52,6 +52,8 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Group[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Group[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Group[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
+ * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
  */
 class GroupsTable extends Table
 {
@@ -311,6 +313,7 @@ class GroupsTable extends Table
         $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
             ->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
+            /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
         }

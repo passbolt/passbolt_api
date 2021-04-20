@@ -36,12 +36,12 @@ class HealthcheckHtmlHelper extends HealthcheckCommand
      * Display assert result as HTML formatted section
      *
      * @param bool $condition to check
-     * @param string $success message
-     * @param string $error message
-     * @param string $help optional
+     * @param string|string[] $success to display when success
+     * @param string|string[] $error to display when error
+     * @param string|string[]|null $help string optional help message
      * @return void
      */
-    protected function assert($condition, $success, $error, $help = null)
+    protected function assert(bool $condition, $success, $error, $help = null)
     {
         if ($condition) {
             echo '<div class="message success">' . $success . '</div>' . PHP_EOL;
@@ -54,12 +54,12 @@ class HealthcheckHtmlHelper extends HealthcheckCommand
      * Display warning result as HTML formatted section
      *
      * @param bool $condition to check
-     * @param string $success message
-     * @param string $warning message
-     * @param null $help (optional)
+     * @param string|string[] $success message to display when success
+     * @param string|string[] $warning message to display if fails
+     * @param string|string[]|null $help optional help message
      * @return void
      */
-    protected function warning($condition, $success, $warning, $help = null)
+    protected function warning(bool $condition, $success, $warning, $help = null)
     {
         if ($condition) {
             echo '<div class="message success">' . $success . '</div>' . PHP_EOL;
@@ -74,7 +74,7 @@ class HealthcheckHtmlHelper extends HealthcheckCommand
      * @param string $title section title
      * @return void
      */
-    protected function title($title)
+    protected function title(string $title)
     {
         echo '<h3>' . $title . '</h3>' . PHP_EOL;
     }

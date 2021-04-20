@@ -40,7 +40,7 @@ class IsActiveRule
             $id = $entity->get($options['errorField']);
             $lookupEntity = $Table->get($id);
 
-            return $lookupEntity->active === true;
+            return $lookupEntity->get('active') === true;
         } catch (\Exception $e) {
         }
 
