@@ -62,7 +62,7 @@ class ResourcesTagsAddController extends AppController
             $this->Tags->deleteAllUnusedTags();
             $options = ['contain' => ['tag' => 1, 'permission' => 1]];
             $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
-            $this->success(__('The operation was successful.'), $resource->tags);
+            $this->success(__('The operation was successful.'), $resource->get('tags'));
         } else {
             throw new InternalErrorException('Could not save the tags, try again later.');
         }
@@ -101,7 +101,7 @@ class ResourcesTagsAddController extends AppController
         $userId = $this->User->id();
         $isOwner = $resource->permission->type === Permission::OWNER;
 
-        foreach ($resource->tags as $i => $tag) {
+        foreach ($resource->get('tags') as $i => $tag) {
             // Do not patch tags owned by other users.
             if ($tag->_joinData->user_id != $userId && !is_null($tag->_joinData->user_id)) {
                 continue;
@@ -113,6 +113,7 @@ class ResourcesTagsAddController extends AppController
                     $msg = __('You do not have the permission to edit shared tags on this resource.');
                     throw new BadRequestException($msg);
                 } else {
+                    /** @phpstan-ignore-next-line */
                     unset($resource->tags[$i]);
                 }
             } else {
@@ -142,13 +143,13 @@ class ResourcesTagsAddController extends AppController
                         'user_id' => $userId,
                     ]);
                 }
-                array_push($resource->tags, $existingTag);
+                array_push($resource->get('tags'), $existingTag);
             }
         }
 
         // Create the new tags.
         $requestTags = $this->Tags->buildEntitiesOrFail($userId, $data);
-        $resource->tags = array_merge($resource->tags, $requestTags);
+        $resource->set('tags', array_merge($resource->get('tags'), $requestTags));
         $resource->setDirty('tags', true);
         $resource->setAccess('tags', true);
     }

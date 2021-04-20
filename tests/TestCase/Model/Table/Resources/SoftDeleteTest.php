@@ -55,7 +55,6 @@ class SoftDeleteTest extends AppTestCase
         $resource = $this->Resources->get($resourceId);
         $this->assertFalse($resource->deleted);
         $this->Resources->softDelete($userId, $resource);
-        var_dump($resource->getErrors());
         $this->assertEmpty($resource->getErrors());
 
         // Check that the resource is well soft deleted.

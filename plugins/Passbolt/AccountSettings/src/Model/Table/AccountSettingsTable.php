@@ -156,9 +156,7 @@ class AccountSettingsTable extends Table
             $props[] = UuidFactory::uuid($settingNamespace);
         }
 
-        return $this->find()
-            ->where(['user_id' => $userId, 'property_id IN' => $props])
-            ->all();
+        return $this->find()->where(['user_id' => $userId, 'property_id IN' => $props]);
     }
 
     /**
@@ -166,10 +164,10 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId uuid
      * @param string $property The name of the property to get
-     * @return \Cake\Datasource\EntityInterface|array The first result from the ResultSet.
+     * @return \Passbolt\AccountSettings\Model\Entity\AccountSetting The first result from the ResultSet.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getFirstPropertyOrFail(string $userId, string $property)
+    public function getFirstPropertyOrFail(string $userId, string $property): AccountSetting
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
@@ -177,6 +175,7 @@ class AccountSettingsTable extends Table
 
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
 
+        /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting $entity */
         $entity = $this->find()
             ->where(['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)])
             ->firstOrFail();
@@ -189,13 +188,13 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId uuid
      * @param string $property The property name
-     * @param mixed $value The property value
+     * @param string $value The property value
      * @throws \Cake\Http\Exception\BadRequestException if userId does not exist
      * @throws \App\Error\Exception\ValidationException if could not save because of validation issues
      * @throws \Cake\Http\Exception\InternalErrorException if save operation saved for another reason
      * @return \Passbolt\AccountSettings\Model\Entity\AccountSetting
      */
-    public function createOrUpdateSetting(string $userId, string $property, string $value)
+    public function createOrUpdateSetting(string $userId, string $property, string $value): AccountSetting
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
@@ -204,6 +203,7 @@ class AccountSettingsTable extends Table
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
         $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
         $settingValues = ['value' => $value, 'property' => $property];
+        /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting|null $settingItem */
         $settingItem = $this->find()
             ->where($settingFinder)
             ->first();

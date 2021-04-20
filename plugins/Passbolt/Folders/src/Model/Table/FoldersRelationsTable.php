@@ -23,6 +23,7 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
@@ -54,6 +55,11 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeS
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  * @method \Cake\ORM\Query findByForeignId(string $id)
  * @method \Cake\ORM\Query findById(string $id)
+ * @method \Cake\ORM\Query findByUserId(string $userId)
+ * @method \Cake\ORM\Query findByFolderParentId(string $folderParentId)
+ * @method \Cake\ORM\Query findByUserIdAndForeignModel(string $userId, string $foreignModel)
+ * @method \Cake\ORM\Query findByForeignIdAndFolderParentId(string $foreignId, string $folderParentId)
+ * @method \Cake\ORM\Query findByUserIdAndFolderParentId(string $userId, string $folderParentId)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class FoldersRelationsTable extends Table
@@ -411,7 +417,7 @@ class FoldersRelationsTable extends Table
      *
      * @param string $userId The target user to look for
      * @param string $foreignId The item identifier
-     * @return ?string|null
+     * @return string|null
      */
     public function getItemFolderParentIdInUserTree(string $userId, string $foreignId): ?string
     {
@@ -460,12 +466,12 @@ class FoldersRelationsTable extends Table
      *
      * @param string $foreignId The target entity id
      * @param string|null $folderParentId The target entity parent id
-     * @return \Passbolt\Folders\Model\Table\DateTime
+     * @return \Cake\I18n\FrozenTime|null
      */
     public function getRelationOldestCreatedDate(
         string $foreignId,
         ?string $folderParentId = FoldersRelation::ROOT
-    ) {
+    ): ?FrozenTime {
         $conditions = [
             'foreign_id' => $foreignId,
             'folder_parent_id' => $folderParentId,

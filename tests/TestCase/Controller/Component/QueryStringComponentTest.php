@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Component;
+namespace App\Test\TestCase\Controller\Component;
 
 use App\Controller\Component\QueryStringComponent;
 use Cake\Controller\ComponentRegistry;

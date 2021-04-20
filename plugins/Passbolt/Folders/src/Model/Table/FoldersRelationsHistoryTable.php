@@ -135,6 +135,7 @@ class FoldersRelationsHistoryTable extends Table
      */
     public function buildEntity(array $data): FoldersRelation
     {
+        /** @var \Passbolt\Folders\Model\Table\FoldersRelationsTable $foldersRelationsTable */
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
 
         return $foldersRelationsTable->newEntity($data, [

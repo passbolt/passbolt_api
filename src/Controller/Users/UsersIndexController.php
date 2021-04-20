@@ -33,7 +33,7 @@ class UsersIndexController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadComponent('BryanCrowe/ApiPagination.ApiPagination', [
+        $this->loadComponent('ApiPagination', [
             'model' => 'Users',
         ]);
     }
@@ -45,11 +45,13 @@ class UsersIndexController extends AppController
             'Profiles.created',
             'Profiles.modified',
             'Users.username',
+            'Users.created',
             'Users.modified',
             'Users.last_logged_in',
         ],
-        'limit' => 1000000, // Default number of resources per page,
-        'maxLimit' => 1000000, // Maximum amount of items returned (CakePHP default = 100)
+        'order' => [
+            'Users.username' => 'asc', // Default sorted field
+        ],
     ];
 
     /**
@@ -63,10 +65,8 @@ class UsersIndexController extends AppController
             ->allowContains([
                 'last_logged_in', 'groups_users', 'gpgkey', 'profile', 'role',
                 // @deprecate when v2.13 support drops
-                'LastLoggedIn', // remapped ot last_logged_in in QueryStringComponent
+                'LastLoggedIn', // remapped to last_logged_in in QueryStringComponent
             ])
-            ->allowOrders(['User.username', 'User.created', 'User.modified'])
-            ->allowOrders(['Profile.first_name', 'Profile.last_name', 'Profile.created', 'Profile.modified'])
             ->allowFilters(['search', 'has-groups', 'has-access', 'is-admin']);
 
         if ($this->User->role() === Role::ADMIN) {

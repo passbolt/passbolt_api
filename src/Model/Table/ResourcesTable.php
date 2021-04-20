@@ -56,6 +56,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Resource[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findByIdAndDeleted(string $id, bool $delete)
  */
 class ResourcesTable extends Table
 {
@@ -327,6 +328,7 @@ class ResourcesTable extends Table
         }
 
         // Retrieve the users who are allowed to access the resource.
+        /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
         $usersFindOptions['filter']['has-access'] = [$entity->id];
         $allowedUsersIds = $Users->findIndex(Role::USER, $usersFindOptions)
@@ -423,6 +425,7 @@ class ResourcesTable extends Table
         if (Configure::read('passbolt.plugins.tags.enabled')) {
             $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
             $ResourcesTags->deleteAll(['resource_id' => $resource->id]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
             $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
             $Tags->deleteAllUnusedTags();
         }
@@ -459,6 +462,7 @@ class ResourcesTable extends Table
                 'resource_id' => $resourceId,
                 'user_id IN' => $usersId,
             ]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
             $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
             $Tags->deleteAllUnusedTags();
         }
@@ -498,6 +502,7 @@ class ResourcesTable extends Table
             if (Configure::read('passbolt.plugins.tags.enabled')) {
                 $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
                 $ResourcesTags->deleteAll(['resource_id IN' => $resourceIds]);
+                /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
                 $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
                 $Tags->deleteAllUnusedTags();
             }

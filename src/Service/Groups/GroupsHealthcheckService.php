@@ -41,6 +41,7 @@ class GroupsHealthcheckService extends AbstractHealthcheckService
     public function __construct(?GroupsTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
+        /** @phpstan-ignore-next-line */
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Groups');
         $this->checks[self::CHECK_VALIDATES] = $this->healthcheckFactory(self::CHECK_VALIDATES, true);
     }

@@ -64,6 +64,7 @@ class MfaOrgSettings
         }
         $settings[MfaSettings::PROVIDERS] = $this->formatProviders($settings[MfaSettings::PROVIDERS]);
         $this->settings = $settings;
+        /** @phpstan-ignore-next-line  */
         $this->OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
     }
 
@@ -101,6 +102,7 @@ class MfaOrgSettings
         $defaultSettings = ['providers' => []];
         $configureSettings = Configure::read('passbolt.plugins.multiFactorAuthentication');
         try {
+            /** @var \App\Model\Table\OrganizationSettingsTable $orgSettings */
             $orgSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
             $databaseSettings = $orgSettings->getFirstSettingOrFail(MfaSettings::MFA);
             $databaseSettings = json_decode($databaseSettings->value, true);

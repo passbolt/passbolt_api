@@ -102,6 +102,7 @@ class FolderizableBehavior extends Behavior
      */
     public function initialize(array $config): void
     {
+        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         parent::initialize($config);
     }
@@ -278,7 +279,7 @@ class FolderizableBehavior extends Behavior
             if ($when === 'always' || ($when === 'new' && $new) || ($when === 'existing' && !$new)) {
                 // When the entity is a new entity, we use the created_by property.
                 $folderParentId = $this->foldersRelationsTable
-                    ->getItemFolderParentIdInUserTree($entity->created_by, $entity->id);
+                    ->getItemFolderParentIdInUserTree($entity->get('created_by'), $entity->id);
                 $isPersonal = $this->foldersRelationsTable->isItemPersonal($entity->id);
                 $this->addPersonalStatusProperty($entity, $isPersonal);
                 $this->addFolderParentIdProperty($entity, $folderParentId);

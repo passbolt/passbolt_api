@@ -38,15 +38,17 @@ class MfaMiddleware implements MiddlewareInterface
     /**
      * Mfa Middleware.
      *
-     * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $handler The handler.
-     * @return \Cake\Http\Response The response.
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The handler.
+     * @return \Psr\Http\Message\ResponseInterface The response.
      */
     public function process(
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
+        /** @var \Cake\Http\ServerRequest $request */
         if ($this->requiredMfaCheck($request)) {
+            /** @var \Cake\Http\Response $response */
             $response = $handler->handle($request);
             // Clear any dubious cookie if mfa check required
             if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {

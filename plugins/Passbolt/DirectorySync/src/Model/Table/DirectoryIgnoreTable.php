@@ -219,9 +219,9 @@ class DirectoryIgnoreTable extends Table
      *
      * @param string $entityType Users or Groups
      * @param bool $dryRun false
-     * @return \Passbolt\DirectorySync\Model\Table\number of affected records
+     * @return int number of affected records
      */
-    public function cleanupHardDeletedEntities(string $entityType, ?bool $dryRun = false)
+    public function cleanupHardDeletedEntities(string $entityType, ?bool $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id'])
@@ -240,9 +240,9 @@ class DirectoryIgnoreTable extends Table
      *
      * @param array|null $entryIds entry ids
      * @param bool $dryRun dry run
-     * @return \Passbolt\DirectorySync\Model\Table\number
+     * @return int number
      */
-    public function cleanupHardDeletedDirectoryEntries(?array $entryIds = null, ?bool $dryRun = false)
+    public function cleanupHardDeletedDirectoryEntries(?array $entryIds = null, ?bool $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id']);

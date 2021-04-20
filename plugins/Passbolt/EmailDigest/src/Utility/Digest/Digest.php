@@ -35,14 +35,14 @@ class Digest extends AbstractDigest implements DigestInterface
     private $emailPreviewFactory;
 
     /**
-     * @var $emails[]
+     * @var array
      */
-    private $emails = [];
+    private $emails;
 
     /**
-     * @var []
+     * @var array
      */
-    private $emailCount = [];
+    private $emailCount;
 
     /**
      * List of supported templates. An empty list means that all templates are supported.
@@ -50,7 +50,7 @@ class Digest extends AbstractDigest implements DigestInterface
      *
      * @var string[]
      */
-    private $supportedTemplates = [];
+    private $supportedTemplates;
 
     /**
      * Name of the variable in template vars body which contain the user.
@@ -77,7 +77,7 @@ class Digest extends AbstractDigest implements DigestInterface
      * Digest constructor.
      *
      * @param string $subject templates
-     * @param string $supportedTemplates subject
+     * @param array $supportedTemplates subject
      * @param string $executedByTemplateVarKey key to look for user info in email data
      * @param callable $onThresholdCallback what to do when too many emails are present in digest
      * @param \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory|null $emailPreviewFactory email preview factory
@@ -132,9 +132,9 @@ class Digest extends AbstractDigest implements DigestInterface
     /**
      * Process and set the content of the emails (as EmailDigest).
      *
-     * @return \Passbolt\EmailDigest\Utility\Digest\EmailDigestInterface[]
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      */
-    public function marshalEmails()
+    public function marshalEmails(): array
     {
         $result = [];
         foreach ($this->emails as $username => $emailsByOperator) {
@@ -185,7 +185,7 @@ class Digest extends AbstractDigest implements DigestInterface
     {
         $executedBy = $this->getOperatorFromEmail($emailQueueEntity);
 
-        return !empty($executedBy) ? $this->isTemplateSupported($emailQueueEntity->template) : false;
+        return !empty($executedBy) ? $this->isTemplateSupported($emailQueueEntity->get('template')) : false;
     }
 
     /**
@@ -207,7 +207,7 @@ class Digest extends AbstractDigest implements DigestInterface
      */
     private function getOperatorFromEmail(Entity $emailData)
     {
-        return $emailData->template_vars['body'][$this->executedByTemplateVarKey] ?? null;
+        return $emailData->get('template_vars')['body'][$this->executedByTemplateVarKey] ?? null;
     }
 
     /**

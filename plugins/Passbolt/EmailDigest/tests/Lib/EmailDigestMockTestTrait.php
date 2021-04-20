@@ -44,7 +44,7 @@ trait EmailDigestMockTestTrait
                 $this->emailDigests = $emailDigests;
             }
 
-            public function marshalEmails()
+            public function marshalEmails(): array
             {
                 return $this->emailDigests;
             }

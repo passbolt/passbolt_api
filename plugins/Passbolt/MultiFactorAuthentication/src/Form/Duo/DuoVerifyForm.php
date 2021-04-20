@@ -46,9 +46,9 @@ class DuoVerifyForm extends MfaForm
      * Build form schema
      *
      * @param \Cake\Form\Schema $schema schema
-     * @return $this|\Cake\Form\Schema
+     * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('sig_response', ['type' => 'string']);

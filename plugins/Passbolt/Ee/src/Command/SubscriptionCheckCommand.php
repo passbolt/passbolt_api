@@ -23,7 +23,6 @@ use Cake\Chronos\Date;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Cake\ORM\TableRegistry;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionFormatException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionSignatureException;
@@ -107,7 +106,8 @@ class SubscriptionCheckCommand extends PassboltCommand
     protected function displayInfo(SubscriptionKeyDto $subscription, ConsoleIo $io)
     {
         $data = $subscription->toArray();
-        $users = TableRegistry::getTableLocator()->get('Users');
+        /** @var \App\Model\Table\UsersTable $users */
+        $users = $this->loadModel('Users');
 
         $io->nl();
         $io->out(__('Thanks for choosing Passbolt Pro'));

@@ -23,28 +23,29 @@ use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 
 class FoldersDeleteService
 {
     use EventDispatcherTrait;
+    use ModelAwareTrait;
 
     public const FOLDERS_DELETE_FOLDER_EVENT = 'folders.folder.delete';
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    private $foldersTable;
+    private $Folders;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private $FoldersRelations;
 
     /**
      * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
@@ -54,12 +55,12 @@ class FoldersDeleteService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private $Permissions;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $resourcesTable;
+    private $Resources;
 
     /**
      * @var \App\Service\Permissions\UserHasPermissionService
@@ -71,11 +72,11 @@ class FoldersDeleteService
      */
     public function __construct()
     {
-        $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
-        $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+        $this->loadModel('Passbolt/Folders.Folders');
+        $this->loadModel('Passbolt/Folders.FoldersRelations');
+        $this->loadModel('Permissions');
+        $this->loadModel('Resources');
         $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->userHasPermissionService = new UserHasPermissionService();
     }
 
@@ -95,7 +96,7 @@ class FoldersDeleteService
             throw new ForbiddenException(__('You are not allowed to delete this folder.'));
         }
 
-        $this->foldersTable->getConnection()->transactional(function () use ($uac, $folder, $cascade) {
+        $this->Folders->getConnection()->transactional(function () use ($uac, $folder, $cascade) {
             $usersIds = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($folder->id);
             $this->deleteFolder($uac, $folder, $cascade);
             $this->dispatchEvent(self::FOLDERS_DELETE_FOLDER_EVENT, [
@@ -116,7 +117,7 @@ class FoldersDeleteService
     private function getFolder(string $folderId): Folder
     {
         try {
-            return $this->foldersTable->get($folderId);
+            return $this->Folders->get($folderId);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The folder does not exist.'));
         }
@@ -154,9 +155,9 @@ class FoldersDeleteService
             $this->moveFolderContentToRoot($folder);
         }
 
-        $this->foldersTable->delete($folder, ['atomic' => false]);
-        $this->foldersRelationsTable->deleteAll(['foreign_id' => $folder->id]);
-        $this->permissionsTable->deleteAll(['aco_foreign_key' => $folder->id]);
+        $this->Folders->delete($folder, ['atomic' => false]);
+        $this->FoldersRelations->deleteAll(['foreign_id' => $folder->id]);
+        $this->Permissions->deleteAll(['aco_foreign_key' => $folder->id]);
     }
 
     /**
@@ -169,7 +170,7 @@ class FoldersDeleteService
      */
     private function deleteFolderChildrenOrMoveToRoot(UserAccessControl $uac, Folder $folder): void
     {
-        $children = $this->foldersRelationsTable->findAllByFolderParentId($folder->id);
+        $children = $this->FoldersRelations->findByFolderParentId($folder->id);
 
         foreach ($children as $folderRelation) {
             $this->deleteFolderChildOrMoveToRoot(
@@ -209,7 +210,7 @@ class FoldersDeleteService
                     break;
             }
         } else {
-            $this->foldersRelationsTable->moveItemFrom($foreignId, [$folderParentId], null);
+            $this->FoldersRelations->moveItemFrom($foreignId, [$folderParentId], null);
         }
     }
 
@@ -229,10 +230,10 @@ class FoldersDeleteService
             throw new ForbiddenException(__('You cannot delete this resource'));
         }
 
-        $resource = $this->resourcesTable->get($resourceId);
+        $resource = $this->Resources->get($resourceId);
         // The soft delete function will trigger an event that once caught will remove the resource from the users
         // folders trees.
-        $this->resourcesTable->softDelete($uac->getId(), $resource);
+        $this->Resources->softDelete($uac->getId(), $resource);
     }
 
     /**
@@ -244,6 +245,6 @@ class FoldersDeleteService
      */
     private function moveFolderContentToRoot(Folder $folder): void
     {
-        $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['folder_parent_id' => $folder->id]);
+        $this->FoldersRelations->updateAll(['folder_parent_id' => null], ['folder_parent_id' => $folder->id]);
     }
 }

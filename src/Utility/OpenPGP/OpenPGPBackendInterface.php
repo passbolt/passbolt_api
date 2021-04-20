@@ -63,9 +63,9 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception if the key cannot be found in the keyring
      * @throws \Cake\Core\Exception\Exception if the key is using a passphrase
      * @throws \Cake\Core\Exception\Exception if the key cannot be used to decrypt
-     * @return bool true if success
+     * @return void
      */
-    public function setVerifyKeyFromFingerprint(string $fingerprint);
+    public function setVerifyKeyFromFingerprint(string $fingerprint): void;
 
     /**
      * Set a key for signing.

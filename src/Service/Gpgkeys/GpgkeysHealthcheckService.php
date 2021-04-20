@@ -54,6 +54,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->gpg = $gpg ?? OpenPGPBackendFactory::get();
+        /** @phpstan-ignore-next-line */
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Gpgkeys');
         $this->checks[self::CHECK_CANENCRYPT] = $this->healthcheckFactory(self::CHECK_CANENCRYPT, true);
         $this->checks[self::CHECK_VALIDATES] = $this->healthcheckFactory(self::CHECK_VALIDATES, true);

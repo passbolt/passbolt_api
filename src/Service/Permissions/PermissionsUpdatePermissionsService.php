@@ -49,10 +49,8 @@ class PermissionsUpdatePermissionsService
     {
         $this->permissionsAcoHasOwnerService = new PermissionsAcoHasOwnerService();
         $this->permissionsCreateService = new PermissionsCreateService();
-        $this->permissionsTable = $permissionsTable;
-        if (is_null($this->permissionsTable)) {
-            $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        }
+        /** @phpstan-ignore-next-line */
+        $this->permissionsTable = $permissionsTable ?? TableRegistry::getTableLocator()->get('Permissions');
     }
 
     /**
@@ -173,6 +171,7 @@ class PermissionsUpdatePermissionsService
      */
     private function getPermission(int $rowIndexRef, string $acoForeignkey, string $permissionId): Permission
     {
+        /** @var \App\Model\Entity\Permission|null $permission */
         $permission = $this->permissionsTable->findByIdAndAcoForeignKey($permissionId, $acoForeignkey)->first();
 
         if (!$permission) {

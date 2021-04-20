@@ -41,12 +41,12 @@ class SubscriptionKeyDto
     public $email;
 
     /**
-     * @var \Cake\I18n\FrozenTime $expiry the subscription expiry date
+     * @var \Cake\I18n\FrozenDate $expiry the subscription expiry date
      */
     public $expiry;
 
     /**
-     * @var \Cake\I18n\FrozenTime $created the subscription creation date
+     * @var \Cake\I18n\FrozenDate $created the subscription creation date
      */
     public $created;
 
@@ -72,8 +72,8 @@ class SubscriptionKeyDto
         string $subscriptionId,
         int $users,
         string $email,
-        \Cake\I18n\FrozenDate $expiry,
-        \Cake\I18n\FrozenDate $created
+        FrozenDate $expiry,
+        FrozenDate $created
     ) {
         $this->data = $data;
         $this->customerId = $customerId;
@@ -112,8 +112,8 @@ class SubscriptionKeyDto
             $key['subscription_id'] ?? '',
             $key['users'] ?? 0,
             $key['email'] ?? '',
-            isset($key['expiry']) ? new FrozenDate($key['expiry']) : \Cake\I18n\FrozenDate::now(),
-            isset($key['created']) ? new FrozenDate($key['created']) : \Cake\I18n\FrozenDate::now(),
+            isset($key['expiry']) ? new FrozenDate($key['expiry']) : FrozenDate::now(),
+            isset($key['created']) ? new FrozenDate($key['created']) : FrozenDate::now(),
         );
     }
 }

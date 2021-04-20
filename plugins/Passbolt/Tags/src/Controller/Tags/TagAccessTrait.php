@@ -19,7 +19,7 @@ namespace Passbolt\Tags\Controller\Tags;
 use Passbolt\Tags\Model\Entity\Tag;
 
 /**
- * @property UserComponent User
+ * @property \App\Controller\Component\UserComponent $User
  */
 trait TagAccessTrait
 {

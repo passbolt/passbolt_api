@@ -201,10 +201,10 @@ trait SyncTrait
     protected function getEntityName(Entity $entity)
     {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
-            return $entity->name;
+            return $entity->get('name');
         }
 
-        return $entity->username;
+        return $entity->get('username');
     }
 
     /**

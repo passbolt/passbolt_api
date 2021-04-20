@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Model\Traits\Users;
 
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
@@ -469,9 +470,9 @@ trait UsersFindersTrait
     /**
      * Get a user info for an email notification context
      *
-     * @return \App\Model\Entity\User
+     * @return \App\Model\Entity\User|null
      */
-    public function findFirstAdmin()
+    public function findFirstAdmin(): ?User
     {
         /** @var \App\Model\Entity\User $user */
         $user = $this->find()
@@ -518,8 +519,7 @@ trait UsersFindersTrait
                  'Users.deleted' => false,
                  'Users.active' => true,
              ])
-             ->order(['Users.created' => 'ASC'])
-             ->all();
+             ->order(['Users.created' => 'ASC']);
     }
 
     /**

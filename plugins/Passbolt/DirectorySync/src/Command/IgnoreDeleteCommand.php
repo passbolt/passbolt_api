@@ -59,6 +59,7 @@ class IgnoreDeleteCommand extends DirectorySyncCommand
             return $this->errorCode();
         }
         try {
+            /** @var \Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable $DirectoryIgnore */
             $DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
             $ignored = $DirectoryIgnore->get($foreignKey);
             if ($ignored->foreign_model !== $foreignModel) {

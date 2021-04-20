@@ -254,7 +254,7 @@ class Gnupg extends OpenPGPBackend
      * @param string $armoredKey ASCII armored key data
      * @return bool true if valid, false otherwise
      */
-    public function isParsableArmoredPublicKey(string $armoredKey)
+    public function isParsableArmoredPublicKey(string $armoredKey): bool
     {
         try {
             $this->assertGpgMarker($armoredKey, self::PUBLIC_KEY_MARKER);
@@ -264,7 +264,7 @@ class Gnupg extends OpenPGPBackend
 
         // If we don't manage to unarmor the key, we consider it's not a valid one.
         $keyUnarmored = $this->unarmor($armoredKey, self::PUBLIC_KEY_MARKER);
-        if ($keyUnarmored === false || $keyUnarmored === null) {
+        if ($keyUnarmored === false) {
             return false;
         }
 
@@ -420,6 +420,7 @@ class Gnupg extends OpenPGPBackend
 
         // Get userId.
         $userIds = [];
+        /** @phpstan-ignore-next-line  */
         foreach ($msg->signatures() as $signatures) {
             foreach ($signatures as $signature) {
                 if ($signature instanceof \OpenPGP_UserIDPacket) {
@@ -468,7 +469,7 @@ class Gnupg extends OpenPGPBackend
         } catch (\Exception $e) {
             return false;
         }
-        if (empty($results) || $results === false) {
+        if (empty($results)) {
             return false;
         }
 

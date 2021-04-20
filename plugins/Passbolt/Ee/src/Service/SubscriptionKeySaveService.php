@@ -41,6 +41,7 @@ class SubscriptionKeySaveService
      */
     public function __construct(?SubscriptionsTable $Subscriptions = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->SubscriptionsTable = $Subscriptions
             ?? TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
         $this->SubscriptionKeyValidateService = new SubscriptionKeyValidateService();

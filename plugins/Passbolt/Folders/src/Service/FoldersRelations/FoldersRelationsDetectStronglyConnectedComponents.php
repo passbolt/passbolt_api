@@ -17,29 +17,31 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Service\FoldersRelations;
 
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Utility\Tarjan;
 
 class FoldersRelationsDetectStronglyConnectedComponents
 {
+    use ModelAwareTrait;
+
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private $FoldersRelations;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private $Users;
 
     /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
-        $this->usersTable = TableRegistry::getTableLocator()->get('Users');
+        $this->loadModel('Passbolt/Folders.FoldersRelations');
+        $this->loadModel('Users');
     }
 
     /**
@@ -92,7 +94,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
      */
     private function getAllNonDeletedUsersIds()
     {
-        return $this->usersTable->find()
+        return $this->Users->find()
             ->where(['deleted' => false])
             ->select('id')
             ->extract('id')
@@ -117,11 +119,11 @@ class FoldersRelationsDetectStronglyConnectedComponents
     {
         $result = array_fill_keys($usersIds, []);
 
-        $query = $this->foldersRelationsTable->find();
-        $query = $this->foldersRelationsTable->filterByUsersIds($query, $usersIds);
-        $query = $this->foldersRelationsTable->filterByForeignModel($query, FoldersRelation::FOREIGN_MODEL_FOLDER);
+        $query = $this->FoldersRelations->find();
+        $query = $this->FoldersRelations->filterByUsersIds($query, $usersIds);
+        $query = $this->FoldersRelations->filterByForeignModel($query, FoldersRelation::FOREIGN_MODEL_FOLDER);
         if (!$includePersonal) {
-            $query = $this->foldersRelationsTable->filterQueryByIsNotPersonalFolder($query);
+            $query = $this->FoldersRelations->filterQueryByIsNotPersonalFolder($query);
         }
         $foldersRelations = $query->select(['foreign_id', 'folder_parent_id', 'user_id'])
             ->disableHydration()->toArray();
@@ -268,8 +270,8 @@ class FoldersRelationsDetectStronglyConnectedComponents
      */
     public function detectInUserTree(string $userId)
     {
-        $query = $this->foldersRelationsTable->findByUserId($userId);
-        $query = $this->foldersRelationsTable->filterByForeignModel($query, FoldersRelation::FOREIGN_MODEL_FOLDER);
+        $query = $this->FoldersRelations->findByUserId($userId);
+        $query = $this->FoldersRelations->filterByForeignModel($query, FoldersRelation::FOREIGN_MODEL_FOLDER);
         $foldersRelations = $query->select(['foreign_id', 'folder_parent_id'])
             ->disableHydration()->toArray();
 

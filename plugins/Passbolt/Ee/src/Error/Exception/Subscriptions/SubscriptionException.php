@@ -17,9 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\Ee\Error\Exception\Subscriptions;
 
 use App\Error\Exception\ExceptionWithErrorsDetailInterface;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 
-class SubscriptionException extends Exception implements ExceptionWithErrorsDetailInterface
+class SubscriptionException extends CakeException implements ExceptionWithErrorsDetailInterface
 {
     /**
      * @var mixed $data

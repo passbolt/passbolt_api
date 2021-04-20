@@ -37,7 +37,7 @@ class AvatarsViewController extends AppController
 
         $formatIsValid = $this->validateImageFormat($format);
 
-        /** @var \App\Model\Entity\Avatar $avatar */
+        /** @var \App\Model\Entity\Avatar|null $avatar */
         $avatar = $this->Avatars->findById($id)->first();
 
         if (is_null($avatar) || !$formatIsValid) {

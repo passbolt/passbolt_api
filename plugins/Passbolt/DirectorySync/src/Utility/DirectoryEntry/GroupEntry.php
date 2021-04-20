@@ -35,6 +35,13 @@ class GroupEntry extends DirectoryEntry
     public $group;
 
     /**
+     * Level.
+     *
+     * @var int
+     */
+    public $level;
+
+    /**
      * Type of object (group).
      *
      * @var string

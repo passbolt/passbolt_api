@@ -133,6 +133,6 @@ trait JsonRequestTrait
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;
-        $this->_responseJsonPagination = $this->_responseJson->pagination ?? null;
+        $this->_responseJsonPagination = $this->_responseJson->header->pagination ?? null;
     }
 }

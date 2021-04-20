@@ -60,6 +60,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
  */
 class UsersTable extends Table
 {
@@ -355,6 +356,7 @@ class UsersTable extends Table
             ->extract('aco_foreign_key')
             ->toArray();
         if (!empty($resourceIds)) {
+            /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
         }
@@ -409,6 +411,7 @@ class UsersTable extends Table
         if (Configure::read('passbolt.plugins.tags.enabled')) {
             $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
             $ResourcesTags->deleteAll(['user_id' => $user->id]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
             $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
             $Tags->deleteAllUnusedTags();
         }
@@ -463,12 +466,13 @@ class UsersTable extends Table
         }
 
         // Generate an authentication token
+        /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens */
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $token = $AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
 
         // Generate event data
         $eventData = ['user' => $user, 'token' => $token];
-        if (isset($control) && !is_null($control->getId())) {
+        if (isset($control) && !empty($control->getId())) {
             $eventData['adminId'] = $control->getId();
         }
         $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);

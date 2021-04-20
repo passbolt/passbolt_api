@@ -22,13 +22,15 @@ use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
 
 class ResourcesAfterAccessRevokedService
 {
+    use ModelAwareTrait;
+
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService
      */
@@ -37,12 +39,12 @@ class ResourcesAfterAccessRevokedService
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private $GroupsUsers;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $resourcesTable;
+    private $Resources;
 
     /**
      * @var \App\Service\Permissions\UserHasPermissionService
@@ -54,9 +56,9 @@ class ResourcesAfterAccessRevokedService
      */
     public function __construct()
     {
+        $this->loadModel('GroupsUsers');
+        $this->loadModel('Resources');
         $this->foldersRelationsRemoveItemFromUserTree = new FoldersRelationsRemoveItemFromUserTreeService();
-        $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->userHasPermissionService = new UserHasPermissionService();
     }
 
@@ -90,7 +92,7 @@ class ResourcesAfterAccessRevokedService
     private function getResource(UserAccessControl $uac, string $resourceId)
     {
         try {
-            return $this->resourcesTable->get($resourceId, [
+            return $this->Resources->get($resourceId, [
                 'finder' => FolderizableBehavior::FINDER_NAME,
                 'user_id' => $uac->getId(),
             ]);
@@ -109,7 +111,7 @@ class ResourcesAfterAccessRevokedService
      */
     private function removeResourceFromGroupUsersTrees(\App\Model\Entity\Resource $resource, string $groupId)
     {
-        $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
+        $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
             $this->removeResourceFromUserTree($resource, $groupUserId);
         }

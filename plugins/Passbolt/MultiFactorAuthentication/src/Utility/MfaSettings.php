@@ -175,9 +175,9 @@ class MfaSettings
      * Get account settings
      *
      * @param bool|null $refresh if a new table find is required
-     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
+     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings|null
      */
-    public function getAccountSettings(?bool $refresh = false)
+    public function getAccountSettings(?bool $refresh = false): ?MfaAccountSettings
     {
         if ($this->accountSettings === null || $refresh) {
             try {
