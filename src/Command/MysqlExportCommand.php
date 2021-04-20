@@ -114,7 +114,7 @@ class MysqlExportCommand extends PassboltCommand
     /**
      * Perform a mysqldump command
      *
-     * @param array $connection connection manager config
+     * @param \Cake\Database\Connection $connection connection manager config
      * @param string $dir directory path
      * @param string $file file name
      * @param \Cake\Console\ConsoleIo $io Console IO.
@@ -122,6 +122,8 @@ class MysqlExportCommand extends PassboltCommand
      */
     protected function dump(Connection $connection, $dir, $file, ConsoleIo $io): bool
     {
+        $io->info('Saving backup file: ' . $dir . $file);
+
         if ($connection->getDriver() instanceof Mysql) {
             $status = $this->mysqlDump($connection->config(), $dir, $file);
         } elseif ($connection->getDriver() instanceof Postgres) {
@@ -132,8 +134,6 @@ class MysqlExportCommand extends PassboltCommand
             return false;
         }
 
-        $io->out('Saving backup file: ' . $dir . $file);
-
         if ($status !== $this->successCode()) {
             $io->quiet(__('There was an error running the dump.'));
             $io->error(__('Please ensure on MySQL that the user has PROCESS privileges.'));
@@ -143,7 +143,7 @@ class MysqlExportCommand extends PassboltCommand
             return false;
         }
 
-        return $status === $this->successCode();
+        return true;
     }
 
     /**

@@ -18,6 +18,7 @@ namespace Passbolt\WebInstaller\Utility;
 
 use App\Utility\Healthchecks;
 use Cake\Core\Exception\Exception;
+use Cake\Database\Connection;
 use Cake\Datasource\ConnectionManager;
 
 class DatabaseConfiguration
@@ -70,12 +71,15 @@ class DatabaseConfiguration
     public static function testConnection()
     {
         $connection = ConnectionManager::get('default');
+        if (!($connection instanceof Connection)) {
+            return false;
+        }
 
         try {
             $connection->connect();
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return false;
         }
     }

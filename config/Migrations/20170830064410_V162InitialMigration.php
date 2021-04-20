@@ -60,9 +60,9 @@ class V162InitialMigration extends AbstractMigration
         }
 
         // Reset the collation just in case
-               if($this->getAdapter()->getOptions()["adapter"] !== "pgsql") {
-                       $this->execute('ALTER DATABASE `' . $databaseName . '` COLLATE utf8mb4_unicode_ci');
-                   }
+        if ($this->getAdapter()->getOptions()["adapter"] !== "pgsql") {
+            $this->execute('ALTER DATABASE `' . $databaseName . '` COLLATE utf8mb4_unicode_ci');
+       }
 
 
         // If this is an upgrade from v1

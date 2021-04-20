@@ -36,7 +36,7 @@ class V300CopyFileStorageToAvatars extends AbstractMigration
             ->setTable('file_storage');
 
         $AvatarsTable = TableRegistry::getTableLocator()->get('Avatars');
-	$this->getAdapter()->commitTransaction();
+	    $this->getAdapter()->commitTransaction();
 
         $fileStorages = $FileStoragesTable->find()->where(['model' => 'Avatar']);
 

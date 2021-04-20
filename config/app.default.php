@@ -289,15 +289,6 @@ return [
             /*
              * For MariaDB/MySQL the internal default changed from utf8 to utf8mb4, aka full utf-8 support
              */
-            //'port' => 'non_standard_port_number',
-            'username' => env('DATASOURCES_DEFAULT_USERNAME', ''),
-            'password' => env('DATASOURCES_DEFAULT_PASSWORD', ''),
-            'database' => env('DATASOURCES_DEFAULT_DATABASE', ''),
-            'ssl_key' => env('DATASOURCES_DEFAULT_SSL_KEY', ''),
-            'ssl_cert' => env('DATASOURCES_DEFAULT_SSL_CERT', ''),
-            'ssl_ca' => env('DATASOURCES_DEFAULT_SSL_CA', ''),
-            'encoding' => env('DATASOURCES_DEFAULT_ENCODING','utf8mb4'),
-            'timezone' => 'UTC',
             'flags' => [],
             'cacheMetadata' => true,
             'log' => env('DATASOURCES_DEFAULT_LOG', false),
@@ -335,6 +326,7 @@ return [
             'ssl_key' => env('DATASOURCES_DEFAULT_SSL_KEY', ''),
             'ssl_cert' => env('DATASOURCES_DEFAULT_SSL_CERT', ''),
             'ssl_ca' => env('DATASOURCES_DEFAULT_SSL_CA', ''),
+            'encoding' => env('DATASOURCES_DEFAULT_ENCODING','utf8mb4'),
 
         ],
 
@@ -346,7 +338,7 @@ return [
             'driver' => env('DATASOURCES_TEST_DRIVER', Mysql::class),
             'persistent' => false,
             'timezone' => 'UTC',
-            'encoding' => 'utf8mb4',
+            'encoding' => env('DATASOURCES_TEST_ENCODING','utf8mb4'),
             'flags' => [],
             'cacheMetadata' => true,
             'quoteIdentifiers' => env('DATASOURCES_QUOTE_IDENTIFIER', true),
@@ -366,12 +358,6 @@ return [
             'ssl_key' => env('DATASOURCES_TEST_SSL_KEY', ''),
             'ssl_cert' => env('DATASOURCES_TEST_SSL_CERT', ''),
             'ssl_ca' => env('DATASOURCES_TEST_SSL_CA', ''),
-            'encoding' => env('DATASOURCES_TEST_ENCODING','utf8mb4'),
-            'timezone' => 'UTC',
-            'cacheMetadata' => true,
-            'quoteIdentifiers' => true,
-            'log' => false,
-            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
             'url' => env('DATASOURCES_TEST_URL', null),
         ],
     ],

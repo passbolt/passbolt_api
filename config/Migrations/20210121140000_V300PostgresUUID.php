@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Migrations\AbstractMigration;
 
-class V320PostgresUUID extends AbstractMigration
+class V300PostgresUUID extends AbstractMigration
 {
     /**
      * Change Method.
@@ -25,6 +25,7 @@ class V320PostgresUUID extends AbstractMigration
         ->changeColumn('id', 'uuid')
         ->changeColumn('user_id', 'uuid', ['null' => true])
         ->save();
+
         $this->table('actions')
         ->changeColumn('id', 'uuid')
         ->save();
@@ -34,12 +35,7 @@ class V320PostgresUUID extends AbstractMigration
         ->changeColumn('token', 'uuid')
         ->changeColumn('user_id', 'uuid')
         ->save();
-/*
-        $this->table('avatars')
-        ->changeColumn('id', 'uuid')
-        ->changeColumn('profile_id', 'uuid')
-        ->save();
- */
+
         $this->table('comments')
         ->changeColumn('created_by', 'uuid')
         ->changeColumn('foreign_key', 'uuid')
@@ -139,8 +135,8 @@ class V320PostgresUUID extends AbstractMigration
         $this->table('user_agents')
         ->changeColumn('id', 'uuid')
         ->save();
-        $this->table('users')
 
+        $this->table('users')
         ->changeColumn('id', 'uuid')
         ->changeColumn('role_id', 'uuid')
         ->save();
