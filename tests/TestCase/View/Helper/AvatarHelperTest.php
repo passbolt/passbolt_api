@@ -19,7 +19,7 @@ namespace App\Test\TestCase\View\Helper;
 
 use App\Model\Table\AvatarsTable;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Test\Lib\Model\AvatarsModelTestTrait;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
 
@@ -28,7 +28,7 @@ use Cake\Core\Configure;
  */
 class AvatarHelperTest extends AppIntegrationTestCase
 {
-    use AvatarsModelTrait;
+    use AvatarsModelTestTrait;
 
     /**
      * @var string

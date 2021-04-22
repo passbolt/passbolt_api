@@ -36,18 +36,15 @@ class AvatarsViewController extends AppController
         $this->loadModel('Avatars');
 
         $formatIsValid = $this->validateImageFormat($format);
-
-        /** @var \App\Model\Entity\Avatar|null $avatar */
-        $avatar = $this->Avatars->findById($id)->first();
-
-        if (is_null($avatar) || !$formatIsValid) {
-            $fileName = $this->Avatars->getFallBackFileName();
-        } else {
-            $format = trim($format, AvatarHelper::IMAGE_EXTENSION);
-            $fileName = $this->Avatars->readFromCache($avatar, $format);
+        if ($formatIsValid === false) {
+            $id = null;
         }
 
-        return $this->getResponse()->withFile($fileName);
+        $stream = $this->Avatars->readSteamFromId($id, $format);
+
+        return $this->getResponse()
+            ->withType('jpg')
+            ->withBody($stream);
     }
 
     /**

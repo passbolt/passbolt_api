@@ -19,11 +19,11 @@ namespace App\Test\TestCase\Controller\Avatars;
 
 use App\Model\Table\AvatarsTable;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AvatarsModelTrait;
-use App\Utility\Filesystem\DirectoryUtility;
+use App\Test\Lib\Model\AvatarsModelTestTrait;
 use App\View\Helper\AvatarHelper;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 
 /**
  * App\Controller\AvatarsController Test Case
@@ -32,7 +32,7 @@ use Cake\TestSuite\IntegrationTestTrait;
  */
 class AvatarsViewControllerTest extends AppIntegrationTestCase
 {
-    use AvatarsModelTrait;
+    use AvatarsModelTestTrait;
     use IntegrationTestTrait;
 
     /**
@@ -44,13 +44,12 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->assertFileExists($this->Avatars->getCacheDirectory());
-        $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars');
-        DirectoryUtility::removeRecursively($this->Avatars->getCacheDirectory());
+        $this->Avatars->setFilesystem(new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars'));
     }
 
     public function tearDown(): void
     {
+        $this->Avatars->getFilesystem()->deleteDirectory('.');
         unset($this->Avatars);
         parent::tearDown();
     }
@@ -83,7 +82,8 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     public function testViewNonExistent(string $format)
     {
         $this->get('avatars/view/1/' . $format);
-        $this->assertFileResponse($this->Avatars->getFallBackFileName($format));
+        $this->assertResponseEquals(file_get_contents($this->Avatars->getFallBackFileName($format)));
+        $this->assertContentType('jpg');
     }
 
     /**
@@ -98,12 +98,13 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     {
         $avatar = $this->createAvatar();
 
-        $expectedFileName =
-            $this->Avatars->getCacheDirectory() .
-            $this->Avatars->getOrCreateAvatarDirectory($avatar) . $format;
+        $expectedFileContent = file_get_contents(
+            TMP . 'tests' . DS . 'avatars' . DS .
+            $this->Avatars->getOrCreateAvatarDirectory($avatar) . $format
+        );
 
         $this->get('avatars/view/' . $avatar->id . '/' . $format);
-        $this->assertFileResponse($expectedFileName);
+        $this->assertResponseEquals($expectedFileContent);
 
         // Ensure that the virtual field is correctly constructed.
         $virtualField = [
@@ -121,8 +122,9 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     public function testViewOnWrongFormat(string $format)
     {
         $avatar = $this->createAvatar();
+        $expectedFileContent = file_get_contents($this->Avatars->getFallBackFileName());
 
         $this->get('avatars/view/' . $avatar->id . '/' . $format);
-        $this->assertFileResponse($this->Avatars->getFallBackFileName());
+        $this->assertResponseEquals($expectedFileContent);
     }
 }

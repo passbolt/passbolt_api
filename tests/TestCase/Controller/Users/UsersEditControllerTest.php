@@ -21,7 +21,6 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
@@ -33,8 +32,6 @@ class UsersEditControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars');
         RoleFactory::make()->guest()->persist();
     }
 

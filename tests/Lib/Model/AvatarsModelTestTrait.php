@@ -20,9 +20,13 @@ namespace App\Test\Lib\Model;
 use App\Model\Entity\Avatar;
 use App\Test\Factory\ProfileFactory;
 use Cake\ORM\TableRegistry;
+use Laminas\Diactoros\Stream;
 use Laminas\Diactoros\UploadedFile;
 
-trait AvatarsModelTrait
+/**
+ * @property \App\Model\Table\AvatarsTable $Avatars
+ */
+trait AvatarsModelTestTrait
 {
     /**
      * Asserts that an object has all the attributes an avatar should have.
@@ -74,5 +78,14 @@ trait AvatarsModelTrait
             $adaAvatar,
             'image/png'
         );
+    }
+
+    private function assertAvatarCachedFilesExist(Avatar $avatar)
+    {
+        $this->assertInstanceOf(Stream::class, $this->Avatars->readStreamInCache($avatar));
+        $this->assertInstanceOf(Stream::class, $this->Avatars->readStreamInCache($avatar, 'medium'));
+        $this->assertInstanceOf(Stream::class, $this->Avatars->readStreamInCache($avatar, 'whateverFormatWillReturnSmall'));
+        $this->assertTextEndsWith('.jpg', $this->Avatars->getAvatarFileName($avatar));
+        $this->assertTextEndsWith('.jpg', $this->Avatars->getAvatarFileName($avatar, 'medium'));
     }
 }

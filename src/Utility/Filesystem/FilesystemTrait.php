@@ -18,44 +18,25 @@ namespace App\Utility\Filesystem;
 
 use Cake\Core\Configure;
 use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemAdapter;
 
 trait FilesystemTrait
 {
-    /**
-     * @var \League\Flysystem\Filesystem
-     */
-    protected $filesystem;
-
     /**
      * @return \League\Flysystem\Filesystem
      */
     public function getFilesystem(): Filesystem
     {
-        return $this->filesystem;
+        return Configure::read('ImageStorage.filesystem');
     }
 
     /**
-     * @param string $path Path to the directory.
+     * @param \League\Flysystem\FilesystemAdapter $adapter Path to the directory.
      * @return void
      * @throws \RuntimeException Will throw an exception if the image storage adapter is not configured.
      */
-    public function setFilesystem(string $path): void
+    public function setFilesystem(FilesystemAdapter $adapter): void
     {
-        $filesystemAdapterClass = Configure::readOrFail('ImageStorage.adapter');
-        $adapter = new $filesystemAdapterClass($path);
-        $this->filesystem = new Filesystem($adapter);
-    }
-
-    /**
-     * @param string $directoryPath Nam of the directory.
-     * @return string
-     */
-    public function createDirectoryIfNotExists(string $directoryPath): string
-    {
-        if (!file_exists($directoryPath)) {
-            mkdir($directoryPath, 0770, true);
-        }
-
-        return $directoryPath;
+        Configure::write('ImageStorage.filesystem', new Filesystem($adapter));
     }
 }
