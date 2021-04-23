@@ -16,12 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\Locale\Event;
 
+use App\Controller\Setup\RecoverCompleteController;
 use App\Controller\Setup\SetupCompleteController;
 use App\Controller\Users\UsersRegisterController;
 use App\Error\Exception\ValidationException;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Log\Log;
+use Cake\Utility\Hash;
 use Passbolt\Locale\Service\SetUserLocaleService;
 
 class SaveUserLocaleListener implements EventListenerInterface
@@ -35,6 +37,7 @@ class SaveUserLocaleListener implements EventListenerInterface
     {
         return [
             SetupCompleteController::COMPLETE_SUCCESS_EVENT_NAME => 'setUserLocaleIfFoundInPayload',
+            RecoverCompleteController::COMPLETE_SUCCESS_EVENT_NAME => 'setUserLocaleIfFoundInPayload',
             UsersRegisterController::USERS_REGISTER_EVENT_NAME => 'setUserLocaleIfFoundInPayload',
         ];
     }
@@ -48,7 +51,13 @@ class SaveUserLocaleListener implements EventListenerInterface
      */
     public function setUserLocaleIfFoundInPayload(EventInterface $event): void
     {
-        $locale = $event->getData('data')[static::LOCALE_KEY] ?? null;
+        $data = $event->getData('data');
+        $localeKey = static::LOCALE_KEY;
+        $locale = Hash::get($data, "user.$localeKey") ?: Hash::get($data, $localeKey);
+        if (is_null($locale)) {
+            return;
+        }
+
         $user = $event->getData('user');
         $service = new SetUserLocaleService();
         if ($service->isValidLocale($locale)) {

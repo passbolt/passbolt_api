@@ -57,7 +57,9 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             'gpgkey' => [
                 'armored_key' => $armoredKey,
             ],
-            'locale' => 'fr_FR', // Putting on purpose an underscore, though convention is dashed.
+            'user' => [
+                'locale' => 'fr_FR', // Putting on purpose an underscore, though convention is dashed.
+            ],
         ];
         $this->postJson($url, $data);
         $this->assertSuccess();

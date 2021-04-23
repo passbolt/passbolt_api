@@ -426,7 +426,7 @@ trait UsersFindersTrait
 
         // show active first and do not count deleted ones
         /** @var \App\Model\Entity\User $user */
-        $user = $this->find()
+        $user = $this->find('locale')
             ->contain([
                 'Roles',
                 'Profiles' => AvatarsTable::addContainAvatar(),

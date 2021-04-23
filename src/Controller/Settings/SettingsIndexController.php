@@ -22,7 +22,7 @@ use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
-use Passbolt\Locale\Service\RequestLocaleParserService;
+use Passbolt\Locale\Service\GetOrgLocaleService;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -94,7 +94,7 @@ class SettingsIndexController extends AppController
         $baseSettings = [
             'app' => [
                 'url' => Router::url('/', true),
-                'locale' => (new RequestLocaleParserService($this->getRequest()))->getLocale(),
+                'locale' => (new GetOrgLocaleService())->getLocale(),
             ],
             'passbolt' => [
                 'legal' => Configure::read('passbolt.legal'),

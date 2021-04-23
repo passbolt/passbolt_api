@@ -21,6 +21,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
 use Cake\Http\MiddlewareQueue;
+use Passbolt\Locale\Event\AddLocaleBehavior;
 use Passbolt\Locale\Event\LocaleEmailQueueListener;
 use Passbolt\Locale\Event\LocaleRenderListener;
 use Passbolt\Locale\Event\SaveUserLocaleListener;
@@ -60,7 +61,8 @@ class Plugin extends BasePlugin
         $eventManager
             ->on(new LocaleEmailQueueListener())
             ->on(new SaveUserLocaleListener())
-            ->on(new ValidateLocaleOnBeforeSaveListener());
+            ->on(new ValidateLocaleOnBeforeSaveListener())
+            ->on(new AddLocaleBehavior());
 
         if (PHP_SAPI === 'cli') {
             $eventManager->on(new LocaleRenderListener());

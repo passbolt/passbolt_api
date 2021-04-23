@@ -62,7 +62,10 @@ class GetUserLocaleService extends LocaleService
         $setting = $this->AccountSettings
             ->find('byProperty', ['property' => static::SETTING_PROPERTY])
             ->innerJoinWith('Users', function (Query $q) use ($username) {
-                return $q->where(['Users.username' => $username]);
+                return $q->where([
+                    'Users.username' => $username,
+                    'Users.deleted' => false,
+                ]);
             })
             ->first();
 
