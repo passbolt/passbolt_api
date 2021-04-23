@@ -59,6 +59,7 @@ class FoldersHistoryTable extends Table
         $this->setTable('folders_history');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
+        $this->setEntityClass(FolderHistory::class);
 
         $this->hasOne('Permission', [
             'className' => 'Permissions',
