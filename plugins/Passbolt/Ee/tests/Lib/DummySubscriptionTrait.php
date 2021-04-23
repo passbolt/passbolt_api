@@ -26,7 +26,7 @@ use Cake\ORM\TableRegistry;
 /**
  * Class DummySubscriptionTrait
  *
- * @property SubscriptionsTable $Subscriptions
+ * @property \Passbolt\Ee\Model\Table\SubscriptionsTable $Subscriptions
  */
 trait DummySubscriptionTrait
 {

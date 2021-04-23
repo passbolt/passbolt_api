@@ -19,6 +19,7 @@ namespace Passbolt\Ee;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Passbolt\Ee\Command\SubscriptionCheckCommand;
+use Passbolt\Ee\Command\SubscriptionImportCommand;
 
 class Plugin extends BasePlugin
 {
@@ -30,6 +31,7 @@ class Plugin extends BasePlugin
         // Alias license_check to subscription_check for retro compatibility
         $commands->add('passbolt license_check', SubscriptionCheckCommand::class);
         $commands->add('passbolt subscription_check', SubscriptionCheckCommand::class);
+        $commands->add('passbolt subscription_import', SubscriptionImportCommand::class);
 
         return $commands;
     }
