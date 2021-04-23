@@ -103,7 +103,11 @@ class PassboltCommand extends Command
 
         if (Configure::read('passbolt.plugins.ee')) {
             $parser->addArgument('subscription_check', [
-                'help' => __d('cake_console', 'Check the license.'),
+                'help' => __d('cake_console', 'Check details of the current subscription key.'),
+            ]);
+
+            $parser->addArgument('subscription_import', [
+                'help' => __d('cake_console', 'Import a new subscription key.'),
             ]);
         }
 
