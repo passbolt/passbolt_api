@@ -27,7 +27,7 @@ trait TableCleanupTrait
      * @param string $modelName model
      * @param bool|null $dryRun false
      * @param \Cake\ORM\Query|null $query custom query to replace the default find if any
-     * @return int of affected records
+     * @return int Number of affected records
      */
     public function cleanupSoftDeleted(string $modelName, ?bool $dryRun = false, ?Query $query = null): int
     {
@@ -54,7 +54,7 @@ trait TableCleanupTrait
      * @param string $modelName model
      * @param bool|null $dryRun false
      * @param \Cake\ORM\Query|null $query custom query to replace the default find if any
-     * @return int of affected records
+     * @return int Number of affected records
      */
     public function cleanupHardDeleted(string $modelName, ?bool $dryRun = false, ?Query $query = null): int
     {

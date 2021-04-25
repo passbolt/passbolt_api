@@ -20,7 +20,6 @@ use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
@@ -35,14 +34,11 @@ class SetupCompleteController extends AppController
     public const COMPLETE_SUCCESS_EVENT_NAME = 'SetupCompleteController.complete.success';
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow('complete');
+        $this->Authentication->allowUnauthenticated(['complete']);
 
         $this->loadModel('Gpgkeys');
         $this->loadModel('AuthenticationTokens');
@@ -60,7 +56,7 @@ class SetupCompleteController extends AppController
      * @throws \Cake\Http\Exception\BadRequestException if no authentication token was provided
      * @throws \Cake\Http\Exception\BadRequestException if the authentication token is not a uuid
      * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
-     * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
+     * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key is not provided or not a valid OpenPGP key
      * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
      * @param string $userId uuid of the user
      * @return void
@@ -81,25 +77,25 @@ class SetupCompleteController extends AppController
         // Deactivate the authentication token
         $token->active = false;
         if (!$this->AuthenticationTokens->save($token, ['checkRules' => false])) {
-            throw new InternalErrorException(__('Could not update the authentication token data.'));
+            throw new InternalErrorException('Could not update the authentication token data.');
         }
 
         // Save user GPG key, rules were already checked
         if (!$this->Gpgkeys->save($gpgkey, ['checkRules' => false])) {
-            throw new InternalErrorException(__('Could not save the OpenPGP key data.'));
+            throw new InternalErrorException('Could not save the OpenPGP key data.');
         }
 
         // Update the user
         $user->active = true;
         if (!$this->Users->save($user, ['checkRules' => false])) {
-            throw new InternalErrorException(__('Could not save the user data.'));
+            throw new InternalErrorException('Could not save the user data.');
         }
 
         $this->dispatchEvent(static::COMPLETE_SUCCESS_EVENT_NAME, [
             'user' => $user,
         ]);
 
-        $this->success(__('The setup was completed successfully!'));
+        $this->success(__('The setup was completed successfully.'));
     }
 
     /**
@@ -116,11 +112,11 @@ class SetupCompleteController extends AppController
     {
         $data = $this->request->getData();
         if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
-            throw new BadRequestException(__('An authentication token must be provided.'));
+            throw new BadRequestException(__('An authentication token should be provided.'));
         }
         $tokenId = $data['authenticationtoken']['token'];
         if (!Validation::uuid($tokenId)) {
-            throw new BadRequestException(__('The authentication token should be a valid uuid.'));
+            throw new BadRequestException(__('The authentication token should be a valid UUID.'));
         }
         if (!$this->AuthenticationTokens->isValid($tokenId, $userId, $tokenType)) {
             throw new BadRequestException(__('The authentication token is not valid or has expired.'));
@@ -143,11 +139,11 @@ class SetupCompleteController extends AppController
     protected function _getAndAssertUser(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user id is not valid. It should be a uuid.'));
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
         $user = $this->Users->findSetup($userId);
         if (empty($user)) {
-            $msg = __('The user does not exist or is already active or has been deleted.');
+            $msg = __('The user does not exist, is already active or has been deleted.');
             throw new BadRequestException($msg);
         }
 

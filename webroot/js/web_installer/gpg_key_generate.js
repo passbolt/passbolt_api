@@ -56,7 +56,10 @@ ready(function () {
       privateKeyArmoredInput.setAttribute("value", keyPair.privateKeyArmored.trim());
       publicKeyArmoredInput.setAttribute("value", keyPair.publicKeyArmored.trim());
       fingerprintInput.setAttribute("value", keyPair.key.primaryKey.getFingerprint().toUpperCase());
-      form.submit();
+      setTimeout(() => {
+        form.submit(); // wait some seconds to prevent key from being "in the future"
+      }, 3000);
+
     } catch(error) {
       console.error(error);
     }
@@ -139,7 +142,7 @@ ready(function () {
   };
 
   /**
-   * Generate a gpg key.
+   * Generate an OpenPGP key.
    * @param {string} name The user id name
    * @param {string} email The user id email
    * @param {string} comment The user id comment

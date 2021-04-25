@@ -29,7 +29,7 @@ class HomeControllerTest extends AppIntegrationTestCase
     public function testHomeNotLoggedInError()
     {
         $this->get('/app/passwords');
-        $this->assertRedirect('/auth/login?redirect=%2Fapp%2Fpasswords');
+        $this->assertRedirectContains('/auth/login?redirect=%2Fapp%2Fpasswords');
     }
 
     public function testHomeSuccess()

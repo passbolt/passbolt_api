@@ -35,7 +35,7 @@ class EmailNotificationSettings
     /**
      * The settings.
      *
-     * @var array
+     * @var array|null
      */
     private static $settings;
 
@@ -78,7 +78,7 @@ class EmailNotificationSettings
     {
         // Before making any lookups, check if the key is valid
         if ($key && !static::isConfigKeyValid($key)) {
-            throw new InternalErrorException(__('The key {0} is not a valid email notification setting.', $key));
+            throw new InternalErrorException("The key $key is not a valid email notification setting.");
         }
 
         if (is_null(static::$settings)) {
@@ -151,7 +151,7 @@ class EmailNotificationSettings
      */
     protected static function getConfigSettingsSource()
     {
-        if (!static::$configSettingsSource) {
+        if (!isset(static::$configSettingsSource)) {
             static::$configSettingsSource = new ConfigEmailNotificationSettingsSource();
         }
 
@@ -175,7 +175,7 @@ class EmailNotificationSettings
      */
     protected static function getDbSettingsSource()
     {
-        if (!static::$dbSettingsSource) {
+        if (!isset(static::$dbSettingsSource)) {
             static::$dbSettingsSource = new DbEmailNotificationSettingsSource();
         }
 
@@ -197,7 +197,7 @@ class EmailNotificationSettings
      */
     protected static function getDefaultSettingsSource()
     {
-        if (!static::$defaultSettingsSource) {
+        if (!isset(static::$defaultSettingsSource)) {
             static::$defaultSettingsSource = DefaultEmailNotificationSettingsSource::fromCakeForm(
                 new EmailNotificationSettingsForm(EventManager::instance())
             );

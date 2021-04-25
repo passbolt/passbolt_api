@@ -32,16 +32,16 @@ require __DIR__ . '/paths.php';
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
 use Cake\Cache\Cache;
-use Cake\Console\ConsoleErrorHandler;
+use Cake\Error\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Database\Type;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
-use Cake\Http\ServerRequest;
 use Cake\Log\Log;
-use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
+use Cake\Routing\Router;
 use Cake\Utility\Security;
 
 /*
@@ -58,6 +58,13 @@ try {
     Configure::load('default', 'default', false); // passbolt default config
     if (\file_exists(CONFIG . DS . 'passbolt.php')) {
         Configure::load('passbolt', 'default', true); // merge with default config
+
+         // Deduplicate multiple from address for email
+         // Can happen if from is also set as array in passbolt.php
+        $from = Configure::read('Email.default.from');
+        if (isset($from) && is_array($from) && count($from) > 1) {
+            Configure::write('Email.default.from', array_slice($from, -1, count($from))); // pick the last one
+        }
     }
     Configure::load('version', 'default', true);
 } catch (\Exception $e) {
@@ -66,6 +73,16 @@ try {
         exit($e->getMessage() . "\n");
     }
 }
+
+/**
+ * Overwrite these paths. This is a helper to ensure CakePHP3 to 4 retro-compatibility
+ * It will also be helpful if we ever have multiple plugin directories. Same goes for locales.
+ */
+Configure::write('App.paths', [
+    'plugins' => [ROOT . DS . 'plugins' . DS],
+    'templates' => [ROOT . DS . 'templates' . DS],
+    'locales' => [RESOURCES . 'locales' . DS],
+]);
 
 /*
  * Load an environment local configuration file.
@@ -120,10 +137,9 @@ if ($isCli) {
 /*
  * Set the full base URL.
  * This URL is used as the base of all absolute links.
- *
- * If you define fullBaseUrl in your config file you can remove this.
  */
-if (!Configure::read('App.fullBaseUrl')) {
+$fullBaseUrl = Configure::read('App.fullBaseUrl');
+if (!$fullBaseUrl) {
     $s = null;
     if (env('HTTPS')) {
         $s = 's';
@@ -131,15 +147,19 @@ if (!Configure::read('App.fullBaseUrl')) {
 
     $httpHost = env('HTTP_HOST');
     if (isset($httpHost)) {
-        Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
+        $fullBaseUrl = 'http' . $s . '://' . $httpHost;
     }
     unset($httpHost, $s);
 }
+if ($fullBaseUrl) {
+    Router::fullBaseUrl($fullBaseUrl);
+}
+unset($fullBaseUrl);
 
 Cache::setConfig(Configure::consume('Cache'));
 ConnectionManager::setConfig(Configure::consume('Datasources'));
 TransportFactory::setConfig(Configure::consume('EmailTransport'));
-Email::setConfig(Configure::consume('Email'));
+Mailer::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
 

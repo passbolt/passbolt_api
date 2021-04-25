@@ -31,7 +31,7 @@ class SingleDigest extends AbstractDigest implements DigestInterface
     private $emailPreviewFactory;
 
     /**
-     * @var $emails[]
+     * @var array
      */
     private $emails = [];
 
@@ -61,9 +61,9 @@ class SingleDigest extends AbstractDigest implements DigestInterface
     /**
      * Process and set the content of the emails (as EmailDigest).
      *
-     * @return \Passbolt\EmailDigest\Utility\Digest\EmailDigestInterface[]
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      */
-    public function marshalEmails()
+    public function marshalEmails(): array
     {
         $result = [];
         foreach ($this->emails as $username => $emails) {

@@ -1,0 +1,20 @@
+Index: passbolt-@PASSBOLT_FLAVOUR@-server/bin/cake.php
+===================================================================
+--- passbolt-@PASSBOLT_FLAVOUR@-server.orig/bin/cake.php
++++ passbolt-@PASSBOLT_FLAVOUR@-server/bin/cake.php
+@@ -1,7 +1,7 @@
+ #!/usr/bin/php -q
+ <?php
+ // Check platform requirements
+-require dirname(__DIR__) . '/config/requirements.php';
++require '/etc/passbolt/requirements.php';
+ require dirname(__DIR__) . '/vendor/autoload.php';
+ include '/etc/passbolt/bootstrap.php';
+ 
+@@ -9,5 +9,5 @@ use App\Application;
+ use Cake\Console\CommandRunner;
+ 
+ // Build the runner with an application and root executable name.
+-$runner = new CommandRunner(new Application(dirname(__DIR__) . '/config'), 'cake');
++$runner = new CommandRunner(new Application('/etc/passbolt'), 'cake');
+ exit($runner->run($argv));

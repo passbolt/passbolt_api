@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\UuidFactory;
 use Cake\Routing\Router;
 use Zend\Diactoros\Response\RedirectResponse;
 
@@ -40,14 +39,7 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
 
     public function testAuthLogoutLoggedIn()
     {
-        $this->session([
-            'Auth' => [
-                'User' => [
-                    'id' => UuidFactory::uuid('users.id.ada'),
-                    'username' => 'ada@passbolt.com',
-                ],
-            ],
-        ]);
+        $this->logInAsUser();
 
         $this->get('/auth/logout');
         $this->assertRedirect('/auth/login');

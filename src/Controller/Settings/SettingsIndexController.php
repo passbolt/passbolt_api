@@ -20,7 +20,6 @@ namespace App\Controller\Settings;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 
@@ -43,18 +42,16 @@ class SettingsIndexController extends AppController
      */
     protected $alwaysWhiteListed = [
         'version',
+        'enabled',
     ];
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         $this->loadModel('Users');
-        $this->Auth->allow('index');
+        $this->Authentication->allowUnauthenticated(['index']);
 
         return parent::beforeFilter($event);
     }
@@ -159,7 +156,7 @@ class SettingsIndexController extends AppController
             }
 
             $whiteListOptions = Hash::extract($pluginConf, self::SETTINGS_VISIBILITY_KEY . '.' . $confKey);
-            if (isset($whiteListOptions) && is_array($whiteListOptions)) {
+            if (is_array($whiteListOptions)) {
                 foreach ($whiteListOptions as $whiteList) {
                     $res[] = $pluginName . '.' . $whiteList;
                 }

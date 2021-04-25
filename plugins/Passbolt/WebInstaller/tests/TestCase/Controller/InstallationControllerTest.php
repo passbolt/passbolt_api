@@ -22,7 +22,7 @@ use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class InstallationControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
@@ -31,7 +31,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
         $this->backupConfiguration();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->restoreConfiguration();
@@ -228,12 +228,6 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
                 'role_id' => '0d6990c8-4aaa-4456-a333-00e803ba0828',
             ],
         ];
-        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
-            $licenseSettings = [
-                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev'),
-            ];
-            $data += $licenseSettings;
-        }
 
         return $data;
     }
@@ -245,7 +239,7 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $this->get('/install/installation');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Installing', $data);
+        $this->assertStringContainsString('Installing', $data);
     }
 
     /**

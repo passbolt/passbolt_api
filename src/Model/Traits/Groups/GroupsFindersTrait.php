@@ -103,7 +103,7 @@ trait GroupsFindersTrait
         // If contains user_group_user.
         if (isset($options['contain']['my_group_user'])) {
             $query->contain('MyGroupUser', function ($q) use ($options) {
-                return $q->where(['MyGroupUser.user_id' => $options['my_user_id']]);
+                return $q->where(['MyGroupUser.user_id' => $options['my_user_id'] ?? '']);
             });
         }
 
@@ -217,7 +217,7 @@ trait GroupsFindersTrait
         // If there is only one user use a left join
         if (count($usersIds) == 1) {
             $query->leftJoinWith('GroupsUsers');
-            $query->where(['GroupsUsers.user_id' => $usersIds[0]]);
+            $query->where(['GroupsUsers.user_id' => $usersIds[0] ?? '']);
             // If we want to retrieve only managers.
             if ($areManager) {
                 $query->where(['GroupsUsers.is_admin' => true]);
@@ -249,7 +249,7 @@ trait GroupsFindersTrait
         // Filter the query.
         if (empty($matchingGroupsIds)) {
             // If no group contains all the users, the main request should return nothing
-            $query->where(['true' => false]);
+            $query->where(['Groups.id' => 'NOT_A_VALID_GROUP_ID']);
         } else {
             $query->where(['Groups.id IN' => $matchingGroupsIds]);
         }
@@ -268,7 +268,7 @@ trait GroupsFindersTrait
     public function findView(string $groupId, ?array $options = []): Query
     {
         if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException(__('The parameter groupId should be a valid uuid.'));
+            throw new \InvalidArgumentException('The parameter groupId should be a valid UUID.');
         }
 
         return $this->findIndex($options)->where(['Groups.id' => $groupId]);
@@ -284,11 +284,11 @@ trait GroupsFindersTrait
     public function findAllByIds(array $groupsIds, ?array $options = []): Query
     {
         if (empty($groupsIds)) {
-            throw new \InvalidArgumentException(__('The parameter groupIds cannot be empty.'));
+            throw new \InvalidArgumentException('The parameter groupIds cannot be empty.');
         }
         foreach ($groupsIds as $groupId) {
             if (!Validation::uuid($groupId)) {
-                throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
+                throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
             }
         }
 

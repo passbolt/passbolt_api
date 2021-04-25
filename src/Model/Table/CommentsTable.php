@@ -35,16 +35,24 @@ use Cake\Validation\Validator;
 /**
  * Comments Model
  *
- * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
- * @method \App\Model\Entity\Comment get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Comment newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Comment[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Comment|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Comment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Comment[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Comment findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Comment get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Comment newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Comment[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Comment|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Comment patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Comment[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Comment findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
+ * @method \App\Model\Entity\Comment newEmptyEntity()
+ * @method \App\Model\Entity\Comment saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Comment[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class CommentsTable extends Table
 {
@@ -104,34 +112,39 @@ class CommentsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('user_id', __('user_id should be a uuid'))
-            ->allowEmptyString('user_id', __('The user_id should not be empty'), false)
-            ->requirePresence('user_id', 'create', __('A user_id is required'));
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->allowEmptyString('user_id', __('The user identifier should not be empty.'), false)
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'));
 
         $validator
-            ->uuid('parent_id', __('parent_ud should be a uuid'))
-            ->allowEmptyString('parent_id', null, true);
+            ->uuid('parent_id', __('The parent comment identifier should be a valid UUID.'))
+            ->allowEmptyString('parent_id');
 
         $validator
-            ->ascii('foreign_model')
-            ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS, __('The foreign_model provided is not supported'))
-            ->requirePresence('foreign_model', 'create', __('A foreign_model is required'))
-            ->allowEmptyString('foreign_model', __('The foreign_model should not be empty'), false);
+            ->inList(
+                'foreign_model',
+                self::ALLOWED_FOREIGN_MODELS,
+                __(
+                    'The commented object type should be one of the following: {0}.',
+                    implode(', ', self::ALLOWED_FOREIGN_MODELS)
+                )
+            )
+            ->requirePresence('foreign_model', 'create', __('The commented object type is required.'))
+            ->allowEmptyString('foreign_model', __('The commented object type should not be empty.'), false);
 
         $validator
-            ->uuid('foreign_key', __('foreign_key should be a uuid'))
-            ->requirePresence('foreign_key', 'create', __('A foreign_key is required'))
-            ->allowEmptyString('foreign_key', __('The foreign_key should not be empty'), false);
+            ->uuid('foreign_key', __('The commented object identifier should be a valid UUID.'))
+            ->requirePresence('foreign_key', 'create', __('The commented object identifier is required.'))
+            ->allowEmptyString('foreign_key', __('The commented object identifier should not be empty.'), false);
 
         $validator
-            ->scalar('content')
+            ->utf8Extended('content', __('The content should be a valid UTF8 string.'))
             ->requirePresence('content', __('A content is required'))
             ->allowEmptyString('content', __('The content should not be empty'), false)
-            ->utf8Extended('content', __('The content is not a valid utf8 string (emoticons excluded)'))
             ->lengthBetween(
                 'content',
                 [1, 255],
@@ -139,14 +152,30 @@ class CommentsTable extends Table
             );
 
         $validator
-            ->uuid('created_by', __('created_by should be a uuid'))
-            ->requirePresence('created_by', 'create', __('A created_by is required'))
-            ->allowEmptyString('created_by', __('The created_by should not be empty'), false);
+            ->uuid('created_by', __('The identifier of the user who created the comment should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the comment is required.')
+            )
+            ->allowEmptyString(
+                'created_by',
+                __('The identifier of the user who created the comment should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by', __('modified_by should be a uuid'))
-            ->requirePresence('modified_by', true, __('A modified_by is required'))
-            ->allowEmptyString('modified_by', __('A modified_by is required'), false);
+            ->uuid('modified_by', __('The identifier of the user who modified the comment should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                true,
+                __('The identifier of the user who modified the comment required.')
+            )
+            ->allowEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the comment should not be empty.'),
+                false
+            );
 
         return $validator;
     }
@@ -164,13 +193,13 @@ class CommentsTable extends Table
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_soft_deleted', [
             'table' => 'Resources',
             'errorField' => 'foreign_key',
-            'message' => __('The resource is soft deleted.'),
+            'message' => __('The resource does not exist.'),
         ]);
         $rules->addCreate($rules->existsIn('user_id', 'Users'), 'user_exists');
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => __('The user is soft deleted.'),
+            'message' => __('The user does not exist.'),
         ]);
         $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
             'errorField' => 'foreign_key',
@@ -181,7 +210,7 @@ class CommentsTable extends Table
         $rules->addCreate(new HasValidParentRule(), 'has_valid_parent_id', [
             'table' => 'Comments',
             'errorField' => 'parent_id',
-            'message' => __('The parent comment is invalid.'),
+            'message' => __('The parent comment does not exist.'),
             'resourceField' => 'foreign_key',
         ]);
         $rules->addCreate($rules->existsIn('created_by', 'Users'), 'creator_exists');
@@ -221,20 +250,21 @@ class CommentsTable extends Table
     ): Query {
         // Check model sanity.
         if (!in_array($foreignModelName, self::ALLOWED_FOREIGN_MODELS)) {
-            throw new \InvalidArgumentException(__('The foreign model provided is not supported'));
+            throw new \InvalidArgumentException('The parameter foreignModel provided is not supported');
         }
 
         // Check uuid format.
         if (!Validation::uuid($foreignKey)) {
-            throw new \InvalidArgumentException(__('The parameter groupId should be a valid uuid.'));
+            throw new \InvalidArgumentException('The parameter groupId should be a valid UUID.');
         }
 
         // Retrieve the resource.
         // This will break if the resource doesn't exist, if it is soft deleted, or if the user is not allowed to access it.
+        /** @var \App\Model\Table\ResourcesTable $ResourcesTable */
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $foreignModelLookup = $ResourcesTable->findView($userId, $foreignKey)->first();
         if (empty($foreignModelLookup)) {
-            throw new RecordNotFoundException(__('The foreign model does not exist.'));
+            throw new RecordNotFoundException(__('The commented object type does not exist.'));
         }
 
         $query = $this->find('threaded');
@@ -274,7 +304,7 @@ class CommentsTable extends Table
     public function ruleIsOwner(\App\Model\Entity\Comment $entity, ?array $options = []): bool
     {
         if (!isset($options['Comments.user_id'])) {
-            throw new BadRequestException(__('The parameter Comments.user_id should be provided'));
+            throw new BadRequestException('The parameter Comments.user_id should be provided');
         }
         if ($options['Comments.user_id'] != $entity->user_id) {
             return false;

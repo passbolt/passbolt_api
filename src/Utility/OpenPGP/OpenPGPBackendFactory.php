@@ -27,9 +27,9 @@ class OpenPGPBackendFactory
     public const GNUPG = 'gnupg';
 
     /**
-     * @var \App\Utility\OpenPGP\OpenPGPBackend
+     * @var \App\Utility\OpenPGP\OpenPGPBackend|null
      */
-    private static $instance = null;
+    private static $instance;
 
     /**
      * Instantiate an OpenPGP Backend
@@ -38,7 +38,7 @@ class OpenPGPBackendFactory
      * @throws \Cake\Http\Exception\InternalErrorException if backend if not supported
      * @return \App\Utility\OpenPGP\OpenPGPBackend
      */
-    public static function create(string $backend = self::GNUPG)
+    public static function create(string $backend = self::GNUPG): OpenPGPBackend
     {
         switch ($backend) {
             case self::GNUPG:
@@ -47,9 +47,9 @@ class OpenPGPBackendFactory
                 } catch (Exception $exception) {
                     throw new InternalErrorException($exception->getMessage());
                 }
-                break;
+                // no break
             default:
-                throw new InternalErrorException(__('This OpenPGP backend is not supported'));
+                throw new InternalErrorException('This OpenPGP backend is not supported');
         }
     }
 

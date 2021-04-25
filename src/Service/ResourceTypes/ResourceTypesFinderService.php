@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Service\ResourceTypes;
 
 use App\Model\Table\ResourceTypesTable;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 class ResourceTypesFinderService
@@ -31,15 +32,16 @@ class ResourceTypesFinderService
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->resourceTypesTable = TableRegistry::getTableLocator()->get('ResourceTypes');
     }
 
     /**
      * Get resource types query
      *
-     * @return array|\App\Service\ResourceTypes\Query
+     * @return \Cake\ORM\Query
      */
-    public function find()
+    public function find(): Query
     {
         return $this->resourceTypesTable
             ->find()

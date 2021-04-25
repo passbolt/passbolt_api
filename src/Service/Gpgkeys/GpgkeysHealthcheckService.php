@@ -54,6 +54,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->gpg = $gpg ?? OpenPGPBackendFactory::get();
+        /** @phpstan-ignore-next-line */
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Gpgkeys');
         $this->checks[self::CHECK_CANENCRYPT] = $this->healthcheckFactory(self::CHECK_CANENCRYPT, true);
         $this->checks[self::CHECK_VALIDATES] = $this->healthcheckFactory(self::CHECK_VALIDATES, true);
@@ -138,7 +139,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
                 $this->gpg->importKeyIntoKeyring($armored);
                 $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
             } catch (Exception $exception) {
-                throw new InternalErrorException(__('The OpenPGP key for the user could not be imported in GnuPG.'));
+                throw new InternalErrorException('Could not import the user OpenPGP key.');
             }
         }
     }

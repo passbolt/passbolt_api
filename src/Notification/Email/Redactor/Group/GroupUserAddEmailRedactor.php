@@ -46,6 +46,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function __construct(?UsersTable $usersTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 
@@ -72,14 +73,14 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
 
         switch ($event->getName()) {
             case GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME:
-                /** @var \App\Model\Entity\Group $resource */
+                /** @var \App\Model\Entity\Group $group */
                 $group = $event->getData('group');
                 $addedGroupsUsers = $event->getData('addedGroupsUsers'); // the list of added groups users
                 $modifiedBy = $this->usersTable->findFirstForEmail($event->getData('userId'));
                 $emails = $this->createGroupUserAddedUpdateEmails($group, $addedGroupsUsers, $modifiedBy);
                 break;
             default:
-                /** @var \App\Model\Entity\Group $resource */
+                /** @var \App\Model\Entity\Group $group */
                 $group = $event->getData('group');
                 $emails = $this->createGroupCreatedEmail($group);
                 break;

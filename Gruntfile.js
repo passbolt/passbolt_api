@@ -42,22 +42,38 @@ module.exports = function(grunt) {
   /**
    * Load baseline NPM tasks
    */
+  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   /**
    * Register project specific grunt tasks
    */
-  grunt.registerTask('default', ['dependencies-update', 'styleguide-update']);
+  grunt.registerTask('default', ['dependencies-update', 'styleguide-update', 'locale-externalize']);
   grunt.registerTask('styleguide-update', 'copy:styleguide');
   grunt.registerTask('styleguide-watch', ['watch:node-modules-styleguide']);
   grunt.registerTask('dependencies-update', 'copy:dependencies');
+  grunt.registerTask('locale-externalize', 'shell:externalize_locale');
 
   /**
    * Tasks definition
    */
   grunt.initConfig({
     pkg: pkg,
+
+    /**
+     * Shell commands
+     */
+    shell: {
+      options: {stderr: false},
+
+      externalize_locale: {
+        command: [
+          './bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_US --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes',
+          'find resources/locales/en_US -name "*.pot" -exec sh -c \'mv "$1" "${1%.pot}.po"\' _ {} \\;'
+        ].join(' && ')
+      },
+    },
 
     copy: {
       dependencies: {
@@ -108,17 +124,12 @@ module.exports = function(grunt) {
             'controls/loading_light.svg',
             'controls/loading_dark.svg',
             'controls/overlay-opacity-50.png',
-            // Background images for error pages for ex
-            'illustrations/birds6_850.png',
-            'illustrations/birds3_850.png',
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
             'third_party/FirefoxAMO_black.svg',
             'third_party/FirefoxAMO_white.svg',
             'third_party/ChromeWebStore_black.png',
             'third_party/ChromeWebStore_white.png',
-            'third_party/gnupg_logo_disabled.png',
-            'third_party/gnupg_logo.png',
             'third_party/chosen-sprite.png',
             'third_party/chosen-sprite@2x.png',
             // Setup
@@ -131,7 +142,7 @@ module.exports = function(grunt) {
         }, {
           // CSS
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
-          src: ['api_login.min.css', 'api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css'],
+          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
         }, {
@@ -139,6 +150,12 @@ module.exports = function(grunt) {
           cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
           src: ['api_main.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
+          expand: true
+        },{
+          // Translation files
+          cwd: paths.node_modules_styleguide + 'src/locales',
+          src: ['**'],
+          dest: paths.webroot + 'locales',
           expand: true
         }, {
           // Javascript applications

@@ -23,7 +23,24 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\Action;
 
+/**
+ * @property \Passbolt\Log\Model\Table\ActionLogsTable&\Cake\ORM\Association\HasMany $ActionLogs
+ * @method \Passbolt\Log\Model\Entity\Action newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\Action newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\Action[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ */
 class ActionsTable extends Table
 {
     /**
@@ -60,12 +77,12 @@ class ActionsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should be not be empty.'), 'create');
 
         $validator
-            ->ascii('name', __('name should be ascii'))
-            ->requirePresence('name');
+            ->ascii('name', __('The name should be a valid ASCII string.'))
+            ->requirePresence('name', __('A name is required.'));
 
         return $validator;
     }
@@ -91,11 +108,11 @@ class ActionsTable extends Table
      *
      * @param string $id action id
      * @param string $name name of the action
-     * @return \App\Model\Entity\Action|bool
+     * @return \Passbolt\Log\Model\Entity\Action
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(string $id, string $name)
+    public function create(string $id, string $name): Action
     {
         $data = [
             'id' => $id,
@@ -117,7 +134,7 @@ class ActionsTable extends Table
 
         // Check for errors while saving.
         if (!$actionSaved) {
-            throw new InternalErrorException(__('The action could not be saved.'));
+            throw new InternalErrorException('Could not save the action.');
         }
 
         return $actionSaved;
@@ -153,7 +170,7 @@ class ActionsTable extends Table
      *
      * @param string $id id of the action
      * @param string $name name of the action
-     * @return \Cake\Orm\Entity $action the action
+     * @return \Cake\ORM\Entity $action the action
      */
     public function findOrCreateAction(string $id, string $name)
     {

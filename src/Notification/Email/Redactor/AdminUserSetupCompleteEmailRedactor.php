@@ -51,6 +51,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      */
     public function __construct(?UsersTable $usersTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         if (!Configure::read('passbolt.plugins.log.enabled')) {
             // Check if plugin log is enabled because this redactor uses on ActionLog tables

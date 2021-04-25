@@ -27,28 +27,24 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Response;
 use Cake\ORM\RulesChecker;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\GroupsTable Groups
- * @property \App\Model\Table\GroupsUsersTable GroupsUsers
- * @property \App\Model\Table\PermissionsTable Permissions
- * @property \App\Model\Table\ResourcesTable Resources
+ * @property \App\Model\Table\GroupsTable $Groups
+ * @property \App\Model\Table\GroupsUsersTable $GroupsUsers
+ * @property \App\Model\Table\PermissionsTable $Permissions
+ * @property \App\Model\Table\ResourcesTable $Resources
  */
 class GroupsDeleteController extends AppController
 {
     public const DELETE_SUCCESS_EVENT_NAME = 'GroupsDeleteController.delete.success';
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event): ?Response
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         $this->loadModel('Groups');
         $this->loadModel('GroupsUsers');
@@ -64,7 +60,7 @@ class GroupsDeleteController extends AppController
      * @param string $id group uuid
      * @return void
      */
-    public function dryrun(string $id): void
+    public function dryRun(string $id): void
     {
         $group = $this->_validateRequestData($id);
         $this->_validateDelete($group);
@@ -87,7 +83,7 @@ class GroupsDeleteController extends AppController
             $this->_transferContentOwners($group);
             $this->_validateDelete($group);
             if (!$this->Groups->softDelete($group, ['checkRules' => false])) {
-                throw new InternalErrorException(__('Could not delete the group, please try again later.'));
+                throw new InternalErrorException('Could not delete the group, please try again later.');
             }
             $this->_notifyUsers($group);
             $this->success(__('The group was deleted successfully.'));
@@ -112,7 +108,7 @@ class GroupsDeleteController extends AppController
             }
         }
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The group id must be a valid uuid.'));
+            throw new BadRequestException(__('The group identifier should be a valid UUID.'));
         }
 
         /** @var \App\Model\Entity\Group $group */
@@ -177,7 +173,7 @@ class GroupsDeleteController extends AppController
         $permissionsIdsToUpdate = Hash::extract($owners, '{n}.id');
         foreach ($permissionsIdsToUpdate as $id) {
             if (!Validation::uuid($id)) {
-                throw new BadRequestException(__('The permissions ids must be valid uuids.'));
+                throw new BadRequestException(__('The permissions identifiers must be valid UUID.'));
             }
         }
 

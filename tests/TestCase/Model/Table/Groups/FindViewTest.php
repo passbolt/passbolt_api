@@ -14,7 +14,7 @@ class FindViewTest extends AppTestCase
 
     public $Groups;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Groups') ? [] : ['className' => GroupsTable::class];

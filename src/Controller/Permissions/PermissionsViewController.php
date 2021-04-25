@@ -43,7 +43,7 @@ class PermissionsViewController extends AppController
     {
         // Check request sanity
         if (!Validation::uuid($acoForeignKey)) {
-            throw new BadRequestException(__('The id is not valid for model Resource.'));
+            throw new BadRequestException(__('The identifier should be a valid UUID.'));
         }
 
         // Retrieve and sanity the query options.

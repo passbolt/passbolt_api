@@ -20,21 +20,19 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
+use Authentication\Authenticator\Result;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
 
 class AuthLoginController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow([
+        $this->Authentication->allowUnauthenticated([
             'loginGet',
             'loginPost',
         ]);
@@ -59,7 +57,7 @@ class AuthLoginController extends AppController
 
         $this->viewBuilder()
             ->setLayout('default')
-            ->setTemplatePath('/Auth')
+            ->setTemplatePath('Auth')
             ->setTemplate('triage');
     }
 
@@ -74,23 +72,21 @@ class AuthLoginController extends AppController
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
         }
 
-        $user = $this->Auth->identify();
-        $gpgAuth = $this->Auth->getAuthenticate('Gpg');
-        $this->response = $gpgAuth->getUpdatedResponse();
-
-        if ($user) {
-            $this->Auth->setUser($user);
-            UserAction::getInstance()->setUserAccessControl(new UserAccessControl(
-                $user['role']['name'],
-                $user['id']
-            ));
+        // Custom X-GpgAuth-* http headers are stored in $result->getErrors
+        // They are translated into actual http headers as part of GpgAuthHeadersMiddleware::process
+        $result = $this->Authentication->getResult();
+        if ($result->isValid()) {
+            $user = $result->getData();
+            $uac = new UserAccessControl($user['role']['name'], $user['id']);
+            UserAction::getInstance()->setUserAccessControl($uac);
             $this->success(__('You are successfully logged in.'), $user);
         } else {
-            $message = 'The authentication failed.';
-            $debug = $this->response->getHeader('X-GPGAuth-Debug');
-            if (isset($debug) && count($debug) === 1) {
-                $message .= ' ' . $debug[0];
+            $errors = $result->getErrors();
+            $message = $errors['X-GPGAuth-Debug'] ?? 'The authentication failed.';
+            if ($result->getStatus() === Result::FAILURE_OTHER) {
+                throw new InternalErrorException($message);
             }
+
             $this->error($message);
         }
     }

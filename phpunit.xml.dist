@@ -1,51 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    colors="true"
-    processIsolation="false"
-    stopOnFailure="false"
-    syntaxCheck="false"
-    bootstrap="./tests/bootstrap.php"
-    >
-    <php>
-        <ini name="memory_limit" value="-1"/>
-        <ini name="apc.enable_cli" value="1"/>
-    </php>
-
-    <!-- Add any additional test suites you want to run here -->
-    <testsuites>
-        <testsuite name="App Test Suite">
-            <directory>./tests/TestCase</directory>
-            <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
-            <directory>./plugins/Passbolt/EmailDigest/tests/TestCase</directory>
-            <directory>./plugins/Passbolt/EmailNotificationSettings/tests/TestCase</directory>
-            <directory>./plugins/Passbolt/Log/tests/TestCase</directory>
-            <directory>./plugins/Passbolt/Mobile/tests/TestCase</directory>
-            <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
-        </testsuite>
-        <testsuite name="WebInstaller Test Suite">
-            <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
-        </testsuite>
-    </testsuites>
-
-    <!-- Setup a listener for fixtures -->
-    <listeners>
-        <listener class="CakephpTestSuiteLight\FixtureInjector">
-            <arguments>
-                <object class="CakephpTestSuiteLight\FixtureManager" />
-            </arguments>
-        </listener>
-    </listeners>
-
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./src/</directory>
-            <directory suffix=".php">./plugins/AccountSettings/src/</directory>
-            <directory suffix=".php">./plugins/EmailDigest/src/</directory>
-            <directory suffix=".php">./plugins/EmailNotificationSettings/src/</directory>
-            <directory suffix=".php">./plugins/Log/src/</directory>
-            <directory suffix=".php">./plugins/Reports/src/</directory>
-            <directory suffix=".php">./plugins/Mobile/src/</directory>
-            <directory suffix=".php">./plugins/WebInstaller/src/</directory>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" processIsolation="false" stopOnFailure="false" bootstrap="./tests/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">./src/</directory>
+      <directory suffix=".php">./plugins/AccountSettings/src/</directory>
+      <directory suffix=".php">./plugins/WebInstaller/src/</directory>
+      <directory suffix=".php">./plugins/Log/src/</directory>
+      <directory suffix=".php">./plugins/EmailNotificationSettings/src/</directory>
+      <directory suffix=".php">./plugins/EmailDigest/src/</directory>
+      <directory suffix=".php">./plugins/Mobile/src/</directory>
+      <directory suffix=".php">./plugins/Reports/src/</directory>
+    </include>
+  </coverage>
+  <php>
+    <ini name="memory_limit" value="-1"/>
+    <ini name="apc.enable_cli" value="1"/>
+  </php>
+  <!-- Add any additional test suites you want to run here -->
+  <testsuites>
+    <testsuite name="app">
+      <directory>./tests/TestCase</directory>
+      <exclude>./tests/TestCase/Command</exclude>
+    </testsuite>
+    <testsuite name="plugins">
+      <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
+      <directory>./plugins/Passbolt/Log/tests/TestCase</directory>
+      <directory>./plugins/Passbolt/EmailNotificationSettings/tests/TestCase</directory>
+      <directory>./plugins/Passbolt/EmailDigest/tests/TestCase</directory>
+      <directory>./plugins/Passbolt/Mobile/tests/TestCase</directory>
+      <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
+    </testsuite>
+    <testsuite name="installers">
+      <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
+      <directory>./tests/TestCase/Command</directory>
+    </testsuite>
+  </testsuites>
+  <!-- Setup a listener for fixtures -->
+  <listeners>
+    <listener class="CakephpTestSuiteLight\FixtureInjector">
+      <arguments>
+        <object class="CakephpTestSuiteLight\FixtureManager"/>
+      </arguments>
+    </listener>
+  </listeners>
 </phpunit>

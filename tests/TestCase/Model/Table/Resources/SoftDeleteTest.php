@@ -34,14 +34,14 @@ class SoftDeleteTest extends AppTestCase
         'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Secrets',
         'app.Base/Permissions'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Resources') ? [] : ['className' => ResourcesTable::class];
         $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Resources);
 
@@ -55,6 +55,7 @@ class SoftDeleteTest extends AppTestCase
         $resource = $this->Resources->get($resourceId);
         $this->assertFalse($resource->deleted);
         $this->Resources->softDelete($userId, $resource);
+        var_dump($resource->getErrors());
         $this->assertEmpty($resource->getErrors());
 
         // Check that the resource is well soft deleted.

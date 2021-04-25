@@ -155,7 +155,6 @@ class WebInstaller
         $this->importGpgKey();
         $this->writePassboltConfigFile();
         $this->installDatabase();
-        $this->writeLicenseFile();
         $this->createFirstUser();
         $this->saveSettings();
         $this->deleteTmpFiles();
@@ -175,7 +174,7 @@ class WebInstaller
     }
 
     /**
-     * Import the server gpg key
+     * Import the server OpenPGP key
      *
      * @return void
      */
@@ -204,20 +203,6 @@ class WebInstaller
         $passboltConfig = new PassboltConfiguration();
         $contents = $passboltConfig->render($this->settings);
         file_put_contents(CONFIG . 'passbolt.php', $contents);
-    }
-
-    /**
-     * Write the license file.
-     *
-     * @return void
-     */
-    public function writeLicenseFile(): void
-    {
-        if (!Configure::read('passbolt.plugins.license')) {
-            return;
-        }
-        $license = $this->getSettings('license');
-        file_put_contents(CONFIG . 'license', $license);
     }
 
     /**

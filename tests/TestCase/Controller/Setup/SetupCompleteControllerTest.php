@@ -31,7 +31,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     ];
     public $AuthenticationTokens;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
@@ -83,7 +83,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->postJson($url, $data);
         $this->assertError();
         $this->assertNotEmpty($this->_responseJsonBody);
-        $this->assertContains('_isUnique', $this->_getBodyAsString());
+        $this->assertStringContainsString('_isUnique', $this->_getBodyAsString());
     }
 
     /**
@@ -96,7 +96,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/complete/nope.json';
         $data = [];
         $this->postJson($url, $data);
-        $this->assertError(400, 'The user id is not valid.');
+        $this->assertError(400, 'The user identifier should be a valid UUID.');
     }
 
     /**
@@ -126,23 +126,23 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $fails = [
             'empty array' => [
                 'data' => [],
-                'message' => 'An authentication token must be provided.',
+                'message' => 'An authentication token should be provided.',
             ],
             'null' => [
                 'data' => null,
-                'message' => 'An authentication token must be provided.',
+                'message' => 'An authentication token should be provided.',
             ],
             'array with null' => [
                 'data' => ['token' => null],
-                'message' => 'An authentication token must be provided.',
+                'message' => 'An authentication token should be provided.',
             ],
             'int' => [
                 'data' => ['token' => 100],
-                'message' => 'The authentication token should be a valid uuid.',
+                'message' => 'The authentication token should be a valid UUID.',
             ],
             'string' => [
                 'data' => ['token' => 'nope'],
-                'message' => 'The authentication token should be a valid uuid.',
+                'message' => 'The authentication token should be a valid UUID.',
             ],
             'expired token' => [
                 'data' => ['token' => $tokenExpired],
@@ -221,7 +221,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     {
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
         $this->postJson($url, []);
-        $this->assertError(400, 'The user does not exist or is already active or has been deleted.');
+        $this->assertError(400, 'The user does not exist, is already active or has been deleted.');
     }
 
     /**
@@ -233,6 +233,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     {
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
         $this->postJson($url, []);
-        $this->assertError(400, 'The user does not exist or is already active or has been deleted.');
+        $this->assertError(400, 'The user does not exist, is already active or has been deleted.');
     }
 }

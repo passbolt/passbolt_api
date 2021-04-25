@@ -18,8 +18,6 @@ namespace Passbolt\AccountSettings\Model\Table\Traits;
 
 use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Filesystem\File;
-use Cake\Filesystem\Folder;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 use Cake\Routing\Router;
@@ -63,10 +61,10 @@ trait ThemeSettingsTrait
     /**
      * Get the theme to apply
      *
-     * @param string $userId uuid
-     * @return string value of the theme setting or default
+     * @param string|null $userId uuid
+     * @return string|null value of the theme setting or default
      */
-    public function getTheme($userId)
+    public function getTheme(?string $userId): ?string
     {
         try {
             $theme = $this->getFirstPropertyOrFail($userId, 'theme');
@@ -88,27 +86,24 @@ trait ThemeSettingsTrait
         $defaultCssFileName = 'api_main.min.css';
         $themesPath = WWW_ROOT . 'css' . DS . 'themes';
 
-        $dir = new Folder($themesPath);
-        $files = $dir->read(true, true);
-        if (!isset($files[0])) {
-            throw new InternalErrorException(__('No themes installed.'));
+        $themeFolders = array_diff(scandir($themesPath), ['.', '..']);
+        if (empty($themeFolders)) {
+            throw new InternalErrorException('No themes installed.');
         }
         $response = [];
-        foreach ($files[0] as $dir) {
+        foreach ($themeFolders as $dir) {
             $cssFilePath = $themesPath . DS . $dir . DS . $defaultCssFileName;
             $defaultPreviewImageName = $dir . '.png';
             $imagePreviewFilePath = IMAGES . DS . 'themes' . DS . $defaultPreviewImageName;
-            $cssFile = new File($cssFilePath);
-            $imagePreviewFile = new File($imagePreviewFilePath);
-            if ($cssFile->exists() && $imagePreviewFile->exists()) {
+            if (file_exists($cssFilePath) && file_exists($imagePreviewFilePath)) {
                 $response[] = [
                     'id' => UuidFactory::uuid('theme.id.' . $dir),
                     'name' => $dir,
                     'preview' => Router::url('/img/themes/' . $defaultPreviewImageName, true),
                 ];
             } else {
-                $msg = __('ThemesIndexController: Could not load theme {0}.', $dir) . ' ';
-                $msg .= __('The main css file or preview image is missing');
+                $msg = "ThemesIndexController: Could not load theme $dir. ";
+                $msg .= 'The main css file or preview image is missing';
                 Log::error($msg);
             }
         }

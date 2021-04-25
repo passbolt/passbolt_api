@@ -18,30 +18,35 @@ namespace App\Middleware;
 
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class ContentSecurityPolicyMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddleware
+class ContentSecurityPolicyMiddleware implements MiddlewareInterface
 {
     /**
      * Add Content Security Policy to the response headers
      *
-     * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $response The response.
-     * @param callable $next Callback to invoke the next middleware.
-     * @return \Cake\Http\Response A response
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The handler.
+     * @return \Psr\Http\Message\ResponseInterface The response.
      */
-    public function __invoke(ServerRequest $request, Response $response, $next)
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
+        $response = $handler->handle($request);
+
         $cspFromConfig = Configure::read('passbolt.security.csp');
 
         // No CSP - should be for testing only
         if ($cspFromConfig === false) {
-            return $next($request, $response);
+            return $response;
         }
 
         $defaultCsp = "default-src 'self'; ";
-        $defaultCsp .= "script-src 'self' 'unsafe-eval'; "; // eval needed by canjs for templates
+        $defaultCsp .= "script-src 'self'; "; // eval needed by canjs for templates
         $defaultCsp .= "style-src 'self' 'unsafe-inline'; "; // inline needed to perform extension iframe resizing
         $defaultCsp .= "img-src 'self';";
         $defaultCsp .= "frame-src 'self';";
@@ -51,11 +56,11 @@ class ContentSecurityPolicyMiddleware extends \Cake\Http\Middleware\CsrfProtecti
         } elseif (is_string($cspFromConfig)) {
             $csp = $cspFromConfig;
         } else {
-            throw new InternalErrorException(__('The CSP policy defined in settings is invalid.'));
+            throw new InternalErrorException('The CSP policy defined in settings is invalid.');
         }
 
         $response = $response->withAddedHeader('Content-Security-Policy', $csp);
 
-        return $next($request, $response);
+        return $response;
     }
 }

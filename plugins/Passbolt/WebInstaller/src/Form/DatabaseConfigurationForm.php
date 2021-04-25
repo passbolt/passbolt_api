@@ -34,7 +34,7 @@ class DatabaseConfigurationForm extends Form
      * @param \Cake\Form\Schema $schema shchema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('host', 'string')
@@ -50,22 +50,22 @@ class DatabaseConfigurationForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('host', 'create', __('A host name is required.'))
-            ->notEmptyString('host', __('A host name is required.'))
-            ->utf8('host', __('The host is not a valid utf8 string.'));
+            ->notEmptyString('host', __('The host name should not be empty.'))
+            ->utf8('host', __('The host name should be a valid BMP-UTF8 string.'));
 
         $validator
             ->requirePresence('port', 'create', __('A port number is required.'))
-            ->numeric('port', __('Port number should be numeric'))
-            ->range('port', [0, 65535], __('Port should be between 0 and 65535'));
+            ->numeric('port', __('The port number should be numeric.'))
+            ->range('port', [0, 65535], __('The port number should be between {0} and {1}.', '0', '65535'));
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
-            ->notEmptyString('username', __('A username is required.'))
-            ->utf8('username', __('The username is not a valid utf8 string.'));
+            ->notEmptyString('username', __('The username should not be empty.'))
+            ->utf8('username', __('The username should be a valid BMP-UTF8 string.'));
 
         $validator
             ->allowEmptyString('password')
@@ -77,19 +77,19 @@ class DatabaseConfigurationForm extends Form
 
                     return strpos($value, '"') === false && strpos($value, "'") === false;
                 },
-                'message' => __('The password cannot contain quotes.'),
+                'message' => __('The password should not contain quotes.'),
             ])
-            ->utf8('password', __('The host is not a valid utf8 string.'));
+            ->utf8('password', __('The password should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->requirePresence('database', 'create', __('A database is required.'))
-            ->notEmptyString('database', __('A database is required.'))
-            ->utf8('database', __('The database is not a valid utf8 string.'))
+            ->requirePresence('database', 'create', __('A database name is required.'))
+            ->notEmptyString('database', __('The database name should not be empty.'))
+            ->utf8('database', __('The database name should be a valid BMP-UTF8 string.'))
             ->add('database', 'no_dashes', [
                 'rule' => function ($value, $context) {
                     return strpos($value, '-') === false;
                 },
-                'message' => __('The database name cannot contain dashes.'),
+                'message' => __('The database name should not contain dashes.'),
             ]);
 
         return $validator;
@@ -101,7 +101,7 @@ class DatabaseConfigurationForm extends Form
      * @param array $data form data
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         return true;
     }

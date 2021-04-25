@@ -58,7 +58,7 @@ class UserAction
     /**
      * Instance of class used for singleton.
      *
-     * @var
+     * @var \App\Utility\UserAction|null
      */
     private static $instance;
 
@@ -75,8 +75,6 @@ class UserAction
         $this->actionName = $actionName;
         $this->context = $context;
         $this->userAccessControl = $accessControl;
-
-        return $this;
     }
 
     /**
@@ -97,7 +95,7 @@ class UserAction
         }
 
         if (!isset(self::$instance)) {
-            throw new Exception(__('UserAction has not been initialized yet.'));
+            throw new Exception('UserAction has not been initialized yet.');
         }
 
         return self::$instance;
@@ -106,11 +104,11 @@ class UserAction
     /**
      * Init singleton from a Cakephp request.
      *
-     * @param \App\Utility\UserAccessControl|null $accessControl user access control object
-     * @param \Cake\Http\ServerRequest|null $request server request object
+     * @param \App\Utility\UserAccessControl $accessControl user access control object
+     * @param \Cake\Http\ServerRequest $request server request object
      * @return \App\Utility\UserAction userAction object
      */
-    public static function initFromRequest(UserAccessControl $accessControl, ServerRequest $request)
+    public static function initFromRequest(UserAccessControl $accessControl, ServerRequest $request): UserAction
     {
         if (isset(self::$instance)) {
             return self::$instance;
@@ -194,9 +192,9 @@ class UserAction
     /**
      * Get User access control.
      *
-     * @return string context
+     * @return \App\Utility\UserAccessControl context
      */
-    public function getUserAccessControl()
+    public function getUserAccessControl(): UserAccessControl
     {
         return $this->userAccessControl;
     }
@@ -208,7 +206,7 @@ class UserAction
      * @param \App\Utility\UserAccessControl $userAccessControl user access control.
      * @return void
      */
-    public function setUserAccessControl(UserAccessControl $userAccessControl)
+    public function setUserAccessControl(UserAccessControl $userAccessControl): void
     {
         $this->userAccessControl = $userAccessControl;
     }

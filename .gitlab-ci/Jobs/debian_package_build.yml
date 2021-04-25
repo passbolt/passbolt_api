@@ -79,8 +79,6 @@ build-debian:
 
 debian-testing:
   extends: .publish
-  dependencies:
-    - build-debian
   variables:
     DISTRIBUTION: buster
     COMPONENT: testing
@@ -95,6 +93,26 @@ debian-stable:
     DISTRIBUTION: buster
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/debian
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+      when: on_success
+
+ubuntu-testing:
+  extends: .publish
+  variables:
+    DISTRIBUTION: focal
+    COMPONENT: testing
+    PREFIX: $PASSBOLT_FLAVOUR/ubuntu
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+ubuntu-stable:
+  extends: .publish
+  variables:
+    DISTRIBUTION: focal
+    COMPONENT: stable
+    PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
       when: on_success
@@ -139,20 +157,17 @@ ubuntu-1804-runtime:
   variables:
     KITCHEN_JOB: runtime-benchmarks-ubuntu-1804
 
-ubuntu-1910-fs:
+ubuntu-2004-fs:
   extends: .kitchen-test
-  allow_failure: true
   variables:
-    KITCHEN_JOB: filesystem-benchmarks-ubuntu-1910
+    KITCHEN_JOB: filesystem-benchmarks-ubuntu-2004
 
-ubuntu-1910-purge:
+ubuntu-2004-purge:
   extends: .kitchen-test
-  allow_failure: true
   variables:
-    KITCHEN_JOB: purge-benchmarks-ubuntu-1910
+    KITCHEN_JOB: purge-benchmarks-ubuntu-2004
 
-ubuntu-1910-runtime:
+ubuntu-2004-runtime:
   extends: .kitchen-test
-  allow_failure: true
   variables:
-    KITCHEN_JOB: runtime-benchmarks-ubuntu-1910
+    KITCHEN_JOB: runtime-benchmarks-ubuntu-2004

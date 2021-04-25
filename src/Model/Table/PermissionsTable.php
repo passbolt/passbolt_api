@@ -32,17 +32,27 @@ use Cake\Validation\Validator;
 /**
  * Permissions Model
  *
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Groups
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Permission get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Permission newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Permission[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Permission|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Permission patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Permission[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Permission findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Permission get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Permission newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Permission[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Permission|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Permission patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Permission[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Permission findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \Passbolt\Log\Model\Table\PermissionsHistoryTable&\Cake\ORM\Association\BelongsTo $PermissionsHistory
+ * @method \App\Model\Entity\Permission newEmptyEntity()
+ * @method \App\Model\Entity\Permission saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findByAcoForeignKeyAndType(string $acoForeignKey, string $type)
+ * @method \Cake\ORM\Query findByAroAndAcoForeignKey(string $aro, string $acoForeignKey)
+ * @method \Cake\ORM\Query findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
  */
 class PermissionsTable extends Table
 {
@@ -123,42 +133,50 @@ class PermissionsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
             ->inList('aco', self::ALLOWED_ACOS, __(
-                'The aco must be one of the following: {0}.',
+                'The type of the access control object should be one of the following: {0}.',
                 implode(', ', self::ALLOWED_ACOS)
             ))
-            ->requirePresence('aco', 'create', __('The aco is required.'))
-            ->notEmptyString('aco', __('The aco cannot be empty.'));
+            ->requirePresence('aco', 'create', __('The type of the access control object is required.'))
+            ->notEmptyString('aco', __('The type of the access control object should not be empty.'));
 
         $validator
-            ->uuid('aco_foreign_key')
-            ->requirePresence('aco_foreign_key', 'create')
-            ->notEmptyString('aco_foreign_key');
+            ->uuid('aco_foreign_key', __('The identifier of the access control object should be a valid UUID.'))
+            ->requirePresence(
+                'aco_foreign_key',
+                'create',
+                __('The identifier of the access control object is required.')
+            )
+            ->notEmptyString('aco_foreign_key', __('The identifier of the access control object should not be empty.'));
 
         $validator
             ->inList('aro', self::ALLOWED_AROS, __(
-                'The aro must be one of the following: {0}.',
+                'The access request object type should be one of the following: {0}.',
                 implode(', ', self::ALLOWED_AROS)
             ))
-            ->requirePresence('aro', 'create', __('The aro is required.'))
-            ->notEmptyString('aro', __('The aro cannot be empty.'));
+            ->requirePresence('aro', 'create', __('The type of the access request object is required.'))
+            ->notEmptyString('aro', __('The access request object type should not be empty.'));
 
         $validator
-            ->uuid('aro_foreign_key')
-            ->requirePresence('aro_foreign_key', 'create')
-            ->notEmptyString('aro_foreign_key');
+            ->uuid('aro_foreign_key', __('The identifier of the access request object should be a valid UUID.'))
+            ->requirePresence(
+                'aro_foreign_key',
+                'create',
+                __('The identifier of the access request object is required.')
+            )
+            ->notEmptyString('aro_foreign_key', __('The identifier of the access request object should not be empty.'));
 
         $validator
             ->inList('type', self::ALLOWED_TYPES, __(
-                'The type must be one of the following: {0}.',
+                'The type should be one of the following: {0}.',
                 implode(', ', self::ALLOWED_TYPES)
             ))
-            ->requirePresence('type', 'create', __('The type is required.'))
-            ->notEmptyString('type', __('The type cannot be empty.'));
+            ->requirePresence('type', 'create', __('A type is required.'))
+            ->notEmptyString('type', __('The type should not be empty.'));
 
         return $validator;
     }
@@ -202,17 +220,17 @@ class PermissionsTable extends Table
         $rules->addCreate(
             $rules->isUnique(
                 ['aco_foreign_key', 'aro_foreign_key'],
-                __('A permission already exists for the given aco and aro.')
+                __('A permission already exists for the given access control object and access request object.')
             ),
             'permission_unique'
         );
         $rules->addCreate([$this, 'acoExistsRule'], 'aco_exists', [
             'errorField' => 'aco_foreign_key',
-            'message' => __('The aco does not exist.'),
+            'message' => __('The access control object does not exist.'),
         ]);
         $rules->addCreate([$this, 'aroExistsRule'], 'aro_exists', [
             'errorField' => 'aro_foreign_key',
-            'message' => __('The aro does not exist.'),
+            'message' => __('The access request object does not exist.'),
         ]);
 
         return $rules;
@@ -230,7 +248,7 @@ class PermissionsTable extends Table
         $rules = new RulesChecker($options);
         $exist = false;
 
-        switch ($entity->aco) { // Change this implementation  next time a new ACO is created
+        switch ($entity->get('aco')) { // Change this implementation  next time a new ACO is created
             case static::RESOURCE_ACO:
                 $rule = $rules->existsIn('aco_foreign_key', 'Resources');
                 $existIn = $rule($entity, $options);
@@ -266,7 +284,7 @@ class PermissionsTable extends Table
     public function aroExistsRule(EntityInterface $entity, array $options)
     {
         $rules = new RulesChecker($options);
-        $aro = Inflector::pluralize($entity->aro);
+        $aro = Inflector::pluralize($entity->get('aro'));
         $singularizedAro = Inflector::singularize($aro);
         if (in_array($singularizedAro, self::ALLOWED_AROS)) {
             // The aro instance exists.
@@ -299,9 +317,9 @@ class PermissionsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupSoftDeletedAro(string $modelName, $dryRun = false)
+    public function cleanupSoftDeletedAro(string $modelName, $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id'])
@@ -319,9 +337,9 @@ class PermissionsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupHardDeletedAro(string $modelName, $dryRun = false)
+    public function cleanupHardDeletedAro(string $modelName, $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id'])
@@ -340,9 +358,9 @@ class PermissionsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupSoftDeletedAco(string $modelName, $dryRun = false)
+    public function cleanupSoftDeletedAco(string $modelName, $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id'])
@@ -360,9 +378,9 @@ class PermissionsTable extends Table
      *
      * @param string $modelName model
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupHardDeletedAco(string $modelName, $dryRun = false)
+    public function cleanupHardDeletedAco(string $modelName, $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id'])
@@ -380,9 +398,9 @@ class PermissionsTable extends Table
      * Delete all records where associated users are soft deleted
      *
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupSoftDeletedUsers($dryRun = false)
+    public function cleanupSoftDeletedUsers($dryRun = false): int
     {
         return $this->cleanupSoftDeletedAro('Users', $dryRun);
     }
@@ -391,9 +409,9 @@ class PermissionsTable extends Table
      * Delete all records where associated users are deleted
      *
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupHardDeletedUsers($dryRun = false)
+    public function cleanupHardDeletedUsers($dryRun = false): int
     {
         return $this->cleanupHardDeletedAro('Users', $dryRun);
     }
@@ -402,9 +420,9 @@ class PermissionsTable extends Table
      * Delete all records where associated groups are soft deleted
      *
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupSoftDeletedGroups($dryRun = false)
+    public function cleanupSoftDeletedGroups($dryRun = false): int
     {
         return $this->cleanupSoftDeletedAro('Groups', $dryRun);
     }
@@ -413,9 +431,9 @@ class PermissionsTable extends Table
      * Delete all records where associated groups are deleted
      *
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupHardDeletedGroups($dryRun = false)
+    public function cleanupHardDeletedGroups($dryRun = false): int
     {
         return $this->cleanupHardDeletedAro('Groups', $dryRun);
     }
@@ -424,9 +442,9 @@ class PermissionsTable extends Table
      * Delete all records where associated resources are deleted
      *
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupHardDeletedResources(bool $dryRun = false)
+    public function cleanupHardDeletedResources(bool $dryRun = false): int
     {
         return $this->cleanupHardDeletedAco('Resources', $dryRun);
     }
@@ -435,9 +453,9 @@ class PermissionsTable extends Table
      * Delete all records where associated resources are deleted
      *
      * @param bool $dryRun false
-     * @return \App\Model\Table\number of affected records
+     * @return int Number of affected records
      */
-    public function cleanupSoftDeletedResources(bool $dryRun = false)
+    public function cleanupSoftDeletedResources(bool $dryRun = false): int
     {
         return $this->cleanupSoftDeletedAco('Resources', $dryRun);
     }

@@ -18,21 +18,16 @@ namespace App\Controller\Auth;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;
-use Cake\Event\Event;
-use Cake\Filesystem\File;
 use Cake\Http\Exception\InternalErrorException;
 
 class AuthVerifyController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow('verifyGet');
+        $this->Authentication->allowUnauthenticated(['verifyGet']);
 
         return parent::beforeFilter($event);
     }
@@ -47,16 +42,19 @@ class AuthVerifyController extends AppController
         $configMissing = (Configure::read('passbolt.gpg.serverKey.public') === null);
         $configMissing = ($configMissing || Configure::read('passbolt.gpg.serverKey.public') === null);
         if ($configMissing) {
-            $msg = __('The public key information was not found in config.');
+            $msg = __('The OpenPGP public key information was not found in config.');
             throw new InternalErrorException($msg);
         }
-        $file = new File(Configure::read('passbolt.gpg.serverKey.public'));
-        if (!$file->exists()) {
-            throw new InternalErrorException(__('The public key for this passbolt instance was not found.'));
+        $publicKeyFileName = Configure::read('passbolt.gpg.serverKey.public');
+        if (!file_exists($publicKeyFileName)) {
+            throw new InternalErrorException('The OpenPGP public key for this passbolt instance was not found.');
+        }
+        if (!is_readable($publicKeyFileName)) {
+            throw new InternalErrorException("The OpenPGP public key file '$publicKeyFileName' is not readable.");
         }
         $key = [
             'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'),
-            'keydata' => $file->read(),
+            'keydata' => file_get_contents($publicKeyFileName),
         ];
         $this->success(__('The operation was successful.'), $key);
     }

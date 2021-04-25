@@ -23,7 +23,7 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
 {
     use GpgkeysModelTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
@@ -35,7 +35,7 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/gpg_key');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Create a new GPG key for your server', $data);
+        $this->assertStringContainsString('Create a new OpenPGP key for your server', $data);
     }
 
     public function testWebInstallerGpgKeyGeneratePostSuccess()
@@ -55,6 +55,6 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/gpg_key', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('The data entered are not correct', $data);
+        $this->assertStringContainsString('The data entered are not correct', $data);
     }
 }

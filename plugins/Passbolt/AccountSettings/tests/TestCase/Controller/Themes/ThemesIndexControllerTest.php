@@ -20,6 +20,9 @@ namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesIndexController
+ */
 class ThemesIndexControllerTest extends AppIntegrationTestCase
 {
     public $AccountSettings;
@@ -28,7 +31,7 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
         'plugin.Passbolt/AccountSettings.AccountSettings',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings');

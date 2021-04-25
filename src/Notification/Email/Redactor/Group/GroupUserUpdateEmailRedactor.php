@@ -45,6 +45,7 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function __construct(?UsersTable $usersTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 
@@ -126,8 +127,7 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         User $modifiedBy,
         Group $group
     ): Email {
-        $msg = '{0} updated your membership in the group {1}';
-        $subject = __($msg, $modifiedBy->profile->first_name, $group->name);
+        $subject = __('{0} updated your membership in the group {1}', $modifiedBy->profile->first_name, $group->name);
         $data = ['body' => ['admin' => $modifiedBy, 'group' => $group, 'isAdmin' => $isAdmin], 'title' => $subject];
 
         return new Email($recipient, $subject, $data, self::TEMPLATE);

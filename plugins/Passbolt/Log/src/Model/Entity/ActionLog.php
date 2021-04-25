@@ -21,12 +21,14 @@ use Cake\ORM\Entity;
 
 /**
  * @property string $id
- * @property string $user_id
+ * @property string|null $user_id
  * @property string $action_id
  * @property string $context
- * @property bool $status
+ * @property int $status
  * @property \Cake\I18n\FrozenTime $created
- * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\User|null $user
+ * @property \Passbolt\Log\Model\Entity\Action $action
+ * @property \Passbolt\Log\Model\Entity\EntityHistory[] $entities_history
  */
 class ActionLog extends Entity
 {

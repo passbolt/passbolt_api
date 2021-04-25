@@ -9,7 +9,7 @@
 
     # Passbolt unit test job common variables
     DEBUG: "true"
-    DATASOURCES_DEFAULT_DATABASE: $MYSQL_DATABASE
+    DATASOURCES_DEFAULT_DATABASE: non_existing_database # to ensure that all tests run on the test datasource
     DATASOURCES_DEFAULT_USERNAME: $MYSQL_USER
     DATASOURCES_DEFAULT_PASSWORD: $MYSQL_PASSWORD
     DATASOURCES_DEFAULT_HOST: 127.0.0.1
@@ -32,7 +32,7 @@
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        docker-entrypoint.sh mysqld
+        docker-entrypoint.sh mysqld --default-authentication-plugin=mysql_native_password --log-bin-trust-function-creators=1
   image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
   script:
     - init_test_db
@@ -99,10 +99,22 @@ php7.3-mysql5.7:
     DATABASE_ENGINE_VERSION: "mysql:5.7"
   extends: .test-template
 
+php7.4-mysql8:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "mysql:8.0"
+  extends: .test-template
+  except:
+    variables:
+      - $TEST_DISABLED
+  only:
+    - develop
+    - master
+
 .custom_functions: &custom_functions |
 
   function init_test_db() {
-    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON $DATASOURCES_TEST_DATABASE.* to $DATASOURCES_TEST_USERNAME@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
+    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
   }
 
 before_script:

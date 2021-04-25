@@ -20,20 +20,16 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 
 class HealthcheckIndexController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow(['index']);
+        $this->Authentication->allowUnauthenticated(['index']);
 
         return parent::beforeFilter($event);
     }
@@ -66,9 +62,9 @@ class HealthcheckIndexController extends AppController
      * Check that need/can to be performed in web context only
      *
      * @access private
-     * @return bool
+     * @return array
      */
-    private function __webChecks()
+    private function __webChecks(): array
     {
         $checks['ssl']['is'] = $this->request->is('ssl');
 

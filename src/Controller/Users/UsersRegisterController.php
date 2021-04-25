@@ -19,28 +19,22 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 
 /**
- * @property \App\Model\Table\UsersTable Users
+ * @property \App\Model\Table\UsersTable $Users
  */
 class UsersRegisterController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @throws \Cake\Http\Exception\NotFoundException if registration is not set to public
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         if (Configure::read('passbolt.registration.public') === true) {
-            $this->Auth->allow('registerGet');
-            $this->Auth->allow('registerPost');
+            $this->Authentication->allowUnauthenticated(['registerGet', 'registerPost']);
         } else {
             $msg = __('Registration is not opened to public. Please contact your administrator.');
             throw new NotFoundException($msg);
@@ -67,7 +61,7 @@ class UsersRegisterController extends AppController
 
         $this->set('title', Configure::read('passbolt.meta.description'));
         $this->viewBuilder()
-            ->setTemplatePath('/Auth')
+            ->setTemplatePath('Auth')
             ->setLayout('default')
             ->setTemplate('triage');
     }

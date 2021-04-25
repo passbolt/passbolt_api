@@ -27,7 +27,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
-        'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Avatars',
+        'app.Base/Gpgkeys', 'app.Base/GroupsUsers',
     ];
     public $keyid;
 
@@ -70,7 +70,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
 
     /**
      * Test error 500 if the GnuPG fingerprint config for the server is invalid.
-     * It can happen if a sysop changed the server key fingerprint without loading this key in the gpg keyring post installation.
+     * It can happen if a sysop changed the server key fingerprint without loading this key in the OpenPGP keyring post installation.
      */
     public function testAuthLoginControllerLoginBadServerKeyFingerprint()
     {
@@ -201,7 +201,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
                 $this->assertTrue(isset($headers['X-GPGAuth-Debug']), 'A debug message should be set in the headers');
                 $this->assertFalse(
                     strpos($headers['X-GPGAuth-Debug'], 'Invalid verify token format') === false,
-                    'The debug message should contain "Invalid verify token format"'
+                    'The debug message should contain "Invalid verify token format" got: ' . $headers['X-GPGAuth-Debug']
                 );
             } else {
                 $this->assertTrue(isset($headers['X-GPGAuth-Verify-Response']), 'The verify response header should be set for ' . $token);

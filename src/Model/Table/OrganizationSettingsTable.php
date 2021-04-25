@@ -31,6 +31,20 @@ use Cake\Validation\Validator;
  * Class OrganizationSettingsTable
  *
  * @package App\Model\Table
+ * @method \App\Model\Entity\OrganizationSetting newEmptyEntity()
+ * @method \App\Model\Entity\OrganizationSetting newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\OrganizationSetting get($primaryKey, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\OrganizationSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class OrganizationSettingsTable extends Table
 {
@@ -60,44 +74,31 @@ class OrganizationSettingsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->scalar('property')
-            ->maxLength('property', 256)
-            ->requirePresence('property', 'create')
-            ->notEmptyString('property')
-            ->add('property', ['isValidProperty' => [
-                'rule' => [$this, 'isValidProperty'],
-                'message' => __('This setting is not supported.'),
-            ]]);
+            ->maxLength('property', 256, __('The property length should be maximum {0} characters.', 256))
+            ->requirePresence('property', 'create', __('A property is required.'))
+            ->notEmptyString('property', __('The property should not be empty.'))
+            ->regex(
+                'property',
+                '/^[a-zA-Z][a-zA-Z.]+[a-z]$/',
+                __('The property should be an alphabetical string and only point is accepted as special characters.')
+            );
 
         $validator
-            ->uuid('property_id')
-            ->requirePresence('property_id', 'create')
-            ->notEmptyString('property_id');
+            ->uuid('property_id', __('The property identifier should be a valid UUID.'))
+            ->requirePresence('property_id', 'create', __('A property identifier is required.'))
+            ->notEmptyString('property_id', __('The property identifier should not be empty.'));
 
         $validator
-            ->utf8Extended('value')
-            ->maxLength('property', 10240)
-            ->requirePresence('value', 'create')
-            ->notEmptyString('value');
+            ->utf8Extended('value', __('The value should be a valid UTF8 string.'))
+            ->maxLength('value', 10240, __('The value length should be maximum {0} characters.', 10240))
+            ->requirePresence('value', 'create', __('A value is required.'))
+            ->notEmptyString('value', __('The value should not be empty.'));
 
         return $validator;
-    }
-
-    /**
-     * Custom validation rule to validate fingerprint
-     *
-     * @param string $value fingerprint
-     * @param array $context not in use
-     * @return bool
-     */
-    public function isValidProperty(string $value, ?array $context = null)
-    {
-        // Format should always be camel case, without numbers. Only points are allowed as special characters.
-        return preg_match('/^[a-zA-Z][a-zA-Z.]+[a-z]$/', $value) === 1;
     }
 
     /**
@@ -137,12 +138,15 @@ class OrganizationSettingsTable extends Table
      * Create (or update) an organization setting
      *
      * @param string $property The property name
-     * @param mixed $value The property value
+     * @param string $value The property value
      * @param \App\Utility\UserAccessControl $control user access control object
      * @return \App\Model\Entity\OrganizationSetting
      */
-    public function createOrUpdateSetting(string $property, string $value, UserAccessControl $control)
-    {
+    public function createOrUpdateSetting(
+        string $property,
+        string $value,
+        UserAccessControl $control
+    ): OrganizationSetting {
         if (!$control->isAdmin()) {
             throw new UnauthorizedException(__('Only admin can create or update organization settings.'));
         }
@@ -164,7 +168,7 @@ class OrganizationSettingsTable extends Table
             throw new CustomValidationException(__('This is not a valid setting.'), $settingItem->getErrors(), $this);
         }
         if (!$this->save($settingItem)) {
-            throw new InternalErrorException(__('Could not save the setting, please try again later.'));
+            throw new InternalErrorException('Could not save the setting, please try again later.');
         }
 
         return $settingItem;

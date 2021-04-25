@@ -30,19 +30,33 @@ use Cake\Validation\Validator;
 /**
  * AuthenticationTokens Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\AuthenticationToken get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\AuthenticationToken get($primaryKey, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\AuthenticationToken newEmptyEntity()
+ * @method \App\Model\Entity\AuthenticationToken saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class AuthenticationTokensTable extends Table
 {
     use AuthenticationTokensFindersTrait;
+
+    public const ALLOWED_TYPES = [
+        AuthenticationToken::TYPE_REGISTER,
+        AuthenticationToken::TYPE_RECOVER,
+        AuthenticationToken::TYPE_LOGIN,
+        AuthenticationToken::TYPE_MFA,
+        AuthenticationToken::TYPE_MOBILE_TRANSFER,
+    ];
 
     /**
      * @var \App\Utility\AuthToken\AuthTokenExpiry
@@ -82,31 +96,33 @@ class AuthenticationTokensTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('token')
-            ->requirePresence('token', 'create')
-            ->allowEmptyString('token', __('Then authentication token should not be empty.'), false);
+            ->uuid('token', __('The token should be a valid UUID.'))
+            ->requirePresence('token', 'create', __('A token is required.'))
+            ->allowEmptyString('token', __('The token should not be empty.'), false);
 
         $validator
-            ->scalar('type')
-            ->requirePresence('type', 'create')
-            ->allowEmptyString('token', __('Then authentication type should not be empty.'), false)
             ->add('type', ['type' => [
                 'rule' => [$this, 'isValidAuthenticationTokenType'],
-                'message' => __('This authentication type is not supported.'),
-            ]]);
+                'message' => __(
+                    'The type should be one of the following: {0}.',
+                    implode(', ', self::ALLOWED_TYPES)
+                ),
+            ]])
+            ->requirePresence('type', 'create', __('A type is required.'))
+            ->allowEmptyString('token', __('The type should not be empty.'), false);
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->allowEmptyString('user_id', __('Then authentication user id should not be empty.'), false);
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->allowEmptyString('user_id', __('The user identifier should not be empty.'), false);
 
         $validator
-            ->boolean('active')
-            ->requirePresence('active', true);
+            ->boolean('active', __('The active status should be a valid boolean.'))
+            ->requirePresence('active', true, __('An active status is required'));
 
         return $validator;
     }
@@ -114,16 +130,17 @@ class AuthenticationTokensTable extends Table
     /**
      * Check true if field is a valid gpg message.
      *
-     * @param string $check Value to check
+     * @param mixed $check Value to check
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function isValidAuthenticationTokenType(string $check, array $context)
+    public function isValidAuthenticationTokenType($check, array $context)
     {
-        return $check === AuthenticationToken::TYPE_REGISTER ||
+        return is_string($check) && (
+            $check === AuthenticationToken::TYPE_REGISTER ||
             $check === AuthenticationToken::TYPE_RECOVER ||
             $check === AuthenticationToken::TYPE_LOGIN ||
-            $check === AuthenticationToken::TYPE_MFA ||
+            $check === AuthenticationToken::TYPE_MFA) ||
             $check === AuthenticationToken::TYPE_MOBILE_TRANSFER;
     }
 
@@ -224,7 +241,8 @@ class AuthenticationTokensTable extends Table
         if ($type) {
             $where['type'] = $type;
         }
-        $token = $this->find('all')
+        /** @var \App\Model\Entity\AuthenticationToken|null $token */
+        $token = $this->find()
             ->where($where)
             ->first();
         if (empty($token)) {
@@ -234,7 +252,7 @@ class AuthenticationTokensTable extends Table
         // Is it expired
         if ($this->isExpired($token, $expiry)) {
             // update the token to inactive
-            $token->active = false;
+            $token->set('active', false);
             $this->save($token);
 
             return false;
@@ -251,7 +269,7 @@ class AuthenticationTokensTable extends Table
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool
      */
-    public function isExpired(AuthenticationToken $token, $expiry = null)
+    public function isExpired(AuthenticationToken $token, $expiry = null): bool
     {
         if ($expiry === null) {
             $expiry = $this->authTokenExpiry->getExpirationForTokenType($token->type);
@@ -268,10 +286,10 @@ class AuthenticationTokensTable extends Table
      * @throws \InvalidArgumentException is the token is not a valid uuid
      * @return bool save result
      */
-    public function setInactive(string $tokenId)
+    public function setInactive(string $tokenId): bool
     {
         if (!Validation::uuid($tokenId)) {
-            throw new \InvalidArgumentException(__('The token id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The token should be a valid UUID.');
         }
         $token = $this->find('all')
             ->where(['token' => $tokenId, 'active' => true ])
@@ -280,7 +298,7 @@ class AuthenticationTokensTable extends Table
         if (empty($token)) {
             return false;
         }
-        $token->active = false;
+        $token->set('active', false);
 
         if (!$this->save($token)) {
             return false;
@@ -300,7 +318,7 @@ class AuthenticationTokensTable extends Table
     public function getByToken(string $tokenId)
     {
         if (!Validation::uuid($tokenId)) {
-            throw new \InvalidArgumentException(__('The token id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The token should be a valid UUID.');
         }
         $token = $this->find('all')
             ->where(['token' => $tokenId, 'active' => true ])
@@ -320,7 +338,7 @@ class AuthenticationTokensTable extends Table
     public function getByUserId(string $userId, $type = null)
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         $where = ['user_id' => $userId, 'active' => true ];
         if ($type !== null) {

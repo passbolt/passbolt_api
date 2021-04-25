@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace App\Error\Exception;
 
-use Cake\Core\Exception\Exception;
+use Cake\Http\Exception\HttpException;
 use Cake\ORM\Table;
 
 /**
@@ -25,7 +25,7 @@ use Cake\ORM\Table;
  * Compared to ValidationException the second constructor parameter can be anything
  * e.g. a custom error message format, not necessarily an entity
  */
-class CustomValidationException extends Exception implements
+class CustomValidationException extends HttpException implements
     ExceptionWithErrorsDetailInterface,
     ExceptionWithTableDetailInterface
 {

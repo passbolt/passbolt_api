@@ -14,32 +14,42 @@
 /config/gpg/*.key
 /config/license
 
-# Dependencies #
+# JS Dependencies #
 ################
-/vendor/*
 /node_modules
 
-# Temp config files #
-#####################
-/tmp/*
-/logs/*
-
-# User specific #
+# Legacy images #
 #################
 /webroot/img/public/*
 !/webroot/img/public/empty
 
-# IDE and editor specific files #
-#################################
-/nbproject
-.idea
-*.mo
-.project
+# DEBIAN Package #
+##################
+.kitchen/
+.kitchen.local.yml
+debian/tmp/
+debian/passbolt-ce/
+debian/.debhelper/
+debian/files
+debian/passbolt-api-ce/
+debian/passbolt-api-pro/
+debian/*debhelper*
+debian/*substvars*
+
+# CakePHP specific files #
+##########################
+/config/app_local.php
+/config/.env
+/logs/*
+/tmp/*
+/vendor/*
 
 # IDE and editor specific files #
 #################################
-/nbproject
-.idea
+
+
+# IDE and editor specific files #
+#################################
 /.project
 /.buildpath
 /.settings/
@@ -54,63 +64,53 @@
 Icon?
 ehthumbs.db
 Thumbs.db
-/.settings
-/.idea/*
+.directory
 
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
-
-.buildpath
-*.iml
-
-## Directory-based project format:
-.idea/
-# if you remove the above rule, at least ignore the following:
-
-# User-specific stuff:
-# .idea/workspace.xml
-# .idea/tasks.xml
-# .idea/dictionaries
-
-# Sensitive or high-churn files:
-# .idea/dataSources.ids
-# .idea/dataSources.xml
-# .idea/sqlDataSources.xml
-# .idea/dynamic.xml
-# .idea/uiDesigner.xml
-
-# Gradle:
-# .idea/gradle.xml
-# .idea/libraries
-
-# Mongo Explorer plugin:
-# .idea/mongoSettings.xml
-
-## File-based project format:
-*.ipr
-*.iws
-
-## Plugin-specific files:
-
-# IntelliJ
-/out/
-
-# mpeltonen/sbt-idea plugin
-.idea_modules/
-
-# JIRA plugin
-atlassian-ide-plugin.xml
+# Tool specific files #
+#######################
+# PHPUnit
+.phpunit.result.cache
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
-.kitchen/
-.kitchen.local.yml
-debian/tmp/
-debian/passbolt-ce/
-debian/.debhelper/
-debian/files
-debian/passbolt-api-ce/
-debian/passbolt-api-pro/
-debian/*debhelper*
-debian/*substvars*
+
+# IDE specific files  #
+#######################
+# vim
+*~
+*.swp
+*.swo
+# sublime text & textmate
+*.sublime-*
+*.stTheme.cache
+*.tmlanguage.cache
+*.tmPreferences.cache
+# Eclipse
+.settings/*
+# JetBrains, aka PHPStorm, IntelliJ IDEA
+.idea
+.idea/*
+/.idea/*
+/out/
+# NetBeans
+nbproject/*
+/nbproject
+# Visual Studio Code
+.vscode
+# Sass preprocessor
+.sass-cache/
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+# JIRA plugin
+atlassian-ide-plugin.xml
+# Others
+*.mo
+.project
+.buildpath
+*.iml
+
+## File-based project format:
+*.ipr
+*.iws

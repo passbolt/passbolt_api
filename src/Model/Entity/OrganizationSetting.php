@@ -28,6 +28,11 @@ use Cake\ORM\Entity;
  * @property string $value
  *
  * @property \Passbolt\OrganizationSettings\Model\Entity\User $user
+ * @property string $property_id
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
+ * @property string $created_by
+ * @property string $modified_by
  */
 class OrganizationSetting extends Entity
 {

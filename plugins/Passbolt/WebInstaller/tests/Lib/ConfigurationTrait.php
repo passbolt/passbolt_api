@@ -59,14 +59,6 @@ trait ConfigurationTrait
             return $this->installerFriendly;
         }
 
-        $passboltLicensePath = CONFIG . 'license';
-        $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ? is_writable($passboltLicensePath) : $configFolderWritable;
-        if (!$passboltLicenseFileIsWritable) {
-            $this->installerFriendly = false;
-
-            return $this->installerFriendly;
-        }
-
         $this->installerFriendly = true;
 
         return $this->installerFriendly;
@@ -102,9 +94,7 @@ trait ConfigurationTrait
         if (!$this->isWebInstallerFriendly()) {
             return;
         }
-        if (file_exists(CONFIG . 'license')) {
-            chmod(CONFIG . 'license', 0777);
-        }
+
         if (file_exists(CONFIG . 'passbolt.php')) {
             chmod(CONFIG . 'passbolt.php', 0777);
         }
@@ -113,13 +103,6 @@ trait ConfigurationTrait
         } else {
             if (file_exists(CONFIG . 'passbolt.php')) {
                 unlink(CONFIG . 'passbolt.php');
-            }
-        }
-        if (isset($this->backupConfig['license'])) {
-            file_put_contents(CONFIG . 'license', $this->backupConfig['license']);
-        } else {
-            if (file_exists(CONFIG . 'license')) {
-                unlink(CONFIG . 'license');
             }
         }
         if (file_exists(TMP . 'tests' . DS . 'testkey.asc')) {

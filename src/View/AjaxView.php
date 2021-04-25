@@ -25,8 +25,8 @@ class AjaxView extends AppView
 {
     /**
      * The name of the layout file to render the view inside of. The name
-     * specified is the filename of the layout in /src/Template/Layout without
-     * the .ctp extension.
+     * specified is the filename of the layout in /templates/layout without
+     * the .php extension.
      *
      * @var string
      */

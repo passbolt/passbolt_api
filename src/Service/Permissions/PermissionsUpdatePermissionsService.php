@@ -49,10 +49,8 @@ class PermissionsUpdatePermissionsService
     {
         $this->permissionsAcoHasOwnerService = new PermissionsAcoHasOwnerService();
         $this->permissionsCreateService = new PermissionsCreateService();
-        $this->permissionsTable = $permissionsTable;
-        if (is_null($this->permissionsTable)) {
-            $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        }
+        /** @phpstan-ignore-next-line */
+        $this->permissionsTable = $permissionsTable ?? TableRegistry::getTableLocator()->get('Permissions');
     }
 
     /**
@@ -119,7 +117,7 @@ class PermissionsUpdatePermissionsService
      * @param string $aco The type of entity
      * @param string $acoForeignkey The target entity id
      * @param array $data The permission data
-     * @return \App\Model\Entity\Permission
+     * @return \App\Model\Entity\Permission|null
      * @throws \Exception
      */
     private function addPermission(
@@ -128,7 +126,7 @@ class PermissionsUpdatePermissionsService
         string $aco,
         string $acoForeignkey,
         array $data
-    ): Permission {
+    ): ?Permission {
         $permissionData = [
             'aco' => $aco,
             'aco_foreign_key' => $acoForeignkey,
@@ -143,6 +141,8 @@ class PermissionsUpdatePermissionsService
             $errors = [$rowIndexRef => $e->getErrors()];
             $this->handleValidationErrors($errors);
         }
+
+        return null;
     }
 
     /**
@@ -171,6 +171,7 @@ class PermissionsUpdatePermissionsService
      */
     private function getPermission(int $rowIndexRef, string $acoForeignkey, string $permissionId): Permission
     {
+        /** @var \App\Model\Entity\Permission|null $permission */
         $permission = $this->permissionsTable->findByIdAndAcoForeignKey($permissionId, $acoForeignkey)->first();
 
         if (!$permission) {

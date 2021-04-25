@@ -39,7 +39,7 @@ class OptionController extends WebInstallerController
     /**
      * Index
      *
-     * @return void|mixed
+     * @return void
      */
     public function index(): void
     {
@@ -65,7 +65,7 @@ class OptionController extends WebInstallerController
     /**
      * Index post
      *
-     * @return void|mixed
+     * @return void
      */
     protected function indexPost(): void
     {

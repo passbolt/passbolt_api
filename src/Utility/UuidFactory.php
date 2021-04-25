@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Utility;
 
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Ramsey\Uuid\Uuid;
 
 class UuidFactory
@@ -30,10 +29,11 @@ class UuidFactory
      *
      * @param string|null $seed optional, used to create uuid5
      * @return string uuid4|uuid5
+     * @throws \Exception
      */
-    public static function uuid($seed = null)
+    public static function uuid(?string $seed = null): string
     {
-        if (!isset($seed)) {
+        if (is_null($seed)) {
             // Generate a version 4 (random) UUID object
             // uses random_bytes on php7
             // uses openssl_random_bytes on php5
@@ -41,8 +41,8 @@ class UuidFactory
                 $uuid4 = Uuid::uuid4();
 
                 return $uuid4->toString();
-            } catch (UnsatisfiedDependencyException $e) {
-                trigger_error('Cannot generate a random UUID, some dependencies are missing.', E_USER_ERROR);
+            } catch (\Throwable $e) {
+                throw new \Exception('Cannot generate a random UUID, some dependencies are missing.');
             }
         } else {
             // Generate a version 5 (name-based and hashed with SHA1) UUID object

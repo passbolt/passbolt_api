@@ -21,15 +21,16 @@ use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use donatj\UserAgent\UserAgentParser;
 use Exception;
 
 /**
- * @property Component\AuthComponent Auth
+ * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
  */
 class UserComponent extends Component
 {
-    public $components = ['Auth'];
+    public $components = ['Authentication.Authentication'];
 
     /**
      * User agent cache to avoid parsing multiple times per request
@@ -41,11 +42,11 @@ class UserComponent extends Component
     /**
      * Return the current user id if the user is identified
      *
-     * @return string
+     * @return string|null
      */
-    public function id()
+    public function id(): ?string
     {
-        return $this->Auth->user('id');
+        return $this->getAuthenticatedUserProperty('id');
     }
 
     /**
@@ -53,9 +54,9 @@ class UserComponent extends Component
      *
      * @return string|null
      */
-    public function username()
+    public function username(): ?string
     {
-        return $this->Auth->user('username');
+        return $this->getAuthenticatedUserProperty('username');
     }
 
     /**
@@ -63,14 +64,9 @@ class UserComponent extends Component
      *
      * @return string
      */
-    public function role()
+    public function role(): string
     {
-        $role = $this->Auth->user('role.name');
-        if (!isset($role)) {
-            return Role::GUEST;
-        }
-
-        return $role;
+        return $this->getAuthenticatedUserProperty('role.name', Role::GUEST);
     }
 
     /**
@@ -78,7 +74,7 @@ class UserComponent extends Component
      *
      * @return bool
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->role() == Role::ADMIN;
     }
@@ -89,6 +85,25 @@ class UserComponent extends Component
     public function getAccessControl()
     {
         return new UserAccessControl($this->role(), $this->id(), $this->username());
+    }
+
+    /**
+     * Get a given property of the authenticated user.
+     *
+     * @param string $property Property name (e.g. username, or id, or role.name)
+     * @param string|null $default Default value if not found
+     * @return string|null
+     */
+    protected function getAuthenticatedUserProperty(string $property, ?string $default = null): ?string
+    {
+        try {
+            // Get the user delivered by the authentication result.
+            $user = $this->Authentication->getResult()->getData() ?? [];
+        } catch (Exception $e) {
+            $user = [];
+        } finally {
+            return Hash::get($user, $property, $default);
+        }
     }
 
     /**
