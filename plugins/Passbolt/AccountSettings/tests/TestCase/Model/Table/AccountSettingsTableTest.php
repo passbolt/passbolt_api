@@ -17,7 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountSettings\Test\TestCase\Model\Table;
 
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use Passbolt\AccountSettings\Model\Entity\AccountSetting;
+use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 use Passbolt\AccountSettings\Test\Lib\AccountSettingsPluginTestCase;
 
 /**
@@ -33,16 +36,6 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
     public $AccountSettings;
 
     /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/Users',
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-    ];
-
-    /**
      * setUp method
      *
      * @return void
@@ -50,7 +43,7 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings');
+        $this->AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
     }
 
     /**
@@ -65,33 +58,24 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
         parent::tearDown();
     }
 
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
+    public function testFindByProperty(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $property = 'Foo';
+        $value = 'Bar';
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        // Expect exception if no property is passed
+        $this->expectException(InternalErrorException::class);
+        $this->AccountSettings->find('byProperty');
 
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        // Return null if the property does not exist
+        $result = $this->AccountSettings->find('byProperty', compact('property'));
+        $this->assertSame(null, $result);
+
+        // Now all good with an existing acount setting
+        AccountSettingFactory::make()->setPropertyValue($property, $value)->persist();
+        $result = $this->AccountSettings->find('byProperty', compact('property'));
+        $this->assertInstanceOf(AccountSetting::class, $result);
+        $this->assertSame($property, $result->get('property'));
+        $this->assertSame($value, $result->get('value'));
     }
 }

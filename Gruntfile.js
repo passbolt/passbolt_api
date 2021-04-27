@@ -30,7 +30,9 @@ module.exports = function(grunt) {
     webroot: 'webroot/',
     img: 'webroot/img/',
     css: 'webroot/css/',
-    js: 'webroot/js/'
+    js: 'webroot/js/',
+    locales: 'resources/locales/',
+    cakephp_locales: 'vendor/cakephp/localized/resources/locales/'
   };
 
   /**
@@ -69,8 +71,8 @@ module.exports = function(grunt) {
 
       externalize_locale: {
         command: [
-          './bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_US --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes',
-          'find resources/locales/en_US -name "*.pot" -exec sh -c \'mv "$1" "${1%.pot}.po"\' _ {} \\;'
+          './bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes',
+          'find resources/locales/en_UK -name "*.pot" -exec sh -c \'mv "$1" "${1%.pot}.po"\' _ {} \\;'
         ].join(' && ')
       },
     },
@@ -164,6 +166,15 @@ module.exports = function(grunt) {
           dest: paths.js + 'app',
           expand: true
         },]
+      },
+      locales: {
+        // CakePHP Locale Resources
+        files: [{
+          cwd: paths.cakephp_locales,
+          src: ['fr_FR/*.po'],
+          dest: paths.locales,
+          expand: true
+        }]
       }
     },
 

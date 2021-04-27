@@ -54,7 +54,8 @@ class PreviewCommand extends PassboltCommand
     {
         $emailSenderService = new PreviewEmailBatchService();
 
-        $previews = $emailSenderService->previewNextEmailsBatch($args->getOption('limit'));
+        $limit = (int)$args->getOption('limit');
+        $previews = $emailSenderService->previewNextEmailsBatch($limit);
         foreach ($previews as $preview) {
             $io->out($preview->getHeaders());
             if ($args->getOption('body') === true) {
