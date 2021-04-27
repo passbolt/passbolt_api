@@ -1,7 +1,7 @@
 .build-template:
   stage: package-build
   variables:
-    BRANCH: release
+    BRANCH: master
   script:
     - |
       apk add --update curl && rm -rf /var/cache/apk/*
@@ -12,11 +12,8 @@
         --form "variables[UPSTREAM_COMMIT_SHA]=$CI_COMMIT_SHA" \
         --form "variables[UPSTREAM_PROJECT_ID]=$CI_PROJECT_ID" \
         "https://gitlab.com/api/v4/projects/$TRIGGER_PROJECT_ID/trigger/pipeline"
-  only:
-    refs:
-      - release
-    variables:
-      - $PASSBOLT_FLAVOUR == "pro"
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /test-trigger/ && $CI_COMMIT_TAG && $PASSBOLT_FLAVOUR == pro'
 
 pro-trigger-build:
   variables:
@@ -32,14 +29,12 @@ ce-trigger-build:
   variables:
     TRIGGER_PROJECT_ID: $DOWNSTREAM_PROJECT_ID
   extends: .build-template
-  only:
-    variables:
-      - $PASSBOLT_FLAVOUR == "ce"
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /test-trigger/ && $CI_COMMIT_TAG && $PASSBOLT_FLAVOUR == ce'
 
 ce-do-trigger-build:
   extends: .build-template
   variables:
     TRIGGER_PROJECT_ID: $DOWNSTREAM_DO_PROJECT_ID
-  only:
-    variables:
-      - $PASSBOLT_FLAVOUR == "ce"
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /test-trigger/ && $CI_COMMIT_TAG && $PASSBOLT_FLAVOUR == ce'
