@@ -18,8 +18,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Component;
 
 use App\Controller\Component\QueryStringComponent;
+use App\Utility\UuidFactory;
 use Cake\Controller\ComponentRegistry;
+use Cake\Controller\Controller;
 use Cake\Core\Exception\Exception;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 
 class QueryStringComponentTest extends TestCase
@@ -202,5 +207,51 @@ class QueryStringComponentTest extends TestCase
         ];
         $actual = QueryStringComponent::rewriteLegacyItems($query);
         $this->assertEquals($expected, $actual);
+    }
+
+    public function dataForTestQueryStringComponentFilters(): array
+    {
+        $fooId = UuidFactory::uuid('foo');
+        $barId = UuidFactory::uuid('bar');
+        $bazId = UuidFactory::uuid('baz');
+
+        return [
+            [[], "filter[has-groups]=$fooId", []], // No allowed query items
+            [BadRequestException::class, 'filter[has-groups]=foo',], // not a valid uuid
+            [['has-groups' => [$fooId]], "filter[has-groups]=$fooId",], // string assignment
+            [['has-groups' => [$fooId, $barId]], "filter[has-groups]=$fooId,$barId",], // comma separated assignment
+            [['has-groups' => [$fooId, $barId]], "filter[has-groups][]=$fooId&filter[has-groups][]=$barId",], // array assignment
+            [['has-groups' => [$barId]], "filter[has-groups][]=$fooId&filter[has-groups]=$barId",], // array + string assignment
+            [['has-groups' => [$barId]], "filter[has-groups]=$fooId&filter[has-groups][]=$barId",], // string + array assignment
+            [['has-groups' => [$bazId]], "filter[has-groups]=$fooId&filter[has-groups]=$barId&filter[has-groups]=$bazId",], // string + string + string assignment
+            [['has-groups' => [$bazId]], "filter[has-groups]=$fooId,$barId&filter[has-groups]=$bazId",], // comma separated + string assignment
+            [['has-groups' => [$barId,$bazId]], "filter[has-groups]=$fooId&filter[has-groups]=$barId,$bazId",], //  string + comma separated assignment
+            [BadRequestException::class, "filter[has-groups][]=$fooId,$barId",], // comma separated in array assignment
+            [BadRequestException::class, "filter[has-groups][]=$fooId&filter[has-groups][]=$barId,$bazId",], // array + comma separated in array assignment
+        ];
+    }
+
+    /**
+     * @dataProvider dataForTestQueryStringComponentFilters
+     */
+    public function testQueryStringComponentFilters($expected, string $query, array $allowedQueryItems = ['filter' => ['has-groups']], array $filterValidators = [])
+    {
+        $url = '/?' . $query;
+
+        $request = new ServerRequest(compact('url'));
+        $response = new Response();
+        $controller = new Controller($request, $response);
+        $registry = new ComponentRegistry($controller);
+        $component = new QueryStringComponent($registry);
+
+        $expectException = is_string($expected);
+        if ($expectException) {
+            $this->expectException($expected);
+        }
+        $query = $component->get($allowedQueryItems, $filterValidators);
+        if (!$expectException) {
+            $expected = empty($allowedQueryItems) ? [] : ['filter' => $expected];
+            $this->assertSame($expected, $query);
+        }
     }
 }
