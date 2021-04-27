@@ -33,9 +33,9 @@ class LocaleMiddleware implements MiddlewareInterface
      * 3. organization setting
      * 4. Default locale
      *
-     * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $handler The handler.
-     * @return \Cake\Http\Response The response.
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The handler.
+     * @return \Psr\Http\Message\ResponseInterface The response.
      */
     public function process(
         ServerRequestInterface $request,
