@@ -37,14 +37,11 @@ class TransfersUpdateController extends AppController
     protected $transfer;
 
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow('updateNoSession');
+        $this->Authentication->allowUnauthenticated(['updateNoSession']);
         $this->loadModel('Passbolt/Mobile.Transfers');
 
         return parent::beforeFilter($event);

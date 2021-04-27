@@ -16,7 +16,7 @@
 use Migrations\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
 
-class V310AddMobileTransferTable extends AbstractMigration
+class V330AddMobileTransferTable extends AbstractMigration
 {
     /**
      * Up
@@ -58,7 +58,7 @@ class V310AddMobileTransferTable extends AbstractMigration
             ])
             ->addColumn('hash', 'char', [
                 'default' => null,
-                'limit' => 64, // See. Transfer::TRANSFER_HASH_SIZE
+                'limit' => 128, // See. Transfer::TRANSFER_HASH_SIZE
                 'null' => false,
             ])
             ->addColumn('created', 'datetime', [

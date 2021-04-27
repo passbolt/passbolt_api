@@ -56,8 +56,8 @@ class Transfer extends Entity
     /**
      * Transfer Hash
      */
-    //public const TRANSFER_HASH_ALGORITHM = 'SHA256';
-    public const TRANSFER_HASH_SIZE = 64;
+    //public const TRANSFER_HASH_ALGORITHM = 'SHA512';
+    public const TRANSFER_HASH_SIZE = 128;
     public const TRANSFER_MAX_PAGES = 65535; // mysql small int
 
     /**

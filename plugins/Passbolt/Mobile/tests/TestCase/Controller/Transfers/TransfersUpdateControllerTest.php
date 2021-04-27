@@ -38,8 +38,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Avatars',
+        'app.Base/Profiles'
     ];
 
     public function testMobileTransfersUpdateController_Success()
@@ -80,9 +79,8 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
     {
         $transfer = $this->insertTransferFixture($this->getDummyTransfer());
         $id = $transfer->id;
-        $data = null;
         $this->authenticateAs('ada');
-        $this->postJson("/mobile/transfers/$id.json", $data);
+        $this->postJson("/mobile/transfers/$id.json", []);
         $this->assertError(400);
     }
 

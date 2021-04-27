@@ -48,7 +48,7 @@ class TransfersCreateControllerTest extends AppIntegrationTestCase
     public function testMobileTransfersCreateController_ErrorNoData()
     {
         $this->authenticateAs('ada');
-        $this->postJson('/mobile/transfers.json');
+        $this->postJson('/mobile/transfers.json', []);
         $this->assertError(400);
     }
 

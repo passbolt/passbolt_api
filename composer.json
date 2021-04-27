@@ -83,7 +83,8 @@
             "Passbolt\\Log\\": "./plugins/Passbolt/Log/src",
             "Passbolt\\EmailNotificationSettings\\": "./plugins/Passbolt/EmailNotificationSettings/src",
             "Passbolt\\EmailDigest\\": "plugins/Passbolt/EmailDigest/src",
-            "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src"
+            "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src",
+            "Passbolt\\Mobile\\": "./plugins/Passbolt/Mobile/src"
         }
     },
     "autoload-dev": {
@@ -95,7 +96,8 @@
             "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests",
             "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/Passbolt/EmailNotificationSettings/tests",
             "Passbolt\\EmailDigest\\Test\\": "plugins/Passbolt/EmailDigest/tests",
-            "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests"
+            "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests",
+            "Passbolt\\Mobile\\Test\\": "./plugins/Passbolt/Mobile/tests"
         }
     },
     "scripts": {

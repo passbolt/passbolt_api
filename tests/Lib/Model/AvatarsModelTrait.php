@@ -31,7 +31,8 @@ trait AvatarsModelTrait
      */
     protected function assertAvatarAttributes($avatar)
     {
-        $this->assertObjectHasAttributes(['data'], $avatar);
+        $this->assertObjectHasAttributes(['url'], $avatar);
+        $this->assertObjectHasAttributes(['small', 'medium'], $avatar->url);
     }
 
     /**

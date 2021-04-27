@@ -68,15 +68,15 @@ class TransfersUpdateServiceTest extends AppTestCase
         // Unchanged data
         $this->assertTextEquals($transferOriginal->id, $transferUpdated->id);
         $this->assertTextEquals($transferOriginal->user_id, $transferUpdated->user_id);
-        $this->assertTextEquals($transferOriginal->total_pages, $transferUpdated->total_pages);
-        $this->assertTextEquals($transferOriginal->created, $transferUpdated->created);
+        $this->assertEquals($transferOriginal->total_pages, $transferUpdated->total_pages);
+        $this->assertEquals($transferOriginal->created, $transferUpdated->created);
 
         // Updated data
         $this->assertNotEquals($transferOriginal->current_page, $transferUpdated->current_page);
         $this->assertNotEquals($transferOriginal->status, $transferUpdated->status);
         $this->assertNotEquals($transferOriginal->modified, $transferUpdated->modified);
 
-        $this->assertTextEquals($transferUpdated->current_page, 2);
+        $this->assertEquals($transferUpdated->current_page, 2);
         $this->assertTextEquals($transferUpdated->status, Transfer::TRANSFER_STATUS_COMPLETE);
     }
 
@@ -99,7 +99,7 @@ class TransfersUpdateServiceTest extends AppTestCase
             'current_page' => 1,
         ];
         $transferUpdated = $service->update($transfer, $data, $uac);
-        $this->assertTextEquals($transferUpdated->current_page, 1);
+        $this->assertEquals($transferUpdated->current_page, 1);
         $this->assertTextEquals($transferUpdated->status, Transfer::TRANSFER_STATUS_IN_PROGRESS);
 
         // Update - error
@@ -108,7 +108,7 @@ class TransfersUpdateServiceTest extends AppTestCase
             'current_page' => 1,
         ];
         $transferUpdated = $service->update($transfer, $data, $uac);
-        $this->assertTextEquals($transferUpdated->current_page, 1);
+        $this->assertEquals($transferUpdated->current_page, 1);
         $this->assertTextEquals($transferUpdated->status, Transfer::TRANSFER_STATUS_ERROR);
 
         // Update - completed
@@ -117,7 +117,7 @@ class TransfersUpdateServiceTest extends AppTestCase
             'current_page' => 2,
         ];
         $transferUpdated = $service->update($transfer, $data, $uac);
-        $this->assertTextEquals($transferUpdated->current_page, 2);
+        $this->assertEquals($transferUpdated->current_page, 2);
         $this->assertTextEquals($transferUpdated->status, Transfer::TRANSFER_STATUS_COMPLETE);
     }
 
