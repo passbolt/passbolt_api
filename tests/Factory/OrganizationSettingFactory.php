@@ -43,12 +43,6 @@ class OrganizationSettingFactory extends CakephpBaseFactory
             ];
         });
     }
-            return [
-                'created_by' => $faker->uuid,
-                'modified_by' => $faker->uuid,
-            ];
-        });
-    }
 
     /**
      * @param string $property

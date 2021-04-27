@@ -173,9 +173,12 @@ class AccountSettingsTable extends Table
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
 
-        return $this->find('byProperty', compact('property'))
+        /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting $entity */
+        $entity = $this->find('byProperty', compact('property'))
             ->where([$this->aliasField('user_id') => $userId])
             ->firstOrFail();
+
+        return $entity;
     }
 
     /**
