@@ -154,12 +154,15 @@ class OrganizationSettingsTable extends Table
      * Create (or update) an organization setting
      *
      * @param string $property The property name
-     * @param mixed $value The property value
+     * @param string $value The property value
      * @param \App\Utility\UserAccessControl $control user access control object
      * @return \App\Model\Entity\OrganizationSetting
      */
-    public function createOrUpdateSetting(string $property, string $value, UserAccessControl $control)
-    {
+    public function createOrUpdateSetting(
+        string $property,
+        string $value,
+        UserAccessControl $control
+    ): OrganizationSetting {
         if (!$control->isAdmin()) {
             throw new UnauthorizedException(__('Only admin can create or update organization settings.'));
         }

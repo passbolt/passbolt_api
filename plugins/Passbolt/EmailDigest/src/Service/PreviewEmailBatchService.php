@@ -56,6 +56,7 @@ class PreviewEmailBatchService
         ?EmailDigestService $emailDigestsService = null,
         ?EmailPreviewFactory $emailPreviewFactory = null
     ) {
+        /** @phpstan-ignore-next-line  */
         $this->emailQueueTable = $emailQueueTable ?? TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
         $this->emailDigestsService = $emailDigestsService ?? new EmailDigestService();
         $this->emailPreviewFactory = $emailPreviewFactory ?? new EmailPreviewFactory();

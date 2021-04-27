@@ -26,7 +26,7 @@ class DatabaseHealthchecks
     /**
      * Run all databases health checks
      *
-     * @param string|null $datasource Name of the connection
+     * @param string $datasource Name of the connection
      * @param array|null $checks List of checks
      * @return array
      */
@@ -52,6 +52,7 @@ class DatabaseHealthchecks
     {
         $checks['database']['connect'] = false;
         try {
+            /** @var \Cake\Database\Connection $connection */
             $connection = ConnectionManager::get($datasource);
             $connection->connect();
             $checks['database']['connect'] = true;
@@ -59,7 +60,7 @@ class DatabaseHealthchecks
             $errorMsg = $connectionError->getMessage();
             if (method_exists($connectionError, 'getAttributes')) {
                 $attributes = $connectionError->getAttributes();
-                if (isset($errorMsg['message'])) {
+                if (!empty($errorMsg)) {
                     $checks['database']['info'] .= ' ' . $attributes['message'];
                 }
             }
@@ -103,7 +104,7 @@ class DatabaseHealthchecks
             $tables = $connection->execute('show tables')->fetchAll('assoc');
 
             if ($tables !== false && count($tables)) {
-                $checks['database']['tablesCount'] = (count($tables) > 0);
+                $checks['database']['tablesCount'] = true;
                 $checks['database']['info']['tablesCount'] = count($tables);
             }
         } catch (DatabaseException $connectionError) {

@@ -619,9 +619,8 @@ class QueryStringComponent extends Component
      * - ['order' => ['Users.first_name' => 'ASC', 'Users.last_name' => 'DESC']]
      *
      * @param array $query items
-     * @throws \Cake\Core\Exception\Exception if order is invalid
      * @return array updated query items
-     * @deprecated Use the ApiPagiantionComponent
+     * @deprecated Use the ApiPaginationComponent
      */
     public static function finalizeOrder(array $query): array
     {
@@ -629,9 +628,6 @@ class QueryStringComponent extends Component
             $neworder = [];
             foreach ($query['order'] as $order) {
                 $output = preg_split("/(\.|( ))/", $order);
-                if (count($output) < 2 && count($output) > 3) {
-                    throw new Exception(__('"{0}" is not a valid order.', $order));
-                }
                 $key = Inflector::pluralize($output[0]) . '.' . $output[1];
                 if (count($output) == 2) {
                     $output[2] = 'ASC';

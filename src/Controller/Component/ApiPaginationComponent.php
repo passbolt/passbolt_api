@@ -23,7 +23,7 @@ use Cake\Http\ServerRequest;
 use Cake\Utility\Inflector;
 
 /**
- * @property \Authentication\Controller\Component\AuthenticationComponent Authentication
+ * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
  */
 class ApiPaginationComponent extends BaseApiComponent
 {

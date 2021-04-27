@@ -175,7 +175,7 @@ class EntitiesHistoryTable extends Table
      *
      * @param array $data the data: foreign_key and foreign_model
      * @param \App\Utility\UserAction $userAction userAction object
-     * @return \App\Utility\UserAction|bool
+     * @return \Passbolt\Log\Model\Entity\EntityHistory
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */

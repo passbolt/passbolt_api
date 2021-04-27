@@ -21,6 +21,7 @@ use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\SecretAccess;
 
 /**
  * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\BelongsTo $Secrets
@@ -115,9 +116,9 @@ class SecretAccessesTable extends Table
      * Return a secret_access entity.
      *
      * @param array $data entity data
-     * @return \Passbolt\Log\Model\Table\SecretAccess
+     * @return \Passbolt\Log\Model\Entity\SecretAccess
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): SecretAccess
     {
         return $this->newEntity($data, [
             'accessibleFields' => [

@@ -239,7 +239,8 @@ class AuthenticationTokensTable extends Table
         if ($type) {
             $where['type'] = $type;
         }
-        $token = $this->find('all')
+        /** @var \App\Model\Entity\AuthenticationToken|null $token */
+        $token = $this->find()
             ->where($where)
             ->first();
         if (empty($token)) {
@@ -249,7 +250,7 @@ class AuthenticationTokensTable extends Table
         // Is it expired
         if ($this->isExpired($token, $expiry)) {
             // update the token to inactive
-            $token->active = false;
+            $token->set('active', false);
             $this->save($token);
 
             return false;
@@ -266,7 +267,7 @@ class AuthenticationTokensTable extends Table
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool
      */
-    public function isExpired(AuthenticationToken $token, $expiry = null)
+    public function isExpired(AuthenticationToken $token, $expiry = null): bool
     {
         if ($expiry === null) {
             $expiry = $this->authTokenExpiry->getExpirationForTokenType($token->type);
@@ -283,7 +284,7 @@ class AuthenticationTokensTable extends Table
      * @throws \InvalidArgumentException is the token is not a valid uuid
      * @return bool save result
      */
-    public function setInactive(string $tokenId)
+    public function setInactive(string $tokenId): bool
     {
         if (!Validation::uuid($tokenId)) {
             throw new \InvalidArgumentException('The token should be a valid UUID.');
@@ -295,7 +296,7 @@ class AuthenticationTokensTable extends Table
         if (empty($token)) {
             return false;
         }
-        $token->active = false;
+        $token->set('active', false);
 
         if (!$this->save($token)) {
             return false;

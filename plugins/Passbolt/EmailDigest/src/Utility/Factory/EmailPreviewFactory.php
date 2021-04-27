@@ -62,12 +62,12 @@ class EmailPreviewFactory
      */
     public function renderEmailPreviewFromEmailEntity(Entity $emailData, ?string $layout = null)
     {
-        $configName = $emailData->config;
-        $theme = empty($emailData->theme) ? '' : (string)$emailData->theme;
+        $configName = $emailData->get('config');
+        $theme = empty($emailData->get('theme')) ? '' : (string)$emailData->get('theme');
 
         $email = $this->mapEmailEntityToMailerEmail(new Mailer($configName), $emailData);
 
-        $this->configureEmailView($email, $emailData->template, $layout, $theme);
+        $this->configureEmailView($email, $emailData->get('template'), $layout, $theme);
 
         return $this->renderEmailContent($email);
     }
@@ -96,7 +96,7 @@ class EmailPreviewFactory
     /**
      * Configure the email view for a Mailer email, theme, template, layout can be changed.
      *
-     * @param \Cake\Mailer\Email $email An Email
+     * @param \Cake\Mailer\Mailer $email An Email
      * @param string $template Template
      * @param string|null $layout Layout file name to set.
      * @param string|null $theme Theme name.
@@ -150,9 +150,9 @@ class EmailPreviewFactory
         }
 
         $email
-            ->setTo($emailData->email)
-            ->setSubject($emailData->subject)
-            ->setEmailFormat($emailData->format)
+            ->setTo($emailData->get('email'))
+            ->setSubject($emailData->get('subject'))
+            ->setEmailFormat($emailData->get('format'))
             ->addHeaders($headers)
             ->setViewVars($viewVars)
             ->setMessageId(false)

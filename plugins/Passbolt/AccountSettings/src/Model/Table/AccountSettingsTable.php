@@ -156,9 +156,7 @@ class AccountSettingsTable extends Table
             $props[] = $this->propertyToPropertyId($item);
         }
 
-        return $this->find()
-            ->where(['user_id' => $userId, 'property_id IN' => $props])
-            ->all();
+        return $this->find()->where(['user_id' => $userId, 'property_id IN' => $props]);
     }
 
     /**
@@ -185,13 +183,13 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId uuid
      * @param string $property The property name
-     * @param mixed $value The property value
+     * @param string $value The property value
      * @throws \Cake\Http\Exception\BadRequestException if userId does not exist
      * @throws \App\Error\Exception\ValidationException if could not save because of validation issues
      * @throws \Cake\Http\Exception\InternalErrorException if save operation saved for another reason
      * @return \Passbolt\AccountSettings\Model\Entity\AccountSetting
      */
-    public function createOrUpdateSetting(string $userId, string $property, string $value)
+    public function createOrUpdateSetting(string $userId, string $property, string $value): AccountSetting
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
@@ -199,6 +197,7 @@ class AccountSettingsTable extends Table
 
         $settingFinder = ['user_id' => $userId, 'property_id' => $this->propertyToPropertyId($property)];
         $settingValues = ['value' => $value, 'property' => $property];
+        /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting|null $settingItem */
         $settingItem = $this->find()
             ->where($settingFinder)
             ->first();

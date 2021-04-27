@@ -44,6 +44,10 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
             {
                 return [];
             }
+
+            public function setDescription(string $description)
+            {
+            }
         };
 
         $report = new $ReportClass();
@@ -99,6 +103,10 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
             public function getData()
             {
                 return [];
+            }
+
+            public function setDescription(string $description)
+            {
             }
         };
 
