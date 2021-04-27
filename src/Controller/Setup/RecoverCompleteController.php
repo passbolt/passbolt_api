@@ -23,6 +23,8 @@ use Cake\Validation\Validation;
 
 class RecoverCompleteController extends SetupCompleteController
 {
+    public const COMPLETE_SUCCESS_EVENT_NAME = 'RecoverCompleteController.complete.success';
+
     /**
      * Recovery completion
      * Check if the public key matches the currently stored fingerprint
@@ -42,7 +44,7 @@ class RecoverCompleteController extends SetupCompleteController
     public function complete(string $userId)
     {
         // Check request sanity
-        $this->_getAndAssertUser($userId);
+        $user = $this->_getAndAssertUser($userId);
         $token = $this->_getAndAssertToken($userId, AuthenticationToken::TYPE_RECOVER);
         $gpgkey = $this->_getAndAssertGpgkey($userId);
 
@@ -57,6 +59,11 @@ class RecoverCompleteController extends SetupCompleteController
         if (!$this->AuthenticationTokens->save($token, ['checkRules' => false])) {
             throw new InternalErrorException('Could not update the authentication token data.');
         }
+
+        $this->dispatchEvent(static::COMPLETE_SUCCESS_EVENT_NAME, [
+            'user' => $user,
+            'data' => $this->getRequest()->getData(),
+        ]);
 
         $this->success(__('The recovery was completed successfully.'));
     }

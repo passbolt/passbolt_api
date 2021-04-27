@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\OrganizationSetting;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\ORM\RulesChecker;
@@ -134,6 +135,21 @@ class OrganizationSettingsTable extends Table
             ->firstOrFail();
 
         return $setting;
+    }
+
+    /**
+     * Get an entry for a given user and property
+     *
+     * @param string $property user property
+     * @return \Cake\Datasource\EntityInterface|array|null The first result from the ResultSet.
+     */
+    public function getByProperty(string $property)
+    {
+        try {
+            return $this->getFirstSettingOrFail($property);
+        } catch (RecordNotFoundException $e) {
+            return null;
+        }
     }
 
     /**

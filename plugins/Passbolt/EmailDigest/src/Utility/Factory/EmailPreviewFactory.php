@@ -41,10 +41,10 @@ class EmailPreviewFactory
      * Create a snapshot of the email as it would be rendered from an email digest.
      *
      * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest Email digest to get a snapshot of
-     * @param string|false|null $layout Layout file name to set.
+     * @param string|null $layout Layout file name to set.
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview
      */
-    public function renderEmailPreviewFromDigest(EmailDigestInterface $emailDigest, $layout = false)
+    public function renderEmailPreviewFromDigest(EmailDigestInterface $emailDigest, ?string $layout = null)
     {
         $email = $this->mapEmailDigestToMailerEmail(new Mailer('default'), $emailDigest);
 
@@ -57,10 +57,10 @@ class EmailPreviewFactory
      * Create a snapshot of the email as it would be rendered from an email.
      *
      * @param \Cake\ORM\Entity $emailData Email data to get a snapshot of
-     * @param string|false|null $layout Layout file name to set.
+     * @param string|null $layout Layout file name to set.
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview
      */
-    public function renderEmailPreviewFromEmailEntity(Entity $emailData, $layout = false)
+    public function renderEmailPreviewFromEmailEntity(Entity $emailData, ?string $layout = null)
     {
         $configName = $emailData->get('config');
         $theme = empty($emailData->get('theme')) ? '' : (string)$emailData->get('theme');
@@ -98,11 +98,11 @@ class EmailPreviewFactory
      *
      * @param \Cake\Mailer\Mailer $email An Email
      * @param string $template Template
-     * @param string|false|null $layout Layout file name to set.
-     * @param string|false|null $theme Theme name.
+     * @param string|null $layout Layout file name to set.
+     * @param string|null $theme Theme name.
      * @return void
      */
-    private function configureEmailView(Mailer $email, string $template, $layout = null, $theme = null)
+    private function configureEmailView(Mailer $email, string $template, ?string $layout = null, ?string $theme = null)
     {
         $email->viewBuilder()
             ->setVar('title', 'Email digest preview')

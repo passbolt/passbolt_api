@@ -15,7 +15,8 @@
             <directory suffix=".php">./plugins/Folders/src/</directory>
             <directory suffix=".php">./plugins/EmailDigest/src/</directory>
             <directory suffix=".php">./plugins/Reports/src/</directory>
-        </include>
+            <directory suffix=".php">./plugins/Locale/src/</directory>
+    </include>
     </coverage>
     <php>
         <ini name="memory_limit" value="-1"/>
@@ -39,6 +40,7 @@
             <directory>./plugins/Passbolt/Folders/tests/TestCase</directory>
             <directory>./plugins/Passbolt/EmailDigest/tests/TestCase</directory>
             <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/Locale/tests/TestCase</directory>
         </testsuite>
         <testsuite name="installers">
             <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>

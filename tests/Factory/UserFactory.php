@@ -7,6 +7,7 @@ use App\Model\Entity\Role;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 /**
@@ -105,5 +106,19 @@ class UserFactory extends CakephpBaseFactory
     public function withLogIn(int $n = 1): self
     {
         return $this->with('ActionLogs', ActionLogFactory::make($n)->loginAction());
+    }
+
+    /**
+     * Set the locale of this user in her account settings.
+     *
+     * @param string $locale
+     * @return $this
+     */
+    public function withLocale(string $locale)
+    {
+        return $this->with(
+            'AccountSettings',
+            AccountSettingFactory::make()->locale($locale)
+        );
     }
 }

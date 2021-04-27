@@ -43,4 +43,31 @@ class OrganizationSettingFactory extends CakephpBaseFactory
             ];
         });
     }
+            return [
+                'created_by' => $faker->uuid,
+                'modified_by' => $faker->uuid,
+            ];
+        });
+    }
+
+    /**
+     * @param string $property
+     * @param string $value
+     * @return $this
+     */
+    public function setPropertyValue(string $property, string $value)
+    {
+        $property_id = UuidFactory::uuid(OrganizationSetting::UUID_NAMESPACE . $property);
+
+        return $this->patchData(compact('property', 'property_id', 'value'));
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function locale(string $value)
+    {
+        return $this->setPropertyValue('locale', $value);
+    }
 }
