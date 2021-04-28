@@ -153,21 +153,6 @@ class OrganizationSettingsTable extends Table
     }
 
     /**
-     * Get an entry for a given user and property
-     *
-     * @param string $property user property
-     * @return \Cake\Datasource\EntityInterface|array|null The first result from the ResultSet.
-     */
-    public function getByProperty(string $property)
-    {
-        try {
-            return $this->getFirstSettingOrFail($property);
-        } catch (RecordNotFoundException $e) {
-            return null;
-        }
-    }
-
-    /**
      * Create (or update) an organization setting
      *
      * @param string $property The property name
