@@ -20,6 +20,6 @@
     "grunt-shell": "^3.0.1",
     "jquery": "^3.5.1",
     "openpgp": "4.6.2",
-    "passbolt-styleguide": "^3.0.1"
+    "passbolt-styleguide": "^3.2.0-alpha.0"
   }
 }

@@ -51,7 +51,7 @@ module.exports = function(grunt) {
   /**
    * Register project specific grunt tasks
    */
-  grunt.registerTask('default', ['dependencies-update', 'styleguide-update', 'locale-externalize']);
+  grunt.registerTask('default', ['dependencies-update', 'styleguide-update']);
   grunt.registerTask('styleguide-update', 'copy:styleguide');
   grunt.registerTask('styleguide-watch', ['watch:node-modules-styleguide']);
   grunt.registerTask('dependencies-update', 'copy:dependencies');
