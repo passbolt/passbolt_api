@@ -16,7 +16,7 @@
             <directory suffix=".php">./plugins/EmailDigest/src/</directory>
             <directory suffix=".php">./plugins/Reports/src/</directory>
             <directory suffix=".php">./plugins/Locale/src/</directory>
-    </include>
+        </include>
     </coverage>
     <php>
         <ini name="memory_limit" value="-1"/>
