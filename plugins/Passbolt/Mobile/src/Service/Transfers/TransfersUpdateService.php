@@ -27,15 +27,20 @@ use Cake\ORM\TableRegistry;
 use Passbolt\Mobile\Model\Entity\Transfer;
 use Passbolt\Mobile\Model\Table\TransfersTable;
 
+/**
+ * Class TransfersUpdateService
+ *
+ * @package Passbolt\Mobile\Service\Transfers
+ */
 class TransfersUpdateService
 {
     /**
-     * @var \App\Model\Table\AuthenticationTokensTable|\Cake\ORM\Table table
+     * @var \App\Model\Table\AuthenticationTokensTable table
      */
     public $AuthenticationTokens;
 
     /**
-     * @var \Cake\ORM\Table|\Passbolt\Mobile\Model\Table\TransfersTable table
+     * @var \Passbolt\Mobile\Model\Table\TransfersTable table
      */
     public $Transfers;
 
@@ -43,11 +48,13 @@ class TransfersUpdateService
      * Instantiate the service.
      *
      * @param \Passbolt\Mobile\Model\Table\TransfersTable|null $transfersTable table
-     * @param \App\Model\Table\AuthenticationTokensTable $authTable table
+     * @param \App\Model\Table\AuthenticationTokensTable|null $authTable table
      */
     public function __construct(?TransfersTable $transfersTable = null, ?AuthenticationTokensTable $authTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->Transfers = $transfersTable ?? TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
+        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $authTable ?? TableRegistry::getTableLocator()->get('AuthenticationTokens');
     }
 

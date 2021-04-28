@@ -20,6 +20,12 @@ use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\Mobile\Service\Transfers\TransfersCreateService;
 
+/**
+ * Class TransfersCreateController
+ *
+ * @package Passbolt\Mobile\Controller\Transfers
+ * @property \Passbolt\Mobile\Model\Table\TransfersTable $Transfers
+ */
 class TransfersCreateController extends AppController
 {
     /**

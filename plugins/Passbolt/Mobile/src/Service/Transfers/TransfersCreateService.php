@@ -26,12 +26,18 @@ use Cake\ORM\TableRegistry;
 use Passbolt\Mobile\Model\Entity\Transfer;
 use Passbolt\Mobile\Model\Table\TransfersTable;
 
+/**
+ * Class TransfersCreateService
+ *
+ * @package Passbolt\Mobile\Service\Transfers
+ * @property \Passbolt\Mobile\Model\Table\TransfersTable $Transfers
+ */
 class TransfersCreateService
 {
     /**
      * @var \Passbolt\Mobile\Model\Table\TransfersTable
      */
-    private $transfersTable;
+    private $Transfers;
 
     /**
      * Instantiate the service.
@@ -40,6 +46,7 @@ class TransfersCreateService
      */
     public function __construct(?TransfersTable $transfersTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->Transfers = $transfersTable ?? TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
     }
 
@@ -58,14 +65,14 @@ class TransfersCreateService
         $transfer = $this->buildTransferEntity($data, $uac);
         if (!empty($transfer->getErrors())) {
             $msg = __('Could not validate the transfer data.');
-            throw new ValidationException($msg, $transfer, $this->transfersTable);
+            throw new ValidationException($msg, $transfer, $this->Transfers);
         }
 
         // Save and check for build rules errors.
         $transferSaved = $this->Transfers->save($transfer);
         if (!empty($transfer->getErrors())) {
             $msg = __('Could not validate the transfer data.');
-            throw new ValidationException($msg, $transfer, $this->transfersTable);
+            throw new ValidationException($msg, $transfer, $this->Transfers);
         }
 
         // Check for errors while saving.

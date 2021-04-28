@@ -54,7 +54,7 @@ trait TransfersModelTrait
             'current_page' => $currentPage,
             'status' => $status,
             'total_pages' => $totalPages,
-            'hash' => Security::hash('test', 'sha256', true),
+            'hash' => Security::hash('test', 'sha512', true),
             'authentication_token' => [
                 'user_id' => $userId,
                 'token' => UuidFactory::uuid(),

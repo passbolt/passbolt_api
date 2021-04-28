@@ -38,7 +38,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users',
-        'app.Base/Profiles'
+        'app.Base/Profiles',
     ];
 
     public function testMobileTransfersUpdateController_Success()
@@ -139,7 +139,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
             'current_page' => 1,
             'status' => Transfer::TRANSFER_STATUS_IN_PROGRESS,
             'total_pages' => 2,
-            'hash' => Security::hash('test', 'sha256', true),
+            'hash' => Security::hash('test', 'sha512', true),
             'authentication_token' => [
                 'user_id' => UuidFactory::uuid('user.id.ada'),
                 'token' => UuidFactory::uuid(),
@@ -163,7 +163,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
             'current_page' => 1,
             'status' => Transfer::TRANSFER_STATUS_IN_PROGRESS,
             'total_pages' => 2,
-            'hash' => Security::hash('test', 'sha256', true),
+            'hash' => Security::hash('test', 'sha512', true),
             'authentication_token' => [
                 'user_id' => UuidFactory::uuid('user.id.ada'),
                 'token' => UuidFactory::uuid(),
@@ -189,7 +189,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
             'current_page' => 1,
             'status' => Transfer::TRANSFER_STATUS_IN_PROGRESS,
             'total_pages' => 2,
-            'hash' => Security::hash('test', 'sha256', true),
+            'hash' => Security::hash('test', 'sha512', true),
             'authentication_token' => [
                 'user_id' => UuidFactory::uuid('user.id.ada'),
                 'token' => UuidFactory::uuid(),

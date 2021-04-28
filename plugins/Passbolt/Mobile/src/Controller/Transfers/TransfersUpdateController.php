@@ -20,13 +20,15 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Model\Table\AvatarsTable;
 use App\Utility\UserAccessControl;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\Validation\Validation;
 use Passbolt\Mobile\Service\Transfers\TransfersUpdateService;
 
 /**
+ * Class TransfersUpdateController
+ *
+ * @package Passbolt\Mobile\Controller\Transfers
  * @property \Passbolt\Mobile\Model\Table\TransfersTable $Transfers
  */
 class TransfersUpdateController extends AppController

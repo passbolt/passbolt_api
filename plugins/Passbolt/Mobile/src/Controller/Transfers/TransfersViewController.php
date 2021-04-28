@@ -23,7 +23,10 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
 
 /**
- * @property \Passbolt\Mobile\Model\Table\TransfersTable Transfers
+ * Class TransfersViewController
+ *
+ * @package Passbolt\Mobile\Controller\Transfers
+ * @property \Passbolt\Mobile\Model\Table\TransfersTable $Transfers
  */
 class TransfersViewController extends AppController
 {

@@ -36,7 +36,7 @@ class TransfersCreateControllerTest extends AppIntegrationTestCase
         $data = [
             'total_pages' => 1,
             'status' => Transfer::TRANSFER_STATUS_START,
-            'hash' => Security::hash('test', 'sha256', true),
+            'hash' => Security::hash('test', 'sha512', true),
         ];
         $this->authenticateAs('ada');
         $this->postJson('/mobile/transfers.json', $data);
@@ -57,7 +57,7 @@ class TransfersCreateControllerTest extends AppIntegrationTestCase
         $data = [
             'total_pages' => 1,
             'status' => Transfer::TRANSFER_STATUS_START,
-            'hash' => Security::hash('test', 'sha256', true),
+            'hash' => Security::hash('test', 'sha512', true),
         ];
         $this->authenticateAs('sofia');
         $this->postJson('/mobile/transfers.json', $data);
@@ -77,7 +77,7 @@ class TransfersCreateControllerTest extends AppIntegrationTestCase
         $data = [
             'total_pages' => 1,
             'status' => Transfer::TRANSFER_STATUS_START,
-            'hash' => Security::hash('test', 'sha256', true),
+            'hash' => Security::hash('test', 'sha512', true),
         ];
         $this->postJson('/mobile/transfers.json', $data);
         $this->assertAuthenticationError();

@@ -49,7 +49,7 @@ class TransfersCreateServiceTest extends AppTestCase
         $service = new TransfersCreateService();
         $data = [
             'total_pages' => 1,
-            'hash' => Security::hash('test', 'sha256', true),
+            'hash' => Security::hash('test', 'sha512', true),
         ];
 
         $accessControl = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
@@ -106,7 +106,7 @@ class TransfersCreateServiceTest extends AppTestCase
         $service = new TransfersCreateService();
         $data = [
             'total_pages' => 1,
-            'hash' => Security::hash('test', 'sha256', true),
+            'hash' => Security::hash('test', 'sha512', true),
         ];
         $accessControl = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.nope'));
         try {
