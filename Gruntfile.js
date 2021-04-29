@@ -119,6 +119,8 @@ module.exports = function(grunt) {
             // Image for inputs and controls
             'controls/check_black.svg',
             'controls/check_white.svg',
+            'controls/chevron-down_black.svg',
+            'controls/chevron-down_white.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
             'controls/dot_black.svg',
