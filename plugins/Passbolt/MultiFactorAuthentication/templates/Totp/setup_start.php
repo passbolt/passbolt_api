@@ -27,7 +27,7 @@
             <p><?= __('Once you enter this code, you can log in.'); ?></p>
         </div>
         <div class="col4 last">
-            <h4>Requirements</h4>
+            <h4><?= __('Requirements') ?></h4>
             <div class="message notice">
                 <p>
                     <?= __('To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:'); ?>
