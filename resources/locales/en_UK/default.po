@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2021-04-02 14:05+0000\n"
+"POT-Creation-Date: 2021-04-29 15:53+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -107,6 +107,18 @@ msgstr ""
 msgid "Could not find comments for the requested model."
 msgstr ""
 
+msgid "Invalid order. \"{0}\" is not in the list of allowed order."
+msgstr ""
+
+msgid "Invalid order. \"{0}\" is not a valid order."
+msgstr ""
+
+msgid "Invalid order. \"{0}\" is not a valid field."
+msgstr ""
+
+msgid "Invalid pagination."
+msgstr ""
+
 msgid "Invalid query string. The filter parameter should be an array."
 msgstr ""
 
@@ -177,6 +189,9 @@ msgid "\"{0}\" is not a valid contain value."
 msgstr ""
 
 msgid "undefined user agent"
+msgstr ""
+
+msgid "Access restricted to administrators."
 msgstr ""
 
 msgid "This feature is not supported by your version of passbolt."
@@ -315,12 +330,6 @@ msgid "An OpenPGP key must be provided."
 msgstr ""
 
 msgid "A valid OpenPGP key must be provided."
-msgstr ""
-
-msgid "The user id is missing."
-msgstr ""
-
-msgid "The authentication token is missing."
 msgstr ""
 
 msgid "The token should be a valid UUID."
@@ -1331,6 +1340,9 @@ msgstr ""
 msgid "The setting value should not be empty."
 msgstr ""
 
+msgid "The parameter {0} is not set."
+msgstr ""
+
 msgid "This theme is not supported."
 msgstr ""
 
@@ -1733,6 +1745,15 @@ msgstr ""
 msgid "Only administrators can view the subscription details."
 msgstr ""
 
+msgid "No active admins were found."
+msgstr ""
+
+msgid "The file {0} could not be found."
+msgstr ""
+
+msgid "The file {0} could not be read."
+msgstr ""
+
 msgid "Only administrators can update the subscription details."
 msgstr ""
 
@@ -1902,6 +1923,12 @@ msgid "shared a folder with you"
 msgstr ""
 
 msgid "{0} updated the folder {1}"
+msgstr ""
+
+msgid "This is not a valid locale."
+msgstr ""
+
+msgid "This is not a valid {0}."
 msgstr ""
 
 msgid "The action log identifier should be a valid UUID."
@@ -3089,6 +3116,6 @@ msgstr ""
 msgid "view users"
 msgstr ""
 
-msgid "An Internal Error Has Occurred"
+msgid "View"
 msgstr ""
 

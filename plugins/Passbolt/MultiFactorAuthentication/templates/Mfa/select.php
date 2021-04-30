@@ -38,7 +38,6 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
             <ul class="mfa-providers">
                 <?php if ($body[MfaSettings::ORG_SETTINGS]['totp']) : ?>
                 <li>
-
                     <?php $start = !$body[MfaSettings::ACCOUNT_SETTINGS]['totp'] ? 'start' : ''; ?>
                     <a href="<?= Router::url("/mfa/setup/totp/$start", true); ?>">
                         <img src="<?= Router::url('/img/third_party/google-authenticator.svg', true); ?>" />
@@ -46,11 +45,11 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['totp']) : ?>
                     <div class="mfa-provider-status enabled">
-                        Enabled
+                        <?= __('Enabled') ?>
                     </div>
                     <?php else : ?>
                     <div class="mfa-provider-status disabled">
-                        Disabled
+                        <?= __('Disabled') ?>
                     </div>
                     <?php endif; ?>
                 </li>
@@ -63,11 +62,11 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['duo']) : ?>
                     <div class="mfa-provider-status enabled">
-                        Enabled
+                        <?= __('Enabled') ?>
                     </div>
                     <?php else : ?>
                     <div class="mfa-provider-status disabled">
-                        Disabled
+                        <?= __('Disabled') ?>
                     </div>
                     <?php endif; ?>
                 </li>
@@ -80,11 +79,11 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['yubikey']) : ?>
                     <div class="mfa-provider-status enabled">
-                        Enabled
+                        <?= __('Enabled') ?>
                     </div>
                     <?php else : ?>
                     <div class="mfa-provider-status disabled">
-                        Disabled
+                        <?= __('Disabled') ?>
                     </div>
                     <?php endif; ?>
                 </li>
