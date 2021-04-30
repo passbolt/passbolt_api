@@ -9,7 +9,6 @@ declare(strict_types=1);
  */
 
 use CakephpTestMigrator\Migrator;
-use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/config/bootstrap.php';
@@ -17,4 +16,3 @@ require dirname(__DIR__) . '/config/bootstrap.php';
 $_SERVER['PHP_SELF'] = '/';
 
 Migrator::migrate();
-SnifferRegistry::get('test')->markAllTablesAsDirty();
