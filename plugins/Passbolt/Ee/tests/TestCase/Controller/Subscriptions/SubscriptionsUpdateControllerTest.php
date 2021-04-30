@@ -120,7 +120,7 @@ class SubscriptionsUpdateControllerTest extends SubscriptionControllerTestCase
         $this->authenticateAs('admin');
         $data = $this->getValidSubscriptionKey();
         $this->postJson('/ee/subscription/key.json', compact('data'));
-        $this->assertInternalError(SubscriptionSignatureException::MESSAGE);
+        $this->assertBadRequestError(SubscriptionSignatureException::MESSAGE);
         $this->assertSubscriptionExists();
     }
 }

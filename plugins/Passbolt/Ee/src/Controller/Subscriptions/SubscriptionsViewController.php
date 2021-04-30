@@ -18,12 +18,17 @@ namespace Passbolt\Ee\Controller\Subscriptions;
 
 use App\Controller\AppController;
 use App\Error\Exception\PaymentRequiredException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Exception\InternalErrorException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionSignatureException;
 use Passbolt\Ee\Service\SubscriptionKeyGetService;
 
+/**
+ * Class SubscriptionsCreateController
+ *
+ * @property  \Passbolt\Ee\Model\Table\SubscriptionsTable $Subscriptions
+ */
 class SubscriptionsViewController extends AppController
 {
     /**
@@ -35,11 +40,13 @@ class SubscriptionsViewController extends AppController
         if (!$this->User->isAdmin()) {
             throw new ForbiddenException(__('You are not allowed to access this location.'));
         }
+
+        $this->loadModel('Passbolt/Ee.Subscriptions');
         try {
             $service = new SubscriptionKeyGetService();
             $keyDto = $service->get($this->User->getAccessControl());
         } catch (SubscriptionSignatureException $e) {
-            throw new InternalErrorException($e->getMessage());
+            throw new BadRequestException($e->getMessage());
         } catch (SubscriptionException $e) {
             throw new PaymentRequiredException($e->getMessage(), $e->getErrors());
         }
