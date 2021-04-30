@@ -128,7 +128,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $this->assertFileExists(CONFIG . 'passbolt.php');
     }
 
-    public function testWebInstallerUtilityInstallDatabaseSuccess()
+    public function testWebInstallerUtilityInstallDatabaseSuccessAndCreateFirstUserSuccess()
     {
         $this->loadPlugins(['Migrations']);
         $webInstaller = new WebInstaller(null);
@@ -137,22 +137,16 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $webInstaller->initDatabaseConnection();
         $this->dropAllTables();
         $webInstaller->installDatabase();
+
+        // Validate schema
         try {
             DatabaseConfiguration::validateSchema();
         } catch (Exception $e) {
             $this->assertTrue(false);
         }
         $this->assertTrue(true);
-    }
 
-    public function testWebInstallerUtilityCreateFirstUserSuccess()
-    {
-        $this->loadPlugins(['Migrations']);
-        $webInstaller = new WebInstaller(null);
-        $databaseSettings = $this->getTestDatasourceFromConfig();
-        $webInstaller->setSettings('database', $databaseSettings);
-        $webInstaller->initDatabaseConnection();
-        $webInstaller->installDatabase();
+        // Create first user
         $Users = TableRegistry::getTableLocator()->get('Users');
         $roleAdminId = $Users->Roles->getIdByName(Role::ADMIN);
         $userSettings = [
