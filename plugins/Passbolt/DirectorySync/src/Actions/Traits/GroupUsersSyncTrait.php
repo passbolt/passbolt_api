@@ -115,9 +115,9 @@ trait GroupUsersSyncTrait
      */
     public function requestAddGroupUsers(Group $group, array $userIdsToAdd)
     {
+        $groupUsers = [];
         foreach ($userIdsToAdd as $userId) {
             $u = $this->Users->get($userId);
-            $groupUsers = [];
 
             // If users are deleted or active, we just ignore the entry.
             if ($u->deleted) {
