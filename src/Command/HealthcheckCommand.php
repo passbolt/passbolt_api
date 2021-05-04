@@ -797,11 +797,10 @@ class HealthcheckCommand extends PassboltCommand
     protected function summary()
     {
         if ($this->__errorCount >= 1) {
-            $summary = ' <fail> ' . __('{0} error(s) found. Hang in there!', $this->__errorCount) . '</fail>';
+            $this->display(__('{0} error(s) found. Hang in there!', $this->__errorCount), 'fail');
         } else {
-            $summary = ' <success>' . __('No error found. Nice one sparky!') . '</success>';
+            $this->display(__('No error found. Nice one sparky!'), 'pass');
         }
-        $this->io->out($summary);
         $this->io->out('');
     }
 }
