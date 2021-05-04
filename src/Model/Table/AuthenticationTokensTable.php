@@ -27,7 +27,6 @@ use Cake\I18n\FrozenDate;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
@@ -411,6 +410,7 @@ class AuthenticationTokensTable extends Table
             ->where(['id IN' => $this
                 ->find('expiredByType', ['type' => $type])
                 ->select(['id'])
+                ->distinct()
                 ->where(['active' => true])])
             ->execute();
     }

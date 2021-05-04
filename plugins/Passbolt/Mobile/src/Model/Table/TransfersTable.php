@@ -167,6 +167,7 @@ class TransfersTable extends Table
             ->set(['status' => Transfer::TRANSFER_STATUS_CANCEL])
             ->where(['id in' => $this->find()
                 ->select(['id'])
+                ->distinct()
                 ->contain(['AuthenticationTokens'])
                 ->where(['Transfers.status in' => [
                     Transfer::TRANSFER_STATUS_IN_PROGRESS, Transfer::TRANSFER_STATUS_START,
