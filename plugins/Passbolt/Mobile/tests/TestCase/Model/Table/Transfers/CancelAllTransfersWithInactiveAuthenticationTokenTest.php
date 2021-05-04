@@ -21,6 +21,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Passbolt\Mobile\Model\Entity\Transfer;
 use Passbolt\Mobile\Model\Table\TransfersTable;
 use Passbolt\Mobile\Test\Factory\TransferFactory;
@@ -42,19 +43,34 @@ class CancelAllTransfersWithInactiveAuthenticationTokenTest extends AppTestCase
         $this->Transfers = TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers', $config);
     }
 
-    public function testTransfersTablet_IN_PROGRESS(): void
+    public function testTransfersTablesCancelAllTransfersWithInactiveAuthenticationToken(): void
     {
-        $this->markTestSkipped();
-        $token = AuthenticationTokenFactory::make()
+        $inactiveToken = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_MOBILE_TRANSFER)
-            ->active()
-            ->expired();
+            ->inactive();
 
         TransferFactory::make()
             ->status(Transfer::TRANSFER_STATUS_START)
-            ->withAuthenticationToken($token)
+            ->withAuthenticationToken($inactiveToken)
             ->persist();
 
-        $found = $this->Transfers->find()->contain(['AuthenticationTokens'])->all();
+        $activeToken = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_MOBILE_TRANSFER)
+            ->active();
+
+        TransferFactory::make()
+            ->status(Transfer::TRANSFER_STATUS_START)
+            ->withAuthenticationToken($activeToken)
+            ->persist();
+
+        $this->Transfers->cancelAllTransfersWithInactiveAuthenticationToken();
+
+        $transfers = $this->Transfers->find()
+            ->all()
+            ->toArray();
+
+        $this->Transfers->cancelAllTransfersWithInactiveAuthenticationToken();
+        $this->assertTrue(count(Hash::extract($transfers, '{n}[status=cancel].status')) === 1);
+        $this->assertTrue(count(Hash::extract($transfers, '{n}[status=start].status')) === 1);
     }
 }

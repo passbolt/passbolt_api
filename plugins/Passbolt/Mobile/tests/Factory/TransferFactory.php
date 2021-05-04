@@ -19,6 +19,7 @@ namespace Passbolt\Mobile\Test\Factory;
 use App\Test\Factory\AuthenticationTokenFactory;
 use Cake\Chronos\Chronos;
 use Cake\Chronos\ChronosInterface;
+use Cake\Utility\Security;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Mobile\Model\Entity\Transfer;
@@ -35,7 +36,7 @@ class TransferFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'Transfers';
+        return 'Passbolt/Mobile.Transfers';
     }
 
     /**
@@ -52,7 +53,7 @@ class TransferFactory extends CakephpBaseFactory
                 'total_pages' => 2,
                 'current_page' => 0,
                 'status' => Transfer::TRANSFER_STATUS_START,
-                'hash' => $faker->regexify(['[A-Fa-f0-9]{128}']),
+                'hash' => hash('sha512', Security::randomBytes(16), false),
                 'created' => Chronos::now(),
                 'modified' => Chronos::now(),
             ];
@@ -95,7 +96,7 @@ class TransferFactory extends CakephpBaseFactory
      */
     public function modified(ChronosInterface $modified)
     {
-        return $this->patchData(['modified' => $modified]);
+        return $this->patchData(compact('modified'));
     }
 
     /**
@@ -104,7 +105,7 @@ class TransferFactory extends CakephpBaseFactory
      */
     public function created(ChronosInterface $created)
     {
-        return $this->patchData(['created' => $created]);
+        return $this->patchData(compact('created'));
     }
 
     /**
@@ -113,6 +114,6 @@ class TransferFactory extends CakephpBaseFactory
      */
     public function status(string $status)
     {
-        return $this->patchData(['status' => $status]);
+        return $this->patchData(compact('status'));
     }
 }

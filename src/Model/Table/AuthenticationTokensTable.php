@@ -352,6 +352,23 @@ class AuthenticationTokensTable extends Table
     }
 
     /**
+     * getExpiryDate for a given type
+     *
+     * @param string $type type
+     * @return \Cake\I18n\FrozenDate
+     */
+    private function getExpiryDate(string $type)
+    {
+        $expiryPeriod = $this->authTokenExpiry->getExpiryForTokenType($type);
+        if (!isset($expiryPeriod) || empty($expiryPeriod)) {
+            $msg = 'AuthenticationTokensTable::findExpiredByType no expiry in config for token type ' . $type;
+            throw new InternalErrorException($msg);
+        }
+
+        return new FrozenDate($expiryPeriod . ' ago');
+    }
+
+    /**
      * Finder to return authentication token that have expired
      * Requires a type to be provided
      *
@@ -369,17 +386,9 @@ class AuthenticationTokensTable extends Table
         }
         $type = $options['type'];
 
-        $expiryPeriod = $this->authTokenExpiry->getExpiryForTokenType($type);
-        if (!isset($expiryPeriod) || empty($expiryPeriod)) {
-            $msg = 'AuthenticationTokensTable::findExpiredByType no expiry in config for token type ' . $type;
-            throw new InternalErrorException($msg);
-        }
-
-        $expiryDate = new FrozenDate($expiryPeriod . ' ago');
-
         return $query->where([
             'type' => $type,
-            'created <' => $expiryDate,
+            'created <' => $this->getExpiryDate($type),
         ]);
     }
 
@@ -407,11 +416,11 @@ class AuthenticationTokensTable extends Table
         $this->query()
             ->update()
             ->set(['active' => false])
-            ->where(['id IN' => $this
-                ->find('expiredByType', ['type' => $type])
-                ->select(['id'])
-                ->distinct()
-                ->where(['active' => true])])
+            ->where([
+                'active' => true,
+                'type' => $type,
+                'created <' => $this->getExpiryDate($type),
+            ])
             ->execute();
     }
 }

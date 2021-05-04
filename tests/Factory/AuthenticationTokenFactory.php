@@ -65,7 +65,7 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
      */
     public function modified(ChronosInterface $modified)
     {
-        return $this->patchData(['modified' => $modified]);
+        return $this->patchData(compact('modified'));
     }
 
     /**
@@ -74,7 +74,7 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
      */
     public function created(ChronosInterface $created)
     {
-        return $this->patchData(['created' => $created]);
+        return $this->patchData(compact('created'));
     }
 
     /**
@@ -82,7 +82,7 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
      */
     public function expired()
     {
-        return $this->patchData(['created' => new FrozenDate('5 years ago')]);
+        return $this->created(new FrozenDate('5 years ago'));
     }
 
     /**
@@ -91,7 +91,7 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
      */
     public function type(string $type)
     {
-        return $this->patchData(['type' => $type]);
+        return $this->patchData(compact('type'));
     }
 
     /**
@@ -100,7 +100,7 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
      */
     public function data(string $data)
     {
-        return $this->patchData(['data' => $data]);
+        return $this->patchData(compact('data'));
     }
 
     /**
