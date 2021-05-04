@@ -36,4 +36,29 @@ class AvatarFactory extends CakephpBaseFactory
             ];
         });
     }
+
+    public function withProfile(?ProfileFactory $profileFactory = null): self
+    {
+        if (!isset($profileFactory)) {
+            $profileFactory = ProfileFactory::make()->without('Avatars');
+        }
+
+        return $this->with('Profiles', $profileFactory);
+    }
+
+    /**
+     * @param UserFactory|null $userFactory Associated user
+     * @return $this
+     */
+    public function withUser(?UserFactory $userFactory = null)
+    {
+        if (!isset($userFactory)) {
+            $userFactory = UserFactory::make()->with(
+                'Profiles',
+                ProfileFactory::make()->without('Avatars')
+            );
+        }
+
+        return $this->with('Profiles.Users', $userFactory);
+    }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Entity\Avatar;
+use App\Model\Traits\Cleanup\AvatarsCleanupTrait;
 use App\Utility\AvatarProcessing;
 use App\Utility\Filesystem\FilesystemTrait;
 use App\View\Helper\AvatarHelper;
@@ -51,6 +52,7 @@ use Psr\Http\Message\UploadedFileInterface;
  */
 class AvatarsTable extends Table
 {
+    use AvatarsCleanupTrait;
     use FilesystemTrait;
 
     public const FORMAT_SMALL = 'small';
