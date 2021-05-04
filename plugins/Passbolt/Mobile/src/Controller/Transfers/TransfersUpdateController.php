@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.1.0
+ * @since         3.3.0
  */
 namespace Passbolt\Mobile\Controller\Transfers;
 
@@ -134,6 +134,8 @@ class TransfersUpdateController extends AppController
 
     /**
      * Assert auth token
+     * We only check if the authentication token exists and if it matches the one provide by the user
+     * Expiry and logical validity of the authentication token is checked in the TransfersUpdateService service
      *
      * @param string $authToken uuid
      * @throws \Cake\Http\Exception\BadRequestException if no authentication token is expired or invalid

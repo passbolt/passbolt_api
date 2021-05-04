@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.1.0
+ * @since         3.3.0
  */
 
 namespace Passbolt\Mobile\Model\Table;
@@ -152,5 +152,25 @@ class TransfersTable extends Table
         ]);
 
         return $rules;
+    }
+
+    /**
+     * Cancel all the transfers that are started or in progress and that cannot be
+     * completed because the authentication token has expired.
+     *
+     * @return void
+     */
+    public function cancelAllTransfersWithInactiveAuthenticationToken(): void
+    {
+        $this->query()
+            ->update()
+            ->set(['status' => Transfer::TRANSFER_STATUS_CANCEL])
+            ->where(['id in' => $this->find()
+                ->select(['id'])
+                ->contain(['AuthenticationTokens'])
+                ->where(['Transfers.status in' => [
+                    Transfer::TRANSFER_STATUS_IN_PROGRESS, Transfer::TRANSFER_STATUS_START,
+                ], 'AuthenticationTokens.active' => false])])
+            ->execute();
     }
 }

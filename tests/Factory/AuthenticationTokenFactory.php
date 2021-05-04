@@ -12,20 +12,21 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.0.0
+ * @since         3.3.0
  */
 namespace App\Test\Factory;
 
-use App\Model\Entity\Role;
+use App\Model\Entity\AuthenticationToken;
 use Cake\Chronos\Chronos;
+use Cake\Chronos\ChronosInterface;
+use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
-use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 /**
- * UserFactory
+ * AuthenticationTokenFactory
  */
-class UserFactory extends CakephpBaseFactory
+class AuthenticationTokenFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -34,7 +35,7 @@ class UserFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'Users';
+        return 'AuthenticationTokens';
     }
 
     /**
@@ -47,52 +48,59 @@ class UserFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'username' => $faker->userName . '@passbolt.com',
-                'active' => true,
-                'deleted' => false,
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'token' => $faker->uuid,
+                'user_id' => $faker->uuid,
+                'type' => AuthenticationToken::TYPE_LOGIN,
+                'data' => null,
+                'active' => $faker->boolean,
+                'created' => Chronos::now(),
+                'modified' => Chronos::now(),
             ];
         });
-
-        $this
-            ->with('Roles')
-            ->with('Profiles')
-            ->with('Gpgkeys')
-            ->with('GroupsUsers');
     }
 
     /**
-     * @param string $name
+     * @param ChronosInterface $modified token type
      * @return $this
      */
-    public function withRole(string $name)
+    public function modified(ChronosInterface $modified)
     {
-        return $this->with('Roles', compact('name'));
+        return $this->patchData(['modified' => $modified]);
     }
 
     /**
+     * @param ChronosInterface $created token type
      * @return $this
      */
-    public function admin()
+    public function created(ChronosInterface $created)
     {
-        return $this->withRole(Role::ADMIN);
+        return $this->patchData(['created' => $created]);
     }
 
     /**
      * @return $this
      */
-    public function user()
+    public function expired()
     {
-        return $this->withRole(Role::USER);
+        return $this->patchData(['created' => new FrozenDate('5 years ago')]);
     }
 
     /**
+     * @param string $type token type
      * @return $this
      */
-    public function guest()
+    public function type(string $type)
     {
-        return $this->withRole(Role::GUEST);
+        return $this->patchData(['type' => $type]);
+    }
+
+    /**
+     * @param string $data token type
+     * @return $this
+     */
+    public function data(string $data)
+    {
+        return $this->patchData(['data' => $data]);
     }
 
     /**
@@ -109,14 +117,5 @@ class UserFactory extends CakephpBaseFactory
     public function active()
     {
         return $this->patchData(['active' => true]);
-    }
-
-    /**
-     * @param int $n
-     * @return self
-     */
-    public function withLogIn(int $n = 1): self
-    {
-        return $this->with('ActionLogs', ActionLogFactory::make($n)->loginAction());
     }
 }

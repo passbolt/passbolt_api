@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.1.0
+ * @since         3.3.0
  */
 
 namespace Passbolt\Mobile\Service\Transfers;
@@ -56,6 +56,13 @@ class TransfersUpdateService
         $this->Transfers = $transfersTable ?? TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
         /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $authTable ?? TableRegistry::getTableLocator()->get('AuthenticationTokens');
+
+        // Cleanup the tokens if needed
+        // @later (tm) could be moved in a cron job
+        /** @phpstan-ignore-next-line */
+        $this->AuthenticationTokens->setActiveExpiredTokenToInactive(AuthenticationToken::TYPE_MOBILE_TRANSFER);
+        /** @phpstan-ignore-next-line */
+        $this->Transfers->cancelAllTransfersWithInactiveAuthenticationToken();
     }
 
     /**
@@ -109,7 +116,9 @@ class TransfersUpdateService
     {
         // Cannot "restart"
         if ($updated->status === Transfer::TRANSFER_STATUS_START) {
-            throw new ForbiddenException(__('This operation is not allowed. Restart not allowed.'));
+            $msg = __('This operation is not allowed.') . ' ';
+            $msg .= __('Restarting a transfer is not allowed.');
+            throw new ForbiddenException($msg);
         }
 
         // Cannot update a cancelled or completed transfer
@@ -122,7 +131,9 @@ class TransfersUpdateService
             ($original->status === Transfer::TRANSFER_STATUS_CANCEL
                 || $original->status === Transfer::TRANSFER_STATUS_COMPLETE)
         ) {
-            throw new ForbiddenException(__('This operation is not allowed. Operation already over.'));
+            $msg = __('This operation is not allowed.') . ' ';
+            $msg .= __('The operation is already over.');
+            throw new ForbiddenException($msg);
         }
 
         // Cannot "complete" without being on last page
@@ -130,7 +141,9 @@ class TransfersUpdateService
             $updated->status === Transfer::TRANSFER_STATUS_COMPLETE &&
             $updated->current_page !== $original->total_pages
         ) {
-            throw new ForbiddenException(__('This operation is not allowed. Current page does not match total.'));
+            $msg = __('This operation is not allowed.') . ' ';
+            $msg .= __('The current page does not match the total number of pages.');
+            throw new ForbiddenException($msg);
         }
     }
 
@@ -147,19 +160,22 @@ class TransfersUpdateService
     private function assertOperationIsAllowed(Transfer $transfer, UserAccessControl $uac): void
     {
         if ($transfer->user_id !== $uac->getId()) {
-            throw new ForbiddenException(__('This operation is not allowed.'));
+            throw new ForbiddenException(__('This operation is not allowed for this user.'));
+        }
+        if (!isset($transfer->authentication_token)) {
+            throw new ForbiddenException(__('The authentication token is missing.'));
         }
         if ($transfer->authentication_token->user_id !== $uac->getId()) {
-            throw new ForbiddenException(__('The authentication token is invalid.'));
+            throw new ForbiddenException(__('The authentication token is not valid for this user.'));
         }
         if ($transfer->authentication_token->type !== AuthenticationToken::TYPE_MOBILE_TRANSFER) {
             throw new ForbiddenException(__('The authentication token type is invalid.'));
         }
-        if (
-            !isset($transfer->authentication_token)
-            || $this->AuthenticationTokens->isExpired($transfer->authentication_token)
-        ) {
-            throw new ForbiddenException(__('The transfer window is closed.'));
+        if ($transfer->authentication_token->active !== true) {
+            throw new ForbiddenException(__('The authentication token is not active.'));
+        }
+        if ($this->AuthenticationTokens->isExpired($transfer->authentication_token)) {
+            throw new ForbiddenException(__('The authentication token is expired.'));
         }
     }
 

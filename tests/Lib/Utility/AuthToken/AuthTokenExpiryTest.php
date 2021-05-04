@@ -26,7 +26,7 @@ class AuthTokenExpiryTest extends TestCase
     public function testThatGetExpirationForInvalidTokenTypeThrowAnException()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->sut->getExpirationForTokenType('type');
+        $this->sut->getExpiryForTokenType('type');
     }
 
     public function testThatGetExpirationForTokenRetrieveConfigurationForTokenType()
@@ -37,7 +37,7 @@ class AuthTokenExpiryTest extends TestCase
         Configure::write('passbolt.auth.token.' . $tokenType . '.expiry', $expectedExpiry);
         Configure::write('passbolt.auth.tokenExpiry', '10 days');
 
-        $this->assertEquals($expectedExpiry, $this->sut->getExpirationForTokenType($tokenType));
+        $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
     }
 
     public function testThatGetExpirationForTokenFallbackToDefaultExpiryConfigurationIfExpiryNotDefinedForTokenType()
@@ -47,7 +47,7 @@ class AuthTokenExpiryTest extends TestCase
         Configure::clear();
         Configure::write('passbolt.auth.tokenExpiry', $expectedExpiry);
 
-        $this->assertEquals($expectedExpiry, $this->sut->getExpirationForTokenType($tokenType));
+        $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
     }
 
     public function testThatGetExpirationForTokenFallbackToDefaultExpiryConfigurationIfExpiryInvalidForTokenType()
@@ -58,6 +58,6 @@ class AuthTokenExpiryTest extends TestCase
         Configure::write('passbolt.auth.token.' . $tokenType . '.expiry', null);
         Configure::write('passbolt.auth.tokenExpiry', $expectedExpiry);
 
-        $this->assertEquals($expectedExpiry, $this->sut->getExpirationForTokenType($tokenType));
+        $this->assertEquals($expectedExpiry, $this->sut->getExpiryForTokenType($tokenType));
     }
 }
