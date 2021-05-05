@@ -120,12 +120,6 @@ class QueryStringComponent extends Component
                             $query['filter']['has-parent'][$i] = false;
                         }
                     }
-                } elseif ($filterName === 'has-parent') {
-                    foreach ($query['filter']['has-parent'] as $i => $parentId) {
-                        if ($parentId === 'false' || $parentId === '0') {
-                            $query['filter']['has-parent'][$i] = false;
-                        }
-                    }
                 } elseif ($filterName === 'from') {
                     try {
                         $query['filter']['from'] = new \DateTime($query['filter']['from']);
