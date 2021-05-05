@@ -53,12 +53,12 @@ class TransfersUpdateServiceTest extends AppTestCase
         $transfer = $this->insertTransferFixture($this->getDummyTransfer(
             'ada',
             Transfer::TRANSFER_STATUS_IN_PROGRESS,
-            1,
+            0,
             2
         ));
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
 
         $service = new TransfersUpdateService();
@@ -76,7 +76,7 @@ class TransfersUpdateServiceTest extends AppTestCase
         $this->assertNotEquals($transferOriginal->status, $transferUpdated->status);
         $this->assertNotEquals($transferOriginal->modified, $transferUpdated->modified);
 
-        $this->assertEquals($transferUpdated->current_page, 2);
+        $this->assertEquals($transferUpdated->current_page, 1);
         $this->assertTextEquals($transferUpdated->status, Transfer::TRANSFER_STATUS_COMPLETE);
     }
 
@@ -114,10 +114,10 @@ class TransfersUpdateServiceTest extends AppTestCase
         // Update - completed
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $transferUpdated = $service->update($transfer, $data, $uac);
-        $this->assertEquals($transferUpdated->current_page, 2);
+        $this->assertEquals($transferUpdated->current_page, 1);
         $this->assertTextEquals($transferUpdated->status, Transfer::TRANSFER_STATUS_COMPLETE);
     }
 
@@ -127,7 +127,7 @@ class TransfersUpdateServiceTest extends AppTestCase
         $transfer = $service->Transfers->newEntity($this->getDummyTransfer(
             'ada',
             Transfer::TRANSFER_STATUS_START,
-            1,
+            0,
             2
         ), ['accessibleFields' => [
             'id' => false,

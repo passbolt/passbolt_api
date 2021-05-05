@@ -23,7 +23,7 @@ use App\Model\Traits\AuthenticationTokens\AuthenticationTokensFindersTrait;
 use App\Utility\AuthToken\AuthTokenExpiry;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -355,7 +355,7 @@ class AuthenticationTokensTable extends Table
      * getExpiryDate for a given type
      *
      * @param string $type type
-     * @return \Cake\I18n\FrozenDate
+     * @return \Cake\I18n\FrozenTime
      */
     private function getExpiryDate(string $type)
     {
@@ -365,7 +365,7 @@ class AuthenticationTokensTable extends Table
             throw new InternalErrorException($msg);
         }
 
-        return new FrozenDate($expiryPeriod . ' ago');
+        return new FrozenTime($expiryPeriod . ' ago');
     }
 
     /**

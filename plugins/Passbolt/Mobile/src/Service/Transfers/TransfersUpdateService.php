@@ -139,7 +139,7 @@ class TransfersUpdateService
         // Cannot "complete" without being on last page
         if (
             $updated->status === Transfer::TRANSFER_STATUS_COMPLETE &&
-            $updated->current_page !== $original->total_pages
+            $updated->current_page !== $original->total_pages - 1
         ) {
             $msg = __('This operation is not allowed.') . ' ';
             $msg .= __('The current page does not match the total number of pages.');

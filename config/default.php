@@ -214,6 +214,7 @@ return [
                     'AuthLogin' => ['loginPost'],
                     'RecoverComplete' => ['complete'],
                     'SetupComplete' => ['complete'],
+                    'TransfersUpdate' => ['updateNoSession'],
                 ]
             ],
             'csp' => env('PASSBOLT_SECURITY_CSP', true)

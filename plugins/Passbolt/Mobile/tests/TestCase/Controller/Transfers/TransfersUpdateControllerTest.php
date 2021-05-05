@@ -47,7 +47,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->authenticateAs('ada');
         $this->postJson("/mobile/transfers/$id.json", $data);
@@ -63,7 +63,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->authenticateAs('ada');
         $this->postJson("/mobile/transfers/$id.json?contain[user.profile]=1", $data);
@@ -90,7 +90,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->authenticateAs('betty');
         $this->postJson("/mobile/transfers/$id.json", $data);
@@ -103,7 +103,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->authenticateAs('betty');
         $this->postJson("/mobile/transfers/$id.json", $data);
@@ -126,7 +126,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->postJson("/mobile/transfers/$id.json", $data);
         $this->assertAuthenticationError();
@@ -150,7 +150,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->postJson("/mobile/transfers/$id.json", $data);
         $this->assertAuthenticationError();
@@ -175,7 +175,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->authenticateAs('ada');
         $this->postJson("/mobile/transfers/$id.json", $data);
@@ -201,7 +201,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->authenticateAs('ada');
         $this->postJson("/mobile/transfers/$id.json", $data);
@@ -217,7 +217,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $token = $transfer->authentication_token->token;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->authenticateAs('ada');
         $this->postJson("/mobile/transfers/$id/$token.json", $data);
@@ -233,7 +233,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $token = UuidFactory::uuid('nope');
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->postJson("/mobile/transfers/$id/$token.json", $data);
         $this->assertError(401);
@@ -245,7 +245,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 2,
+            'current_page' => 1,
         ];
         $this->postJson("/mobile/transfers/$id/nope.json", $data);
         $this->assertError(401);
