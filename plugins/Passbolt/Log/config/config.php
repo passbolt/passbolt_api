@@ -9,7 +9,7 @@ return [
                     // The actions listed in the blacklist will not be logged.
                     'blackList' => [
                         'AuthIsAuthenticated.isAuthenticated',
-                        //'TransferView.view'
+                        'TransfersView.view'
                     ],
                 ],
             ],
