@@ -18,6 +18,7 @@ use Cake\Core\Configure;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Laminas\Diactoros\UploadedFile;
+use League\Flysystem\FilesystemException;
 use Migrations\AbstractMigration;
 
 class V300CopyFileStorageToAvatars extends AbstractMigration
@@ -35,24 +36,36 @@ class V300CopyFileStorageToAvatars extends AbstractMigration
             ->get('FileStorages')
             ->setTable('file_storage');
 
+        /** @var \App\Model\Table\AvatarsTable $AvatarsTable */
         $AvatarsTable = TableRegistry::getTableLocator()->get('Avatars');
 
         $fileStorages = $FileStoragesTable->find()->where(['model' => 'Avatar']);
 
         $dropFileStorage = true;
 
+        $fileSystem = $AvatarsTable->getFilesystem();
+
         foreach ($fileStorages as $fileStorage) {
             $filePath = $this->getCleanFilePath($fileStorage->path);
-            if (file_exists($filePath) && is_readable($filePath)) {
+            try {
+                $stream = $fileSystem->readStream($filePath);
+                $fileSize = $fileSystem->fileSize($filePath);
+                $fileIsReadable = true;
+            } catch (FilesystemException $e) {
+                $fileIsReadable = false;
+                $stream = null;
+                $fileSize = null;
+            }
+            if ($fileIsReadable) {
                 $avatar = $AvatarsTable->newEntity([
                     'profile_id' => $fileStorage->foreign_key,
                     'file' =>  new UploadedFile(
-                        $filePath,
-                        filesize($filePath),
+                        $stream,
+                        $fileSize,
                         \UPLOAD_ERR_OK,
-                        $filePath,
+                        $fileStorage->filename,
                     ),
-                ]);
+                ], ['validate' => false]);
 
                 if (!$AvatarsTable->save($avatar)) {
                     $dropFileStorage = false;
@@ -60,7 +73,9 @@ class V300CopyFileStorageToAvatars extends AbstractMigration
                 } else {
                     $FileStoragesTable->delete($fileStorage);
                 }
-                if (!unlink($filePath)) {
+                try {
+                    $fileSystem->delete($filePath);
+                } catch (FilesystemException $e) {
                     Log::warning(__('The avatar located at {0} could not be deleted.'), $filePath);
                 }
             }

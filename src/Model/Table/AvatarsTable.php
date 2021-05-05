@@ -137,10 +137,9 @@ class AvatarsTable extends Table
      *
      * @param \Cake\Event\Event $event the event
      * @param \App\Model\Entity\Avatar $avatar entity
-     * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeSave(Event $event, Avatar $avatar, \ArrayObject $options)
+    public function beforeSave(Event $event, Avatar $avatar)
     {
         if (!$this->setData($avatar)) {
             $avatar->setError('data', __('Could not save the data in {0} format.', AvatarHelper::IMAGE_EXTENSION));
@@ -280,8 +279,6 @@ class AvatarsTable extends Table
      *
      * @param \App\Model\Entity\Avatar $avatar Avatar to read the data from.
      * @return void
-     * @throws \RuntimeException The avatar sizes are not set in configs.
-     * @throws \League\Flysystem\FilesystemException The cache directory is not writable.
      */
     public function storeInCache(Avatar $avatar): void
     {
@@ -289,8 +286,13 @@ class AvatarsTable extends Table
             return;
         }
 
+        $data = $avatar->get('data');
+        if (is_resource($data)) {
+            $data = stream_get_contents($data);
+        }
+
         try {
-            $this->getFilesystem()->write($this->getMediumAvatarFileName($avatar), $avatar->get('data'));
+            $this->getFilesystem()->write($this->getMediumAvatarFileName($avatar), $data);
         } catch (\Throwable $e) {
             Log::error('Error while saving medium avatar with ID {0}', $avatar->get('id'));
             Log::error($e->getMessage());
@@ -322,6 +324,8 @@ class AvatarsTable extends Table
         $file = $avatar->get('file');
 
         if ($file === null) {
+            // If the avatar provided is empty, the avatar will not be saved, but we should not
+            // block the saving. See EntitiesTable::editEntity() where an empty Avatar is set per default.
             return true;
         } elseif (is_array($file)) {
             $content = file_get_contents($file['tmp_name']);

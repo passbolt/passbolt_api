@@ -19,7 +19,6 @@ namespace App\Test\TestCase\Model\Table\Avatars;
 
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AvatarsModelTestTrait;
-use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
@@ -61,7 +60,6 @@ class CreateTest extends AppTestCase
      */
     public function testCreateAvatarFile(bool $withExistingAvatar)
     {
-        $this->assertNotEmpty(Configure::read('ImageStorage.publicPath'));
         if ($withExistingAvatar) {
             $avatar = $this->createAvatar();
         } else {
