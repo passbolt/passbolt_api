@@ -28,7 +28,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     use EventDispatcherTrait;
     use FormatValidationTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

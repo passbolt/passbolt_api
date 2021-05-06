@@ -17,19 +17,15 @@ declare(strict_types=1);
 namespace App\Controller\Healthcheck;
 
 use App\Controller\AppController;
-use Cake\Event\Event;
 
 class HealthcheckStatusController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow(['status']);
+        $this->Authentication->allowUnauthenticated(['status']);
 
         return parent::beforeFilter($event);
     }

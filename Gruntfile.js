@@ -30,7 +30,9 @@ module.exports = function(grunt) {
     webroot: 'webroot/',
     img: 'webroot/img/',
     css: 'webroot/css/',
-    js: 'webroot/js/'
+    js: 'webroot/js/',
+    locales: 'resources/locales/',
+    cakephp_locales: 'vendor/cakephp/localized/resources/locales/'
   };
 
   /**
@@ -42,6 +44,7 @@ module.exports = function(grunt) {
   /**
    * Load baseline NPM tasks
    */
+  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
@@ -52,12 +55,27 @@ module.exports = function(grunt) {
   grunt.registerTask('styleguide-update', 'copy:styleguide');
   grunt.registerTask('styleguide-watch', ['watch:node-modules-styleguide']);
   grunt.registerTask('dependencies-update', 'copy:dependencies');
+  grunt.registerTask('locale-externalize', 'shell:externalize_locale');
 
   /**
    * Tasks definition
    */
   grunt.initConfig({
     pkg: pkg,
+
+    /**
+     * Shell commands
+     */
+    shell: {
+      options: {stderr: false},
+
+      externalize_locale: {
+        command: [
+          './bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes',
+          'find resources/locales/en_UK -name "*.pot" -exec sh -c \'mv "$1" "${1%.pot}.po"\' _ {} \\;'
+        ].join(' && ')
+      },
+    },
 
     copy: {
       dependencies: {
@@ -101,6 +119,8 @@ module.exports = function(grunt) {
             // Image for inputs and controls
             'controls/check_black.svg',
             'controls/check_white.svg',
+            'controls/chevron-down_black.svg',
+            'controls/chevron-down_white.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
             'controls/dot_black.svg',
@@ -135,6 +155,12 @@ module.exports = function(grunt) {
           src: ['api_main.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
           expand: true
+        },{
+          // Translation files
+          cwd: paths.node_modules_styleguide + 'src/locales',
+          src: ['**'],
+          dest: paths.webroot + 'locales',
+          expand: true
         }, {
           // Javascript applications
           cwd: paths.node_modules_styleguide + 'build/js/dist',
@@ -142,6 +168,15 @@ module.exports = function(grunt) {
           dest: paths.js + 'app',
           expand: true
         },]
+      },
+      locales: {
+        // CakePHP Locale Resources
+        files: [{
+          cwd: paths.cakephp_locales,
+          src: ['fr_FR/*.po'],
+          dest: paths.locales,
+          expand: true
+        }]
       }
     },
 

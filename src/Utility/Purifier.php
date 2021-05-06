@@ -21,7 +21,7 @@ class Purifier
     /**
      * Purify a html string
      *
-     * @param mixed $html html to clean
+     * @param string|null $html html to clean
      * @return mixed
      */
     public static function clean(?string $html = null)

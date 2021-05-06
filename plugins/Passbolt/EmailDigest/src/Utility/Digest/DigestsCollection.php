@@ -47,9 +47,9 @@ class DigestsCollection extends AbstractDigest implements DigestInterface
      * check if it can digest the email entity, if yes add emails data to it.
      * The first digest to be picked in the list, if can be used, will be the first and ONLY one digest served for the email.
      *
-     * @return \Passbolt\EmailDigest\Utility\Digest\EmailDigestInterface[]
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      */
-    public function marshalEmails()
+    public function marshalEmails(): array
     {
         $digests = [];
 

@@ -49,8 +49,8 @@ class HealthcheckHtmlHelper extends \App\View\Helper\HealthcheckHtmlHelper
         $publicKeyPath = Configure::read('passbolt.gpg.serverKey.public');
         $this->assert(
             $checks['webInstaller']['publicKeyWritable'],
-            __('The server public key is writable.'),
-            __('The server public key is not writable.'),
+            __('The server OpenPGP public key file is writable.'),
+            __('The server OpenPGP public key file is not writable.'),
             [
                 __('Ensure the file ' . CONFIG . 'gpg' . DS . $publicKeyPath . ' is writable by the webserver user.'),
                 __('you can try:'),
@@ -62,8 +62,8 @@ class HealthcheckHtmlHelper extends \App\View\Helper\HealthcheckHtmlHelper
         $privateKeyPath = Configure::read('passbolt.gpg.serverKey.private');
         $this->assert(
             $checks['webInstaller']['privateKeyWritable'],
-            __('The server private key is writable.'),
-            __('The server private key is not writable.'),
+            __('The server OpenPGP private key file is writable.'),
+            __('The server OpenPGP private key file is not writable.'),
             [
                 __('Ensure the file ' . CONFIG . 'gpg' . DS . $privateKeyPath . ' is writable by the webserver user.'),
                 __('you can try:'),

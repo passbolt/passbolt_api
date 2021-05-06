@@ -1,7 +1,7 @@
 .build-template:
   stage: package-build
   variables:
-    BRANCH: release
+    BRANCH: master
   script:
     - |
       apk add --update curl && rm -rf /var/cache/apk/*

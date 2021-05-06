@@ -35,18 +35,27 @@ class GnupgTest extends TestCase
      */
     public $gnupg;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->originalErrorSettings = ini_get('error_reporting');
         $this->gnupg = new Gnupg();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $settings = ini_get('error_reporting');
         if ($settings != $this->originalErrorSettings) {
             ini_set('error_reporting', $this->originalErrorSettings);
         }
+    }
+
+    /**
+     * With PHPStan suspicious on the constant, this test checks that it is well defined and
+     * that the error can be ignored.
+     */
+    public function testGnupErrorMode()
+    {
+        $this->assertSame(2, \gnupg::ERROR_EXCEPTION, 'This constant is not defined.');
     }
 
     public function testGnupgEncryptDecryptSuccess()
@@ -188,7 +197,7 @@ zaZXtuDzZmnTOjWJm895TA==
         $fingerprint = $this->gnupg->importKeyIntoKeyring($armoredKey);
         $message = null;
         $this->gnupg->verify($armoredSignedMessage, $fingerprint, $message);
-        $this->assertRegExp('/^Signed message/', $message);
+        $this->assertMatchesRegularExpression('/^Signed message/', $message);
     }
 
     public function testGnupgVerifyError()

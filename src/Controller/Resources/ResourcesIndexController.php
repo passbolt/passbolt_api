@@ -23,9 +23,33 @@ use Cake\Http\Exception\InternalErrorException;
 
 /**
  * @property \App\Model\Table\ResourcesTable $Resources
+ * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class ResourcesIndexController extends AppController
 {
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('ApiPagination', [
+            'model' => 'Resources',
+        ]);
+    }
+
+    public $paginate = [
+        'sortableFields' => [
+            'Resources.name',
+            'Resources.username',
+            'Resources.uri',
+            'Resources.modified',
+        ],
+        'order' => [
+            'Resources.name' => 'asc', // Default sorted field
+        ],
+    ];
+
     /**
      * Resource Index action
      *
@@ -42,7 +66,6 @@ class ResourcesIndexController extends AppController
                 'permission', 'permissions', 'permissions.user.profile', 'permissions.group',
             ],
             'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id'],
-            'order' => ['Resource.modified'],
         ];
 
         if (Configure::read('passbolt.plugins.tags')) {
@@ -54,6 +77,7 @@ class ResourcesIndexController extends AppController
         // Retrieve the resources.
         $resources = $this->Resources->findIndex($this->User->id(), $options);
         $this->_logSecretAccesses($resources->all()->toArray());
+        $this->paginate($resources);
         $this->success(__('The operation was successful.'), $resources);
     }
 
@@ -76,12 +100,9 @@ class ResourcesIndexController extends AppController
 
             foreach ($resource->secrets as $secret) {
                 try {
-                    $this->Resources
-                        ->getAssociation('Secrets')
-                        ->getAssociation('SecretAccesses')
-                        ->create($secret, $this->User->getAccessControl());
+                    $this->Resources->Secrets->SecretAccesses->create($secret, $this->User->getAccessControl());
                 } catch (\Exception $e) {
-                    throw new InternalErrorException(__('Could not log secret access entry.'));
+                    throw new InternalErrorException('Could not log secret access entry.');
                 }
             }
         }

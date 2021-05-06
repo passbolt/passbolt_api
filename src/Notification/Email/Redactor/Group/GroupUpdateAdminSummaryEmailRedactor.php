@@ -45,6 +45,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
      */
     public function __construct(?UsersTable $usersTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 
@@ -68,7 +69,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
     {
         $emailCollection = new EmailCollection();
 
-        /** @var \App\Model\Entity\Group $resource */
+        /** @var \App\Model\Entity\Group $group */
         $group = $event->getData('group');
         $addedGroupsUsers = $event->getData('addedGroupsUsers');
         $updatedGroupsUsers = $event->getData('updatedGroupsUsers');

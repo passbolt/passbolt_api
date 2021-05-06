@@ -68,11 +68,11 @@ abstract class AbstractDigest implements DigestInterface
      * @param \Cake\ORM\Entity $emailQueueEntity entity
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
      */
-    public function buildSingleEmailDigest(Entity $emailQueueEntity)
+    public function buildSingleEmailDigest(Entity $emailQueueEntity): EmailDigest
     {
         return (new EmailDigest())
             ->addEmailData($emailQueueEntity)
-            ->setSubject($emailQueueEntity->subject)
-            ->setEmailRecipient($emailQueueEntity->email);
+            ->setSubject($emailQueueEntity->get('subject'))
+            ->setEmailRecipient($emailQueueEntity->get('email'));
     }
 }

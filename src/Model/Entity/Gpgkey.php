@@ -11,13 +11,13 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $user_id
  * @property string $armored_key
- * @property int $bits
+ * @property int|null $bits
  * @property string $uid
  * @property string $key_id
  * @property string $fingerprint
- * @property string $type
- * @property \Cake\I18n\FrozenTime $expires
- * @property \Cake\I18n\FrozenTime $key_created
+ * @property string|null $type
+ * @property \Cake\I18n\FrozenTime|null $expires
+ * @property \Cake\I18n\FrozenTime|null $key_created
  * @property bool $deleted
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified

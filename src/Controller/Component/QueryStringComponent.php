@@ -25,9 +25,14 @@ use Cake\Validation\Validation;
 /**
  * Query String Component
  * Class used for extracting query string parameters
+ *
+ * @method \App\Controller\AppController getController()
+ * @property \App\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class QueryStringComponent extends Component
 {
+    public $components = ['ApiPagination'];
+
     /**
      * Get query Items
      *
@@ -74,6 +79,10 @@ class QueryStringComponent extends Component
             $query['contain']['last_logged_in'] = $query['contain']['LastLoggedIn'];
             unset($query['contain']['LastLoggedIn']);
         }
+        // Sorting is now handled by the ApiPaginationComponent
+        if (isset($query['order'])) {
+            unset($query['order']);
+        }
 
         return $query;
     }
@@ -87,6 +96,7 @@ class QueryStringComponent extends Component
     public static function normalizeQueryItems(array $query): array
     {
         // order should always be an array even when one value is provided
+        // this is deprecated, order is now handled by the ApiPaginationComponent
         if (isset($query['order']) && !is_array($query['order'])) {
             $query['order'] = [$query['order']];
         }
@@ -95,7 +105,7 @@ class QueryStringComponent extends Component
         // we accept 'TRUE', 'true', '1' as true and the rest is set to false
         if (isset($query['filter'])) {
             if (!is_array($query['filter'])) {
-                throw new BadRequestException(__('Invalid query string. Filter should be an array.'));
+                throw new BadRequestException(__('Invalid query string. The filter parameter should be an array.'));
             }
             foreach ($query['filter'] as $filterName => $filter) {
                 if (substr($filterName, 0, 3) === 'is-') {
@@ -119,7 +129,7 @@ class QueryStringComponent extends Component
         // idem with contain clauses
         if (isset($query['contain'])) {
             if (!is_array($query['contain'])) {
-                throw new BadRequestException(__('Invalid query string. Contain should be an array.'));
+                throw new BadRequestException(__('Invalid query string. The contain parameter should be an array.'));
             }
             foreach ($query['contain'] as $containName => $contain) {
                 $query['contain'][$containName] = self::normalizeBoolean($contain);
@@ -522,6 +532,7 @@ class QueryStringComponent extends Component
      * @param array|null $allowedQueryItems whitelist
      * @return bool true if validate
      * @throws \Cake\Core\Exception\Exception if the group name does not validate
+     * @deprecated Use the ApiPaginationComponent
      */
     public static function validateOrders(?array $orders = null, ?array $allowedQueryItems = null): bool
     {
@@ -608,8 +619,8 @@ class QueryStringComponent extends Component
      * - ['order' => ['Users.first_name' => 'ASC', 'Users.last_name' => 'DESC']]
      *
      * @param array $query items
-     * @throws \Cake\Core\Exception\Exception if order is invalid
      * @return array updated query items
+     * @deprecated Use the ApiPaginationComponent
      */
     public static function finalizeOrder(array $query): array
     {
@@ -617,9 +628,6 @@ class QueryStringComponent extends Component
             $neworder = [];
             foreach ($query['order'] as $order) {
                 $output = preg_split("/(\.|( ))/", $order);
-                if (count($output) < 2 && count($output) > 3) {
-                    throw new Exception(__('"{0}" is not a valid order...', $order));
-                }
                 $key = Inflector::pluralize($output[0]) . '.' . $output[1];
                 if (count($output) == 2) {
                     $output[2] = 'ASC';
@@ -651,6 +659,7 @@ class QueryStringComponent extends Component
      * Return true if valid order
      *
      * @param mixed $orderName like Groups.name
+     * @deprecated Order is now handled by the ApiPaginationComponent
      * @return bool true if valid order
      */
     public static function isOrder($orderName): bool

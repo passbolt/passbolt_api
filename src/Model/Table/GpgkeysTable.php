@@ -19,6 +19,7 @@ namespace App\Model\Table;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Gpgkey;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Chronos\ChronosInterface;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\I18n\FrozenTime;
@@ -28,20 +29,25 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use DateTimeInterface;
 
 /**
  * Model to store and validate OpenPGP public keys
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Gpgkey get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Gpgkey get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Gpgkey newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Gpgkey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Gpgkey newEmptyEntity()
+ * @method \App\Model\Entity\Gpgkey saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class GpgkeysTable extends Table
 {
@@ -76,59 +82,55 @@ class GpgkeysTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->scalar('armored_key')
-            ->ascii('armored_key')
-            ->requirePresence('armored_key', 'create')
-            ->notEmptyString('armored_key')
+            ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
+            ->requirePresence('armored_key', 'create', __('An armored key is required.'))
+            ->notEmptyString('armored_key', __('The armored key should not be empty.'))
             ->add('armored_key', ['custom' => [
                 'rule' => [$this, 'isParsableArmoredPublicKey'],
-                'message' => __('The key should be a valid OpenPGP ASCII armored key.'),
+                'message' => __('The armored key should be a valid ASCII-armored OpenPGP key.'),
             ]]);
 
         $validator
-            ->integer('bits', 'The key bits should be an integer.')
-            ->requirePresence('bits', 'create');
+            ->integer('bits', 'The length should be a valid integer.')
+            ->requirePresence('bits', 'create', __('A length is required.'));
 
         $validator
-            ->utf8('uid')
+            ->utf8('uid', __('The identifier should be a valid BMP-UTF8 string.'))
             ->allowEmptyString('uid');
 
         $validator
-            ->scalar('key_id')
-            ->ascii('key_id')
-            ->requirePresence('key_id', 'create')
-            ->notEmptyString('key_id')
+            ->ascii('key_id', __('The key identifier should be a valid ASCII string.'))
+            ->requirePresence('key_id', 'create', __('A key identifier is required.'))
+            ->notEmptyString('key_id', __('The key identifier should not be empty.'))
             ->add('key_id', ['custom' => [
                 'rule' => [$this, 'isValidKeyIdRule'],
-                'message' => __('The key id should be a string of 8 hexadecimal characters.'),
+                'message' => __('The key identifier should be a string of 8 hexadecimal characters.'),
             ]]);
 
         $validator
-            ->scalar('fingerprint')
-            ->ascii('fingerprint')
-            ->requirePresence('fingerprint', 'create')
-            ->notEmptyString('fingerprint')
+            ->ascii('fingerprint', __('The fingerprint should be a valid ASCII string.'))
+            ->requirePresence('fingerprint', 'create', __('A fingerprint is required'))
+            ->notEmptyString('fingerprint', __('The fingerprint should not be empty'))
             ->add('fingerprint', ['custom' => [
                 'rule' => [$this, 'isValidFingerprintRule'],
-                'message' => __('The key id should be a string of 40 hexadecimal characters.'),
+                'message' => __('The fingerprint should be a string of 40 hexadecimal characters.'),
             ]]);
 
         $validator
-            ->scalar('type')
-            ->ascii('type')
-            ->requirePresence('type', 'create')
-            ->notEmptyString('type')
+            ->ascii('type', __('The type should be a valid ASCII string.'))
+            ->requirePresence('type', 'create', __('A type is required'))
+            ->notEmptyString('type', __('The type should not be empty'))
             ->add('type', ['custom' => [
                 'rule' => [$this, 'isValidKeyTypeRule'],
-                'message' => __('The key type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.'),
+                'message' => __('The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.'),
             ]]);
 
         $validator
-            ->dateTime('expires')
+            ->dateTime('expires', ['ymd'], __('The expiry should be a valid date.'))
             ->allowEmptyDateTime('expires')
             ->add('expires', ['custom' => [
                 'rule' => [$this, 'isInFutureRule'],
@@ -136,22 +138,22 @@ class GpgkeysTable extends Table
             ]]);
 
         $validator
-            ->dateTime('key_created')
-            ->requirePresence('key_created', 'create')
-            ->notEmptyDateTime('key_created')
+            ->dateTime('key_created', ['ymd'], __('The creation date should be a valid date.'))
+            ->requirePresence('key_created', 'create', __('A creation date is required.'))
+            ->notEmptyDateTime('key_created', __('The creation date should not be empty.'))
             ->add('key_created', ['custom' => [
                 'rule' => [$this, 'isInFuturePastRule'],
-                'message' => __('The key creation date should be set in the past.'),
+                'message' => __('The creation date should be set in the past.'),
             ]]);
 
         $validator
-            ->boolean('deleted')
-            ->requirePresence('deleted');
+            ->boolean('deleted', __('The deleted status should be a valid boolean.'))
+            ->requirePresence('deleted', __('A deleted status is required'));
 
         $validator
-            ->uuid('user_id', __('The user id should be a valid uuid.'))
-            ->requirePresence('user_id', 'create')
-            ->notEmptyString('user_id');
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty'));
 
         return $validator;
     }
@@ -228,11 +230,10 @@ class GpgkeysTable extends Table
      * allow a next day margin because users had the issue of having keys generated
      * by systems that were ahead of server time. Refs. PASSBOLT-1505.
      *
-     * @param \DateTimeInterface $value Cake Datetime
-     * @param array|null $context not in use
+     * @param \Cake\Chronos\ChronosInterface $value Cake Datetime
      * @return bool
      */
-    public function isInFuturePastRule(DateTimeInterface $value, ?array $context = null)
+    public function isInFuturePastRule(ChronosInterface $value): bool
     {
         $nowWithMargin = Time::now()->modify('+12 hours');
 
@@ -243,11 +244,10 @@ class GpgkeysTable extends Table
      * Check if a key date is set in the future
      * Used to check key expiry date
      *
-     * @param \DateTimeInterface $value Cake Datetime
-     * @param array|null $context not in use
+     * @param \Cake\Chronos\ChronosInterface $value Cake Datetime
      * @return bool
      */
-    public function isInFutureRule(DateTimeInterface $value, ?array $context = null)
+    public function isInFutureRule(ChronosInterface $value)
     {
         return $value->gt(FrozenTime::now());
     }
@@ -271,7 +271,7 @@ class GpgkeysTable extends Table
     }
 
     /**
-     * Check for valid email inside GPG key UID
+     * Check for valid email inside OpenPGP key UID
      *
      * @param string $value gpg key uid
      * @param array|null $context not in use
@@ -319,7 +319,7 @@ class GpgkeysTable extends Table
     {
         // Options must contain an id
         if (!isset($options['id'])) {
-            throw new Exception(__('Gpgkey table findView should have an id set in options.'));
+            throw new Exception('Gpgkey table findView should have an id set in options.');
         }
         // Same rule than index apply
         // with a specific id requested
@@ -340,10 +340,10 @@ class GpgkeysTable extends Table
     public function getByFingerprintAndUserId(string $fingerprint, string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         if (!$this->isValidFingerprintRule($fingerprint)) {
-            throw new \InvalidArgumentException(__('The fingerprint should be a valid hexadecimal string.'));
+            throw new \InvalidArgumentException('The fingerprint should be a valid hexadecimal string.');
         }
 
         return $this->find()
@@ -366,13 +366,13 @@ class GpgkeysTable extends Table
     public function buildEntityFromArmoredKey(string $armoredKey, string $userId): Gpgkey
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         try {
             $gpg = OpenPGPBackendFactory::get();
             $info = $gpg->getPublicKeyInfo($armoredKey);
         } catch (Exception $e) {
-            throw new ValidationException(__('Could not create Gpgkey from armored key.'));
+            throw new ValidationException(__('Could not parse the key info.'));
         }
 
         $data = [

@@ -36,13 +36,13 @@ class GpgkeysViewController extends AppController
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The gpg key id should be a uuid.'));
+            throw new BadRequestException(__('The OpenPGP key identifier should be a valid UUID.'));
         }
         // Retrieve the user
         $this->loadModel('Gpgkeys');
         $gpgkeys = $this->Gpgkeys->find('view', ['id' => $id ])->first();
         if (empty($gpgkeys)) {
-            throw new NotFoundException(__('The gpg key does not exist.'));
+            throw new NotFoundException(__('The OpenPGP key does not exist.'));
         }
         $this->success(__('The operation was successful.'), $gpgkeys);
     }

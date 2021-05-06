@@ -36,11 +36,11 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments',
-        'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Profiles',
+        'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Profiles',
         'app.Base/Gpgkeys',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
@@ -101,7 +101,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $postData = ['content' => $commentContent];
         $resourceId = 'testBadUuid';
         $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
         $this->assertEmpty($this->_responseJsonBody);
     }
 

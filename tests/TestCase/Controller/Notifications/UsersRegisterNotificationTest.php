@@ -23,7 +23,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Avatars', ];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
     public function testUserRegisterNotificationDisabled()
     {

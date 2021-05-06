@@ -23,6 +23,9 @@ use Cake\ORM\Entity;
  * Class Action
  *
  * @package Passbolt\Log\Model\Entity
+ * @property string $id
+ * @property string $name
+ * @property \Passbolt\Log\Model\Entity\ActionLog[] $action_logs
  */
 class Action extends Entity
 {

@@ -37,6 +37,7 @@ class PermissionsCreateService
      */
     public function __construct(?PermissionsTable $permissionsTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->permissionsTable = $permissionsTable ?? TableRegistry::getTableLocator()->get('Permissions');
     }
 
@@ -133,7 +134,7 @@ class PermissionsCreateService
     {
         $errors = $permission->getErrors();
         if (!empty($errors)) {
-            $msg = __('Could not validate the permission data.');
+            $msg = __('Could not validate permission data.');
             throw new ValidationException($msg, $permission, $this->permissionsTable);
         }
     }

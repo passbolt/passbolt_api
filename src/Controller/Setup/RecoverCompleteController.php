@@ -23,6 +23,8 @@ use Cake\Validation\Validation;
 
 class RecoverCompleteController extends SetupCompleteController
 {
+    public const COMPLETE_SUCCESS_EVENT_NAME = 'RecoverCompleteController.complete.success';
+
     /**
      * Recovery completion
      * Check if the public key matches the currently stored fingerprint
@@ -33,8 +35,8 @@ class RecoverCompleteController extends SetupCompleteController
      * @throws \Cake\Http\Exception\BadRequestException if no authentication token was provided
      * @throws \Cake\Http\Exception\BadRequestException if the authentication token is not a uuid
      * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
-     * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
-     * @throws \Cake\Http\Exception\BadRequestException if the gpg key does not belong to the user
+     * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key is not provided or not a valid OpenPGP key
+     * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key does not belong to the user
      * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
      * @param string $userId uuid of the user
      * @return void
@@ -42,7 +44,7 @@ class RecoverCompleteController extends SetupCompleteController
     public function complete(string $userId)
     {
         // Check request sanity
-        $this->_getAndAssertUser($userId);
+        $user = $this->_getAndAssertUser($userId);
         $token = $this->_getAndAssertToken($userId, AuthenticationToken::TYPE_RECOVER);
         $gpgkey = $this->_getAndAssertGpgkey($userId);
 
@@ -55,10 +57,15 @@ class RecoverCompleteController extends SetupCompleteController
         // Deactivate the authentication token
         $token->active = false;
         if (!$this->AuthenticationTokens->save($token, ['checkRules' => false])) {
-            throw new InternalErrorException(__('Could not update the authentication token data.'));
+            throw new InternalErrorException('Could not update the authentication token data.');
         }
 
-        $this->success(__('The recovery was completed successfully!'));
+        $this->dispatchEvent(static::COMPLETE_SUCCESS_EVENT_NAME, [
+            'user' => $user,
+            'data' => $this->getRequest()->getData(),
+        ]);
+
+        $this->success(__('The recovery was completed successfully.'));
     }
 
     /**
@@ -72,11 +79,11 @@ class RecoverCompleteController extends SetupCompleteController
     protected function _getAndAssertUser(string $userId)
     {
         if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user id is not valid. It should be a uuid.'));
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
         $user = $this->Users->findSetupRecover($userId);
         if (empty($user)) {
-            $msg = __('The user does not exist or has not completed the setup or was deleted.');
+            $msg = __('The user does not exist, has not completed the setup or was deleted.');
             throw new BadRequestException($msg);
         }
 

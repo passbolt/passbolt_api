@@ -17,82 +17,77 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Avatars;
 
+use App\Model\Entity\Avatar;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
-use App\Utility\UuidFactory;
+use App\Utility\Filesystem\DirectoryUtility;
 use Cake\Core\Configure;
-use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 
 class CreateTest extends AppTestCase
 {
     use AvatarsModelTrait;
 
+    /**
+     * @var \App\Model\Table\AvatarsTable
+     */
     public $Avatars;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars'];
-
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Burzum/FileStorage', 'Burzum/Imagine']);
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-
-        // delete default ada avatar / it may not be reachable
-        $connection = ConnectionManager::get('test');
-        $connection->delete('file_storage', ['user_id' => UuidFactory::uuid('user.id.ada')]);
+        $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars' . DS);
+        DirectoryUtility::removeRecursively($this->Avatars->getCacheDirectory());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
+        unset($this->Avatars);
         parent::tearDown();
     }
 
-    private function _createAvatar($name = 'ada')
+    public function dataProviderForCreateAvatarFile()
     {
-        $userAvatarFullPath = FIXTURES . 'Avatar' . DS . $name . '.png';
-        $data = [
-            'file' => [
-                'tmp_name' => $userAvatarFullPath,
-                'error' => 0,
-                'type' => 'image/png',
-                'name' => $name . '.png',
-            ],
-            'user_id' => UuidFactory::uuid('user.id.' . $name),
-            'foreign_key' => UuidFactory::uuid('profile.id.' . $name),
+        return [
+            [false,],
+            [true,],
         ];
+    }
 
-        $newAvatar = $this->Avatars->newEntity($data, ['validate' => false]);
-        if (!$this->Avatars->save($newAvatar)) {
-            $this->fail('Could not create avatar for testing');
+    /**
+     * @dataProvider dataProviderForCreateAvatarFile
+     * @param bool $withExistingAvatar Create an Avatar if true.
+     * @throws \Exception
+     */
+    public function testCreateAvatarFile(bool $withExistingAvatar)
+    {
+        $this->assertNotEmpty(Configure::read('ImageStorage.publicPath'));
+        if ($withExistingAvatar) {
+            $avatar = $this->createAvatar();
+        } else {
+            $avatar = null;
         }
 
-        return $newAvatar->toArray();
+        $avatar = $this->createAvatar($avatar);
+
+        $this->assertAvatarCachedFilesExist($avatar);
     }
 
-    public function testCreateAvatarFileIsCreated()
+    public function testAvatarCacheFilesCreatedAfterDirectoryDeleted()
     {
-        $this->assertNotEmpty(Configure::read('ImageStorage.publicPath'));
-
-        $avatar = $this->_createAvatar('ada');
-        $this->assertTrue(file_exists(WWW_ROOT . $avatar['url']['small']));
-        $this->assertTrue(file_exists(WWW_ROOT . $avatar['url']['medium']));
+        $avatar = $this->createAvatar();
+        $this->assertAvatarCachedFilesExist($avatar);
+        $this->Avatars->getFilesystem()->deleteDirectory($this->Avatars->getOrCreateAvatarDirectory($avatar));
+        $this->assertAvatarCachedFilesExist($avatar);
     }
 
-    public function testCreateAvatarDeleteFormerVersionAfterCreate()
+    private function assertAvatarCachedFilesExist(Avatar $avatar)
     {
-        $this->assertNotEmpty(Configure::read('ImageStorage.publicPath'));
-        $avatar = $this->_createAvatar('ada');
-
-        $this->assertTrue(file_exists(WWW_ROOT . $avatar['url']['small']));
-        $this->assertTrue(file_exists(WWW_ROOT . $avatar['url']['medium']));
-
-        $avatar1 = $this->_createAvatar('ada');
-        $this->assertTrue(file_exists(WWW_ROOT . $avatar1['url']['small']));
-        $this->assertTrue(file_exists(WWW_ROOT . $avatar1['url']['medium']));
-
-        // Assert that the previous avatar files have been deleted.
-        $this->assertFalse(file_exists(WWW_ROOT . $avatar['url']['small']));
-        $this->assertFalse(file_exists(WWW_ROOT . $avatar['url']['medium']));
+        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar)));
+        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'medium')));
+        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'whateverFormatWillReturnSmall')));
+        $this->assertTextEndsWith('.jpg', $this->Avatars->readFromCache($avatar));
+        $this->assertTextEndsWith('.jpg', $this->Avatars->readFromCache($avatar, 'medium'));
     }
 }

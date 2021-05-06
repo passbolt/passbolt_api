@@ -33,14 +33,14 @@ class SaveTest extends AppTestCase
 
     public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Permissions'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Favorites') ? [] : ['className' => FavoritesTable::class];
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites', $config);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Favorites);
 

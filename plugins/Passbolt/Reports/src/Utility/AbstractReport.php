@@ -76,7 +76,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function setDescription(string $description)
+    public function setDescriptigetReportson(string $description)
     {
         $this->description = $description;
 

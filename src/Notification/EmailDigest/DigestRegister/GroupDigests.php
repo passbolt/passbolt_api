@@ -62,8 +62,8 @@ class GroupDigests implements EventListenerInterface
                 $digest = (new EmailDigest())
                     ->setSubject(__('Your membership in several groups changed in passbolt'))
                     ->setTemplate(static::GROUP_USERS_CHANGES_TEMPLATE)
-                    ->setEmailRecipient($emailData->email)
-                    ->addTemplateVar('user', $emailData->template_vars['body']['user'])
+                    ->setEmailRecipient($emailData->get('email'))
+                    ->addTemplateVar('user', $emailData->get('template_vars')['body']['user'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
 
@@ -87,8 +87,8 @@ class GroupDigests implements EventListenerInterface
                 $digest = (new EmailDigest())
                     ->setSubject(__('Several groups were deleted in passbolt'))
                     ->setTemplate(static::GROUPS_DELETE_TEMPLATE)
-                    ->setEmailRecipient($emailData->email)
-                    ->addTemplateVar('user', $emailData->template_vars['body']['user'])
+                    ->setEmailRecipient($emailData->get('email'))
+                    ->addTemplateVar('user', $emailData->get('template_vars')['body']['user'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
 

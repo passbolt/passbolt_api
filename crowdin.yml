@@ -1,0 +1,4 @@
+files:
+  - source: /resources/locales/en_UK/*.po
+    translation: /resources/locales/%locale_with_underscore%/%original_file_name%
+commit_message: '[skip-ci]'

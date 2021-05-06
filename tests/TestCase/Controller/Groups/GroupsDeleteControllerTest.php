@@ -33,10 +33,10 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Secrets',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
@@ -69,8 +69,8 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $groupId = UuidFactory::uuid('group.id.creative');
         $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
         $this->assertError(400);
-        $this->assertContains(
-            'You need to transfer the ownership for the shared content',
+        $this->assertStringContainsString(
+            'transfer the ownership',
             $this->_responseJsonHeader->message
         );
     }
@@ -95,22 +95,22 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('admin');
         $bogusId = '0';
         $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
-        $this->assertError(400, 'The group id must be a valid uuid.');
+        $this->assertError(400, 'The group identifier should be a valid UUID.');
 
         $this->authenticateAs('admin');
         $bogusId = 'true';
         $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
-        $this->assertError(400, 'The group id must be a valid uuid.');
+        $this->assertError(400, 'The group identifier should be a valid UUID.');
 
         $this->authenticateAs('admin');
         $bogusId = 'null';
         $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
-        $this->assertError(400, 'The group id must be a valid uuid.');
+        $this->assertError(400, 'The group identifier should be a valid UUID.');
 
         $this->authenticateAs('admin');
         $bogusId = '🔥';
         $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
-        $this->assertError(400, 'The group id must be a valid uuid.');
+        $this->assertError(400, 'The group identifier should be a valid UUID.');
     }
 
     public function testGroupsDeleteGroupDoesNotExistError()
@@ -187,7 +187,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $this->deleteJson("/groups/$groupId.json?api-version=v2");
         $this->assertError(400);
         $this->assertGroupIsNotSoftDeleted($groupId);
-        $this->assertContains('You need to transfer the ownership for the shared content', $this->_responseJsonHeader->message);
+        $this->assertStringContainsString('transfer the ownership', $this->_responseJsonHeader->message);
 
         $errors = $this->_responseJsonBody->errors;
         $this->assertEquals(1, count($errors->resources->sole_owner));
@@ -226,7 +226,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
 
         $transfer['owners'][] = ['id' => 'invalid-uuid', 'aco_foreign_key' => $resourceId];
         $this->deleteJson("/groups/$groupId.json?api-version=v2", ['transfer' => $transfer]);
-        $this->assertError(400, 'The permissions ids must be valid uuids.');
+        $this->assertError(400, 'The permissions identifiers must be valid UUID.');
         $this->assertGroupIsNotSoftDeleted($groupId);
     }
 

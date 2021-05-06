@@ -358,9 +358,9 @@ trait EntitiesHistoryTrait
      * Get entities history config
      *
      * @param string $actionName action name
-     * @return |null
+     * @return array|null
      */
-    public function getEntitiesHistoryConfig(string $actionName)
+    public function getEntitiesHistoryConfig(string $actionName): ?array
     {
         if (isset($this->config[$actionName])) {
             return $this->config[$actionName];

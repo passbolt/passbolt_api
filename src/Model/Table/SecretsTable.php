@@ -31,16 +31,26 @@ use Cake\Validation\Validator;
 /**
  * Secrets Model
  *
- * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Secret get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Secret newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Secret[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Secret|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Secret patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Secret[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Secret findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Secret get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Secret newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Secret[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Secret|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Secret patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Secret[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Secret findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \Passbolt\Log\Model\Table\SecretsHistoryTable&\Cake\ORM\Association\BelongsTo $SecretsHistory
+ * @property \Passbolt\Log\Model\Table\SecretAccessesTable&\Cake\ORM\Association\HasMany $SecretAccesses
+ * @method \App\Model\Entity\Secret newEmptyEntity()
+ * @method \App\Model\Entity\Secret saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Secret[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findByResourceId(string $resourceId)
+ * @method \Cake\ORM\Query findByResourceIdAndUserId(string $resourceId, string $userId)
  */
 class SecretsTable extends Table
 {
@@ -78,27 +88,27 @@ class SecretsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('resource_id')
-            ->requirePresence('resource_id', 'create')
-            ->notEmptyString('resource_id');
+            ->uuid('resource_id', __('The resource identifier should be a valid UUID.'))
+            ->requirePresence('resource_id', 'create', __('The resource identifier is required.'))
+            ->notEmptyString('resource_id', __('The resource identifier should not be empty.'));
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->notEmptyString('user_id');
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
-            ->ascii('data', __('The message is not a valid armored gpg message.'))
+            ->ascii('data', __('The message should be a valid ASCII string.'))
             ->add('data', 'isValidGpgMessage', [
                 'rule' => [$this, 'isValidGpgMessageRule'],
-                'message' => __('The message is not a valid armored gpg message.'),
+                'message' => __('The message should be a valid ASCII-armored gpg message.'),
             ])
             ->requirePresence('data', 'create', __('A message is required.'))
-            ->notEmptyString('data', __('The message cannot be empty.'));
+            ->notEmptyString('data', __('The message should not be empty.'));
 
         return $validator;
     }

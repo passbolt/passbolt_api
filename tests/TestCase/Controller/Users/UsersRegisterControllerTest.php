@@ -21,13 +21,14 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
+use Passbolt\Locale\Service\GetOrgLocaleService;
+use Passbolt\Locale\Service\GetUserLocaleService;
 
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
         'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
-         'app.Base/Avatars',
     ];
 
     public function testUsersRegisterGetSuccess()
@@ -59,6 +60,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
                     'first_name' => 'Aurore',
                     'last_name' => 'Avarguès-Weber',
                 ],
+                'locale' => 'fr-FR',
             ],
         ];
 
@@ -83,6 +85,12 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             $roles = TableRegistry::getTableLocator()->get('Roles');
             $role = $roles->get($user->get('role_id'));
             $this->assertEquals(Role::USER, $role->name);
+
+            // Check locale was stored
+            GetOrgLocaleService::clearOrganisationLocale();
+            $expectedLocale = $data['locale'] ?? GetOrgLocaleService::getLocale();
+            $locale = (new GetUserLocaleService())->getLocale($user->username);
+            $this->assertSame($expectedLocale, $locale);
         }
     }
 
@@ -147,7 +155,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->post('/users/register');
         $this->assertResponseCode(403);
         $result = $this->_getBodyAsString();
-        $this->assertContains('Missing CSRF token cookie', $result);
+        $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
     }
 
     public function testUsersRegisterPostExistingDeletedUserWithSameUsername()
@@ -213,6 +221,6 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertEquals($user->role_id, $userRoleId);
-        $this->assertTrue($user->created->gt(FrozenTime::create($date)));
+        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 }
