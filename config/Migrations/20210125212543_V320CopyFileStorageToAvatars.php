@@ -21,7 +21,7 @@ use Laminas\Diactoros\UploadedFile;
 use League\Flysystem\FilesystemException;
 use Migrations\AbstractMigration;
 
-class V300CopyFileStorageToAvatars extends AbstractMigration
+class V320CopyFileStorageToAvatars extends AbstractMigration
 {
     /**
      * Change Method.
@@ -44,17 +44,18 @@ class V300CopyFileStorageToAvatars extends AbstractMigration
         $dropFileStorage = true;
 
         $fileSystem = $AvatarsTable->getFilesystem();
-
+        // Wrap this in a class for command and migrations
         foreach ($fileStorages as $fileStorage) {
             $filePath = $this->getCleanFilePath($fileStorage->path);
             try {
                 $stream = $fileSystem->readStream($filePath);
                 $fileSize = $fileSystem->fileSize($filePath);
                 $fileIsReadable = true;
-            } catch (FilesystemException $e) {
+            } catch (\Throwable $e) {
                 $fileIsReadable = false;
                 $stream = null;
                 $fileSize = null;
+                // TODO: Add log
             }
             if ($fileIsReadable) {
                 $avatar = $AvatarsTable->newEntity([

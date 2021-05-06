@@ -232,7 +232,7 @@ class AvatarsTable extends Table
         $avatar = $id ? $this->findById($id)->first() : null;
 
         if (is_null($avatar)) {
-            return new Stream($this->getFallBackFileName());
+            return new Stream($this->getFallBackFileName($format));
         } else {
             $format = trim($format, AvatarHelper::IMAGE_EXTENSION);
 
@@ -287,9 +287,11 @@ class AvatarsTable extends Table
         }
 
         $data = $avatar->get('data');
-        if (is_resource($data)) {
-            $data = stream_get_contents($data);
-        }
+        
+        // TODO: get rid of this crap
+//        if (is_resource($data)) {
+//            $data = stream_get_contents($data);
+//        }
 
         try {
             $this->getFilesystem()->write($this->getMediumAvatarFileName($avatar), $data);
@@ -325,7 +327,7 @@ class AvatarsTable extends Table
 
         if ($file === null) {
             // If the avatar provided is empty, the avatar will not be saved, but we should not
-            // block the saving. See EntitiesTable::editEntity() where an empty Avatar is set per default.
+            // block the saving. See UsersTable::editEntity() where an empty Avatar is set per default.
             return true;
         } elseif (is_array($file)) {
             $content = file_get_contents($file['tmp_name']);

@@ -5,7 +5,9 @@ namespace App\Controller\Avatars;
 
 use App\Controller\AppController;
 use App\View\Helper\AvatarHelper;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
+use Cake\Log\Log;
 
 /**
  * AvatarsViewController
@@ -40,7 +42,12 @@ class AvatarsViewController extends AppController
             $id = null;
         }
 
-        $stream = $this->Avatars->readSteamFromId($id, $format);
+        try {
+            $stream = $this->Avatars->readSteamFromId($id, $format);
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+            throw new NotFoundException($e->getMessage());
+        }
 
         return $this->getResponse()
             ->withType('jpg')
