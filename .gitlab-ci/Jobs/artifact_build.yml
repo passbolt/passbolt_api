@@ -1,5 +1,5 @@
 .build-template:
-  stage: publish
+  stage: publish-artifacts
   needs:
     - debian-stable
     - ubuntu-stable
