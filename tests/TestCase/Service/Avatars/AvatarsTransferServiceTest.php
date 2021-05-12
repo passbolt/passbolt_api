@@ -29,7 +29,6 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
  * @deprecated Will be removed with version 4
  * The service under test was used to migrate avatars from
  * version prior to 3.2 to 3.2.
- *
  * @covers \App\Service\Avatars\AvatarsTransferService
  */
 class AvatarsTransferServiceTest extends TestCase
