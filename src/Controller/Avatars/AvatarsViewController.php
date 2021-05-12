@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Avatars;
 
 use App\Controller\AppController;
+use App\Service\Avatars\AvatarsCacheService;
 use App\View\Helper\AvatarHelper;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
@@ -42,8 +43,10 @@ class AvatarsViewController extends AppController
             $id = null;
         }
 
+        $service = new AvatarsCacheService($this->Avatars);
+
         try {
-            $stream = $this->Avatars->readSteamFromId($id, $format);
+            $stream = $service->readSteamFromId($id, $format);
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
             throw new NotFoundException($e->getMessage());

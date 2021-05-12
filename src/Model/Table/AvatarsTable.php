@@ -17,19 +17,18 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Entity\Avatar;
+use App\Service\Avatars\AvatarsCacheService;
 use App\Utility\AvatarProcessing;
-use App\Utility\Filesystem\FilesystemTrait;
 use App\View\Helper\AvatarHelper;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Log\Log;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Laminas\Diactoros\Stream;
-use League\Flysystem\FilesystemException;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemAdapter;
 use Psr\Http\Message\UploadedFileInterface;
 
 /**
@@ -52,8 +51,6 @@ use Psr\Http\Message\UploadedFileInterface;
  */
 class AvatarsTable extends Table
 {
-    use FilesystemTrait;
-
     public const FORMAT_SMALL = 'small';
     public const FORMAT_MEDIUM = 'medium';
     public const MAX_SIZE = '5MB';
@@ -61,9 +58,14 @@ class AvatarsTable extends Table
     public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif'];
 
     /**
-     * @var string
+     * @var \League\Flysystem\Filesystem
      */
-    protected $cacheDirectory;
+    protected $fileSystem;
+
+    /**
+     * @var bool
+     */
+    protected $isAvatarUploadEnabled;
 
     /**
      * Initialize method
@@ -77,6 +79,8 @@ class AvatarsTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->belongsTo('Profiles');
+
+        $this->setIsAvatarUploadEnabled(Configure::read('ImageStorage.isAvatarUploadEnabled', true));
     }
 
     /**
@@ -137,14 +141,21 @@ class AvatarsTable extends Table
      *
      * @param \Cake\Event\Event $event the event
      * @param \App\Model\Entity\Avatar $avatar entity
-     * @return void
+     * @return \Cake\Datasource\EntityInterface|bool
      */
     public function beforeSave(Event $event, Avatar $avatar)
     {
+        if ($this->isAvatarUploadEnabled === false) {
+            $avatar->set('file', null);
+        }
         if (!$this->setData($avatar)) {
             $avatar->setError('data', __('Could not save the data in {0} format.', AvatarHelper::IMAGE_EXTENSION));
             $event->stopPropagation();
+
+            return false;
         }
+
+        return $avatar;
     }
 
     /**
@@ -159,12 +170,14 @@ class AvatarsTable extends Table
      */
     public function afterSave(Event $event, Avatar $avatar, \ArrayObject $options)
     {
-        $this->storeInCache($avatar);
+        (new AvatarsCacheService($this))->storeInCache($avatar);
 
         $this->deleteMany($this->find()->where([
             $this->aliasField('profile_id') => $avatar->get('profile_id'),
             $this->aliasField('id') . ' <>' => $avatar->get('id'),
         ]));
+
+        $this->deleteMany($this->find()->where($this->aliasField('data') . ' IS NULL'));
     }
 
     /**
@@ -179,7 +192,7 @@ class AvatarsTable extends Table
     {
         try {
             $this->getFilesystem()->deleteDirectory($avatar->get('id'));
-        } catch (FilesystemException $exception) {
+        } catch (\Throwable $exception) {
             Log::warning($exception->getMessage());
         }
     }
@@ -190,6 +203,7 @@ class AvatarsTable extends Table
      *
      * @param \Cake\Collection\CollectionInterface $avatars list of avatars (\App\Model\Entity\Avatar)
      * @return mixed
+     * @deprecated the fallback avatar url is handled by the AvatarHelper.
      */
     public static function formatResults(CollectionInterface $avatars)
     {
@@ -211,107 +225,7 @@ class AvatarsTable extends Table
      */
     public static function addContainAvatar(): array
     {
-        return [
-            'Avatars' => function (Query $q) {
-                // Formatter for empty avatars.
-                return $q->formatResults(function (CollectionInterface $avatars) {
-                    return AvatarsTable::formatResults($avatars);
-                });
-            },
-        ];
-    }
-
-    /**
-     * @param string|null $id Avatar id
-     * @param string $format Avaar format
-     * @return \Laminas\Diactoros\Stream
-     */
-    public function readSteamFromId(?string $id, string $format): Stream
-    {
-        /** @var \App\Model\Entity\Avatar|null $avatar */
-        $avatar = $id ? $this->findById($id)->first() : null;
-
-        if (is_null($avatar)) {
-            return new Stream($this->getFallBackFileName($format));
-        } else {
-            $format = trim($format, AvatarHelper::IMAGE_EXTENSION);
-
-            return $this->readStreamInCache($avatar, $format);
-        }
-    }
-
-    /**
-     * Returns the full path to the file in cache.
-     * If the cache does not exist, tries to create it.
-     * If no data is in the avatar, returns the default
-     * avatar image.
-     *
-     * @param \App\Model\Entity\Avatar $avatar The avatar concerned.
-     * @param string $format The format to recover.
-     * @return \Laminas\Diactoros\Stream The full path to the filename.
-     */
-    public function readStreamInCache(Avatar $avatar, string $format = self::FORMAT_SMALL): Stream
-    {
-        $fileName = $this->getAvatarFileName($avatar, $format);
-
-        if (!$this->getFilesystem()->fileExists($fileName)) {
-            try {
-                $this->storeInCache($avatar);
-                $stream = $this->getFilesystem()->readStream($fileName);
-            } catch (\Throwable $exception) {
-                Log::warning(__('Could not save the avatar in cache.'));
-                $stream = $this->getFallBackFileName($format);
-            }
-        } else {
-            try {
-                $stream = $this->getFilesystem()->readStream($fileName);
-            } catch (\Throwable $exception) {
-                Log::warning(__('Could not read the avatar in cache.'));
-                $stream = $this->getFallBackFileName($format);
-            }
-        }
-
-        return new Stream($stream);
-    }
-
-    /**
-     * Store the image in $avatar->data in medium and small formats.
-     *
-     * @param \App\Model\Entity\Avatar $avatar Avatar to read the data from.
-     * @return void
-     */
-    public function storeInCache(Avatar $avatar): void
-    {
-        if (empty($avatar->get('data'))) {
-            return;
-        }
-
-        $data = $avatar->get('data');
-        
-        // TODO: get rid of this crap
-//        if (is_resource($data)) {
-//            $data = stream_get_contents($data);
-//        }
-
-        try {
-            $this->getFilesystem()->write($this->getMediumAvatarFileName($avatar), $data);
-        } catch (\Throwable $e) {
-            Log::error('Error while saving medium avatar with ID {0}', $avatar->get('id'));
-            Log::error($e->getMessage());
-        }
-
-        try {
-            $content = $this->getFilesystem()->read($this->getMediumAvatarFileName($avatar));
-            $smallImage = AvatarProcessing::resizeAndCrop(
-                $content,
-                Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.width'),
-                Configure::readOrFail('FileStorage.imageSizes.Avatar.small.thumbnail.height'),
-            );
-            $this->getFilesystem()->write($this->getSmallAvatarFileName($avatar), $smallImage);
-        } catch (\Throwable $e) {
-            Log::error('Error while saving small avatar with ID {0}', $avatar->get('id'));
-            Log::error($e->getMessage());
-        }
+        return ['Avatars',];
     }
 
     /**
@@ -332,7 +246,13 @@ class AvatarsTable extends Table
         } elseif (is_array($file)) {
             $content = file_get_contents($file['tmp_name']);
         } elseif ($file instanceof UploadedFileInterface) {
-            $content = $file->getStream()->getContents();
+            try {
+                $content = $file->getStream()->getContents();
+            } catch (\Throwable $e) {
+                Log::error($e->getMessage());
+
+                return false;
+            }
         } else {
             return false;
         }
@@ -352,82 +272,38 @@ class AvatarsTable extends Table
     }
 
     /**
-     * Get or create the relative directory name of a given avatar.
-     *
-     * @param \App\Model\Entity\Avatar $avatar Avatar
-     * @return string
-     * @throws \League\Flysystem\FilesystemException The cache directory must be readable/writable.
+     * @return \League\Flysystem\Filesystem
+     * @throws \RuntimeException if the filesystem was not set.
      */
-    public function getOrCreateAvatarDirectory(Avatar $avatar): string
+    public function getFilesystem(): Filesystem
     {
-        $avatarCacheSubDirectory = $avatar->get('id') . DS;
-        $this->getFilesystem()->createDirectory($avatarCacheSubDirectory);
-
-        return $avatarCacheSubDirectory;
+        return Configure::readOrFail('AvatarFilesystem');
     }
 
     /**
-     * @param \App\Model\Entity\Avatar $avatar Avatar.
-     * @param string|null $format Format.
-     * @return string
+     * @param \League\Flysystem\FilesystemAdapter $adapter Filesystem adapter
+     * @return void
+     * @throws \RuntimeException Will throw an exception if the image storage adapter is not configured.
      */
-    public function getAvatarFileName(Avatar $avatar, ?string $format = null): string
+    public function setFilesystem(FilesystemAdapter $adapter): void
     {
-        if (empty($avatar->get('data'))) {
-            return $this->getFallBackFileName($format);
-        } elseif ($format === self::FORMAT_SMALL) {
-            return $this->getSmallAvatarFileName($avatar);
-        } else {
-            return $this->getMediumAvatarFileName($avatar);
-        }
+        Configure::write('AvatarFilesystem', new Filesystem($adapter));
     }
 
     /**
-     * @param \App\Model\Entity\Avatar $avatar Avatar.
-     * @return string
+     * @return bool
      */
-    public function getSmallAvatarFileName(Avatar $avatar): string
+    public function getIsAvatarUploadEnabled(): bool
     {
-        return $this->getOrCreateAvatarDirectory($avatar) . self::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION;
+        return $this->isAvatarUploadEnabled;
     }
 
     /**
-     * @param \App\Model\Entity\Avatar $avatar Avatar concerned
-     * @return string
+     * @param bool $value Value assigned.
+     * @return void
      */
-    public function getMediumAvatarFileName(Avatar $avatar): string
+    public function setIsAvatarUploadEnabled(bool $value): void
     {
-        return $this->getOrCreateAvatarDirectory($avatar) . self::FORMAT_MEDIUM . AvatarHelper::IMAGE_EXTENSION;
-    }
-
-    /**
-     * The default avatar file.
-     *
-     * @param ?string $format Format of the image.
-     * @return string
-     * @throws \RuntimeException if the avatar config is not set in config/file_storage.php
-     */
-    public function getFallBackFileName(?string $format = null): string
-    {
-        if (empty($format)) {
-            $format = $this->getDefaultFormat();
-        }
-        try {
-            $fileName = Configure::readOrFail('FileStorage.imageDefaults.Avatar.' . $format);
-        } catch (\RuntimeException $e) {
-            $fileName = Configure::readOrFail('FileStorage.imageDefaults.Avatar.' . $this->getDefaultFormat());
-        }
-
-        return WWW_ROOT . $fileName;
-    }
-
-    /**
-     * The default avatar format
-     *
-     * @return string
-     */
-    public function getDefaultFormat(): string
-    {
-        return self::FORMAT_MEDIUM;
+        $this->isAvatarUploadEnabled = $value;
     }
 }

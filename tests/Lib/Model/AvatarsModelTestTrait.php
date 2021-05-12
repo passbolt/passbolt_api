@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace App\Test\Lib\Model;
 
 use App\Model\Entity\Avatar;
+use App\Model\Table\AvatarsTable;
+use App\Service\Avatars\AvatarsCacheService;
 use App\Test\Factory\ProfileFactory;
 use Cake\ORM\TableRegistry;
 use Laminas\Diactoros\Stream;
@@ -82,10 +84,11 @@ trait AvatarsModelTestTrait
 
     private function assertAvatarCachedFilesExist(Avatar $avatar)
     {
-        $this->assertInstanceOf(Stream::class, $this->Avatars->readStreamInCache($avatar));
-        $this->assertInstanceOf(Stream::class, $this->Avatars->readStreamInCache($avatar, 'medium'));
-        $this->assertInstanceOf(Stream::class, $this->Avatars->readStreamInCache($avatar, 'whateverFormatWillReturnSmall'));
-        $this->assertTextEndsWith('.jpg', $this->Avatars->getAvatarFileName($avatar));
-        $this->assertTextEndsWith('.jpg', $this->Avatars->getAvatarFileName($avatar, 'medium'));
+        $service = new AvatarsCacheService($this->Avatars);
+        $this->assertInstanceOf(Stream::class, $service->readSteamFromId($avatar->id, AvatarsTable::FORMAT_SMALL));
+        $this->assertInstanceOf(Stream::class, $service->readSteamFromId($avatar->id, AvatarsTable::FORMAT_MEDIUM));
+        $this->assertInstanceOf(Stream::class, $service->readSteamFromId($avatar->id, 'whateverFormatWillReturnSmall'));
+        $this->assertTextEndsWith('.jpg', $service->getAvatarFileName($avatar));
+        $this->assertTextEndsWith('.jpg', $service->getAvatarFileName($avatar, 'medium'));
     }
 }
