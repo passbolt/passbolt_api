@@ -79,8 +79,6 @@ class AvatarsTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->belongsTo('Profiles');
-
-        $this->setIsAvatarUploadEnabled(Configure::read('ImageStorage.isAvatarUploadEnabled', true));
     }
 
     /**
@@ -288,22 +286,5 @@ class AvatarsTable extends Table
     public function setFilesystem(FilesystemAdapter $adapter): void
     {
         Configure::write('AvatarFilesystem', new Filesystem($adapter));
-    }
-
-    /**
-     * @return bool
-     */
-    public function getIsAvatarUploadEnabled(): bool
-    {
-        return $this->isAvatarUploadEnabled;
-    }
-
-    /**
-     * @param bool $value Value assigned.
-     * @return void
-     */
-    public function setIsAvatarUploadEnabled(bool $value): void
-    {
-        $this->isAvatarUploadEnabled = $value;
     }
 }

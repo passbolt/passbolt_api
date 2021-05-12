@@ -19,7 +19,6 @@ namespace App\Test\TestCase\Model\Table\Avatars;
 
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AvatarsModelTestTrait;
-use App\View\Helper\AvatarHelper;
 use Cake\ORM\TableRegistry;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
@@ -79,23 +78,5 @@ class CreateTest extends AppTestCase
         $this->assertAvatarCachedFilesExist($avatar);
         $this->Avatars->getFilesystem()->deleteDirectory('.');
         $this->assertAvatarCachedFilesExist($avatar);
-    }
-
-    public function testSaveAvatarInMaintenanceMode()
-    {
-        $this->loadRoutes();
-        $isUploadEnabled = $this->Avatars->getIsAvatarUploadEnabled();
-        $this->Avatars->setIsAvatarUploadEnabled(false);
-
-        $avatar = $this->createAvatar();
-
-        $this->assertSame([
-            'medium' => AvatarHelper::getAvatarFallBackUrl('medium'),
-            'small' => AvatarHelper::getAvatarFallBackUrl('small'),
-        ], $avatar->url);
-
-        $this->assertSame(0, $this->Avatars->find()->count());
-
-        $this->Avatars->setIsAvatarUploadEnabled($isUploadEnabled);
     }
 }

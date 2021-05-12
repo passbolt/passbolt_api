@@ -12,7 +12,6 @@ $AvatarsTable->setFilesystem(new LocalFilesystemAdapter(TMP . 'avatars'));
 // File storage and images
 Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public' . DS);
 Configure::write('ImageStorage.publicPath', 'img' . DS . 'public' . DS);
-Configure::write('ImageStorage.isAvatarUploadEnabled', true);
 Configure::write('FileStorage', [
     'imageDefaults' => [
         'Avatar' => [
