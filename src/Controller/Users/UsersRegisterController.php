@@ -28,6 +28,8 @@ use Cake\Http\Exception\NotFoundException;
  */
 class UsersRegisterController extends AppController
 {
+    public const USERS_REGISTER_EVENT_NAME = 'UsersRegisterController.register.success';
+
     /**
      * @inheritDoc
      */
@@ -85,6 +87,12 @@ class UsersRegisterController extends AppController
 
         $data = $this->request->getData();
         $user = $this->Users->register($data);
+
+        $this->dispatchEvent(static::USERS_REGISTER_EVENT_NAME, [
+            'user' => $user,
+            'data' => $this->getRequest()->getData(),
+        ]);
+
         $this->success(__('The operation was successful.'), $user);
     }
 }

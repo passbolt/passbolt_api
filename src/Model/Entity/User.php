@@ -41,6 +41,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Group[] $groups
  * @property \App\Model\Entity\Permission[] $permissions
  * @property \Passbolt\Log\Model\Entity\ActionLog[] $action_logs
+ * @property \Passbolt\AccountSettings\Model\Entity\AccountSetting|null $locale
  */
 class User extends Entity
 {

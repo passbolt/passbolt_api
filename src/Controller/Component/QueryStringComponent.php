@@ -108,12 +108,17 @@ class QueryStringComponent extends Component
                 throw new BadRequestException(__('Invalid query string. The filter parameter should be an array.'));
             }
             foreach ($query['filter'] as $filterName => $filter) {
+                if (in_array($filterName, self::mustBeArrayFilters())) {
+                    // these should always be an array
+                    $query['filter'][$filterName] = $filter = (array)$query['filter'][$filterName];
+                }
                 if (substr($filterName, 0, 3) === 'is-') {
                     $query['filter'][$filterName] = self::normalizeBoolean($filter);
-                } elseif ($filterName === 'search') {
-                    // search should always be an array
-                    if (!is_array($query['filter']['search'])) {
-                        $query['filter']['search'] = [$query['filter']['search']];
+                } elseif ($filterName === 'has-parent') {
+                    foreach ($query['filter']['has-parent'] as $i => $parentId) {
+                        if ($parentId === 'false' || $parentId === '0') {
+                            $query['filter']['has-parent'][$i] = false;
+                        }
                     }
                 } elseif ($filterName === 'from') {
                     try {
@@ -163,6 +168,16 @@ class QueryStringComponent extends Component
         }
 
         return $query;
+    }
+
+    /**
+     * Defines the filters which values should by all mean be converted to arrays.
+     *
+     * @return string[]
+     */
+    protected static function mustBeArrayFilters(): array
+    {
+        return ['search', 'has-parent', 'has-id', 'has-groups', 'has-managers', 'has-users', 'has-access',];
     }
 
     /**

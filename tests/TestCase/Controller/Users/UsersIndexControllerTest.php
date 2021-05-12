@@ -23,7 +23,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Utility\PaginationTestTrait;
 use App\Utility\UuidFactory;
-use Cake\Chronos\Chronos;
+use Cake\Chronos\Date;
 use Cake\Utility\Hash;
 
 class UsersIndexControllerTest extends AppIntegrationTestCase
@@ -134,9 +134,9 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexOrderByCreated()
     {
         RoleFactory::make()->guest()->persist();
-        $userOnYesterdayA = UserFactory::make(['username' => 'A@test.test', 'created' => Chronos::now()->subDays(1)])->user()->persist();
+        $userOnYesterdayA = UserFactory::make(['username' => 'A@test.test', 'created' => Date::now()->subDays(1)])->user()->persist();
         $userOnYesterdayB = UserFactory::make($userOnYesterdayA)->patchData(['username' => 'B@test.test'])->user()->persist();
-        $userTodayZ = UserFactory::make(['username' => 'Z@test-test', 'created' => Chronos::now()])->user()->persist();
+        $userTodayZ = UserFactory::make(['username' => 'Z@test-test', 'created' => Date::now()])->user()->persist();
 
         $this->logInAsUser();
 
@@ -150,11 +150,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexOrderByModifiedAndUsername()
     {
         RoleFactory::make()->guest()->persist();
-        $userOnBeforeYesterday = UserFactory::make(['modified' => Chronos::now()->subDays(2)])->user()->persist();
-        $userOnYesterdayB = UserFactory::make(['username' => 'B@test.test', 'modified' => Chronos::now()->subDays(1)])->user()->persist();
-        $userOnYesterdayA = UserFactory::make(['username' => 'A@test.test', 'modified' => Chronos::now()->subDays(1)])->user()->persist();
-        $userOnYesterdayC = UserFactory::make(['username' => 'C@test.test', 'modified' => Chronos::now()->subDays(1)])->user()->persist();
-        $userToday = UserFactory::make(['modified' => Chronos::now()])->user()->persist();
+        $userOnBeforeYesterday = UserFactory::make(['modified' => Date::now()->subDays(2)])->user()->persist();
+        $userOnYesterdayB = UserFactory::make(['username' => 'B@test.test', 'modified' => Date::now()->subDays(1)])->user()->persist();
+        $userOnYesterdayA = UserFactory::make(['username' => 'A@test.test', 'modified' => Date::now()->subDays(1)])->user()->persist();
+        $userOnYesterdayC = UserFactory::make(['username' => 'C@test.test', 'modified' => Date::now()->subDays(1)])->user()->persist();
+        $userToday = UserFactory::make(['modified' => Date::now()])->user()->persist();
 
         $this->logInAs($userOnBeforeYesterday);
 

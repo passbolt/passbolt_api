@@ -47,7 +47,7 @@ return [
     'App' => [
         'namespace' => 'App',
         'encoding' => env('APP_ENCODING', 'UTF-8'),
-        'defaultLocale' => env('APP_DEFAULT_LOCALE', 'en_US'),
+        'defaultLocale' => 'en_UK',
         'base' => env('APP_BASE', false),
         'dir' => 'src',
         'webroot' => 'webroot',

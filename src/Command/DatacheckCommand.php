@@ -189,7 +189,7 @@ class DatacheckCommand extends PassboltCommand
                 $msg = $pad . '<success>[' . __('PASS') . ']</success> ' . $msg;
                 break;
             case Healthcheck::STATUS_ERROR:
-                $msg = $pad . '<fail>[' . __('FAIL') . '] ' . $msg . '</fail>';
+                $msg = $pad . '<error>[' . __('FAIL') . '] ' . $msg . '</error>';
                 break;
             case Healthcheck::STATUS_WARNING:
                 $msg = $pad . '<warning>[' . __('WARN') . '] ' . $msg . '</warning>';

@@ -10,8 +10,8 @@ stages:
   - package-deps
   - package-build
   - package-test
-  - release
   - publish
+  - publish-artifacts
 
 include:
   - template: Code-Quality.gitlab-ci.yml
