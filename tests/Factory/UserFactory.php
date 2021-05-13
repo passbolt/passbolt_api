@@ -15,6 +15,8 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
  */
 class UserFactory extends CakephpBaseFactory
 {
+    use FactoryHelperTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *

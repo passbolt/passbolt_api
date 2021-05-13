@@ -69,6 +69,11 @@ class CleanupCommand extends PassboltCommand
         'Resources' => [
             'Missing ResourceType Id',
         ],
+        'Avatars' => [
+            'Soft Deleted Users',
+            'Hard Deleted Users',
+            'Hard Deleted Profiles',
+        ],
     ];
 
     /**
