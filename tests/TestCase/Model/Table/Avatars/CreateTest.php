@@ -17,16 +17,14 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Avatars;
 
-use App\Model\Entity\Avatar;
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\AvatarsModelTrait;
-use App\Utility\Filesystem\DirectoryUtility;
-use Cake\Core\Configure;
+use App\Test\Lib\Model\AvatarsModelTestTrait;
 use Cake\ORM\TableRegistry;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 
 class CreateTest extends AppTestCase
 {
-    use AvatarsModelTrait;
+    use AvatarsModelTestTrait;
 
     /**
      * @var \App\Model\Table\AvatarsTable
@@ -36,13 +34,14 @@ class CreateTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
+        TableRegistry::getTableLocator()->clear();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars' . DS);
-        DirectoryUtility::removeRecursively($this->Avatars->getCacheDirectory());
+        $this->Avatars->setFilesystem(new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars'));
     }
 
     public function tearDown(): void
     {
+        $this->Avatars->getFilesystem()->deleteDirectory('.');
         unset($this->Avatars);
         parent::tearDown();
     }
@@ -62,7 +61,6 @@ class CreateTest extends AppTestCase
      */
     public function testCreateAvatarFile(bool $withExistingAvatar)
     {
-        $this->assertNotEmpty(Configure::read('ImageStorage.publicPath'));
         if ($withExistingAvatar) {
             $avatar = $this->createAvatar();
         } else {
@@ -78,16 +76,7 @@ class CreateTest extends AppTestCase
     {
         $avatar = $this->createAvatar();
         $this->assertAvatarCachedFilesExist($avatar);
-        $this->Avatars->getFilesystem()->deleteDirectory($this->Avatars->getOrCreateAvatarDirectory($avatar));
+        $this->Avatars->getFilesystem()->deleteDirectory('.');
         $this->assertAvatarCachedFilesExist($avatar);
-    }
-
-    private function assertAvatarCachedFilesExist(Avatar $avatar)
-    {
-        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar)));
-        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'medium')));
-        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'whateverFormatWillReturnSmall')));
-        $this->assertTextEndsWith('.jpg', $this->Avatars->readFromCache($avatar));
-        $this->assertTextEndsWith('.jpg', $this->Avatars->readFromCache($avatar, 'medium'));
     }
 }
