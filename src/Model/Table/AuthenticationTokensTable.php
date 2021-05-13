@@ -22,6 +22,9 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\AuthenticationTokens\AuthenticationTokensFindersTrait;
 use App\Utility\AuthToken\AuthTokenExpiry;
 use App\Utility\UuidFactory;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\FrozenTime;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -55,6 +58,7 @@ class AuthenticationTokensTable extends Table
         AuthenticationToken::TYPE_RECOVER,
         AuthenticationToken::TYPE_LOGIN,
         AuthenticationToken::TYPE_MFA,
+        AuthenticationToken::TYPE_MOBILE_TRANSFER,
     ];
 
     /**
@@ -135,11 +139,7 @@ class AuthenticationTokensTable extends Table
      */
     public function isValidAuthenticationTokenType($check, array $context)
     {
-        return is_string($check) && (
-            $check === AuthenticationToken::TYPE_REGISTER ||
-            $check === AuthenticationToken::TYPE_RECOVER ||
-            $check === AuthenticationToken::TYPE_LOGIN ||
-            $check === AuthenticationToken::TYPE_MFA);
+        return is_string($check) && (in_array($check, self::ALLOWED_TYPES));
     }
 
     /**
@@ -239,6 +239,7 @@ class AuthenticationTokensTable extends Table
         if ($type) {
             $where['type'] = $type;
         }
+
         /** @var \App\Model\Entity\AuthenticationToken|null $token */
         $token = $this->find()
             ->where($where)
@@ -270,7 +271,7 @@ class AuthenticationTokensTable extends Table
     public function isExpired(AuthenticationToken $token, $expiry = null): bool
     {
         if ($expiry === null) {
-            $expiry = $this->authTokenExpiry->getExpirationForTokenType($token->type);
+            $expiry = $this->authTokenExpiry->getExpiryForTokenType($token->type);
         }
         $isNotExpired = $token->created->wasWithinLast($expiry);
 
@@ -348,5 +349,78 @@ class AuthenticationTokensTable extends Table
             ->first();
 
         return $token;
+    }
+
+    /**
+     * getExpiryDate for a given type
+     *
+     * @param string $type type
+     * @return \Cake\I18n\FrozenTime
+     */
+    private function getExpiryDate(string $type)
+    {
+        $expiryPeriod = $this->authTokenExpiry->getExpiryForTokenType($type);
+        if (!isset($expiryPeriod) || empty($expiryPeriod)) {
+            $msg = 'AuthenticationTokensTable::findExpiredByType no expiry in config for token type ' . $type;
+            throw new InternalErrorException($msg);
+        }
+
+        return new FrozenTime($expiryPeriod . ' ago');
+    }
+
+    /**
+     * Finder to return authentication token that have expired
+     * Requires a type to be provided
+     *
+     * @param \Cake\ORM\Query $query query
+     * @param array $options options
+     * @throws \InvalidArgumentException if type is missing in options
+     * @throws \Cake\Http\Exception\InternalErrorException if token type does not have expiry in config
+     * @return \Cake\ORM\Query
+     */
+    public function findExpiredByType(Query $query, array $options): Query
+    {
+        if (!isset($options['type']) || empty($options)) {
+            $msg = 'AuthenticationTokensTable::findExpiredByType error, a token type is required';
+            throw new \InvalidArgumentException($msg);
+        }
+        $type = $options['type'];
+
+        return $query->where([
+            'type' => $type,
+            'created <' => $this->getExpiryDate($type),
+        ]);
+    }
+
+    /**
+     * Set all expired tokens to inactive
+     *
+     * @return void
+     */
+    public function setAllActiveExpiredTokenToInactive(): void
+    {
+        $types = self::ALLOWED_TYPES;
+        foreach ($types as $type) {
+            $this->setActiveExpiredTokenToInactive($type);
+        }
+    }
+
+    /**
+     * Set all expired tokens to inactive
+     *
+     * @param string $type type
+     * @return void
+     */
+    public function setActiveExpiredTokenToInactive(string $type): void
+    {
+        $this->query()
+            ->update()
+            ->set(['active' => false])
+            ->where([
+                'active' => true,
+                'type' => $type,
+                'created <' => $this->getExpiryDate($type),
+            ])
+            ->execute();
     }
 }
