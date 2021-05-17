@@ -18,12 +18,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Avatars;
 
 use App\Model\Table\AvatarsTable;
+use App\Service\Avatars\AvatarsCacheService;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AvatarsModelTrait;
-use App\Utility\Filesystem\DirectoryUtility;
+use App\Test\Lib\Model\AvatarsModelTestTrait;
 use App\View\Helper\AvatarHelper;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 
 /**
  * App\Controller\AvatarsController Test Case
@@ -32,7 +33,7 @@ use Cake\TestSuite\IntegrationTestTrait;
  */
 class AvatarsViewControllerTest extends AppIntegrationTestCase
 {
-    use AvatarsModelTrait;
+    use AvatarsModelTestTrait;
     use IntegrationTestTrait;
 
     /**
@@ -40,35 +41,32 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
      */
     public $Avatars;
 
+    /**
+     * @var AvatarsCacheService
+     */
+    public $avatarsCacheService;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->assertFileExists($this->Avatars->getCacheDirectory());
-        $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars');
-        DirectoryUtility::removeRecursively($this->Avatars->getCacheDirectory());
+        $this->Avatars->setFilesystem(new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars'));
+        $this->avatarsCacheService = new AvatarsCacheService($this->Avatars);
     }
 
     public function tearDown(): void
     {
+        $this->Avatars->getFilesystem()->deleteDirectory('.');
         unset($this->Avatars);
+        unset($this->avatarsCacheService);
         parent::tearDown();
     }
 
     public function validFormatDataProvider()
     {
         return [
-            [AvatarsTable::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION],
-            [AvatarsTable::FORMAT_MEDIUM . AvatarHelper::IMAGE_EXTENSION],
-        ];
-    }
-
-    public function nonValidFormatDataProvider()
-    {
-        return [
             [AvatarsTable::FORMAT_SMALL],
             [AvatarsTable::FORMAT_MEDIUM],
-            [AvatarsTable::FORMAT_MEDIUM . '.wrong_extension'],
         ];
     }
 
@@ -82,8 +80,10 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
      */
     public function testViewNonExistent(string $format)
     {
-        $this->get('avatars/view/1/' . $format);
-        $this->assertFileResponse($this->Avatars->getFallBackFileName($format));
+        $this->get('avatars/view/1/' . $format . AvatarHelper::IMAGE_EXTENSION);
+        $defaultAvatarFileName = $this->avatarsCacheService->getFallBackFileName();
+        $this->assertResponseEquals(file_get_contents($defaultAvatarFileName));
+        $this->assertContentType('jpg');
     }
 
     /**
@@ -98,17 +98,18 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     {
         $avatar = $this->createAvatar();
 
-        $expectedFileName =
-            $this->Avatars->getCacheDirectory() .
-            $this->Avatars->getOrCreateAvatarDirectory($avatar) . $format;
+        $expectedFileContent = file_get_contents(
+            TMP . 'tests' . DS . 'avatars' . DS .
+            $this->avatarsCacheService->getAvatarFileName($avatar, $format)
+        );
 
-        $this->get('avatars/view/' . $avatar->id . '/' . $format);
-        $this->assertFileResponse($expectedFileName);
+        $this->get('avatars/view/' . $avatar->id . '/' . $format . AvatarHelper::IMAGE_EXTENSION);
+        $this->assertResponseEquals($expectedFileContent);
 
         // Ensure that the virtual field is correctly constructed.
         $virtualField = [
             AvatarsTable::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar, AvatarsTable::FORMAT_MEDIUM),
-            AvatarsTable::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar, AvatarsTable::FORMAT_SMALL),
+            AvatarsTable::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar),
         ];
         $this->assertSame($virtualField, $avatar->url);
     }
@@ -116,13 +117,14 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     /**
      * Test view on a non valid format.
      *
-     * @dataProvider nonValidFormatDataProvider
+     * @dataProvider validFormatDataProvider
      */
-    public function testViewOnWrongFormat(string $format)
+    public function testViewOnWrongExtension(string $format)
     {
         $avatar = $this->createAvatar();
+        $expectedFileContent = file_get_contents($this->avatarsCacheService->getFallBackFileName());
 
-        $this->get('avatars/view/' . $avatar->id . '/' . $format);
-        $this->assertFileResponse($this->Avatars->getFallBackFileName());
+        $this->get('avatars/view/' . $avatar->id . '/' . $format . '.wrong_extension');
+        $this->assertResponseEquals($expectedFileContent);
     }
 }
