@@ -58,16 +58,6 @@ class AvatarsTable extends Table
     public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif'];
 
     /**
-     * @var \League\Flysystem\Filesystem
-     */
-    protected $fileSystem;
-
-    /**
-     * @var bool
-     */
-    protected $isAvatarUploadEnabled;
-
-    /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -143,9 +133,6 @@ class AvatarsTable extends Table
      */
     public function beforeSave(Event $event, Avatar $avatar)
     {
-        if ($this->isAvatarUploadEnabled === false) {
-            $avatar->set('file', null);
-        }
         if (!$this->setData($avatar)) {
             $avatar->setError('data', __('Could not save the data in {0} format.', AvatarHelper::IMAGE_EXTENSION));
             $event->stopPropagation();
