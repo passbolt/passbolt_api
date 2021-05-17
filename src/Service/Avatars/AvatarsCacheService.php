@@ -23,6 +23,7 @@ use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Log\Log;
+use Cake\Validation\Validation;
 use Laminas\Diactoros\Stream;
 
 class AvatarsCacheService
@@ -194,10 +195,15 @@ class AvatarsCacheService
      * @param \App\Model\Entity\Avatar $avatar Avatar
      * @return string
      * @throws \League\Flysystem\FilesystemException The cache directory must be readable/writable.
+     * @throws \Exception if the avatar id is not a uuid.
      */
     protected function getOrCreateAvatarDirectory(Avatar $avatar): string
     {
-        $avatarCacheSubDirectory = $avatar->id . DS;
+        $avatarId = $avatar->id;
+        if (!Validation::uuid($avatarId)) {
+            throw new \Exception(__('The avatar id is not valid.'));
+        }
+        $avatarCacheSubDirectory = $avatarId . DS;
         $this->Avatars->getFilesystem()->createDirectory($avatarCacheSubDirectory);
 
         return $avatarCacheSubDirectory;
