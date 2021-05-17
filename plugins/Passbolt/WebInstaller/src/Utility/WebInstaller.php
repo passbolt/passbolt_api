@@ -174,7 +174,7 @@ class WebInstaller
     }
 
     /**
-     * Import the server gpg key
+     * Import the server OpenPGP key
      *
      * @return void
      */

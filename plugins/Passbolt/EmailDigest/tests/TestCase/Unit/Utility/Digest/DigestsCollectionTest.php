@@ -40,7 +40,7 @@ class DigestsCollectionTest extends TestCase
      */
     private $digestsCollectionMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->digestsCollectionMock = $this->createMock(DigestsPool::class);
 

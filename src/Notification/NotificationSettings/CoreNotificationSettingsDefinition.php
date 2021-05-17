@@ -63,26 +63,29 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
     public function buildValidator(Validator $validator)
     {
         return $validator
-            ->boolean('purify_subject', __('Purify subject should be a boolean.'))
+            ->boolean('purify_subject', __('The purify subject setting should be a boolean.'))
             // Show controls
-            ->boolean('show_comment', __('Show comment should be a boolean.'))
-            ->boolean('show_description', __('Show description should be a boolean.'))
-            ->boolean('show_secret', __('Show secret should be a boolean.'))
-            ->boolean('show_uri', __('Show uri should be a boolean.'))
-            ->boolean('show_username', __('Show username should be a boolean.'))
+            ->boolean('show_comment', __('The show comment setting should be a boolean.'))
+            ->boolean('show_description', __('The show description setting should be a boolean.'))
+            ->boolean('show_secret', __('The show secret setting should be a boolean.'))
+            ->boolean('show_uri', __('The show uri setting should be a boolean.'))
+            ->boolean('show_username', __('The show username setting should be a boolean.'))
             // Send controls
-            ->boolean('send_admin_user_setup_completed', __('An email notification setting should be a boolean.'))
-            ->boolean('send_comment_add', __('Send comment add should be a boolean.'))
-            ->boolean('send_group_delete', __('Send group delete should be a boolean.'))
-            ->boolean('send_group_user_add', __('Send group user add should be a boolean.'))
-            ->boolean('send_group_user_delete', __('Send group user delete should be a boolean.'))
-            ->boolean('send_group_user_update', __('Send group user update should be a boolean.'))
-            ->boolean('send_group_manager_update', __('Send group manager update should be a boolean.'))
-            ->boolean('send_password_create', __('Send password create should be a boolean.'))
-            ->boolean('send_password_share', __('Send password share should be a boolean.'))
-            ->boolean('send_password_update', __('Send password update should be a boolean.'))
-            ->boolean('send_password_delete', __('Send password delete should be a boolean.'))
-            ->boolean('send_user_create', __('Send user create should be a boolean.'))
-            ->boolean('send_user_recover', __('Send user recover should be a boolean.'));
+            ->boolean(
+                'send_admin_user_setup_completed',
+                __('The send on user setup completed setting should be a boolean.')
+            )
+            ->boolean('send_comment_add', __('The send on comment added setting should be a boolean.'))
+            ->boolean('send_group_delete', __('The send on group deleted setting should be a boolean.'))
+            ->boolean('send_group_user_add', __('The send on group user added setting should be a boolean.'))
+            ->boolean('send_group_user_delete', __('The send on group user deleted setting should be a boolean.'))
+            ->boolean('send_group_user_update', __('The send on group user updated setting should be a boolean.'))
+            ->boolean('send_group_manager_update', __('The send on group manager updated setting should be a boolean.'))
+            ->boolean('send_password_create', __('The send on password created setting should be a boolean.'))
+            ->boolean('send_password_share', __('The send on password shared setting should be a boolean.'))
+            ->boolean('send_password_update', __('The send on password updated setting should be a boolean.'))
+            ->boolean('send_password_delete', __('The send on password deleted setting should be a boolean.'))
+            ->boolean('send_user_create', __('The send on user created setting should be a boolean.'))
+            ->boolean('send_user_recover', __('The send on user recovered setting should be a boolean.'));
     }
 }

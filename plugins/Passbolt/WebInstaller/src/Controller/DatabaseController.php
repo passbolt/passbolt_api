@@ -26,6 +26,7 @@ use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
  * Class DatabaseController
  *
  * @package Passbolt\WebInstaller\Controller
+ * @property \App\Model\Table\UsersTable $Users
  */
 class DatabaseController extends WebInstallerController
 {
@@ -81,7 +82,7 @@ class DatabaseController extends WebInstallerController
     /**
      * Index
      *
-     * @return void|mixed
+     * @return void
      */
     public function index(): void
     {

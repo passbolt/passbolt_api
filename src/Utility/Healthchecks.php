@@ -40,7 +40,7 @@ class Healthchecks
         $checks = Healthchecks::configFiles($checks);
         $checks = Healthchecks::core($checks);
         $checks = Healthchecks::ssl($checks);
-        $checks = Healthchecks::database($checks);
+        $checks = Healthchecks::database('default', $checks);
         $checks = Healthchecks::gpg($checks);
         $checks = Healthchecks::application($checks);
 
@@ -174,7 +174,7 @@ class Healthchecks
             ]);
             $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
             $response = @file_get_contents($url, false, $context); // phpcs:ignore
-            if ($response !== false && isset($response)) {
+            if ($response !== false && !empty($response)) {
                 $json = json_decode($response);
                 if (isset($json->body)) {
                     $checks['core']['fullBaseUrlReachable'] = ($json->body === 'OK');
@@ -194,12 +194,13 @@ class Healthchecks
      * - info.tableCount: number of tables installed
      * - defaultContent: some default content (4 roles)
      *
+     * @param string|null $datasource Datasource name
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function database(?array $checks = []): array
+    public static function database(?string $datasource = 'default', ?array $checks = []): array
     {
-        return DatabaseHealthchecks::all($checks);
+        return DatabaseHealthchecks::all($datasource, $checks);
     }
 
     /**
@@ -286,10 +287,10 @@ class Healthchecks
         // List of tables for passbolt v1.
         $tables = [
             'authentication_tokens',
+            'avatars',
             'comments',
             'email_queue',
             'favorites',
-            'file_storage',
             'gpgkeys',
             'groups',
             'groups_users',

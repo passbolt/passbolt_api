@@ -33,14 +33,14 @@ class UpdateTest extends AppTestCase
 
     public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Permissions'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
         $this->Comments = TableRegistry::getTableLocator()->get('Comments', $config);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Comments);
 
@@ -70,10 +70,9 @@ class UpdateTest extends AppTestCase
     public function testValidationContent()
     {
         $testCases = [
-            'scalar' => self::getScalarTestCases(),
+            'utf8Extended' => self::getUtf8ExtendedTestCases(50),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
-            'utf8Extended' => self::getUtf8ExtendedTestCases(50),
             'lengthBetween' => self::getLengthBetweenTestCases(1, 255),
         ];
         $comment = self::getDummyComment([

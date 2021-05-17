@@ -26,10 +26,14 @@ use Cake\ORM\Entity;
  * @property string $aco
  * @property string $aco_foreign_key
  * @property string $aro
- * @property string $aro_foreign_key
+ * @property string|null $aro_foreign_key
  * @property int $type
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \App\Model\Entity\Group|null $group
+ * @property \App\Model\Entity\Resource $resource
+ * @property \App\Model\Entity\User|null $user
+ * @property \Passbolt\Log\Model\Entity\PermissionHistory $permissions_history
  */
 class Permission extends Entity
 {

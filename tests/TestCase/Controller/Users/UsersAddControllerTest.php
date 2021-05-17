@@ -26,7 +26,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
-        'app.Base/Profiles', 'app.Base/Avatars',
+        'app.Base/Profiles',
     ];
 
     public function testUsersAddNotLoggedInError()
@@ -151,7 +151,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($user->id, $userId);
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
-        $this->assertTrue($user->created->gt(FrozenTime::create($date)));
+        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersAddSuccessEmail()

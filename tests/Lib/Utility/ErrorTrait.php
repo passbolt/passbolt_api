@@ -26,7 +26,7 @@ trait ErrorTrait
      * @param string $errorMessage (optional) Test case error message to be displayed
      * @return void
      */
-    public function assertError($code = null, $message = '', $errorMessage = null)
+    public function assertError($code = null, $message = '', $errorMessage = '')
     {
         $this->assertEquals('error', $this->_responseJsonHeader->status, 'The request should be an error');
 
@@ -39,18 +39,21 @@ trait ErrorTrait
 
         // If message given.
         if (!empty($message)) {
-            $this->assertRegExp("/$message/", $this->_responseJsonHeader->message, $errorMessage);
+            $this->assertMatchesRegularExpression("/$message/", $this->_responseJsonHeader->message, $errorMessage);
         }
     }
 
     /**
      * Asserts that the json response is relative to an authentication error.
+     * From CakePHP 4.x, with the Authentication plugin, an error 401 is returned
+     * instead of 403 (https://stackoverflow.com/questions/3297048/403-forbidden-vs-401-unauthorized-http-responses)
      *
+     * @param string $msg The message displayed to the user.
      * @return void
      */
-    public function assertAuthenticationError()
+    public function assertAuthenticationError($msg = 'Authentication is required to continue')
     {
-        $this->assertError(403, 'You need to login to access this location.');
+        $this->assertError(401, $msg);
     }
 
     /**

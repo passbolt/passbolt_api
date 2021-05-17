@@ -54,7 +54,7 @@ class HealthchecksTest extends AppIntegrationTestCase
 
     public function testDatabase()
     {
-        $check = Healthchecks::database();
+        $check = Healthchecks::database('test');
         $attributes = ['connect', 'supportedBackend', 'tablesCount', 'defaultContent'];
         $this->assertArrayHasAttributes($attributes, $check['database']);
     }

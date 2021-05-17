@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -40,7 +39,6 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     use SecretsModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
         FavoritesFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
@@ -180,8 +178,8 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->putJson("/resources/$resourceId.json");
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->putJson("/resources/$resourceId.json?api-version=v2");
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
     public function testUpdateResourcesError_ValidationErrors()

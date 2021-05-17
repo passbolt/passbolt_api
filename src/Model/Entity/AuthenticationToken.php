@@ -25,7 +25,7 @@ use Cake\ORM\Entity;
  * @property string $token
  * @property string $user_id
  * @property string $type
- * @property string $data
+ * @property string|null $data
  * @property bool $active
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified

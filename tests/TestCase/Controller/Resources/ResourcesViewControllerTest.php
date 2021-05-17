@@ -30,7 +30,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
-        'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars',
+        'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions',
     ];
 
     public function testSuccess()
@@ -116,7 +116,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
         $this->getJson("/resources/$resourceId.json");
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
     public function testErrorNotFound()

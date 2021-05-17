@@ -22,7 +22,7 @@ abstract class AbstractCombinedReport extends AbstractReport implements Combined
     public const COMBINED_REPORT_TYPE = 'combined';
 
     /**
-     * @var \Passbolt\Reports\Utility\ReportInterface
+     * @var \Passbolt\Reports\Utility\ReportInterface[]
      */
     protected $subReports = [];
 

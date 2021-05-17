@@ -20,7 +20,7 @@ namespace App\Controller\Groups;
 use App\Controller\AppController;
 
 /**
- * @property \App\Model\Table\GroupsTable Groups
+ * @property \App\Model\Table\GroupsTable $Groups
  */
 class GroupsIndexController extends AppController
 {

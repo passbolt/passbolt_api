@@ -37,7 +37,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Favorites', 'app.Base/Avatars',
+        'app.Base/Favorites',
     ];
 
     /**
@@ -55,7 +55,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
@@ -94,10 +94,10 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
         $this->assertEquals($operatorSecret->data, $result['secrets'][0]['data']);
         $this->assertEquals($operatorSecret->data, $result['secrets'][1]['data']);
         $this->assertCount(4, $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userCId, 'resource_id' => $r1->id], $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userDId, 'resource_id' => $r1->id], $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userCId, 'resource_id' => $r2->id], $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userDId, 'resource_id' => $r2->id], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r1->id, 'user_id' => $userCId], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r1->id, 'user_id' => $userDId,], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r2->id, 'user_id' => $userCId,], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r2->id, 'user_id' => $userDId,], $result['secretsNeeded']);
     }
 
     private function insertFixture_AddUpdateRemoveGroupUsers_HavingMultipleResourcesSharedWith()
@@ -140,8 +140,8 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
         $this->assertCount(1, $result['secrets']);
         $this->assertEquals($operatorSecret->data, $result['secrets'][0]['data']);
         $this->assertCount(2, $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userCId, 'resource_id' => $r1->id], $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userDId, 'resource_id' => $r1->id], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r1->id, 'user_id' => $userCId], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r1->id, 'user_id' => $userDId], $result['secretsNeeded']);
     }
 
     private function insertFixture_AddGroupUser_HavingOneResourceSharedWith()
@@ -182,10 +182,10 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
         $this->assertEquals($operatorSecret->data, $result['secrets'][0]['data']);
         $this->assertEquals($operatorSecret->data, $result['secrets'][1]['data']);
         $this->assertCount(4, $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userCId, 'resource_id' => $r1->id], $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userDId, 'resource_id' => $r1->id], $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userCId, 'resource_id' => $r2->id], $result['secretsNeeded']);
-        $this->assertContains(['user_id' => $userDId, 'resource_id' => $r2->id], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r1->id, 'user_id' => $userCId], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r1->id, 'user_id' => $userDId], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r2->id, 'user_id' => $userCId], $result['secretsNeeded']);
+        $this->assertContains(['resource_id' => $r2->id, 'user_id' => $userDId], $result['secretsNeeded']);
     }
 
     private function insertFixture_AddGroupUser_HavingMultipleResourceSharedWith()

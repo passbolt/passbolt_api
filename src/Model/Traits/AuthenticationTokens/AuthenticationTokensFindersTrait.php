@@ -35,8 +35,8 @@ trait AuthenticationTokensFindersTrait
     {
         $where = [
             'type' => AuthenticationToken::TYPE_REGISTER,
-            'token' => Hash::get($options, 'token'),
-            'user_id' => Hash::get($options, 'userId'),
+            'token' => Hash::get($options, 'token', ''),
+            'user_id' => Hash::get($options, 'userId', ''),
             'active' => true,
         ];
 
@@ -55,8 +55,8 @@ trait AuthenticationTokensFindersTrait
     {
         $where = [
             'type' => AuthenticationToken::TYPE_RECOVER,
-            'token' => Hash::get($options, 'token'),
-            'user_id' => Hash::get($options, 'userId'),
+            'token' => Hash::get($options, 'token', ''),
+            'user_id' => Hash::get($options, 'userId', ''),
             'active' => true,
         ];
 

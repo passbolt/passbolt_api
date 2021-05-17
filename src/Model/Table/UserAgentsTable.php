@@ -24,13 +24,19 @@ use donatj\UserAgent\UserAgentParser;
 /**
  * UserAgents Model
  *
- * @method \App\Model\Entity\UserAgent get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\UserAgent newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\UserAgent[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\UserAgent|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\UserAgent patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\UserAgent[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\UserAgent findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @method \App\Model\Entity\UserAgent get($primaryKey, $options = [])
+ * @method \App\Model\Entity\UserAgent newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\UserAgent[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\UserAgent|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\UserAgent patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\UserAgent[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\UserAgent findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\UserAgent newEmptyEntity()
+ * @method \App\Model\Entity\UserAgent saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\UserAgent[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\UserAgent[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\UserAgent[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\UserAgent[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class UserAgentsTable extends Table
 {
@@ -58,12 +64,11 @@ class UserAgentsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->scalar('name')
-            ->utf8('name', __('The user agent should be a UTF8 compatible string.'))
+            ->utf8('name', __('The name should be a valid BMP-UTF8 string.'))
             ->allowEmptyString('name');
 
         return $validator;

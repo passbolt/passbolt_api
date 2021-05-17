@@ -16,10 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailNotificationSettings\Test\TestCase\Controllers;
 
-use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
-use Cake\Event\EventManager;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
@@ -35,18 +33,16 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         'app.Base/Roles',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Passbolt/EmailNotificationSettings']);
-        EventManager::instance()
-            ->on(new CoreNotificationSettingsDefinition());
+        $this->loadNotificationSettings();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
-        EmailNotificationSettings::flushCache();
         parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
     /**
@@ -57,7 +53,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
     public function testNotificationOrgSettingsGetControllerNotLoggedIn()
     {
         $this->getJson('/settings/emails/notifications.json?api-version=v2');
-        $this->assertForbiddenError('You need to login to access this location.');
+        $this->assertAuthenticationError();
     }
 
     /**

@@ -28,11 +28,11 @@ use Cake\Utility\Hash;
 class ShareControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Groups',
+        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups',
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
@@ -212,7 +212,7 @@ hcciUFw5
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
         $this->putJson("/share/resource/$resourceId.json");
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
     public function testErrorDoesNotExistResource()

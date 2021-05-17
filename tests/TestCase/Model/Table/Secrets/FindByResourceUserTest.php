@@ -38,7 +38,7 @@ class FindByResourceUserTest extends AppTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Secrets') ? [] : ['className' => SecretsTable::class];

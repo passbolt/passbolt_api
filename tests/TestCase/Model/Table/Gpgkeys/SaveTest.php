@@ -30,13 +30,13 @@ class SaveTest extends AppTestCase
 
     public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Gpgkeys);
         parent::tearDown();
@@ -173,7 +173,7 @@ class SaveTest extends AppTestCase
         $successes = [
             'tomorrow' => FrozenTime::tomorrow(),
             'tomorrow as time' => Date::tomorrow(),
-            'way later' => FrozenTime::createFromDate('2030'),
+            'way later' => FrozenTime::createFromDate(2030),
         ];
         foreach ($successes as $case => $value) {
             $this->assertTrue(
@@ -186,7 +186,7 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationIsInFuturePast()
     {
         $fails = [
-            'future' => FrozenTime::createFromDate('2030'),
+            'future' => FrozenTime::createFromDate(2030),
             'more than half a day' => Time::now()->modify('+13 hours'),
             'tomorrow as time' => Time::now()->modify('+24 hours'),
         ];

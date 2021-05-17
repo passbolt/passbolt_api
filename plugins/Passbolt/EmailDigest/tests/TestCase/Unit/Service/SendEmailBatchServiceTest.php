@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\EmailDigest\Test\TestCase\Unit\Service;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\Mailer\Email;
+use Cake\Mailer\Message;
 use Cake\Mailer\TransportFactory;
 use Cake\Network\Exception\SocketException;
 use Cake\TestSuite\EmailTrait;
@@ -47,7 +47,7 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
      */
     private $emailQueueTableMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadPlugins(['Passbolt/EmailDigest']);
@@ -211,7 +211,7 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
                     parent::__construct($config);
                 }
 
-                public function send(Email $email)
+                public function send(Message $message): array
                 {
                     throw $this->exception;
                 }

@@ -32,6 +32,7 @@ class PermissionsAcoHasOwnerService
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 
@@ -42,7 +43,7 @@ class PermissionsAcoHasOwnerService
      * @return bool
      * @throws \Exception
      */
-    public function check(string $acoForeignKey)
+    public function check(string $acoForeignKey): bool
     {
         return $this->permissionsTable->findByAcoForeignKeyAndType($acoForeignKey, Permission::OWNER)
             ->count() > 0;

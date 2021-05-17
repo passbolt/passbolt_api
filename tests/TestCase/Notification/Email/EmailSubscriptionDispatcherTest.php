@@ -59,7 +59,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
      */
     private $loggerMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->eventManagerMock = $this->createMock(EventManager::class);
         $this->emailSubscriptionManagerMock = $this->createMock(EmailSubscriptionManager::class);
@@ -111,7 +111,10 @@ class EmailSubscriptionDispatcherTest extends TestCase
 
         $this->emailSenderMock->expects($this->exactly(count($subscribedRedactors)))
             ->method('sendEmail')
-            ->withConsecutive(...$subscribedRedactorEmails);
+            ->withConsecutive(
+                [$this->equalTo($subscribedRedactorEmails[0])],
+                [$this->equalTo($subscribedRedactorEmails[1])],
+            );
 
         $this->sut->dispatch($event);
     }
@@ -173,7 +176,10 @@ class EmailSubscriptionDispatcherTest extends TestCase
 
         $this->emailSenderMock->expects($this->exactly(2))
             ->method('sendEmail')
-            ->withConsecutive(...$emails);
+            ->withConsecutive(
+                [$this->equalTo($emails[0])],
+                [$this->equalTo($emails[1])],
+            );
 
         $this->sut->dispatch($event);
     }

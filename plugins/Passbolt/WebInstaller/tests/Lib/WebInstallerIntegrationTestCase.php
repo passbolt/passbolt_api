@@ -21,6 +21,7 @@ use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 
 class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
 {
@@ -30,14 +31,14 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
     protected $_recover;
     protected $_configured;
 
-    public function setUp()
+    public function setUp(): void
     {
+        TableRegistry::getTableLocator()->clear();
         parent::setUp();
-        $this->loadPlugins(['Passbolt/WebInstaller']);
         $this->_recover = false;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         if ($this->_recover) {
@@ -46,6 +47,9 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
             } else {
                 Configure::delete('passbolt.webInstaller.configured');
             }
+        }
+        if ($this->isWebInstallerFriendly()) {
+            $this->restoreTestConnection();
         }
     }
 

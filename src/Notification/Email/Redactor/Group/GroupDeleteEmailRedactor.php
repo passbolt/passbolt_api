@@ -45,6 +45,7 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function __construct(?UsersTable $usersTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 
@@ -68,7 +69,7 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     {
         $emailCollection = new EmailCollection();
 
-        /** @var \App\Model\Entity\Group $resource */
+        /** @var \App\Model\Entity\Group $group */
         $group = $event->getData('group');
         $deletedBy = $event->getData('userId');
 

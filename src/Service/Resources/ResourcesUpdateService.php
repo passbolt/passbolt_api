@@ -27,17 +27,18 @@ use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\Time;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class ResourcesUpdateService
 {
     use EventDispatcherTrait;
+    use ModelAwareTrait;
 
     public const UPDATE_SUCCESS_EVENT_NAME = 'ResourcesUpdateController.update.success';
 
@@ -49,17 +50,17 @@ class ResourcesUpdateService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private $Permissions;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $resourcesTable;
+    private $Resources;
 
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $secretsTable;
+    private $Secrets;
 
     /**
      * @var \App\Service\Secrets\SecretsUpdateSecretsService
@@ -72,10 +73,10 @@ class ResourcesUpdateService
     public function __construct()
     {
         $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
-        $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
+        $this->loadModel('Permissions');
+        $this->loadModel('Resources');
+        $this->loadModel('Secrets');
     }
 
     /**
@@ -99,7 +100,7 @@ class ResourcesUpdateService
             return $resource;
         }
 
-        $this->resourcesTable->getConnection()->transactional(
+        $this->Resources->getConnection()->transactional(
             function () use (&$resource, $uac, $data, $meta, $secrets) {
                 $this->updateResourceMeta($uac, $resource, $meta);
                 if (!empty($secrets)) {
@@ -124,17 +125,17 @@ class ResourcesUpdateService
      */
     private function getResource(UserAccessControl $uac, string $id): Resource
     {
-        $permission = $this->permissionsTable
+        $permission = $this->Permissions
             ->findHighestByAcoAndAro(PermissionsTable::RESOURCE_ACO, $id, $uac->getId())
             ->first();
 
         if (empty($permission)) {
             throw new NotFoundException(__('The resource does not exist.'));
-        } elseif ($permission->type < Permission::UPDATE) {
+        } elseif ($permission->get('type') < Permission::UPDATE) {
             throw new ForbiddenException(__('You are not allowed to update this resource.'));
         }
 
-        return $this->resourcesTable->get($id);
+        return $this->Resources->get($id);
     }
 
     /**
@@ -200,7 +201,7 @@ class ResourcesUpdateService
     {
         $this->patchEntity($uac, $resource, $data);
         $this->handleValidationErrors($resource);
-        $this->resourcesTable->save($resource);
+        $this->Resources->save($resource);
         $this->handleValidationErrors($resource);
     }
 
@@ -229,7 +230,7 @@ class ResourcesUpdateService
             'resource_type_id' => true,
         ];
 
-        return $this->resourcesTable->patchEntity($resource, $data, ['accessibleFields' => $accessibleFields]);
+        return $this->Resources->patchEntity($resource, $data, ['accessibleFields' => $accessibleFields]);
     }
 
     /**
@@ -244,7 +245,7 @@ class ResourcesUpdateService
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->resourcesTable);
+            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->Resources);
         }
     }
 
@@ -288,7 +289,7 @@ class ResourcesUpdateService
      */
     private function postResourceUpdate(UserAccessControl $uac, Resource $resource, array $data): void
     {
-        $secrets = $this->secretsTable->findByResourcesUser([$resource->id], $uac->getId())->all()->toArray();
+        $secrets = $this->Secrets->findByResourcesUser([$resource->id], $uac->getId())->all()->toArray();
         $resource['secrets'] = $secrets;
         $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
         $this->dispatchEvent(static::UPDATE_SUCCESS_EVENT_NAME, $eventData);
