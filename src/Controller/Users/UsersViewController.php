@@ -42,7 +42,7 @@ class UsersViewController extends AppController
             if ($id === 'me') {
                 $id = $this->User->id(); // me returns the currently logged-in user
             } else {
-                throw new BadRequestException(__('The user id should be a uuid or "me".'));
+                throw new BadRequestException(__('The user identifier should be a valid UUID or "me".'));
             }
         }
 

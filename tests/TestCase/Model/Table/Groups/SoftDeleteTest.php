@@ -37,7 +37,7 @@ class SoftDeleteTest extends AppTestCase
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Users = TableRegistry::getTableLocator()->get('Users');

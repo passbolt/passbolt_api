@@ -22,23 +22,25 @@ use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService;
 
 class ResourcesAfterAccessGrantedService
 {
+    use ModelAwareTrait;
+
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private $GroupsUsers;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $resourcesTable;
+    private $Resources;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService
@@ -50,9 +52,10 @@ class ResourcesAfterAccessGrantedService
      */
     public function __construct()
     {
-        $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->loadModel('GroupsUsers');
+        $this->loadModel('Resources');
+
         $this->foldersRelationsAddItemToUserTree = new FoldersRelationsAddItemToUserTreeService();
-        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
     }
 
     /**
@@ -85,7 +88,7 @@ class ResourcesAfterAccessGrantedService
     private function getResource(UserAccessControl $uac, string $resourceId): Resource
     {
         try {
-            return $this->resourcesTable->get($resourceId, [
+            return $this->Resources->get($resourceId, [
                 'finder' => FolderizableBehavior::FINDER_NAME,
                 'user_id' => $uac->getId(),
             ]);
@@ -105,7 +108,7 @@ class ResourcesAfterAccessGrantedService
      */
     private function addResourceToGroupUsersTrees(UserAccessControl $uac, Resource $resource, string $groupId): void
     {
-        $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
+        $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
             $this->addResourceToUserTree($uac, $resource, $groupUserId);
         }

@@ -30,15 +30,22 @@ use Cake\Validation\Validator;
 /**
  * Tags Model
  *
- * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsToMany $Resources
- * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable|\Cake\ORM\Association\HasMany $ResourcesTags
- * @method \Passbolt\Tags\Model\Table\Tag get($primaryKey, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag newEntity($data = null, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag|bool save(\Passbolt\Tags\Model\Table\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag patchEntity(\Passbolt\Tags\Model\Table\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsToMany $Resources
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasMany $ResourcesTags
+ * @method \Passbolt\Tags\Model\Entity\Tag get($primaryKey, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag newEntity(array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag newEmptyEntity()
+ * @method \Passbolt\Tags\Model\Entity\Tag saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findBySlug(string $slug)
  */
 class TagsTable extends Table
 {
@@ -48,7 +55,7 @@ class TagsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -74,18 +81,18 @@ class TagsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->notEmptyString('slug')
-            ->requirePresence('slug', 'create')
-            ->utf8('first_name', __('The tag should be a valid utf8 string.'))
-            ->maxLength('slug', 128, __('Tag can not be more than 128 characters in length.'));
+            ->notEmptyString('slug', __('The tag should not be empty.'))
+            ->requirePresence('slug', 'create', __('A tag is required.'))
+            ->utf8Extended('slug', __('The tag should be a valid BMP-UTF8 string.'))
+            ->maxLength('slug', 128, __('The tag length should be maximum {0} characters.', 128));
 
         $validator
-            ->boolean('is_shared')
-            ->requirePresence('is_shared', 'create');
+            ->boolean('is_shared', __('The shared status should be a valid boolean.'))
+            ->requirePresence('is_shared', 'create', __('A shared status is required.'));
 
         return $validator;
     }
@@ -144,7 +151,7 @@ class TagsTable extends Table
     public static function decorateForeignFind(Query $query, array $options, string $userId)
     {
         if (isset($options['contain']['all_tags'])) {
-            $query->contain('Tags', function (Query $q) use ($userId) {
+            $query->contain('Tags', function (Query $q) {
                 return $q->order(['slug']);
             });
         }
@@ -155,7 +162,7 @@ class TagsTable extends Table
                 return $q
                     ->order(['slug'])
                     ->where(function (QueryExpression $where) use ($userId) {
-                        return $where->or_(function (QueryExpression $or) use ($userId) {
+                        return $where->or(function (QueryExpression $or) use ($userId) {
                             return $or
                                 ->eq('ResourcesTags.user_id', $userId)
                                 ->isNull('ResourcesTags.user_id');
@@ -253,7 +260,7 @@ class TagsTable extends Table
             }
         }
         if (!empty($errors)) {
-            throw new CustomValidationException(__('Could not validate the tags.'), $errors);
+            throw new CustomValidationException(__('Could not validate tags data.'), $errors);
         }
 
         return $collection;

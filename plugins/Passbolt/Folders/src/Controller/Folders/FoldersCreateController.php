@@ -54,7 +54,7 @@ class FoldersCreateController extends AppController
         $options = $this->QueryString->get($whitelist);
         $folder = $folderCreateService->foldersTable->findView($this->User->id(), $folder->id, $options)->first();
 
-        $this->success(__('The folder `{0}` has been added successfully.', $folder->name), $folder);
+        $this->success(__('The folder has been added successfully.'), $folder);
     }
 
     /**

@@ -27,6 +27,14 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
  * @property string $modified_by
+ * @property \App\Model\Entity\User|null $creator
+ * @property \App\Model\Entity\User|null $modifier
+ * @property \App\Model\Entity\Permission|null $permission
+ * @property \App\Model\Entity\Permission[] $permissions
+ * @property \Passbolt\Folders\Model\Entity\FoldersRelation[] $folders_relations
+ * @property \Passbolt\Folders\Model\Entity\Folder[] $children_folders
+ * @property \App\Model\Entity\Resource[] $children_resources
+ * @property \Cake\ORM\Entity $folders_history
  */
 class Folder extends Entity
 {

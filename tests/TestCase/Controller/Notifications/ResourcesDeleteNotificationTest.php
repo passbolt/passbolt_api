@@ -28,16 +28,16 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets',
         'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Gpgkeys',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Gpgkeys',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadNotificationSettings();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->unloadNotificationSettings();
         parent::tearDown();

@@ -48,7 +48,7 @@ class TotpVerifyGetController extends MfaVerifyController
                 ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
                 ->setTemplate('verifyForm');
         } else {
-            $this->success(__('Please provide the one time password.'));
+            $this->success(__('Please provide the one-time password.'));
         }
     }
 }

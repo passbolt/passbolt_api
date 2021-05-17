@@ -28,7 +28,7 @@ use Passbolt\Folders\Model\Behavior\PermissionsCleanupBehavior;
 
 abstract class FoldersTestCase extends AppTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders.enabled', true);

@@ -21,7 +21,6 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
@@ -60,8 +59,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
-        GroupsFixture::class,
+    GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,
@@ -84,7 +82,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = new FoldersUpdateService();
@@ -96,7 +94,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->unloadNotificationSettings();
@@ -151,7 +149,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
-            $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
+            $errors = ['name' => ['_empty' => 'The name should not be empty.']];
             $this->assertEquals($errors, $e->getErrors());
         }
     }

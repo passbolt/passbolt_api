@@ -24,7 +24,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\ResourcesTable Resources
+ * @property \App\Model\Table\ResourcesTable $Resources
  */
 class ResourcesUpdateController extends AppController
 {
@@ -42,7 +42,7 @@ class ResourcesUpdateController extends AppController
     public function update(string $id): void
     {
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The resource id is not valid.'));
+            throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
 
         $uac = $this->User->getAccessControl();
@@ -62,6 +62,6 @@ class ResourcesUpdateController extends AppController
         $this->loadModel('Resources');
         $output = $this->Resources->findView($this->User->id(), $resource->id, $options)->first();
 
-        $this->success(__('The resource `{0}` has been updated successfully.', $resource->name), $output);
+        $this->success(__('The resource has been updated successfully.'), $output);
     }
 }

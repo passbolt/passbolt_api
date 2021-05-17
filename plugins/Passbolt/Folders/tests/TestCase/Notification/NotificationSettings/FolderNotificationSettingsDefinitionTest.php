@@ -36,7 +36,7 @@ class FolderNotificationSettingsDefinitionTest extends TestCase
      */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new FolderNotificationSettingsDefinition();
 

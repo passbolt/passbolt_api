@@ -17,7 +17,7 @@ trait OpenPGPCommonAssertsTrait
      */
     public function assertGpgMarker(string $armoredText, string $marker)
     {
-        $msg = __('This is not a valid OpenPGP armored message/key marker');
+        $msg = __('This is not a valid OpenPGP armored marker.');
         try {
             $m = $this->getGpgMarker($armoredText);
         } catch (Exception $e) {
@@ -52,7 +52,7 @@ trait OpenPGPCommonAssertsTrait
     public function assertSignKey()
     {
         if (empty($this->_signKeyFingerprint)) {
-            throw new Exception(__('Can not sign without a key. Set a sign key first.'));
+            throw new Exception('Can not sign without a key. Set a sign key first.');
         }
     }
 
@@ -65,7 +65,7 @@ trait OpenPGPCommonAssertsTrait
     public function assertVerifyKey()
     {
         if (empty($this->_verifyKeyFingerprint)) {
-            throw new Exception(__('Can not verify without a key. Set a verification key first.'));
+            throw new Exception('Can not verify without a key. Set a verification key first.');
         }
     }
 
@@ -78,7 +78,7 @@ trait OpenPGPCommonAssertsTrait
     public function assertEncryptKey()
     {
         if (empty($this->_encryptKeyFingerprint)) {
-            throw new Exception(__('Can not encrypt without a key. Set a public key first.'));
+            throw new Exception('Can not encrypt without a key. Set a public key first.');
         }
     }
 
@@ -91,7 +91,7 @@ trait OpenPGPCommonAssertsTrait
     public function assertDecryptKey()
     {
         if (empty($this->_decryptKeyFingerprint)) {
-            throw new Exception(__('Can not decrypt without a key. Set a secret key first.'));
+            throw new Exception('Can not decrypt without a key. Set a secret key first.');
         }
     }
 }

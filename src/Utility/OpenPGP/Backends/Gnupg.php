@@ -63,6 +63,7 @@ class Gnupg extends OpenPGPBackend
         }
 
         $this->_gpg = new \gnupg();
+        /** @phpstan-ignore-next-line */
         $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
     }
 
@@ -253,7 +254,7 @@ class Gnupg extends OpenPGPBackend
      * @param string $armoredKey ASCII armored key data
      * @return bool true if valid, false otherwise
      */
-    public function isParsableArmoredPublicKey(string $armoredKey)
+    public function isParsableArmoredPublicKey(string $armoredKey): bool
     {
         try {
             $this->assertGpgMarker($armoredKey, self::PUBLIC_KEY_MARKER);
@@ -263,7 +264,7 @@ class Gnupg extends OpenPGPBackend
 
         // If we don't manage to unarmor the key, we consider it's not a valid one.
         $keyUnarmored = $this->unarmor($armoredKey, self::PUBLIC_KEY_MARKER);
-        if ($keyUnarmored === false || $keyUnarmored === null) {
+        if ($keyUnarmored === false) {
             return false;
         }
 
@@ -367,7 +368,7 @@ class Gnupg extends OpenPGPBackend
             $this->isParsableArmoredPublicKey($armoredKey) === false
             && $this->isParsableArmoredPrivateKey($armoredKey) === false
         ) {
-            throw new Exception(__('The public key could not be parsed.'));
+            throw new Exception(__('Could not parse the OpenPGP public key.'));
         }
 
         return $this->getKeyInfo($armoredKey);
@@ -394,19 +395,19 @@ class Gnupg extends OpenPGPBackend
     {
         $keyUnarmored = $this->unarmor($armoredKey, $this->getGpgMarker($armoredKey));
         if ($keyUnarmored === false) {
-            throw new Exception(__('Invalid key. No public key package found.'));
+            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
         }
 
         // Get the message.
         $msg = @OpenPGP_Message::parse($keyUnarmored); // phpcs:ignore
         if (empty($msg->packets)) {
-            throw new Exception(__('Invalid key. No public key package found.'));
+            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
         }
 
         // Parse public key.
         $publicKey = @OpenPGP_PublicKeyPacket::parse($keyUnarmored); // phpcs:ignore
         if ($publicKey === null) {
-            throw new Exception(__('Invalid key. No public key package found.'));
+            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
         }
 
         // Get Packets for public key.
@@ -414,11 +415,12 @@ class Gnupg extends OpenPGPBackend
 
         // If the packet is not a valid publicKey Packet, then we can't retrieve the uid.
         if (!$publicKeyPacket instanceof OpenPGP_PublicKeyPacket) {
-            throw new Exception(__('Invalid key. No public key package found.'));
+            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
         }
 
         // Get userId.
         $userIds = [];
+        /** @phpstan-ignore-next-line  */
         foreach ($msg->signatures() as $signatures) {
             foreach ($signatures as $signature) {
                 if ($signature instanceof \OpenPGP_UserIDPacket) {
@@ -467,7 +469,7 @@ class Gnupg extends OpenPGPBackend
         } catch (\Exception $e) {
             return false;
         }
-        if (empty($results) || $results === false) {
+        if (empty($results)) {
             return false;
         }
 
@@ -483,7 +485,7 @@ class Gnupg extends OpenPGPBackend
      */
     public function importKeyIntoKeyring(string $armoredKey)
     {
-        $msg = __('Could not import the key.');
+        $msg = __('Could not import the OpenPGP key.');
         try {
             $import = $this->_gpg->import($armoredKey);
         } catch (\Exception $e) {

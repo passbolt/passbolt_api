@@ -23,7 +23,7 @@ class AllSyncAction
     /**
      * Synchronize users.
      *
-     * @return \Passbolt\DirectorySync\Actions\ActionReportCollection reports collection
+     * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection reports collection
      */
     public function syncUsers()
     {
@@ -36,7 +36,7 @@ class AllSyncAction
     /**
      * Synchronize groups.
      *
-     * @return \Passbolt\DirectorySync\Actions\ActionReportCollection reports collection
+     * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection reports collection
      */
     public function syncGroups()
     {

@@ -63,7 +63,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');

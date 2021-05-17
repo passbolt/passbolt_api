@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace App\Test\Lib;
 
 use App\Model\Entity\Role;
-use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Model\Entity\User;
+use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\AvatarsModelTestTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
@@ -38,7 +40,7 @@ use Cake\TestSuite\TestCase;
 abstract class AppIntegrationTestCase extends TestCase
 {
     use ArrayTrait;
-    use AvatarsModelTrait;
+    use AvatarsModelTestTrait;
     use EntityTrait;
     use ErrorTrait;
     use GpgkeysModelTrait;
@@ -53,33 +55,13 @@ abstract class AppIntegrationTestCase extends TestCase
     use UsersModelTrait;
 
     /**
-     * The response for the most recent json request.
-     *
-     * @var Object|array
-     */
-    protected $_responseJson;
-
-    /**
-     * The response header for the most recent json request.
-     *
-     * @var Object
-     */
-    protected $_responseJsonHeader;
-
-    /**
-     * The response body for the most recent json request.
-     *
-     * @var Object
-     */
-    protected $_responseJsonBody;
-
-    /**
      * Setup.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->enableCsrfToken();
+        $this->loadRoutes();
         Configure::write('passbolt.plugins.tags.enabled', false);
         Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
@@ -89,7 +71,7 @@ abstract class AppIntegrationTestCase extends TestCase
     /**
      * Tear down
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->clearPlugins();
         parent::tearDown();
@@ -117,7 +99,39 @@ abstract class AppIntegrationTestCase extends TestCase
         if ($userFirstName === 'admin') {
             $data['role']['name'] = Role::ADMIN;
         }
-        $this->session(['Auth' => ['User' => $data]]);
+        $this->session(['Auth' => $data]);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function logInAs(User $user)
+    {
+        $this->session(['Auth' => $user->toArray()]);
+    }
+
+    /**
+     * @return User
+     * @throws \Exception
+     */
+    public function logInAsUser()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
+
+        return $user;
+    }
+
+    /**
+     * @return User
+     * @throws \Exception
+     */
+    public function logInAsAdmin()
+    {
+        $user = UserFactory::make()->admin()->persist();
+        $this->logInAs($user);
+
+        return $user;
     }
 
     /**

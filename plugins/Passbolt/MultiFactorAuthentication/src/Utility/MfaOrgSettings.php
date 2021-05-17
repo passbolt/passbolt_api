@@ -60,10 +60,11 @@ class MfaOrgSettings
     public function __construct(?array $settings = null)
     {
         if (!isset($settings) || !isset($settings[MfaSettings::PROVIDERS])) {
-            throw new InternalErrorException(__('Invalid MFA org settings.'));
+            throw new InternalErrorException('Invalid MFA org settings.');
         }
         $settings[MfaSettings::PROVIDERS] = $this->formatProviders($settings[MfaSettings::PROVIDERS]);
         $this->settings = $settings;
+        /** @phpstan-ignore-next-line  */
         $this->OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
     }
 
@@ -101,6 +102,7 @@ class MfaOrgSettings
         $defaultSettings = ['providers' => []];
         $configureSettings = Configure::read('passbolt.plugins.multiFactorAuthentication');
         try {
+            /** @var \App\Model\Table\OrganizationSettingsTable $orgSettings */
             $orgSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
             $databaseSettings = $orgSettings->getFirstSettingOrFail(MfaSettings::MFA);
             $databaseSettings = json_decode($databaseSettings->value, true);
@@ -249,11 +251,12 @@ class MfaOrgSettings
      */
     public function validate(array $data)
     {
-        if (!isset($data) || empty($data)) {
-            throw new CustomValidationException(__('The MFA settings data cannot be empty.'));
+        if (empty($data)) {
+            $msg = __('The multi-factor authentication settings data should not be empty.');
+            throw new CustomValidationException($msg);
         }
         if (!isset($data[MfaSettings::PROVIDERS]) || !is_array($data[MfaSettings::PROVIDERS])) {
-            throw new CustomValidationException(__('The MFA providers list is missing.'));
+            throw new CustomValidationException(__('The multi-factor authentication providers list is missing.'));
         }
         $results = [];
         foreach ($data[MfaSettings::PROVIDERS] as $provider) {
@@ -285,7 +288,8 @@ class MfaOrgSettings
             }
         }
         if (count($results) !== 0) {
-            throw new CustomValidationException(__('Could not validate MFA provider configuration.'), $results);
+            $msg = __('Could not validate multi-factor authentication provider configuration.');
+            throw new CustomValidationException($msg, $results);
         }
 
         return true;

@@ -32,7 +32,7 @@ class CleanupTest extends AppTestCase
     ];
     public $options;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Comments = TableRegistry::getTableLocator()->get('Comments');
@@ -46,7 +46,7 @@ class CleanupTest extends AppTestCase
         ]];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Comments);
         parent::tearDown();

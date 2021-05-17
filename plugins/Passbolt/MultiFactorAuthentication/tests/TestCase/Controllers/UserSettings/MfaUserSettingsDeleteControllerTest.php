@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\UserSettings;
 
 use App\Test\Fixture\Alt0\GroupsUsersFixture;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
@@ -38,7 +37,6 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         RolesFixture::class,
         ProfilesFixture::class,
         GpgkeysFixture::class,
-        AvatarsFixture::class,
         GroupsUsersFixture::class,
     ];
 
@@ -76,7 +74,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         $this->authenticateAs('ada');
         $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid()));
         $this->assertResponseCode(403);
-        $this->assertResponseError('You are not allowed to access this location');
+        $this->assertResponseError('You are not allowed to access this location.');
     }
 
     public function testMfaUserSettingsDeleteCheckIfGivenUserIdIsValid()

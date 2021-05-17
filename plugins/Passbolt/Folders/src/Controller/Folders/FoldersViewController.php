@@ -23,7 +23,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property FoldersTable Folders
+ * @property \Passbolt\Folders\Model\Table\FoldersTable $Folders
  */
 class FoldersViewController extends AppController
 {

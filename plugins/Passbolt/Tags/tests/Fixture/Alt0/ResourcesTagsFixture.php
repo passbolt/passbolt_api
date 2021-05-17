@@ -14,7 +14,7 @@ class ResourcesTagsFixture extends TestFixture
      *
      * @throws \Exception if dependencies to generate random uuid are not met
      */
-    public function init()
+    public function init(): void
     {
         $this->records = [
             [

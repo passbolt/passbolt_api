@@ -13,10 +13,39 @@
  * @since         2.0.0
  */
 namespace App\Test\Lib\Utility;
+use Cake\Http\Response;
 use PHPUnit\Framework\Assert;
 
 trait JsonRequestTrait
 {
+    /**
+     * The response for the most recent json request.
+     *
+     * @var Object|array
+     */
+    protected $_responseJson;
+
+    /**
+     * The response header for the most recent json request.
+     *
+     * @var Object
+     */
+    protected $_responseJsonHeader;
+
+    /**
+     * The response body for the most recent json request.
+     *
+     * @var Object
+     */
+    protected $_responseJsonBody;
+
+    /**
+     * The response body for the most recent json request.
+     *
+     * @var Object
+     */
+    protected $_responseJsonPagination;
+
     /**
      * Asserts that the latest json request is a success.
      *
@@ -41,12 +70,7 @@ trait JsonRequestTrait
     public function getJson($url)
     {
         $this->get($url);
-        $this->_responseJson = json_decode($this->_getBodyAsString());
-        if (empty($this->_responseJson)) {
-            Assert::fail('The result of the request is not a valid json.');
-        }
-        $this->_responseJsonHeader = $this->_responseJson->header;
-        $this->_responseJsonBody = $this->_responseJson->body;
+        $this->setJsonHeaderAndBody();
     }
 
     /**
@@ -63,13 +87,7 @@ trait JsonRequestTrait
     public function postJson($url, $data = [])
     {
         $this->post($url, $data);
-        $this->_responseJson = json_decode($this->_getBodyAsString());
-        if (empty($this->_responseJson)) {
-            pr($this->_getBodyAsString());
-            Assert::fail('The result of the request is not a valid json.');
-        }
-        $this->_responseJsonHeader = $this->_responseJson->header;
-        $this->_responseJsonBody = $this->_responseJson->body;
+        $this->setJsonHeaderAndBody();
     }
 
     /**
@@ -86,12 +104,7 @@ trait JsonRequestTrait
     public function putJson($url, $data = [])
     {
         $this->put($url, $data);
-        $this->_responseJson = json_decode($this->_getBodyAsString());
-        if (empty($this->_responseJson)) {
-            Assert::fail('The result of the request is not a valid json.');
-        }
-        $this->_responseJsonHeader = $this->_responseJson->header;
-        $this->_responseJsonBody = $this->_responseJson->body;
+        $this->setJsonHeaderAndBody();
     }
 
     /**
@@ -108,11 +121,18 @@ trait JsonRequestTrait
     public function deleteJson($url, $data = [])
     {
         $this->_sendRequest($url, 'DELETE', $data);
+        $this->setJsonHeaderAndBody();
+    }
+
+    private function setJsonHeaderAndBody()
+    {
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
+            pr($this->_getBodyAsString());
             Assert::fail('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;
+        $this->_responseJsonPagination = $this->_responseJson->header->pagination ?? null;
     }
 }

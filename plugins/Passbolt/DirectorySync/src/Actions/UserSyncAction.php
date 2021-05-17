@@ -35,16 +35,6 @@ class UserSyncAction extends SyncAction
     public const ENTITY_TYPE = Alias::MODEL_USERS;
 
     /**
-     * UserSyncAction constructor.
-     *
-     * @throws \Exception
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Things to do after the constructor and before the sync job
      *
      * @return void
@@ -56,9 +46,7 @@ class UserSyncAction extends SyncAction
     }
 
     /**
-     * Execute sync.
-     *
-     * @return void
+     * @inheritDoc
      */
     protected function _execute()
     {
@@ -71,14 +59,14 @@ class UserSyncAction extends SyncAction
     /**
      * Get user from data.
      *
-     * @param array $data data
+     * @param string $username username
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    protected function getUserFromData(array $data)
+    protected function getUserFromData(string $username)
     {
         $existingUser = $this->Users->find()
             ->select(['id', 'username', 'active', 'deleted', 'created', 'modified'])
-            ->where(['username' => $data['user']['username']])
+            ->where(compact('username'))
             ->order(['Users.modified' => 'DESC'])
             ->first();
         if (!isset($existingUser) || empty($existingUser)) {

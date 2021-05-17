@@ -91,7 +91,7 @@ class FolderizableBehavior extends Behavior
      * @return array
      * @uses handleEvent()
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return array_fill_keys(array_keys($this->_config['events']), 'handleEvent');
     }
@@ -100,8 +100,9 @@ class FolderizableBehavior extends Behavior
      * @param array $config Config
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
+        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         parent::initialize($config);
     }
@@ -272,16 +273,13 @@ class FolderizableBehavior extends Behavior
         $new = $entity->isNew() !== false;
         foreach ($events['Model.afterSave'] as $field => $when) {
             if (!in_array($when, ['always', 'new', 'existing'])) {
-                $msg = __(
-                    'When should be one of "always", "new" or "existing". The passed value "{0}" is invalid',
-                    $when
-                );
+                $msg = 'When should be one of "always", "new" or "existing". The passed value "{0}" is invalid';
                 throw new UnexpectedValueException($msg);
             }
             if ($when === 'always' || ($when === 'new' && $new) || ($when === 'existing' && !$new)) {
                 // When the entity is a new entity, we use the created_by property.
                 $folderParentId = $this->foldersRelationsTable
-                    ->getItemFolderParentIdInUserTree($entity->created_by, $entity->id);
+                    ->getItemFolderParentIdInUserTree($entity->get('created_by'), $entity->id);
                 $isPersonal = $this->foldersRelationsTable->isItemPersonal($entity->id);
                 $this->addPersonalStatusProperty($entity, $isPersonal);
                 $this->addFolderParentIdProperty($entity, $folderParentId);

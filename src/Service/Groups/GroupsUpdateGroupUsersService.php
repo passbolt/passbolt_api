@@ -43,6 +43,7 @@ class GroupsUpdateGroupUsersService
     public function __construct()
     {
         $this->groupsUsersCreateService = new GroupsUsersCreateService();
+        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
@@ -129,10 +130,10 @@ class GroupsUpdateGroupUsersService
      * @param int $rowIndexRef The row index in the request data
      * @param string $groupId The target group
      * @param array $data The group user data
-     * @return \App\Model\Entity\GroupsUser
+     * @return \App\Model\Entity\GroupsUser|null
      * @throws \Exception
      */
-    private function addGroupUser(UserAccessControl $uac, int $rowIndexRef, string $groupId, array $data): GroupsUser
+    private function addGroupUser(UserAccessControl $uac, int $rowIndexRef, string $groupId, array $data): ?GroupsUser
     {
         $permissionData = [
             'group_id' => $groupId,
@@ -145,6 +146,8 @@ class GroupsUpdateGroupUsersService
         } catch (ValidationException $e) {
             $errors = [$rowIndexRef => $e->getErrors()];
             $this->handleValidationErrors($errors);
+
+            return null;
         }
     }
 
@@ -173,6 +176,7 @@ class GroupsUpdateGroupUsersService
      */
     private function getGroupUser(int $rowIndexRef, string $groupId, string $groupUserId): GroupsUser
     {
+        /** @var \App\Model\Entity\GroupsUser|null $groupUser */
         $groupUser = $this->groupsUsersTable->findByIdAndGroupId($groupUserId, $groupId)->first();
         if (!$groupUser) {
             $errors = [$rowIndexRef => ['id' => ['exists' => __('The group user does not exist.')]]];
@@ -251,7 +255,7 @@ class GroupsUpdateGroupUsersService
             ->count();
 
         if ($groupManagersCount < 1) {
-            $errors = ['at_least_one_group_manager' => __('At least one group manager must be provided.')];
+            $errors = ['at_least_one_group_manager' => __('At least one group manager should be provided.')];
             $this->handleValidationErrors($errors);
         }
     }

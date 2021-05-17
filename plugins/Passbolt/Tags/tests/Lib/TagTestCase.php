@@ -26,13 +26,13 @@ abstract class TagTestCase extends AppTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.tags.enabled', true);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         Configure::write('passbolt.plugins.tags.enabled', false);

@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -47,8 +46,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
-        GpgkeysFixture::class,
+    GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -62,7 +60,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);

@@ -18,10 +18,13 @@ namespace Passbolt\WebInstaller\Test\TestCase\Utility;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
+use Passbolt\Ee\Model\Entity\Subscription;
+use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 use Passbolt\WebInstaller\Test\Lib\ConfigurationTrait;
 use Passbolt\WebInstaller\Test\Lib\DatabaseTrait;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
@@ -33,15 +36,16 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
     use ConfigurationTrait;
     use DatabaseTrait;
     use GpgkeysModelTrait;
+    use DummySubscriptionTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->skipTestIfNotWebInstallerFriendly();
         $this->backupConfiguration();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->restoreConfiguration();
@@ -124,31 +128,25 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $this->assertFileExists(CONFIG . 'passbolt.php');
     }
 
-    public function testWebInstallerUtilityInstallDatabaseSuccess()
+    public function testWebInstallerUtilityInstallDatabaseSuccessAndCreateFirstUserSuccess()
     {
         $this->loadPlugins(['Migrations']);
         $webInstaller = new WebInstaller(null);
         $databaseSettings = $this->getTestDatasourceFromConfig();
         $webInstaller->setSettings('database', $databaseSettings);
         $webInstaller->initDatabaseConnection();
-        $this->truncateTables();
+        $this->dropAllTables();
         $webInstaller->installDatabase();
+
+        // Validate schema
         try {
             DatabaseConfiguration::validateSchema();
         } catch (Exception $e) {
             $this->assertTrue(false);
         }
         $this->assertTrue(true);
-    }
 
-    public function testWebInstallerUtilityCreateFirstUserSuccess()
-    {
-        $this->loadPlugins(['Migrations']);
-        $webInstaller = new WebInstaller(null);
-        $databaseSettings = $this->getTestDatasourceFromConfig();
-        $webInstaller->setSettings('database', $databaseSettings);
-        $webInstaller->initDatabaseConnection();
-        $webInstaller->installDatabase();
+        // Create first user
         $Users = TableRegistry::getTableLocator()->get('Users');
         $roleAdminId = $Users->Roles->getIdByName(Role::ADMIN);
         $userSettings = [
@@ -178,10 +176,11 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerUtilityWriteLicenseFile()
     {
-        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
+        $this->markTestSkipped('This test should be removed. I keep it though because it documents the v2.0 license approach');
+        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Ee')) {
             $webInstaller = new WebInstaller(null);
             $licenseSettings = [
-                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev'),
+                'subscription_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_dev'),
             ];
             $webInstaller->setSettings('license', $licenseSettings);
 
@@ -189,5 +188,30 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
             $this->assertFileExists(CONFIG . 'license');
         }
         $this->assertTrue(true);
+    }
+
+    public function testWebInstallerImportSubscription()
+    {
+        $user = UserFactory::make()->admin()->persist();
+        $webInstaller = new WebInstaller(null);
+        $webInstaller->setSettings('user', ['user_id' => $user->id]);
+        $subscriptionSettings = [
+            'subscription_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_dev'),
+        ];
+        $webInstaller->setSettings('subscription', $subscriptionSettings);
+
+        // With Public Subscription Key:
+        $this->setUpPathAndPublicSubscriptionKey();
+        $webInstaller->importSubscription();
+        $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
+
+        // With Public Subscription Key update
+        $this->setUpPathAndPublicSubscriptionKey();
+        $webInstaller->importSubscription();
+
+        // Without Public Subscription Key, no exception should be thrown, the former subscription is still valid
+        Configure::delete('passbolt.plugins.ee.subscriptionKey.public');
+        $webInstaller->importSubscription();
+        $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
     }
 }

@@ -31,13 +31,13 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Gpgkeys);
         parent::tearDown();

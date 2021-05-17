@@ -33,6 +33,7 @@ class FoldersRelationsRepairStronglyConnectedComponents
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
     }
 
@@ -145,7 +146,7 @@ class FoldersRelationsRepairStronglyConnectedComponents
      */
     private function sortFolderRelationsByPriority(UserAccessControl $uac, array $foldersRelations): array
     {
-        usort($foldersRelations, function ($folderRelationA, $folderRelationB) use ($uac) {
+        usort($foldersRelations, function ($folderRelationA, $folderRelationB) {
             // Operator relations should be broken with the lowest priority.
             if ($folderRelationA['inOperatorTree']) {
                 return 1;

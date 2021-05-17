@@ -25,13 +25,13 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
 {
     public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->GroupsUsers);
         parent::tearDown();

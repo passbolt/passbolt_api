@@ -46,7 +46,7 @@ class TableFindIndexBefore extends Event
      * @param null $subject Subject
      * @param null $data Data
      */
-    public function __construct($name, $subject = null, $data = null)
+    final public function __construct($name, $subject = null, $data = null)
     {
         $this->setTable($subject);
         $this->setOptions($data['options'] ?? null);

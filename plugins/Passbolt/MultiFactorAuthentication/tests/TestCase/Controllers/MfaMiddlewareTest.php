@@ -28,7 +28,7 @@ class MfaMiddlewareTest extends MfaIntegrationTestCase
     public function testMfaMiddlewareVerifyNotNeededAnonymousUser()
     {
         $this->get('/app/users');
-        $this->assertRedirect('/auth/login?redirect=%2Fapp%2Fusers');
+        $this->assertRedirectContains('/auth/login?redirect=%2Fapp%2Fusers');
     }
 
     /**

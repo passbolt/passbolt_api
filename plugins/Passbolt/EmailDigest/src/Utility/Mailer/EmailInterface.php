@@ -55,7 +55,7 @@ interface EmailInterface
 
     /**
      * Return the template file to use with this email digest
-     * i.e: LU/template.ctp
+     * i.e: LU/template.php
      *
      * @return string
      */

@@ -73,7 +73,7 @@ class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = new FoldersRelationsAddItemToUserTreeService();

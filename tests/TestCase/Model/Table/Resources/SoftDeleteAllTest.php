@@ -36,14 +36,14 @@ class SoftDeleteAllTest extends AppTestCase
         'app.Base/Secrets',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Resources') ? [] : ['className' => ResourcesTable::class];
         $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Resources);
 

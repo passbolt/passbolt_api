@@ -35,7 +35,7 @@ class TagsIndexControllerTest extends TagPluginIntegrationTestCase
         $this->assertResponseError();
         $response = json_decode($this->_getBodyAsString());
         $this->assertTextContains('error', $response->header->status);
-        $this->assertTextContains('You need to login to access this location.', $response->header->message);
+        $this->assertTextContains('Authentication is required to continue', $response->header->message);
     }
 
     // A user should see personal and shared tags or resources via direct and group permissions

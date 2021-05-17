@@ -19,6 +19,21 @@ namespace Passbolt\Log\Model\Entity;
 
 use Cake\ORM\Entity;
 
+/**
+ * @property string $id
+ * @property string $aco
+ * @property string $aco_foreign_key
+ * @property string $aro
+ * @property string|null $aro_foreign_key
+ * @property int $type
+ * @property \Passbolt\Log\Model\Entity\EntityHistory|null $entities_history
+ * @property \App\Model\Entity\Group|null $group
+ * @property \App\Model\Entity\Resource $resource
+ * @property \App\Model\Entity\User|null $user
+ * @property \App\Model\Entity\Group|null $permissions_history_group
+ * @property \App\Model\Entity\User|null $permissions_history_user
+ * @property \App\Model\Entity\Resource $permissions_history_resource
+ */
 class PermissionHistory extends Entity
 {
     /**

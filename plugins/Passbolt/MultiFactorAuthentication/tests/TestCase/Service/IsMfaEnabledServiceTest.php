@@ -48,7 +48,7 @@ class IsMfaEnabledServiceTest extends TestCase
      */
     private $getMfaOrgSettingsServiceMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mfaOrgSettingsMock = $this->createMock(MfaOrgSettings::class);
         $this->getMfaAccountSettingsServiceMock = $this->createMock(GetMfaAccountSettingsService::class);

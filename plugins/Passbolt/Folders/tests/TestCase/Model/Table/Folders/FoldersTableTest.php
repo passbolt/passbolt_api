@@ -61,7 +61,7 @@ class FoldersTableTest extends FoldersTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
@@ -78,7 +78,7 @@ class FoldersTableTest extends FoldersTestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Folders);
 

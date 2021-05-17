@@ -22,7 +22,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
-        'app.Base/Avatars',
+
     ];
 
     public $fails = [
@@ -68,7 +68,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         foreach ($this->fails as $case => $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
             $result = $this->_getBodyAsString();
-            $this->assertContains($data['error'], $result, 'Error case not respected: ' . $case);
+            $this->assertStringContainsString($data['error'], $result, 'Error case not respected: ' . $case);
         }
     }
 
@@ -79,7 +79,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->postJson('/users/recover.json', $data);
         $this->assertResponseCode(404);
         $result = $this->_getBodyAsString();
-        $this->assertContains($error, $result);
+        $this->assertStringContainsString($error, $result);
     }
 
     public function testRecoverPostError_UserNotExist()
@@ -89,7 +89,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->postJson('/users/recover.json', $data);
         $this->assertResponseCode(404);
         $result = $this->_getBodyAsString();
-        $this->assertContains($error, $result);
+        $this->assertStringContainsString($error, $result);
     }
 
     public function testRecoverPostSuccess()

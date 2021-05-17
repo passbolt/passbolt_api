@@ -29,16 +29,22 @@ use Cake\Validation\Validator;
 /**
  * Favorites Model
  *
- * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Favorite get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Favorite newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Favorite[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Favorite|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Favorite patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Favorite[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Favorite findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Favorite get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Favorite newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Favorite patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Favorite newEmptyEntity()
+ * @method \App\Model\Entity\Favorite saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Favorite[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Favorite[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Favorite[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Favorite[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class FavoritesTable extends Table
 {
@@ -86,23 +92,30 @@ class FavoritesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->notEmptyString('user_id');
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
-            ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS)
-            ->requirePresence('foreign_model', 'create')
-            ->notEmptyString('foreign_model');
+            ->inList(
+                'foreign_model',
+                self::ALLOWED_FOREIGN_MODELS,
+                __(
+                    'The favorite object type should be one of the following: {0}.',
+                    implode(', ', self::ALLOWED_FOREIGN_MODELS)
+                )
+            )
+            ->requirePresence('foreign_model', 'create', __('The favorite object type is required.'))
+            ->notEmptyString('foreign_model', __('The favorite object type should not be empty'));
 
         $validator
-            ->uuid('foreign_key')
-            ->requirePresence('foreign_key', 'create')
-            ->notEmptyString('foreign_key');
+            ->uuid('foreign_key', __('The favorite object identifier should be a valid UUID.'))
+            ->requirePresence('foreign_key', 'create', __('The favorite object identifier is required.'))
+            ->notEmptyString('foreign_key', __('The favorite object identifier should not be empty.'));
 
         return $validator;
     }
@@ -121,13 +134,13 @@ class FavoritesTable extends Table
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => __('The user is soft deleted.'),
+            'message' => __('The user does not exist.'),
         ]);
         $rules->addCreate($rules->existsIn('foreign_key', 'Resources'), 'resource_exists');
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_not_soft_deleted', [
             'table' => 'Resources',
             'errorField' => 'foreign_key',
-            'message' => __('The resource is soft deleted.'),
+            'message' => __('The resource does not exist.'),
         ]);
         $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
             'errorField' => 'foreign_key',

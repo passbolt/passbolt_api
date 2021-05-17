@@ -23,25 +23,14 @@ use Cake\ORM\TableRegistry;
 class ResourcesAfterSoftDeleteService
 {
     /**
-     * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
-     */
-    private $foldersRelationsTable;
-
-    /**
-     * Instantiate the service.
-     */
-    public function __construct()
-    {
-        $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
-    }
-
-    /**
      * @param resource $resource The soft deleted resource.
      * @return void
      * @throws \Exception
      */
     public function afterSoftDelete(Resource $resource)
     {
-        $this->foldersRelationsTable->deleteAll(['FoldersRelations.foreign_id' => $resource->id]);
+        TableRegistry::getTableLocator()
+            ->get('Passbolt/Folders.FoldersRelations')
+            ->deleteAll(['FoldersRelations.foreign_id' => $resource->id]);
     }
 }

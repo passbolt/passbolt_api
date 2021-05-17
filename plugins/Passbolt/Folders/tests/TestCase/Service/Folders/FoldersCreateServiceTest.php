@@ -21,7 +21,6 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -36,6 +35,7 @@ use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventManager;
 use Cake\TestSuite\IntegrationTestTrait;
+use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
@@ -61,8 +61,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
-        GpgkeysFixture::class,
+    GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -81,7 +80,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
@@ -94,7 +93,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->unloadNotificationSettings();
@@ -113,8 +112,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
-            $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'name._empty'));
         }
     }
 
@@ -132,8 +130,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent must exist.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.folder_exists'));
         }
     }
 
@@ -150,8 +147,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.has_folder_access'));
         }
     }
 
@@ -238,8 +234,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
-            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'folder_parent_id.has_folder_access'));
         }
     }
 

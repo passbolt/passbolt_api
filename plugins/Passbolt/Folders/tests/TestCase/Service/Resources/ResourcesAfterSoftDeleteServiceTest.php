@@ -56,7 +56,7 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = new ResourcesAfterSoftDeleteService();

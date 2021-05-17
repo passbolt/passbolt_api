@@ -50,7 +50,7 @@ class SoftDeleteTest extends FoldersTestCase
      */
     private $usersTable;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->usersTable = TableRegistry::getTableLocator()->get('Users');

@@ -30,6 +30,7 @@ class LdapConfigurationForm extends Form
     public const CONNECTION_TYPE_PLAIN = 'plain';
     public const CONNECTION_TYPE_SSL = 'ssl';
     public const CONNECTION_TYPE_TLS = 'tls';
+    public const SUPPORTED_DIRECTORY_TYPE = ['ad', 'openldap'];
 
     public static $connectionTypes = [
         self::CONNECTION_TYPE_PLAIN,
@@ -77,7 +78,7 @@ class LdapConfigurationForm extends Form
      * @param \Cake\Form\Schema $schema shchema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('directory_type', ['type' => 'string'])
@@ -113,131 +114,147 @@ class LdapConfigurationForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('directory_type', 'create', __('A directory type is required.'))
-            ->notEmpty('directory_type', __('A directory type is required.'))
+            ->notEmptyString('directory_type', __('The directory type should not be empty.'))
             ->inList(
                 'directory_type',
-                ['ad', 'openldap'],
-                __('The directory type is not valid (only ad and openldap are supported).')
+                self::SUPPORTED_DIRECTORY_TYPE,
+                __(
+                    'The directory type should be one of the following: {0}.',
+                    implode(', ', self::SUPPORTED_DIRECTORY_TYPE)
+                )
             );
 
         $validator
             ->requirePresence('domain_name', 'create', __('A domain name is required.'))
-            ->notEmpty('domain_name', __('A domain name is required.'))
-            ->utf8('domain_name', __('The domain name should be a valid utf8 string.'));
+            ->notEmptyString('domain_name', __('The domain name should not be empty.'))
+            ->utf8('domain_name', __('The domain name should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('username', __('Username can be empty.'))
-            ->utf8('username', __('The username should be a valid utf8 string.'));
+            ->allowEmptyString('username')
+            ->utf8('username', __('The username should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('password', __('Password can be empty.'))
-            ->utf8('password', __('The password should be a valid utf8 string.'));
+            ->allowEmptyString('password')
+            ->utf8('password', __('The password should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('base_dn', __('Base DN can be empty.'))
-            ->utf8('base_dn', __('The base DN should be a valid utf8 string.'));
+            ->allowEmptyString('base_dn')
+            ->utf8('base_dn', __('The base DN should be a valid BMP-UTF8 string.'));
 
         $validator
             ->requirePresence('server', 'create', __('A server is required.'))
-            ->notEmpty('server', __('A server is required.'))
-            ->utf8('server', __('The server should be a valid utf8 string.'));
+            ->notEmptyString('server', __('The server should not be empty.'))
+            ->utf8('server', __('The server should be a valid BMP-UTF8 string.'));
 
         $validator
             ->requirePresence('port', 'create', __('A port number is required.'))
-            ->notEmpty('port', __('A port number is required.'))
-            ->numeric('port', __('Port number should be numeric'))
-            ->range('port', [0, 65535], __('Port should be between 0 and 65535'));
+            ->notEmptyString('port', __('The port number should not be empty.'))
+            ->numeric('port', __('The port number should be numeric.'))
+            ->range('port', [0, 65535], __('The port number should be between 0 and 65535'));
 
         $validator
             ->requirePresence('connection_type', 'create', __('A connection type is required.'))
-            ->notEmpty('connection_type', __('A connection type is required.'))
+            ->notEmptyString('connection_type', __('The connection type should not be empty.'))
             ->inList(
                 'connection_type',
                 self::$connectionTypes,
-                __('The connection type is not valid (only plain, ssl, tls are supported)')
+                __(
+                    'The connection type should be one of the following: {0}.',
+                    implode(', ', self::$connectionTypes)
+                )
             );
 
         $validator
-            ->requirePresence('default_user', 'create', __('A default user is required.'))
-            ->notEmpty('default_user', __('Default user cannot be empty.'))
-            ->uuid('default_user', false, __('Default user should be a valid uuid.'))
+            ->requirePresence('default_user', 'create', __('The identifier of the default admin user is required.'))
+            ->notEmptyString('default_user', __('The identifier of the default admin user should not be empty.'))
+            ->uuid('default_user', __('The identifier of the default admin user should be a valid UUID.'))
             ->add('default_user', ['isValidAdmin' => [
                 'rule' => [$this, 'isValidAdmin'],
-                'message' => __('The admin user provided does not exist.'),
+                'message' => __('The admin user does not exist.'),
             ]]);
 
         $validator
-            ->requirePresence('default_group_admin_user', 'create', __('A default group admin user is required.'))
-            ->notEmpty('default_group_admin_user', __('Default group admin user cannot be empty.'))
-            ->uuid('default_group_admin_user', false, __('Default group admin user should be a valid uuid.'))
+            ->requirePresence(
+                'default_group_admin_user',
+                'create',
+                __('The identifier of the default group admin user is required.')
+            )
+            ->notEmptyString(
+                'default_group_admin_user',
+                __('The identifier of the default group admin user should not be empty.')
+            )
+            ->uuid(
+                'default_group_admin_user',
+                __('The identifier of the default group admin user should be a valid UUID.')
+            )
             ->add('default_group_admin_user', ['isValidUser' => [
                 'rule' => [$this, 'isValidUser'],
-                'message' => __('The group admin user provided does not exist.'),
+                'message' => __('The group admin user does not exist.'),
             ]]);
 
         $validator
-            ->allowEmpty('group_object_class', __('Group object class cannot be empty.'))
-            ->utf8('group_object_class', __('Group object class should be a valid utf8 string.'));
+            ->allowEmptyString('group_object_class')
+            ->utf8('group_object_class', __('The group object class should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('user_object_class', __('User object class cannot be empty.'))
-            ->utf8('user_object_class', __('User object class should be a valid utf8 string.'));
+            ->allowEmptyString('user_object_class')
+            ->utf8('user_object_class', __('The user object class should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('group_path')
-            ->utf8('group_path', __('Group object class should be a valid utf8 string.'));
+            ->allowEmptyString('group_path')
+            ->utf8('group_path', __('The group object class should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('user_path')
-            ->utf8('user_path', __('User path should be a valid utf8 string.'));
+            ->allowEmptyString('user_path')
+            ->utf8('user_path', __('The user path should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('use_email_prefix_suffix')
-            ->boolean('use_email_prefix_suffix', __('UseEmailPrefixSuffix should be a boolean.'));
+            ->allowEmptyTime('use_email_prefix_suffix')
+            ->boolean('use_email_prefix_suffix', __('The email prefix/suffix setting should be a valid boolean.'));
 
         $validator
-            ->allowEmpty('email_prefix')
-            ->utf8('email_prefix', __('Email prefix should be a valid utf8 string.'));
+            ->allowEmptyString('email_prefix')
+            ->utf8('email_prefix', __('The email prefix should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('email_suffix')
-            ->utf8('email_suffix', __('Email suffix should be a valid utf8 string.'));
+            ->allowEmptyString('email_suffix')
+            ->utf8('email_suffix', __('The email suffix should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('users_parent_group', __('Users parent group cannot be empty.'))
-            ->utf8('users_parent_group', __('Users parent group should be a valid utf8 string.'));
+            ->allowEmptyString('users_parent_group')
+            ->utf8('users_parent_group', __('The users parent group should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('groups_parent_group', __('Groups parent group cannot be empty.'))
-            ->utf8('groups_parent_group', __('Groups parent group should be a valid utf8 string.'));
+            ->allowEmptyString('groups_parent_group')
+            ->utf8('groups_parent_group', __('The groups parent group should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmpty('enabled_users_only')
-            ->boolean('enabled_users_only', __('Enabled users only should be a boolean.'));
+            ->allowEmptyString('enabled_users_only')
+            ->boolean('enabled_users_only', __('The enabled users only setting should be a boolean.'));
 
         $validator
-            ->allowEmpty('sync_users_create')
-            ->boolean('sync_users_create', __('Sync of user when create should be a boolean.'));
+            ->allowEmptyString('sync_users_create')
+            ->boolean('sync_users_create', __('The sync of created users setting should be a boolean.'));
 
         $validator
-            ->allowEmpty('sync_users_delete')
-            ->boolean('sync_users_delete', __('Sync of user when delete should be a boolean.'));
+            ->allowEmptyString('sync_users_delete')
+            ->boolean('sync_users_delete', __('The sync of deleted user setting should be a boolean.'));
 
         $validator
-            ->allowEmpty('sync_groups_create')
-            ->boolean('sync_groups_create', __('Sync of groups when create should be a boolean.'));
+            ->allowEmptyString('sync_groups_create')
+            ->boolean('sync_groups_create', __('The sync of created groups setting should be a boolean.'));
 
         $validator
-            ->allowEmpty('sync_groups_delete')
-            ->boolean('sync_groups_delete', __('Sync of groups when delete should be a boolean.'));
+            ->allowEmptyString('sync_groups_delete')
+            ->boolean('sync_groups_delete', __('The sync of deleted groups setting should be a boolean.'));
 
         $validator
-            ->allowEmpty('sync_groups_update')
-            ->boolean('sync_groups_update', __('Sync of groups when yodate should be a boolean.'));
+            ->allowEmptyString('sync_groups_update')
+            ->boolean('sync_groups_update', __('The sync of updated groups setting should be a boolean.'));
 
         return $validator;
     }
@@ -387,7 +404,7 @@ class LdapConfigurationForm extends Form
      * @param array $data form data
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         return $this->testConnection($data);
     }

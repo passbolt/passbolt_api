@@ -17,19 +17,15 @@ declare(strict_types=1);
 namespace App\Controller\Auth;
 
 use App\Controller\AppController;
-use Cake\Event\Event;
 
 class AuthLogoutController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Auth->allow('logoutGet');
+        $this->Authentication->allowUnauthenticated(['logoutGet']);
 
         return parent::beforeFilter($event);
     }
@@ -41,6 +37,6 @@ class AuthLogoutController extends AppController
      */
     public function logoutGet()
     {
-        return $this->redirect($this->Auth->logout());
+        return $this->redirect($this->Authentication->logout());
     }
 }

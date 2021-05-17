@@ -44,7 +44,7 @@ trait FoldersFindersTrait
     public function findIndex(string $userId, ?array $options = [])
     {
         if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         $query = $this->find();
@@ -218,7 +218,7 @@ trait FoldersFindersTrait
     public function filterQueryBySearch(Query $query, string $name)
     {
         return $query->where([
-            ['name LIKE' => '%' . $name . '%'],
+            ['Folders.name LIKE' => '%' . $name . '%'],
         ]);
     }
 
@@ -229,7 +229,7 @@ trait FoldersFindersTrait
      * @param array $parentIds Array of parent ids
      * @return \Cake\ORM\Query
      */
-    public function filterQueryByParentIds(Query $query, array $parentIds)
+    public function filterQueryByParentIds(Query $query, array $parentIds): Query
     {
         if (empty($parentIds)) {
             return $query;
@@ -251,7 +251,7 @@ trait FoldersFindersTrait
             if (!empty($parentIds)) {
                 $conditions[] = ['folder_parent_id IN' => $parentIds];
             }
-            if ($includeRoot) {
+            if ($includeRoot === true) {
                 $conditions[] = ['folder_parent_id IS NULL'];
             }
 

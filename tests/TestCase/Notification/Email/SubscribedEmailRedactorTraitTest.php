@@ -37,7 +37,7 @@ class SubscribedEmailRedactorTraitTest extends TestCase
      */
     private $subscriptionManagerMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->subscriptionManagerMock = $this->createMock(EmailSubscriptionManager::class);
 

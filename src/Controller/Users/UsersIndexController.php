@@ -20,39 +20,53 @@ use App\Controller\AppController;
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
-use Cake\Event\Event;
 
 /**
- * @property UsersTable Users
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class UsersIndexController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param \Cake\Event\Event $event An Event instance
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
-    public function beforeFilter(Event $event)
+    public function initialize(): void
     {
-        $this->loadModel('Users');
-
-        return parent::beforeFilter($event);
+        parent::initialize();
+        $this->loadComponent('ApiPagination', [
+            'model' => 'Users',
+        ]);
     }
+
+    public $paginate = [
+        'sortableFields' => [
+            'Profiles.first_name',
+            'Profiles.last_name',
+            'Profiles.created',
+            'Profiles.modified',
+            'Users.username',
+            'Users.created',
+            'Users.modified',
+            'Users.last_logged_in',
+        ],
+        'order' => [
+            'Users.username' => 'asc', // Default sorted field
+        ],
+    ];
 
     /**
      * @return void
      */
     public function index()
     {
+        $this->loadModel('Users');
+
         $findIndexOptions = (new FindIndexOptions())
             ->allowContains([
                 'last_logged_in', 'groups_users', 'gpgkey', 'profile', 'role',
                 // @deprecate when v2.13 support drops
-                'LastLoggedIn', // remapped ot last_logged_in in QueryStringComponent
+                'LastLoggedIn', // remapped to last_logged_in in QueryStringComponent
             ])
-            ->allowOrders(['User.username', 'User.created', 'User.modified'])
-            ->allowOrders(['Profile.first_name', 'Profile.last_name', 'Profile.created', 'Profile.modified'])
             ->allowFilters(['search', 'has-groups', 'has-access', 'is-admin']);
 
         if ($this->User->role() === Role::ADMIN) {
@@ -68,7 +82,7 @@ class UsersIndexController extends AppController
         );
 
         $users = $this->Users->findIndex($this->User->role(), $computedFindIndexOptions);
-
+        $this->paginate($users);
         $this->success(__('The operation was successful.'), $users);
     }
 }

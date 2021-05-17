@@ -29,7 +29,7 @@ class HasAccessTest extends AppTestCase
 
     public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');

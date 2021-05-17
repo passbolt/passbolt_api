@@ -53,7 +53,7 @@ trait PermissionsFindersTrait
     public function findViewAcoPermissions(string $aco, ?array $options = []): Query
     {
         if (!Validation::uuid($aco)) {
-            throw new InvalidArgumentException(__('The aco parameter is not a valid uuid.'));
+            throw new InvalidArgumentException('The access control object identifier should be a valid UUID.');
         }
 
         $query = $this->find()
@@ -141,7 +141,7 @@ trait PermissionsFindersTrait
         $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
 
         if (!Validation::uuid($aro)) {
-            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         if ($checkGroupsUsers) {
@@ -219,7 +219,7 @@ trait PermissionsFindersTrait
     {
         foreach ($aros as $aro) {
             if (!Validation::uuid($aro)) {
-                throw new InvalidArgumentException(__('The aro id should be a valid uuid.'));
+                throw new InvalidArgumentException('The access request object identifier should be a valid UUID.');
             }
         }
 
@@ -366,15 +366,15 @@ trait PermissionsFindersTrait
         ?int $permissionType = null
     ): bool {
         if (!Validation::uuid($acoForeignKey)) {
-            throw new InvalidArgumentException(__('The aco parameter should be a valid uuid.'));
+            throw new InvalidArgumentException('The aco parameter should be a valid UUID.');
         }
         if (!Validation::uuid($aroForeignKey)) {
-            throw new InvalidArgumentException(__('The aro parameter should be a valid uuid.'));
+            throw new InvalidArgumentException('The aro parameter should be a valid UUID.');
         }
         $permissionType = $permissionType ?? Permission::READ;
 
         if (!$this->isValidPermissionType($permissionType)) {
-            $msg = __('The permission type should be in the list of allowed permission type.');
+            $msg = 'The permission type should be in the list of allowed permission type.';
             throw new InvalidArgumentException($msg);
         }
         $query = $this->findHighestByAcoAndAro($acoType, $acoForeignKey, $aroForeignKey)

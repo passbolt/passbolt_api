@@ -30,10 +30,10 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/ResourceTypes',
         'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Groups', 'app.Alt0/GroupsUsers',
         'app.Alt0/Permissions', 'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-        'app.Base/Groups', 'app.Base/Avatars', 'app.Base/Favorites',
+        'app.Base/Groups', 'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Passbolt/Tags.ResourcesTags') ? [] : ['className' => ResourcesTagsTable::class];
@@ -115,7 +115,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->assertBadRequestError('Could not validate tag data.');
         $response = json_decode(json_encode($this->_responseJsonBody), true);
         $this->assertTrue(Hash::check($response, 'slug.maxLength'));
-        $this->assertEquals('Tag can not be more than 128 characters in length.', Hash::get($response, 'slug.maxLength'));
+        $this->assertEquals('The tag length should be maximum 128 characters.', Hash::get($response, 'slug.maxLength'));
     }
 
     /**
@@ -136,7 +136,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         ]);
         $this->assertResponseCode(403);
         $result = $this->_getBodyAsString();
-        $this->assertContains('Missing CSRF token cookie', $result);
+        $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
     }
 
     /**

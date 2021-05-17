@@ -21,9 +21,9 @@ use Cake\Datasource\ConnectionManager;
 trait DatabaseTrait
 {
     /**
-     * Truncate the database tables.
+     * Drops all the database tables.
      */
-    public function truncateTables()
+    public static function dropAllTables()
     {
         $connection = ConnectionManager::get('default');
         $tables = $connection->execute('SHOW TABLES')->fetchAll();

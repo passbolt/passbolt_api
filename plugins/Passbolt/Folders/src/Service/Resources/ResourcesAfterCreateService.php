@@ -53,6 +53,7 @@ class ResourcesAfterCreateService
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
         $this->userHasPermissionService = new UserHasPermissionService();
@@ -87,7 +88,7 @@ class ResourcesAfterCreateService
             );
             $resource->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
-            throw new InternalErrorException(__('Could not create the resource, please try again later.'), 500, $e);
+            throw new InternalErrorException('Could not create the resource, please try again later.', 500, $e);
         }
     }
 
@@ -104,7 +105,7 @@ class ResourcesAfterCreateService
     private function validateParentFolder(UserAccessControl $uac, Resource $resource, ?string $folderParentId = null)
     {
         if (!Validation::uuid($folderParentId)) {
-            $errors = ['uuid' => 'The folder parent id is not valid.'];
+            $errors = ['uuid' => __('The folder parent identifier should be a valid UUID.')];
 
             $resource->setError('folder_parent_id', $errors);
 
@@ -115,7 +116,7 @@ class ResourcesAfterCreateService
         try {
             $this->foldersTable->get($folderParentId);
         } catch (RecordNotFoundException $e) {
-            $errors = ['folder_exists' => 'The folder parent must exist.'];
+            $errors = ['folder_exists' => __('The folder parent does not exist.')];
 
             $resource->setError('folder_parent_id', $errors);
 
@@ -131,7 +132,7 @@ class ResourcesAfterCreateService
             Permission::UPDATE
         );
         if (!$isAllowedToCreateIn) {
-            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+            $errors = ['has_folder_access' => __('You are not allowed to create content into the parent folder.')];
 
             $resource->setError('folder_parent_id', $errors);
 

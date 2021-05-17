@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
+### Added
+- Add support for subscription key to be stored in DB and read/updated via API endpoint
+
+### Fixed
+- Fix SQL error when filtering folders both by parent and name
+
 ## [3.1.0] - 2021-03-17
 ### Added
 - Add preview password plugin feature flag

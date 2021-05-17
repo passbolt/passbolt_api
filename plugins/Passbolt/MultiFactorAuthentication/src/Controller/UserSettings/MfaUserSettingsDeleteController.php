@@ -19,21 +19,18 @@ namespace Passbolt\MultiFactorAuthentication\Controller\UserSettings;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Validation\Validation;
 use Passbolt\MultiFactorAuthentication\Controller\MfaController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 
+/**
+ * @property \App\Model\Table\UsersTable $Users
+ */
 class MfaUserSettingsDeleteController extends MfaController
 {
     public const MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT = 'mfa.user_account.settings.delete';
-
-    /**
-     * @var \App\Model\Table\UsersTable
-     */
-    private $UsersTable;
 
     /**
      * @return void
@@ -42,19 +39,19 @@ class MfaUserSettingsDeleteController extends MfaController
     {
         parent::initialize();
 
-        $this->UsersTable = $this->loadModel('Users');
+        $this->loadModel('Users');
     }
 
     /**
      * @param \Cake\Event\Event $event An event instance
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         $userId = $this->getRequest()->getParam('userId', null);
 
         if (!$this->isAllowed($userId)) {
-            throw new ForbiddenException(__('You are not allowed to access this location'));
+            throw new ForbiddenException(__('You are not allowed to access this location.'));
         }
 
         return parent::beforeFilter($event);
@@ -70,9 +67,9 @@ class MfaUserSettingsDeleteController extends MfaController
             throw new BadRequestException(__('The user id is not valid.'));
         }
 
-        /** @var \App\Model\Entity\User $user */
         try {
-            $user = $this->UsersTable->findView($userId, $this->User->role())->firstOrFail();
+            /** @var \App\Model\Entity\User $user */
+            $user = $this->Users->findView($userId, $this->User->role())->firstOrFail();
         } catch (RecordNotFoundException $exception) {
             throw new BadRequestException(__('The user id is not valid.'));
         }
@@ -99,7 +96,7 @@ class MfaUserSettingsDeleteController extends MfaController
      */
     private function isAllowed(?string $userId = null)
     {
-        return isset($userId) && ($this->User->isAdmin() || $userId === $this->Auth->user('id'));
+        return isset($userId) && ($this->User->isAdmin() || $userId === $this->User->id());
     }
 
     /**

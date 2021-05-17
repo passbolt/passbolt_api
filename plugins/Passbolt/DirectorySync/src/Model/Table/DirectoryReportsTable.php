@@ -6,23 +6,30 @@ namespace Passbolt\DirectorySync\Model\Table;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
 
 /**
  * DirectoryReports Model
  *
- * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable|\Cake\ORM\Association\BelongsTo $ParentDirectoryReports
- * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable|\Cake\ORM\Association\HasMany $ChildDirectoryReports
- * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable|\Cake\ORM\Association\HasMany $DirectoryReportsItems
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport get($primaryKey, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport newEntity($data = null, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable&\Cake\ORM\Association\BelongsTo $ParentDirectoryReports
+ * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsTable&\Cake\ORM\Association\HasMany $ChildDirectoryReports
+ * @property \Passbolt\DirectorySync\Model\Table\DirectoryReportsItemsTable&\Cake\ORM\Association\HasMany $DirectoryReportsItems
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport newEntity(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport newEmptyEntity()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class DirectoryReportsTable extends Table
 {
@@ -32,7 +39,7 @@ class DirectoryReportsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -65,14 +72,14 @@ class DirectoryReportsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
             ->scalar('status')
             ->maxLength('status', 36)
             ->requirePresence('status', 'create')
-            ->notEmpty('status');
+            ->notEmptyString('status');
 
         return $validator;
     }
@@ -84,7 +91,7 @@ class DirectoryReportsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
     {
         $rules->add(
             function ($entity, $options) {
@@ -102,7 +109,7 @@ class DirectoryReportsTable extends Table
             'ParentDirectoryReports',
             [
                 'errorField' => 'parent_id',
-                'message' => __('The associated record could not be found'),
+                'message' => __('The associated record could not be found.'),
             ]
         );
 

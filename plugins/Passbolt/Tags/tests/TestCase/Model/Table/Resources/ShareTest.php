@@ -39,7 +39,7 @@ class ShareTest extends TagTestCase
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
@@ -47,7 +47,7 @@ class ShareTest extends TagTestCase
         $this->ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Permissions);
         unset($this->Resources);

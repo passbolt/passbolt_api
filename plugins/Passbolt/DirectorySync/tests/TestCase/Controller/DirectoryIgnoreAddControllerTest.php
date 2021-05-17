@@ -24,7 +24,7 @@ class DirectoryIgnoreAddControllerTest extends DirectorySyncIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'app.Base/Favorites',
     ];
 
