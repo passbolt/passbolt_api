@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2021-04-29 15:53+0000\n"
+"POT-Creation-Date: 2021-05-17 07:39+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -468,9 +468,6 @@ msgid "The file is not valid, or exceeds max size of {0} bytes."
 msgstr ""
 
 msgid "Could not save the data in {0} format."
-msgstr ""
-
-msgid "Could not save the avatar in cache."
 msgstr ""
 
 msgid "The parent comment identifier should be a valid UUID."
@@ -1145,6 +1142,12 @@ msgstr ""
 msgid "Validation success for authenticationToken {0}"
 msgstr ""
 
+msgid "Could not save the avatar in cache."
+msgstr ""
+
+msgid "Could not read the avatar in cache."
+msgstr ""
+
 msgid "Validation failed for comment {0}. {1}"
 msgstr ""
 
@@ -1347,6 +1350,9 @@ msgid "This theme is not supported."
 msgstr ""
 
 msgid "The folder id is not valid."
+msgstr ""
+
+msgid "Resources or folders supported only."
 msgstr ""
 
 msgid "The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt."
@@ -2202,6 +2208,12 @@ msgid "Please contact your administrator to enable multi-factor authentication."
 msgstr ""
 
 msgid "Please select a provider"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Disabled"
 msgstr ""
 
 msgid "What is multi-factor authentication?"
@@ -3116,6 +3128,9 @@ msgstr ""
 msgid "view users"
 msgstr ""
 
-msgid "View"
+msgid "The locale {0} is not valid or not supported."
+msgstr ""
+
+msgid "An Internal Error Has Occurred"
 msgstr ""
 

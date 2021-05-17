@@ -15,7 +15,7 @@
 
 use Migrations\AbstractMigration;
 
-class V300AddAvatarsTable extends AbstractMigration
+class V320AddAvatarsTable extends AbstractMigration
 {
     /**
      * Change Method.

@@ -19,7 +19,7 @@ namespace App\Test\Lib;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Test\Lib\Model\AvatarsModelTestTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
@@ -40,7 +40,7 @@ use Cake\TestSuite\TestCase;
 abstract class AppIntegrationTestCase extends TestCase
 {
     use ArrayTrait;
-    use AvatarsModelTrait;
+    use AvatarsModelTestTrait;
     use EntityTrait;
     use ErrorTrait;
     use GpgkeysModelTrait;

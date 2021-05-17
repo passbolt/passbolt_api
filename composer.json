@@ -120,22 +120,26 @@
         }
     },
     "scripts": {
-      "post-install-cmd": "App\\Console\\Installer::postInstall",
-      "post-create-project-cmd": "App\\Console\\Installer::postInstall",
-      "check": [
-        "@test",
-        "@cs-check"
-      ],
-      "cs-check": "phpcs --colors -p --ignore=*.js,*/templates/* ./src ./tests ./plugins",
-      "cs-fix": "phpcbf --colors --ignore=*.js,*/templates/* ./src ./tests ./plugins",
-      "install-dev": [
-        "@composer install --dev",
-        "npm install",
-        "./node_modules/.bin/grunt appjs-update",
-        "./node_modules/.bin/grunt styleguide-update"
-      ],
-      "stan": "phpstan analyse --memory-limit=-1",
-      "test": "phpunit --colors=always"
+        "post-install-cmd": "App\\Console\\Installer::postInstall",
+        "post-create-project-cmd": "App\\Console\\Installer::postInstall",
+        "check": [
+          "@test",
+          "@cs-check"
+        ],
+        "cs-check": "phpcs --colors -p --ignore=*.js,*/templates/* ./src ./tests ./plugins",
+        "cs-fix": "phpcbf --colors --ignore=*.js,*/templates/* ./src ./tests ./plugins",
+        "install-dev": [
+          "@composer install --dev",
+          "npm install",
+          "./node_modules/.bin/grunt appjs-update",
+          "./node_modules/.bin/grunt styleguide-update"
+        ],
+        "stan": "phpstan analyse --memory-limit=-1",
+        "test": "phpunit --colors=always",
+        "externalize-locale-strings": [
+          "./bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes",
+          "find resources/locales/en_UK -name '*.pot' -exec sh -c 'mv \"$1\" \"${1%.pot}.po\"' _ {} \\;"
+        ]
     },
     "prefer-stable": true
 }
