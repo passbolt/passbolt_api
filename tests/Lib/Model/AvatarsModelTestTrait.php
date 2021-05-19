@@ -41,6 +41,16 @@ trait AvatarsModelTestTrait
     }
 
     /**
+     * Asserts that an object has the urls required.
+     *
+     * @param object $avatar
+     */
+    protected function assertAvatarUrlAttributes($avatar)
+    {
+        $this->assertObjectHasAttributes(['url'], $avatar);
+    }
+
+    /**
      * @param \App\Model\Entity\Avatar|null $avatar
      * @return \App\Model\Entity\Avatar
      * @throws \Exception
