@@ -31,18 +31,18 @@ class AuthenticationTokensHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    private $table;
+    private $AuthenticationTokens;
 
     /**
      * AuthenticationTokens Healthcheck constructor.
      *
-     * @param \App\Model\Table\AuthenticationTokensTable|null $table secret table
+     * @param \App\Model\Table\AuthenticationTokensTable|null $table table
      */
     public function __construct(?AuthenticationTokensTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
         /** @phpstan-ignore-next-line */
-        $this->table = $table ?? TableRegistry::getTableLocator()->get('AuthenticationTokens');
+        $this->AuthenticationTokens = $table ?? TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $this->checks[self::CHECK_VALIDATES] = $this->healthcheckFactory(self::CHECK_VALIDATES, true);
     }
 
@@ -51,7 +51,7 @@ class AuthenticationTokensHealthcheckService extends AbstractHealthcheckService
      */
     public function check(): array
     {
-        $records = $this->table->find()->all();
+        $records = $this->AuthenticationTokens->find()->all();
 
         foreach ($records as $i => $record) {
             $this->canValidate($record);
@@ -68,7 +68,7 @@ class AuthenticationTokensHealthcheckService extends AbstractHealthcheckService
      */
     private function canValidate(AuthenticationToken $authenticationToken): void
     {
-        $copy = $this->table->newEntity($authenticationToken->toArray());
+        $copy = $this->AuthenticationTokens->newEntity($authenticationToken->toArray());
         $error = $copy->getErrors();
 
         if (count($error)) {

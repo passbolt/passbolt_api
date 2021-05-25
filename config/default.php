@@ -53,6 +53,9 @@ return [
                 AuthenticationToken::TYPE_LOGIN => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_LOGIN_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
+                AuthenticationToken::TYPE_MOBILE_TRANSFER => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_MOBILE_TRANSFER_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
             ]
         ],
 
@@ -186,6 +189,9 @@ return [
             'resourceTypes' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RESOURCE_TYPES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'mobile' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
         ],
 
         // Is public registration allowed.
@@ -208,6 +214,7 @@ return [
                     'AuthLogin' => ['loginPost'],
                     'RecoverComplete' => ['complete'],
                     'SetupComplete' => ['complete'],
+                    'TransfersUpdate' => ['updateNoSession'],
                 ]
             ],
             'csp' => env('PASSBOLT_SECURITY_CSP', true)

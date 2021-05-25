@@ -24,18 +24,18 @@ trait TableCleanupTrait
     /**
      * Delete all association records where associated model entities are soft deleted
      *
-     * @param string $modelName model
+     * @param string $association association
      * @param bool|null $dryRun false
      * @param \Cake\ORM\Query|null $query custom query to replace the default find if any
      * @return int Number of affected records
      */
-    public function cleanupSoftDeleted(string $modelName, ?bool $dryRun = false, ?Query $query = null): int
+    public function cleanupSoftDeleted(string $association, ?bool $dryRun = false, ?Query $query = null): int
     {
         if (!isset($query)) {
             $query = $this->query()
                 ->select(['id'])
-                ->leftJoinWith($modelName)
-                ->where([$modelName . '.deleted' => true]);
+                ->leftJoinWith($association)
+                ->where([$this->getModelNameFromAssociation($association) . '.deleted' => true]);
         }
         $records = Hash::extract($query->toArray(), '{n}.id');
         if ($dryRun) {
@@ -51,19 +51,19 @@ trait TableCleanupTrait
     /**
      * Delete all association records where associated model entities are deleted
      *
-     * @param string $modelName model
+     * @param string $association association
      * @param bool|null $dryRun false
      * @param \Cake\ORM\Query|null $query custom query to replace the default find if any
      * @return int Number of affected records
      */
-    public function cleanupHardDeleted(string $modelName, ?bool $dryRun = false, ?Query $query = null): int
+    public function cleanupHardDeleted(string $association, ?bool $dryRun = false, ?Query $query = null): int
     {
         if (!isset($query)) {
             $query = $this->query()
                 ->select(['id'])
-                ->leftJoinWith($modelName)
-                ->where(function ($exp, $q) use ($modelName) {
-                    return $exp->isNull($modelName . '.id');
+                ->leftJoinWith($association)
+                ->where(function ($exp, $q) use ($association) {
+                    return $exp->isNull($this->getModelNameFromAssociation($association) . '.id');
                 });
         }
         $records = Hash::extract($query->toArray(), '{n}.id');
@@ -75,5 +75,18 @@ trait TableCleanupTrait
         }
 
         return 0;
+    }
+
+    /**
+     * Extracts the string after the last dot.
+     *
+     * @param string $association Association path
+     * @return string
+     */
+    protected function getModelNameFromAssociation(string $association): string
+    {
+        $pos = strrpos($association, '.');
+
+        return $pos === false ? $association : substr($association, $pos + 1);
     }
 }
