@@ -102,16 +102,30 @@ class SaveTest extends AppTestCase
 
     public function testMobileTransfersModel_ValidateCurrentPage()
     {
-        $this->markTestIncomplete();
+        $t = $this->Transfers->newEntity([
+            'current_page' => 50000000000000,
+            'total_pages' => 1,
+        ]);
+        $errors = $t->getError('current_page');
+        $this->assertNotEmpty($errors['inferior_to_total']);
+        $this->assertNotEmpty($errors['lessThan']);
     }
 
     public function testMobileTransfersModel_ValidateTotalPage()
     {
-        $this->markTestIncomplete();
+        $t = $this->Transfers->newEntity([
+            'total_pages' => 50000000000000,
+        ]);
+        $errors = $t->getError('total_pages');
+        $this->assertNotEmpty($errors['lessThan']);
     }
 
     public function testMobileTransfersModel_ValidateStatus()
     {
-        $this->markTestIncomplete();
+        $t = $this->Transfers->newEntity([
+            'status' => 50000000000000,
+        ]);
+        $errors = $t->getError('status');
+        $this->assertNotEmpty($errors['inList']);
     }
 }

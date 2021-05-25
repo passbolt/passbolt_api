@@ -188,6 +188,8 @@ class TransfersUpdateService
      */
     private function patchTransferEntity(Transfer $transfer, array $data): Transfer
     {
+        $data['total_pages'] = $transfer->total_pages;
+
         return $this->Transfers->patchEntity($transfer, $data, [
             'accessibleFields' => [
                 'id' => true,
