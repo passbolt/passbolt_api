@@ -62,8 +62,8 @@ use Cake\Routing\Router;
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <input type="submit" class="button primary next big" value="<?= __('Next'); ?>">
+                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel medium"><?= __('Cancel'); ?></a>
+                    <input type="submit" class="button primary next medium" value="<?= __('Next'); ?>">
                 </div>
             </div>
         </div>

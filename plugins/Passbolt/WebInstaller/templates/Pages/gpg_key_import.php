@@ -44,8 +44,8 @@ $this->Html->script('web_installer/gpg_key_import', ['block' => 'scriptBottom'])
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <button type="submit" id="next" class="button primary next big"><?= __('Next'); ?> </button>
+                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel medium"><?= __('Cancel'); ?></a>
+                    <button type="submit" id="next" class="button primary next medium"><?= __('Next'); ?> </button>
                 </div>
             </div>
         </div>

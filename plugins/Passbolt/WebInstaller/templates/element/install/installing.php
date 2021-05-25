@@ -14,7 +14,7 @@
     </div>
     <div class="row last">
         <div class="input-wrapper">
-            <a href="#" class="button primary next big processing">next</a>
+            <a href="#" class="button primary next medium processing">next</a>
         </div>
     </div>
 </div>
