@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Mobile\Test\TestCase\Service\Transfers;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
@@ -174,6 +175,28 @@ class TransfersUpdateServiceTest extends AppTestCase
                 $this->fail($msg);
             }
         }
+    }
+
+    public function testMobileTransfersCreateService_Error_TransitionsNotAllowed_CurrentPageBiggerThanTotal()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer(
+            'ada',
+            Transfer::TRANSFER_STATUS_START,
+            1,
+            2
+        ));
+
+        $service = new TransfersUpdateService();
+
+        // Update - in progress
+        $data = [
+            'status' => Transfer::TRANSFER_STATUS_IN_PROGRESS,
+            'current_page' => 2,
+        ];
+        $this->expectException(ValidationException::class);
+        $service->update($transfer, $data, $uac);
     }
 
     public function testMobileTransfersUpdateService_Error_ValidationError()

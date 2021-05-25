@@ -97,7 +97,7 @@ class TransfersTable extends Table
             ->add('current_page', 'inferior_to_total', [
                 'rule' => function ($value, $context) {
                     if (isset($context['data']['total_pages'])) {
-                        return $value <= $context['data']['total_pages'];
+                        return $value < $context['data']['total_pages'];
                     }
 
                     return true;

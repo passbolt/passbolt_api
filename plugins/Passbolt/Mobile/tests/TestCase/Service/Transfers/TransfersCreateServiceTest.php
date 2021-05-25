@@ -78,7 +78,7 @@ class TransfersCreateServiceTest extends AppTestCase
         $service = new TransfersCreateService();
         $data = [
             'user_id' => 'nope',
-            'total_pages' => 0,
+            'total_pages' => 500000000000,
             'current_page' => -1,
             'hash' => 'nope',
         ];
@@ -90,7 +90,7 @@ class TransfersCreateServiceTest extends AppTestCase
             $errors = $exception->getErrors();
             $this->assertNotEmpty($errors);
             $this->assertNotEmpty($errors['hash']['lengthBetween']);
-            $this->assertNotEmpty($errors['total_pages']['greaterThan']);
+            $this->assertNotEmpty($errors['total_pages']['lessThan']);
             // shouldn't fail / overridden
             $this->assertFalse(isset($errors['user_id']));
             $this->assertFalse(isset($errors['current_page']));
