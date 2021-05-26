@@ -54,6 +54,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('profile', $this->_responseJsonBody[0]);
         $this->assertProfileAttributes($this->_responseJsonBody[0]->profile);
         // avatar
+        pr($this->_responseJsonBody[0]->profile);
         $this->assertObjectHasAttribute('avatar', $this->_responseJsonBody[0]->profile);
         $this->assertAvatarUrlAttributes($this->_responseJsonBody[0]->profile->avatar);
         // role

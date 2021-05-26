@@ -18,13 +18,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Avatars;
 
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\AvatarsModelTestTrait;
+use App\Test\Lib\Model\AvatarsModelTrait;
 use Cake\ORM\TableRegistry;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
 class CreateTest extends AppTestCase
 {
-    use AvatarsModelTestTrait;
+    use AvatarsModelTrait;
 
     /**
      * @var \App\Model\Table\AvatarsTable
