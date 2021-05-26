@@ -25,6 +25,7 @@ use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Log\Log;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -206,14 +207,16 @@ class AvatarsTable extends Table
         });
     }
 
-    /**
-     * Generate an Avatar contain clause to be inserted in a contain table.
-     *
-     * @return array
-     */
     public static function addContainAvatar(): array
     {
-        return ['Avatars',];
+        return [
+            'Avatars' => function (Query $q) {
+                // Formatter for empty avatars.
+                return $q->formatResults(function (CollectionInterface $avatars) {
+                    return AvatarsTable::formatResults($avatars);
+                });
+            },
+        ];
     }
 
     /**
