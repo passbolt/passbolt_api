@@ -207,6 +207,12 @@ class AvatarsTable extends Table
         });
     }
 
+    /**
+     * addContainAvatar
+     * Helper to add avatar contains options in a query
+     *
+     * @return array contain clause
+     */
     public static function addContainAvatar(): array
     {
         return [
