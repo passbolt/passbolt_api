@@ -21,6 +21,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Passbolt\Ee\Command\SubscriptionCheckCommand;
 
 /**
  * Passbolt command.
@@ -290,5 +291,28 @@ class PassboltCommand extends Command
         if (!$args->getOption('help') && ($command === PassboltCommand::class)) {
             $this->displayHelp($this->getOptionParser(), $args, $io);
         }
+    }
+
+    /**
+     * Check that license is valid.
+     * Dispatch to plugin Passbolt/license.subscription_check
+     *
+     * @param \Cake\Console\Arguments $args The command arguments.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
+     * @return bool status
+     */
+    protected function subscriptionCheck(Arguments $args, ConsoleIo $io): bool
+    {
+        if (Configure::read('passbolt.plugins.ee')) {
+            $code = $this->executeCommand(
+                SubscriptionCheckCommand::class,
+                $this->formatOptions($args),
+                $io
+            );
+
+            return $code === self::CODE_SUCCESS;
+        }
+
+        return true;
     }
 }
