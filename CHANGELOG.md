@@ -3,11 +3,32 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
+## [3.2.0] - 2021-05-31
 ### Added
-- Add support for subscription key to be stored in DB and read/updated via API endpoint
+- PB-5054 French internationalization
+- PB-5171 As logged-in user I can paginate the result of the users and resources index controllers
+- PB-5526 As admin I can save the subscription key as organization setting
+- PB-5854 As logged-in user I can save the locale of a user as account setting
+- PB-5854 As admin I can save the locale the organization as organization setting
+- PB-5985 As system administration I should be able to import a subscription key from the command line
 
 ### Fixed
-- Fix SQL error when filtering folders both by parent and name
+- PB-5523 Fix as system administrator I should see the healthcheck errors colored in red
+- PB-5860 Fix password max length should be set to 4096 in resource type definitions
+- PB-6007 Fix all group managers should receive an email when a new user is added to a group after a Ldap synchronization
+- PB-6031 Fix as LU I shouldn't get a fatal error when using a scalar instead of an array for some filters values
+- PB-6131 Fix healthcheck error messages display
+
+### Improved
+- PB-5975 Test code with PHPStan - level 4
+- Avatar table should use created and modified for timestamp and not created_at and modified_at
+- Move avatar in database
+
+### Maintenance
+- PB-5527 Migration to CakePHP4
+
+### Security
+- Remove X-XSS-Protection as per Cure53 audit recommendations
 
 ## [3.1.0] - 2021-03-17
 ### Added
@@ -924,7 +945,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.1.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.2.0...HEAD
+[3.2.0]: https://github.com/passbolt/passbolt_api/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/passbolt/passbolt_api/compare/v3.0.2...v3.1.0
 [3.0.2]: https://github.com/passbolt/passbolt_api/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/passbolt/passbolt_api/compare/v3.0.0...v3.0.1
