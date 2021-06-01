@@ -13,7 +13,7 @@ passbolt-ce-server (3.2.0-1) buster; urgency=medium
   * PB-5527 Migration to CakePHP4
   * Remove X-XSS-Protection as per Cure53 audit recommendations
 
- -- Daniel Del Rio <daniel@passbolt.com>  Tue, 1 Jun 2021 14:00:00 +0000
+ -- Daniel Del Rio <daniel@passbolt.com>  Tue, 1 Jun 2021 16:00:00 +0000
 
 passbolt-ce-server (3.1.0-1) buster; urgency=medium
   * Add preview password plugin feature flag
