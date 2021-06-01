@@ -21,7 +21,6 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Fixture\Alt0\SecretsFixture;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -66,8 +65,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     use ResourcesModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
-        GpgkeysFixture::class,
+    GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -89,7 +87,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = new FoldersDeleteService();
@@ -100,7 +98,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->unloadNotificationSettings();

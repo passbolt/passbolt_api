@@ -23,21 +23,21 @@ class UsersRecoverNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Avatars'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
 
     public function testUsersRecoverNotificationSuccess()
     {
         $this->setEmailNotificationSetting('send.user.recover', true);
 
         // setup
-        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ruth@passbolt.com']);
+        $this->postJson('/users/recover.json', ['username' => 'ruth@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
         $this->assertResponseOk();
         $this->assertResponseContains('You just opened an account');
 
         // recovery
-        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ada@passbolt.com']);
+        $this->postJson('/users/recover.json', ['username' => 'ada@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showlastemail/ada@passbolt.com');
         $this->assertResponseOk();

@@ -40,7 +40,7 @@ class MfaVerifyController extends MfaController
         $sessionId = $this->getRequest()->getSession()->id();
         if (isset($mfaVerifiedToken)) {
             if (MfaVerifiedToken::check($uac, $mfaVerifiedToken, $sessionId)) {
-                throw new BadRequestException(__('MFA is not required.'));
+                throw new BadRequestException(__('The multi-factor authentication is not required.'));
             }
         }
     }
@@ -56,11 +56,11 @@ class MfaVerifyController extends MfaController
     protected function _handleInvalidSettings(string $provider)
     {
         if ($this->mfaSettings->getAccountSettings() === null) {
-            throw new InternalErrorException(__('No valid MFA settings found.'));
+            throw new InternalErrorException('No valid multi-factor authentication settings found.');
         }
         if (!$this->mfaSettings->isProviderEnabled($provider)) {
             // for example a user is trying to force a check on a provider that is not set for the org
-            throw new BadRequestException(__('No valid MFA settings found for this provider.'));
+            throw new BadRequestException(__('No valid multi-factor authentication settings found for this provider.'));
         }
     }
 

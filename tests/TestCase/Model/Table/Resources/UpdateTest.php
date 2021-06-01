@@ -45,10 +45,10 @@ class UpdateTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys',
-        'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets',
+        'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
@@ -56,7 +56,7 @@ class UpdateTest extends AppTestCase
         $this->gpg = OpenPGPBackendFactory::get();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Resources);
 

@@ -45,60 +45,62 @@ class GpgKeyForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator): Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->requirePresence('public_key_armored', 'create', __('A public key is required.'))
-            ->notEmptyString('public_key_armored', __('A public key is required.'))
-            ->ascii('public_key_armored', __('The public key is not a valid ascii string.'))
+            ->requirePresence('public_key_armored', 'create', __('An OpenPGP public key is required.'))
+            ->notEmptyString('public_key_armored', __('The OpenPGP public key should not be empty.'))
+            ->ascii('public_key_armored', __('The OpenPGP public key should be a valid ASCII string.'))
             ->add('public_key_armored', 'is_public_key', [
                 'rule' => [$this, 'checkIsPublicKey'],
-                'message' => __('The key is not a valid public key'),
+                'message' => __('The key is not a valid OpenPGP public key.'),
             ])
             ->add('public_key_armored', 'has_no_expiry', [
                 'rule' => [$this, 'checkHasNoExpiry'],
-                'message' => __('The key cannot have an expiry date'),
+                'message' => __('The OpenPGP public key should not have an expiry date.'),
             ])
             ->add('public_key_armored', 'can_encrypt', [
                 'last' => true,
                 'rule' => [$this, 'checkCanEncrypt'],
-                'message' => __('The public key cannot be used to encrypt.'),
+                'message' => __('The OpenPGP public key cannot be used to encrypt.'),
             ]);
 
         $validator
-            ->requirePresence('private_key_armored', 'create', __('A private key is required.'))
-            ->notEmptyString('private_key_armored', __('A private key is required.'))
-            ->ascii('private_key_armored', __('The private key is not a valid ascii string.'))
+            ->requirePresence('private_key_armored', 'create', __('An OpenPGP private key is required.'))
+            ->notEmptyString('private_key_armored', __('The OpenPGP private key should not be empty.'))
+            ->ascii('private_key_armored', __('The OpenPGP private key should be a valid ASCII string.'))
             ->add('private_key_armored', 'is_private_key', [
                 'rule' => [$this, 'checkIsPrivateKey'],
-                'message' => __('The key is not a valid private key'),
+                'message' => __('The value is not a valid OpenPGP private key.'),
             ])
             ->add('private_key_armored', 'has_no_expiry', [
                 'rule' => [$this, 'checkHasNoExpiry'],
-                'message' => __('The key cannot have an expiry date'),
+                'message' => __('The OpenPGP private key should not have an expiry date.'),
             ])
             ->add('private_key_armored', 'can_decrypt', [
                 'last' => true,
                 'rule' => [$this, 'checkCanDecrypt'],
-                'message' => __('The private key cannot be used to decrypt.') . ' ' .
-                    __('Please note that passbolt does not support GPG key protected with a secret.'),
+                'message' => __('The OpenPGP private key cannot be used to decrypt.') . ' ' .
+                    __('Please note that passbolt does not support OpenPGP key protected with a secret.'),
             ]);
 
         $validator
             ->requirePresence('fingerprint', 'create', __('A fingerprint is required.'))
-            ->notEmptyString('fingerprint', __('A fingerprint is required.'))
-            ->alphaNumeric('fingerprint', __('The fingerprint is not a valid ascii string.'))
+            ->notEmptyString('fingerprint', __('The fingerprint should not be empty.'))
+            ->alphaNumeric('fingerprint', __('The fingerprint should be a valid alphanumeric string.'))
             ->add('fingerprint', 'match_public_private_fingerprints', [
                 'last' => true,
                 'rule' => [$this, 'checkPublicPrivateFingerprints'],
-                'message' => __('The fingerprint does not match the public and the private keys fingerprints.'),
+                'message' => __(
+                    'The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints.'
+                ),
             ]);
 
         return $validator;
     }
 
     /**
-     * Check true if field is a valid private gpg key
+     * Check true if field is a valid OpenPGP private key
      *
      * @param string $check Value to check
      * @param array $context A key value list of data containing the validation context.
@@ -120,7 +122,7 @@ class GpgKeyForm extends Form
     }
 
     /**
-     * Check true if field is a valid private gpg key
+     * Check true if field is a valid OpenPGP private key
      *
      * @param string $check Value to check
      * @param array $context A key value list of data containing the validation context.
@@ -142,7 +144,7 @@ class GpgKeyForm extends Form
     }
 
     /**
-     * Check true if field is a valid private gpg key
+     * Check true if field is a valid OpenPGP private key
      *
      * @param string $check Value to check
      * @param array $context A key value list of data containing the validation context.

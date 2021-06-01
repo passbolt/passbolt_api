@@ -23,11 +23,13 @@ use Cake\ORM\Entity;
  * Favorite Entity
  *
  * @property string $id
- * @property string $user_id
+ * @property string|null $user_id
  * @property string $foreign_key
  * @property string $foreign_model
  * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \App\Model\Entity\Resource $resource
+ * @property \App\Model\Entity\User|null $user
  */
 class Favorite extends Entity
 {

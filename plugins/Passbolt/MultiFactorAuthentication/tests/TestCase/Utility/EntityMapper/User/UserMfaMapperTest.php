@@ -34,7 +34,7 @@ class UserMfaMapperTest extends TestCase
      */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->isMfaEnabledServiceMock = $this->createMock(IsMfaEnabledService::class);
 

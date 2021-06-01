@@ -20,13 +20,15 @@ namespace Passbolt\AuditLog\Test\TestCase\Controller;
 use App\Utility\UuidFactory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
+/**
+ * @uses \Passbolt\AuditLog\Controller\UserLogsController
+ */
 class UserLogsControllerTest extends LogIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users',
         'app.Base/Gpgkeys',
         'app.Base/Profiles',
-        'app.Base/Avatars',
         'app.Base/Roles',
         'app.Base/Groups',
         'app.Base/GroupsUsers',

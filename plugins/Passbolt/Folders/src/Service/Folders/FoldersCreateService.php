@@ -64,6 +64,7 @@ class FoldersCreateService
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
         $this->permissionsCreateService = new PermissionsCreateService();
@@ -78,7 +79,7 @@ class FoldersCreateService
      * @return \Passbolt\Folders\Model\Entity\Folder
      * @throws \Exception If an unexpected error occurred
      */
-    public function create(UserAccessControl $uac, ?array $data = [])
+    public function create(UserAccessControl $uac, ?array $data = []): Folder
     {
         $folder = null;
 
@@ -101,9 +102,9 @@ class FoldersCreateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param array $data The folder data
-     * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
+     * @return \Passbolt\Folders\Model\Entity\Folder
      */
-    private function createFolder(UserAccessControl $uac, array $data)
+    private function createFolder(UserAccessControl $uac, array $data): Folder
     {
         $folder = $this->buildFolderEntity($uac, $data);
         $this->handleValidationErrors($folder);
@@ -118,9 +119,9 @@ class FoldersCreateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param array $data The folder data
-     * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
+     * @return \Passbolt\Folders\Model\Entity\Folder
      */
-    private function buildFolderEntity(UserAccessControl $uac, array $data)
+    private function buildFolderEntity(UserAccessControl $uac, array $data): Folder
     {
         $userId = $uac->getId();
         $data = [
@@ -172,7 +173,7 @@ class FoldersCreateService
         try {
             $this->permissionsCreateService->create($uac, $permissionData);
         } catch (Exception $error) {
-            throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $error);
+            throw new InternalErrorException('Could not create the folder, please try again later.', 500, $error);
         }
     }
 
@@ -199,7 +200,7 @@ class FoldersCreateService
                 ->create($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $folderParentId);
             $folder->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
-            throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $e);
+            throw new InternalErrorException('Could not create the folder, please try again later.', 500, $e);
         }
     }
 
@@ -219,7 +220,7 @@ class FoldersCreateService
         try {
             $this->foldersTable->get($folderParentId);
         } catch (RecordNotFoundException $e) {
-            $errors = ['folder_exists' => 'The folder parent must exist.'];
+            $errors = ['folder_exists' => __('The folder parent must exist.')];
 
             $folder->setError('folder_parent_id', $errors);
 
@@ -231,7 +232,7 @@ class FoldersCreateService
         $isAllowedToMoveIn = $this->userHasPermissionService
             ->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
         if (!$isAllowedToMoveIn) {
-            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+            $errors = ['has_folder_access' => __('You are not allowed to create content into the parent folder.')];
 
             $folder->setError('folder_parent_id', $errors);
 

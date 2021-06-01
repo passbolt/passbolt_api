@@ -18,27 +18,29 @@ declare(strict_types=1);
 namespace App\Service\Permissions;
 
 use App\Model\Table\PermissionsTable;
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 
 class PermissionsGetUsersIdsHavingAccessToService
 {
+    use ModelAwareTrait;
+
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private $GroupsUsers;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private $Permissions;
 
     /**
      * Instantiate the service
      */
     public function __construct()
     {
-        $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $this->loadModel('GroupsUsers');
+        $this->loadModel('Permissions');
     }
 
     /**
@@ -50,19 +52,19 @@ class PermissionsGetUsersIdsHavingAccessToService
     public function getUsersIdsHavingAccessTo(string $acoForeignKey)
     {
         // Retrieve the groups having access to the aco.
-        $groupsIdsHavingAccessQuery = $this->permissionsTable
+        $groupsIdsHavingAccessQuery = $this->Permissions
             ->findByAroAndAcoForeignKey(PermissionsTable::GROUP_ARO, $acoForeignKey)
             ->select('aro_foreign_key');
 
         // Retrieve the groups members having access to the aco.
-        $groupUsersIds = $this->groupsUsersTable->find()
+        $groupUsersIds = $this->GroupsUsers->find()
             ->where(['group_id IN' => $groupsIdsHavingAccessQuery])
             ->select('user_id')
             ->extract('user_id')
             ->toArray();
 
         // Retrieve the users having access to the aco.
-        $usersIds = $this->permissionsTable
+        $usersIds = $this->Permissions
             ->findByAroAndAcoForeignKey(PermissionsTable::USER_ARO, $acoForeignKey)
             ->select('aro_foreign_key')
             ->extract('aro_foreign_key')

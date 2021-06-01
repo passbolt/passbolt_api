@@ -28,6 +28,9 @@ use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
+/**
+ * @uses \Passbolt\DirectorySync\Controller\DirectorySettingsController
+ */
 class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
 {
     use UserAccessControlTrait;
@@ -37,7 +40,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         'app.Base/Roles',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.directorySync.test', 'Nested');

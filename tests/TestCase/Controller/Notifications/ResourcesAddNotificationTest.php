@@ -27,7 +27,7 @@ class ResourcesAddNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles',
-        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites',
+        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Favorites',
         'app.Base/ResourceTypes',
     ];
 
@@ -70,13 +70,13 @@ W3AI8+rWjK8MGH2T88hCYI/6
         return $data;
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadNotificationSettings();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->unloadNotificationSettings();
         parent::tearDown();

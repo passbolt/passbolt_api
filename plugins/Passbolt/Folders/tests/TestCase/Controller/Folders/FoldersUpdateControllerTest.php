@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 
 use App\Model\Entity\Permission;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -46,8 +45,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-        AvatarsFixture::class,
-        GpgkeysFixture::class,
+    GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -86,7 +84,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
         $this->authenticateAs('ada');
         $folderId = 'invalid-id';
         $this->putJson("/move/folder/$folderId.json?api-version=2");
-        $this->assertError(400, 'The folder id is not valid.');
+        $this->assertError(400, 'The object identifier should be a valid UUID.');
     }
 
     public function testFoldersUpdateError_ValidationErrors()

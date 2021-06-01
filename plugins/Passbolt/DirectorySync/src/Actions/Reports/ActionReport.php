@@ -46,16 +46,16 @@ class ActionReport implements \Serializable
     public function __construct(string $message, string $model, string $action, string $status, $data)
     {
         if (!self::isValidModel($model)) {
-            throw new \InvalidArgumentException(__('This is not a valid action report. Invalid Model.'));
+            throw new \InvalidArgumentException('This is not a valid action report. Invalid Model.');
         }
         if (!self::isValidAction($action)) {
-            throw new \InvalidArgumentException(__('This is not a valid action report. Invalid Action: {0}', $action));
+            throw new \InvalidArgumentException('This is not a valid action report. Invalid Action.');
         }
         if (!self::isValidStatus($status)) {
-            throw new \InvalidArgumentException(__('This is not a valid action report. Invalid Status.'));
+            throw new \InvalidArgumentException('This is not a valid action report. Invalid Status.');
         }
         if (!self::isValidData($data)) {
-            throw new \InvalidArgumentException(__('This is not a valid action report. Invalid Data.'));
+            throw new \InvalidArgumentException('This is not a valid action report. Invalid Data.');
         }
         $this->message = $message;
         $this->model = $model;
@@ -210,8 +210,7 @@ class ActionReport implements \Serializable
     {
         return $model === Alias::MODEL_USERS
             || $model === Alias::MODEL_GROUPS
-            || $model === Alias::MODEL_GROUPS_USERS
-            || $model === SyncAction::MEMBERS;
+            || $model === Alias::MODEL_GROUPS_USERS;
     }
 
     /**

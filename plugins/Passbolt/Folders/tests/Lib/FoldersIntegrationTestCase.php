@@ -23,7 +23,7 @@ use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 
 abstract class FoldersIntegrationTestCase extends AppIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -43,7 +43,7 @@ abstract class FoldersIntegrationTestCase extends AppIntegrationTestCase
         $resourcesTable->addBehavior(FolderizableBehavior::class);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 

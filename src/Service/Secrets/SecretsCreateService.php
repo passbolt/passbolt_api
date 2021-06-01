@@ -34,6 +34,7 @@ class SecretsCreateService
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
     }
 
@@ -44,7 +45,7 @@ class SecretsCreateService
      * @return \App\Model\Entity\Secret
      * @throws \Exception
      */
-    public function create(array $data)
+    public function create(array $data): Secret
     {
         $secret = $this->buildEntity($data);
         $this->handleValidationErrors($secret);
@@ -89,7 +90,7 @@ class SecretsCreateService
     {
         $errors = $secret->getErrors();
         if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate the secret data.'), $secret, $this->secretsTable);
+            throw new ValidationException(__('Could not validate secret data.'), $secret, $this->secretsTable);
         }
     }
 }

@@ -23,17 +23,23 @@ use Cake\Validation\Validator;
 /**
  * ResourcesTags Model
  *
- * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \Passbolt\Tags\Model\Table\TagsTable|\Cake\ORM\Association\BelongsTo $Tags
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag get($primaryKey, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag newEntity($data = null, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Tags
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag get($primaryKey, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag newEntity(array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag newEmptyEntity()
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class ResourcesTagsTable extends Table
 {
@@ -43,7 +49,7 @@ class ResourcesTagsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -74,20 +80,16 @@ class ResourcesTagsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->uuid('user_id')
-            ->allowEmpty('user_id');
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->allowEmptyString('user_id');
 
         $validator
-            ->uuid('resource_id')
-            ->notEmpty('resource_id');
-
-        $validator
-            ->uuid('resource_id')
-            ->notEmpty('resource_id');
+            ->uuid('resource_id', __('The resource identifier should be a valid UUID.'))
+            ->notEmptyString('resource_id', __('The resource identifier should not be empty.'));
 
         return $validator;
     }
@@ -99,7 +101,7 @@ class ResourcesTagsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
     {
         $rules->add($rules->existsIn(['resource_id'], 'Resources'));
         $rules->add($rules->existsIn(['tag_id'], 'Tags'));

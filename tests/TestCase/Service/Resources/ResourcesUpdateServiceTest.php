@@ -36,6 +36,7 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 /**
  * \App\Service\Resources\ResourcesUpdateService Test Case
@@ -72,7 +73,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
@@ -201,8 +202,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate resource data.', $e->getMessage());
-            $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'name._empty'));
         }
     }
 
@@ -234,8 +234,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate resource data.', $e->getMessage());
-            $errors = ['secrets' => ['secrets_provided' => 'The secrets of all the users having access to the resource are required.']];
-            $this->assertEquals($errors, $e->getErrors());
+            $this->assertNotEmpty(Hash::get($e->getErrors(), 'secrets.secrets_provided'));
         }
     }
 

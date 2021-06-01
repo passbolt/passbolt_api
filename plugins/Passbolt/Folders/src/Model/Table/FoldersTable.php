@@ -26,16 +26,30 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 /**
  * Folders Model
  *
- * @method \Passbolt\Folders\Model\Entity\Folder get($primaryKey, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder newEntity($data = null, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder|false save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Table\Folder findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder get($primaryKey, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder newEntity(array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Passbolt\Folders\Model\Behavior\FolderizableBehavior
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasOne $Permission
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
+ * @property \Passbolt\Folders\Model\Table\FoldersRelationsTable&\Cake\ORM\Association\HasMany $FoldersRelations
+ * @property \Passbolt\Folders\Model\Table\FoldersTable&\Cake\ORM\Association\BelongsToMany $ChildrenFolders
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsToMany $ChildrenResources
+ * @property \Passbolt\Folders\Model\Table\FoldersHistoryTable&\Cake\ORM\Association\BelongsTo $FoldersHistory
+ * @method \Passbolt\Folders\Model\Entity\Folder newEmptyEntity()
+ * @method \Passbolt\Folders\Model\Entity\Folder[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
  */
 class FoldersTable extends Table
 {
@@ -47,7 +61,7 @@ class FoldersTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -112,24 +126,40 @@ class FoldersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
-            ->utf8Extended('name', __('The name is not a valid utf8 string.'))
+            ->utf8Extended('name', __('The name should be a valid UTF8 string.'))
             ->maxLength('name', 64, __('The name length should be maximum {0} characters.', 64))
             ->requirePresence('name', 'create', __('A name is required.'))
-            ->allowEmptyString('name', __('The name cannot be empty.'), false);
+            ->allowEmptyString('name', __('The name should not be empty.'), false);
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by', null, false);
+            ->uuid('created_by', __('The identifier of the user who created the folder should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the folder is required.')
+            )
+            ->notEmptyString(
+                'created_by',
+                __('The identifier of the user who created the folder should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by', 'create')
-            ->notEmptyString('modified_by', null, false);
+            ->uuid('modified_by', __('The identifier of the user who modified the folder should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who modified the folder is required.')
+            )
+            ->notEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the folder should not be empty.'),
+                false
+            );
 
         return $validator;
     }

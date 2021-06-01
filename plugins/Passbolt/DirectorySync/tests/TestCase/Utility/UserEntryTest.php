@@ -26,7 +26,7 @@ use Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry;
 
 class UserEntryTest extends DirectorySyncIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.directorySync.enabled', true);

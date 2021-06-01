@@ -71,7 +71,7 @@ class EmailNotificationSettingsForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator): Validator
+    public function validationDefault(Validator $validator): Validator
     {
         foreach ($this->notificationSettingsDefinitions as $notificationSettingsDefinition) {
             $notificationSettingsDefinition->buildValidator($validator);

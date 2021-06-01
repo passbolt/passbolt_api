@@ -1,0 +1,12 @@
+parameters:
+    level: 4
+    checkMissingIterableValueType: false
+    treatPhpDocTypesAsCertain: false
+    paths:
+        - src
+        - plugins
+    bootstrapFiles:
+        - config/bootstrap.php
+    excludes_analyse:
+        - **/templates/**
+        - **/tests/**

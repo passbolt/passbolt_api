@@ -23,6 +23,7 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
@@ -34,15 +35,32 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeS
 /**
  * FoldersRelations Model
  *
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEntity($data = null, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Passbolt\Folders\Model\Table\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Passbolt\Folders\Model\Table\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Passbolt\Folders\Model\Table\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, callable $callback = null, ?array $options = [])
- * @mixin \Passbolt\Folders\Model\Table\TimestampBehavior
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEntity(array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, ?callable $callback = null, $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Folders
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $FoldersParents
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \Passbolt\Folders\Model\Table\FoldersRelationsHistoryTable&\Cake\ORM\Association\BelongsTo $FoldersRelationsHistory
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEmptyEntity()
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findByForeignId(string $id)
+ * @method \Cake\ORM\Query findById(string $id)
+ * @method \Cake\ORM\Query findByUserId(string $userId)
+ * @method \Cake\ORM\Query findByFolderParentId(string $folderParentId)
+ * @method \Cake\ORM\Query findByUserIdAndForeignModel(string $userId, string $foreignModel)
+ * @method \Cake\ORM\Query findByForeignIdAndFolderParentId(string $foreignId, string $folderParentId)
+ * @method \Cake\ORM\Query findByUserIdAndFolderParentId(string $userId, string $folderParentId)
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class FoldersRelationsTable extends Table
 {
@@ -63,7 +81,7 @@ class FoldersRelationsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -92,32 +110,32 @@ class FoldersRelationsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): \Cake\Validation\Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
             ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS, __(
-                'The foreign model must be one of the following: {0}.',
+                'The child object type should be one of the following: {0}.',
                 implode(', ', self::ALLOWED_FOREIGN_MODELS)
             ))
-            ->requirePresence('foreign_model', 'create', __('The foreign model is required.'))
-            ->notEmptyString('foreign_model', __('The foreign model cannot be empty'));
+            ->requirePresence('foreign_model', 'create', __('The child object type is required.'))
+            ->notEmptyString('foreign_model', __('The child object type should not be empty.'));
 
         $validator
-            ->uuid('foreign_id')
-            ->requirePresence('foreign_id', 'create', __('The foreign id is required.'))
-            ->notEmptyString('foreign_id', __('The foreign id cannot be empty.'), false);
+            ->uuid('foreign_id', __('The child object identifier should be a valid UUID.'))
+            ->requirePresence('foreign_id', 'create', __('The child object identifier required.'))
+            ->notEmptyString('foreign_id', __('The child object identifier should not be empty.'), false);
 
         $validator
-            ->uuid('user_id')
-            ->requirePresence('user_id', 'create')
-            ->notEmptyString('user_id', __('The user id cannot be empty.'), false);
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'), false);
 
         $validator
-            ->uuid('folder_parent_id')
+            ->uuid('folder_parent_id', __('The folder parent identifier should be a valid UUID.'))
             ->allowEmptyString('folder_parent_id');
 
         return $validator;
@@ -130,18 +148,18 @@ class FoldersRelationsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
     {
         $rules->addCreate(
             $rules->isUnique(
                 ['foreign_id', 'user_id'],
-                __('A folder relation already exists for the given foreign model and user.')
+                __('A folder relation already exists for the given child object and user.')
             ),
             'folder_relation_unique'
         );
         $rules->addCreate([$this, 'foreignIdExistsRule'], 'foreign_model_exists', [
             'errorField' => 'foreign_id',
-            'message' => __('The foreign model does not exist.'),
+            'message' => __('The child object does not exist.'),
         ]);
         $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
             'errorField' => 'user_id',
@@ -399,7 +417,7 @@ class FoldersRelationsTable extends Table
      *
      * @param string $userId The target user to look for
      * @param string $foreignId The item identifier
-     * @return ?string|null
+     * @return string|null
      */
     public function getItemFolderParentIdInUserTree(string $userId, string $foreignId): ?string
     {
@@ -448,12 +466,12 @@ class FoldersRelationsTable extends Table
      *
      * @param string $foreignId The target entity id
      * @param string|null $folderParentId The target entity parent id
-     * @return \Passbolt\Folders\Model\Table\DateTime
+     * @return \Cake\I18n\FrozenTime|null
      */
     public function getRelationOldestCreatedDate(
         string $foreignId,
         ?string $folderParentId = FoldersRelation::ROOT
-    ) {
+    ): ?FrozenTime {
         $conditions = [
             'foreign_id' => $foreignId,
             'folder_parent_id' => $folderParentId,

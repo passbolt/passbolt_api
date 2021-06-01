@@ -30,7 +30,7 @@ class IsValidTest extends AppTestCase
     public $AuthenticationTokens;
     public $fixtures = [ 'app.Base/Users'];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');

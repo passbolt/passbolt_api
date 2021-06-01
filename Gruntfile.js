@@ -30,7 +30,9 @@ module.exports = function(grunt) {
     webroot: 'webroot/',
     img: 'webroot/img/',
     css: 'webroot/css/',
-    js: 'webroot/js/'
+    js: 'webroot/js/',
+    locales: 'resources/locales/',
+    cakephp_locales: 'vendor/cakephp/localized/resources/locales/'
   };
 
   /**
@@ -101,6 +103,8 @@ module.exports = function(grunt) {
             // Image for inputs and controls
             'controls/check_black.svg',
             'controls/check_white.svg',
+            'controls/chevron-down_black.svg',
+            'controls/chevron-down_white.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
             'controls/dot_black.svg',
@@ -140,6 +144,12 @@ module.exports = function(grunt) {
           src: ['api_main.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
           expand: true
+        },{
+          // Translation files
+          cwd: paths.node_modules_styleguide + 'src/locales',
+          src: ['**'],
+          dest: paths.webroot + 'locales',
+          expand: true
         }, {
           // Javascript applications
           cwd: paths.node_modules_styleguide + 'build/js/dist',
@@ -147,6 +157,15 @@ module.exports = function(grunt) {
           dest: paths.js + 'app',
           expand: true
         },]
+      },
+      locales: {
+        // CakePHP Locale Resources
+        files: [{
+          cwd: paths.cakephp_locales,
+          src: ['fr_FR/*.po'],
+          dest: paths.locales,
+          expand: true
+        }]
       }
     },
 

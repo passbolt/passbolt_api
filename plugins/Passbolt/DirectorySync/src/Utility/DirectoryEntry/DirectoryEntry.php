@@ -41,42 +41,42 @@ abstract class DirectoryEntry implements ArrayAccess
     /**
      * created date.
      *
-     * @var string.
+     * @var string|\Cake\I18n\FrozenTime
      */
     public $created;
 
     /**
      * modified date.
      *
-     * @var string.
+     * @var string|\Cake\I18n\FrozenTime
      */
     public $modified;
 
     /**
      * Object type.
      *
-     * @var null
+     * @var mixed|null
      */
     public $type = null;
 
     /**
      * Corresponding ldap object.
      *
-     * @var null
+     * @var \LdapTools\Object\LdapObject|null
      */
     private $ldapObject = null;
 
     /**
      * Mapping rules.
      *
-     * @var null
+     * @var array|null
      */
     private $mappingRules = null;
 
     /**
      * Validation errors.
      *
-     * @var
+     * @var array
      */
     private $errors = [];
 
@@ -213,7 +213,7 @@ abstract class DirectoryEntry implements ArrayAccess
         $this->mappingRules = $mappingRules;
 
         $this->id = $this->getFieldValue('id');
-        $this->dn = $ldapObject->getDn();
+        $this->dn = $ldapObject->get('dn');
 
         $created = $this->getFieldValue('created');
         if (!empty($created)) {

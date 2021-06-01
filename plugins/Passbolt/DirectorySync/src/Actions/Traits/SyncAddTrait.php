@@ -27,6 +27,9 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
+/**
+ * @property array|mixed $defaultGroupAdmin
+ */
 trait SyncAddTrait
 {
     /**
@@ -34,15 +37,15 @@ trait SyncAddTrait
      *
      * @param array $data data
      * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|null $entry entry
-     * @param \Cake\ORM\Entity $existingEntity (User or Group)
+     * @param \App\Model\Entity\User|\App\Model\Entity\Group $existingEntity (User or Group)
      * @return void
      */
-    public function handleAddExist(array $data, ?DirectoryEntry $entry = null, Entity $existingEntity)
+    public function handleAddExist(array $data, ?DirectoryEntry $entry, Entity $existingEntity)
     {
         // Do not overly report already successfully synced entities
         if (isset($entry) && !isset($entry->foreign_key)) {
             // If entity in directory was created before the entity in the db, we update the field and send report.
-            if ($data['directory_created']->lte($existingEntity->created)) {
+            if ($data['directory_created']->lte($existingEntity->get('created'))) {
                 $this->DirectoryEntries->updateForeignKey($entry, $existingEntity->id);
                 $this->addReportItem(new ActionReport(
                     __(
@@ -106,7 +109,7 @@ trait SyncAddTrait
 
         $associatedEntity = $entry->getAssociatedEntity();
         // do not overly report ignored record when there is nothing to do
-        if ((isset($existingEntity) && isset($associatedEntity) && !$existingEntity->deleted)) {
+        if ((isset($existingEntity) && isset($associatedEntity) && !$existingEntity->get('deleted'))) {
             return;
         }
         if ($ignoreEntity) {
@@ -143,6 +146,7 @@ trait SyncAddTrait
 
         $status = Alias::STATUS_ERROR;
         $reportData = null;
+        $entity = null;
         try {
             $reportData = $entity = $this->createEntity($data, $entry);
             $status = Alias::STATUS_SUCCESS;
@@ -179,11 +183,11 @@ trait SyncAddTrait
      * Handle add deleted
      *
      * @param array $data data
-     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|null $entry entry
-     * @param \Cake\ORM\Entity $existingEntity existingEntity
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
+     * @param \App\Model\Entity\User|\App\Model\Entity\Group $existingEntity existingEntity
      * @return void
      */
-    public function handleAddDeleted(array $data, ?DirectoryEntry $entry = null, Entity $existingEntity)
+    public function handleAddDeleted(array $data, DirectoryEntry $entry, Entity $existingEntity)
     {
         if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'create')) {
             return;
@@ -192,7 +196,8 @@ trait SyncAddTrait
         // if the entity was created in ldap and then deleted in passbolt
         // do not try to recreate
         $status = Alias::STATUS_ERROR;
-        if ($data['directory_created']->lt($existingEntity->modified)) {
+        $entity = null;
+        if ($data['directory_created']->lt($existingEntity->get('modified'))) {
             $this->DirectoryEntries->updateForeignKey($entry, null);
             $reportData = new SyncError($entry, null);
             $msg = __(
@@ -203,7 +208,6 @@ trait SyncAddTrait
         } else {
             // if the entity was delete in passbolt and then created in ldap
             // try to recreate
-            $entity = null;
             try {
                 $reportData = $entity = $this->createEntity($data, $entry);
                 $status = Alias::STATUS_SUCCESS;

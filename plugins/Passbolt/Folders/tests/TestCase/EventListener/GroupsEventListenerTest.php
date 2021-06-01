@@ -31,7 +31,7 @@ class GroupsEventListenerTest extends FoldersIntegrationTestCase
     */
    //private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         //$this->sut = new GroupsEventListener();
 

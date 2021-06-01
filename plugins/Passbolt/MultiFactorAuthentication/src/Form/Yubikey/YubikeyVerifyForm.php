@@ -49,9 +49,9 @@ class YubikeyVerifyForm extends MfaForm
      * Build form schema
      *
      * @param \Cake\Form\Schema $schema schema
-     * @return $this|\Cake\Form\Schema
+     * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('hotp', ['type' => 'string']);
@@ -63,11 +63,11 @@ class YubikeyVerifyForm extends MfaForm
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->requirePresence('hotp', __('An OTP is required.'))
-            ->notEmpty('hotp', __('The OTP should not be empty.'))
+            ->notEmptyString('hotp', __('The OTP should not be empty.'))
             ->add('hotp', ['isValidModhex' => [
                 'rule' => [$this, 'isValidModhex'],
                 'last' => true,

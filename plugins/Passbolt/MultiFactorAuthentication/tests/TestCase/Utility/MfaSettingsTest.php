@@ -75,7 +75,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');

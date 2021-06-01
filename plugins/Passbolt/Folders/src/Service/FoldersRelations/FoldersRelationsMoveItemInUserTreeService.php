@@ -53,6 +53,7 @@ class FoldersRelationsMoveItemInUserTreeService
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line  */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $this->folderRelationsDetectStronglyConnectedComponents = new FoldersRelationsDetectStronglyConnectedComponents(); //phpcs:ignore
         $this->foldersRelationsRepairStronglyConnectedComponents = new FoldersRelationsRepairStronglyConnectedComponents(); //phpcs:ignore
@@ -101,7 +102,7 @@ class FoldersRelationsMoveItemInUserTreeService
     {
         $exists = $this->foldersRelationsTable->isItemInUserTree($uac->getId(), $foreignId, $foreignModel);
         if (!$exists) {
-            throw new NotFoundException(__('The {0} does not exist.', strtolower($foreignModel)));
+            throw new NotFoundException(__('The object to move does not exist.'));
         }
     }
 

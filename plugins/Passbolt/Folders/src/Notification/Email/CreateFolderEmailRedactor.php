@@ -34,7 +34,7 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @var string
-     * @see Template/Email/html/LU/folder_create.ctp
+     * @see templates/email/html/LU/folder_delete.php
      */
     public const TEMPLATE = 'Passbolt/Folders.LU/folder_create';
 
@@ -48,6 +48,7 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->usersTable = TableRegistry::getTableLocator()->get('Users');
     }
 

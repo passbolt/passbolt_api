@@ -35,6 +35,13 @@ class GroupEntry extends DirectoryEntry
     public $group;
 
     /**
+     * Level.
+     *
+     * @var int
+     */
+    public $level;
+
+    /**
      * Type of object (group).
      *
      * @var string
@@ -142,13 +149,13 @@ class GroupEntry extends DirectoryEntry
         parent::_validate();
 
         if (empty($this->group['name'])) {
-            $this->_addError('name', 'group name could not be retrieved');
+            $this->_addError('name', __('A group name is required.'));
         }
 
         if (isset($this->group['members']) && !empty($this->group['members'])) {
             foreach ($this->group['members'] as $groupMember) {
                 if (!LdapUtilities::isValidLdapObjectDn($groupMember)) {
-                    $this->_addError('members', 'a group member does not match the expected DN format');
+                    $this->_addError('members', __('A group member does not match the expected DN format.'));
                 }
             }
         }

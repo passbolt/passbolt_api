@@ -45,7 +45,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');

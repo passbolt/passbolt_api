@@ -26,7 +26,7 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
 {
     use AssertGroupsTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->action = new GroupSyncAction();

@@ -22,7 +22,7 @@ class DebugSmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
      * @param string $checkCode check code
      * @return null|string
      */
-    protected function _smtpSend($data, $checkCode = '250')
+    protected function _smtpSend(?string $data, $checkCode = '250'): ?string
     {
         $code = parent::_smtpSend($data, $checkCode);
         $this->_bufferTrace($data, $this->getLastResponse());

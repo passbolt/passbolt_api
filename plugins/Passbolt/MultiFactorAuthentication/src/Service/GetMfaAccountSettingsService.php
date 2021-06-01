@@ -33,8 +33,8 @@ class GetMfaAccountSettingsService
     public function getSettingsForUser(User $user)
     {
         /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting $mfaSettings */
-        $mfaSettings = $user->get(MfaEntityMapper::MFA_SETTINGS_PROPERTY) ?? false;
-        if (!$mfaSettings) {
+        $mfaSettings = $user->get(MfaEntityMapper::MFA_SETTINGS_PROPERTY) ?? null;
+        if (empty($mfaSettings)) {
             throw new Exception('Unable to retrieve MFA settings for user');
         }
 

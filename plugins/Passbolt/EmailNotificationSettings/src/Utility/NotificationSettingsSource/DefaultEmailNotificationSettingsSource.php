@@ -33,7 +33,7 @@ class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificatio
     /**
      * @param \Cake\Form\Schema $schema Schema to use to build notification settings
      */
-    public function __construct(Schema $schema)
+    final public function __construct(Schema $schema)
     {
         $this->schema = $schema;
     }
@@ -46,7 +46,7 @@ class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificatio
      */
     public static function fromCakeForm(CakeForm $form)
     {
-        return new static($form->schema());
+        return new static($form->getSchema());
     }
 
     /**

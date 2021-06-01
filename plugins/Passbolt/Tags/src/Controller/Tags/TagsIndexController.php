@@ -18,6 +18,9 @@ namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
 
+/**
+ * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
+ */
 class TagsIndexController extends AppController
 {
     /**

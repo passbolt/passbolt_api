@@ -30,7 +30,7 @@ class GetByFingerprintAndUserIdTest extends AppTestCase
     public $fingerprint;
     public $Gpgkeys;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');

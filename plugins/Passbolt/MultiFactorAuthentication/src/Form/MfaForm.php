@@ -50,11 +50,11 @@ class MfaForm extends Form
      * @return bool False on validation failure, otherwise returns the
      *   result of the `_execute()` method.
      */
-    public function execute(array $data)
+    public function execute(array $data): bool
     {
         if (!$this->validate($data)) {
             throw new CustomValidationException(
-                __('Something went wrong when validating the OTP.'),
+                __('Something went wrong when validating the one-time password.'),
                 $this->getErrors()
             );
         }

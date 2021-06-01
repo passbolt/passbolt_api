@@ -33,7 +33,6 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
         'app.Base/Users',
         'app.Base/Gpgkeys',
         'app.Base/Profiles',
-        'app.Base/Avatars',
         'app.Base/Roles',
         'app.Base/Groups',
         'app.Base/GroupsUsers',
@@ -44,7 +43,7 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
         'app.Base/Favorites',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Users = TableRegistry::getTableLocator()->get('Users');

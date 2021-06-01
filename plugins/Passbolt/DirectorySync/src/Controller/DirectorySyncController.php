@@ -18,11 +18,13 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Controller;
 
 use App\Model\Entity\Role;
-use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Actions\AllSyncAction;
 
+/**
+ * @property \App\Model\Table\UsersTable $Users
+ */
 class DirectorySyncController extends DirectoryController
 {
     /**
@@ -32,7 +34,7 @@ class DirectorySyncController extends DirectoryController
      * @throws \Cake\Http\Exception\ForbiddenException if the controller is accessed by a non admin
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         $this->loadModel('Users');
         if ($this->User->role() !== Role::ADMIN) {

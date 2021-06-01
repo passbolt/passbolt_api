@@ -19,7 +19,6 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Users;
 
 use App\Model\Entity\Role;
 use App\Test\Fixture\Alt0\GroupsUsersFixture;
-use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
@@ -48,7 +47,6 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         GpgkeysFixture::class,
         RolesFixture::class,
         GroupsUsersFixture::class,
-        AvatarsFixture::class,
     ];
 
     /**
@@ -69,7 +67,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/users.json?contain[is_mfa_enabled]=1');
         $this->assertSuccess();
         $this->assertObjectHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]);
-        $this->assertAttributeEquals(false, 'is_mfa_enabled', $this->_responseJsonBody[0]);
+        $this->assertFalse($this->_responseJsonBody[0]->is_mfa_enabled);
     }
 
     /**
@@ -108,13 +106,13 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/users.json?filter[is-mfa-enabled]=1&contain[is_mfa_enabled]=1');
         $this->assertSuccess();
         foreach ($this->_responseJsonBody as $user) {
-            $this->assertAttributeEquals(true, 'is_mfa_enabled', $user, 'All users in the results should have MFA enabled.');
+            $this->assertTrue($user->is_mfa_enabled, 'All users in the results should have MFA enabled.');
         }
 
         $this->getJson('/users.json?filter[is-mfa-enabled]=0&contain[is_mfa_enabled]=1');
         $this->assertSuccess();
         foreach ($this->_responseJsonBody as $user) {
-            $this->assertAttributeEquals(false, 'is_mfa_enabled', $user, 'All users in the results should have MFA disabled.');
+            $this->assertFalse($user->is_mfa_enabled, 'All users in the results should have MFA disabled.');
         }
     }
 
@@ -142,11 +140,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/users.json?contain[is_mfa_enabled]=1');
         $this->assertSuccess();
         foreach ($this->_responseJsonBody as $user) {
-            if ($user->id === $userId) {
-                $this->assertAttributeEquals(true, 'is_mfa_enabled', $user);
-            } else {
-                $this->assertAttributeEquals(false, 'is_mfa_enabled', $user);
-            }
+            $this->assertSame($user->id === $userId, $user->is_mfa_enabled);
         }
     }
 

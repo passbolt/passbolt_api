@@ -25,7 +25,8 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property TagsTable Tags
+ * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable $ResourcesTags
+ * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
  */
 class TagsDeleteController extends AppController
 {
@@ -65,7 +66,7 @@ class TagsDeleteController extends AppController
 
         $this->_deletePersonalTag($tag->get('id'));
 
-        $this->success(__('The tag was deleted.'));
+        $this->success(__('The tag has been deleted successfully.'));
     }
 
     /**

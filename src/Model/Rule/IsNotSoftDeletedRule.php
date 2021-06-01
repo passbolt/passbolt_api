@@ -40,7 +40,7 @@ class IsNotSoftDeletedRule
             $id = $entity->get($options['errorField']);
             $lookupEntity = $Table->get($id);
 
-            return $lookupEntity->deleted !== true;
+            return $lookupEntity->get('deleted') !== true;
         } catch (\Exception $e) {
         }
 

@@ -65,7 +65,7 @@ class UsersEditController extends AppController
 
         // Save
         if (!$this->Users->save($user, ['checkrules' => false])) {
-            throw new InternalErrorException(__('Could not save the user data. Please try again later.'));
+            throw new InternalErrorException('Could not save the user data. Please try again later.');
         }
 
         // Get the updated version (ex. Role needs to be fetched again if role_id changed)
@@ -76,7 +76,7 @@ class UsersEditController extends AppController
             throw new InternalErrorException($msg);
         }
 
-        $this->success(__('User updated successfully!'), $user);
+        $this->success(__('The user has been updated successfully.'), $user);
     }
 
     /**
@@ -99,16 +99,16 @@ class UsersEditController extends AppController
 
         // Baseline validation
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The user id must be a valid uuid.'));
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
         $data = $this->request->getData();
         $data['id'] = $id;
         if (empty($data) || count($data) < 2) {
-            throw new BadRequestException(__('Some user data must be provided.'));
+            throw new BadRequestException(__('Some user data should be provided.'));
         }
 
         if (isset($data['gpgkey'])) {
-            throw new BadRequestException(__('Updating the gpgkey is not allowed.'));
+            throw new BadRequestException(__('Updating the OpenPGP key is not allowed.'));
         }
         if (isset($data['groups_user'])) {
             throw new BadRequestException(__('Updating the groups is not allowed.'));

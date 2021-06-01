@@ -22,6 +22,10 @@ use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Utility\Alias;
 
+/**
+ * @method array|\Cake\Datasource\EntityInterface|null getUserFromData(string $username)
+ * @method array|\Cake\Datasource\EntityInterface|null getGroupFromData(string $name)
+ */
 trait SyncTrait
 {
     /**
@@ -176,7 +180,7 @@ trait SyncTrait
             }
 
             // If the entity exist but is already deleted
-            if (isset($existingEntity) && $existingEntity->deleted) {
+            if ($existingEntity->deleted) {
                 $this->handleAddDeleted($data, $entry, $existingEntity);
                 continue;
             }
@@ -197,10 +201,10 @@ trait SyncTrait
     protected function getEntityName(Entity $entity)
     {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
-            return $entity->name;
+            return $entity->get('name');
         }
 
-        return $entity->username;
+        return $entity->get('username');
     }
 
     /**
@@ -229,9 +233,9 @@ trait SyncTrait
     protected function getEntityFromData(array $data)
     {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
-            return $this->getGroupFromData($data);
+            return $this->getGroupFromData($data['group']['name'] ?? '');
         }
 
-        return $this->getUserFromData($data);
+        return $this->getUserFromData($data['user']['username'] ?? '');
     }
 }

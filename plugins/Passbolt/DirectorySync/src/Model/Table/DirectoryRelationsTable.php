@@ -22,8 +22,28 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\DirectorySync\Model\Entity\DirectoryRelation;
 use Passbolt\DirectorySync\Utility\Alias;
 
+/**
+ * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasOne $GroupUser
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasOne $UserDirectoryEntry
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasOne $GroupDirectoryEntry
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation newEmptyEntity()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation newEntity(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class DirectoryRelationsTable extends Table
 {
     use TableCleanupTrait;
@@ -34,7 +54,7 @@ class DirectoryRelationsTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -72,19 +92,16 @@ class DirectoryRelationsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->uuid('id')
-            ->requirePresence('id');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->requirePresence('id', __('An identifier is required.'));
 
         $validator
-            ->scalar('parent_key')
-            ->uuid('parent_key')
-            ->requirePresence('parent_key');
+            ->uuid('parent_key', __('The parent identifier should be a valid UUID.'))
+            ->requirePresence('parent_key', __('A parent identifier is required.'));
 
         $validator
-            ->scalar('child_key')
-            ->uuid('child_key')
-            ->requirePresence('child_key');
+            ->uuid('child_key', __('The child identifier should be a valid UUID.'))
+            ->requirePresence('child_key', __('The child identifier is required.'));
 
         return $validator;
     }
@@ -192,9 +209,9 @@ class DirectoryRelationsTable extends Table
      * Create a directory Relation
      *
      * @param array $data data
-     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryRelation
      */
-    public function create(array $data)
+    public function create(array $data): DirectoryRelation
     {
         $entity = $this->newEntity($data, [
             'accessibleFields' => [

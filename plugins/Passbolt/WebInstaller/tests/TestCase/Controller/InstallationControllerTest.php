@@ -19,20 +19,21 @@ namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\Ee\Model\Entity\Subscription;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class InstallationControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
-        $this->truncateTables();
+        $this->dropAllTables();
         $this->initWebInstallerSession();
         $this->backupConfiguration();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->restoreConfiguration();
@@ -230,11 +231,8 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
                 'role_id' => '0d6990c8-4aaa-4456-a333-00e803ba0828',
             ],
         ];
-        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
-            $licenseSettings = [
-                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev'),
-            ];
-            $data += $licenseSettings;
+        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Ee')) {
+            $data['subscription'] = ['subscription_key' => $this->getValidSubscriptionKey()];
         }
 
         return $data;
@@ -247,7 +245,7 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $this->get('/install/installation');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Installing', $data);
+        $this->assertStringContainsString('Installing', $data);
     }
 
     /**
@@ -275,5 +273,6 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $this->assertTrue(isset($result['token']));
         $this->assertTrue(Validation::uuid($result['user_id']));
         $this->assertTrue(Validation::uuid($result['token']));
+        $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
     }
 }

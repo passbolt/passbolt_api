@@ -38,6 +38,7 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line*/
         $this->organizationSettingsTable = TableRegistry::getTableLocator()->get('OrganizationSettings');
     }
 

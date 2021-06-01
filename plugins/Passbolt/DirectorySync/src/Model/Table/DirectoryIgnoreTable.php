@@ -29,21 +29,36 @@ use Cake\Validation\Validator;
 /**
  * DirectoryIgnore Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Groups
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $DirectoryEntries
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get($primaryKey, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEntity($data = null, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Users
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\HasOne $Groups
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasOne $DirectoryEntries
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEntity(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEmptyEntity()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class DirectoryIgnoreTable extends Table
 {
     use TableCleanupTrait;
+
+    /**
+     * @var string[]
+     */
+    public static $SUPPORTED_FOREIGN_MODEL = [
+        'Users',
+        'Groups',
+        'DirectoryEntries',
+    ];
 
     /**
      * Initialize method
@@ -51,7 +66,7 @@ class DirectoryIgnoreTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 
@@ -89,16 +104,19 @@ class DirectoryIgnoreTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('id')
-            ->uuid('id')
-            ->requirePresence('id');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->requirePresence('id', __('An identifier is required.'));
 
         $validator
-            ->scalar('foreign_model')
-            ->requirePresence('foreign_model')
-            ->inList('foreign_model', [
-                'Users', 'Groups', 'DirectoryEntries',
-            ]);
+            ->inList(
+                'foreign_model',
+                self::$SUPPORTED_FOREIGN_MODEL,
+                __(
+                    'The object type should be one of the following: {0}.',
+                    implode(', ', self::$SUPPORTED_FOREIGN_MODEL)
+                )
+            )
+            ->requirePresence('foreign_model', __('An object type is required.'));
 
         return $validator;
     }
@@ -110,7 +128,7 @@ class DirectoryIgnoreTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
     {
         $rules->add(
             function ($entity, $options) {
@@ -128,7 +146,7 @@ class DirectoryIgnoreTable extends Table
             'AssociatedRecordExists',
             [
                 'errorField' => 'id',
-                'message' => __('The associated record could not be found'),
+                'message' => __('The associated record could not be found.'),
             ]
         );
 
@@ -190,7 +208,7 @@ class DirectoryIgnoreTable extends Table
             throw new ValidationException(__('This is not a valid record to ignore.'), $ignore, $this);
         }
         if (!$this->save($ignore, ['checkrules' => false])) {
-            throw new InternalErrorException(__('Could not ignore the record. Please try again later.'));
+            throw new InternalErrorException('Could not ignore the record, please try again later.');
         }
 
         return $ignore;
@@ -201,9 +219,9 @@ class DirectoryIgnoreTable extends Table
      *
      * @param string $entityType Users or Groups
      * @param bool $dryRun false
-     * @return \Passbolt\DirectorySync\Model\Table\number of affected records
+     * @return int number of affected records
      */
-    public function cleanupHardDeletedEntities(string $entityType, ?bool $dryRun = false)
+    public function cleanupHardDeletedEntities(string $entityType, ?bool $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id'])
@@ -222,9 +240,9 @@ class DirectoryIgnoreTable extends Table
      *
      * @param array|null $entryIds entry ids
      * @param bool $dryRun dry run
-     * @return \Passbolt\DirectorySync\Model\Table\number
+     * @return int number
      */
-    public function cleanupHardDeletedDirectoryEntries(?array $entryIds = null, ?bool $dryRun = false)
+    public function cleanupHardDeletedDirectoryEntries(?array $entryIds = null, ?bool $dryRun = false): int
     {
         $query = $this->query()
             ->select(['id']);

@@ -58,9 +58,9 @@ class MfaOtpFactory
         try {
             $secret = trim(Base32::encode(random_bytes(256)), '='); // 256 random bytes Base32 without padding
         } catch (\TypeError $exception) {
-            throw new InternalErrorException(__('Could not generate TOTP secret, please try again later.'));
+            throw new InternalErrorException('Could not generate TOTP secret, please try again later.');
         } catch (\Exception $exception) {
-            throw new InternalErrorException(__('Could not generate enough random bytes, please try again later.'));
+            throw new InternalErrorException('Could not generate enough random bytes, please try again later.');
         }
         $totp = new TOTP(
             $uac->getUsername(), //label: string shown bellow the code digits

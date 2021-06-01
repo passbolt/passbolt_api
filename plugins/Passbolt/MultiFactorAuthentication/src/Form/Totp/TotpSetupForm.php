@@ -36,9 +36,9 @@ class TotpSetupForm extends MfaForm
      * Build form schema
      *
      * @param \Cake\Form\Schema $schema schema
-     * @return $this|\Cake\Form\Schema
+     * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
     {
         return $schema
             ->addField('otpProvisioningUri', ['type' => 'string'])
@@ -51,11 +51,11 @@ class TotpSetupForm extends MfaForm
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    protected function _buildValidator(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->scalar('otpProvisioningUri')
-            ->notEmpty('otpProvisioningUri')
+            ->notEmptyString('otpProvisioningUri')
             ->add('otpProvisioningUri', ['isValidOtpProvisioningUri' => [
                 'rule' => [$this, 'isValidOtpProvisioningUri'],
                 'message' => __('This OTP provision uri is not valid.'),
@@ -63,7 +63,7 @@ class TotpSetupForm extends MfaForm
 
         $validator
             ->requirePresence('totp', __('An OTP is required.'))
-            ->notEmpty('totp', __('The OTP should not be empty.'))
+            ->notEmptyString('totp', __('The OTP should not be empty.'))
             ->add('totp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],
                 'message' => __('This OTP is not valid.'),
@@ -119,13 +119,13 @@ class TotpSetupForm extends MfaForm
      * @param array $data user submited data
      * @return bool
      */
-    protected function _execute(array $data)
+    protected function _execute(array $data): bool
     {
         try {
             $data = ['otpProvisioningUri' => $data['otpProvisioningUri']];
             MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_TOTP, $data);
         } catch (ValidationException $e) {
-            throw new InternalErrorException(__('Could not save the OTP settings. Please try again later.'));
+            throw new InternalErrorException('Could not save the OTP settings. Please try again later.');
         }
 
         return true;

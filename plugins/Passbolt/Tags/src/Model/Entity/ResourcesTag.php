@@ -24,12 +24,12 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $resource_id
  * @property string $tag_id
- * @property string $user_id
+ * @property string|null $user_id
  * @property \Cake\I18n\FrozenTime $created
  *
  * @property \App\Model\Entity\Resource $resource
- * @property \App\Model\Entity\Tag $tag
- * @property \App\Model\Entity\User $user
+ * @property \Cake\ORM\Entity $tag
+ * @property \App\Model\Entity\User|null $user
  */
 class ResourcesTag extends Entity
 {

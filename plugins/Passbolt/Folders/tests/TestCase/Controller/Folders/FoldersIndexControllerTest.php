@@ -31,7 +31,6 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
-use Burzum\FileStorage\Test\Fixture\FileStorageFixture;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
@@ -40,6 +39,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * @see \Passbolt\Folders\Controller\Folders\FoldersIndexController
+ * @uses \Passbolt\Folders\Controller\Folders\FoldersIndexController
  */
 class FoldersIndexControllerTest extends FoldersIntegrationTestCase
 {
@@ -59,10 +59,9 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         ResourceTypesFixture::class,
         SecretsFixture::class,
         GroupsFixture::class,
-        FileStorageFixture::class,
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
@@ -141,6 +140,26 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $folderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
         $this->assertContains($folderA->id, $folderIds);
         $this->assertContains($folderB->id, $folderIds);
+        $this->assertNotContains(UuidFactory::uuid('folder.id.other'), $this->_responseJsonBody);
+
+        $this->assertSuccess();
+    }
+
+    /**
+     * @return void
+     */
+    public function testFoldersIndexFilterByIdSuccessOnOneId()
+    {
+        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2();
+
+        $this->authenticateAs('ada');
+
+        $this->getJson('/folders.json?api-version=2&filter[has-id]=' . $folderA->id);
+        $this->assertSuccess();
+
+        $this->assertCount(1, $this->_responseJsonBody);
+        $folderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        $this->assertContains($folderA->id, $folderIds);
         $this->assertNotContains(UuidFactory::uuid('folder.id.other'), $this->_responseJsonBody);
 
         $this->assertSuccess();
@@ -260,6 +279,81 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         }
     }
 
+    /**
+     * @return void
+     */
+    public function testFoldersIndexFilterHasParentNoArrayBracketNotation()
+    {
+        $this->insertFixtureCase3();
+        $this->authenticateAs('ada');
+
+        $hasParentFilterId = UuidFactory::uuid('folder.id.c');
+        $expectedFolderChildrenIds = [UuidFactory::uuid('folder.id.e'),];
+
+        $this->getJson('/folders.json?api-version=2&filter[has-parent]=' . $hasParentFilterId);
+        $this->assertSuccess();
+
+        $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+
+        foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
+            $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
+        }
+    }
+
+    /**
+     * @dataProvider provideFoldersIndexFilterHasParentSuccessRelations
+     * @param mixed $hasParentFilterId
+     * @param array $expectedFolderChildrenIds
+     * @return void
+     */
+    public function testFoldersIndexFilterHasParentAndFilterSuccess($hasParentFilterId, array $expectedFolderChildrenIds)
+    {
+        $this->insertFixtureCase3();
+        $this->authenticateAs('ada');
+
+        $queryParameters = http_build_query([
+            'api-version' => 2,
+            'filter' => [
+                'has-parent' => $hasParentFilterId,
+                'search' => UuidFactory::uuid('folder.id.name'),
+            ],
+        ]);
+
+        $this->getJson('/folders.json?' . $queryParameters);
+        $this->assertSuccess();
+
+        $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+
+        foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
+            $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
+        }
+    }
+
+    /**
+     * @dataProvider provideFoldersIndexFilterHasParentSuccessRelations
+     * @param mixed $hasParentFilterId
+     * @param array $expectedFolderChildrenIds
+     * @return void
+     */
+    public function testFoldersIndexFilterHasParentAndFilterSuccess_NoResult($hasParentFilterId, array $expectedFolderChildrenIds)
+    {
+        $this->insertFixtureCase3();
+        $this->authenticateAs('ada');
+
+        $queryParameters = http_build_query([
+            'api-version' => 2,
+            'filter' => [
+                'has-parent' => $hasParentFilterId,
+                'search' => 'nope',
+            ],
+        ]);
+
+        $this->getJson('/folders.json?' . $queryParameters);
+        $this->assertSuccess();
+
+        $this->assertEmpty(Hash::extract($this->_responseJsonBody, '{n}.id'));
+    }
+
     public function testFoldersIndexSuccess_ContainChildrenResources()
     {
         $userId = UuidFactory::uuid('user.id.ada');
@@ -282,7 +376,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $folder = $result[0];
 
         $this->assertFolderAttributes($folder);
-        $this->assertAttributeNotEmpty('children_resources', $folder);
+        $this->assertNotEmpty($folder->children_resources);
         $this->assertCount(2, $folder->children_resources);
         foreach ($folder->children_resources as $childResource) {
             $this->assertResourceAttributes($childResource);
@@ -315,7 +409,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $folder = $result[0];
 
         $this->assertFolderAttributes($folder);
-        $this->assertAttributeNotEmpty('children_folders', $folder);
+        $this->assertNotEmpty($folder->children_folders);
         $this->assertCount(2, $folder->children_folders);
         foreach ($folder->children_folders as $childFolder) {
             $this->assertFolderAttributes($childFolder);

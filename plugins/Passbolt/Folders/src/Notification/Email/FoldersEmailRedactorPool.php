@@ -25,9 +25,9 @@ class FoldersEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
     /**
      * Return a list of subscribed redactors
      *
-     * @return \Passbolt\Folders\Notification\Email\SubscribedEmailRedactorInterface[]
+     * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
      */
-    public function getSubscribedRedactors()
+    public function getSubscribedRedactors(): array
     {
         $redactors = [];
 

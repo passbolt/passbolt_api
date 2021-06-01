@@ -42,6 +42,7 @@ class GroupsAfterUserAddedService
     public function __construct()
     {
         $this->foldersRelationsAddItemFromUserTree = new FoldersRelationsAddItemToUserTreeService();
+        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 

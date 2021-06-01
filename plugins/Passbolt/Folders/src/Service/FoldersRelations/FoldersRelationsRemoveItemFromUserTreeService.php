@@ -37,6 +37,7 @@ class FoldersRelationsRemoveItemFromUserTreeService
     public function __construct()
     {
         $this->foldersRelationsDeleteService = new FoldersRelationsDeleteService();
+        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
     }
 

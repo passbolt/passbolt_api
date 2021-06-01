@@ -37,22 +37,30 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
- * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsTo $Roles
- * @property \Burzum\FileStorage\Model\Table\FileStorageTable|\Cake\ORM\Association\HasMany $FileStorage
- * @property \App\Model\Table\GpgkeysTable|\Cake\ORM\Association\HasMany $Gpgkeys
- * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasMany $Permissions
- * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
- * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
- * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsToMany $Groups
- * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable|\Cake\ORM\Association\HasMany $EntitiesHistory
- * @method \App\Model\Entity\User get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\User newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\User[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\User|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\User[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\User findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\RolesTable&\Cake\ORM\Association\BelongsTo $Roles
+ * @property \App\Model\Table\GpgkeysTable&\Cake\ORM\Association\HasOne $Gpgkeys
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
+ * @property \App\Model\Table\ProfilesTable&\Cake\ORM\Association\HasOne $Profiles
+ * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasMany $GroupsUsers
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsToMany $Groups
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasMany $EntitiesHistory
+ * @method \App\Model\Entity\User get($primaryKey, $options = [])
+ * @method \App\Model\Entity\User newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\User|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\User[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\User findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \App\Model\Table\AuthenticationTokensTable&\Cake\ORM\Association\HasMany $AuthenticationTokens
+ * @property \Passbolt\Log\Model\Table\ActionLogsTable&\Cake\ORM\Association\HasMany $ActionLogs
+ * @method \App\Model\Entity\User newEmptyEntity()
+ * @method \App\Model\Entity\User saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
  */
 class UsersTable extends Table
 {
@@ -83,9 +91,6 @@ class UsersTable extends Table
         $this->hasMany('AuthenticationTokens', [
             'foreignKey' => 'user_id',
         ]);
-        $this->hasMany('FileStorage', [
-            'foreignKey' => 'user_id',
-        ]);
         $this->hasOne('Gpgkeys', [
             'foreignKey' => 'user_id',
         ]);
@@ -109,6 +114,10 @@ class UsersTable extends Table
             'className' => 'Passbolt/Log.ActionLogs',
             'foreignKey' => 'user_id',
         ]);
+        $this->hasMany('AccountSettings', [
+            'className' => 'Passbolt/AccountSettings.AccountSettings',
+            'foreignKey' => 'user_id',
+        ]);
     }
 
     /**
@@ -120,8 +129,8 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id', __('User id by must be a valid UUID.'))
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The user identifier by should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
@@ -133,17 +142,19 @@ class UsersTable extends Table
             );
 
         $validator
-            ->boolean('active');
+            ->boolean('active', __('The active status should be a valid boolean.'));
 
         $validator
-            ->uuid('role_id', __('Role id by must be a valid UUID.'))
-            ->requirePresence('role_id', 'create');
+            ->uuid('role_id', __('The role identifier should be a valid UUID.'))
+            ->requirePresence('role_id', 'create', __('A role identifier is required.'));
 
         $validator
-            ->boolean('deleted');
+            ->boolean('deleted', __('The deleted status should be a valid boolean.'));
 
         $validator
-            ->requirePresence('profile', 'create');
+            ->requirePresence('profile', 'create', 'A profile is required.')
+            // @todo translation comment: is it still something necessary?
+            ->allowEmptyString('profile', __('The profile should not be empty.'), false);
 
         return $validator;
     }
@@ -180,8 +191,8 @@ class UsersTable extends Table
     {
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
-            ->notEmptyString('username', __('A username is required.'))
-            ->maxLength('username', 255, __('The username length should be maximum 254 characters.'))
+            ->notEmptyString('username', __('The username should not be empty.'))
+            ->maxLength('username', 255, __('The username length should be maximum 255 characters.'))
             ->email(
                 'username',
                 Configure::read('passbolt.email.validate.mx'),
@@ -202,19 +213,19 @@ class UsersTable extends Table
     {
         // Add rule
         $rules->add($rules->isUnique(['username', 'deleted']), 'uniqueUsername', [
-            'message' => __('This username is already in use.'),
+            'message' => __('The username is already in use.'),
         ]);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
-            'message' => __('This is not a valid role.'),
+            'message' => __('The role identifier does not exist.'),
         ]);
 
         // Delete rules
-        $msg = __('You need to transfer the ownership for the shared content owned by this user before deleting them.');
+        $msg = __('The user should not be sole owner of shared content, transfer the ownership to other users.');
         $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedContent', [
             'errorField' => 'id',
             'message' => $msg,
         ]);
-        $msg = __('You need to transfer the user group manager role to other users before deleting them.');
+        $msg = __('The user should not be sole group manager of group(s), transfer the management to other users.');
         $rules->addDelete(new IsNotSoleManagerOfNonEmptyGroupRule(), 'soleManagerOfNonEmptyGroup', [
             'errorField' => 'id',
             'message' => $msg,
@@ -293,8 +304,6 @@ class UsersTable extends Table
         // Populates fields required for Avatar, if needed.
         if (!empty(Hash::get($data, 'profile.avatar'))) {
             if (!empty(Hash::get($data, 'profile.avatar.file'))) {
-                $data['profile']['avatar']['user_id'] = $user->id;
-                $data['profile']['avatar']['foreign_key'] = $user->profile->id;
                 // Force creation of new Avatar.
                 $user->profile->avatar = new Avatar();
             } else {
@@ -351,6 +360,7 @@ class UsersTable extends Table
             ->extract('aco_foreign_key')
             ->toArray();
         if (!empty($resourceIds)) {
+            /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
         }
@@ -405,6 +415,7 @@ class UsersTable extends Table
         if (Configure::read('passbolt.plugins.tags.enabled')) {
             $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
             $ResourcesTags->deleteAll(['user_id' => $user->id]);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $Tags */
             $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
             $Tags->deleteAllUnusedTags();
         }
@@ -455,16 +466,17 @@ class UsersTable extends Table
         // Check for internal error on save
         $user = $this->save($user, ['checkRules' => false]);
         if (!$user) {
-            throw new InternalErrorException(__('The user could not be saved.'));
+            throw new InternalErrorException('Could not save the user, try again later.');
         }
 
         // Generate an authentication token
+        /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens */
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $token = $AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
 
         // Generate event data
         $eventData = ['user' => $user, 'token' => $token];
-        if (isset($control) && !is_null($control->getId())) {
+        if (isset($control) && !empty($control->getId())) {
             $eventData['adminId'] = $control->getId();
         }
         $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);

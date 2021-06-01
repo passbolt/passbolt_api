@@ -13,7 +13,7 @@
  * @since         2.13.0
  */
 
-use App\Shell\Task\CleanupTask;
+use App\Command\CleanupCommand;
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Passbolt\Folders\EventListener\AddFolderizableBehavior;
@@ -49,4 +49,4 @@ $cleanups = [
         'Missing Resources Folders Relations',
     ],
 ];
-CleanupTask::addCleanups($cleanups);
+CleanupCommand::addCleanups($cleanups);

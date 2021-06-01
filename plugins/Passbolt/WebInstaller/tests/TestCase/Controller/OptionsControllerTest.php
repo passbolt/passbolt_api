@@ -20,7 +20,7 @@ use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class OptionsControllerTest extends WebInstallerIntegrationTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
@@ -32,7 +32,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         $this->get('/install/options');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('Options', $data);
+        $this->assertStringContainsString('Options', $data);
     }
 
     public function testWebInstallerOptionPostSuccess()
@@ -75,7 +75,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/options', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertContains('The data entered are not correct', $data);
+        $this->assertStringContainsString('The data entered are not correct', $data);
         $this->assertSession(null, 'webinstaller.options');
     }
 }

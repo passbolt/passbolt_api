@@ -45,6 +45,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function __construct(?UsersTable $usersTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 

@@ -49,7 +49,7 @@ class DigestFactory
     /**
      * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool|null $digestsPool DigestPool
      */
-    private function __construct(
+    final private function __construct(
         ?DigestsPool $digestsPool = null
     ) {
         $this->isDigestRegisterEventDispatched = false;
@@ -63,7 +63,7 @@ class DigestFactory
      */
     public static function getInstance()
     {
-        if (!static::$instance) {
+        if (!isset(static::$instance)) {
             static::$instance = new static();
         }
 

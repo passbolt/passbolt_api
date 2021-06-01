@@ -48,7 +48,7 @@ class SecretsViewControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
         $this->getJson("/secrets/resource/$resourceId.json?api-version=2");
-        $this->assertError(400, 'The resource id is not valid.');
+        $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
     public function testSecretsViewControllerErrorNotFound()

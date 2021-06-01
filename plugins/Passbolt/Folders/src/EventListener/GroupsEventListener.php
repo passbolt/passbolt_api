@@ -35,7 +35,7 @@ class GroupsEventListener implements EventListenerInterface
     /**
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             GroupsUpdateService::AFTER_GROUP_USER_REMOVED_EVENT_NAME => 'handleGroupsAfterUserRemovedEvent',

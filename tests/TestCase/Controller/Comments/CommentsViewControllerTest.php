@@ -26,7 +26,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
     use CommentsModelTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers',
         'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Comments',
     ];
 
@@ -80,14 +80,14 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
         $this->getJson("/comments/WrongModelName/$resourceId.json?api-version=v2");
-        $this->assertError(500, 'Invalid model name');
+        $this->assertBadRequestError('Invalid model name');
     }
 
     public function testCommentsViewErrorWrongUuidParameter()
     {
         $this->authenticateAs('ada');
         $this->getJson('/comments/resource/wrong-uuid.json?api-version=v2');
-        $this->assertError(500, 'Invalid id');
+        $this->assertBadRequestError('Invalid id');
     }
 
     public function testCommentsViewErrorNotAuthenticated()

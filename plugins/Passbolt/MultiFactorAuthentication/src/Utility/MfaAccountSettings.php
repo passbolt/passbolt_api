@@ -50,6 +50,7 @@ class MfaAccountSettings
      */
     public static function get(UserAccessControl $uac)
     {
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
         $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $settings = $AccountSettings->getFirstPropertyOrFail($uac->getId(), MfaSettings::MFA);
         $decodedJson = json_decode($settings->value, true);
@@ -65,6 +66,7 @@ class MfaAccountSettings
      */
     public function __construct(UserAccessControl $uac, ?array $settings = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $this->uac = $uac;
         $this->settings = $settings;
@@ -176,6 +178,7 @@ class MfaAccountSettings
         $data['verified'] = FrozenTime::now();
         $mfaAccountSettings = null;
         try {
+            /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
             $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
             $settings = $AccountSettings->getFirstPropertyOrFail($uac->getId(), MfaSettings::MFA);
             $decodedJson = json_decode($settings->value, true);
