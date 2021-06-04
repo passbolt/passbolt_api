@@ -1,3 +1,8 @@
+passbolt-pro-server (3.2.1-1) buster; urgency=medium
+  * GITHUB-402 Fix API v3 regression, login must accept JSON data
+
+ -- Daniel Del Rio <daniel@passbolt.com>  Tue, 4 Jun 2021 19:00:00 +0000
+
 passbolt-pro-server (3.2.0-1) buster; urgency=medium
   * PB-5054 French internationalization
   * PB-5171 As logged-in user I can paginate the result of the users and resources index controllers
