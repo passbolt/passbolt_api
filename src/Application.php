@@ -75,9 +75,9 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ]))
             ->add(new RoutingMiddleware($this))
             ->add(new SessionPreventExtensionMiddleware())
+            ->add(new BodyParserMiddleware())
             ->add(new AuthenticationMiddleware($this))
             ->add(GpgAuthHeadersMiddleware::class)
-            ->add(new BodyParserMiddleware())
             ->add($csrf);
 
         /*
