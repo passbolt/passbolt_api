@@ -447,7 +447,7 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @throws \InvalidArgumentException if the user id is not a valid uuid
-     * @return \App\Model\Entity\User
+     * @return \App\Model\Entity\User|null
      */
     public function findFirstForEmail(string $userId)
     {
