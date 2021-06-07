@@ -47,7 +47,6 @@ class PassboltCommand extends Command
         CommandBootstrap::init();
 
         if (!isset(self::$userIsRoot)) {
-            /** @phpstan-ignore-next-line  */
             self::$userIsRoot = (PROCESS_USER === 'root');
         }
     }
