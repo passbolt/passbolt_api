@@ -60,7 +60,7 @@ class UserAccessControl
     /**
      * Get the user id
      *
-     * @return string
+     * @return string|null
      */
     public function getId()
     {

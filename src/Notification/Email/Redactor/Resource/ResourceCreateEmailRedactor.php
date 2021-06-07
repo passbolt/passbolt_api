@@ -17,15 +17,14 @@ declare(strict_types=1);
 
 namespace App\Notification\Email\Redactor\Resource;
 
-use App\Controller\Resources\ResourcesAddController;
 use App\Model\Entity\Resource;
-use App\Model\Table\UsersTable;
+use App\Model\Entity\User;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Service\Resources\ResourcesAddService;
 use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
 
 class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -34,19 +33,11 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     public const TEMPLATE = 'LU/resource_create';
 
     /**
-     * @var \App\Model\Table\UsersTable
-     */
-    private $usersTable;
-
-    /**
      * @param array|null $config Configuration for the redactor
-     * @param \App\Model\Table\UsersTable $usersTable Users Table
      */
-    public function __construct(?array $config = [], ?UsersTable $usersTable = null)
+    public function __construct(?array $config = [])
     {
         $this->setConfig($config);
-        /** @phpstan-ignore-next-line */
-        $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 
     /**
@@ -57,7 +48,7 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents(): array
     {
         return [
-            ResourcesAddController::ADD_SUCCESS_EVENT_NAME,
+            ResourcesAddService::ADD_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -71,19 +62,20 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
 
         /** @var Resource $resource */
         $resource = $event->getData('resource');
+        $user = $event->getData('user');
 
-        $emailCollection->addEmail($this->createResourceCreateEmail($resource));
+        $emailCollection->addEmail($this->createResourceCreateEmail($resource, $user));
 
         return $emailCollection;
     }
 
     /**
-     * @param Resource $resource Resource
+     * @param Resource $resource Resource created.
+     * @param \App\Model\Entity\User $user User creating the resource.
      * @return \App\Notification\Email\Email
      */
-    private function createResourceCreateEmail(Resource $resource)
+    private function createResourceCreateEmail(Resource $resource, User $user): Email
     {
-        $user = $this->usersTable->findFirstForEmail($resource->created_by);
         $subject = __('You added the password {0}', $resource->name);
         $data = [
             'body' => [

@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace App\Test\Factory;
 
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
@@ -25,6 +27,9 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 /**
  * UserFactory
+ *
+ * @method \App\Model\Entity\User persist()
+ * @method \App\Model\Entity\User getEntity()
  */
 class UserFactory extends CakephpBaseFactory
 {
@@ -135,5 +140,34 @@ class UserFactory extends CakephpBaseFactory
             'AccountSettings',
             AccountSettingFactory::make()->locale($locale)
         );
+    }
+
+    /**
+     * Return a non persisted UAC
+     *
+     * @return UserAccessControl
+     */
+    public function nonPersistedUAC(): UserAccessControl
+    {
+        $user = $this->getEntity();
+
+        return $this->makeUserAccessControl($user);
+    }
+
+    /**
+     * Persist and return UAC
+     *
+     * @return UserAccessControl
+     */
+    public function persistedUAC(): UserAccessControl
+    {
+        $user = $this->persist();
+
+        return $this->makeUserAccessControl($user);
+    }
+
+    private function makeUserAccessControl(User $user): UserAccessControl
+    {
+        return new UserAccessControl($user->role->name, $user->get('id'), $user->get('username'));
     }
 }
