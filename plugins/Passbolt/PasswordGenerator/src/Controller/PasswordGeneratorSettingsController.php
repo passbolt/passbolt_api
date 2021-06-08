@@ -25,7 +25,7 @@ class PasswordGeneratorSettingsController extends AppController
      * Get the organization's password generator settings.
      *
      * @return void
-     * @throws \Cake\Http\Exception\BadRequestException if the password generator set in env is not supported.
+     * @throws \Cake\Http\Exception\InternalErrorException if the password generator set in env is not supported.
      */
     public function index()
     {

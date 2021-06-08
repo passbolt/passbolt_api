@@ -60,7 +60,7 @@ class GetPasswordGeneratorService
      *
      * @param string $generator Generator to be validated.
      * @return void
-     * @throws \Cake\Http\Exception\BadRequestException if the password generator provided is not valid.
+     * @throws \Cake\Http\Exception\InternalErrorException if the password generator provided is not valid.
      */
     protected function validateGenerator(string $generator): void
     {
