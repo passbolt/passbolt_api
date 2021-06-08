@@ -80,7 +80,6 @@ class ResourcesAfterCreateService
         try {
             $userId = $uac->getId();
             $this->foldersRelationsCreateService->create(
-                $uac,
                 FoldersRelation::FOREIGN_MODEL_RESOURCE,
                 $resource->id,
                 $userId,

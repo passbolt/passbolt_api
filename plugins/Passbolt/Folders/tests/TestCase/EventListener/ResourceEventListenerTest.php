@@ -18,6 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\TestCase\EventListener;
 
 use App\Model\Entity\Permission;
+use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
+use App\Test\Factory\ResourceTypeFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
@@ -29,6 +32,7 @@ use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\ResourceTypesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Utility\UuidFactory;
@@ -46,6 +50,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class ResourceEventListenerTest extends FoldersIntegrationTestCase
 {
+    use EmailQueueTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use ResourcesModelTrait;
@@ -66,6 +71,8 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         ResourceTypesFixture::class,
     ];
 
+    public $autoFixtures = false;
+
     /**
      * @var PermissionsTable
      */
@@ -79,6 +86,8 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesEventListenerSuccess_AfterResourceAdded()
     {
+        $this->loadFixtures();
+
         [$userId, $folder] = $this->insertFixture_AfterResourceAdded();
         $data = [
             'name' => 'R1',
@@ -92,6 +101,34 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 
         $resource = $this->_responseJsonBody;
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userId, $folder->id);
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'You added the password ' . $data['name'],
+            'template' => ResourceCreateEmailRedactor::TEMPLATE,
+        ]);
+        $this->assertEmailQueueCount(1);
+    }
+
+    public function testFoldersResourcesEventListenerError_AfterResourceAdded()
+    {
+        ResourceTypeFactory::make()->default()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
+
+        $data = [
+            'name' => 'R1',
+            'folder_parent_id' => UuidFactory::uuid(),
+            'secrets' => [$this->getDummySecretData(['resource_id' => null])],
+        ];
+
+        $this->postJson('/resources.json?api-version=v2', $data);
+        $this->assertError(400, 'Could not validate resource data');
+
+        $this->assertSame(0, TableRegistry::getTableLocator()->get('Resources')->find()->count());
+        $this->assertSame(0, TableRegistry::getTableLocator()->get('Permissions')->find()->count());
+        $this->assertSame(0, TableRegistry::getTableLocator()->get('Secrets')->find()->count());
+        $this->assertSame(0, TableRegistry::getTableLocator()->get('Folders')->find()->count());
+        $this->assertEmailQueueIsEmpty();
     }
 
     public function insertFixture_AfterResourceAdded()
@@ -105,6 +142,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesEventListenerSuccess_AfterResourceSoftDeleted()
     {
+        $this->loadFixtures();
         [$userId, $resource] = $this->insertFixture_AfterResourceSoftDeleted();
         $data = $resource->toArray();
         $data['folder_parent_id'] = null;
@@ -127,6 +165,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesEventListenerSuccess_AfterAccessGranted()
     {
+        $this->loadFixtures();
         [$folder, $resource, $userAId, $userBId] = $this->insertFixture_AfterAccessGranted();
 
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
@@ -153,6 +192,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesEventListenerSuccess_AfterAccessRevoked()
     {
+        $this->loadFixtures();
         [$folder, $resource, $userAId, $userBId] = $this->insertFixture_AfterAccessRevoked();
 
         $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($resource->id, $userBId)->first();

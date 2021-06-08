@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\EventListener;
 
+use App\Model\Entity\Resource;
+use App\Service\Resources\ResourcesAddService;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Passbolt\Folders\Service\Resources\ResourcesAfterAccessGrantedService;
@@ -38,7 +40,10 @@ class ResourcesEventListener implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            'ResourcesAddController.addPost.success' => 'handleResourceAfterCreateEvent',
+            ResourcesAddService::ADD_SUCCESS_EVENT_NAME => [
+                'callable' => 'handleResourceAfterCreateEvent',
+                'priority' => 1,
+            ],
             'Model.Resource.afterSoftDelete' => 'handleResourceAfterSoftDeleteEvent',
             'Service.ResourcesShare.afterAccessGranted' => 'handleResourceAfterAccessGrantedEvent',
             'Service.ResourcesShare.afterAccessRevoked' => 'handleResourceAfterAccessRevokedEvent',
@@ -49,13 +54,13 @@ class ResourcesEventListener implements EventListenerInterface
      * Handle a resource after create event.
      *
      * @param \Cake\Event\Event $event The event.
+     * @param Resource $resource The resource saved.
      * @return void
      * @throws \Exception
      */
-    public function handleResourceAfterCreateEvent(Event $event)
+    public function handleResourceAfterCreateEvent(Event $event, Resource $resource)
     {
-        $resource = $event->getData('resource');
-        $uac = $event->getData('accessControl');
+        $uac = $event->getData('uac');
         $data = $event->getData('data');
         $service = new ResourcesAfterCreateService();
         $service->afterCreate($uac, $resource, $data);

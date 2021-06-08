@@ -197,7 +197,7 @@ class FoldersCreateService
         try {
             $userId = $uac->getId();
             $this->foldersRelationsCreateService
-                ->create($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $folderParentId);
+                ->create(FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $folderParentId);
             $folder->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
             throw new InternalErrorException('Could not create the folder, please try again later.', 500, $e);

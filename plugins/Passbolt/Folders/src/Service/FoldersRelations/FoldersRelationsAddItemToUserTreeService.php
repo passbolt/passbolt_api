@@ -90,7 +90,7 @@ class FoldersRelationsAddItemToUserTreeService
             function () use (&$uac, $foreignModel, $foreignId, $userId) {
             // Add the item at the root of the target user tree.
                 $this->foldersRelationsCreateService
-                ->create($uac, $foreignModel, $foreignId, $userId, FoldersRelation::ROOT);
+                ->create($foreignModel, $foreignId, $userId, FoldersRelation::ROOT);
             // Then reconstruct the user tree.
                 $this->reconstructUserTree($uac, $foreignModel, $foreignId, $userId);
             }

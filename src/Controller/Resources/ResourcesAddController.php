@@ -19,6 +19,7 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Service\Resources\ResourcesAddService;
+use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 
 /**

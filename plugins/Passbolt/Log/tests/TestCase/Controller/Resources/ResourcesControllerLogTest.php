@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\Log\Test\TestCase\Controller\Resources;
 
+use App\Test\Factory\ResourceTypeFactory;
+use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
@@ -30,10 +32,14 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
+    public $autoFixtures = false;
+
     public function testLogResourcesAddSuccessWithSecrets()
     {
-        $this->authenticateAs('ada');
-        $userId = UuidFactory::uuid('user.id.ada');
+        ResourceTypeFactory::make()->default()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
+        $userId = $user->id;
         $data = [
             'name' => 'new resource name',
             'username' => 'username@domain.com',
@@ -69,8 +75,29 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         $this->assertEntityHistoryExists($expectedEntityHistory);
     }
 
+    public function testLogResourcesAddSuccessWithSecretsErrorShouldHaveNoLogs()
+    {
+        ResourceTypeFactory::make()->default()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
+        $data = [
+            'name' => 'new resource name',
+            'username' => 'username@domain.com',
+            'uri' => 'https://www.domain.com',
+            'description' => 'new resource description',
+            'resource_type_id' => UuidFactory::uuid(),
+            'secrets' => [[
+                'data' => Hash::get(self::getDummySecretData(), 'data'),
+            ]],
+        ];
+        $this->postJson('/resources.json?api-version=v2', $data);
+        $this->assertError(400, 'Could not validate resource data');
+        $this->assertEntitiesHistoryEmpty();
+    }
+
     public function testLogResourcesUpdateSuccessWithoutSecrets()
     {
+        $this->loadFixtures();
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resource = [
@@ -105,6 +132,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesUpdateSuccessWithSecrets()
     {
+        $this->loadFixtures();
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $adaId = UuidFactory::uuid('user.id.ada');
@@ -161,6 +189,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesDeleteSuccess()
     {
+        $this->loadFixtures();
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->deleteJson("/resources/$resourceId.json");
