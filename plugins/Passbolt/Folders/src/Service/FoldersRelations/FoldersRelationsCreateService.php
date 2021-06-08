@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Service\FoldersRelations;
 
 use App\Error\Exception\ValidationException;
-use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 
@@ -41,7 +40,6 @@ class FoldersRelationsCreateService
     /**
      * Create a folder relation for the current user.
      *
-     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $foreignModel The target foreign model
      * @param string $foreignId The target foreign instance id
      * @param string $userId The target user id
@@ -50,7 +48,6 @@ class FoldersRelationsCreateService
      * @throws \Exception If an unexpected error occurred
      */
     public function create(
-        UserAccessControl $uac,
         string $foreignModel,
         string $foreignId,
         string $userId,
