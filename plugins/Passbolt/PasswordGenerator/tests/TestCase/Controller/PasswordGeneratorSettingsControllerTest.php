@@ -41,7 +41,7 @@ class PasswordGeneratorSettingsControllerTest extends AppIntegrationTestCase
         $this->getJson('/password-generator/settings.json');
 
         if ($generator === 'exception') {
-            $this->assertBadRequestError('The password generator value "' . $env . '" is not valid.');
+            $this->assertResponseFailure('The password generator value "' . $env . '" is not valid.');
         } else {
             $this->assertResponseSuccess();
             $this->assertSame($generator, $this->_responseJsonBody->default_generator);
