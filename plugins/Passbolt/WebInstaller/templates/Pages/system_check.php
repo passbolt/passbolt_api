@@ -72,9 +72,9 @@ $healtcheck = new HealthcheckHtmlHelper();
                     <?php
                     if (isset($data['system_ok']) && $data['system_ok'] === true) :
                         ?>
-                    <a href="<?= $nextStepUrl ?>" class="button primary next big"><?= __('Start configuration') ?></a>
+                    <a href="<?= $nextStepUrl ?>" class="button primary next medium"><?= __('Start configuration') ?></a>
                     <?php else : ?>
-                    <a href="#" onclick="javascript:location.reload(); return false;" class="button primary next big">Retry</a>
+                    <a href="#" onclick="javascript:location.reload(); return false;" class="button primary next medium">Retry</a>
                         <?php
                     endif;
                     ?>

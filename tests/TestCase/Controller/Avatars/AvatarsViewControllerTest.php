@@ -20,7 +20,7 @@ namespace App\Test\TestCase\Controller\Avatars;
 use App\Model\Table\AvatarsTable;
 use App\Service\Avatars\AvatarsCacheService;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AvatarsModelTestTrait;
+use App\Test\Lib\Model\AvatarsModelTrait;
 use App\View\Helper\AvatarHelper;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -33,7 +33,7 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
  */
 class AvatarsViewControllerTest extends AppIntegrationTestCase
 {
-    use AvatarsModelTestTrait;
+    use AvatarsModelTrait;
     use IntegrationTestTrait;
 
     /**

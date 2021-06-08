@@ -35,8 +35,8 @@ $this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <input type="submit" class="button primary next big disabled" disabled="disabled" value="<?= __('Next'); ?>">
+                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel medium"><?= __('Cancel'); ?></a>
+                    <input type="submit" class="button primary next medium disabled" disabled="disabled" value="<?= __('Next'); ?>">
                 </div>
             </div>
         </div>

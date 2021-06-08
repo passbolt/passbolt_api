@@ -67,18 +67,12 @@ $this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom'
                             <option value="4096">4096</option>
                         </select>
                     </div>
-
-                    <div class="input date">
-                        <label for="KeyExpire"><?= __('Key Expire'); ?></label>
-                        <input name="data[Key][expire]" class="required fluid" id="KeyExpire" disabled="disabled" required="required" type="text" placeholder="dd/mm/yyyy">
-                        <span class="input-addon"><i class="fa fa-calendar fa-fw"></i></span>
-                    </div>
                 </div>
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <button type="submit" id="next" class="button primary next big"><?= __('Next'); ?> </button>
+                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel medium"><?= __('Cancel'); ?></a>
+                    <button type="submit" id="next" class="button primary next medium"><?= __('Next'); ?> </button>
                 </div>
             </div>
         </div>

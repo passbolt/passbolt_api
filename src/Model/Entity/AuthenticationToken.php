@@ -38,6 +38,7 @@ class AuthenticationToken extends Entity
     public const TYPE_REGISTER = 'register';
     public const TYPE_MFA = 'mfa';
     public const TYPE_LOGIN = 'login';
+    public const TYPE_MOBILE_TRANSFER = 'mobile_transfer';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

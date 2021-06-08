@@ -18,41 +18,47 @@ declare(strict_types=1);
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationException;
-use App\Model\Entity\Permission;
-use App\Model\Entity\Resource;
-use App\Model\Table\ResourceTypesTable;
-use Cake\Core\Configure;
-use Cake\Event\Event;
+use App\Service\Resources\ResourcesAddService;
+use Cake\Event\EventInterface;
 
 /**
  * @property \App\Model\Table\ResourcesTable $Resources
+ * @property \App\Model\Table\UsersTable $Users
  */
 class ResourcesAddController extends AppController
 {
-    public const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
+    /**
+     * @var \App\Service\Resources\ResourcesAddService
+     */
+    protected $resourcesAddService;
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadModel('Resources');
+
+        $this->resourcesAddService = new ResourcesAddService();
+
+        $this->createAfterSaveEvent();
+    }
 
     /**
      * Resource Add action
      *
      * @return void
      * @throws \Exception
+     * @throws \App\Error\Exception\ValidationException if the resource is not valid.
+     * @throws \Cake\Http\Exception\ServiceUnavailableException if parallel requests lead to a table lock albeit multiple attempts.
      */
     public function add()
     {
-        $this->loadModel('Resources');
-
-        $data = $this->request->getData();
-        $resource = $this->_buildAndValidateEntity($data);
-
-        $result = $this->Resources->getConnection()->transactional(function () use ($resource, $data) {
-            $result = $this->Resources->save($resource, ['atomic' => false]);
-            $this->_handleValidationError($resource);
-            $this->afterCreate($resource, $data);
-            $this->_handleValidationError($resource);
-
-            return $result;
-        });
+        $resource = $this->resourcesAddService->add(
+            $this->User->id(),
+            $this->getRequest()->getData()
+        );
 
         // Retrieve the saved resource.
         $options = [
@@ -65,105 +71,28 @@ class ResourcesAddController extends AppController
             $options['contain']['tag'] = true;
         }
 
-        $resource = $this->Resources->findView($this->User->id(), $result->id, $options)->first();
+        $resource = $this->Resources->findView($this->User->id(), $resource->id, $options)->first();
 
         $this->success(__('The resource has been added successfully.'), $resource);
     }
 
     /**
-     * Build the resource entity from user input
+     * Create the after save events on the Resources table.
      *
-     * @param array $data Array of data
-     * @return Resource
-     */
-    protected function _buildAndValidateEntity(array $data)
-    {
-        // Enforce data.
-        $data['created_by'] = $this->User->id();
-        $data['modified_by'] = $this->User->id();
-        $data['permissions'] = [[
-            'aro' => 'User',
-            'aro_foreign_key' => $this->User->id(),
-            'aco' => 'Resource',
-            'type' => Permission::OWNER,
-        ]];
-
-        // If no secrets given, the model will throw a validation error, no need to take care of it here.
-        if (isset($data['secrets'])) {
-            $data['secrets'][0]['user_id'] = $this->User->id();
-        }
-
-        if (!isset($data['resource_type_id']) || !Configure::read('passbolt.plugins.resourceTypes.enabled')) {
-            $data['resource_type_id'] = ResourceTypesTable::getDefaultTypeId();
-        }
-
-        // Build entity and perform basic check
-        /** @var Resource $resource */
-        $resource = $this->Resources->newEntity($data, [
-            'accessibleFields' => [
-                'name' => true,
-                'username' => true,
-                'uri' => true,
-                'description' => true,
-                'created_by' => true,
-                'modified_by' => true,
-                'secrets' => true,
-                'permissions' => true,
-                'resource_type_id' => true,
-            ],
-            'associated' => [
-                'Permissions' => [
-                    'validate' => 'saveResource',
-                    'accessibleFields' => [
-                        'aco' => true,
-                        'aro' => true,
-                        'aro_foreign_key' => true,
-                        'type' => true,
-                    ],
-                ],
-                'Secrets' => [
-                    'validate' => 'saveResource',
-                    'accessibleFields' => [
-                        'user_id' => true,
-                        'data' => true,
-                    ],
-                ],
-            ],
-        ]);
-
-        // Handle validation errors if any at this stage.
-        $this->_handleValidationError($resource);
-
-        return $resource;
-    }
-
-    /**
-     * Manage validation errors.
-     *
-     * @param Resource $resource resource
-     * @throws \App\Error\Exception\ValidationException if the resource validation failed
      * @return void
      */
-    protected function _handleValidationError(Resource $resource)
+    protected function createAfterSaveEvent(): void
     {
-        $errors = $resource->getErrors();
-        if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->Resources);
-        }
-    }
-
-    /**
-     * Trigger the after resource create event.
-     *
-     * @param Resource $resource The created resource
-     * @param array $data The request data.
-     * @return void
-     */
-    protected function afterCreate(Resource $resource, array $data = [])
-    {
-        $uac = $this->User->getAccessControl();
-        $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
-        $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, $eventData);
-        $this->getEventManager()->dispatch($event);
+        $this->Resources->getEventManager()->on(
+            'Model.afterSave',
+            ['priority' => 1],
+            function (EventInterface $event, $resource) {
+                $this->resourcesAddService->afterSave(
+                    $resource,
+                    $this->User->getAccessControl(),
+                    $this->getRequest()->getData()
+                );
+            }
+        );
     }
 }

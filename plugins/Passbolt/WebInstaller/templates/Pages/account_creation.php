@@ -56,7 +56,7 @@
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <input type="submit" class="button primary next big" value="<?= __('Next'); ?>">
+                    <input type="submit" class="button primary next medium" value="<?= __('Next'); ?>">
                 </div>
             </div>
         </div>

@@ -19,14 +19,14 @@ namespace App\Test\TestCase\Controller\Users;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AvatarsModelTestTrait;
+use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
 class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 {
-    use AvatarsModelTestTrait;
+    use AvatarsModelTrait;
 
     public $localFileStorageListener = null;
     public $imageProcessingListener = null;

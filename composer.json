@@ -51,6 +51,7 @@
         "ext-gnupg" : "*",
         "ext-ldap" : "*",
         "ext-curl" : "*",
+        "ext-pdo": "*",
         "cakephp/cakephp": "4.2.4",
         "cakephp/migrations": "^3.0.0",
         "cakephp/plugin-installer": "^1.3.0",
@@ -88,6 +89,7 @@
             "Passbolt\\DirectorySync\\": "./plugins/Passbolt/DirectorySync/src",
             "Passbolt\\Ee\\": "plugins/Passbolt/Ee/src",
             "Passbolt\\Locale\\": "./plugins/Passbolt/Locale/src",
+            "Passbolt\\PasswordGenerator\\": "./plugins/Passbolt/PasswordGenerator/src",
             "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/Passbolt/MultiFactorAuthentication/src",
             "Passbolt\\Tags\\": "./plugins/Passbolt/Tags/src",
@@ -97,7 +99,8 @@
             "Passbolt\\EmailNotificationSettings\\": "./plugins/Passbolt/EmailNotificationSettings/src",
             "Passbolt\\EmailDigest\\": "./plugins/Passbolt/EmailDigest/src",
             "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src",
-            "Passbolt\\Folders\\": "./plugins/Passbolt/Folders/src"
+            "Passbolt\\Folders\\": "./plugins/Passbolt/Folders/src",
+            "Passbolt\\Mobile\\": "./plugins/Passbolt/Mobile/src"
         }
     },
     "autoload-dev": {
@@ -110,13 +113,15 @@
             "Passbolt\\Locale\\Test\\": "./plugins/Passbolt/Locale/tests",
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/Passbolt/MultiFactorAuthentication/tests",
             "Passbolt\\Tags\\Test\\": "./plugins/Passbolt/Tags/tests",
+            "Passbolt\\PasswordGenerator\\Test\\": "./plugins/Passbolt/PasswordGenerator/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests",
             "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests",
             "Passbolt\\AuditLog\\Test\\": "./plugins/Passbolt/AuditLog/tests",
             "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/Passbolt/EmailNotificationSettings/tests",
             "Passbolt\\EmailDigest\\Test\\": "./plugins/Passbolt/EmailDigest/tests",
             "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests",
-            "Passbolt\\Folders\\Test\\": "./plugins/Passbolt/Folders/tests"
+            "Passbolt\\Folders\\Test\\": "./plugins/Passbolt/Folders/tests",
+            "Passbolt\\Mobile\\Test\\": "./plugins/Passbolt/Mobile/tests"
         }
     },
     "scripts": {
