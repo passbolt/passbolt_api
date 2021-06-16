@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
+## [3.2.2] - 2021-06-16
+### Fixed
+- PB-5910 Fix ldap admin screen should load only default admin users which are active and not deleted
+
 ## [3.2.1] - 2021-06-04
 ### Fixed
 - GITHUB-402 Fix API v3 regression, login must accept JSON data
@@ -949,7 +953,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.2.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.2.2...HEAD
+[3.2.2]: https://github.com/passbolt/passbolt_api/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/passbolt/passbolt_api/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/passbolt/passbolt_api/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/passbolt/passbolt_api/compare/v3.0.2...v3.1.0
