@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Form;
 use App\Model\Entity\Role;
 use Cake\Form\Form;
 use Cake\Form\Schema;
+use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
@@ -353,6 +354,7 @@ class LdapConfigurationForm extends Form
                 'Users.active' => true,
             ])->first();
             if (empty($defaultUser)) {
+                Log::warning("LdapConfigurationForm: Default user ({$settings['defaultUser']}) not found");
                 $settings['defaultUser'] = '';
             } else {
                 $settings['defaultUser'] = $defaultUser->get('id');
@@ -366,6 +368,7 @@ class LdapConfigurationForm extends Form
                     'Users.active' => true,
                 ])->first();
             if (empty($defaultGroupAdminUser)) {
+                Log::warning("LdapConfigurationForm: Default group admin user ({$settings['defaultGroupAdminUser']}) not found");
                 $settings['defaultGroupAdminUser'] = '';
             } else {
                 $settings['defaultGroupAdminUser'] = $defaultGroupAdminUser->get('id');
