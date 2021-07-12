@@ -32,6 +32,9 @@ class LdapConfigurationForm extends Form
     public const CONNECTION_TYPE_TLS = 'tls';
     public const SUPPORTED_DIRECTORY_TYPE = ['ad', 'openldap'];
 
+    /**
+     * @var string[]
+     */
     public static $connectionTypes = [
         self::CONNECTION_TYPE_PLAIN,
         self::CONNECTION_TYPE_SSL,

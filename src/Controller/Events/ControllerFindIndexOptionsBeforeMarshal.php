@@ -37,13 +37,13 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
 
     /**
      * @param string $name Name
-     * @param null $subject Subject must be an instance of Table
-     * @param null $data Data
+     * @param \Cake\Controller\Controller $subject Subject must be an instance of Table
+     * @param array $data Data
      */
-    final public function __construct($name, $subject = null, $data = null)
+    final public function __construct($name, Controller $subject, $data = null)
     {
         $this->setController($subject);
-        $this->setOptions($data['options'] ?? null);
+        $this->setOptions($data['options']);
 
         parent::__construct($name, $subject, $data);
     }

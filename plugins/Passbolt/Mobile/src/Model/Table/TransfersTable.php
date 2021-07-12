@@ -122,7 +122,7 @@ class TransfersTable extends Table
 
         $validator
             ->notEmptyString('status', __('The status should not be empty.'))
-            ->requirePresence('status', null, __('The status is required.'))
+            ->requirePresence('status', true, __('The status is required.'))
             ->inList('status', Transfer::TRANSFER_STATUSES, __(
                 'The status must be one of the following: {0}.',
                 implode(', ', Transfer::TRANSFER_STATUSES)

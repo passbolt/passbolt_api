@@ -164,7 +164,7 @@ class DirectoryOrgSettings
      * Retrieve custom object class.
      *
      * @param string $objectType The type of object to retrieve the class for
-     * @return string
+     * @return string|null
      */
     public function getObjectClass(string $objectType)
     {

@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Notification\Email;
 
 use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
-use Cake\ORM\TableRegistry;
 
 class MfaRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
@@ -27,7 +26,7 @@ class MfaRedactorPool extends AbstractSubscribedEmailRedactorPool
     public function getSubscribedRedactors()
     {
         return [
-            new MfaUserSettingsResetEmailRedactor(TableRegistry::getTableLocator()->get('Users')),
+            new MfaUserSettingsResetEmailRedactor(),
         ];
     }
 }

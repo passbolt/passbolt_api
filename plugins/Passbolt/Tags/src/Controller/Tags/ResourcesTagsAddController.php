@@ -51,6 +51,7 @@ class ResourcesTagsAddController extends AppController
         $data = $this->_formatRequestData();
 
         $options = ['contain' => ['all_tags' => 1, 'permission' => 1]];
+        /** @var Resource $resource */
         $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
@@ -143,7 +144,9 @@ class ResourcesTagsAddController extends AppController
                         'user_id' => $userId,
                     ]);
                 }
-                array_push($resource->get('tags'), $existingTag);
+                $tags = $resource->get('tags') ?? [];
+                array_push($tags, $existingTag);
+                $resource->set('tags', $tags);
             }
         }
 

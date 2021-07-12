@@ -17,22 +17,21 @@ declare(strict_types=1);
 namespace Passbolt\Ee\Service;
 
 use App\Utility\UserAccessControl;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Log\Log;
-use Cake\ORM\TableRegistry;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Ee\Model\Dto\SubscriptionKeyDto;
-use Passbolt\Ee\Model\Table\SubscriptionsTable;
 
+/**
+ * @property \Passbolt\Ee\Model\Table\SubscriptionsTable $Subscriptions
+ */
 class SubscriptionKeyGetService
 {
+    use ModelAwareTrait;
+
     public const LEGACY_SUBSCRIPTION_FILE = CONFIG . 'license';
     public const SUBSCRIPTION_FILE = CONFIG . 'subscription_key.txt';
-
-    /**
-     * @var \Passbolt\Ee\Model\Table\SubscriptionsTable $Subscriptions
-     */
-    protected $SubscriptionsTable;
 
     /**
      * @var \Passbolt\Ee\Service\SubscriptionKeyValidateService $SubscriptionValidateService
@@ -41,13 +40,10 @@ class SubscriptionKeyGetService
 
     /**
      * SubscriptionKeyGetService constructor.
-     *
-     * @param \Passbolt\Ee\Model\Table\SubscriptionsTable|null $Subscriptions subscriptions table
      */
-    public function __construct(?SubscriptionsTable $Subscriptions = null)
+    public function __construct()
     {
-        $this->SubscriptionsTable = $Subscriptions
-            ?? TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
+        $this->loadModel('Passbolt/Ee.Subscriptions');
         $this->SubscriptionValidateService = new SubscriptionKeyValidateService();
     }
 
@@ -81,7 +77,7 @@ class SubscriptionKeyGetService
     protected function readFromDB()
     {
         try {
-            return $this->SubscriptionsTable->getOrFail()->get('value');
+            return $this->Subscriptions->getOrFail()->get('value');
         } catch (SubscriptionRecordNotFoundException $exception) {
             Log::warning('The subscription key could not be found in the database. Falling back on files.');
             // Try some other ways...

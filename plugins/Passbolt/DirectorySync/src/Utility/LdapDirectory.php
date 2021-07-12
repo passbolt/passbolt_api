@@ -34,11 +34,30 @@ use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
  */
 class LdapDirectory implements DirectoryInterface
 {
+    /**
+     * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
+     */
     private $directorySettings;
+
+    /**
+     * @var \LdapTools\LdapManager
+     */
     private $ldap;
+
+    /**
+     * @var mixed
+     */
     private $mappingRules;
+
+    /**
+     * @var string
+     */
     private $directoryType;
-    private $directoryResults = null;
+
+    /**
+     * @var \Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults
+     */
+    private $directoryResults;
 
     /**
      * LdapDirectory constructor.

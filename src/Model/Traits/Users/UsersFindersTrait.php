@@ -31,7 +31,7 @@ use Exception;
 use InvalidArgumentException;
 
 /**
- * @method \Composer\EventDispatcher\EventDispatcher getEventManager()
+ * @method \Cake\Event\EventManager getEventManager()
  * @property \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs
  */
 trait UsersFindersTrait

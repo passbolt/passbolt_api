@@ -50,7 +50,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findByAcoForeignKeyAndType(string $acoForeignKey, string $type)
+ * @method \Cake\ORM\Query findByAcoForeignKeyAndType(string $acoForeignKey, int $type)
  * @method \Cake\ORM\Query findByAroAndAcoForeignKey(string $aro, string $acoForeignKey)
  * @method \Cake\ORM\Query findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
  */

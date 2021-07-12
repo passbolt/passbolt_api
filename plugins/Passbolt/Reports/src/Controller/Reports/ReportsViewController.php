@@ -112,7 +112,7 @@ class ReportsViewController extends AppController
         $this->viewBuilder()
             ->setTemplatePath('Reports/html')
             ->setLayout(static::DEFAULT_LAYOUT)
-            ->setTheme(false)
+            ->setTheme(null)
             ->setTemplate($report->getTemplate());
         $this->set('report', $report->createReport());
     }

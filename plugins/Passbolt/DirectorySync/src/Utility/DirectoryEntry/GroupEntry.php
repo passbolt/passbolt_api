@@ -80,7 +80,7 @@ class GroupEntry extends DirectoryEntry
      * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry group entry
      * @throws \Exception
      */
-    public static function fromLdapObject(LdapObject $ldapObject, array $mappingRules)
+    public static function fromLdapObject(LdapObject $ldapObject, array $mappingRules): GroupEntry
     {
         $groupEntry = new GroupEntry([]);
         $groupEntry->buildFromLdapObject($ldapObject, $mappingRules);
@@ -122,11 +122,9 @@ class GroupEntry extends DirectoryEntry
      * @param array $data array of data.
      * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry the group entry
      */
-    public static function fromArray(array $data)
+    public static function fromArray(array $data): GroupEntry
     {
-        $groupEntry = new GroupEntry($data);
-
-        return $groupEntry;
+        return new GroupEntry($data);
     }
 
     /**

@@ -118,7 +118,7 @@ class DirectoryReportsTable extends Table
 
     /**
      * @param string $parentId UUID parent report id
-     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryReport
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryReport|false
      */
     public function create(?string $parentId = null)
     {
@@ -131,8 +131,7 @@ class DirectoryReportsTable extends Table
                 'status' => true,
             ],
         ]);
-        $result = $this->save($entity);
 
-        return $result;
+        return $this->save($entity);
     }
 }

@@ -44,8 +44,10 @@ class Gnupg extends OpenPGPBackend
 {
     /**
      * Gpg object.
+     *
+     * @var \gnupg
      */
-    protected $_gpg = null;
+    protected $_gpg;
 
     /**
      * Constructor.
@@ -63,8 +65,7 @@ class Gnupg extends OpenPGPBackend
         }
 
         $this->_gpg = new \gnupg();
-        /** @phpstan-ignore-next-line */
-        $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
+        $this->_gpg->seterrormode(GNUPG_ERROR_EXCEPTION);
     }
 
     /**
@@ -518,6 +519,7 @@ class Gnupg extends OpenPGPBackend
             $msg = __('Could not use the key to sign and encrypt.');
             $this->assertSignKey();
             try {
+                /** @var string|false $encryptedText */
                 $encryptedText = $this->_gpg->encryptsign($text);
             } catch (\Exception $e) {
                 throw new Exception($msg . $e->getMessage());
@@ -530,6 +532,7 @@ class Gnupg extends OpenPGPBackend
             $msg = __('Could not use the key to encrypt.');
             $this->assertEncryptKey();
             try {
+                /** @var string|false $encryptedText */
                 $encryptedText = $this->_gpg->encrypt($text);
             } catch (\Exception $e) {
                 throw new Exception($msg . ' ' . $e->getMessage());
@@ -554,6 +557,8 @@ class Gnupg extends OpenPGPBackend
     public function decrypt(string $text, bool $verifySignature = false)
     {
         $decrypted = false;
+        $fingerprint = null;
+        $signatureInfo = null;
         $this->assertDecryptKey();
         if ($verifySignature) {
             $this->assertVerifyKey();
@@ -564,6 +569,7 @@ class Gnupg extends OpenPGPBackend
             if ($verifySignature === false) {
                 $decrypted = $this->_gpg->decrypt($text);
             } else {
+                /** @phpstan-ignore-next-line  */
                 $signatureInfo = $this->_gpg->decryptverify($text, $decrypted);
             }
         } catch (\Exception $e) {
@@ -599,6 +605,7 @@ class Gnupg extends OpenPGPBackend
     {
         $msg = __('The message cannot be verified.');
         try {
+            /** @phpstan-ignore-next-line */
             $signature = $this->_gpg->verify($armored, false, $plainText);
             if (empty($signature) || $signature[0]['fingerprint'] !== $fingerprint) {
                 throw new Exception($msg);
@@ -621,6 +628,7 @@ class Gnupg extends OpenPGPBackend
         $msg = __('Could not sign the text. ');
         $this->assertSignKey();
         try {
+            /** @var string|false $signedText */
             $signedText = $this->_gpg->sign($text);
             $this->clearSignKeys();
         } catch (\Exception $e) {

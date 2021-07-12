@@ -32,23 +32,22 @@ class DigestRegisterEvent extends Event
 
     /**
      * @param string $name Name of the event
-     * @param null $subject Subject of the dispatched event
-     * @param null $data Data for the event
+     * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $subject Subject of the dispatched event
      */
-    final public function __construct($name, $subject = null, $data = null)
+    final public function __construct(string $name, $subject)
     {
         if (!$subject instanceof DigestsPool) {
             throw new InvalidArgumentException('`subject` must be an instance of ' . DigestsPool::class);
         }
 
-        parent::__construct($name, $subject, $data);
+        parent::__construct($name, $subject);
     }
 
     /**
      * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsPool Digests Pool
-     * @return \Passbolt\EmailDigest\Utility\Digest\DigestRegisterEvent
+     * @return self
      */
-    public static function create(DigestsPool $digestsPool)
+    public static function create(DigestsPool $digestsPool): self
     {
         return new static(static::EVENT_NAME, $digestsPool);
     }
@@ -56,7 +55,7 @@ class DigestRegisterEvent extends Event
     /**
      * @return \Passbolt\EmailDigest\Utility\Digest\DigestsPool
      */
-    public function getEmailDigestsPool()
+    public function getEmailDigestsPool(): DigestsPool
     {
         return $this->getSubject();
     }

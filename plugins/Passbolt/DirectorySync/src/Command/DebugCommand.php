@@ -24,10 +24,6 @@ use Passbolt\DirectorySync\Utility\LdapDirectory;
 
 class DebugCommand extends DirectorySyncCommand
 {
-    protected $DirectoryEntries;
-    protected $Groups;
-    protected $Users;
-
     /**
      * @inheritDoc
      */

@@ -38,6 +38,6 @@ abstract class DirectorySyncConsoleIntegrationTestCase extends TestCase
         Configure::write('passbolt.plugins.directorySync.test', true);
         $this->enableDirectoryIntegration();
         $this->useCommandRunner();
-        PassboltCommand::$userIsRoot = false;
+        PassboltCommand::$isUserRoot = false;
     }
 }

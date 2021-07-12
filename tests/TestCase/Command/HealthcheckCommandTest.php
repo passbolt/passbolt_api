@@ -35,7 +35,7 @@ class HealthcheckCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        HealthcheckCommand::$userIsRoot = false;
+        HealthcheckCommand::$isUserRoot = false;
     }
 
     /**

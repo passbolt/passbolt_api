@@ -38,6 +38,8 @@ class EmailController extends WebInstallerController
 
     /**
      * Contains the email class.
+     *
+     * @var \Cake\Mailer\Mailer
      */
     protected $email = null;
 
@@ -137,7 +139,9 @@ class EmailController extends WebInstallerController
                 ->setSubject(__('passbolt test email'))
                 ->deliver($this->_getDefaultMessage());
         } catch (\Exception $e) {
-            $trace = $this->email->getTransport()->getTrace();
+            /** @var \App\Mailer\Transport\DebugSmtpTransport $transport */
+            $transport = $this->email->getTransport();
+            $trace = $transport->getTrace();
             $this->set([
                 'test_email_status' => false,
                 'test_email_error' => $e->getMessage(),

@@ -28,8 +28,19 @@ use Passbolt\Log\Model\Entity\EntityHistory;
 
 class ActionLogResultsParser
 {
+    /**
+     * @var array|\Cake\ORM\ResultSet
+     */
     protected $actionLogs = [];
+
+    /**
+     * @var array
+     */
     protected $entries = [];
+
+    /**
+     * @var array
+     */
     protected $filters = [];
 
     public const TYPE_PERMISSIONS_UPDATED = 'Permissions.updated';

@@ -1,7 +1,8 @@
 parameters:
-    level: 4
+    level: 6
     checkMissingIterableValueType: false
     treatPhpDocTypesAsCertain: false
+    checkGenericClassInNonGenericObjectType: false
     paths:
         - src
         - plugins

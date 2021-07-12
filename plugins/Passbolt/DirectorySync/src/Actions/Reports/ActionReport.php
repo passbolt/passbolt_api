@@ -26,11 +26,34 @@ use Passbolt\DirectorySync\Utility\Alias;
  */
 class ActionReport implements \Serializable
 {
+    /**
+     * @var string
+     */
     protected $model;
+
+    /**
+     * @var string
+     */
     protected $action;
+
+    /**
+     * @var string
+     */
     protected $status;
+
+    /**
+     * @var mixed
+     */
     protected $data;
+
+    /**
+     * @var \Cake\Chronos\ChronosInterface|\Cake\I18n\FrozenTime
+     */
     protected $created;
+
+    /**
+     * @var string
+     */
     protected $message;
 
     /**
