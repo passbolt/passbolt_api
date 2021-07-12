@@ -62,7 +62,9 @@ class AvatarTransferCommand extends PassboltCommand
             ->get('FileStorage')
             ->setTable('file_storage');
 
+        /** @phpstan-ignore-next-line */
         $AvatarsTable->setConnection(ConnectionManager::get($datasource));
+        /** @phpstan-ignore-next-line */
         $FileStorageTable->setConnection(ConnectionManager::get($datasource));
 
         $results = (new AvatarsTransferService($AvatarsTable, $FileStorageTable, true))->transfer();

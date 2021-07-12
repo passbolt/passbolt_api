@@ -40,7 +40,7 @@ class MigrateCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        MigrateCommand::$userIsRoot = false;
+        MigrateCommand::$isUserRoot = false;
     }
 
     /**

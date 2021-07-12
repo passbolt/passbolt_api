@@ -50,8 +50,8 @@ class AvatarProcessing
 
         // Crop that resized image
         $size = $image->getSize();
-        $x = round(($size->getWidth() - $cropWidth) / 2);
-        $y = round(($size->getHeight() - $cropHeight) / 2);
+        $x = (int)round(($size->getWidth() - $cropWidth) / 2);
+        $y = (int)round(($size->getHeight() - $cropHeight) / 2);
 
         return $image
             ->crop(new Point($x, $y), new Box($cropWidth, $cropHeight))

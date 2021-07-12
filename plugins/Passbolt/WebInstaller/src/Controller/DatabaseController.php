@@ -32,8 +32,10 @@ class DatabaseController extends WebInstallerController
 {
     /**
      * Default password to use in the UI in case the config is provided through a .ini config file.
+     *
+     * @var string
      */
-    private $defaultPassword = null;
+    private $defaultPassword;
 
     /**
      * Ini config file content (if ini file provided).
