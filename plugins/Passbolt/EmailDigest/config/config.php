@@ -19,7 +19,7 @@ return [
                 'version' => '1.0.0',
                 'enabled' => env('PASSBOLT_PLUGINS_EMAIL_DIGEST_ENABLED', true),
                 'batchSizeLimit' => filter_var(
-                    env('PASSBOLT_PLUGINS_EMAIL_DIGEST_BATCH_SIZE_LIMIT', 100),
+                    env('PASSBOLT_PLUGINS_EMAIL_DIGEST_BATCH_SIZE_LIMIT', '100'),
                     FILTER_VALIDATE_INT
                 ),
             ],

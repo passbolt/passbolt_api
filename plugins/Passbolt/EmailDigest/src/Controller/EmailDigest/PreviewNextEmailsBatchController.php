@@ -24,8 +24,7 @@ use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 class PreviewNextEmailsBatchController extends AppController
 {
     /**
-     * @param \Cake\Event\Event $event Event to use
-     * @return \Cake\Http\Response|null
+     * @inheritDoc
      */
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {

@@ -41,7 +41,7 @@ class KeyringInitCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        KeyringInitCommand::$userIsRoot = false;
+        KeyringInitCommand::$isUserRoot = false;
         $this->key = Configure::read('passbolt.gpg.serverKey.private');
     }
 

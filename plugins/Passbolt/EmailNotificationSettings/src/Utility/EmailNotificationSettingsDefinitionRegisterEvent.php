@@ -36,7 +36,7 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
 
     /**
      * @param string $name Name of the event
-     * @param null $subject Subject of the dispatched event
+     * @param \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm $subject Subject of the dispatched event
      * @param null $data Data for the event
      */
     final public function __construct($name, $subject = null, $data = null)

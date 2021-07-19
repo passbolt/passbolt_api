@@ -26,7 +26,6 @@ use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Users\UsersFindersTrait;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -449,8 +448,7 @@ class UsersTable extends Table
         if (isset($control) && !empty($control->getId())) {
             $eventData['adminId'] = $control->getId();
         }
-        $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);
-        $this->getEventManager()->dispatch($event);
+        $this->dispatchEvent(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $eventData, $this);
 
         return $user;
     }

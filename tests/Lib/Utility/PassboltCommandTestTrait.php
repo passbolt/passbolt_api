@@ -20,14 +20,14 @@ trait PassboltCommandTestTrait
 {
     public function assertCommandCannotBeRunAsRootUser(string $commandClassName)
     {
-        /** @var PassboltCommand $cmd */
+        /** @var \App\Command\PassboltCommand $cmd */
         $cmd = new $commandClassName();
 
-        $cmd::$userIsRoot = true;
+        $cmd::$isUserRoot = true;
         $this->exec($cmd::defaultName());
         $this->assertOutputContains('Passbolt commands cannot be executed as root.');
         $this->assertExitError();
-        $cmd::$userIsRoot = false;
+        $cmd::$isUserRoot = false;
     }
 
     /**

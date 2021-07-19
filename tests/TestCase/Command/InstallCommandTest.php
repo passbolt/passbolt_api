@@ -40,7 +40,7 @@ class InstallCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        InstallCommand::$userIsRoot = false;
+        InstallCommand::$isUserRoot = false;
         $this->emptyDirectory(CACHE . 'database' . DS);
     }
 

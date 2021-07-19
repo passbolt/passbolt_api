@@ -33,7 +33,7 @@ class ValidationException extends HttpException implements
     protected $_defaultCode = 400;
 
     /**
-     * @inheritDoc
+     * @var int
      */
     protected $code = 400;
 
