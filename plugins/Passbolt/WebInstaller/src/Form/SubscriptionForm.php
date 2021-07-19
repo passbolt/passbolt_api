@@ -23,7 +23,10 @@ use Passbolt\Ee\Service\SubscriptionKeyValidateService;
 
 class SubscriptionForm extends Form
 {
-    private $_lastError = null;
+    /**
+     * @var string
+     */
+    private $_lastError;
 
     /**
      * License key schema.

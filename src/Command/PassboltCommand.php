@@ -28,7 +28,10 @@ use Passbolt\Ee\Command\SubscriptionCheckCommand;
  */
 class PassboltCommand extends Command
 {
-    public static $userIsRoot = null;
+    /**
+     * @var bool
+     */
+    public static $isUserRoot = false;
 
     /**
      * The Passbolt welcome banner should be shown only once.
@@ -47,8 +50,8 @@ class PassboltCommand extends Command
 
         CommandBootstrap::init();
 
-        if (!isset(self::$userIsRoot)) {
-            self::$userIsRoot = (PROCESS_USER === 'root');
+        if (!isset(self::$isUserRoot)) {
+            self::$isUserRoot = (PROCESS_USER === 'root');
         }
     }
 
@@ -226,7 +229,7 @@ class PassboltCommand extends Command
      */
     protected function assertNotRoot(ConsoleIo $io): bool
     {
-        if (self::$userIsRoot) {
+        if (self::$isUserRoot) {
             $io->out();
             $this->error('Passbolt commands cannot be executed as root.', $io);
             $io->out();

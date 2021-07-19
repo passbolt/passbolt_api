@@ -44,8 +44,8 @@ class MfaVerifiedCookie
             ->withSecure($ssl);
 
         if ($expirationDate !== null) {
-            $mfaCookie = $mfaCookie
-                ->withExpiry($expirationDate);
+            /** @phpstan-ignore-next-line Cake is a bit late on its typing here. */
+            $mfaCookie = $mfaCookie ->withExpiry($expirationDate);
         }
 
         return $mfaCookie;

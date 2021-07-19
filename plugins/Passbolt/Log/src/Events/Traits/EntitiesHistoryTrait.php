@@ -24,6 +24,9 @@ use Passbolt\Log\Model\Entity\EntityHistory;
 
 trait EntitiesHistoryTrait
 {
+    /**
+     * @var array
+     */
     private $config = [
         'Share.share' => [
             'models' => [

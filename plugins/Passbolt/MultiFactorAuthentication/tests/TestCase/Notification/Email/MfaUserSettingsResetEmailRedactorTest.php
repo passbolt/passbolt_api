@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Notification\Email;
 
 use App\Model\Entity\User;
-use App\Model\Table\UsersTable;
+use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Event\Event;
@@ -32,16 +32,9 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
      */
     private $sut;
 
-    /**
-     * @var UsersTable|MockObject
-     */
-    private $usersTableMock;
-
     public function setUp(): void
     {
-        $this->usersTableMock = $this->createMock(UsersTable::class);
-
-        $this->sut = new MfaUserSettingsResetEmailRedactor($this->usersTableMock);
+        $this->sut = new MfaUserSettingsResetEmailRedactor();
 
         parent::setUp();
     }
@@ -58,19 +51,14 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
 
     public function testThatEmailUseAdminDeleteTemplateWhenUserIsAdmin()
     {
-        $adminUser = new User();
-        $user = new User();
-        $user->username = 'admin';
-        $uac = new UserAccessControl('admin', UuidFactory::uuid(), 'ada@passbolt.com');
+        $adminUser = UserFactory::make()->admin()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $uac = new UserAccessControl('admin', $adminUser->id, 'ada@passbolt.com');
         $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
         $event->setData([
             'target' => $user,
             'uac' => $uac,
         ]);
-
-        $this->usersTableMock->expects($this->once())
-            ->method('findFirstForEmail')
-            ->willReturn($adminUser);
 
         $emailCollection = $this->sut->onSubscribedEvent($event);
         $email = $emailCollection->getEmails()[0];
@@ -78,10 +66,9 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $this->assertCount(1, $emailCollection->getEmails());
         $this->assertEquals(__('Your multi-factor authentication settings were reset by an administrator.'), $email->getSubject());
         $this->assertEquals(MfaUserSettingsResetEmailRedactor::TEMPLATE_ADMIN, $email->getTemplate());
-        $this->assertEquals([
-            'title' => __('Multi-factor authentication settings were reset.'),
-            'body' => ['user' => $adminUser],
-        ], $email->getData());
+        $emailData = $email->getData();
+        $this->assertEquals('Multi-factor authentication settings were reset.', $emailData['title']);
+        $this->assertEquals($adminUser->id, $emailData['body']['user']['id']);
     }
 
     public function testThatEmailUseSelfDeleteTemplateWhenUserIsHimself()

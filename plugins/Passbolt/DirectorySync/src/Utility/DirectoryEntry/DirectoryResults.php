@@ -52,13 +52,15 @@ class DirectoryResults
 
     /**
      * Directory settings
+     *
+     * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
      */
     private $directorySettings;
 
     /**
      * Groups
      *
-     * @var array
+     * @var \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry[]
      */
     private $groups;
 
@@ -682,9 +684,9 @@ class DirectoryResults
      * Lookup for a group by its case insensitive name.
      *
      * @param string $name group name
-     * @return array|null the corresponding GroupEntry
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry|null the corresponding GroupEntry
      */
-    public function lookupGroupByGroupName(string $name)
+    public function lookupGroupByGroupName(string $name): ?GroupEntry
     {
         foreach ($this->groups as $group) {
             if (strtolower($group['group']['name']) === strtolower($name)) {

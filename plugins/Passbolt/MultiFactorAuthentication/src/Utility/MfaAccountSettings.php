@@ -32,10 +32,15 @@ class MfaAccountSettings
     public const VERIFIED = 'verified';
     public const PROVIDERS = 'providers';
 
+    /**
+     * @var array|null
+     */
     protected $settings;
+
+    /**
+     * @var \App\Utility\UserAccessControl
+     */
     protected $uac;
-    protected $errors;
-    protected $remember;
 
     /**
      * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
@@ -70,7 +75,6 @@ class MfaAccountSettings
         $this->AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $this->uac = $uac;
         $this->settings = $settings;
-        $this->errors = null;
     }
 
     /**

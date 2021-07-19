@@ -30,7 +30,7 @@ class SubscriptionKeySaveService
     protected $SubscriptionsTable;
 
     /**
-     * @var \Passbolt\Ee\Service\SubscriptionKeyValidateService $SubscriptionValidateService
+     * @var \Passbolt\Ee\Service\SubscriptionKeyValidateService $SubscriptionKeyValidateService
      */
     protected $SubscriptionKeyValidateService;
 

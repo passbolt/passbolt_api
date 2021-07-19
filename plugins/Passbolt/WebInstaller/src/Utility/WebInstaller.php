@@ -32,10 +32,15 @@ use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 
 class WebInstaller
 {
+    /**
+     * @var \Cake\Http\Session|null
+     */
     protected $session = null;
+
+    /**
+     * @var array|mixed
+     */
     protected $settings = [];
-    public $createdUser = null;
-    public $createdUserToken = null;
 
     /**
      * WebInstaller constructor.

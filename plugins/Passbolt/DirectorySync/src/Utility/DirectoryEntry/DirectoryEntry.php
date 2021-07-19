@@ -93,9 +93,11 @@ abstract class DirectoryEntry implements ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $offset Offset
+     * @param mixed $value Value
+     * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (!is_null($offset)) {
             $this->{$offset} = $value;
@@ -103,23 +105,26 @@ abstract class DirectoryEntry implements ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $offset Offset
+     * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->{$offset});
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $offset Offset
+     * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->{$offset});
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $offset Offset
+     * @return mixed|null
      */
     public function offsetGet($offset)
     {

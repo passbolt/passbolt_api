@@ -26,8 +26,14 @@ use Cake\ORM\Entity;
  */
 class SyncError implements \Serializable
 {
+    /**
+     * @var \Cake\ORM\Entity|null
+     */
     protected $entity;
-    protected $data;
+
+    /**
+     * @var \Exception|null
+     */
     protected $exception;
 
     /**
@@ -63,16 +69,6 @@ class SyncError implements \Serializable
     public function getException()
     {
         return $this->exception;
-    }
-
-    /**
-     * Get data.
-     *
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->getData();
     }
 
     /**

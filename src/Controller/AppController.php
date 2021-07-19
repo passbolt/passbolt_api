@@ -100,7 +100,7 @@ class AppController extends Controller
      * All passbolt response contains an header (metadata like status) an a body (data)
      *
      * @param string $message message in the header section
-     * @param array  $body data for the body section
+     * @param mixed  $body data for the body section
      * @return void
      */
     protected function success($message = null, $body = null)

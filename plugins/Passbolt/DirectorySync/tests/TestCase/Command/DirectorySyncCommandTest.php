@@ -45,7 +45,7 @@ class DirectorySyncCommandTest extends DirectorySyncConsoleIntegrationTestCase
 
     public function testDirectorySyncCommandAsAdmin()
     {
-        DirectorySyncCommand::$userIsRoot = true;
+        DirectorySyncCommand::$isUserRoot = true;
         $this->exec('directory_sync');
         $this->assertExitError();
     }

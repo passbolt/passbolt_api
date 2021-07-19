@@ -23,7 +23,14 @@ namespace Passbolt\DirectorySync\Actions\Reports;
  */
 class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, \Countable
 {
+    /**
+     * @var array|null
+     */
     protected $reports;
+
+    /**
+     * @var int
+     */
     private $position;
 
     /**

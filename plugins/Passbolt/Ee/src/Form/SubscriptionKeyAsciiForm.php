@@ -41,8 +41,10 @@ class SubscriptionKeyAsciiForm extends Form
 {
     /**
      * Gpg object.
+     *
+     * @var \App\Utility\OpenPGP\Backends\Gnupg
      */
-    protected $_gpg = null;
+    protected $_gpg;
 
     /**
      * SubscriptionKeyAsciiForm constructor.

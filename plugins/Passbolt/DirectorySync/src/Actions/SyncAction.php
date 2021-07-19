@@ -76,6 +76,9 @@ abstract class SyncAction
      */
     protected $summary;
 
+    /**
+     * @var \Passbolt\DirectorySync\Model\Entity\DirectoryReport
+     */
     protected $report;
 
     /**

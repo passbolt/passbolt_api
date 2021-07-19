@@ -24,7 +24,14 @@ use Passbolt\DirectorySync\Utility\SyncError;
 
 trait SyncCommandTrait
 {
+    /**
+     * @var string
+     */
     protected $model;
+
+    /**
+     * @var int
+     */
     protected $pad = 10;
 
     /**

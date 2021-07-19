@@ -17,35 +17,32 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Notification\Email;
 
 use App\Model\Entity\User;
-use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\UserAccessControl;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Passbolt\MultiFactorAuthentication\Controller\UserSettings\MfaUserSettingsDeleteController;
 
+/**
+ * @property \App\Model\Table\UsersTable $Users
+ */
 class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterface
 {
+    use ModelAwareTrait;
     use SubscribedEmailRedactorTrait;
 
     public const TEMPLATE_SELF = 'Passbolt/MultiFactorAuthentication.LU/mfa_user_settings_reset_self';
     public const TEMPLATE_ADMIN = 'Passbolt/MultiFactorAuthentication.LU/mfa_user_settings_reset_admin';
 
     /**
-     * @var \App\Model\Table\UsersTable
-     */
-    private $usersTable;
-
-    /**
      * MfaUserSettingsResetEmailRedactor constructor.
-     *
-     * @param \App\Model\Table\UsersTable $usersTable user table
      */
-    public function __construct(UsersTable $usersTable)
+    public function __construct()
     {
-        $this->usersTable = $usersTable;
+        $this->loadModel('Users');
     }
 
     /**
@@ -86,11 +83,11 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
      */
     private function createEmailAdminDelete(User $user, UserAccessControl $uac)
     {
-        $admin = $this->usersTable->findFirstForEmail($uac->getId());
+        $admin = $this->Users->findFirstForEmail($uac->getId());
 
         return new Email(
             $user->username,
-            $subject = __('Your multi-factor authentication settings were reset by an administrator.'),
+            __('Your multi-factor authentication settings were reset by an administrator.'),
             [
                 'title' => __('Multi-factor authentication settings were reset.'),
                 'body' => ['user' => $admin],
