@@ -241,7 +241,7 @@ return [
             'username' => env('EMAIL_TRANSPORT_DEFAULT_USERNAME', null),
             'password' => env('EMAIL_TRANSPORT_DEFAULT_PASSWORD', null),
             'client' => env('EMAIL_TRANSPORT_DEFAULT_CLIENT', null),
-            'tls' => env('EMAIL_TRANSPORT_DEFAULT_TLS', null),
+            'tls' => filter_var(env('EMAIL_TRANSPORT_DEFAULT_TLS', false), FILTER_VALIDATE_BOOLEAN),
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
 
         ],
