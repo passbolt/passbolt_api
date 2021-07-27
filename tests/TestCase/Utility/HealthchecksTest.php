@@ -62,7 +62,7 @@ class HealthchecksTest extends AppIntegrationTestCase
     public function testHealthcheckEnvironment()
     {
         $check = Healthchecks::environment();
-        $attributes = ['phpVersion', 'pcre', 'tmpWritable', 'imgPublicWritable'];
+        $attributes = ['phpVersion', 'pcre', 'tmpWritable'];
         $this->assertArrayHasAttributes($attributes, $check['environment']);
     }
 

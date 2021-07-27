@@ -221,7 +221,6 @@ class Healthchecks
         $checks['environment']['intl'] = extension_loaded('intl');
         $checks['environment']['image'] = (extension_loaded('gd') || extension_loaded('imagick'));
         $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);
-        $checks['environment']['imgPublicWritable'] = self::_checkRecursiveDirectoryWritable(IMAGES . 'public/');
         $checks['environment']['logWritable'] = is_writable(LOGS);
 
         return $checks;

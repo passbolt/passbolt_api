@@ -45,6 +45,7 @@ debian/*substvars*
 /config/.env
 /logs/*
 /tmp/*
+!/tmp/avatars/empty
 /vendor/*
 
 # IDE and editor specific files #

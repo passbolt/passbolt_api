@@ -78,7 +78,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
      * @return void
      * @throws \PHPUnit\Exception
      */
-    public function testViewNonExistent(string $format)
+    public function testAvatarsViewController_ViewNonExistentAvatar(string $format)
     {
         $this->get('avatars/view/1/' . $format . AvatarHelper::IMAGE_EXTENSION);
         $defaultAvatarFileName = $this->avatarsCacheService->getFallBackFileName();
@@ -94,7 +94,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
      * @return void
      * @throws \PHPUnit\Exception
      */
-    public function testViewOnExistent(string $format)
+    public function testViewAvatarsViewController_ViewExistentAvatar(string $format)
     {
         $avatar = $this->createAvatar();
 
@@ -115,11 +115,42 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     }
 
     /**
+     * Test view method on existent Avatar, which local storage has been deleted.
+     *
+     * @dataProvider validFormatDataProvider
+     * @param string $format
+     * @return void
+     * @throws \PHPUnit\Exception
+     */
+    public function testAvatarsViewController_ViewExistentAvatarWithDeletedFile(string $format)
+    {
+        $avatar = $this->createAvatar();
+
+        $fileName = TMP . 'tests' . DS . 'avatars' . DS .
+            $this->avatarsCacheService->getAvatarFileName($avatar, $format);
+
+        $expectedFileContent = file_get_contents($fileName);
+
+        // Delete the file previously saved on disk
+        unlink($fileName);
+
+        $this->get('avatars/view/' . $avatar->id . '/' . $format . AvatarHelper::IMAGE_EXTENSION);
+        $this->assertResponseEquals($expectedFileContent);
+
+        // Ensure that the virtual field is correctly constructed.
+        $virtualField = [
+            AvatarsTable::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar, AvatarsTable::FORMAT_MEDIUM),
+            AvatarsTable::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar),
+        ];
+        $this->assertSame($virtualField, $avatar->url);
+    }
+
+    /**
      * Test view on a non valid format.
      *
      * @dataProvider validFormatDataProvider
      */
-    public function testViewOnWrongExtension(string $format)
+    public function testAvatarsViewController_ViewOnWrongExtension(string $format)
     {
         $avatar = $this->createAvatar();
         $expectedFileContent = file_get_contents($this->avatarsCacheService->getFallBackFileName());

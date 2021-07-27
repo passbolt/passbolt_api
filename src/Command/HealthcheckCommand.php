@@ -211,18 +211,6 @@ class HealthcheckCommand extends PassboltCommand
             ]
         );
         $this->assert(
-            $checks['environment']['imgPublicWritable'],
-            __('The public image directory and its content are writable.'),
-            __('The public image directory and its content are not writable.'),
-            [
-                __('Ensure the public image directory and its content are writable by the webserver user.'),
-                __('you can try:'),
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . IMAGES . 'public',
-                'sudo chmod 775 $(find ' . IMAGES . 'public -type d)',
-                'sudo chmod 664 $(find ' . IMAGES . 'public -type f)',
-            ]
-        );
-        $this->assert(
             $checks['environment']['logWritable'],
             __('The logs directory and its content are writable.'),
             __('The logs directory and its content are not writable.'),
