@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Form;
 use App\Model\Entity\Role;
 use Cake\Form\Form;
 use Cake\Form\Schema;
+use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
@@ -350,8 +351,13 @@ class LdapConfigurationForm extends Form
 
         $User = TableRegistry::getTableLocator()->get('Users');
         if (isset($settings['defaultUser'])) {
-            $defaultUser = $User->find()->where(['Users.username' => $settings['defaultUser']])->first();
+            $defaultUser = $User->find()->where([
+                'Users.username' => $settings['defaultUser'],
+                'Users.deleted' => false,
+                'Users.active' => true,
+            ])->first();
             if (empty($defaultUser)) {
+                Log::warning("LdapConfigurationForm: Default user ({$settings['defaultUser']}) not found");
                 $settings['defaultUser'] = '';
             } else {
                 $settings['defaultUser'] = $defaultUser->get('id');
@@ -359,9 +365,13 @@ class LdapConfigurationForm extends Form
         }
         if (isset($settings['defaultGroupAdminUser'])) {
             $defaultGroupAdminUser = $User->find()
-                ->where(['Users.username' => $settings['defaultGroupAdminUser']])
-                ->first();
+                ->where([
+                    'Users.username' => $settings['defaultGroupAdminUser'],
+                    'Users.deleted' => false,
+                    'Users.active' => true,
+                ])->first();
             if (empty($defaultGroupAdminUser)) {
+                Log::warning("LdapConfigurationForm: Default group admin user ({$settings['defaultGroupAdminUser']}) not found");
                 $settings['defaultGroupAdminUser'] = '';
             } else {
                 $settings['defaultGroupAdminUser'] = $defaultGroupAdminUser->get('id');
