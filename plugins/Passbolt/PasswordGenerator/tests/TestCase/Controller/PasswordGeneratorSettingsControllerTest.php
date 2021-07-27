@@ -19,6 +19,7 @@ namespace Passbolt\PasswordGenerator\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
+use Passbolt\PasswordGenerator\Plugin;
 use Passbolt\PasswordGenerator\Service\GetPasswordGeneratorService;
 
 class PasswordGeneratorSettingsControllerTest extends AppIntegrationTestCase
@@ -27,7 +28,9 @@ class PasswordGeneratorSettingsControllerTest extends AppIntegrationTestCase
     {
         // Cleanup the env and config variable
         putenv('PASSBOLT_PLUGINS_PASSWORD_GENERATOR_DEFAULT_GENERATOR');
-        Configure::delete('passbolt.plugins.passwordGenerator.defaultPasswordGenerator');
+        Configure::delete(Plugin::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY);
+
+        parent::tearDown();
     }
 
     /**
