@@ -19,10 +19,11 @@ namespace App\Model\Entity;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * @property string $id
- * @property string|resource|null $data
+ * @property mixed $data
  * @property string $profile_id
  * @property \Cake\I18n\FrozenTime $created_at
  * @property \Cake\I18n\FrozenTime|null $updated_at
@@ -63,5 +64,23 @@ class Avatar extends Entity
 
         // Transform original model to add paths.
         return $avatarsPath;
+    }
+
+    /**
+     * Get data in string format.
+     *
+     * @return string
+     */
+    public function getDataInStringFormat(): string
+    {
+        $data = $this->data ?? '';
+
+        if (is_resource($data)) {
+            $data = stream_get_contents($data);
+        } elseif ($data instanceof StreamInterface) {
+            $data = $data->getContents();
+        }
+
+        return $data;
     }
 }

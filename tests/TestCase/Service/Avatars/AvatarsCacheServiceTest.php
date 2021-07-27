@@ -66,15 +66,16 @@ class AvatarsCacheServiceTest extends TestCase
         return [
             [file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png')],
             [(new Stream(FIXTURES . 'Avatar' . DS . 'ada.png'))->getContents()],
+            [(new Stream(FIXTURES . 'Avatar' . DS . 'ada.png'))],
         ];
     }
 
     public function dataForTestAvatarsCacheServiceStoreFail(): array
     {
         return [
+            [null],
             ['1234'],
             [FIXTURES . 'Avatar' . DS . 'ada.png'],
-            [(new Stream(FIXTURES . 'Avatar' . DS . 'ada.png'))],
         ];
     }
 
@@ -83,7 +84,7 @@ class AvatarsCacheServiceTest extends TestCase
      */
     public function testAvatarsCacheServiceStore($data)
     {
-        $id = UuidFactory::uuid('foo');
+        $id = UuidFactory::uuid();
         $avatar = new Avatar(compact('id', 'data'));
 
         $this->avatarsCacheService->storeInCache($avatar);
@@ -108,12 +109,32 @@ class AvatarsCacheServiceTest extends TestCase
      */
     public function testAvatarsCacheServiceStoreFail($data)
     {
-        $id = UuidFactory::uuid('foo');
+        $id = UuidFactory::uuid();
         $avatar = new Avatar(compact('id', 'data'));
 
         $this->avatarsCacheService->storeInCache($avatar);
 
         $this->assertFileDoesNotExist($this->cachedFileLocation . $id . DS . 'medium.jpg');
         $this->assertFileDoesNotExist($this->cachedFileLocation . $id . DS . 'small.jpg');
+    }
+
+    public function testAvatarsCacheServiceStore_Fail_After_File_Deleted()
+    {
+        $data = file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png');
+        $id = UuidFactory::uuid();
+        $avatar = new Avatar(compact('id', 'data'));
+
+        $this->avatarsCacheService->storeInCache($avatar);
+
+        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'medium.jpg');
+        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'small.jpg');
+
+        unlink($this->cachedFileLocation . $id . DS . 'medium.jpg');
+        unlink($this->cachedFileLocation . $id . DS . 'small.jpg');
+
+        $this->avatarsCacheService->storeInCache($avatar);
+
+        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'medium.jpg');
+        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'small.jpg');
     }
 }
