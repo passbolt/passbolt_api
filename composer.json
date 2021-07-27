@@ -49,6 +49,7 @@
         "ext-intl" : "*",
         "ext-mbstring" : "*",
         "ext-gnupg" : "*",
+        "ext-pdo": "*",
         "cakephp/cakephp": "4.2.4",
         "cakephp/migrations": "^3.0.0",
         "cakephp/plugin-installer": "^1.3.0",
@@ -79,12 +80,14 @@
             "App\\": "src",
             "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
             "Passbolt\\Locale\\": "./plugins/Passbolt/Locale/src",
+            "Passbolt\\PasswordGenerator\\": "./plugins/Passbolt/PasswordGenerator/src",
             "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
             "Passbolt\\Log\\": "./plugins/Passbolt/Log/src",
             "Passbolt\\EmailNotificationSettings\\": "./plugins/Passbolt/EmailNotificationSettings/src",
             "Passbolt\\EmailDigest\\": "plugins/Passbolt/EmailDigest/src",
-            "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src"
+            "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src",
+            "Passbolt\\Mobile\\": "./plugins/Passbolt/Mobile/src"
         }
     },
     "autoload-dev": {
@@ -93,11 +96,13 @@
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
             "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
             "Passbolt\\Locale\\Test\\": "./plugins/Passbolt/Locale/tests",
+            "Passbolt\\PasswordGenerator\\Test\\": "./plugins/Passbolt/PasswordGenerator/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests",
             "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests",
             "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/Passbolt/EmailNotificationSettings/tests",
             "Passbolt\\EmailDigest\\Test\\": "plugins/Passbolt/EmailDigest/tests",
-            "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests"
+            "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests",
+            "Passbolt\\Mobile\\Test\\": "./plugins/Passbolt/Mobile/tests"
         }
     },
     "scripts": {

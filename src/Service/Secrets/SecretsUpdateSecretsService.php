@@ -73,6 +73,7 @@ class SecretsUpdateSecretsService
     {
         foreach ($data as $rowIndex => $row) {
             $userId = Hash::get($row, 'user_id', null);
+            /** @var \App\Model\Entity\Secret|null $secret */
             $secret = $this->secretsTable->findByResourceIdAndUserId($resourceId, $userId)->first();
             if ($secret) {
                 $this->updateSecret($secret, $rowIndex, $row);

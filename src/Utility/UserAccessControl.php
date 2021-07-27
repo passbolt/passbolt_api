@@ -30,8 +30,19 @@ use Cake\Validation\Validation;
  */
 class UserAccessControl
 {
+    /**
+     * @var string|null
+     */
     private $userId;
+
+    /**
+     * @var string
+     */
     private $roleName;
+
+    /**
+     * @var string|null
+     */
     private $username;
 
     /**
@@ -60,7 +71,7 @@ class UserAccessControl
     /**
      * Get the user id
      *
-     * @return string
+     * @return string|null
      */
     public function getId()
     {

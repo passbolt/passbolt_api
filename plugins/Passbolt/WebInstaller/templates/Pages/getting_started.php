@@ -29,8 +29,8 @@ $this->assign('page_classes', 'setup start');
                 <h2><?= __('If you see this page, it means that passbolt is present on your server but not configured. Click on "Get Started" to launch the configuration wizard.') ?></h2>
                 <p>&nbsp;</p>
                 <p>
-                    <a href="<?= Router::url('/install/system_check') ?>" class="button primary big">
-                        <i class="fa fa-magic fa-fw"></i> <?= __('Get Started') ?>
+                    <a href="<?= Router::url('/install/system_check') ?>" class="button primary medium">
+                        <?= __('Get Started') ?>
                     </a>
                 </p>
             </div>

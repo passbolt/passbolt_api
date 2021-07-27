@@ -28,7 +28,7 @@ use Laminas\Diactoros\UploadedFile;
 /**
  * @property \App\Model\Table\AvatarsTable $Avatars
  */
-trait AvatarsModelTestTrait
+trait AvatarsModelTrait
 {
     /**
      * Asserts that an object has all the attributes an avatar should have.
@@ -37,7 +37,8 @@ trait AvatarsModelTestTrait
      */
     protected function assertAvatarAttributes($avatar)
     {
-        $this->assertObjectHasAttributes(['data'], $avatar);
+        $this->assertObjectHasAttributes(['url'], $avatar);
+        $this->assertObjectHasAttributes(['small', 'medium'], $avatar->url);
     }
 
     /**

@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\Avatars;
 
 use App\Model\Table\AvatarsTable;
-use App\Test\Lib\Model\AvatarsModelTestTrait;
+use App\Test\Lib\Model\AvatarsModelTrait;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -29,7 +29,7 @@ use Laminas\Diactoros\UploadedFile;
  */
 class ValidationTest extends TestCase
 {
-    use AvatarsModelTestTrait;
+    use AvatarsModelTrait;
 
     /**
      * Test subject

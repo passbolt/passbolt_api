@@ -46,7 +46,7 @@ class RegisterUserCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        RegisterUserCommand::$userIsRoot = false;
+        RegisterUserCommand::$isUserRoot = false;
         $this->Users = TableRegistry::getTableLocator()->get('Users');
     }
 

@@ -33,6 +33,8 @@ class WebInstallerController extends Controller
 {
     /**
      * The web installer model
+     *
+     * @var \Passbolt\WebInstaller\Utility\WebInstaller
      */
     protected $webInstaller;
 

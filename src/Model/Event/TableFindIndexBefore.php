@@ -43,14 +43,14 @@ class TableFindIndexBefore extends Event
 
     /**
      * @param string $name Name
-     * @param null $subject Subject
-     * @param null $data Data
+     * @param \Cake\ORM\Table $subject Subject
+     * @param array $data Data
      */
-    final public function __construct($name, $subject = null, $data = null)
+    final public function __construct(string $name, Table $subject, array $data)
     {
         $this->setTable($subject);
-        $this->setOptions($data['options'] ?? null);
-        $this->setQuery($data['query'] ?? null);
+        $this->setOptions($data['options']);
+        $this->setQuery($data['query']);
 
         parent::__construct($name, $subject, $data);
     }

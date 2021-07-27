@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Entity\Avatar;
+use App\Model\Traits\Cleanup\AvatarsCleanupTrait;
 use App\Service\Avatars\AvatarsCacheService;
 use App\Utility\AvatarProcessing;
 use App\View\Helper\AvatarHelper;
@@ -52,6 +53,8 @@ use Psr\Http\Message\UploadedFileInterface;
  */
 class AvatarsTable extends Table
 {
+    use AvatarsCleanupTrait;
+
     public const FORMAT_SMALL = 'small';
     public const FORMAT_MEDIUM = 'medium';
     public const MAX_SIZE = '5MB';
@@ -205,15 +208,16 @@ class AvatarsTable extends Table
     }
 
     /**
-     * Generate an Avatar contain clause to be inserted in a contain table.
+     * addContainAvatar
+     * Helper to add avatar contains options in a query
      *
-     * @return array
+     * @return array contain clause
      */
     public static function addContainAvatar(): array
     {
         return [
             'Avatars' => function (Query $q) {
-            // Formatter for empty avatars.
+                // Formatter for empty avatars.
                 return $q->formatResults(function (CollectionInterface $avatars) {
                     return AvatarsTable::formatResults($avatars);
                 });
