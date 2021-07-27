@@ -1,3 +1,8 @@
+passbolt-pro-server (3.2.2-2) buster; urgency=medium
+  * PB-7840 Fix package issue for ssl certificates that are already in the correct path during install/reconfigure
+
+ -- Gerold Mougenel <gerold@passbolt.com>  Tue, 27 Jul 2021 11:00:00 +0000
+
 passbolt-pro-server (3.2.2-1) buster; urgency=medium
   * PB-5910 Fix ldap admin screen should load only default admin users which are active and not deleted
 
