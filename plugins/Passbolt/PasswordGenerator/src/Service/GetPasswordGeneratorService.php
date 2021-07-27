@@ -19,6 +19,7 @@ namespace Passbolt\PasswordGenerator\Service;
 
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
+use Passbolt\PasswordGenerator\Plugin;
 
 class GetPasswordGeneratorService
 {
@@ -27,7 +28,10 @@ class GetPasswordGeneratorService
     public const PASSWORD_GENERATOR_SETTING_PASSWORD = 'password';
 
     /**
-     * Read the password generator value in environment
+     * Read the password generator value in
+     * 1. passbolt.php
+     * 2. env
+     * 3. take default value
      *
      * @return string
      * @throws \Cake\Http\Exception\BadRequestException if the password generator provided is not valid.
@@ -47,7 +51,7 @@ class GetPasswordGeneratorService
      */
     protected function readInConfig(): string
     {
-        $envGenerator = Configure::read('passbolt.plugins.passwordGenerator.defaultPasswordGenerator');
+        $envGenerator = Configure::read(Plugin::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY);
         if (empty($envGenerator)) {
             return $this->getDefaultGenerator();
         }

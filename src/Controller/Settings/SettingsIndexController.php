@@ -177,7 +177,7 @@ class SettingsIndexController extends AppController
         $pluginsConfig = [];
         // Add white listed plugin options.
         foreach ($whiteList as $path) {
-            if (!empty(Configure::read('passbolt.plugins.' . $path))) {
+            if (Configure::check('passbolt.plugins.' . $path)) {
                 $pluginsConfig = Hash::insert(
                     $pluginsConfig,
                     $path,
