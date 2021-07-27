@@ -47,7 +47,7 @@ class AvatarsCacheService
 
     /**
      * @param string|null $id Avatar id
-     * @param string $format Avaar format
+     * @param string $format Avatar format
      * @return \Laminas\Diactoros\Stream
      */
     public function readSteamFromId(?string $id, string $format): Stream
@@ -88,11 +88,11 @@ class AvatarsCacheService
      */
     public function storeInCache(Avatar $avatar): void
     {
-        if (empty($avatar->data)) {
+        $data = $avatar->getDataInStringFormat();
+
+        if (empty($data)) {
             return;
         }
-
-        $data = $avatar->data;
 
         try {
             $smallImage = AvatarProcessing::resizeAndCrop(
@@ -129,20 +129,18 @@ class AvatarsCacheService
     protected function readStreamInCache(Avatar $avatar, string $format = AvatarsTable::FORMAT_SMALL): Stream
     {
         $fileName = $this->getAvatarFileName($avatar, $format);
+        try {
+            $stream = $this->Avatars->getFilesystem()->readStream($fileName);
+        } catch (\Throwable $e) {
+            $stream = null;
+        }
 
-        if (!$this->Avatars->getFilesystem()->fileExists($fileName)) {
+        if (empty($stream)) {
             try {
                 $this->storeInCache($avatar);
                 $stream = $this->Avatars->getFilesystem()->readStream($fileName);
             } catch (\Throwable $exception) {
-                Log::warning(__('Could not save the avatar in cache.'));
-                $stream = $this->getFallBackFileName($format);
-            }
-        } else {
-            try {
-                $stream = $this->Avatars->getFilesystem()->readStream($fileName);
-            } catch (\Throwable $exception) {
-                Log::warning(__('Could not read the avatar in cache.'));
+                Log::warning(__('Could not save the avatar in the {0} file.', $fileName));
                 $stream = $this->getFallBackFileName($format);
             }
         }

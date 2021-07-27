@@ -65,6 +65,7 @@ trait AvatarsModelTrait
             'profile_id' => $profileId,
         ];
 
+        /** @var AvatarsTable $AvatarsTable */
         $AvatarsTable = TableRegistry::getTableLocator()->get('Avatars');
         if ($avatar) {
             $avatar = $AvatarsTable->patchEntity($avatar, $data);
