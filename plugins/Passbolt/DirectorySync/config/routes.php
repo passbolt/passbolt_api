@@ -23,7 +23,7 @@ Router::plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function 
                 'controller' => 'DirectoryIgnore', 'action' => 'toggle',
             ])
             ->setPass(['foreign_model', 'foreign_key'])
-            ->setMethods(['GET']);
+            ->setMethods(['POST']);
 
     $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'view'])
             ->setPass(['foreign_model', 'foreign_key'])
@@ -50,7 +50,7 @@ Router::plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function 
            ->setMethods(['POST', 'PUT']);
 
     $routes->connect('/synchronize', ['controller' => 'DirectorySync', 'action' => 'synchronize'])
-           ->setMethods(['GET']);
+           ->setMethods(['POST']);
 
     $routes->connect('/synchronize/dry-run', ['controller' => 'DirectorySync', 'action' => 'dryRun'])
            ->setMethods(['GET']);
