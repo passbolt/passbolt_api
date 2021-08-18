@@ -22,8 +22,6 @@ use Zend\Diactoros\Response\RedirectResponse;
 
 class AuthLogoutControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
-
     /**
      * Check if a redirection is of type ZendRedirect
      * Usefull for high level routes redirections / route alias testing
@@ -37,12 +35,29 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
         $this->assertEquals($url, $location[0]);
     }
 
-    public function testAuthLogoutLoggedIn()
+    public function testAuthLogoutGetLoggedIn()
     {
         $this->logInAsUser();
 
         $this->get('/auth/logout');
         $this->assertRedirect('/auth/login');
+    }
+
+    public function testAuthLogoutPostLoggedIn()
+    {
+        $this->logInAsUser();
+
+        $this->post('/auth/logout');
+        $this->assertRedirect('/auth/login');
+    }
+
+    public function testAuthLogoutPostLoggedInWithouthCSRF()
+    {
+        $this->logInAsUser();
+        $this->disableCsrfToken();
+
+        $this->post('/auth/logout');
+        $this->assertResponseError('Missing or incorrect CSRF cookie type.');
     }
 
     public function testAuthLogoutNotLoggedIn()
