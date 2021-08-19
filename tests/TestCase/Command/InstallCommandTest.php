@@ -25,10 +25,12 @@ use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
 use Faker\Factory;
+use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
 class InstallCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
+    use DummySubscriptionTrait;
     use PassboltCommandTestTrait;
 
     /**
@@ -42,6 +44,7 @@ class InstallCommandTest extends TestCase
         $this->useCommandRunner();
         InstallCommand::$isUserRoot = false;
         $this->emptyDirectory(CACHE . 'database' . DS);
+        $this->setUpPathAndPublicSubscriptionKey();
     }
 
     public function tearDown(): void
