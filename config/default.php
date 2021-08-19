@@ -190,7 +190,7 @@ return [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RESOURCE_TYPES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
             'mobile' => [
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', false), FILTER_VALIDATE_BOOLEAN)
             ],
         ],
 
