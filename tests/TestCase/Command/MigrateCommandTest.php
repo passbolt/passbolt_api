@@ -20,6 +20,7 @@ use App\Command\MigrateCommand;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
+use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
 /**
  * App\Command\MigrateCommand Test Case
@@ -29,6 +30,7 @@ use Cake\TestSuite\TestCase;
 class MigrateCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
+    use DummySubscriptionTrait;
     use PassboltCommandTestTrait;
 
     /**
@@ -41,6 +43,7 @@ class MigrateCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         MigrateCommand::$isUserRoot = false;
+        $this->setUpPathAndPublicSubscriptionKey();
     }
 
     /**
