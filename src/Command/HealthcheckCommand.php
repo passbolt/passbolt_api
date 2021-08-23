@@ -200,14 +200,14 @@ class HealthcheckCommand extends PassboltCommand
         );
         $this->assert(
             $checks['environment']['tmpWritable'],
-            __('The temporary directory and its content are writable.'),
-            __('The temporary directory and its content are not writable.'),
+            __('The temporary directory and its content are writable and not executable.'),
+            __('The temporary directory and its content are not writable, or are executable.'),
             [
                 __('Ensure the temporary directory and its content are writable by the webserver user.'),
                 __('you can try:'),
                 'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . TMP,
-                'sudo chmod 775 $(find ' . TMP . ' -type d)',
-                'sudo chmod 664 $(find ' . TMP . ' -type f)',
+                'sudo chmod -R 775 $(find ' . TMP . ' -type d)',
+                'sudo chmod -R 664 $(find ' . TMP . ' -type f)',
             ]
         );
         $this->assert(
