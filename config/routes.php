@@ -65,8 +65,8 @@ Router::scope('/auth', function (RouteBuilder $routes) {
     $routes->connect('/is-authenticated', ['prefix' => 'Auth', 'controller' => 'AuthIsAuthenticated', 'action' => 'isAuthenticated'])
         ->setMethods(['GET']);
 
-    $routes->connect('/logout', ['prefix' => 'Auth', 'controller' => 'AuthLogout', 'action' => 'logoutGet'])
-        ->setMethods(['GET']);
+    $routes->connect('/logout', ['prefix' => 'Auth', 'controller' => 'AuthLogout', 'action' => 'logout'])
+        ->setMethods(['GET', 'POST']);
 });
 
 /**
