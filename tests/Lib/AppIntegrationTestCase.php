@@ -32,6 +32,7 @@ use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ErrorTrait;
 use App\Test\Lib\Utility\JsonRequestTrait;
 use App\Test\Lib\Utility\ObjectTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -43,6 +44,7 @@ abstract class AppIntegrationTestCase extends TestCase
     use AvatarsModelTrait;
     use EntityTrait;
     use ErrorTrait;
+    use FeaturePluginAwareTrait;
     use GpgkeysModelTrait;
     use IntegrationTestTrait;
     use JsonRequestTrait;

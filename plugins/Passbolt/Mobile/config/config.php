@@ -17,7 +17,6 @@ return [
         'plugins' => [
             'mobile' => [
                 'version' => '1.0.0',
-                'enabled' => env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true),
             ],
         ],
     ],
