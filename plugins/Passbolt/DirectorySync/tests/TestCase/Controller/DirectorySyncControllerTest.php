@@ -42,7 +42,7 @@ class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
     public function testDirectorySyncAsNonAdmin()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/directorysync/synchronize.json?api-version=2');
+        $this->postJson('/directorysync/synchronize.json?api-version=2');
         $this->assertResponseError('Only administrators can access directory sync functionalities');
     }
 
@@ -53,7 +53,7 @@ class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
     public function testDirectorySyncAsAdmin()
     {
         $this->authenticateAs('admin');
-        $this->getJson('/directorysync/synchronize.json?api-version=2');
+        $this->postJson('/directorysync/synchronize.json?api-version=2');
         $this->assertSuccess();
     }
 
