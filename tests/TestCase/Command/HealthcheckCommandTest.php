@@ -67,4 +67,11 @@ class HealthcheckCommandTest extends TestCase
         // Since the tests run with debug on, here will always be at least one error in the healthcheck.
         $this->assertOutputContains('error(s) found. Hang in there!');
     }
+
+    public function testHealthcheckCommand_Environment()
+    {
+        $this->exec('passbolt healthcheck -d test --environment');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('No error found. Nice one sparky!');
+    }
 }

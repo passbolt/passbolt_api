@@ -107,9 +107,22 @@ class AvatarsCacheService
             return;
         }
 
+        $this->writeAvatarDataInFilesystem($this->getMediumAvatarFileName($avatar), $data, $avatar);
+        $this->writeAvatarDataInFilesystem($this->getSmallAvatarFileName($avatar), $smallImage, $avatar);
+    }
+
+    /**
+     * Write avatar on file system as non-executable.
+     *
+     * @param string $filename Name of the target file
+     * @param string $data Image data
+     * @param \App\Model\Entity\Avatar $avatar Avatar
+     * @return void
+     */
+    protected function writeAvatarDataInFilesystem(string $filename, string $data, Avatar $avatar): void
+    {
         try {
-            $this->Avatars->getFilesystem()->write($this->getMediumAvatarFileName($avatar), $data);
-            $this->Avatars->getFilesystem()->write($this->getSmallAvatarFileName($avatar), $smallImage);
+            $this->Avatars->getFilesystem()->write($filename, $data);
         } catch (\Throwable $e) {
             Log::error('Error while saving cache avatar with ID ' . $avatar->id . '.');
             Log::error($e->getMessage());

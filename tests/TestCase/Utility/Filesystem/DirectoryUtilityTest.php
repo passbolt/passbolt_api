@@ -16,15 +16,15 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Utility\Filesystem;
 
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Filesystem\DirectoryUtility;
+use Cake\TestSuite\TestCase;
 
-class DirectoryUtilityTest extends AppIntegrationTestCase
+class DirectoryUtilityTest extends TestCase
 {
     /**
      * @see DirectoryUtility::removeRecursively()
      */
-    public function testRemoveRecursively()
+    public function testDirectoryUtilityRemoveRecursively()
     {
         $folderToDelete = TMP . 'test_folder';
         $subFolder = $folderToDelete . DS . 'sub_folder';
@@ -44,5 +44,42 @@ class DirectoryUtilityTest extends AppIntegrationTestCase
 
         // The parent folder should have disappeared
         $this->assertSame(false, is_dir($folderToDelete));
+    }
+
+    public function testDirectoryUtilityIsFileExecutable_OnNonExistingFile()
+    {
+        $this->expectException(\RuntimeException::class);
+        $file = 'Foo';
+        DirectoryUtility::isExecutable($file);
+    }
+
+    public function testDirectoryUtilityIsFileExecutable_OnNonExecutableFile()
+    {
+        $file = TMP . 'tests' . DS . 'directory.test';
+        file_put_contents($file, 'foo');
+
+        $perms = [0666, 0662, 0422, 626, 0242];
+        foreach ($perms as $perm) {
+            chmod($file, $perm);
+            $res = DirectoryUtility::isExecutable($file);
+            $this->assertFalse($res);
+        }
+
+        unlink($file);
+    }
+
+    public function testDirectoryUtilityIsFileExecutable_OnExecutableFile()
+    {
+        $file = TMP . 'tests' . DS . 'directory.test';
+        file_put_contents($file, 'foo');
+
+        $perms = [0755, 0535, 0661, 677, 0777];
+        foreach ($perms as $perm) {
+            chmod($file, $perm);
+            $res = DirectoryUtility::isExecutable($file);
+            $this->assertTrue($res);
+        }
+
+        unlink($file);
     }
 }

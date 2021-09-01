@@ -25,6 +25,7 @@ use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\EmailDigest\DigestRegister\GroupDigests;
 use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
@@ -43,6 +44,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * Setup the PSR-7 middleware passbolt application will use.
      *
@@ -222,6 +225,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         // Add Common plugins.
         $this->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Passbolt/InFormIntegration', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/Locale', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/ResourceTypes', ['bootstrap' => true, 'routes' => false]);
@@ -229,7 +233,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/Mobile', ['bootstrap' => true, 'routes' => true]);
+        $this->addFeaturePluginIfEnabled($this, 'Mobile');
         $this->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
 
         $mfaEnabled = Configure::read('passbolt.plugins.multiFactorAuthentication.enabled');

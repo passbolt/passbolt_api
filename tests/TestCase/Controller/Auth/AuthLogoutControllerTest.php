@@ -35,12 +35,29 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
         $this->assertEquals($url, $location[0]);
     }
 
-    public function testAuthLogoutLoggedIn()
+    public function testAuthLogoutGetLoggedIn()
     {
         $this->logInAsUser();
 
         $this->get('/auth/logout');
         $this->assertRedirect('/auth/login');
+    }
+
+    public function testAuthLogoutPostLoggedIn()
+    {
+        $this->logInAsUser();
+
+        $this->post('/auth/logout');
+        $this->assertRedirect('/auth/login');
+    }
+
+    public function testAuthLogoutPostLoggedInWithouthCSRF()
+    {
+        $this->logInAsUser();
+        $this->disableCsrfToken();
+
+        $this->post('/auth/logout');
+        $this->assertResponseError('Missing or incorrect CSRF cookie type.');
     }
 
     public function testAuthLogoutNotLoggedIn()

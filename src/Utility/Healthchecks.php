@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use App\Model\Entity\Role;
+use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\Healthchecks\DatabaseHealthchecks;
 use App\Utility\Healthchecks\GpgHealthchecks;
 use App\Utility\Healthchecks\SslHealthchecks;
@@ -259,6 +260,9 @@ class Healthchecks
      */
     private static function _checkRecursiveDirectoryWritable(string $path): bool
     {
+        clearstatcache();
+
+        /** @var \SplFileInfo[] $iterator */
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path),
             \RecursiveIteratorIterator::SELF_FIRST
@@ -267,7 +271,11 @@ class Healthchecks
             if (in_array($fileInfo->getFilename(), ['.', '..', 'empty'])) {
                 continue;
             }
-            if (!is_writable($name)) {
+            // No file should be executable in tmp
+            if ($fileInfo->isFile() && DirectoryUtility::isExecutable($name)) {
+                return false;
+            }
+            if (!$fileInfo->isWritable()) {
                 return false;
             }
         }
