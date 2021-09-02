@@ -21,7 +21,7 @@ use App\Model\Entity\Role;
 use Cake\Http\Exception\ForbiddenException;
 
 /**
- * @property \App\Model\Table\UsersTable Users
+ * @property \App\Model\Table\UsersTable $Users
  */
 class UsersAddController extends UsersRegisterController
 {

@@ -33,17 +33,27 @@ use Cake\Validation\Validator;
 /**
  * Groups Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsToMany $Users
- * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Modifier
- * @method \App\Model\Entity\Group get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Group newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Group[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Group|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Group patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Group[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Group findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsToMany $Users
+ * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasMany $GroupsUsers
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
+ * @method \App\Model\Entity\Group get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Group newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Group[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Group|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Group patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Group[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Group findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasOne $MyGroupUser
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
+ * @method \App\Model\Entity\Group newEmptyEntity()
+ * @method \App\Model\Entity\Group saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Group[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Group[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Group[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Group[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
+ * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
  */
 class GroupsTable extends Table
 {
@@ -303,6 +313,7 @@ class GroupsTable extends Table
         $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
             ->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
+            /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
         }

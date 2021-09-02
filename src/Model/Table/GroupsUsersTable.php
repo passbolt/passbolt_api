@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\GroupsUser;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\GroupsCleanupTrait;
@@ -32,16 +33,24 @@ use Cake\Validation\Validator;
 /**
  * GroupsUsers Model
  *
- * @property \App\Model\Table\GroupsTable|\App\Model\Table\BelongsTo $Groups
- * @property \App\Model\Table\UsersTable|\App\Model\Table\BelongsTo $Users
- * @method \App\Model\Table\GroupsUser get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\GroupsUser findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\GroupsUser get($primaryKey, $options = [])
+ * @method \App\Model\Entity\GroupsUser newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\GroupsUser[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\GroupsUser|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\GroupsUser[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\GroupsUser findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\GroupsUser newEmptyEntity()
+ * @method \App\Model\Entity\GroupsUser saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findByGroupId(string $groupId)
+ * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
  */
 class GroupsUsersTable extends Table
 {
@@ -356,9 +365,9 @@ class GroupsUsersTable extends Table
      * Return a groupUser entity.
      *
      * @param array $data entity data
-     * @return \App\Model\Table\GroupsUser
+     * @return \App\Model\Entity\GroupsUser
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): GroupsUser
     {
         if (!isset($data['is_admin'])) {
             $data['is_admin'] = false;

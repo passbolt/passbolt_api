@@ -27,9 +27,9 @@ class GpgAuthHeadersMiddleware implements MiddlewareInterface
     /**
      * Set GPGAuth Headers.
      *
-     * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $handler The response.
-     * @return \Cake\Http\Response A response
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The response.
+     * @return \Psr\Http\Message\ResponseInterface A response
      */
     public function process(
         ServerRequestInterface $request,

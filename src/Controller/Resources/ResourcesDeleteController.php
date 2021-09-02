@@ -32,8 +32,8 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\ResourcesTable Resources
- * @property \App\Model\Table\UsersTable Users
+ * @property \App\Model\Table\ResourcesTable $Resources
+ * @property \App\Model\Table\UsersTable $Users
  */
 class ResourcesDeleteController extends AppController
 {

@@ -20,6 +20,9 @@ namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesIndexController
+ */
 class ThemesIndexControllerTest extends AppIntegrationTestCase
 {
     public $AccountSettings;

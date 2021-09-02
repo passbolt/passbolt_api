@@ -143,6 +143,7 @@
         docker-entrypoint.sh mysqld --default-authentication-plugin=mysql_native_password --log-bin-trust-function-creators=1
     alias: mysql
   script:
+    - *custom_functions
     - *php_prepare
     - *php_mysql_prepare
     #- export DATASOURCES_TEST_HOST=mysql
@@ -224,4 +225,10 @@ php7.4-postgres:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "postgres:12.2-alpine"
   extends: .postgres-template
+.custom_functions: &custom_functions |
+
+  function init_test_db() {
+    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "ALTER USER '$DATASOURCES_TEST_USERNAME'@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
+    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME;" mysql
+  }
 

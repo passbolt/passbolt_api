@@ -9,6 +9,7 @@
       <directory suffix=".php">./plugins/EmailNotificationSettings/src/</directory>
       <directory suffix=".php">./plugins/EmailDigest/src/</directory>
       <directory suffix=".php">./plugins/Reports/src/</directory>
+      <directory suffix=".php">./plugins/Locale/src/</directory>
     </include>
   </coverage>
   <php>
@@ -27,6 +28,7 @@
       <directory>./plugins/Passbolt/EmailNotificationSettings/tests/TestCase</directory>
       <directory>./plugins/Passbolt/EmailDigest/tests/TestCase</directory>
       <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
+      <directory>./plugins/Passbolt/Locale/tests/TestCase</directory>
     </testsuite>
     <testsuite name="installers">
       <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>

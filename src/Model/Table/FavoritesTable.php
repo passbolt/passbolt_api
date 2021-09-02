@@ -29,16 +29,22 @@ use Cake\Validation\Validator;
 /**
  * Favorites Model
  *
- * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Favorite get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Favorite newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Favorite[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Favorite|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Favorite patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Favorite[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Favorite findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Favorite get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Favorite newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Favorite patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Favorite newEmptyEntity()
+ * @method \App\Model\Entity\Favorite saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Favorite[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Favorite[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Favorite[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Favorite[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class FavoritesTable extends Table
 {

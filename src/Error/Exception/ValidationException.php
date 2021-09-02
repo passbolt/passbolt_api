@@ -40,7 +40,7 @@ class ValidationException extends HttpException implements
     /**
      * The validated entity.
      *
-     * @var array|null
+     * @var \Cake\ORM\Entity|null
      */
     protected $_entity = null;
 

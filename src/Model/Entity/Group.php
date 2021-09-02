@@ -22,7 +22,7 @@ use Cake\ORM\Entity;
  * Group Entity
  *
  * @property string $id
- * @property string $name
+ * @property string|null $name
  * @property bool $deleted
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
@@ -30,7 +30,10 @@ use Cake\ORM\Entity;
  * @property string $modified_by
  *
  * @property \App\Model\Entity\User[] $users
- * @property \App\Model\Entity\GroupUser[] $groups_users
+ * @property \App\Model\Entity\GroupsUser[] $groups_users
+ * @property \App\Model\Entity\User|null $modifier
+ * @property \App\Model\Entity\GroupsUser|null $my_group_user
+ * @property \App\Model\Entity\Permission[] $permissions
  */
 class Group extends Entity
 {

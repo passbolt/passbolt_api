@@ -19,6 +19,7 @@ namespace App\Model\Table;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Gpgkey;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Chronos\ChronosInterface;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\I18n\FrozenTime;
@@ -28,20 +29,25 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use DateTimeInterface;
 
 /**
  * Model to store and validate OpenPGP public keys
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Gpgkey get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Gpgkey findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Gpgkey get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Gpgkey newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Gpgkey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Gpgkey findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Gpgkey newEmptyEntity()
+ * @method \App\Model\Entity\Gpgkey saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Gpgkey[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class GpgkeysTable extends Table
 {
@@ -224,11 +230,10 @@ class GpgkeysTable extends Table
      * allow a next day margin because users had the issue of having keys generated
      * by systems that were ahead of server time. Refs. PASSBOLT-1505.
      *
-     * @param \DateTimeInterface $value Cake Datetime
-     * @param array|null $context not in use
+     * @param \Cake\Chronos\ChronosInterface $value Cake Datetime
      * @return bool
      */
-    public function isInFuturePastRule(DateTimeInterface $value, ?array $context = null)
+    public function isInFuturePastRule(ChronosInterface $value): bool
     {
         $nowWithMargin = Time::now()->modify('+12 hours');
 
@@ -239,11 +244,10 @@ class GpgkeysTable extends Table
      * Check if a key date is set in the future
      * Used to check key expiry date
      *
-     * @param \DateTimeInterface $value Cake Datetime
-     * @param array|null $context not in use
+     * @param \Cake\Chronos\ChronosInterface $value Cake Datetime
      * @return bool
      */
-    public function isInFutureRule(DateTimeInterface $value, ?array $context = null)
+    public function isInFutureRule(ChronosInterface $value)
     {
         return $value->gt(FrozenTime::now());
     }

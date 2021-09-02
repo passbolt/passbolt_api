@@ -21,7 +21,29 @@ use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\SecretAccess;
 
+/**
+ * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\BelongsTo $Secrets
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $SecretAccessResources
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\BelongsTo $EntitiesHistory
+ * @method \Passbolt\Log\Model\Entity\SecretAccess newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\SecretAccess newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class SecretAccessesTable extends Table
 {
     /**
@@ -94,9 +116,9 @@ class SecretAccessesTable extends Table
      * Return a secret_access entity.
      *
      * @param array $data entity data
-     * @return \Passbolt\Log\Model\Table\SecretAccess
+     * @return \Passbolt\Log\Model\Entity\SecretAccess
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): SecretAccess
     {
         return $this->newEntity($data, [
             'accessibleFields' => [

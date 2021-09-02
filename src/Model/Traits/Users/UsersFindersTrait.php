@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Model\Traits\Users;
 
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
@@ -213,10 +214,6 @@ trait UsersFindersTrait
         $query = $event->getQuery();
 
         // Options must contain a role
-        if (!isset($role)) {
-            $msg = 'User table findIndex should have a role set in options.';
-            throw new InvalidArgumentException($msg);
-        }
         if (!$this->Roles->isValidRoleName($role)) {
             throw new InvalidArgumentException('The role name is not valid.');
         }
@@ -429,7 +426,7 @@ trait UsersFindersTrait
 
         // show active first and do not count deleted ones
         /** @var \App\Model\Entity\User $user */
-        $user = $this->find()
+        $user = $this->find('locale')
             ->contain([
                 'Roles',
                 'Profiles' => AvatarsTable::addContainAvatar(),
@@ -472,9 +469,9 @@ trait UsersFindersTrait
     /**
      * Get a user info for an email notification context
      *
-     * @return \App\Model\Entity\User
+     * @return \App\Model\Entity\User|null
      */
-    public function findFirstAdmin()
+    public function findFirstAdmin(): ?User
     {
         /** @var \App\Model\Entity\User $user */
         $user = $this->find()
@@ -521,8 +518,7 @@ trait UsersFindersTrait
                  'Users.deleted' => false,
                  'Users.active' => true,
              ])
-             ->order(['Users.created' => 'ASC'])
-             ->all();
+             ->order(['Users.created' => 'ASC']);
     }
 
     /**

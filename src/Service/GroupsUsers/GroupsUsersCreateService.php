@@ -37,6 +37,7 @@ class GroupsUsersCreateService
      */
     public function __construct(?GroupsUsersTable $groupsUsersTable = null)
     {
+        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = $groupsUsersTable ?? TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 

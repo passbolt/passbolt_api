@@ -20,6 +20,9 @@ namespace App\Controller\Setup;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\UserAgentsTable $UserAgents
+ */
 trait SetupControllerTrait
 {
     /**
@@ -33,14 +36,8 @@ trait SetupControllerTrait
      */
     protected function _assertRequestSanity(string $userId, string $tokenId): void
     {
-        if (!isset($userId)) {
-            throw new BadRequestException(__('The user id is missing.'));
-        }
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
-        }
-        if (!isset($tokenId)) {
-            throw new BadRequestException(__('The authentication token is missing.'));
         }
         if (!Validation::uuid($tokenId)) {
             throw new BadRequestException(__('The token should be a valid UUID.'));

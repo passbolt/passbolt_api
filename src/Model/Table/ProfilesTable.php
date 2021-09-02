@@ -24,15 +24,22 @@ use Cake\Validation\Validator;
 /**
  * Profiles Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Profile get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Profile newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Profile[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Profile|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Profile patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Profile[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Profile findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\Profile get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Profile newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Profile[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Profile|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Profile patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Profile[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Profile findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \App\Model\Table\AvatarsTable&\Cake\ORM\Association\HasOne $Avatars
+ * @method \App\Model\Entity\Profile newEmptyEntity()
+ * @method \App\Model\Entity\Profile saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Profile[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Profile[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Profile[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Profile[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class ProfilesTable extends Table
 {

@@ -22,6 +22,7 @@ use App\Model\Table\UsersTable;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -32,14 +33,21 @@ use Passbolt\AccountSettings\Model\Table\Traits\ThemeSettingsTrait;
 /**
  * AccountSettings Model
  *
- * @property \Passbolt\AccountSettings\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get($primaryKey, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEntity($data = null, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] patchEntities($entities, array $data, ?array $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get($primaryKey, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEntity(array $data, array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEmptyEntity()
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AccountSettingsTable extends Table
 {
@@ -145,13 +153,10 @@ class AccountSettingsTable extends Table
 
         $props = [];
         foreach ($whitelist as $i => $item) {
-            $settingNamespace = AccountSetting::UUID_NAMESPACE . $item;
-            $props[] = UuidFactory::uuid($settingNamespace);
+            $props[] = $this->propertyToPropertyId($item);
         }
 
-        return $this->find()
-            ->where(['user_id' => $userId, 'property_id IN' => $props])
-            ->all();
+        return $this->find()->where(['user_id' => $userId, 'property_id IN' => $props]);
     }
 
     /**
@@ -168,13 +173,9 @@ class AccountSettingsTable extends Table
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
 
-        $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
-
-        $entity = $this->find()
-            ->where(['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)])
+        return $this->find('byProperty', compact('property'))
+            ->where([$this->aliasField('user_id') => $userId])
             ->firstOrFail();
-
-        return $entity;
     }
 
     /**
@@ -182,21 +183,21 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId uuid
      * @param string $property The property name
-     * @param mixed $value The property value
+     * @param string $value The property value
      * @throws \Cake\Http\Exception\BadRequestException if userId does not exist
      * @throws \App\Error\Exception\ValidationException if could not save because of validation issues
      * @throws \Cake\Http\Exception\InternalErrorException if save operation saved for another reason
      * @return \Passbolt\AccountSettings\Model\Entity\AccountSetting
      */
-    public function createOrUpdateSetting(string $userId, string $property, string $value)
+    public function createOrUpdateSetting(string $userId, string $property, string $value): AccountSetting
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
 
-        $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
-        $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
+        $settingFinder = ['user_id' => $userId, 'property_id' => $this->propertyToPropertyId($property)];
         $settingValues = ['value' => $value, 'property' => $property];
+        /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting|null $settingItem */
         $settingItem = $this->find()
             ->where($settingFinder)
             ->first();
@@ -245,11 +246,38 @@ class AccountSettingsTable extends Table
      */
     public function getByProperty(string $userId, string $property)
     {
-        $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
-        $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
-
         return $this->find()
-            ->where($settingFinder)
+            ->find('byProperty', compact('property'))
+            ->where([$this->aliasField('user_id') => $userId])
             ->first();
+    }
+
+    /**
+     * Convert a property in property_id
+     *
+     * @param string $property Property to convert
+     * @return string
+     */
+    public function propertyToPropertyId(string $property): string
+    {
+        return UuidFactory::uuid(AccountSetting::UUID_NAMESPACE . $property);
+    }
+
+    /**
+     * Find setting per property
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @param array $options Option with property
+     * @return \Cake\ORM\Query
+     */
+    public function findByProperty(Query $query, array $options): Query
+    {
+        if (!isset($options['property'])) {
+            throw new InternalErrorException(__('The parameter {0} is not set.', 'property'));
+        }
+
+        $property = $options['property'];
+
+        return $query->where([$this->aliasField('property_id') => $this->propertyToPropertyId($property)]);
     }
 }

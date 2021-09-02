@@ -75,7 +75,7 @@ class EmailDigest implements EmailDigestInterface
     /**
      * Return the list of ids of the emails part of the digest
      *
-     * @return array|\Passbolt\EmailDigest\Utility\Mailer\ArrayAccess|string[]
+     * @return string[]
      */
     public function getEmailIds()
     {

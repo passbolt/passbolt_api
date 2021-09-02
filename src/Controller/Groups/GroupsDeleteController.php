@@ -32,10 +32,10 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\GroupsTable Groups
- * @property \App\Model\Table\GroupsUsersTable GroupsUsers
- * @property \App\Model\Table\PermissionsTable Permissions
- * @property \App\Model\Table\ResourcesTable Resources
+ * @property \App\Model\Table\GroupsTable $Groups
+ * @property \App\Model\Table\GroupsUsersTable $GroupsUsers
+ * @property \App\Model\Table\PermissionsTable $Permissions
+ * @property \App\Model\Table\ResourcesTable $Resources
  */
 class GroupsDeleteController extends AppController
 {

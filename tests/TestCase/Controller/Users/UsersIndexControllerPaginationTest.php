@@ -19,11 +19,11 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Utility\PaginationTrait;
+use App\Test\Lib\Utility\PaginationTestTrait;
 
 class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
 {
-    use PaginationTrait;
+    use PaginationTestTrait;
 
     /**
      * setUp method
@@ -58,8 +58,8 @@ class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
             ['Profiles.created', 'desc', 'profile.created'],
             ['Users.username', 'asc', 'username'],
             ['Users.username', 'desc', 'username'],
-            ['Users.last_logged_in', 'asc', 'last_logged_in', true],
-            ['Users.last_logged_in', 'desc', 'last_logged_in', true],
+            ['Users.last_logged_in', 'asc', 'last_logged_in'],
+            ['Users.last_logged_in', 'desc', 'last_logged_in'],
         ];
     }
 
@@ -71,13 +71,12 @@ class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
      * @Then I should see 9 users sorted according to $direction 'asc' resp. 'desc'.
      * @dataProvider dataProviderForSortingDirection
      * @param string|null $sortedField Sorted field.
-     * @param string|null $direction Sorting direction.
-     * @param string|null $path Path where to find the sorted field in the response data.
-     * @param bool|null $isDateTime The sorted field is a datetime.
+     * @param string $direction Sorting direction.
+     * @param string $path Path where to find the sorted field in the response data.
      * @return void
      * @throws \Exception
      */
-    public function testUsersIndexPagination(?string $sortedField = null, ?string $direction = null, ?string $path = null, ?bool $isDateTime = false)
+    public function testUsersIndexPagination(?string $sortedField = null, string $direction = 'asc', string $path = 'username')
     {
         $numberOfUsers = 19;
         $limit = 10;
@@ -114,10 +113,6 @@ class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
 
         $this->assertSuccess();
         $this->assertCountPaginatedEntitiesEquals($expectedCurrent);
-        $this->assertBodyContentIsSorted(
-            $direction ?? $this->defaultSortDirection,
-            $path ?? 'profile.first_name',
-            $isDateTime
-        );
+        $this->assertBodyContentIsSorted($path, $direction);
     }
 }

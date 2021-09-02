@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\OrganizationSetting;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\ORM\RulesChecker;
@@ -31,6 +32,20 @@ use Cake\Validation\Validator;
  * Class OrganizationSettingsTable
  *
  * @package App\Model\Table
+ * @method \App\Model\Entity\OrganizationSetting newEmptyEntity()
+ * @method \App\Model\Entity\OrganizationSetting newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\OrganizationSetting get($primaryKey, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\OrganizationSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class OrganizationSettingsTable extends Table
 {
@@ -121,15 +136,33 @@ class OrganizationSettingsTable extends Table
     }
 
     /**
+     * Get an entry for a given user and property
+     *
+     * @param string $property user property
+     * @return \Cake\Datasource\EntityInterface|array|null The first result from the ResultSet.
+     */
+    public function getByProperty(string $property)
+    {
+        try {
+            return $this->getFirstSettingOrFail($property);
+        } catch (RecordNotFoundException $e) {
+            return null;
+        }
+    }
+
+    /**
      * Create (or update) an organization setting
      *
      * @param string $property The property name
-     * @param mixed $value The property value
+     * @param string $value The property value
      * @param \App\Utility\UserAccessControl $control user access control object
      * @return \App\Model\Entity\OrganizationSetting
      */
-    public function createOrUpdateSetting(string $property, string $value, UserAccessControl $control)
-    {
+    public function createOrUpdateSetting(
+        string $property,
+        string $value,
+        UserAccessControl $control
+    ): OrganizationSetting {
         if (!$control->isAdmin()) {
             throw new UnauthorizedException(__('Only admin can create or update organization settings.'));
         }

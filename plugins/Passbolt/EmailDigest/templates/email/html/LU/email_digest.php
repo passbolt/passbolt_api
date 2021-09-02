@@ -15,6 +15,9 @@
 /**
  * This is the default template used by any email digest
  * Its content is defined by the class which created the digest
+ *
+ * @var \App\View\AppView $this
+ * @var array $body
  */
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
 

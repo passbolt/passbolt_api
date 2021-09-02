@@ -34,6 +34,7 @@ class SecretsCreateService
      */
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
     }
 
@@ -44,7 +45,7 @@ class SecretsCreateService
      * @return \App\Model\Entity\Secret
      * @throws \Exception
      */
-    public function create(array $data)
+    public function create(array $data): Secret
     {
         $secret = $this->buildEntity($data);
         $this->handleValidationErrors($secret);

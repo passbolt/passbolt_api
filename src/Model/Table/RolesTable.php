@@ -24,15 +24,22 @@ use Cake\Validation\Validator;
 /**
  * Roles Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $Users
- * @method \App\Model\Entity\Role get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\Role newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\Role[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\Role|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\Role patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\Role[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\Role findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
+ * @method \App\Model\Entity\Role get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Role newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Role[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Role|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Role patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Role[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Role findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \Cake\ORM\Table&\Cake\ORM\Association\HasMany $ControllerLogs
+ * @method \App\Model\Entity\Role newEmptyEntity()
+ * @method \App\Model\Entity\Role saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class RolesTable extends Table
 {

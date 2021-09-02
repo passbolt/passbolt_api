@@ -42,19 +42,19 @@ class GpgAuthenticator extends SessionAuthenticator
     public const AUTHENTICATION_REQUIRED_MESSAGE = 'You need to login to access this location.';
 
     /**
-     * @var $_config array loaded from Configure::read('GPG')
+     * @var array loaded from Configure::read('GPG')
      * @access protected
      */
     protected $_config;
 
     /**
-     * @var $_gpg \App\Utility\OpenPGP\OpenPGPBackendInterface instance
+     * @var \App\Utility\OpenPGP\OpenPGPBackendInterface instance
      * @access protected
      */
     protected $_gpg;
 
     /**
-     * @var $headers array
+     * @var array
      */
     protected $headers = [];
 
@@ -64,12 +64,12 @@ class GpgAuthenticator extends SessionAuthenticator
     protected $_debug;
 
     /**
-     * @var
+     * @var array|null
      */
     protected $_data;
 
     /**
-     * @var \App\Model\Entity\User $_user
+     * @var \App\Model\Entity\User
      */
     protected $_user;
 
@@ -122,7 +122,7 @@ class GpgAuthenticator extends SessionAuthenticator
      * See. https://www.passbolt.com/help/tech/auth
      *
      * @param \Cake\Http\ServerRequest $request interface for accessing request parameters
-     * @return mixed User|false the user or false if authentication failed
+     * @return \Authentication\Authenticator\ResultInterface User|false the user or false if authentication failed
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {

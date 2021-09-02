@@ -62,9 +62,9 @@ class HealthcheckIndexController extends AppController
      * Check that need/can to be performed in web context only
      *
      * @access private
-     * @return bool
+     * @return array
      */
-    private function __webChecks()
+    private function __webChecks(): array
     {
         $checks['ssl']['is'] = $this->request->is('ssl');
 

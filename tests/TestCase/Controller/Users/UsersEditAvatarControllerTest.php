@@ -19,12 +19,15 @@ namespace App\Test\TestCase\Controller\Users;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Filesystem\DirectoryUtility;
+use App\Test\Lib\Model\AvatarsModelTestTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 
 class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 {
+    use AvatarsModelTestTrait;
+
     public $localFileStorageListener = null;
     public $imageProcessingListener = null;
 
@@ -37,15 +40,16 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->Avatars->setCacheDirectory(TMP . 'tests' . DS . 'avatars');
+        $this->Avatars->setFilesystem(new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars'));
 
         RoleFactory::make()->guest()->persist();
     }
 
     public function tearDown(): void
     {
-        DirectoryUtility::removeRecursively($this->Avatars->getCacheDirectory());
+        $this->Avatars->getFilesystem()->deleteDirectory('.');
         unset($this->Avatars);
+        parent::tearDown();
     }
 
     public function testUsersEditAvatarSuccess()
@@ -65,20 +69,17 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();
 
+        /** @var \App\Model\Entity\Avatar $avatar */
         $avatar = $this->Avatars
             ->find()
             ->contain('Profiles.Users')
             ->where(['Users.id' => $user->id])
             ->firstOrFail();
 
-        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar)));
-        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'medium')));
-        $this->assertTrue(file_exists($this->Avatars->readFromCache($avatar, 'whateverFormatWillReturnSmall')));
-        $this->assertTextEndsWith('.jpg', $this->Avatars->readFromCache($avatar));
-        $this->assertTextEndsWith('.jpg', $this->Avatars->readFromCache($avatar, 'medium'));
+        $this->assertAvatarCachedFilesExist($avatar);
     }
 
-    public function tesUsersEditAvatarMissingCsrfTokenError()
+    public function testUsersEditAvatarMissingCsrfTokenError()
     {
         $user = UserFactory::make()->user()->persist();
         $this->logInAs($user);

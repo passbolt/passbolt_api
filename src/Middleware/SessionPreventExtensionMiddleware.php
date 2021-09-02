@@ -42,14 +42,16 @@ class SessionPreventExtensionMiddleware implements MiddlewareInterface
      * middleware will override the Config.Time variable with the latest time the user has accessed the API on
      * another entry point (value stored previously in the SessionPreventExtensionMiddleware.time session variable).
      *
-     * @param \Cake\Http\ServerRequest $request The request.
-     * @param \Cake\Http\Response $handler The handler.
-     * @return \Cake\Http\Response The response.
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The handler.
+     * @return \Psr\Http\Message\ResponseInterface The response.
      */
     public function process(
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
+        /** @var \Cake\Http\ServerRequest $request */
+
         $session = $request->getSession();
 
         if ($this->shouldSessionExtensionPrevented($request)) {

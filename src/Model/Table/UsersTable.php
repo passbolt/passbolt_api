@@ -37,21 +37,29 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
- * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsTo $Roles
- * @property \App\Model\Table\GpgkeysTable|\Cake\ORM\Association\HasMany $Gpgkeys
- * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasMany $Permissions
- * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
- * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
- * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsToMany $Groups
- * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable|\Cake\ORM\Association\HasMany $EntitiesHistory
- * @method \App\Model\Entity\User get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\User newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\User[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\User|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\User[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\User findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\RolesTable&\Cake\ORM\Association\BelongsTo $Roles
+ * @property \App\Model\Table\GpgkeysTable&\Cake\ORM\Association\HasOne $Gpgkeys
+ * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
+ * @property \App\Model\Table\ProfilesTable&\Cake\ORM\Association\HasOne $Profiles
+ * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasMany $GroupsUsers
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsToMany $Groups
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasMany $EntitiesHistory
+ * @method \App\Model\Entity\User get($primaryKey, $options = [])
+ * @method \App\Model\Entity\User newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\User|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\User patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\User[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\User findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @property \App\Model\Table\AuthenticationTokensTable&\Cake\ORM\Association\HasMany $AuthenticationTokens
+ * @property \Passbolt\Log\Model\Table\ActionLogsTable&\Cake\ORM\Association\HasMany $ActionLogs
+ * @method \App\Model\Entity\User newEmptyEntity()
+ * @method \App\Model\Entity\User saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class UsersTable extends Table
 {
@@ -103,6 +111,10 @@ class UsersTable extends Table
         ]);
         $this->hasMany('ActionLogs', [
             'className' => 'Passbolt/Log.ActionLogs',
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('AccountSettings', [
+            'className' => 'Passbolt/AccountSettings.AccountSettings',
             'foreignKey' => 'user_id',
         ]);
     }
@@ -347,6 +359,7 @@ class UsersTable extends Table
             ->extract('aco_foreign_key')
             ->toArray();
         if (!empty($resourceIds)) {
+            /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
         }
@@ -427,12 +440,13 @@ class UsersTable extends Table
         }
 
         // Generate an authentication token
+        /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens */
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $token = $AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
 
         // Generate event data
         $eventData = ['user' => $user, 'token' => $token];
-        if (isset($control) && !is_null($control->getId())) {
+        if (isset($control) && !empty($control->getId())) {
             $eventData['adminId'] = $control->getId();
         }
         $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);

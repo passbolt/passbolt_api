@@ -23,7 +23,30 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\PermissionHistory;
 
+/**
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasOne $EntitiesHistory
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $PermissionsHistoryGroups
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $PermissionsHistoryUsers
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $PermissionsHistoryResources
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory newEmptyEntity()
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory newEntity(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ */
 class PermissionsHistoryTable extends Table
 {
     /**
@@ -147,9 +170,9 @@ class PermissionsHistoryTable extends Table
      * Return a permissions_history entity.
      *
      * @param array $data entity data
-     * @return \Passbolt\Log\Model\Table\EntityHistory
+     * @return \Passbolt\Log\Model\Entity\PermissionHistory
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): PermissionHistory
     {
         return $this->newEntity($data, [
             'accessibleFields' => [
@@ -167,11 +190,11 @@ class PermissionsHistoryTable extends Table
      * Create a new permissions_history.
      *
      * @param array $data the data
-     * @return \Passbolt\Log\Model\Table\UserAction|bool
+     * @return \Passbolt\Log\Model\Entity\PermissionHistory
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(array $data)
+    public function create(array $data): PermissionHistory
     {
         // Check validation rules.
         $log = $this->buildEntity($data);

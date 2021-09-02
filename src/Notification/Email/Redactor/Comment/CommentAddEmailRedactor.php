@@ -57,7 +57,9 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
         ?UsersTable $usersTable = null,
         ?ResourcesTable $resourcesTable = null
     ) {
+        /** @phpstan-ignore-next-line  */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
+        /** @phpstan-ignore-next-line  */
         $this->resourcesTable = $resourcesTable ?? TableRegistry::getTableLocator()->get('Resources');
         $this->setConfig($config);
     }

@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace App\Controller\Avatars;
 
 use App\Controller\AppController;
+use App\Service\Avatars\AvatarsCacheService;
 use App\View\Helper\AvatarHelper;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
+use Cake\Log\Log;
 
 /**
  * AvatarsViewController
@@ -36,18 +39,22 @@ class AvatarsViewController extends AppController
         $this->loadModel('Avatars');
 
         $formatIsValid = $this->validateImageFormat($format);
-
-        /** @var \App\Model\Entity\Avatar $avatar */
-        $avatar = $this->Avatars->findById($id)->first();
-
-        if (is_null($avatar) || !$formatIsValid) {
-            $fileName = $this->Avatars->getFallBackFileName();
-        } else {
-            $format = trim($format, AvatarHelper::IMAGE_EXTENSION);
-            $fileName = $this->Avatars->readFromCache($avatar, $format);
+        if ($formatIsValid === false) {
+            $id = null;
         }
 
-        return $this->getResponse()->withFile($fileName);
+        $service = new AvatarsCacheService($this->Avatars);
+
+        try {
+            $stream = $service->readSteamFromId($id, $format);
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+            throw new NotFoundException($e->getMessage());
+        }
+
+        return $this->getResponse()
+            ->withType('jpg')
+            ->withBody($stream);
     }
 
     /**

@@ -69,7 +69,7 @@ class SecretsViewController extends AppController
     {
         try {
             if ($this->Secrets->hasAssociation('SecretAccesses')) {
-                $this->Secrets->getAssociation('SecretAccesses')->create($secret, $uac);
+                $this->Secrets->SecretAccesses->create($secret, $uac);
             }
         } catch (Exception $e) {
             throw new InternalErrorException('Could not log secret access entry.');

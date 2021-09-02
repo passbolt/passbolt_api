@@ -33,7 +33,7 @@ class SecretsUpdateSecretsService
     private $accessService;
 
     /**
-     * @var \App\Service\Secrets\SecretsUpdateSecretsService
+     * @var \App\Service\Secrets\SecretsCreateService
      */
     private $secretCreateService;
 
@@ -49,6 +49,7 @@ class SecretsUpdateSecretsService
     {
         $this->accessService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->secretCreateService = new SecretsCreateService();
+        /** @phpstan-ignore-next-line */
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
     }
 
@@ -120,13 +121,11 @@ class SecretsUpdateSecretsService
      *
      * @param array $errors The list of errors
      * @return void
-     * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
+     * @throws \App\Error\Exception\CustomValidationException If the provided data does not validate.
      */
-    private function handleValidationErrors(array $errors = [])
+    private function handleValidationErrors(array $errors): void
     {
-        if (!empty($errors)) {
-            throw new CustomValidationException(__('Could not validate secrets data.'), $errors, $this->secretsTable);
-        }
+        throw new CustomValidationException(__('Could not validate secrets data.'), $errors, $this->secretsTable);
     }
 
     /**
@@ -147,12 +146,15 @@ class SecretsUpdateSecretsService
             'data' => Hash::get($data, 'data', ''),
         ];
 
+        $secret = null;
         try {
-            return $this->secretCreateService->create($secretData);
+            $secret = $this->secretCreateService->create($secretData);
         } catch (ValidationException $e) {
             $errors = [$rowIndexRef => $e->getErrors()];
             $this->handleValidationErrors($errors);
         }
+
+        return $secret;
     }
 
     /**

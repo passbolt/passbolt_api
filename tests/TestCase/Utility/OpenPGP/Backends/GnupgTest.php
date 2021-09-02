@@ -49,6 +49,15 @@ class GnupgTest extends TestCase
         }
     }
 
+    /**
+     * With PHPStan suspicious on the constant, this test checks that it is well defined and
+     * that the error can be ignored.
+     */
+    public function testGnupErrorMode()
+    {
+        $this->assertSame(2, \gnupg::ERROR_EXCEPTION, 'This constant is not defined.');
+    }
+
     public function testGnupgEncryptDecryptSuccess()
     {
         $keys = $this->getDummyGpgkey();

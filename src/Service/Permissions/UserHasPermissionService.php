@@ -38,10 +38,8 @@ class UserHasPermissionService
      */
     public function __construct(?PermissionsTable $permissionsTable = null)
     {
-        $this->permissionsTable = $permissionsTable;
-        if (is_null($this->permissionsTable)) {
-            $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        }
+        /** @phpstan-ignore-next-line */
+        $this->permissionsTable = $permissionsTable ?? TableRegistry::getTableLocator()->get('Permissions');
     }
 
     /**

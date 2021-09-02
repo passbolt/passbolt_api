@@ -30,15 +30,21 @@ use Cake\Validation\Validator;
 /**
  * AuthenticationTokens Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\AuthenticationToken get($primaryKey, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken newEntity($data = null, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken[] patchEntities($entities, array $data, ?array $options = [])
- * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, callable $callback = null, ?array $options = [])
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Model\Entity\AuthenticationToken get($primaryKey, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\AuthenticationToken newEmptyEntity()
+ * @method \App\Model\Entity\AuthenticationToken saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class AuthenticationTokensTable extends Table
 {
@@ -233,7 +239,8 @@ class AuthenticationTokensTable extends Table
         if ($type) {
             $where['type'] = $type;
         }
-        $token = $this->find('all')
+        /** @var \App\Model\Entity\AuthenticationToken|null $token */
+        $token = $this->find()
             ->where($where)
             ->first();
         if (empty($token)) {
@@ -243,7 +250,7 @@ class AuthenticationTokensTable extends Table
         // Is it expired
         if ($this->isExpired($token, $expiry)) {
             // update the token to inactive
-            $token->active = false;
+            $token->set('active', false);
             $this->save($token);
 
             return false;
@@ -260,7 +267,7 @@ class AuthenticationTokensTable extends Table
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool
      */
-    public function isExpired(AuthenticationToken $token, $expiry = null)
+    public function isExpired(AuthenticationToken $token, $expiry = null): bool
     {
         if ($expiry === null) {
             $expiry = $this->authTokenExpiry->getExpirationForTokenType($token->type);
@@ -277,7 +284,7 @@ class AuthenticationTokensTable extends Table
      * @throws \InvalidArgumentException is the token is not a valid uuid
      * @return bool save result
      */
-    public function setInactive(string $tokenId)
+    public function setInactive(string $tokenId): bool
     {
         if (!Validation::uuid($tokenId)) {
             throw new \InvalidArgumentException('The token should be a valid UUID.');
@@ -289,7 +296,7 @@ class AuthenticationTokensTable extends Table
         if (empty($token)) {
             return false;
         }
-        $token->active = false;
+        $token->set('active', false);
 
         if (!$this->save($token)) {
             return false;

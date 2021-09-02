@@ -43,7 +43,7 @@ class SendTestEmailCommand extends PassboltCommand
      *
      * @var \Cake\Mailer\Mailer Email
      */
-    public $email = null;
+    public $email;
 
     /**
      * @inheritDoc
@@ -190,7 +190,9 @@ class SendTestEmailCommand extends PassboltCommand
      */
     protected function displayTrace(ConsoleIo $io): void
     {
-        $trace = $this->email->getTransport()->getTrace();
+        /** @var \App\Mailer\Transport\DebugSmtpTransport $transport */
+        $transport = $this->email->getTransport();
+        $trace = $transport->getTrace();
 
         $io->nl(0);
         $io->out('<info>Trace</info>');
@@ -261,7 +263,7 @@ class SendTestEmailCommand extends PassboltCommand
      * @param string $customTransportClassName name of the custom transport class to use
      * @return void
      */
-    protected function setCustomTransportClassName($customTransportClassName): void
+    protected function setCustomTransportClassName(string $customTransportClassName): void
     {
         // Return if we are in test context. This will enable the sending of email to be tested.
         if ($this->isRunningOnTestEnvironment()) {

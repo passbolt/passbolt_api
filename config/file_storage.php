@@ -2,10 +2,14 @@
 
 use App\Model\Table\AvatarsTable;
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
+/** @var AvatarsTable $AvatarsTable */
+$AvatarsTable = TableRegistry::getTableLocator()->get('Avatars');
+$AvatarsTable->setFilesystem(new LocalFilesystemAdapter(TMP . 'avatars'));
+
 // File storage and images
-Configure::write('ImageStorage.adapter', LocalFilesystemAdapter::class);
 Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public' . DS);
 Configure::write('ImageStorage.publicPath', 'img' . DS . 'public' . DS);
 Configure::write('FileStorage', [

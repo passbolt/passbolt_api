@@ -56,6 +56,7 @@ class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddl
     public function skipCsrfProtection(RequestInterface $request): bool
     {
         $plugins = Configure::read('passbolt.plugins');
+        /** @var \Cake\Http\ServerRequest $request */
         $controller = $request->getParam('controller', 'Error');
 
         $unlockedActions = Configure::read("passbolt.security.csrfProtection.unlockedActions.$controller", []);
