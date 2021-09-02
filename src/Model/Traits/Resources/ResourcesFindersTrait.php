@@ -167,8 +167,6 @@ trait ResourcesFindersTrait
         // approach prior to pagination.
         if (isset($options['order']['Resources.modified'])) {
             $query->order('Resources.modified DESC');
-        } else {
-            $query->orderAsc('Resources.name');
         }
 
         // Remove resource type if plugin is disabled
