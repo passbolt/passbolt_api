@@ -24,7 +24,12 @@
   - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
   - cp config/app.default.php config/app.php
   - php composer.phar install --dev --no-interaction
+.custom_functions: &custom_functions |
 
+  function init_test_db() {
+    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "ALTER USER '$DATASOURCES_TEST_USERNAME'@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
+    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME;" mysql
+  }
 .php_mysql_prepare: &php_mysql_prepare
   - docker-php-ext-install pdo_mysql
   - docker-php-ext-enable pdo_mysql
@@ -225,10 +230,3 @@ php7.4-postgres:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "postgres:12.2-alpine"
   extends: .postgres-template
-.custom_functions: &custom_functions |
-
-  function init_test_db() {
-    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "ALTER USER '$DATASOURCES_TEST_USERNAME'@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
-    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME;" mysql
-  }
-
