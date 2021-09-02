@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a8a8f01d6ef2aa9a75a27935cfe6d37f",
+    "content-hash": "be2537c8d6f83f6779b52823f8e3efb2",
     "packages": [
         {
             "name": "bcrowe/cakephp-api-pagination",
