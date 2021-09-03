@@ -52,13 +52,12 @@ class SerializedType extends BaseType
      * @param string|null $value json string to decode
      * @return null|string
      */
-    public function marshal($value): ?string
+    public function marshal($value) 
     {
-        if ($value === null) {
-            return null;
+        if ($value === null || is_array($value)) {
+            return $value;
         }
-
-        return serialize($value);
+        return unserialize($value);
     }
 
     /**
@@ -74,12 +73,11 @@ class SerializedType extends BaseType
         if ($value === null) {
             return null;
         }
-
         if (is_a($driver, Postgres::class)) {
             $value = str_replace(self::NULL_CHAR, self::NULL_CHAR_SUBSTITUTE, $value);
         }
 
-        return $value;
+        return serialize($value);
     }
 
     /**
