@@ -306,32 +306,32 @@ class HealthcheckCommand extends PassboltCommand
             $checks['core']['debugDisabled'],
             __('Debug mode is off.'),
             __('Debug mode is on.'),
-            __('Set debug = false; in {0}', 'config/passbolt.php')
+            __('Set debug = false; in {0}', '/etc/passbolt/passbolt.php')
         );
         $this->assert(
             $checks['core']['cache'],
             __('Cache is working.'),
             __('Cache is NOT working.'),
-            __('Check the settings in {0}', 'config/app.php')
+            __('Check the settings in {0}', '/etc/passbolt/app.php')
         );
         $this->assert(
             $checks['core']['salt'],
             __('Unique value set for security.salt'),
             __('Default value found for security.salt'),
-            __('Edit the security.salt in {0}', 'config/app.php')
+            __('Edit the security.salt in {0}', '/etc/passbolt/app.php')
         );
         $this->assert(
             $checks['core']['fullBaseUrl'],
             __('Full base url is set to {0}', $checks['core']['info']['fullBaseUrl']),
             __('Full base url is not set. The application is using: {0}.', $checks['core']['info']['fullBaseUrl']),
-            __('Edit App.fullBaseUrl in {0}', 'config/passbolt.php')
+            __('Edit App.fullBaseUrl in {0}', '/etc/passbolt/passbolt.php')
         );
         $this->assert(
             $checks['core']['validFullBaseUrl'],
             __('App.fullBaseUrl validation OK.'),
             __('App.fullBaseUrl does not validate. {0}.', $checks['core']['info']['fullBaseUrl']),
             [
-                __('Edit App.fullBaseUrl in {0}', 'config/passbolt.php'),
+                __('Edit App.fullBaseUrl in {0}', '/etc/passbolt/passbolt.php'),
                 __('Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt'),
             ]
         );
@@ -340,7 +340,7 @@ class HealthcheckCommand extends PassboltCommand
             __('/healthcheck/status is reachable.'),
             __('Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl'),
             [
-                __('Check that the domain name is correct in {0}', 'config/passbolt.php'),
+                __('Check that the domain name is correct in {0}', '/etc/passbolt/passbolt.php'),
                 __('Check the network settings'),
             ]
         );
@@ -396,7 +396,7 @@ class HealthcheckCommand extends PassboltCommand
             __('The application is able to connect to the database'),
             __('The application is not able to connect to the database.'),
             [
-                __('Double check the host, database name, username and password in config/passbolt.php'),
+                __('Double check the host, database name, username and password in /etc/passbolt/passbolt.php'),
                 __('Make sure the database exists and is accessible for the given database user.'),
             ]
         );
@@ -466,25 +466,25 @@ class HealthcheckCommand extends PassboltCommand
             $checks['application']['sslForce'],
             __('Passbolt is configured to force SSL use.'),
             __('Passbolt is not configured to force SSL use.'),
-            __('Set passbolt.ssl.force to true in config/passbolt.php.')
+            __('Set passbolt.ssl.force to true in /etc/passbolt/passbolt.php.')
         );
         $this->assert(
             $checks['application']['sslFullBaseUrl'],
             __('App.fullBaseUrl is set to HTTPS.'),
             __('App.fullBaseUrl is not set to HTTPS.'),
-            __('Check App.fullBaseUrl url scheme in {0}.', 'config/passbolt.php')
+            __('Check App.fullBaseUrl url scheme in {0}.', '/etc/passbolt/passbolt.php')
         );
         $this->assert(
             $checks['application']['seleniumDisabled'],
             __('Selenium API endpoints are disabled.'),
             __('Selenium API endpoints are active. This setting should be used for testing only.'),
-            __('Set passbolt.selenium.active to false in config/passbolt.php.')
+            __('Set passbolt.selenium.active to false in /etc/passbolt/passbolt.php.')
         );
         $this->warning(
             $checks['application']['robotsIndexDisabled'],
             __('Search engine robots are told not to index content.'),
             __('Search engine robots are not told not to index content.'),
-            __('Set passbolt.meta.robots to false in config/passbolt.php.')
+            __('Set passbolt.meta.robots to false in /etc/passbolt/passbolt.php.')
         );
         $this->warning(
             $checks['application']['registrationClosed'],
@@ -492,14 +492,14 @@ class HealthcheckCommand extends PassboltCommand
             __('Registration is open to everyone.'),
             [
                 __('Make sure this instance is not publicly available on the internet.'),
-                __('Or set passbolt.registration.public to false in config/passbolt.php.'),
+                __('Or set passbolt.registration.public to false in /etc/passbolt/passbolt.php.'),
             ]
         );
         $this->warning(
             $checks['application']['jsProd'],
             __('Serving the compiled version of the javascript app'),
             __('Using non-compiled Javascript. Passbolt will be slower.'),
-            __('Set passbolt.js.build to production in config/passbolt.php')
+            __('Set passbolt.js.build to production in /etc/passbolt/passbolt.php')
         );
         $this->warning(
             $checks['application']['emailNotificationEnabled'],
@@ -533,7 +533,7 @@ class HealthcheckCommand extends PassboltCommand
                 'sudo mkdir ' . $checks['gpg']['info']['gpgHome'],
                 'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
                 'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
-                __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in config/passbolt.php.'),// phpcs:ignore
+                __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in /etc/passbolt/passbolt.php.'),// phpcs:ignore
             ]
         );
         if ($checks['gpg']['gpgHome']) {
@@ -570,7 +570,7 @@ class HealthcheckCommand extends PassboltCommand
                 __('The server OpenPGP key is not the default one'),
                 __('Do not use the default OpenPGP key for the server'),
                 [
-                    __('Create a key, export it and add the fingerprint to config/passbolt.php'),
+                    __('Create a key, export it and add the fingerprint to /etc/passbolt/passbolt.php'),
                     __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
                 ]
             );
@@ -580,37 +580,37 @@ class HealthcheckCommand extends PassboltCommand
                 __('The server OpenPGP key is set'),
                 __('The server OpenPGP key is not set'),
                 [
-                    __('Create a key, export it and add the fingerprint to config/passbolt.php'),
+                    __('Create a key, export it and add the fingerprint to /etc/passbolt/passbolt.php'),
                     __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
                 ]
             );
         }
         $this->assert(
             $checks['gpg']['gpgKeyPublic'] && $checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPublicBlock'],// phpcs:ignore
-            __('The public key file is defined in config/passbolt.php and readable.'),
-            __('The public key file is not defined in config/passbolt.php or not readable.'),
+            __('The public key file is defined in /etc/passbolt/passbolt.php and readable.'),
+            __('The public key file is not defined in /etc/passbolt/passbolt.php or not readable.'),
             [
-                __('Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in config/passbolt.php.'),// phpcs:ignore
+                __('Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in /etc/passbolt/passbolt.php.'),// phpcs:ignore
                 __('Ensure there is a public key armored block in the key file.'),
-                __('Ensure the public key defined in config/passbolt.php exists and is accessible by the webserver user.'),// phpcs:ignore
+                __('Ensure the public key defined in /etc/passbolt/passbolt.php exists and is accessible by the webserver user.'),// phpcs:ignore
                 __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
             ]
         );
         $this->assert(
             $checks['gpg']['gpgKeyPrivate'] && $checks['gpg']['gpgKeyPrivateReadable'] && $checks['gpg']['gpgKeyPrivateBlock'],// phpcs:ignore
-            __('The private key file is defined in config/passbolt.php and readable.'),
-            __('The private key file is not defined in config/passbolt.php or not readable.'),
+            __('The private key file is defined in /etc/passbolt/passbolt.php and readable.'),
+            __('The private key file is not defined in /etc/passbolt/passbolt.php or not readable.'),
             [
-                __('Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in config/passbolt.php.'),// phpcs:ignore
+                __('Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in /etc/passbolt/passbolt.php.'),// phpcs:ignore
                 __('Ensure there is a private key armored block in the key file.'),
-                __('Ensure the private key defined in config/passbolt.php exists and is accessible by the webserver user.'),// phpcs:ignore
+                __('Ensure the private key defined in /etc/passbolt/passbolt.php exists and is accessible by the webserver user.'),// phpcs:ignore
                 __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
             ]
         );
         $this->assert(
             $checks['gpg']['gpgKeyPrivateFingerprint'] && $checks['gpg']['gpgKeyPublicFingerprint'],
-            __('The server key fingerprint matches the one defined in config/passbolt.php.'),
-            __('The server key fingerprint doesn\'t match the one defined in config/passbolt.php.'),
+            __('The server key fingerprint matches the one defined in /etc/passbolt/passbolt.php.'),
+            __('The server key fingerprint doesn\'t match the one defined in /etc/passbolt/passbolt.php.'),
             [
                 __('Double check the key fingerprint, example: '),
                 'sudo su -s /bin/bash -c "gpg --list-keys --fingerprint --home ' . $checks['gpg']['info']['gpgHome'] . '" ' . PROCESS_USER . ' | grep -i -B 2 \'SERVER_KEY_EMAIL\'',// phpcs:ignore
@@ -620,8 +620,8 @@ class HealthcheckCommand extends PassboltCommand
         );
         $this->assert(
             $checks['gpg']['gpgKeyPublicInKeyring'],
-            __('The server public key defined in the config/passbolt.php (or environment variables) is in the keyring.'),// phpcs:ignore
-            __('The server public key defined in the config/passbolt.php (or environment variables) is not in the keyring'),// phpcs:ignore
+            __('The server public key defined in the /etc/passbolt/passbolt.php (or environment variables) is in the keyring.'),// phpcs:ignore
+            __('The server public key defined in the /etc/passbolt/passbolt.php (or environment variables) is not in the keyring'),// phpcs:ignore
             [
                 __('Import the private server key in the keyring of the webserver user.'),
                 __('you can try:'),
