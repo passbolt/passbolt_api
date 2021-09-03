@@ -579,7 +579,7 @@ class HealthcheckCommand extends PassboltCommand
             [
                 __('Ensure the keyring location exists and is accessible by the webserver user.'),
                 __('you can try:'),
-                'sudo mkdir ' . $checks['gpg']['info']['gpgHome'],
+                'sudo mkdir -p ' . $checks['gpg']['info']['gpgHome'],
                 'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
                 'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
                 __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}.', CONFIG . 'passbolt.php'),// phpcs:ignore
