@@ -57,7 +57,11 @@ class SerializedType extends BaseType
         if ($value === null || is_array($value)) {
             return $value;
         }
-        return unserialize($value);
+	$uns_value = unserialize($value);
+	if($uns_value!==False) {
+	    return $uns_value;
+	}
+	return $value;
     }
 
     /**
@@ -73,11 +77,12 @@ class SerializedType extends BaseType
         if ($value === null) {
             return null;
         }
+	$value = serialize($value);
         if (is_a($driver, Postgres::class)) {
             $value = str_replace(self::NULL_CHAR, self::NULL_CHAR_SUBSTITUTE, $value);
         }
 
-        return serialize($value);
+        return $value;
     }
 
     /**
