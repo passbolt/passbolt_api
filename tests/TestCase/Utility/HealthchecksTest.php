@@ -18,9 +18,16 @@ namespace App\Test\TestCase\Utility;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Healthchecks;
+use Cake\Core\Configure;
 
 class HealthchecksTest extends AppIntegrationTestCase
 {
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->disableFeaturePlugin('JwtAuthentication');
+    }
+
     public function testHealthcheckApplication()
     {
         $check = Healthchecks::application();
@@ -82,5 +89,18 @@ class HealthchecksTest extends AppIntegrationTestCase
         $check = Healthchecks::ssl();
         $attributes = ['peerValid', 'hostValid', 'notSelfSigned'];
         $this->assertArrayHasAttributes($attributes, $check['ssl']);
+    }
+
+    public function testJwt()
+    {
+        Configure::delete('passbolt.plugins.jwtAuthentication.enabled');
+        $check = Healthchecks::jwt();
+        $attributes = ['isEnabled',];
+        $this->assertArrayHasAttributes($attributes, $check['jwt']);
+
+        $this->enableFeaturePlugin('JwtAuthentication');
+        $check = Healthchecks::jwt();
+        $attributes = ['isEnabled', 'keyPairValid',];
+        $this->assertArrayHasAttributes($attributes, $check['jwt']);
     }
 }

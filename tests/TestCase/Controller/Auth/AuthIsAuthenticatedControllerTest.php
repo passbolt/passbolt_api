@@ -22,19 +22,17 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
 {
     public function testIsAuthenticatedNotLoggedIn()
     {
-        $this->get('/auth/is-authenticated.json');
+        $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseError();
-        $response = json_decode($this->_getBodyAsString());
-        $this->assertTextContains('error', $response->header->status);
-        $this->assertTextContains('Authentication is required to continue', $response->header->message);
+        $this->assertTextContains('error', $this->_responseJsonHeader->status);
+        $this->assertTextContains('Authentication is required to continue', $this->_responseJsonHeader->message);
     }
 
     public function testIsAuthenticatedLoggedIn()
     {
         $this->authenticateAs('ada');
-        $this->get('/auth/is-authenticated.json');
+        $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseOk();
-        $response = json_decode($this->_getBodyAsString());
-        $this->assertTextContains('success', $response->header->status);
+        $this->assertTextContains('success', $this->_responseJsonHeader->status);
     }
 }

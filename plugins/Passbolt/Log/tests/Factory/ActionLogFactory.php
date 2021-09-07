@@ -33,8 +33,8 @@ class ActionLogFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'user_id' => $faker->uuid,
-                'action_id' => $faker->uuid,
+                'user_id' => $faker->uuid(),
+                'action_id' => $faker->uuid(),
                 'context' => $faker->text(255),
                 'status' => 1,
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),

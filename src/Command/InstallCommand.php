@@ -17,17 +17,22 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Model\Entity\Role;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Healthchecks;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
+use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use PassboltTestData\Command\InsertCommand;
 
 class InstallCommand extends PassboltCommand
 {
     use DatabaseAwareCommandTrait;
+    use FeaturePluginAwareTrait;
 
     /**
      * @inheritDoc
@@ -92,6 +97,17 @@ class InstallCommand extends PassboltCommand
         // This command needs to be executed with the same user as the webserver.
         if (!$this->assertNotRoot($io)) {
             return $this->errorCode();
+        }
+
+        // Create a JWT key pair
+        if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
+            $jwtService = new JwtKeyPairService();
+            try {
+                $jwtService->createKeyPair();
+                $jwtService->validateKeyPair();
+            } catch (InvalidJwtKeyPairException $e) {
+                $io->abort($e->getMessage());
+            }
         }
 
         // Quick mode - exit on success
@@ -379,6 +395,28 @@ class InstallCommand extends PassboltCommand
                 $msg .= __('A new installation would override existing data.');
                 $this->error($msg, $io);
                 $this->error(__('Please use --force to proceed anyway.'), $io);
+
+                return false;
+            }
+        }
+
+        // JWT checks
+        if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
+            $checks = Healthchecks::jwt();
+            if ($checks['jwt']['keyPairValid'] !== true) {
+                $fixCmd = (new JwtKeyPairService())->getCreateJwtKeysCommand();
+
+                $this->error('The JWT key pair is not valid, or cannot be found.', $io);
+                $this->error('Please run ' . $fixCmd . ' to create a valid pair.', $io);
+
+                return false;
+            }
+
+            if ($checks['jwt']['jwtWritable'] !== true) {
+                $folder = JwtAbstractService::JWT_CONFIG_DIR;
+                $fixCmd = "sudo chmod 775 $(find $folder -type d)";
+                $this->error("The directory {$folder} is not writable.", $io);
+                $this->error('You can try ' . $fixCmd, $io);
 
                 return false;
             }

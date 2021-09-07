@@ -60,7 +60,7 @@ class SubscriptionKeyValidateService
             $keyDto = $this->getData($keyString);
             $dataIsValid = $this->validateDto($keyDto);
         } catch (\Exception $e) {
-            throw new SubscriptionSignatureException($this->getFirstErrorMessage());
+            throw new SubscriptionSignatureException($keyString, $this->getFirstErrorMessage());
         }
 
         if (!$formatIsValid) {

@@ -26,7 +26,7 @@ namespace Passbolt\Ee\Error\Exception\Subscriptions;
  */
 class SubscriptionSignatureException extends SubscriptionException
 {
-    public const MESSAGE = 'The subscription cannot be verified. Invalid signature.';
+    public const MESSAGE = 'The subscription content or signature is not valid.';
 
     /**
      * SubscriptionSignatureException constructor.
@@ -36,7 +36,7 @@ class SubscriptionSignatureException extends SubscriptionException
      */
     public function __construct(string $keyString, ?string $msg = null)
     {
-        $msg = $msg ?? __('The subscription cannot be verified. Invalid signature.');
+        $msg = $msg ?? self::MESSAGE;
         parent::__construct($msg, $keyString);
     }
 }

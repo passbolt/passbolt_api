@@ -16,14 +16,17 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
+use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
 use Cake\Chronos\Chronos;
-use Cake\Datasource\EntityInterface;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
  * ResourceFactory
+ *
+ * @method \App\Model\Entity\Resource persist()
+ * @method \App\Model\Entity\Resource getEntity()
  */
 class ResourceFactory extends CakephpBaseFactory
 {
@@ -48,10 +51,10 @@ class ResourceFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'name' => $faker->text(64),
-                'username' => $faker->email,
-                'uri' => $faker->url,
-                'created_by' => $faker->uuid,
-                'modified_by' => $faker->uuid,
+                'username' => $faker->email(),
+                'uri' => $faker->url(),
+                'created_by' => $faker->uuid(),
+                'modified_by' => $faker->uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];
@@ -70,10 +73,10 @@ class ResourceFactory extends CakephpBaseFactory
     /**
      * Associates a previously persisted user with ACO permission.
      *
-     * @param User $creator Persisted creator
+     * @param \App\Model\Entity\User $creator Persisted creator
      * @return $this
      */
-    public function withCreatorAndPermission(EntityInterface $creator)
+    public function withCreatorAndPermission(User $creator)
     {
         $aco = PermissionsTable::RESOURCE_ACO;
         $aro_foreign_key = $creator->id;

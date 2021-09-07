@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib;
 
+use App\Middleware\CsrfProtectionMiddleware;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
@@ -33,6 +34,8 @@ use App\Test\Lib\Utility\ErrorTrait;
 use App\Test\Lib\Utility\JsonRequestTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Utility\UserAction;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -62,12 +65,16 @@ abstract class AppIntegrationTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->cleanup();
         $this->enableCsrfToken();
         $this->loadRoutes();
         Configure::write('passbolt.plugins.tags.enabled', false);
         Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
         Configure::write('passbolt.plugins.folders.enabled', false);
+        Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
+        OpenPGPBackendFactory::reset();
+        UserAction::destroy();
     }
 
     /**

@@ -1,4 +1,17 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.0.0
+ */
 declare(strict_types=1);
 
 namespace App\Utility\OpenPGP;
@@ -20,7 +33,7 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception if the key cannot be used to encrypt
      * @return bool true if success
      */
-    public function setEncryptKey(string $armoredKey);
+    public function setEncryptKey(string $armoredKey): bool;
 
     /**
      * Set a key for encryption.
@@ -30,7 +43,7 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception if there was an issue to use the key to encrypt
      * @return bool true if success
      */
-    public function setEncryptKeyFromFingerprint(string $fingerprint);
+    public function setEncryptKeyFromFingerprint(string $fingerprint): bool;
 
     /**
      * Set a key for decryption.
@@ -42,7 +55,7 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception if the key cannot be used to decrypt
      * @return bool true if success
      */
-    public function setDecryptKey(string $armoredKey, string $passphrase);
+    public function setDecryptKey(string $armoredKey, string $passphrase): bool;
 
     /**
      * Set a key for decryption.
@@ -54,7 +67,7 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception if the key cannot be used to decrypt
      * @return bool true if success
      */
-    public function setDecryptKeyFromFingerprint(string $fingerprint, string $passphrase);
+    public function setDecryptKeyFromFingerprint(string $fingerprint, string $passphrase): bool;
 
     /**
      * Set a key for verification (in decrypt or verify operation).
@@ -78,7 +91,7 @@ interface OpenPGPBackendInterface
      * @return bool
      * @throws \Cake\Core\Exception\Exception
      */
-    public function setSignKey(string $armoredKey, string $passphrase);
+    public function setSignKey(string $armoredKey, string $passphrase): bool;
 
     /**
      * Set key to be used for signing
@@ -90,7 +103,7 @@ interface OpenPGPBackendInterface
      * @param string $passphrase passphrase
      * @return true if success
      */
-    public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase);
+    public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase): bool;
 
     /**
      * Import a key into the local keyring.
@@ -99,7 +112,7 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception if the key could not be imported
      * @return string key fingerprint
      */
-    public function importKeyIntoKeyring(string $armoredKey);
+    public function importKeyIntoKeyring(string $armoredKey): string;
 
     /**
      * Check if an ASCII armored private key is parsable
@@ -107,7 +120,7 @@ interface OpenPGPBackendInterface
      * @param  string $armoredKey ASCII armored key data
      * @return bool true if parsable false otherwise
      */
-    public function isParsableArmoredPublicKey(string $armoredKey);
+    public function isParsableArmoredPublicKey(string $armoredKey): bool;
 
     /**
      * Check if an ASCII armored private key is parsable
@@ -115,7 +128,7 @@ interface OpenPGPBackendInterface
      * @param  string $armoredKey ASCII armored key data
      * @return bool true if parsable false otherwise
      */
-    public function isParsableArmoredPrivateKey(string $armoredKey);
+    public function isParsableArmoredPrivateKey(string $armoredKey): bool;
 
     /**
      * Check if a message is valid.
@@ -123,7 +136,7 @@ interface OpenPGPBackendInterface
      * @param string $armored ASCII armored message data
      * @return bool true if valid, false otherwise
      */
-    public function isValidMessage(string $armored);
+    public function isValidMessage(string $armored): bool;
 
     /**
      * Get key information
@@ -142,7 +155,7 @@ interface OpenPGPBackendInterface
      * @param string $armoredKey the ASCII armored key block
      * @return array as described above
      */
-    public function getKeyInfo(string $armoredKey);
+    public function getKeyInfo(string $armoredKey): array;
 
     /**
      * Get public key information.
@@ -151,7 +164,7 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception if the armored key cannot be parsed
      * @return array key information (see getKeyInfo)
      */
-    public function getPublicKeyInfo(string $armoredKey);
+    public function getPublicKeyInfo(string $armoredKey): array;
 
     /**
      * Is key currently in keyring
@@ -159,7 +172,7 @@ interface OpenPGPBackendInterface
      * @param string $fingerprint fingerprint
      * @return bool true if in keyring false otherwise
      */
-    public function isKeyInKeyring(string $fingerprint);
+    public function isKeyInKeyring(string $fingerprint): bool;
 
     /**
      * Encrypt a text and optionally sign it too
@@ -171,7 +184,18 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception if there is an issue with the key to encrypt and optionally to sign
      * @return string encrypted text
      */
-    public function encrypt(string $text, bool $sign = false);
+    public function encrypt(string $text, bool $sign = false): string;
+
+    /**
+     * Encrypt a text and sign it too
+     * Do not forget to add a key to encrypt and sign
+     *
+     * @param string $text plain text to be encrypted.
+     * @throws \Cake\Core\Exception\Exception if no key was set to encrypt and optionally to sign
+     * @throws \Cake\Core\Exception\Exception if there is an issue with the key to encrypt and optionally to sign
+     * @return string encrypted text
+     */
+    public function encryptSign(string $text): string;
 
     /**
      * Decrypt a text.
@@ -181,18 +205,17 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception
      * @return string decrypted text
      */
-    public function decrypt(string $text, bool $verifySignature = false);
+    public function decrypt(string $text, bool $verifySignature = false): string;
 
     /**
      * Verify a signed message.
      *
-     * @param string $armored The armored signed message to verify.
-     * @param string $fingerprint The fingerprint of the key to verify for.
-     * @param mixed $plainText (optional) The plain text.
-     * @return void
+     * @param string $signedText The signed message to verify.
+     * @param string|null $plainText (optional) The plain text.
+     * @return array signature information
      * @throws \Cake\Core\Exception\Exception If the armored signed message cannot be verified.
      */
-    public function verify($armored, $fingerprint, &$plainText = null);
+    public function verify(string $signedText, ?string &$plainText = null): array;
 
     /**
      * Sign a text.
@@ -202,33 +225,33 @@ interface OpenPGPBackendInterface
      * @throws \Cake\Core\Exception\Exception if there is an issue with the key to sign
      * @return string signed text
      */
-    public function sign(string $text);
+    public function sign(string $text): string;
 
     /**
      * Removes all keys which were set for decryption before
      *
      * @return void
      */
-    public function clearDecryptKeys();
+    public function clearDecryptKeys(): void;
 
     /**
      * Removes all keys which were set for signing before
      *
      * @return void
      */
-    public function clearSignKeys();
+    public function clearSignKeys(): void;
 
     /**
      * Removes all keys which were set for encryption before
      *
      * @return void
      */
-    public function clearEncryptKeys();
+    public function clearEncryptKeys(): void;
 
     /**
      * Removes all keys which were set before
      *
      * @return void
      */
-    public function clearKeys();
+    public function clearKeys(): void;
 }

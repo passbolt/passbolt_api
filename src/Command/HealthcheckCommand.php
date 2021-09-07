@@ -16,15 +16,19 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Healthchecks;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 class HealthcheckCommand extends PassboltCommand
 {
     use DatabaseAwareCommandTrait;
+    use FeaturePluginAwareTrait;
 
     /**
      * Total number of errors for that check
@@ -109,6 +113,10 @@ class HealthcheckCommand extends PassboltCommand
             ->addOption('application', [
                 'help' => __d('cake_console', 'Run passbolt app tests only.'),
                 'boolean' => true,
+            ])
+            ->addOption('jwt', [
+                'help' => __d('cake_console', 'Run passbolt JWT tests only.'),
+                'boolean' => true,
             ]);
 
         $this->addDatasourceOption($parser);
@@ -142,7 +150,7 @@ class HealthcheckCommand extends PassboltCommand
         // if user only want to run one check
         $paramChecks = [];
         $checks = [
-            'environment', 'configFiles', 'core', 'ssl', 'database', 'gpg', 'application',
+            'environment', 'configFiles', 'core', 'ssl', 'database', 'gpg', 'application', 'jwt',
         ];
         foreach ($checks as $check) {
             if ($args->getOption($check)) {
@@ -664,6 +672,55 @@ class HealthcheckCommand extends PassboltCommand
                 __('The public key cannot be used to verify a signature.')
             );
         }
+    }
+
+    /**
+     * Assert config files exist
+     *
+     * @param array $checks existing results
+     * @return void
+     */
+    public function assertJWT($checks = null)
+    {
+        if (!isset($checks)) {
+            $checks = Healthchecks::jwt();
+        }
+
+        $this->title(__('JWT Authentication'));
+
+        $this->warning(
+            $checks['jwt']['isEnabled'],
+            __('The {0} plugin is enabled', 'JWT Authentication'),
+            __('The {0} plugin is disabled', 'JWT Authentication'),
+            __('Set the environment variable {0} to true', 'PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED'),
+        );
+
+        if (!$this->isFeaturePluginEnabled('JwtAuthentication')) {
+            return;
+        }
+
+        $directory = JwtAbstractService::JWT_CONFIG_DIR;
+        $this->assert(
+            $checks['jwt']['jwtWritable'],
+            "The {$directory} directory is not writable.",
+            "The {$directory} directory is writable",
+            [
+                'You can try: ',
+                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $directory,
+                'sudo chmod 444 ' . $directory,
+            ]
+        );
+
+        $fixCmd = (new JwtKeyPairService())->getCreateJwtKeysCommand();
+        $this->assert(
+            $checks['jwt']['keyPairValid'],
+            __('A valid JWT key pair was found'),
+            __('A valid JWT key pair is missing'),
+            [
+                __('Run the create JWT keys script to create a valid JWT secret and public key pair:'),
+                'sudo su -s /bin/bash -c "' . $fixCmd . '" ' . PROCESS_USER,
+            ]
+        );
     }
 
     /**

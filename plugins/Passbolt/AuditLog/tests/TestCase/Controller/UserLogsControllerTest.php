@@ -17,7 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\AuditLog\Test\TestCase\Controller;
 
-use App\Utility\UuidFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
 /**
@@ -25,33 +26,22 @@ use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
  */
 class UserLogsControllerTest extends LogIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users',
-        'app.Base/Gpgkeys',
-        'app.Base/Profiles',
-        'app.Base/Roles',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/Resources',
-        'app.Base/Permissions',
-        'app.Base/Secrets',
-        'app.Base/Favorites',
-    ];
-
     public function testAuditLogUserLogsControllerViewByResourceEmpty()
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->getJson("/actionlog/resource/$resourceId.json?api-version=v2");
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $this->logInAs($user);
+        $this->getJson("/actionlog/resource/{$resource->id}.json?api-version=v2");
         $this->assertSuccess();
         $this->assertEmpty($this->_responseJsonBody);
     }
 
     public function testAuditLogUserLogsControllerViewByResourceUserDoesNotHavePermission()
     {
-        $this->authenticateAs('betty');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->getJson("/actionlog/resource/$resourceId.json?api-version=v2");
+        $resource = ResourceFactory::make()->withCreator(UserFactory::make()->user())->persist();
+        $user = $resource->creator;
+        $this->logInAs($user);
+        $this->getJson("/actionlog/resource/{$resource->id}.json?api-version=v2");
         $this->assertError(404, 'The resource does not exist.');
     }
 }
