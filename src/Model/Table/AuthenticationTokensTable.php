@@ -59,6 +59,8 @@ class AuthenticationTokensTable extends Table
         AuthenticationToken::TYPE_LOGIN,
         AuthenticationToken::TYPE_MFA,
         AuthenticationToken::TYPE_MOBILE_TRANSFER,
+        AuthenticationToken::TYPE_REFRESH_TOKEN,
+        AuthenticationToken::TYPE_VERIFY_TOKEN,
     ];
 
     /**
@@ -178,17 +180,18 @@ class AuthenticationTokensTable extends Table
      *
      * @param string $userId uuid
      * @param string $type AuthenticationToken::TYPE_*
+     * @param ?string $token token value (optional)
      * @throws \App\Error\Exception\ValidationException is the user is not a valid uuid
      * @throws \App\Error\Exception\ValidationException is the user is not found
      * @throws \App\Error\Exception\ValidationException is the user is deleted
      * @return \App\Model\Entity\AuthenticationToken $token
      */
-    public function generate(string $userId, string $type)
+    public function generate(string $userId, string $type, ?string $token = null): AuthenticationToken
     {
         $token = $this->newEntity(
             [
                 'user_id' => $userId,
-                'token' => UuidFactory::uuid(),
+                'token' => $token ?? UuidFactory::uuid(),
                 'active' => true,
                 'type' => $type,
             ],
@@ -220,22 +223,22 @@ class AuthenticationTokensTable extends Table
      *  - is active &&
      *  - is not expired ;
      *
-     * @param string $tokenId uuid of the token to check
+     * @param string $token uuid of the token to check
      * @param string $userId uuid of the user
      * @param string $type token type
      * @param string|int $expiry the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool true if it is valid
      */
-    public function isValid(string $tokenId, string $userId, ?string $type = null, $expiry = null)
+    public function isValid(string $token, string $userId, ?string $type = null, $expiry = null): bool
     {
         // Are ids valid uuid?
-        if (!Validation::uuid($tokenId) || !Validation::uuid($userId)) {
+        if (!Validation::uuid($token) || !Validation::uuid($userId)) {
             return false;
         }
 
         // Does token exist?
-        $where = ['token' => $tokenId, 'user_id' => $userId, 'active' => true];
+        $where = ['token' => $token, 'user_id' => $userId, 'active' => true];
         if ($type) {
             $where['type'] = $type;
         }
@@ -270,28 +273,23 @@ class AuthenticationTokensTable extends Table
      */
     public function isExpired(AuthenticationToken $token, $expiry = null): bool
     {
-        if ($expiry === null) {
-            $expiry = $this->authTokenExpiry->getExpiryForTokenType($token->type);
-        }
-        $isNotExpired = $token->created->wasWithinLast($expiry);
-
-        return !$isNotExpired;
+        return $token->isExpired($expiry);
     }
 
     /**
      * Set a token as inactive
      *
-     * @param string $tokenId uuid
-     * @throws \InvalidArgumentException is the token is not a valid uuid
+     * @param string $tokenValue uuid
      * @return bool save result
+     * @throws \InvalidArgumentException is the token is not a valid uuid
      */
-    public function setInactive(string $tokenId): bool
+    public function setInactive(string $tokenValue): bool
     {
-        if (!Validation::uuid($tokenId)) {
+        if (!Validation::uuid($tokenValue)) {
             throw new \InvalidArgumentException('The token should be a valid UUID.');
         }
         $token = $this->find('all')
-            ->where(['token' => $tokenId, 'active' => true ])
+            ->where(['token' => $tokenValue, 'active' => true ])
             ->first();
 
         if (empty($token)) {
@@ -312,14 +310,16 @@ class AuthenticationTokensTable extends Table
      *
      * @param string $tokenId uuid
      * @throws \InvalidArgumentException is the token is not a valid uuid
-     * @return array|\Cake\Datasource\EntityInterface|null
+     * @return \App\Model\Entity\AuthenticationToken|null
      */
-    public function getByToken(string $tokenId)
+    public function getByToken(string $tokenId): ?AuthenticationToken
     {
         if (!Validation::uuid($tokenId)) {
-            throw new \InvalidArgumentException('The token should be a valid UUID.');
+            throw new \InvalidArgumentException(__('The token should be a valid UUID.'));
         }
-        $token = $this->find('all')
+
+        /** @var \App\Model\Entity\AuthenticationToken|null $token */
+        $token = $this->find()
             ->where(['token' => $tokenId, 'active' => true ])
             ->first();
 

@@ -49,6 +49,7 @@ trait ActionLogsTrait
      */
     public function getDummyActionLogEntity(?array $data = [], ?array $options = []): ActionLog
     {
+        /** @var ActionLogsTable $actionLogsTable */
         $actionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
         $defaultOptions = [
             'checkRules' => true,
@@ -105,7 +106,7 @@ trait ActionLogsTrait
 
     public function assertOneActionLog()
     {
-        return $this->assertActionLogsCount(1);
+        $this->assertActionLogsCount(1);
     }
 
     public function assertActionLogIdMatchesResponse($id, $response)

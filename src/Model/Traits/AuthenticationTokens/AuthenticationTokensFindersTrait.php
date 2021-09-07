@@ -33,14 +33,7 @@ trait AuthenticationTokensFindersTrait
      */
     public function findActiveUserRegistrationToken(Query $query, array $options): Query
     {
-        $where = [
-            'type' => AuthenticationToken::TYPE_REGISTER,
-            'token' => Hash::get($options, 'token', ''),
-            'user_id' => Hash::get($options, 'userId', ''),
-            'active' => true,
-        ];
-
-        return $query->where($where);
+        return $this->findActiveByType($query, AuthenticationToken::TYPE_REGISTER, $options);
     }
 
     /**
@@ -53,8 +46,20 @@ trait AuthenticationTokensFindersTrait
      */
     public function findActiveUserRecoveryToken(Query $query, array $options): Query
     {
+        return $this->findActiveByType($query, AuthenticationToken::TYPE_RECOVER, $options);
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query The query to decorate
+     * @param string $type The token type
+     * @param array $options The finder options
+     *   [userId: string, token: string]
+     * @return \Cake\ORM\Query
+     */
+    public function findActiveByType(Query $query, string $type, array $options): Query
+    {
         $where = [
-            'type' => AuthenticationToken::TYPE_RECOVER,
+            'type' => $type,
             'token' => Hash::get($options, 'token', ''),
             'user_id' => Hash::get($options, 'userId', ''),
             'active' => true,

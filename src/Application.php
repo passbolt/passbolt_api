@@ -37,8 +37,11 @@ use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
+use Cake\Http\ServerRequest;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
+use Passbolt\JwtAuthentication\Service\Middleware\JwtRequestDetectionService;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -56,7 +59,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $csrf = new CsrfProtectionMiddleware();
         // Token check will be skipped when callback returns `true`.
-        $csrf->skipCheckCallback(function ($request) use ($csrf) {
+        $csrf->skipCheckCallback(function (ServerRequest $request) use ($csrf) {
             return $csrf->skipCsrfProtection($request);
         });
 
@@ -71,16 +74,14 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
          * - Apply CSRF protection
          */
         $middlewareQueue
-            ->add(ContentSecurityPolicyMiddleware::class)
+            ->add(new ContentSecurityPolicyMiddleware())
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
-            ->add(new AssetMiddleware([
-                'cacheTime' => Configure::read('Asset.cacheTime'),
-            ]))
+            ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
             ->add(new RoutingMiddleware($this))
             ->add(new SessionPreventExtensionMiddleware())
             ->add(new BodyParserMiddleware())
             ->add(new AuthenticationMiddleware($this))
-            ->add(GpgAuthHeadersMiddleware::class)
+            ->add(new GpgAuthHeadersMiddleware())
             ->add($csrf);
 
         /*
@@ -225,6 +226,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
         $this->addFeaturePluginIfEnabled($this, 'Mobile');
+        $this->addFeaturePluginIfEnabled($this, 'JwtAuthentication');
         $this->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
 
         if (!WebInstallerMiddleware::isConfigured()) {
@@ -268,6 +270,12 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
+        // If the middleware detected a JWT authentication attempt,
+        // return the Jwt dedicated service
+        if ($request->getAttribute(JwtRequestDetectionService::IS_JWT_AUTH_REQUEST)) {
+            return new JwtAuthenticationService();
+        }
+
         $service = new AuthenticationService();
 
         // Define where users should be redirected to when they are not authenticated
@@ -282,7 +290,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ]);
         }
 
-        // Load the authenticators. Session should be first.
+        // Load the default authenticators. Session should be first.
         $service->loadAuthenticator('Authentication.Session');
         $service->loadAuthenticator('Gpg');
 

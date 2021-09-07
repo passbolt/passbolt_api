@@ -49,7 +49,7 @@ class RoleFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'name' => $faker->name,
+                'name' => $faker->name(),
             ];
         });
     }

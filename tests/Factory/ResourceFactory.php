@@ -48,10 +48,10 @@ class ResourceFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'name' => $faker->text(64),
-                'username' => $faker->email,
-                'uri' => $faker->url,
-                'created_by' => $faker->uuid,
-                'modified_by' => $faker->uuid,
+                'username' => $faker->email(),
+                'uri' => $faker->url(),
+                'created_by' => $faker->uuid(),
+                'modified_by' => $faker->uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];

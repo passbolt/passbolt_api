@@ -290,4 +290,18 @@ class PassboltCommand extends Command
             $this->displayHelp($this->getOptionParser(), $args, $io);
         }
     }
+
+    /**
+     * Abort command if not in debug mode.
+     *
+     * @param \Cake\Console\ConsoleIo $io Console IO
+     * @return void
+     */
+    protected function abortIfNotInDebugMode(ConsoleIo $io): void
+    {
+        if (Configure::read('debug') !== true) {
+            $io->error('This command is available in debug mode only.');
+            $this->abort();
+        }
+    }
 }

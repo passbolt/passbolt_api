@@ -11,6 +11,7 @@
       <directory suffix=".php">./plugins/Mobile/src/</directory>
       <directory suffix=".php">./plugins/Reports/src/</directory>
       <directory suffix=".php">./plugins/Locale/src/</directory>
+      <directory suffix=".php">./plugins/JwtAuthentication/src/</directory>
       <directory suffix=".php">./plugins/PasswordGenerator/src/</directory>
     </include>
   </coverage>
@@ -32,6 +33,7 @@
       <directory>./plugins/Passbolt/Mobile/tests/TestCase</directory>
       <directory>./plugins/Passbolt/Reports/tests/TestCase</directory>
       <directory>./plugins/Passbolt/Locale/tests/TestCase</directory>
+      <directory>./plugins/Passbolt/JwtAuthentication/tests/TestCase</directory>
       <directory>./plugins/Passbolt/PasswordGenerator/tests/TestCase</directory>
     </testsuite>
     <testsuite name="installers">

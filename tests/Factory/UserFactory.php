@@ -55,7 +55,7 @@ class UserFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'username' => $faker->userName . '@passbolt.com',
+                'username' => $faker->userName() . '@passbolt.com',
                 'active' => true,
                 'deleted' => false,
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),

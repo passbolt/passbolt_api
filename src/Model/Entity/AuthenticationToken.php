@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Model\Entity;
 
+use App\Utility\AuthToken\AuthTokenExpiry;
 use Cake\ORM\Entity;
 
 /**
@@ -39,6 +40,8 @@ class AuthenticationToken extends Entity
     public const TYPE_MFA = 'mfa';
     public const TYPE_LOGIN = 'login';
     public const TYPE_MOBILE_TRANSFER = 'mobile_transfer';
+    public const TYPE_REFRESH_TOKEN = 'refresh_token';
+    public const TYPE_VERIFY_TOKEN = 'verify_token';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -57,4 +60,34 @@ class AuthenticationToken extends Entity
         'type' => false,
         'data' => false,
     ];
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotActive(): bool
+    {
+        return !$this->active;
+    }
+
+    /**
+     * @param string|null $expiry Expiry in word format.
+     * @return bool
+     */
+    public function isExpired(?string $expiry = null): bool
+    {
+        if (empty($expiry)) {
+            $expiry = (new AuthTokenExpiry())->getExpiryForTokenType($this->type);
+        }
+        $isNotExpired = $this->created->wasWithinLast($expiry);
+
+        return !$isNotExpired;
+    }
 }
