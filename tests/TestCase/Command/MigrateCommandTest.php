@@ -43,7 +43,6 @@ class MigrateCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         MigrateCommand::$isUserRoot = false;
-        $this->setUpPathAndPublicSubscriptionKey();
     }
 
     /**
@@ -74,6 +73,7 @@ class MigrateCommandTest extends TestCase
      */
     public function testMigrateCommandAsNonRootWithoutBackup()
     {
+        $this->persistValidSubscription();
         $this->exec('passbolt migrate -q -d test');
         $this->assertExitSuccess();
         $this->assertOutputEmpty();
@@ -87,6 +87,7 @@ class MigrateCommandTest extends TestCase
      */
     public function testMigrateCommandAsNonRootWithBackup()
     {
+        $this->persistValidSubscription();
         $this->exec('passbolt migrate -q --backup -d test');
         $this->assertExitSuccess();
         $this->assertOutputEmpty();

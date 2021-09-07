@@ -371,7 +371,8 @@ class LdapConfigurationForm extends Form
                     'Users.active' => true,
                 ])->first();
             if (empty($defaultGroupAdminUser)) {
-                Log::warning("LdapConfigurationForm: Default group admin user ({$settings['defaultGroupAdminUser']}) not found");
+                $u = $settings['defaultGroupAdminUser'];
+                Log::warning("LdapConfigurationForm: Default group admin user ({$u}) not found");
                 $settings['defaultGroupAdminUser'] = '';
             } else {
                 $settings['defaultGroupAdminUser'] = $defaultGroupAdminUser->get('id');

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Test\Factory\ProfileFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
@@ -25,6 +26,7 @@ use App\Test\Lib\Utility\PaginationTestTrait;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Date;
 use Cake\Utility\Hash;
+use Faker\Generator;
 
 class UsersIndexControllerTest extends AppIntegrationTestCase
 {
@@ -105,7 +107,13 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexOrderByFirstName()
     {
         RoleFactory::make()->guest()->persist();
-        UserFactory::make(5)->user()->with('Profiles')->persist();
+        UserFactory::make(5)->user()->with(
+            'Profiles',
+            function (ProfileFactory $factory, Generator $faker) {
+                // Makes sure that all first name are distinct
+                return ['first_name' => $faker->unique()->firstName()];
+            }
+        )->persist();
 
         $this->logInAsUser();
 
@@ -121,7 +129,13 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexOrderByLastName()
     {
         RoleFactory::make()->guest()->persist();
-        UserFactory::make(5)->user()->with('Profiles')->persist();
+        UserFactory::make(5)->user()->with(
+            'Profiles',
+            function (ProfileFactory $factory, Generator $faker) {
+                // Makes sure that all last name are distinct
+                return ['last_name' => $faker->unique()->lastName(),];
+            }
+        )->persist();
 
         $this->logInAsUser();
 

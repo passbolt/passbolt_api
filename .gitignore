@@ -16,6 +16,8 @@
 /config/subscription_key.txt
 /config/ldap.php
 /config/DirectorySync/schema/*
+/config/jwt/jwt.key
+/config/jwt/jwt.pem
 
 # JS Dependencies #
 ################

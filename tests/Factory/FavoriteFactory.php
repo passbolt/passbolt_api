@@ -45,9 +45,9 @@ class FavoriteFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'user_id' => $faker->uuid,
-                'foreign_key' => $faker->uuid,
-                'foreign_model' => $faker->uuid,
+                'user_id' => $faker->uuid(),
+                'foreign_key' => $faker->uuid(),
+                'foreign_model' => $faker->uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];

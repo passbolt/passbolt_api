@@ -22,6 +22,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
+use Passbolt\Ee\Service\SubscriptionKeyGetService;
 
 /**
  * Class DummySubscriptionTrait
@@ -98,6 +99,49 @@ trait DummySubscriptionTrait
             'expiry' => '2020-06-01',
             'created' => '2018-03-01',
         ];
+    }
+
+    protected function makeExistingKeyBackup()
+    {
+        $madeBackup = false;
+        $legacySubscriptionFileExists = file_exists(SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
+        $legacySubscriptionFileIsWritable = is_writable(SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
+        $tempFile1 = TMP . 'temp_subscription_file1';
+
+        if ($legacySubscriptionFileExists) {
+            if (!$legacySubscriptionFileIsWritable) {
+                $this->fail('The following file is not writable ' . SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
+            }
+            rename(SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE, $tempFile1);
+            $madeBackup = true;
+        }
+
+        $newSubscriptionFileExists = file_exists(SubscriptionKeyGetService::SUBSCRIPTION_FILE);
+        $newSubscriptionFileIsWritable = is_writable(SubscriptionKeyGetService::SUBSCRIPTION_FILE);
+        $tempFile2 = TMP . 'temp_subscription_file2';
+
+        if ($newSubscriptionFileExists) {
+            if (!$newSubscriptionFileIsWritable) {
+                $this->fail('The following file is not writable ' . SubscriptionKeyGetService::SUBSCRIPTION_FILE);
+            }
+            rename(SubscriptionKeyGetService::SUBSCRIPTION_FILE, $tempFile2);
+            $madeBackup = true;
+        }
+
+        return $madeBackup;
+    }
+
+    protected function restoreExistingKeyBackup()
+    {
+        $tempFile1 = TMP . 'temp_subscription_file1';
+        $tempFile2 = TMP . 'temp_subscription_file2';
+
+        if (file_exists($tempFile1)) {
+            rename($tempFile1, SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
+        }
+        if (file_exists($tempFile2)) {
+            rename($tempFile2, SubscriptionKeyGetService::SUBSCRIPTION_FILE);
+        }
     }
 
     protected function getDummyUserMock(bool $isAdmin = false): UserAccessControl

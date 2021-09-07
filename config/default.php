@@ -15,6 +15,7 @@
 
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\AuthToken\AuthTokenExpiryConfigValidator;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 
 $authTokenExpiryConfigValidator = new AuthTokenExpiryConfigValidator();
 
@@ -55,6 +56,15 @@ return [
                 ],
                 AuthenticationToken::TYPE_MOBILE_TRANSFER => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_MOBILE_TRANSFER_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                AuthenticationToken::TYPE_REFRESH_TOKEN => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_JWT_REFRESH_TOKEN', '1 month'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                JwtAbstractService::USER_ACCESS_TOKEN_KEY => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_JWT_ACCESS_TOKEN', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                AuthenticationToken::TYPE_VERIFY_TOKEN => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_JWT_VERIFY_TOKEN', '1 hour'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
             ]
         ],
@@ -197,6 +207,9 @@ return [
             ],
             'mobile' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', false), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'jwtAuthentication' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', false), FILTER_VALIDATE_BOOLEAN)
             ],
         ],
 

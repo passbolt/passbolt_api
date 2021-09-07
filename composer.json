@@ -49,6 +49,7 @@
         "ext-intl" : "*",
         "ext-mbstring" : "*",
         "ext-gnupg" : "*",
+        "ext-openssl": "*",
         "ext-ldap" : "*",
         "ext-curl" : "*",
         "ext-pdo": "*",
@@ -64,6 +65,7 @@
         "league/flysystem": "^2.1.1",
         "cakephp/authentication": "^2.6.0",
         "bcrowe/cakephp-api-pagination": "^2.1.0",
+        "firebase/php-jwt": "^5.2",
         "spomky-labs/otphp": "^8.3",
         "bacon/bacon-qr-code": "^1.0",
         "enygma/yubikey": "^3.3",
@@ -79,7 +81,7 @@
         "passbolt/cakephp-codesniffer": "dev-master",
         "passbolt/passbolt-selenium-api": "^3.1.1",
         "passbolt/passbolt-test-data": "^3.2.0",
-        "vierge-noire/cakephp-fixture-factories": "^2.2",
+        "vierge-noire/cakephp-fixture-factories": "2.3.1",
         "cakephp/localized": "4.0.0-beta"
     },
     "autoload": {
@@ -101,7 +103,8 @@
             "Passbolt\\EmailDigest\\": "./plugins/Passbolt/EmailDigest/src",
             "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src",
             "Passbolt\\Folders\\": "./plugins/Passbolt/Folders/src",
-            "Passbolt\\Mobile\\": "./plugins/Passbolt/Mobile/src"
+            "Passbolt\\Mobile\\": "./plugins/Passbolt/Mobile/src",
+            "Passbolt\\JwtAuthentication\\": "./plugins/Passbolt/JwtAuthentication/src"
         }
     },
     "autoload-dev": {
@@ -123,7 +126,8 @@
             "Passbolt\\EmailDigest\\Test\\": "./plugins/Passbolt/EmailDigest/tests",
             "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests",
             "Passbolt\\Folders\\Test\\": "./plugins/Passbolt/Folders/tests",
-            "Passbolt\\Mobile\\Test\\": "./plugins/Passbolt/Mobile/tests"
+            "Passbolt\\Mobile\\Test\\": "./plugins/Passbolt/Mobile/tests",
+            "Passbolt\\JwtAuthentication\\Test\\": "./plugins/Passbolt/JwtAuthentication/tests"
         }
     },
     "scripts": {

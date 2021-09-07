@@ -49,7 +49,7 @@ class TransferFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'user_id' => $faker->uuid,
+                'user_id' => $faker->uuid(),
                 'total_pages' => 2,
                 'current_page' => 0,
                 'status' => Transfer::TRANSFER_STATUS_START,

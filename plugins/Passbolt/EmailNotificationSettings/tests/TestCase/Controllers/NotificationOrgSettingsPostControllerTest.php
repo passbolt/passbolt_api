@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.10.0
  */
-namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettings;
+namespace Passbolt\EmailNotificationSettings\Test\TestCase\Controllers;
 
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Test\Lib\AppIntegrationTestCase;

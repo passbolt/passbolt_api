@@ -34,12 +34,14 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public $autoFixtures = false;
 
-    public function testLogResourcesAddSuccessWithSecrets()
+    /**
+     * @dataProvider dataProviderForLoginType
+     */
+    public function testLogResourcesAddSuccessWithSecrets(string $loginType)
     {
         ResourceTypeFactory::make()->default()->persist();
         $user = UserFactory::make()->user()->persist();
-        $this->logInAs($user);
-        $userId = $user->id;
+        $this->loginWithDataProviderLoginTypeValue($loginType, $user);
         $data = [
             'name' => 'new resource name',
             'username' => 'username@domain.com',
@@ -59,7 +61,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         $this->assertOneActionLog();
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('ResourcesAdd.add'),
-            'user_id' => $userId,
+            'user_id' => $user->id,
             'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);

@@ -195,8 +195,9 @@ zaZXtuDzZmnTOjWJm895TA==
         $armoredSignedMessage = $this->getDummySignedMessage('betty');
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $fingerprint = $this->gnupg->importKeyIntoKeyring($armoredKey);
-        $message = null;
-        $this->gnupg->verify($armoredSignedMessage, $fingerprint, $message);
+        $message = '';
+        $this->gnupg->setVerifyKeyFromFingerprint($fingerprint);
+        $this->gnupg->verify($armoredSignedMessage, $message);
         $this->assertMatchesRegularExpression('/^Signed message/', $message);
     }
 
@@ -206,7 +207,8 @@ zaZXtuDzZmnTOjWJm895TA==
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key');
         $fingerprint = $this->gnupg->importKeyIntoKeyring($armoredKey);
         $this->expectException(Exception::class);
-        $this->gnupg->verify($armoredSignedMessage, $fingerprint);
+        $this->gnupg->setVerifyKeyFromFingerprint($fingerprint);
+        $this->gnupg->verify($armoredSignedMessage);
     }
 
     public function testIsParsableArmoredSignedMessageSuccess()
@@ -264,7 +266,8 @@ gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
         $signedMessage = $this->gnupg->sign($messageToSign);
 
         $messageUnsigned = null;
-        $this->gnupg->verify($signedMessage, $keyInfo['fingerprint'], $messageUnsigned);
+        $this->gnupg->setVerifyKeyFromFingerprint($keyInfo['fingerprint']);
+        $this->gnupg->verify($signedMessage, $messageUnsigned);
 
         $this->assertEquals($messageToSign . "\n", $messageUnsigned);
     }

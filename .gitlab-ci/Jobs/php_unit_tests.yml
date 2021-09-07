@@ -22,6 +22,7 @@
     APP_FULL_BASE_URL: http://127.0.0.1
     PASSBOLT_REGISTRATION_PUBLIC: 1
     PASSBOLT_SELENIUM_ACTIVE: 1
+    PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED: 1 # Remove that line once JWT is enabled by default
     # This is the development dummy fingerprint
     PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
     PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
@@ -40,6 +41,7 @@
     - composer install --dev --no-interaction
     - gpg --import config/gpg/unsecure_private.key
     - gpg --import config/gpg/unsecure.key
+    - ./bin/cake passbolt create_jwt_keys -q
     - $PHPUNIT_COMMAND
   only:
     - branches

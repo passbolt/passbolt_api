@@ -21,6 +21,7 @@ use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\Form\Form;
 use Cake\Form\Schema;
+use Cake\Log\Log;
 use Cake\Validation\Validator;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionSignatureException;
 use Passbolt\Ee\Model\Dto\SubscriptionKeyDto;
@@ -89,7 +90,7 @@ class SubscriptionKeyAsciiForm extends Form
             ->add('key_ascii', 'is_valid_subscription', [
                 'last' => true,
                 'rule' => [$this, 'checkSignature'],
-                'message' => 'The subscription content or signature is not valid.',
+                'message' => SubscriptionSignatureException::MESSAGE,
             ]);
 
         return $validator;
@@ -125,6 +126,8 @@ class SubscriptionKeyAsciiForm extends Form
         try {
             $this->parse($value);
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
+
             return false;
         }
 
@@ -190,17 +193,20 @@ class SubscriptionKeyAsciiForm extends Form
      */
     protected function _verifySignature(string $subscriptionSigned): string
     {
-        $msg = __('The subscription key cannot be verified. The passbolt OpenPGP public key could not be found.');
+        $msg = __('The subscription key cannot be verified.');
         $subscription = '';
         $filePublicKey = Configure::read('passbolt.plugins.ee.subscriptionKey.public');
         if (!$filePublicKey || !file_exists($filePublicKey)) {
+            $msg .= ' ' . __('The passbolt OpenPGP public key could not be found.');
             throw new SubscriptionSignatureException($subscriptionSigned, $msg);
         }
         $subscriptionPublicKey = file_get_contents($filePublicKey);
         $fingerprint = $this->_gpg->importKeyIntoKeyring($subscriptionPublicKey);
+        $this->_gpg->setVerifyKeyFromFingerprint($fingerprint);
         try {
-            $this->_gpg->verify($subscriptionSigned, $fingerprint, $subscription);
+            $this->_gpg->verify($subscriptionSigned, $subscription);
         } catch (\Exception $e) {
+            $msg .= ' ' . $e->getMessage();
             throw new SubscriptionSignatureException($subscriptionSigned, $msg);
         }
 

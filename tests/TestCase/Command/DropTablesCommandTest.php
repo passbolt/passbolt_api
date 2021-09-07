@@ -20,7 +20,6 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\MissingDatasourceConfigException;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
 
 class DropTablesCommandTest extends TestCase
 {
@@ -62,8 +61,6 @@ class DropTablesCommandTest extends TestCase
 
         // Run migrations to recreate the lost tables.
         $this->exec('migrations migrate -c test -q --no-lock');
-        SnifferRegistry::get('test')->restart();
-        SnifferRegistry::get('test')->markAllTablesAsDirty();
     }
 
     /**

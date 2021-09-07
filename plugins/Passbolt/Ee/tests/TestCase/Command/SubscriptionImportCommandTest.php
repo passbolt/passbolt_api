@@ -65,28 +65,18 @@ class SubscriptionImportCommandTest extends TestCase
     {
         UserFactory::make()->admin()->persist();
 
-        $defaultFileName = SubscriptionKeyGetService::SUBSCRIPTION_FILE;
-        $subscriptionFileExists = file_exists($defaultFileName);
-        $subscriptionFileIsWritable = is_writable($defaultFileName);
-        $tempFile = TMP . 'temp_subscription_file';
-        $makeBackup = false;
-        if ($subscriptionFileExists) {
-            if (!$subscriptionFileIsWritable) {
-                $this->fail('The following file is not writable ' . $defaultFileName);
-            }
-            $makeBackup = true;
-            rename(SubscriptionKeyGetService::SUBSCRIPTION_FILE, $tempFile);
-        }
+        $this->makeExistingKeyBackup();
 
-        copy($this->getValidSubscriptionFileName(), $defaultFileName);
+        copy($this->getValidSubscriptionFileName(), SubscriptionKeyGetService::SUBSCRIPTION_FILE);
 
         $this->exec('passbolt subscription_import');
-        $this->assertExitSuccess();
-        $this->assertOutputContains("The subscription key {$defaultFileName} has been successfully imported in the database.");
-        if ($makeBackup) {
-            rename($tempFile, SubscriptionKeyGetService::SUBSCRIPTION_FILE);
-        }
 
+        unlink(SubscriptionKeyGetService::SUBSCRIPTION_FILE);
+
+        $this->restoreExistingKeyBackup();
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('has been successfully imported in the database.');
         $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
     }
 

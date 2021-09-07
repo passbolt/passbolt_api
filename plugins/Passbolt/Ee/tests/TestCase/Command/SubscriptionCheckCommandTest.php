@@ -65,30 +65,53 @@ class SubscriptionCheckCommandTest extends TestCase
     }
 
     /**
+     * Basic test on existing subscription file
+     */
+    public function testSubscriptionCheckCommand_Success_On_File()
+    {
+        // Make backups
+        $this->makeExistingKeyBackup();
+
+        // create test key
+        copy($this->getValidSubscriptionFileName(), SubscriptionKeyGetService::SUBSCRIPTION_FILE);
+
+        // Run command
+        $this->exec('passbolt subscription_check');
+
+        // Delete test key
+        unlink(SubscriptionKeyGetService::SUBSCRIPTION_FILE);
+
+        // Restore backups
+        $this->restoreExistingKeyBackup();
+
+        // Check outputs
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Below are your subscription key details');
+    }
+
+    /**
      * Basic test on existing legacy subscription file
      */
     public function testSubscriptionCheckCommand_Success_On_Legacy_File()
     {
-        $subscriptionFileExists = file_exists(SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
-        $subscriptionFileIsWritable = is_writable(SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
-        $tempFile = TMP . 'temp_subscription_file';
-        $makeBackup = false;
-        if ($subscriptionFileExists) {
-            if (!$subscriptionFileIsWritable) {
-                $this->fail('The following file is not writable ' . SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
-            }
-            $makeBackup = true;
-            rename(SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE, $tempFile);
-        }
+        // Make backups
+        $this->makeExistingKeyBackup();
 
+        // create test key
         copy($this->getValidSubscriptionFileName(), SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
 
+        // Run command
         $this->exec('passbolt subscription_check');
+
+        // Delete test key
+        unlink(SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
+
+        // Restore backups
+        $this->restoreExistingKeyBackup();
+
+        // Check output
         $this->assertExitSuccess();
         $this->assertOutputContains('Below are your subscription key details');
-        if ($makeBackup) {
-            rename($tempFile, SubscriptionKeyGetService::LEGACY_SUBSCRIPTION_FILE);
-        }
     }
 
     /**

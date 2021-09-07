@@ -16,10 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\Log\Test\Lib;
 
+use App\Model\Entity\User;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAction;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
 use Passbolt\Log\Test\Lib\Traits\EntitiesHistoryTrait;
 
@@ -27,6 +30,10 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
 {
     use ActionLogsTrait;
     use EntitiesHistoryTrait;
+    use JwtAuthTestTrait;
+
+    public const JWT_LOGIN = 'jwt_login';
+    public const SESSION_LOGIN = 'session_login';
 
     /**
      * @var ResourcesTable
@@ -99,5 +106,26 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
     {
         // Remove dynamically added associations
         TableRegistry::getTableLocator()->clear();
+        $this->disableFeaturePlugin('JwtAuthentication');
+    }
+
+    public function dataProviderForLoginType(): array
+    {
+        return [[self::SESSION_LOGIN], [self::JWT_LOGIN]];
+    }
+
+    /**
+     * @param string $loginType Login Type (JWT or SESSION)
+     * @param User $user User to log in
+     */
+    public function loginWithDataProviderLoginTypeValue(string $loginType, User $user)
+    {
+        if ($loginType === self::JWT_LOGIN) {
+            $this->enableFeaturePlugin('JwtAuthentication');
+            (new JwtKeyPairService())->createKeyPair();
+            $this->createJwtTokenAndSetInHeader($user->id);
+        } else {
+            $this->logInAs($user);
+        }
     }
 }
