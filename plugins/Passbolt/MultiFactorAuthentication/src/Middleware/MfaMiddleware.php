@@ -71,11 +71,14 @@ class MfaMiddleware implements MiddlewareInterface
      */
     protected function requiredMfaCheck(ServerRequest $request)
     {
-        // User is not logged in
-        $user = $request->getSession()->read('Auth');
-        if (!isset($user)) {
+        // Return false if user is not logged in
+        /** @var \Authentication\Identity $identity */
+        $identity = $request->getAttribute('identity', null);
+        if (empty($identity)) {
             return false;
         }
+
+        $user = $identity->get('user') ?? $identity;
 
         // Do not redirect on mfa setup or check page
         // same goes for authentication pages

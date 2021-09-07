@@ -108,7 +108,7 @@ abstract class AppIntegrationTestCase extends TestCase
         if ($userFirstName === 'admin') {
             $data['role']['name'] = Role::ADMIN;
         }
-        $this->session(['Auth' => $data]);
+        $this->session(['Auth' => ['user' => $data]]);
     }
 
     /**
@@ -116,7 +116,7 @@ abstract class AppIntegrationTestCase extends TestCase
      */
     public function logInAs(User $user)
     {
-        $this->session(['Auth' => $user->toArray()]);
+        $this->session(['Auth' => ['user' => $user]]);
     }
 
     /**
