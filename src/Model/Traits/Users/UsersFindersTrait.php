@@ -572,11 +572,11 @@ trait UsersFindersTrait
      * @param \Cake\ORM\Query $query Query to carve.
      * @return \Cake\ORM\Query
      */
-    public function findActiveNotDeleted(Query $query): Query
+    public function findActiveNotDeletedContainRole(Query $query): Query
     {
         return $query->where([
            $this->aliasField('active') => true,
            $this->aliasField('deleted') => false,
-        ]);
+        ])->contain('Roles');
     }
 }
