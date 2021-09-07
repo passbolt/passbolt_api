@@ -20,10 +20,8 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\SkipTablesTruncation;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 /**
@@ -34,17 +32,6 @@ class CreateAccessTokenCommandTest extends TestCase
     use ConsoleIntegrationTestTrait;
     use FeaturePluginAwareTrait;
     use PassboltCommandTestTrait;
-    use SkipTablesTruncation;
-
-    public static $userId;
-    public static $username;
-
-    public static function setUpBeforeClass(): void
-    {
-        $user = TableRegistry::getTableLocator()->get('Users')->find()->first() ?? UserFactory::make()->user()->persist();
-        self::$userId = $user->id;
-        self::$username = $user->username;
-    }
 
     /**
      * setUp method
@@ -78,32 +65,36 @@ class CreateAccessTokenCommandTest extends TestCase
 
     public function testCreateAccessTokenCommandWithUsername()
     {
-        $this->exec('passbolt create_access_token -u ' . self::$username);
+        $user = UserFactory::make()->user()->persist();
+        $this->exec('passbolt create_access_token -u ' . $user->username);
         $this->assertExitSuccess();
-        $this->assertOutputContains('Access token for ' . self::$username . ' valid 5 minutes:');
+        $this->assertOutputContains('Access token for ' . $user->username . ' valid 5 minutes:');
     }
 
     public function testCreateAccessTokenCommandWithUserId()
     {
-        $this->exec('passbolt create_access_token -i ' . self::$userId);
+        $user = UserFactory::make()->user()->persist();
+        $this->exec('passbolt create_access_token -i ' . $user->id);
         $this->assertExitSuccess();
-        $this->assertOutputContains('Access token for ' . self::$username . ' valid 5 minutes:');
+        $this->assertOutputContains('Access token for ' . $user->username . ' valid 5 minutes:');
     }
 
     public function testCreateAccessTokenCommandWithExpiry()
     {
+        $user = UserFactory::make()->user()->persist();
         $expiry = 10;
-        $this->exec('passbolt create_access_token -i ' . self::$userId . ' -e ' . $expiry);
+        $this->exec('passbolt create_access_token -i ' . $user->id . ' -e ' . $expiry);
         $this->assertExitSuccess();
-        $this->assertOutputContains('Access token for ' . self::$username . " valid {$expiry} minutes:");
+        $this->assertOutputContains('Access token for ' . $user->username . " valid {$expiry} minutes:");
     }
 
     public function testCreateAccessTokenCommandWithExpiryInWordFormat()
     {
+        $user = UserFactory::make()->user()->persist();
         $expiry = '5 seconds';
-        $this->exec('passbolt create_access_token -i ' . self::$userId . ' -e "' . $expiry . '"');
+        $this->exec('passbolt create_access_token -i ' . $user->id . ' -e "' . $expiry . '"');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Access token for ' . self::$username . " valid {$expiry}:");
+        $this->assertOutputContains('Access token for ' . $user->username . " valid {$expiry}:");
     }
 
     public function testCreateAccessTokenCommandWithNoUserParams()
@@ -120,9 +111,10 @@ class CreateAccessTokenCommandTest extends TestCase
 
     public function testCreateAccessTokenCommandInProdMod()
     {
+        $user = UserFactory::make()->user()->persist();
         $debug = Configure::read('debug');
         Configure::write('debug', false);
-        $this->exec('passbolt create_access_token -i ' . self::$userId);
+        $this->exec('passbolt create_access_token -i ' . $user->id);
         $this->assertExitError();
         Configure::write('debug', $debug);
     }

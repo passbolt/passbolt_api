@@ -34,7 +34,7 @@ class JwtAuthenticationService extends AuthenticationService
         $this->loadIdentifier('Authentication.JwtSubject', [
             'resolver' => [
                 'className' => 'Authentication.Orm',
-                'finder' => 'activeNotDeleted',
+                'finder' => 'activeNotDeletedContainRole',
             ],
         ]);
         $this->loadAuthenticator('Authentication.Jwt', [
