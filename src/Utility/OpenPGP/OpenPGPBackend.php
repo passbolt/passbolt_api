@@ -49,7 +49,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      * @throws \Cake\Http\Exception\InternalErrorException if server key is undefined or invalid
      * @return void
      */
-    public function importServerKeyInKeyring()
+    public function importServerKeyInKeyring(): void
     {
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
         $keyFilePath = Configure::read('passbolt.gpg.serverKey.private');
@@ -104,7 +104,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearDecryptKeys()
+    public function clearDecryptKeys(): void
     {
         $this->_decryptKeyFingerprint = null;
     }
@@ -114,7 +114,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearSignKeys()
+    public function clearSignKeys(): void
     {
         $this->_signKeyFingerprint = null;
     }
@@ -124,7 +124,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearEncryptKeys()
+    public function clearEncryptKeys(): void
     {
         $this->_encryptKeyFingerprint = null;
     }
@@ -134,7 +134,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearVerifyKeys()
+    public function clearVerifyKeys(): void
     {
         $this->_verifyKeyFingerprint = null;
     }
@@ -144,7 +144,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearKeys()
+    public function clearKeys(): void
     {
         $this->clearDecryptKeys();
         $this->clearEncryptKeys();

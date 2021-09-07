@@ -34,13 +34,13 @@ class EmailQueueFactory extends CakephpBaseFactory
         $this->configureEmailTemplateFixturePath();
 
         $this->setDefaultData(function (Generator $faker) {
-            $email = $faker->email;
-            $from_email = $faker->email;
+            $email = $faker->email();
+            $from_email = $faker->email();
 
             return [
                 'email' => $email,
-                'subject' => $faker->sentence,
-                'from_name' => $faker->name,
+                'subject' => $faker->sentence(),
+                'from_name' => $faker->name(),
                 'from_email' => $from_email,
                 'config' => 'default',
                 'template' => 'test_email',

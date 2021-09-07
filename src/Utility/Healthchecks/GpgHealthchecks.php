@@ -364,7 +364,7 @@ class GpgHealthchecks
 
                 try {
                     $_gpg->setVerifyKeyFromFingerprint($fingerprint);
-                    $_gpg->verify($signedMessage, Configure::read('passbolt.gpg.serverKey.fingerprint'));
+                    $_gpg->verify($signedMessage);
                     $checks['gpg']['canVerify'] = true;
                 } catch (Exception $e) {
                 }

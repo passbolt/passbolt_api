@@ -231,7 +231,7 @@ class ResourcesTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         // Create and Update rules
-        $rules->add($rules->existsIn(['resource_type_id'], 'ResourceTypes'), 'resource_type_exists', [
+        $rules->add($rules->existsIn('resource_type_id', 'ResourceTypes'), 'resource_type_exists', [
             'message' => __('The resource type does not exist.'),
         ]);
 

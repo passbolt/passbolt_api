@@ -48,7 +48,7 @@ class PermissionFactory extends CakephpBaseFactory
             return [
                 'aro' => $faker->text(30),
                 'type' => rand(),
-                'aco_foreign_key' => $faker->uuid,
+                'aco_foreign_key' => $faker->uuid(),
                 'created' => Chronos::now(),
                 'modified' => Chronos::now(),
             ];

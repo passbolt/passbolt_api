@@ -97,9 +97,9 @@ class RegisterUserCommandTest extends TestCase
 
         $faker = Factory::create();
         $role = Role::USER;
-        $username = $faker->email;
-        $firstName = $faker->firstNameFemale;
-        $lastName = $faker->lastName;
+        $username = $faker->email();
+        $firstName = $faker->firstNameFemale();
+        $lastName = $faker->lastName();
 
         $options = " -r $role -u $username -f $firstName -l $lastName";
 
@@ -119,7 +119,7 @@ class RegisterUserCommandTest extends TestCase
 
         // Prepare the interaction inputs
         $faker = Factory::create();
-        $input = [$faker->email, $faker->firstNameFemale, $faker->lastName, Role::USER];
+        $input = [$faker->email(), $faker->firstNameFemale(), $faker->lastName(), Role::USER];
 
         // Run the register command
         $this->exec('passbolt register_user -i', $input);

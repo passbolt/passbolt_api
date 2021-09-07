@@ -17,12 +17,14 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use Cake\Core\Configure;
+use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use Cake\Utility\Security;
-use Psr\Http\Message\RequestInterface;
 
 class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddleware
 {
+    public const PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG = 'passbolt.security.csrfProtection.active';
+
     /**
      * @inheritDoc
      */
@@ -50,13 +52,12 @@ class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddl
     /**
      * Skip Csrf protection.
      *
-     * @param \Psr\Http\Message\RequestInterface $request The request
+     * @param \Cake\Http\ServerRequest $request The request
      * @return bool result
      */
-    public function skipCsrfProtection(RequestInterface $request): bool
+    public function skipCsrfProtection(ServerRequest $request): bool
     {
         $plugins = Configure::read('passbolt.plugins');
-        /** @var \Cake\Http\ServerRequest $request */
         $controller = $request->getParam('controller', 'Error');
 
         $unlockedActions = Configure::read("passbolt.security.csrfProtection.unlockedActions.$controller", []);
@@ -67,7 +68,7 @@ class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddl
             }
         }
 
-        if (!Configure::read('passbolt.security.csrfProtection.active')) {
+        if (!Configure::read(self::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG)) {
             return true;
         }
         if (in_array($request->getParam('action'), $unlockedActions)) {

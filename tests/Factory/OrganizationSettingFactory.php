@@ -33,8 +33,8 @@ class OrganizationSettingFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'created_by' => $faker->uuid,
-                'modified_by' => $faker->uuid,
+                'created_by' => $faker->uuid(),
+                'modified_by' => $faker->uuid(),
             ];
         });
     }

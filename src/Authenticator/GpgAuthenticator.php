@@ -87,7 +87,7 @@ class GpgAuthenticator extends SessionAuthenticator
         if ($request->is('json')) {
             throw new ForbiddenException(__('You need to login to access this location.'));
         }
-        // Otherwise we let the controller handle it
+        // Otherwise we let the controller handle the redirections
     }
 
     /**
@@ -110,11 +110,12 @@ class GpgAuthenticator extends SessionAuthenticator
      * in the GpgAuthHeadersMiddleware
      *
      * @see GpgAuthHeadersMiddleware
+     * @param \Cake\Http\ServerRequest $request The request.
      * @return \Authentication\Authenticator\ResultInterface
      */
-    private function authenticationSuccessResult(): ResultInterface
+    private function authenticationSuccessResult(ServerRequest $request): ResultInterface
     {
-        return new Result($this->_user->toArray(), Result::SUCCESS, $this->headers);
+        return new Result(['user' => $this->_user->toArray()], Result::SUCCESS, $this->headers);
     }
 
     /**
@@ -160,7 +161,7 @@ class GpgAuthenticator extends SessionAuthenticator
         }
 
         // Return the user to be set as active
-        return $this->authenticationSuccessResult();
+        return $this->authenticationSuccessResult($request);
     }
 
     /**
