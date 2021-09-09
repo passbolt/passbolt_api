@@ -93,6 +93,6 @@ class GetPasswordGeneratorService
      */
     protected function getDefaultGenerator(): string
     {
-        return self::PASSWORD_GENERATOR_SETTING_PASSPHRASE;
+        return self::PASSWORD_GENERATOR_SETTING_PASSWORD;
     }
 }
