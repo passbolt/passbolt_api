@@ -67,7 +67,8 @@ class JwtAuthenticationService extends AuthenticationService
      */
     private function loadGpgJwtAuthenticatorOnLoginEndpoint(ServerRequest $request): void
     {
-        $isLoginPath = ($request->getUri()->getPath() === '/auth/jwt/login.json');
+        $path = str_replace('.json', '', $request->getUri()->getPath());
+        $isLoginPath = ($path === '/auth/jwt/login');
         if ($isLoginPath && $request->is('POST')) {
             $this->loadAuthenticator('Passbolt/JwtAuthentication.GpgJwt');
         }
