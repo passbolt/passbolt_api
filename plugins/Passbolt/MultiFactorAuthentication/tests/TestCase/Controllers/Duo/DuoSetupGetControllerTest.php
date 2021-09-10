@@ -16,23 +16,17 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Duo;
 
-use Passbolt\MultiFactorAuthentication\Test\Lib\MfaDuoSettingsTestTrait;
+use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\OrganizationSettingFactory;
+use Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoOrganizationOnlyScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupGetControllerTest extends MfaIntegrationTestCase
 {
-    use MfaDuoSettingsTestTrait;
-
-    /**
-     * @var array
-     */
-    public $fixtures = [
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-        'app.Base/Users',
-        'app.Base/Roles',
-    ];
-
     /**
      * @group mfa
      * @group mfaSetup
@@ -53,7 +47,7 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupGetDuoJsonNotAllowed()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->get('/mfa/setup/duo.json?api-version=v2');
         $this->assertResponseError('not available');
     }
@@ -66,12 +60,13 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupGetDuoAlreadyConfigured()
     {
-        $this->mockMfaDuoSettings('ada', 'valid');
-        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_DUO);
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_DUO);
         $this->get('/mfa/setup/duo');
         $this->assertResponseOk();
         $this->assertResponseContains('Duo multi-factor authentication is enabled');
+        $this->assertSame(1, OrganizationSettingFactory::count());
     }
 
     /**
@@ -82,9 +77,9 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupGetDuoOrgSettingsNotEnabled()
     {
-        $this->mockMfaTotpSettings('ada', 'valid');
-        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_TOTP);
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP);
         $this->get('/mfa/setup/duo');
         $this->assertResponseError();
         $this->assertResponseContains('This authentication provider is not enabled for your organization.');
@@ -98,10 +93,30 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupGetDuoAccountSettingsEmpty()
     {
-        $this->authenticateAs('ada');
-        $this->mockMfaDuoSettings('ada', 'orgOnly');
+        $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
         $this->get('/mfa/setup/duo');
         $this->assertResponseOk();
         $this->assertResponseContains('<iframe');
+    }
+
+    public function testMfaSetupGetDuo_Valid_Form()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
+        $this->mockValidMfaFormInterface(DuoSetupForm::class, $this->makeUac($user));
+        $this->get('/mfa/setup/duo?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertSame(0, AuthenticationTokenFactory::count());
+    }
+
+    public function testMfaSetupGetDuo_Invalid_Form()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
+        $this->mockInvalidMfaFormInterface(DuoSetupForm::class, $this->makeUac($user));
+        $this->get('/mfa/setup/duo?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertSame(0, AuthenticationTokenFactory::count());
     }
 }

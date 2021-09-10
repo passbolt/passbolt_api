@@ -24,6 +24,7 @@ use Authentication\Authenticator\AbstractAuthenticator;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Cake\Core\Configure;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
@@ -44,7 +45,11 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class GpgJwtAuthenticator extends AbstractAuthenticator
 {
+    use EventDispatcherTrait;
+
     public const PROTOCOL_VERSION = '1.0.0';
+
+    public const MAKE_ARMORED_CHALLENGE_EVENT_NAME = 'gpg_jwt_auth_make_armored_challenge_event_name';
 
     /**
      * @var \App\Utility\OpenPGP\OpenPGPBackend $gpg gpg backend
@@ -132,7 +137,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
     public function successResult(string $verifyToken): Result
     {
         $accessToken = (new JwtTokenCreateService())->createToken($this->user->id);
-        $refreshToken = (new RefreshTokenCreateService())->createToken($this->user->id);
+        $refreshToken = (new RefreshTokenCreateService())->createToken($this->user->id, $accessToken);
         $verifyToken = (new VerifyTokenCreateService())->createToken($verifyToken, $this->user->id);
         $armoredChallenge = $this->makeArmoredChallenge($accessToken, $refreshToken->token, $verifyToken->token);
         $data = ['challenge' => $armoredChallenge, 'user' => $this->user];
@@ -145,20 +150,20 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      *
      * @param string $accessToken access token.
      * @param string $refreshToken access token.
-     * @param string|null $verifyToken verify token.
+     * @param string $verifyToken verify token.
      * @return string encrypted challenge
      */
-    public function makeArmoredChallenge(string $accessToken, string $refreshToken, ?string $verifyToken = null): string
+    public function makeArmoredChallenge(string $accessToken, string $refreshToken, string $verifyToken): string
     {
-        $challenge = [
+        $event = $this->dispatchEvent(self::MAKE_ARMORED_CHALLENGE_EVENT_NAME, [], $this);
+        $dataInChallenge = (array)$event->getData();
+        $challenge = array_merge($dataInChallenge, [
             'version' => self::PROTOCOL_VERSION,
             'domain' => Router::url('/', true),
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
-        ];
-        if (isset($verifyToken)) {
-            $challenge['verify_token'] = $verifyToken;
-        }
+            'verify_token' => $verifyToken,
+        ]);
 
         return $this->gpg->encryptSign(json_encode($challenge));
     }
@@ -470,6 +475,14 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
     public function getGpg(): \App\Utility\OpenPGP\OpenPGPBackend
     {
         return $this->gpg;
+    }
+
+    /**
+     * @return \App\Model\Entity\User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 
     /**

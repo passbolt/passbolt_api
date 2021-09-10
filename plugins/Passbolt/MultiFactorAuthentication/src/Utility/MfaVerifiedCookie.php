@@ -18,7 +18,6 @@ namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Utility\UuidFactory;
 use Cake\Http\Cookie\Cookie;
-use DateTime;
 use DateTimeInterface;
 
 class MfaVerifiedCookie
@@ -61,7 +60,7 @@ class MfaVerifiedCookie
     {
         $mfaCookie = (new Cookie(self::MFA_COOKIE_ALIAS))
             ->withValue(UuidFactory::uuid())
-            ->withExpiry(new DateTime('yesterday'))
+            ->withExpired()
             ->withPath('/')
             ->withHttpOnly(true)
             ->withSecure($ssl);

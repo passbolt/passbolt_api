@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpVerifyPostController extends MfaVerifyController
@@ -26,18 +27,20 @@ class TotpVerifyPostController extends MfaVerifyController
     /**
      * Totp Verify Post
      *
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID service
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $verifyForm MFA Form
      * @throws \Cake\Http\Exception\InternalErrorException
      * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
-    public function post()
-    {
-        $this->_handleVerifiedNotRequired();
+    public function post(
+        SessionIdentificationServiceInterface $sessionIdentificationService,
+        MfaFormInterface $verifyForm
+    ) {
+        $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_TOTP);
 
         // Verify totp
-        $uac = $this->User->getAccessControl();
-        $verifyForm = new TotpVerifyForm($uac, $this->mfaSettings);
         try {
             $verifyForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
@@ -56,7 +59,7 @@ class TotpVerifyPostController extends MfaVerifyController
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $this->_generateMfaToken(MfaSettings::PROVIDER_TOTP);
+        $this->_generateMfaToken(MfaSettings::PROVIDER_TOTP, $sessionIdentificationService);
         $this->_handleVerifySuccess();
     }
 }

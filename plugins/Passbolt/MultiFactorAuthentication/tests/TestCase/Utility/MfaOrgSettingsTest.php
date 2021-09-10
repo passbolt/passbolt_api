@@ -27,13 +27,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsTest extends MfaIntegrationTestCase
 {
-    /**
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/Users',
-        'app.Base/Roles',
-    ];
+    public $autoFixtures = false;
 
     /**
      * @var OrganizationSettingsTable

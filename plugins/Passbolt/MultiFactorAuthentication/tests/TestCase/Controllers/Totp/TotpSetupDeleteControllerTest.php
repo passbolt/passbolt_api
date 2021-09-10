@@ -16,7 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
+use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpSetupDeleteControllerTest extends MfaIntegrationTestCase
@@ -55,11 +59,15 @@ class TotpSetupDeleteControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupDeleteTotpSuccessDeleted()
     {
-        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_TOTP);
-        $this->mockMfaTotpSettings('ada', 'valid');
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP);
         $this->delete('/mfa/setup/totp.json?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertResponseContains('The configuration was deleted.');
+        $this->assertSame(0, AccountSettingFactory::count());
+        $this->assertSame(1, MfaOrganizationSettingFactory::count());
+        $this->assertSame(1, MfaAuthenticationTokenFactory::count());
+        $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true])->count());
     }
 }

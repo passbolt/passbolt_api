@@ -18,7 +18,7 @@
     ];
     ?>
 <div class="grid grid-responsive-12">
-    <?= $this->form->create($yubikeySetupForm, $formContext); ?>
+    <?= $this->Form->create($yubikeySetupForm, $formContext); ?>
     <div class="row">
         <div class="col12 last">
             <h3><?= $title; ?></h3>
@@ -27,7 +27,7 @@
     <div class="row">
         <div class="col7">
             <div class="input-verify">
-                <?= $this->form->control('hotp', [
+                <?= $this->Form->control('hotp', [
                     'label' => 'Yubikey OTP',
                     'type' => 'password',
                 ]); ?>
@@ -47,5 +47,5 @@
             </div>
         </div>
     </div>
-    <?= $this->form->end(); ?>
+    <?= $this->Form->end(); ?>
 </div>

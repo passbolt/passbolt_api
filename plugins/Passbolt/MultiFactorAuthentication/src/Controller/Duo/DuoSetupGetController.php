@@ -20,7 +20,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupGetController extends MfaSetupController
@@ -28,9 +28,10 @@ class DuoSetupGetController extends MfaSetupController
     /**
      * Duo Get Qr Code and provisioning urls
      *
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
      * @return void
      */
-    public function get()
+    public function get(MfaFormInterface $setupForm)
     {
         if ($this->request->is('json')) {
             throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
@@ -38,7 +39,7 @@ class DuoSetupGetController extends MfaSetupController
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_DUO);
         try {
             $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_DUO);
-            $this->_handleGetNewSettings();
+            $this->_handleGetNewSettings($setupForm);
         } catch (BadRequestException $exception) {
             $this->_handleGetExistingSettings(MfaSettings::PROVIDER_DUO);
         }
@@ -47,12 +48,13 @@ class DuoSetupGetController extends MfaSetupController
     /**
      * Handle get request when new settings are needed
      *
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
      * @return void
      */
-    protected function _handleGetNewSettings()
+    protected function _handleGetNewSettings(MfaFormInterface $setupForm)
     {
+        /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm $setupForm */
         try {
-            $setupForm = new DuoSetupForm($this->User->getAccessControl(), $this->mfaSettings);
             $this->set('sigRequest', $setupForm->getSigRequest());
             $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
         } catch (RecordNotFoundException $exception) {

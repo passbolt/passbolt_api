@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -24,20 +25,21 @@ use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
-class MfaVerifyController extends MfaController
+abstract class MfaVerifyController extends MfaController
 {
     /**
      * Trigger a redirect if MFA verification is not required
      *
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
      * @throws \Cake\Http\Exception\BadRequestException if valid Verification token is already present in cookie
      * @return void
      */
-    protected function _handleVerifiedNotRequired()
+    protected function _handleVerifiedNotRequired(SessionIdentificationServiceInterface $sessionIdentificationService)
     {
         // Mfa cookie is set and a valid token
         $uac = $this->User->getAccessControl();
         $mfaVerifiedToken = $this->request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
-        $sessionId = $this->getRequest()->getSession()->id();
+        $sessionId = $sessionIdentificationService->getSessionId($this->getRequest());
         if (isset($mfaVerifiedToken)) {
             if (MfaVerifiedToken::check($uac, $mfaVerifiedToken, $sessionId)) {
                 throw new BadRequestException(__('The multi-factor authentication is not required.'));
@@ -68,12 +70,15 @@ class MfaVerifyController extends MfaController
      * Generate MFA verification token and cookie and decorate response accordingly
      *
      * @param string $provider name of the provider
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
      * @return void
      */
-    protected function _generateMFaToken(string $provider)
-    {
+    protected function _generateMFaToken(
+        string $provider,
+        SessionIdentificationServiceInterface $sessionIdentificationService
+    ) {
         $uac = $this->User->getAccessControl();
-        $sessionId = $this->getRequest()->getSession()->id();
+        $sessionId = $sessionIdentificationService->getSessionId($this->getRequest());
         $token = MfaVerifiedToken::get($uac, $provider, $sessionId, (bool)$this->request->getData('remember') ?? false);
         $expiryAt = $this->request->getData('remember') ?
             (new Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :

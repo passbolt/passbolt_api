@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\UserSettings;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Validation\Validation;
@@ -46,7 +47,7 @@ class MfaUserSettingsDeleteController extends MfaController
      * @param \Cake\Event\Event $event An event instance
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $userId = $this->getRequest()->getParam('userId', null);
 

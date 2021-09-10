@@ -19,9 +19,9 @@ namespace Passbolt\MultiFactorAuthentication\Model\Behavior;
 
 use App\Model\Event\TableFindIndexBefore;
 use Cake\ORM\Behavior;
+use Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper;
 use Passbolt\MultiFactorAuthentication\Model\Query\IsMfaEnabledQueryDecorator;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaEnabledService;
-use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
 
 /**
  * @method \App\Model\Table\UsersTable table()
@@ -34,16 +34,6 @@ class IsMfaEnabledBehavior extends Behavior
     private $isMfaEnabledQueryDecorator;
 
     /**
-     * @return array
-     */
-    public function implementedEvents(): array
-    {
-        return [
-            TableFindIndexBefore::EVENT_NAME => 'addIsMfaEnabledBehavior',
-        ];
-    }
-
-    /**
      * @param array $config Config
      * @return void
      */
@@ -54,16 +44,24 @@ class IsMfaEnabledBehavior extends Behavior
             $this->table(),
             new MfaEntityMapper($isMfaEnabledService)
         );
+        $this->addIsMfaEnabledBehaviorOnTableFindIndexBeforeEvent();
 
         parent::initialize($config);
     }
 
     /**
-     * @param \App\Model\Event\TableFindIndexBefore $event Event
+     * Listens to the TableFindIndexBefore::EVENT_NAME, and apply the
+     * Mfa decoration if triggered.
+     *
      * @return void
      */
-    public function addIsMfaEnabledBehavior(TableFindIndexBefore $event)
+    public function addIsMfaEnabledBehaviorOnTableFindIndexBeforeEvent(): void
     {
-        $this->isMfaEnabledQueryDecorator->apply($event->getQuery(), $event->getOptions());
+        $this->table()->getEventManager()->on(
+            TableFindIndexBefore::EVENT_NAME,
+            function (TableFindIndexBefore $event) {
+                $this->isMfaEnabledQueryDecorator->apply($event->getQuery(), $event->getOptions());
+            }
+        );
     }
 }

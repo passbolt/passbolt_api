@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         2.12.0
  */
 
-namespace Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User;
+namespace Passbolt\MultiFactorAuthentication\Model\EntityMapper\User;
 
 use App\Model\Entity\User;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaEnabledService;

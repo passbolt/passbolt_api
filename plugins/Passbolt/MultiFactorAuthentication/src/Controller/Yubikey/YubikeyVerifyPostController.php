@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeyVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeyVerifyPostController extends MfaVerifyController
@@ -26,18 +27,20 @@ class YubikeyVerifyPostController extends MfaVerifyController
     /**
      * Yubikey verify post
      *
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $verifyForm MFA Form
      * @throws \Cake\Http\Exception\InternalErrorException
      * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
-    public function post()
-    {
-        $this->_handleVerifiedNotRequired();
+    public function post(
+        SessionIdentificationServiceInterface $sessionIdentificationService,
+        MfaFormInterface $verifyForm
+    ) {
+        $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);
 
         // Verify hotp
-        $uac = $this->User->getAccessControl();
-        $verifyForm = new YubikeyVerifyForm($uac, $this->mfaSettings);
         try {
             $verifyForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
@@ -59,7 +62,7 @@ class YubikeyVerifyPostController extends MfaVerifyController
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $this->_generateMfaToken(MfaSettings::PROVIDER_YUBIKEY);
+        $this->_generateMfaToken(MfaSettings::PROVIDER_YUBIKEY, $sessionIdentificationService);
         $this->_handleVerifySuccess();
     }
 }

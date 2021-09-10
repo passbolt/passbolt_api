@@ -34,6 +34,7 @@ trait MfaOrgSettingsTestTrait
             Configure::write('passbolt.plugins.multiFactorAuthentication', $data);
         } else {
             $data = json_encode($data);
+            /** @var \App\Model\Table\OrganizationSettingsTable $OrgSettings */
             $OrgSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
             $OrgSettings->createOrUpdateSetting(MfaSettings::MFA, $data, $user);
         }

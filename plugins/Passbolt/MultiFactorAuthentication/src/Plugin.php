@@ -16,17 +16,48 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication;
 
+use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
+use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
-use Passbolt\MultiFactorAuthentication\Middleware\MfaMiddleware;
+use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Middleware\AppendProvidersToJwtChallengeMiddleware;
+use Passbolt\MultiFactorAuthentication\Middleware\MfaInjectFormMiddleware;
+use Passbolt\MultiFactorAuthentication\Middleware\MfaRefreshTokenCreatedListenerMiddleware;
+use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
+use Passbolt\MultiFactorAuthentication\Middleware\SetMfaSettingsInRequestMiddleware;
+use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
 
 class Plugin extends BasePlugin
 {
     /**
      * @inheritDoc
      */
+    public function bootstrap(PluginApplicationInterface $app): void
+    {
+        parent::bootstrap($app);
+
+        $this->addIsMfaEnabledBehaviorToUsersTable();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
-        return $middlewareQueue->add(MfaMiddleware::class);
+        return $middlewareQueue
+            ->insertBefore(AuthenticationMiddleware::class, AppendProvidersToJwtChallengeMiddleware::class)
+            ->insertAfter(AuthenticationMiddleware::class, SetMfaSettingsInRequestMiddleware::class)
+            ->insertAfter(SetMfaSettingsInRequestMiddleware::class, MfaRequiredCheckMiddleware::class)
+            ->insertAfter(MfaRequiredCheckMiddleware::class, MfaInjectFormMiddleware::class)
+            ->add(MfaRefreshTokenCreatedListenerMiddleware::class);
+    }
+
+    /**
+     * @return void
+     */
+    public function addIsMfaEnabledBehaviorToUsersTable(): void
+    {
+        TableRegistry::getTableLocator()->get('Users')->addBehavior(IsMfaEnabledBehavior::class);
     }
 }

@@ -16,7 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Yubikey;
 
+use App\Test\Factory\AuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyOrganizationOnlyScenario;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class YubikeySetupPostControllerTest extends MfaIntegrationTestCase
 {
@@ -29,5 +33,25 @@ class YubikeySetupPostControllerTest extends MfaIntegrationTestCase
     {
         $this->post('/mfa/setup/yubikey.json?api-version=v2', []);
         $this->assertResponseError('You need to login to access this location.');
+    }
+
+    /**
+     * @group mfa
+     */
+    public function testMfaSetupPostYubikey_Success()
+    {
+        $user = $this->logInAsUser();
+        $sessionID = 'Foo';
+        $this->loadFixtureScenario(MfaYubikeyOrganizationOnlyScenario::class);
+        $this->mockValidMfaFormInterface(YubikeySetupForm::class, $this->makeUac($user));
+        $this->mockSessionId($sessionID);
+        $this->post('/mfa/setup/yubikey?api-version=v2', [
+            'hotp' => 'i-am-mocked',
+        ]);
+        $this->assertResponseSuccess();
+        /** @var \App\Model\Entity\AuthenticationToken $mfaToken */
+        $mfaToken = AuthenticationTokenFactory::find()->firstOrFail();
+        $this->assertTrue($mfaToken->checkSessionId($sessionID));
+        $this->assertCookie($mfaToken->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }

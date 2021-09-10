@@ -21,6 +21,8 @@ use App\Utility\UuidFactory;
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\TokenIdentifier;
 use Cake\Core\Configure;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\ServerRequest;
@@ -44,6 +46,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         parent::setUp();
         $this->sut = new GpgJwtAuthenticator(new TokenIdentifier());
         (new JwtKeyPairService())->createKeyPair();
+        EventManager::instance()->setEventList(new EventList());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_NoData()
@@ -260,6 +263,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $this->assertEquals($userChallenge['verify_token'], $deserializedChallenge->verify_token);
         $this->assertNotEmpty($deserializedChallenge->access_token);
         $this->assertNotEmpty($deserializedChallenge->refresh_token);
+        $this->assertEventFired(GpgJwtAuthenticator::MAKE_ARMORED_CHALLENGE_EVENT_NAME);
     }
 
     // ========================================================================

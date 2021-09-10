@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf8862dab88b6aa72186700d8182aa22",
+    "content-hash": "e1204fd0946aa2948f15cf7f46d1329a",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -8022,16 +8022,16 @@
         },
         {
             "name": "vierge-noire/cakephp-fixture-factories",
-            "version": "2.3.1",
+            "version": "v2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierge-noire/cakephp-fixture-factories.git",
-                "reference": "01337dd69d4779608f95eee7c09c7bbb73f09c8f"
+                "reference": "87d8eb48865f6d6848627bafa845b0529d676257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/01337dd69d4779608f95eee7c09c7bbb73f09c8f",
-                "reference": "01337dd69d4779608f95eee7c09c7bbb73f09c8f",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/87d8eb48865f6d6848627bafa845b0529d676257",
+                "reference": "87d8eb48865f6d6848627bafa845b0529d676257",
                 "shasum": ""
             },
             "require": {
@@ -8078,9 +8078,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vierge-noire/cakephp-fixture-factories/issues",
-                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/2.3.1"
+                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.4"
             },
-            "time": "2021-07-08T14:25:29+00:00"
+            "time": "2021-09-08T12:15:32+00:00"
         },
         {
             "name": "vierge-noire/cakephp-test-migrator",

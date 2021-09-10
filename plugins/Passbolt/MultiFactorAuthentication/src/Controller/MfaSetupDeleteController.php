@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
-class MfaSetupDeleteController extends MfaController
+abstract class MfaSetupDeleteController extends MfaController
 {
     /**
      * Delete a provider setting

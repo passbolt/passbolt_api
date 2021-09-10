@@ -16,16 +16,27 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\Lib;
 
+use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 trait MfaAccountSettingsTestTrait
 {
-    public function mockMfaAccountSettings(string $user, array $data)
+    /**
+     * @param string|UserAccessControl $user
+     * @param array $data data
+     * @throws \Exception
+     */
+    public function mockMfaAccountSettings($user, array $data)
     {
-        $userId = UuidFactory::uuid('user.id.' . $user);
+        if ($user instanceof UserAccessControl) {
+            $userId = $user->getId();
+        } else {
+            $userId = UuidFactory::uuid('user.id.' . $user);
+        }
         $data = json_encode($data);
+        /** @var AccountSettingsTable $AccountSettings */
         $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $AccountSettings->createOrUpdateSetting($userId, MfaSettings::MFA, $data);
     }

@@ -20,8 +20,8 @@ use App\Controller\Component\QueryStringComponent;
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Controller\Users\UsersIndexController;
 use Cake\Event\EventListenerInterface;
+use Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper;
 use Passbolt\MultiFactorAuthentication\Model\Query\IsMfaEnabledQueryDecorator;
-use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
 
 class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
 {

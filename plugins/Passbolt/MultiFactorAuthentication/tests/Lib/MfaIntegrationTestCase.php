@@ -18,27 +18,20 @@ namespace Passbolt\MultiFactorAuthentication\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
-use Cake\Core\Configure;
+use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
+use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
 class MfaIntegrationTestCase extends AppIntegrationTestCase
 {
+    use JwtAuthTestTrait;
     use MfaAccountSettingsTestTrait;
-    use MfaDuoSettingsTestTrait;
     use MfaOrgSettingsTestTrait;
-    use MfaTotpSettingsTestTrait;
-    use MfaYubikeySettingsTestTrait;
     use UserAccessControlTrait;
-
-    /**
-     * @var array
-     */
-    public $fixtures = [
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-        'app.Base/Users', 'app.Base/Roles',
-    ];
 
     /**
      * Setup.
@@ -46,20 +39,68 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', true);
+        $this->enableFeaturePlugin('MultiFactorAuthentication');
+        $this->enableFeaturePlugin('JwtAuthentication');
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->disableFeaturePlugin('MultiFactorAuthentication');
+        $this->disableFeaturePlugin('JwtAuthentication');
     }
 
     /**
-     * @param string $user firstname
+     * @param UserAccessControl $uac UAC
      * @param string|null $provider provider
+     * @param bool|null $remember remember
+     * @param string|null $sessionId session ID
+     * @return string The valid mfa token
      */
-    public function mockMfaVerified(string $user = 'ada', ?string $provider = null, ?bool $remember = true)
-    {
+    public function mockMfaCookieValid(
+        UserAccessControl $uac,
+        ?string $provider = null,
+        ?bool $remember = false,
+        ?string $sessionId = ''
+    ): string {
         if (!isset($provider)) {
             throw new InternalErrorException('Cannot mock mfa verification without provider.');
         }
-        $uac = $this->mockUserAccessControl($user);
-        $token = MfaVerifiedToken::get($uac, $provider, uniqid(), $remember);
+        $sessionId = empty($sessionId) ? uniqid() : $sessionId;
+        $this->mockSessionId($sessionId);
+        $token = MfaVerifiedToken::get($uac, $provider, $sessionId, $remember);
         $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $token);
+
+        return $token;
+    }
+
+    /**
+     * Injects in the DIC a MFA form stub, returning $validate to validate()
+     *
+     * @param string $className MFA Form class name
+     * @param UserAccessControl $uac UAC
+     * @param bool $validate value returned from form validate()
+     */
+    public function mockMfaFormInterface(string $className, UserAccessControl $uac, bool $validate)
+    {
+        $stub = $this->getMockBuilder($className)
+            ->setConstructorArgs([$uac, MfaSettings::get($uac)])
+            ->onlyMethods(['validate',])
+            ->getMock();
+        $stub->method('validate')->willReturn($validate);
+
+        $this->mockService(MfaFormInterface::class, function () use ($stub) {
+            return $stub;
+        });
+    }
+
+    public function mockValidMfaFormInterface(string $className, UserAccessControl $uac): void
+    {
+        $this->mockMfaFormInterface($className, $uac, true);
+    }
+
+    public function mockInvalidMfaFormInterface(string $className, UserAccessControl $uac): void
+    {
+        $this->mockMfaFormInterface($className, $uac, false);
     }
 }

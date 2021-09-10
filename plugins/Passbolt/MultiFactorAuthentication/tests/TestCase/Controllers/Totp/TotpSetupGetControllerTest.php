@@ -16,8 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
-use Cake\Core\Configure;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpOrganizationOnlyScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpSetupGetControllerTest extends MfaIntegrationTestCase
@@ -42,9 +44,9 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupGetTotpAlreadyConfigured()
     {
-        $this->mockMfaTotpSettings('ada', 'valid');
-        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_TOTP);
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP);
         $this->get('/mfa/setup/totp');
         $this->assertResponseOk();
         $this->assertResponseContains('is enabled');
@@ -58,10 +60,9 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupGetTotpOrgSettingsNotEnabled()
     {
-        $this->mockMfaDuoSettings('ada', 'valid');
-        Configure::write('passbolt.plugins.multiFactorAuthentication.providers.totp', 0);
-        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_DUO);
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_DUO);
         $this->get('/mfa/setup/totp');
         $this->assertResponseError();
         $this->assertResponseContains('This authentication provider is not enabled for your organization.');
@@ -75,8 +76,8 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupGetTotpSuccess()
     {
-        $this->authenticateAs('ada');
-        $this->mockMfaTotpSettings('ada', 'orgOnly');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
         $this->get('/mfa/setup/totp');
         $this->assertResponseOk();
         $this->assertResponseContains('<form');
@@ -91,8 +92,8 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupGetTotpSuccessJson()
     {
-        $this->authenticateAs('ada');
-        $this->mockMfaTotpSettings('ada', 'orgOnly');
+        $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
         $this->getJson('/mfa/setup/totp.json?api-version=v2');
         $this->assertResponseOk();
         $this->assertNotEmpty($this->_responseJsonBody->otpQrCodeImage);

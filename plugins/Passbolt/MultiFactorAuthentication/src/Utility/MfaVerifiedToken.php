@@ -20,7 +20,6 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\TableRegistry;
 
 class MfaVerifiedToken
@@ -51,7 +50,6 @@ class MfaVerifiedToken
             'data' => json_encode([
                 'provider' => $provider,
                 'user_agent' => env('HTTP_USER_AGENT'),
-                'session_id' => (new DefaultPasswordHasher())->hash($sessionId),
                 'remember' => $remember,
             ]),
         ];
@@ -63,6 +61,7 @@ class MfaVerifiedToken
             'data' => true,
         ];
         $token = $AuthenticationTokens->newEntity($entityData, ['accessibleFields' => $accessibleFields]);
+        $token->hashAndSetSessionId($sessionId);
         $msg = __('It is not possible to create an authentication token for this user.');
         $errors = $token->getErrors();
         if (!empty($errors) || !$AuthenticationTokens->save($token)) {
@@ -93,7 +92,7 @@ class MfaVerifiedToken
 
         /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = $auth->getByToken($tokenString);
-        $data = json_decode($token->data);
+        $data = json_decode($token->data ?? '');
 
         // Check for issue when decoding data
         if ($data === null) {
@@ -117,7 +116,7 @@ class MfaVerifiedToken
         }
 
         // Check Session id
-        if ((new DefaultPasswordHasher())->check($sessionId, $data->session_id)) {
+        if ($token->checkSessionId($sessionId)) {
             return true;
         }
 

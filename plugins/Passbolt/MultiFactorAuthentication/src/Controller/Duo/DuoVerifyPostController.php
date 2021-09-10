@@ -16,10 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoVerifyPostController extends MfaVerifyController
@@ -27,21 +28,23 @@ class DuoVerifyPostController extends MfaVerifyController
     /**
      * Duo Verify Post
      *
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID service
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $verifyForm MFA Form
      * @throws \Cake\Http\Exception\InternalErrorException
      * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
-    public function post()
-    {
+    public function post(
+        SessionIdentificationServiceInterface $sessionIdentificationService,
+        MfaFormInterface $verifyForm
+    ) {
         if ($this->request->is('json')) {
             throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
         }
-        $this->_handleVerifiedNotRequired();
+        $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
 
         // Verify totp
-        $uac = $this->User->getAccessControl();
-        $verifyForm = new DuoVerifyForm($uac, $this->mfaSettings);
         try {
             $verifyForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
@@ -51,7 +54,7 @@ class DuoVerifyPostController extends MfaVerifyController
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $this->_generateMfaToken(MfaSettings::PROVIDER_DUO);
+        $this->_generateMfaToken(MfaSettings::PROVIDER_DUO, $sessionIdentificationService);
         $this->_handleVerifySuccess();
     }
 }

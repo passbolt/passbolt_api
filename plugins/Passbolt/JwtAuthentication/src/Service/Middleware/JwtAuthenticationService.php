@@ -43,6 +43,17 @@ class JwtAuthenticationService extends AuthenticationService
             'algorithms' => [JwtTokenCreateService::JWT_ALG],
             'returnPayload' => false,
         ]);
+
+        $this->loadGpgAuthenticator();
+    }
+
+    /**
+     * Loads the JWT Specific Authenticator
+     *
+     * @return void
+     */
+    protected function loadGpgAuthenticator(): void
+    {
         $this->loadAuthenticator('Passbolt/JwtAuthentication.GpgJwt');
     }
 }

@@ -15,11 +15,11 @@ declare(strict_types=1);
  * @since         2.14.0
  */
 
-namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility\EntityMapper\User;
+namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Model\EntityMapper\User;
 
 use App\Model\Entity\User;
+use Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaEnabledService;
-use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
 use PHPUnit\Framework\TestCase;
 
 class UserMfaMapperTest extends TestCase

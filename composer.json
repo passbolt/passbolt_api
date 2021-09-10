@@ -81,7 +81,7 @@
         "passbolt/cakephp-codesniffer": "dev-master",
         "passbolt/passbolt-selenium-api": "^3.1.1",
         "passbolt/passbolt-test-data": "^3.2.0",
-        "vierge-noire/cakephp-fixture-factories": "2.3.1",
+        "vierge-noire/cakephp-fixture-factories": "v2.4",
         "cakephp/localized": "4.0.0-beta"
     },
     "autoload": {

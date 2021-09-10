@@ -18,10 +18,12 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Middleware\SetMfaSettingsInRequestMiddleware;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
-class MfaController extends AppController
+abstract class MfaController extends AppController
 {
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
@@ -33,6 +35,7 @@ class MfaController extends AppController
      * Used to add common initialization code like loading components.
      *
      * @return void
+     * @see SetMfaSettingsInRequestMiddleware::setMfaSettingsInRequestAttribute()
      */
     public function initialize(): void
     {
@@ -40,7 +43,9 @@ class MfaController extends AppController
 
         // Do not initialize if user is guest and login redirection is scheduled
         if ($this->User->role() !== Role::GUEST) {
-            $this->mfaSettings = MfaSettings::get($this->User->getAccessControl());
+            $this->mfaSettings = $this->getRequest()->getAttribute(
+                SetMfaSettingsInRequestMiddleware::MFA_SETTINGS_REQUEST_ATTRIBUTE
+            );
         }
     }
 
@@ -57,5 +62,17 @@ class MfaController extends AppController
             $msg = __('This authentication provider is not enabled for your organization.');
             throw new BadRequestException($msg);
         }
+    }
+
+    /**
+     * Clear any dubious cookie if mfa check is required
+     *
+     * @return void
+     */
+    protected function _invalidateMfaCookie(): void
+    {
+        $secure = Configure::read('passbolt.security.cookies.secure') || $this->getRequest()->is('ssl');
+        $mfaCookie = MfaVerifiedCookie::clearCookie($secure);
+        $this->setResponse($this->getResponse()->withCookie($mfaCookie));
     }
 }

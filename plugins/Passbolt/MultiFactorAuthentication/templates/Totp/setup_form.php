@@ -18,7 +18,7 @@
     ];
     ?>
 <div class="grid grid-responsive-12">
-    <?= $this->form->create($totpSetupForm, $formContext); ?>
+    <?= $this->Form->create($totpSetupForm, $formContext); ?>
         <div class="row">
             <div class="col12 last">
                 <h3><?= $title; ?></h3>
@@ -27,13 +27,13 @@
         <div class="row">
             <div class="col7">
                 <h4><?= __('Scan this bar code'); ?></h4>
-                <?= $this->form->hidden('otpQrCodeImage'); ?>
+                <?= $this->Form->hidden('otpQrCodeImage'); ?>
 
-                <?= $this->form->hidden('otpProvisioningUri'); ?>
+                <?= $this->Form->hidden('otpProvisioningUri'); ?>
 
                 <img class="qrcode" src="<?= $this->request->getData('otpQrCodeImage'); ?>" width="128" height="128"/>
                 <div class="input-verify">
-                    <?= $this->form->control('totp', [
+                    <?= $this->Form->control('totp', [
                         'label' => 'One Time Password (OTP)',
                         'placeholder' => '123456',
                     ]); ?>
@@ -64,6 +64,6 @@
                 </div>
             </div>
         </div>
-    <?= $this->form->end(); ?>
+    <?= $this->Form->end(); ?>
 
 </div>

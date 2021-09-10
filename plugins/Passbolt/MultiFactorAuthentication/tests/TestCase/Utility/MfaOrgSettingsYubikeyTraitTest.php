@@ -25,13 +25,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsYubikeyTraitTest extends MfaIntegrationTestCase
 {
-    /**
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/Users',
-        'app.Base/Roles',
-    ];
+    public $autoFixtures = false;
 
     /**
      * @var OrganizationSettingsTable
