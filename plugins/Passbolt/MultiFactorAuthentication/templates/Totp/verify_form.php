@@ -21,8 +21,8 @@
     <h1>
         <?= __('Enter the six digit number as presented on your phone or tablet.'); ?>
     </h1>
-    <?= $this->form->create($verifyForm, $formContext); ?>
-    <?= $this->form->control('totp', [
+    <?= $this->Form->create($verifyForm, $formContext); ?>
+    <?= $this->Form->control('totp', [
         'label' => 'One Time Password (OTP)',
         'placeholder' => '123456',
     ]); ?>
@@ -31,5 +31,5 @@
         <label for="remember" ><?= __('Remember this device for a month.'); ?></label>
     </div>
     <?= $this->element('formActions', ['providers' => $providers, 'currentProvider' => MfaSettings::PROVIDER_TOTP]); ?>
-    <?= $this->form->end(); ?>
+    <?= $this->Form->end(); ?>
 </div>

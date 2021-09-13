@@ -20,8 +20,8 @@
     <h1>
         <?= __('Plug in the yubikey and put your finger on it.'); ?>
     </h1>
-    <?= $this->form->create($verifyForm, $formContext); ?>
-    <?= $this->form->control('hotp', [
+    <?= $this->Form->create($verifyForm, $formContext); ?>
+    <?= $this->Form->control('hotp', [
         'label' => 'Yubikey OTP',
         'type' => 'password',
     ]); ?>
@@ -30,5 +30,5 @@
         <label for="remember" ><?= __('Remember this device for a month.'); ?></label>
     </div>
     <?= $this->element('formActions', ['providers' => $providers, 'currentProvider' => MfaSettings::PROVIDER_YUBIKEY]); ?>
-    <?= $this->form->end(); ?>
+    <?= $this->Form->end(); ?>
 </div>
