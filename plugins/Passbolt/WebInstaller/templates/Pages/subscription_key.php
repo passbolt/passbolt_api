@@ -17,7 +17,7 @@ $this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
                 <div class="col7">
                         <div class="row">
                             <div class="col12">
-                                <h3><?= __('Copy paste your Passbolt Pro subscription key here'); ?></h3>
+                                <h2><?= __('Copy paste your Passbolt Pro subscription key here'); ?></h2>
                                 <?= $this->Flash->render() ?>
                                 <div class="input textarea gpgkey">
                                     <?= $this->Form->control('subscription_key', ['type' => 'textarea', 'class' => ['key-content']]); ?>

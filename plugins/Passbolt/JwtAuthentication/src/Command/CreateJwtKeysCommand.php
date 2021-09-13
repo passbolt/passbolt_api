@@ -52,10 +52,6 @@ class CreateJwtKeysCommand extends PassboltCommand
         $force = $args->getOption('force');
         $service = new JwtKeyPairService();
 
-        if ($args->getOption('quiet')) {
-            $service->activateSilentMode();
-        }
-
         if ($service->keyPairExists() && !$force) {
             if (file_exists($service->getPublicKeyPath())) {
                 $io->warning('Public key path: ' . $service->getPublicKeyPath());

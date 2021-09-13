@@ -76,6 +76,6 @@ class HealthcheckHtmlHelper extends HealthcheckCommand
      */
     protected function title(string $title)
     {
-        echo '<h3>' . $title . '</h3>' . PHP_EOL;
+        echo '<h2>' . $title . '</h2>' . PHP_EOL;
     }
 }

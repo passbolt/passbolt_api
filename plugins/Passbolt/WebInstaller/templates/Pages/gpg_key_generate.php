@@ -16,12 +16,12 @@ $this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom'
     </div>
     <!-- main -->
     <?= $this->Form->create($formExecuteResult); ?>
-    <?php $this->Form->setTemplates(['inputContainer' => '<div class="input {{type}}{{required}}">{{content}} <div class="message error hidden" aria-live="polite"></div></div>']); ?>
+    <?php $this->Form->setTemplates(['inputContainer' => '<div class="input {{type}}{{required}}">{{content}} <div class="message error-message hidden" aria-live="polite"></div></div>']); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
                 <div class="col6">
-                    <h3><?= __('Create a new OpenPGP key for your server'); ?></h3>
+                    <h2><?= __('Create a new OpenPGP key for your server'); ?></h2>
                     <?= $this->Flash->render() ?>
                     <?php
                     echo $this->Form->control('public_key_armored', ['type' => 'hidden']);
@@ -50,7 +50,7 @@ $this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom'
                     ?>
                 </div>
                 <div class="col4 last">
-                    <h3>Advanced settings</h3>
+                    <h2>Advanced settings</h2>
                     <div class="input select required">
                         <label for="KeyType">Key Type</label>
                         <select name="data[Key][type]" id="KeyType" disabled="disabled" class="fluid">

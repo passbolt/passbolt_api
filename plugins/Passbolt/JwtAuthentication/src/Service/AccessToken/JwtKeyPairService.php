@@ -39,11 +39,6 @@ class JwtKeyPairService
     protected $keyLength = JwtTokenCreateService::JWT_KEY_LENGTH;
 
     /**
-     * @var bool
-     */
-    protected $isSilent = false;
-
-    /**
      * CreateJwtKeysService constructor.
      *
      * @param \Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService|null $secretService JWT Secret Service
@@ -206,16 +201,5 @@ class JwtKeyPairService
         $this->keyLength = $keyLength;
 
         return $this;
-    }
-
-    /**
-     * This is useful to have openssl commands run silently
-     * in CI's pipelines.
-     *
-     * @return void
-     */
-    public function activateSilentMode(): void
-    {
-        $this->isSilent = true;
     }
 }

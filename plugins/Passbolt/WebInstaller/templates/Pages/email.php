@@ -18,7 +18,7 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                 <div class="col7">
                     <div class="row">
                         <div class="col12">
-                            <h3><?= __('Email configuration'); ?></h3>
+                            <h2><?= __('Email configuration'); ?></h2>
                             <?= $this->Flash->render() ?>
                             <?= $this->Form->control('sender_name', [
                                 'type' => 'text',
@@ -36,7 +36,7 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                                 'type' => 'email',
                             ]); ?>
 
-                            <h3><?= __('SMTP server configuration'); ?></h3>
+                            <h2><?= __('SMTP server configuration'); ?></h2>
                             <?= $this->Form->control('host', [
                                 'type' => 'text',
                                 'required' => 'required',
@@ -76,55 +76,8 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                 </div>
                 <div class="col5 last">
                     <p>&nbsp;</p>
-                    <div class="message warning">
-                        <strong>Pro tip: a cron job is required</strong><br>
-                        Once your installation is complete, do not forget to set a cron job in order to have your emails sent automatically. <br><a href="https://help.passbolt.com/hosting/install" rel="noopener noreferrer" target="_blank">Read the doc</a>
-                    </div>
-                    <h3>Why do I need a SMTP server?</h3>
-                    <p>Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications.</p>
-
-                    <h3>Send test email</h3>
-                    <p>Test your configuration by sending a test email.</p>
-
-                    <?php if (isset($test_email_status)) : ?>
-                        <?php if ($test_email_status == true) : ?>
-                            <div class="message success">
-                                <?=  __('The test email has been sent successfully!') ?>
-                            </div>
-                        <?php else : ?>
-                        <div class="message error">
-                                <?= __('Email could not be sent:') ?>
-                            <strong><?= $test_email_error ?></strong>
-                                <?php if (!empty($test_email_trace)) : ?>
-                            <br/>
-                            <a href="#" class="see-trace"><?= __('See trace') ?></a>
-                            <div class="trace hidden">
-                                    <?php
-                                    foreach ($test_email_trace as $trace_entry) {
-                                        echo '<strong>' . $trace_entry['cmd'] . '</strong><br>';
-                                        if (!empty($trace_entry['response'])) {
-                                            foreach ($trace_entry['response'] as $response) {
-                                                echo "[{$response['code']}] {$response['message']}<br>";
-                                            }
-                                        }
-                                    }
-                                    ?>
-                            </div>
-                                <?php endif; ?>
-                        </div>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                    <div class="input text required">
-                        <?php
-                        echo $this->Form->control('email_test_to', [
-                            'placeholder' => __('Your email address'),
-                            'label' => false,
-                            'class' => 'required fluid',
-                            'type' => 'email',
-                        ]);
-                        ?>
-                        <input type="submit" name="send_test_email" class="button" value="<?= __('Send test email'); ?>" >
-                    </div>
+                    <?= $this->element('sidebar/smtp_explanations') ?>
+                    <?= $this->element('sidebar/send_test_email') ?>
                 </div>
             </div>
             <div class="row last">
