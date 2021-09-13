@@ -32,6 +32,6 @@
             data-host="<?= $hostName; ?>"
             data-sig-request="<?= $sigRequest; ?>"
     ></iframe>
-    <?= $this->form->create($verifyForm, $formContext); ?><?= $this->form->end(); ?>
+    <?= $this->Form->create($verifyForm, $formContext); ?><?= $this->Form->end(); ?>
     <?= $this->element('formActions', ['providers' => $providers, 'currentProvider' => MfaSettings::PROVIDER_DUO]); ?>
 </div>

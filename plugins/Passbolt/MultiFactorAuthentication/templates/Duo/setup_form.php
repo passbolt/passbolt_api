@@ -33,7 +33,7 @@
                     data-host="<?= $hostName; ?>"
                     data-sig-request="<?= $sigRequest; ?>"
             ></iframe>
-            <?= $this->form->create($setupForm, $formContext); ?><?= $this->form->end(); ?>
+            <?= $this->Form->create($setupForm, $formContext); ?><?= $this->Form->end(); ?>
         </div>
     </div>
     <div class="row">
