@@ -65,7 +65,7 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
     public function isMfaCheckRequired(ServerRequest $request, MfaSettings $mfaSettings): bool
     {
         $uac = $this->getUacInRequest($request);
-        // Return false if user is not logged in
+        // Return false if user is not authenticated
         if (empty($uac)) {
             return false;
         }

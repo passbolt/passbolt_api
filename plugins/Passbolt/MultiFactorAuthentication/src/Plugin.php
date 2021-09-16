@@ -21,12 +21,14 @@ use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\ORM\TableRegistry;
-use Passbolt\MultiFactorAuthentication\Middleware\AppendProvidersToJwtChallengeMiddleware;
+use Passbolt\MultiFactorAuthentication\Event\AddIsMfaEnabledColumnToUsersGrid;
+use Passbolt\MultiFactorAuthentication\Event\AppendProvidersToJwtChallenge;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaInjectFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRefreshTokenCreatedListenerMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\SetMfaSettingsInRequestMiddleware;
 use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
+use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 
 class Plugin extends BasePlugin
 {
@@ -38,6 +40,7 @@ class Plugin extends BasePlugin
         parent::bootstrap($app);
 
         $this->addIsMfaEnabledBehaviorToUsersTable();
+        $this->registerListeners($app);
     }
 
     /**
@@ -46,7 +49,6 @@ class Plugin extends BasePlugin
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         return $middlewareQueue
-            ->insertBefore(AuthenticationMiddleware::class, AppendProvidersToJwtChallengeMiddleware::class)
             ->insertAfter(AuthenticationMiddleware::class, SetMfaSettingsInRequestMiddleware::class)
             ->insertAfter(SetMfaSettingsInRequestMiddleware::class, MfaRequiredCheckMiddleware::class)
             ->insertAfter(MfaRequiredCheckMiddleware::class, MfaInjectFormMiddleware::class)
@@ -59,5 +61,20 @@ class Plugin extends BasePlugin
     public function addIsMfaEnabledBehaviorToUsersTable(): void
     {
         TableRegistry::getTableLocator()->get('Users')->addBehavior(IsMfaEnabledBehavior::class);
+    }
+
+    /**
+     * Register MFA related listeners.
+     *
+     * @param \Cake\Core\PluginApplicationInterface $app App
+     * @return void
+     */
+    public function registerListeners(PluginApplicationInterface $app): void
+    {
+        $app->getEventManager()
+            // Decorate the users grid and add the column "is_mfa_enabled"
+            ->on(new AddIsMfaEnabledColumnToUsersGrid()) // decorate the query to add the new property on the User entity
+            ->on(new MfaRedactorPool()) // Register email redactors
+            ->on(new AppendProvidersToJwtChallenge());
     }
 }

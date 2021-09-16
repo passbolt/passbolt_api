@@ -192,7 +192,6 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $this->createJwtTokenAndSetInHeader($user->id);
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
         $accessToken = $this->getJwtTokenInHeader();
-        $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
         $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
         $otp = Factory::loadFromProvisioningUri($uri);
         $this->post('/mfa/setup/totp.json?api-version=v2', [

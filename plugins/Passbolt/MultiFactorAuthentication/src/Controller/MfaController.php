@@ -18,10 +18,9 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
-use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Middleware\SetMfaSettingsInRequestMiddleware;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
+use Passbolt\MultiFactorAuthentication\Service\ClearMfaCookieInResponseService;
 
 abstract class MfaController extends AppController
 {
@@ -71,8 +70,6 @@ abstract class MfaController extends AppController
      */
     protected function _invalidateMfaCookie(): void
     {
-        $secure = Configure::read('passbolt.security.cookies.secure') || $this->getRequest()->is('ssl');
-        $mfaCookie = MfaVerifiedCookie::clearCookie($secure);
-        $this->setResponse($this->getResponse()->withCookie($mfaCookie));
+        (new ClearMfaCookieInResponseService($this))->clearMfaCookie();
     }
 }

@@ -21,6 +21,7 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Event\EventManager;
 use Cake\TestSuite\TestCase;
 use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
 use Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper;
@@ -54,6 +55,7 @@ class IsMfaEnabledBehaviorTest extends TestCase
         $this->Users->hasBehavior(IsMfaEnabledBehavior::class);
         $MfaPlugin = new Plugin();
         $appSut = $this->createMock(PluginApplicationInterface::class);
+        $appSut->method('getEventManager')->willReturn(EventManager::instance());
         $MfaPlugin->bootstrap($appSut);
         $this->assertTrue($this->Users->hasBehavior(IsMfaEnabledBehavior::class));
     }

@@ -169,7 +169,6 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $mfaCookie);
         $this->postJson('/auth/login.json');
         $this->assertResponseSuccess();
-
-        $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieExpired(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }

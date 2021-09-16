@@ -25,6 +25,7 @@ use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 /**
  * Class JwtMfaLoginControllerTest
@@ -53,6 +54,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
             ->persist();
 
         $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, 'foo');
 
         $this->postJson('/auth/jwt/login.json', [
             'user_id' => $user->id,
@@ -62,5 +64,6 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
         $this->assertResponseSuccess('The authentication was a success.');
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge), true);
         $this->assertSame([MfaSettings::PROVIDER_TOTP], $challenge['providers']);
+        $this->assertCookieExpired(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }

@@ -58,9 +58,6 @@ class MfaVerifyAjaxErrorControllerTest extends MfaIntegrationTestCase
         $this->assertSame($expected, $response);
 
         // Check that the MFA cookie is set and expired, but other cookie remain untouched.
-        /** @var \Cake\Http\Cookie\CookieCollection $cookies */
-        $cookies = $this->_response->getCookieCollection();
-        $mfaCookie = $cookies->get(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
-        $this->assertTrue($mfaCookie->isExpired());
+        $this->assertCookieExpired(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }
