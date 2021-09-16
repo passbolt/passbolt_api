@@ -55,12 +55,11 @@ class MfaInjectFormMiddleware implements MiddlewareInterface
         /** @var \Cake\Http\ServerRequest $request */
         $uac = $this->getUacInRequest($request);
         $path = $this->getShortMfaRoute($request);
-        /** @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings|null $mfaSettings */
-        $mfaSettings = $request->getAttribute(SetMfaSettingsInRequestMiddleware::MFA_SETTINGS_REQUEST_ATTRIBUTE);
 
-        // If the url starts with "mfa" and the user is logged in and the MFA Settings are set
+        // If the url starts with "mfa" and the user is logged in
         // Inject the appropriate MFA Form according to the route.
-        if ($path && isset($uac) && isset($mfaSettings)) {
+        if ($path && isset($uac)) {
+            $mfaSettings = MfaSettings::get($uac);
             $this->services($this->getContainer($request), $path, $uac, $mfaSettings);
         }
 

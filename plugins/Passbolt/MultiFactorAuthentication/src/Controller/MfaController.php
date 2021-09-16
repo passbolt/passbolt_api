@@ -19,8 +19,8 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use Cake\Http\Exception\BadRequestException;
-use Passbolt\MultiFactorAuthentication\Middleware\SetMfaSettingsInRequestMiddleware;
 use Passbolt\MultiFactorAuthentication\Service\ClearMfaCookieInResponseService;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 abstract class MfaController extends AppController
 {
@@ -42,9 +42,7 @@ abstract class MfaController extends AppController
 
         // Do not initialize if user is guest and login redirection is scheduled
         if ($this->User->role() !== Role::GUEST) {
-            $this->mfaSettings = $this->getRequest()->getAttribute(
-                SetMfaSettingsInRequestMiddleware::MFA_SETTINGS_REQUEST_ATTRIBUTE
-            );
+            $this->mfaSettings = MfaSettings::get($this->User->getAccessControl());
         }
     }
 

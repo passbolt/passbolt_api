@@ -48,6 +48,7 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
         parent::tearDown();
         $this->disableFeaturePlugin('MultiFactorAuthentication');
         $this->disableFeaturePlugin('JwtAuthentication');
+        MfaSettings::clear();
     }
 
     /**

@@ -48,6 +48,11 @@ class MfaSettings
     protected $uac;
 
     /**
+     * @var self|null
+     */
+    protected static $instance;
+
+    /**
      * MfaSettings constructor.
      *
      * @param \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings $orgSettings organization settings
@@ -73,6 +78,13 @@ class MfaSettings
      */
     public static function get(UserAccessControl $uac)
     {
+        if (self::$instance !== null) {
+            if (self::$instance->uac->getId() !== $uac->getId()) {
+                throw new InternalErrorException('Invalid UserControl user id.');
+            }
+            return self::$instance;
+        }
+
         try {
             $orgSettings = MfaOrgSettings::get();
         } catch (InternalErrorException $exception) {
@@ -85,7 +97,19 @@ class MfaSettings
             $accountSettings = null;
         }
 
-        return new MfaSettings($orgSettings, $accountSettings, $uac);
+        self::$instance = new MfaSettings($orgSettings, $accountSettings, $uac);
+
+        return self::$instance;
+    }
+
+    /**
+     * Clear the instance
+     *
+     * @return void
+     */
+    public static function clear(): void
+    {
+        self::$instance = null;
     }
 
     /**

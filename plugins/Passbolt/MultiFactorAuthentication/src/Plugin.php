@@ -26,7 +26,6 @@ use Passbolt\MultiFactorAuthentication\Event\AppendProvidersToJwtChallenge;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaInjectFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRefreshTokenCreatedListenerMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
-use Passbolt\MultiFactorAuthentication\Middleware\SetMfaSettingsInRequestMiddleware;
 use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 
@@ -49,8 +48,7 @@ class Plugin extends BasePlugin
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         return $middlewareQueue
-            ->insertAfter(AuthenticationMiddleware::class, SetMfaSettingsInRequestMiddleware::class)
-            ->insertAfter(SetMfaSettingsInRequestMiddleware::class, MfaRequiredCheckMiddleware::class)
+            ->insertAfter(AuthenticationMiddleware::class, MfaRequiredCheckMiddleware::class)
             ->insertAfter(MfaRequiredCheckMiddleware::class, MfaInjectFormMiddleware::class)
             ->add(MfaRefreshTokenCreatedListenerMiddleware::class);
     }
