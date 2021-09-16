@@ -29,7 +29,6 @@ class JwksController extends AppController
     public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
-
         $this->Authentication->allowUnauthenticated(['rsa', 'jwks']);
     }
 

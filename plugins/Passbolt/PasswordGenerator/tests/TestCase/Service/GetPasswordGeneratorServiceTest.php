@@ -51,8 +51,8 @@ class GetPasswordGeneratorServiceTest extends TestCase
     public function dataForTestGetPasswordGeneratorHappyPath(): array
     {
         return [
-            [null, GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSPHRASE],
-            ['', GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSPHRASE],
+            [null, GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSWORD],
+            ['', GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSWORD],
             [ucfirst(GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSPHRASE), GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSPHRASE],
             [GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSWORD, GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSWORD],
         ];

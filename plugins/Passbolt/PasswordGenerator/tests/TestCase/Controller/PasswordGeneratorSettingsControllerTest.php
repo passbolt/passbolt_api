@@ -54,8 +54,8 @@ class PasswordGeneratorSettingsControllerTest extends AppIntegrationTestCase
     public function dataForTestPasswordDefaultGeneratorSettings(): array
     {
         return [
-            [null, GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSPHRASE],
-            ['', GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSPHRASE],
+            [null, GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSWORD],
+            ['', GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSWORD],
             ['foo', 'exception'],
             [ucfirst(GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSPHRASE), GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSPHRASE],
             [GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSWORD, GetPasswordGeneratorService::PASSWORD_GENERATOR_SETTING_PASSWORD],
