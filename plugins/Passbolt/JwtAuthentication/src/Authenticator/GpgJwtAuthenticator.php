@@ -155,15 +155,17 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      */
     public function makeArmoredChallenge(string $accessToken, string $refreshToken, string $verifyToken): string
     {
-        $event = $this->dispatchEvent(self::MAKE_ARMORED_CHALLENGE_EVENT_NAME, [], $this);
-        $dataInChallenge = (array)$event->getData();
-        $challenge = array_merge($dataInChallenge, [
+        $challengeBaseData = [
             'version' => self::PROTOCOL_VERSION,
             'domain' => Router::url('/', true),
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
             'verify_token' => $verifyToken,
-        ]);
+        ];
+        // Collect additional data from other services to be added to the $challenge.
+        $event = $this->dispatchEvent(self::MAKE_ARMORED_CHALLENGE_EVENT_NAME, $challengeBaseData, $this);
+        $dataToAppendInChallenge = (array)$event->getData();
+        $challenge = array_merge($dataToAppendInChallenge, $challengeBaseData);
 
         return $this->gpg->encryptSign(json_encode($challenge));
     }
@@ -483,6 +485,14 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    /**
+     * @return \Cake\Http\ServerRequest
+     */
+    public function getRequest(): ServerRequest
+    {
+        return $this->request;
     }
 
     /**

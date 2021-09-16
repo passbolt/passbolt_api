@@ -24,10 +24,30 @@ use Psr\Http\Message\ServerRequestInterface;
 class JwtSessionIdentificationService implements SessionIdentificationServiceInterface
 {
     /**
+     * @var string|null
+     */
+    private $accessToken;
+
+    /**
+     * On login, one can pass the access token generated as parameter.
+     * This way, the newly login user has a session id.
+     * If not set, the token in the header is taken.
+     *
+     * @param string|null $accessToken Access Token
+     */
+    public function __construct(?string $accessToken = null)
+    {
+        $this->accessToken = $accessToken;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getSessionId(ServerRequestInterface $request): ?string
     {
+        if (isset($this->accessToken)) {
+            return $this->accessToken;
+        }
         if (!$this->isAuthenticated($request)) {
             return null;
         }
