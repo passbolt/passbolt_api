@@ -19,13 +19,11 @@ namespace App\Authenticator;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- *
  * Interface SessionIdentificationServiceInterface
  *
  * The session ID may be the session ID if loggin from the browser,
  * but also the access token if logged in with JWT. This interface
  * enables the management of session ID in stateless authentication.
- * 
  */
 interface SessionIdentificationServiceInterface
 {
