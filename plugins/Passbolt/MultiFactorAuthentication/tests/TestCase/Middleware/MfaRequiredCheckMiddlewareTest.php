@@ -16,13 +16,24 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Middleware;
 
+use App\Authenticator\SessionIdentificationService;
+use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Test\Factory\UserFactory;
+use App\Test\Lib\Utility\UserAccessControlTrait;
+use Cake\Core\Container;
 use Cake\Http\ServerRequest;
+use Cake\Http\Session;
 use Cake\TestSuite\TestCase;
+use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaRequiredCheckMiddlewareTest extends TestCase
 {
+    use ScenarioAwareTrait;
+    use UserAccessControlTrait;
+
     public $middleware;
 
     public function setUp(): void
@@ -33,24 +44,37 @@ class MfaRequiredCheckMiddlewareTest extends TestCase
     public function tearDown(): void
     {
         unset($this->middleware);
+        MfaSettings::clear();
     }
 
     public function dataForWhiteListUrl()
     {
         return [
-            ['/mfa/verify',],
-            ['/auth/logout',],
-            ['/logout',],
+            ['/mfa/verify', false,],
+            ['/auth/logout', false,],
+            ['/logout', false,],
+            ['/auth/login', false,],
+            ['/login', false,],
+            ['/users', true,],
         ];
     }
 
     /**
      * @dataProvider dataForWhiteListUrl
      */
-    public function testMfaRequiredCheckMiddlewareIsMfaCheckRequired_WhiteListed_Route($url)
+    public function testMfaRequiredCheckMiddlewareIsMfaCheckRequired_WhiteListed_Route(string $url, bool $expected)
     {
-        $request = new ServerRequest(['url' => $url]);
-        $result = $this->middleware->isMfaCheckRequired($request, $this->createMock(MfaSettings::class));
-        $this->assertFalse($result);
+        $user = UserFactory::make()->user()->persist();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $request = new ServerRequest([
+            'url' => $url,
+            'session' => new Session(['Auth' => $user]),
+        ]);
+        $container = new Container();
+        $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
+        $request = $request->withAttribute('identity', $user);
+        $request = $request->withAttribute('container', $container);
+        $isMfaRequired = $this->middleware->isMfaCheckRequired($request);
+        $this->assertSame($expected, $isMfaRequired);
     }
 }

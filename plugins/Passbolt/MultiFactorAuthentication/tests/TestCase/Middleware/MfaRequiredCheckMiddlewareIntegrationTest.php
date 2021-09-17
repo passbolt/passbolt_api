@@ -125,19 +125,6 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
      * @group mfa
      * @group mfaMiddleware
      */
-    public function testMfaRequiredCheckMiddlewareErrorEncryptedVerifyCookie()
-    {
-        $this->cookieEncrypted(MfaVerifiedCookie::MFA_COOKIE_ALIAS, 'Invalid secret');
-        $user = $this->logInAsUser();
-        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
-        $this->delete('/mfa/setup/duo.json?api-version=v2');
-        $this->assertRedirect('/mfa/verify/error.json');
-    }
-
-    /**
-     * @group mfa
-     * @group mfaMiddleware
-     */
     public function testMfaRequiredCheckMiddlewareError_ExpiredVerifyCookie()
     {
         $user = UserFactory::make()

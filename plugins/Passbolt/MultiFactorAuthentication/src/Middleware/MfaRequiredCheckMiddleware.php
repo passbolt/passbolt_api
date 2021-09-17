@@ -48,10 +48,8 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
-        /** @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings|null $mfaSettings */
-        $mfaSettings = $request->getAttribute(SetMfaSettingsInRequestMiddleware::MFA_SETTINGS_REQUEST_ATTRIBUTE);
-        if (!empty($mfaSettings) && $this->isMfaCheckRequired($request, $mfaSettings)) {
-            $request = $this->clearAuthenticationOnInvalidMfaCookie($request, $mfaSettings);
+        if ($this->isMfaCheckRequired($request)) {
+            $request = $this->clearAuthenticationOnInvalidMfaCookie($request);
         }
 
         return $handler->handle($request);
@@ -59,16 +57,17 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
 
     /**
      * @param \Cake\Http\ServerRequest $request request
-     * @param \Passbolt\MultiFactorAuthentication\Utility\MfaSettings $mfaSettings MFA settings
      * @return bool
      */
-    public function isMfaCheckRequired(ServerRequest $request, MfaSettings $mfaSettings): bool
+    public function isMfaCheckRequired(ServerRequest $request): bool
     {
         $uac = $this->getUacInRequest($request);
         // Return false if user is not authenticated
         if (empty($uac)) {
             return false;
         }
+
+        $mfaSettings = MfaSettings::get($uac);
 
         $isMfaAuthenticationRequiredService = new IsMfaAuthenticationRequiredService();
 
@@ -103,17 +102,16 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
      *  set according to the MFA provider requested.
      *
      * @param \Cake\Http\ServerRequest $request Request
-     * @param \Passbolt\MultiFactorAuthentication\Utility\MfaSettings $mfaSettings MFA settings
      * @return \Cake\Http\ServerRequest Request without authenticated user
      * @see MfaController::_invalidateMfaCookie()
      */
     protected function clearAuthenticationOnInvalidMfaCookie(
-        ServerRequest $request,
-        MfaSettings $mfaSettings
+        ServerRequest $request
     ): ServerRequest {
         /** @var \Authentication\AuthenticationService $authService */
         $authService = $request->getAttribute('authentication');
 
+        $mfaSettings = MfaSettings::get($this->getUacInRequest($request));
         // Update the unauthenticated redirection url
         $authService->setConfig([
             'unauthenticatedRedirect' => $this->getVerifyUrl($request, $mfaSettings),

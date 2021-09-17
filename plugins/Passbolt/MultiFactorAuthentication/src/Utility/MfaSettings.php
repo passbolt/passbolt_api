@@ -82,6 +82,7 @@ class MfaSettings
             if (self::$instance->uac->getId() !== $uac->getId()) {
                 throw new InternalErrorException('Invalid UserControl user id.');
             }
+
             return self::$instance;
         }
 
