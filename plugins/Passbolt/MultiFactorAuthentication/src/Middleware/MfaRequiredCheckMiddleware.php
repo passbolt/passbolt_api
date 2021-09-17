@@ -19,11 +19,12 @@ namespace Passbolt\MultiFactorAuthentication\Middleware;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Middleware\UacAwareMiddlewareTrait;
-use Cake\Http\Response;
+use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaAuthenticationRequiredService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -48,8 +49,19 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
+        /** @var \Cake\Http\ServerRequest $request */
         if ($this->isMfaCheckRequired($request)) {
-            $request = $this->clearAuthenticationOnInvalidMfaCookie($request);
+            /** @var \Cake\Http\Response $response */
+            $response = $handler->handle($request);
+            if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
+                $secure = Configure::read('passbolt.security.cookies.secure') || $request->is('ssl');
+                $response = $response
+                    ->withCookie(MfaVerifiedCookie::clearCookie($secure));
+            }
+            // Exception if ajax or redirect
+            return $response
+                ->withStatus(302)
+                ->withLocation($this->getVerifyUrl($request));
         }
 
         return $handler->handle($request);
@@ -81,11 +93,12 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
 
     /**
      * @param \Cake\Http\ServerRequest $request request
-     * @param \Passbolt\MultiFactorAuthentication\Utility\MfaSettings $mfaSettings MFA Settings
      * @return string
      */
-    protected function getVerifyUrl(ServerRequest $request, MfaSettings $mfaSettings)
+    protected function getVerifyUrl(ServerRequest $request)
     {
+        $uac = $this->getUacInRequest($request);
+        $mfaSettings = MfaSettings::get($uac);
         if ($request->is('json')) {
             $url = '/mfa/verify/error.json';
         } else {
@@ -94,35 +107,5 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
         }
 
         return Router::url($url, true);
-    }
-
-    /**
-     * If a user was found authenticated but with invalid MFA cookie
-     * the identity is marked as invalid (cleared), the redirect URL are
-     *  set according to the MFA provider requested.
-     *
-     * @param \Cake\Http\ServerRequest $request Request
-     * @return \Cake\Http\ServerRequest Request without authenticated user
-     * @see MfaController::_invalidateMfaCookie()
-     */
-    protected function clearAuthenticationOnInvalidMfaCookie(
-        ServerRequest $request
-    ): ServerRequest {
-        /** @var \Authentication\AuthenticationService $authService */
-        $authService = $request->getAttribute('authentication');
-
-        $mfaSettings = MfaSettings::get($this->getUacInRequest($request));
-        // Update the unauthenticated redirection url
-        $authService->setConfig([
-            'unauthenticatedRedirect' => $this->getVerifyUrl($request, $mfaSettings),
-            'queryParam' => null,
-        ]);
-
-        // Reset the authentication
-        $result = $authService->clearIdentity($request, new Response());
-        /** @var \Cake\Http\ServerRequest $request */
-        $request = $result['request'];
-
-        return $request->withAttribute('authentication', $authService);
     }
 }

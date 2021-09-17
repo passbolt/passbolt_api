@@ -141,21 +141,4 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->delete('/mfa/setup/duo.json?api-version=v2');
         $this->assertRedirect('/mfa/verify/error.json');
     }
-
-    public function testMfaRequiredCheckMiddlewareError_InvalidMfaCookieOnLoginEndpoint()
-    {
-        $user = UserFactory::make()
-            ->withAuthenticationTokens(
-                MfaAuthenticationTokenFactory::make()->expired()
-            )
-            ->persist();
-        $mfaCookie = $user->authentication_tokens[0]->token;
-        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
-
-        $this->logInAs($user);
-        $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $mfaCookie);
-        $this->postJson('/auth/login.json');
-        $this->assertResponseSuccess();
-        $this->assertCookieExpired(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
-    }
 }

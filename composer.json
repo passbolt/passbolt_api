@@ -52,7 +52,7 @@
         "ext-openssl": "*",
         "ext-ldap" : "*",
         "ext-curl" : "*",
-        "ext-pdo": "*",
+        "ext-pdo": "*",       
         "cakephp/cakephp": "4.2.4",
         "cakephp/migrations": "^3.0.0",
         "cakephp/plugin-installer": "^1.3.0",

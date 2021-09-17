@@ -18,6 +18,7 @@
             <directory suffix=".php">./plugins/Reports/src/</directory>
             <directory suffix=".php">./plugins/Locale/src/</directory>
             <directory suffix=".php">./plugins/JwtAuthentication/src/</directory>
+            <directory suffix=".php">./plugins/JwtAuthentication/src/</directory>
             <directory suffix=".php">./plugins/PasswordGenerator/src/</directory>
         </include>
     </coverage>
