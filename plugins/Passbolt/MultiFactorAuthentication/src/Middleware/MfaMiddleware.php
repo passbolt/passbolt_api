@@ -83,6 +83,8 @@ class MfaMiddleware implements MiddlewareInterface
         // Do not redirect on mfa setup or check page
         // same goes for authentication pages
         $whitelistedPaths = [
+            '/login',
+            '/auth/login',
             '/mfa/verify',
             '/auth/logout',
             '/logout',
