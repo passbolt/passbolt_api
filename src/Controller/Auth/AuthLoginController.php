@@ -76,8 +76,7 @@ class AuthLoginController extends AppController
         // They are translated into actual http headers as part of GpgAuthHeadersMiddleware::process
         $result = $this->Authentication->getResult();
         if ($result->isValid()) {
-            $data = $result->getData();
-            $user = $data['user'];
+            $user = $result->getData();
             $uac = new UserAccessControl($user['role']['name'], $user['id']);
             UserAction::getInstance()->setUserAccessControl($uac);
             $this->success(__('You are successfully logged in.'), $user);

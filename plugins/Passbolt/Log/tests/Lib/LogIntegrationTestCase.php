@@ -100,6 +100,8 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         $this->SecretAccesses->belongsTo('Passbolt/Log.EntitiesHistory', [
             'foreignKey' => 'foreign_key',
         ]);
+        $this->enableFeaturePlugin('JwtAuthentication');
+        (new JwtKeyPairService())->createKeyPair();
     }
 
     public function tearDown(): void
@@ -121,8 +123,6 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
     public function loginWithDataProviderLoginTypeValue(string $loginType, User $user)
     {
         if ($loginType === self::JWT_LOGIN) {
-            $this->enableFeaturePlugin('JwtAuthentication');
-            (new JwtKeyPairService())->createKeyPair();
             $this->createJwtTokenAndSetInHeader($user->id);
         } else {
             $this->logInAs($user);
