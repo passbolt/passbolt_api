@@ -20,6 +20,7 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Middleware\UacAwareMiddlewareTrait;
 use Cake\Core\Configure;
+use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaAuthenticationRequiredService;
@@ -49,10 +50,9 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
-        /** @var \Cake\Http\ServerRequest $request */
         if ($this->isMfaCheckRequired($request)) {
             /** @var \Cake\Http\Response $response */
-            $response = $handler->handle($request);
+            $response = new Response();
             if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
                 $secure = Configure::read('passbolt.security.cookies.secure') || $request->is('ssl');
                 $response = $response
@@ -73,6 +73,10 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
      */
     public function isMfaCheckRequired(ServerRequest $request): bool
     {
+        if ($this->isRouteWhiteListed($request)) {
+            return false;
+        }
+
         $uac = $this->getUacInRequest($request);
         // Return false if user is not authenticated
         if (empty($uac)) {
@@ -107,5 +111,30 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
         }
 
         return Router::url($url, true);
+    }
+
+    /**
+     * @param \Cake\Http\ServerRequest $request request
+     * @return bool
+     */
+    protected function isRouteWhiteListed(ServerRequest $request): bool
+    {
+        // Do not redirect on mfa setup or check page
+        // same goes for authentication pages
+        $whitelistedPaths = [
+            '/login',
+            '/auth/login',
+            '/auth/jwt/login',
+            '/mfa/verify',
+            '/auth/logout',
+            '/logout',
+        ];
+        foreach ($whitelistedPaths as $path) {
+            if (substr($request->getUri()->getPath(), 0, strlen($path)) === $path) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

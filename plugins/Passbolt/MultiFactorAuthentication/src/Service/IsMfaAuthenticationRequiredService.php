@@ -46,10 +46,6 @@ class IsMfaAuthenticationRequiredService
         UserAccessControl $uac,
         SessionIdentificationServiceInterface $sessionIdentificationService
     ): bool {
-        if ($this->isRouteWhiteListed($request)) {
-            return false;
-        }
-
         // Mfa not enabled for org or user
         $providers = $mfaSettings->getEnabledProviders();
         if (!count($providers)) {
@@ -71,29 +67,5 @@ class IsMfaAuthenticationRequiredService
         }
 
         return true;
-    }
-
-    /**
-     * @param \Cake\Http\ServerRequest $request request
-     * @return bool
-     */
-    protected function isRouteWhiteListed(ServerRequest $request): bool
-    {
-        // Do not redirect on mfa setup or check page
-        // same goes for authentication pages
-        $whitelistedPaths = [
-            '/login',
-            '/auth/login',
-            '/mfa/verify',
-            '/auth/logout',
-            '/logout',
-        ];
-        foreach ($whitelistedPaths as $path) {
-            if (substr($request->getUri()->getPath(), 0, strlen($path)) === $path) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
