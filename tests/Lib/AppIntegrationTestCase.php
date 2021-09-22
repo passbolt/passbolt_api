@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -40,6 +41,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
+use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 
 abstract class AppIntegrationTestCase extends TestCase
 {
@@ -56,6 +58,7 @@ abstract class AppIntegrationTestCase extends TestCase
     use ProfilesModelTrait;
     use ResourcesModelTrait;
     use RolesModelTrait;
+    use ScenarioAwareTrait;
     use SecretsModelTrait;
     use UsersModelTrait;
 
@@ -105,7 +108,7 @@ abstract class AppIntegrationTestCase extends TestCase
         if ($userFirstName === 'admin') {
             $data['role']['name'] = Role::ADMIN;
         }
-        $this->session(['Auth' => ['user' => $data]]);
+        $this->session(['Auth' => $data]);
     }
 
     /**
@@ -113,7 +116,7 @@ abstract class AppIntegrationTestCase extends TestCase
      */
     public function logInAs(User $user)
     {
-        $this->session(['Auth' => ['user' => $user]]);
+        $this->session(['Auth' => $user]);
     }
 
     /**
@@ -148,5 +151,23 @@ abstract class AppIntegrationTestCase extends TestCase
     public function disableCsrfToken()
     {
         $this->_csrfToken = false;
+    }
+
+    /**
+     * Injects in the DIC an Session Indentification Interface with the provided ID.
+     * In Session, will return the session ID
+     * In JWT, will return the access token
+     *
+     * @param string $sessionId Session Id to mock
+     * @return void
+     */
+    public function mockSessionId(string $sessionId)
+    {
+        $this->mockService(SessionIdentificationServiceInterface::class, function () use ($sessionId) {
+            $stubSessionIdentifier = $this->createMock(SessionIdentificationServiceInterface::class);
+            $stubSessionIdentifier->method('getSessionId')->willReturn($sessionId);
+
+            return $stubSessionIdentifier;
+        });
     }
 }

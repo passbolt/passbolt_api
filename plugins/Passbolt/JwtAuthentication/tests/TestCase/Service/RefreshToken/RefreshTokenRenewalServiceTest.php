@@ -45,7 +45,8 @@ class RefreshTokenRenewalServiceTest extends TestCase
     public function testRefreshTokenRenewalService_WithNoExistingRefreshCookie()
     {
         $userId = UserFactory::make()->persist()->id;
-        $authToken = (new RefreshTokenCreateService())->createToken($userId);
+        $newAccessToken = 'Bar';
+        $authToken = (new RefreshTokenCreateService())->createToken($userId, 'Foo');
 
         $tokenInTheRequest = $this->AuthenticationTokens->find()->firstOrFail();
 
@@ -55,29 +56,33 @@ class RefreshTokenRenewalServiceTest extends TestCase
             ->userId($userId)
             ->persist();
 
-        $service = new RefreshTokenRenewalService($userId, $authToken->token);
+        $service = new RefreshTokenRenewalService($userId, $authToken->token, $newAccessToken);
         $newToken = $service->renewToken();
         $cookie = $service->createHttpOnlySecureCookie($newToken);
 
         $this->assertTrue($this->AuthenticationTokens->exists(['id' => $someUserTokenNotInvolvedInTheRenewal->id]));
-        $this->assertTrue($this->AuthenticationTokens->exists([
+        /** @var AuthenticationToken $newRefreshToken */
+        $newRefreshToken = $this->AuthenticationTokens->find()->where([
+            'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
             'token' => $cookie->getValue(),
             'active' => true,
             'user_id' => $userId,
-        ]));
+        ])->firstOrFail();
+
+        $this->assertTrue($newRefreshToken->checkSessionId($newAccessToken));
         $this->assertTrue($this->AuthenticationTokens->exists(['id' => $tokenInTheRequest->id, 'active' => false]));
     }
 
     public function testRefreshTokenRenewalService_Renew_On_Consumed_Token()
     {
         $userId = UserFactory::make()->persist()->id;
-        $authToken = (new RefreshTokenCreateService())->createToken($userId);
+        $authToken = (new RefreshTokenCreateService())->createToken($userId, 'Foo');
 
-        $service = new RefreshTokenRenewalService($userId, $authToken->token);
-        // This is O.K.
+        $service = new RefreshTokenRenewalService($userId, $authToken->token, 'Bar');
+        // This is O.K. to renew once
         $service->renewToken();
 
-        // This is not O.K., should throw an excepion and should send an Email to both user and admin
+        // This is not O.K. to renew again, should throw an exception and should send an Email to both user and admin
         $this->expectException(ConsumedRefreshTokenAccessException::class);
         $this->expectExceptionMessage('The refresh token provided was already used.');
         $service->renewToken();

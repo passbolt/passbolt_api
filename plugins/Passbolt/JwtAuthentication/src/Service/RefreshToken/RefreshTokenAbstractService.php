@@ -38,6 +38,7 @@ abstract class RefreshTokenAbstractService
     public const REFRESH_TOKEN_COOKIE = 'refresh_token';
     public const REFRESH_TOKEN_DATA_KEY = 'refresh_token';
     public const REFRESH_TOKEN_EXPIRY_CONFIG_KEY = 'passbolt.auth.token.refresh_token.expiry';
+    public const ACCESS_TOKEN_DATA_KEY = 'access_token';
 
     /**
      * RefreshTokenCreateService constructor.

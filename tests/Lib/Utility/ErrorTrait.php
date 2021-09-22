@@ -67,12 +67,63 @@ trait ErrorTrait
     }
 
     /**
+     * Asserts that the json response is relative to a payment required error.
+     *
+     * @return void
+     */
+    public function assertPaymentRequiredError($msg = 'Payment Required')
+    {
+        $this->assertError(402, $msg);
+    }
+
+    /**
      * Asserts that the json response is relative to a forbidden error.
      *
+     * @param string $msg
      * @return void
      */
     public function assertBadRequestError($msg = 'Bad Request')
     {
         $this->assertError(400, $msg);
+    }
+
+    /**
+     * Asserts that the json response is relative to a forbidden error.
+     *
+     * @param string $msg
+     * @return void
+     */
+    public function assertNotFoundError($msg = 'Not Found')
+    {
+        $this->assertError(404, $msg);
+    }
+
+    /**
+     * Asserts that the json response is relative to a forbidden error.
+     *
+     * @param string $msg
+     * @return void
+     */
+    public function assertInternalError($msg = 'Internal Error')
+    {
+        $this->assertError(500, $msg);
+    }
+
+    /**
+     * Read a cookie in the response, assert that the cookie is found and expired.
+     *
+     * @param string $cookie Cookie name
+     * @param string $msg Error message
+     * @return void
+     */
+    public function assertCookieExpired(string $cookie, string $msg = 'Expired cookie not found.')
+    {
+        /** @var \Cake\Http\Cookie\CookieCollection $cookies */
+        $cookies = $this->_response->getCookieCollection();
+        if (!$cookies->has($cookie)) {
+            $this->fail($msg);
+        }
+        $mfaCookie = $cookies->get($cookie);
+        $this->assertTrue($mfaCookie->isExpired(), $msg);
     }
 }

@@ -16,6 +16,10 @@ declare(strict_types=1);
  */
 namespace App;
 
+use App\Authenticator\SessionAuthenticationService;
+use App\Authenticator\SessionIdentificationService;
+use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
@@ -26,11 +30,11 @@ use App\Notification\EmailDigest\DigestRegister\GroupDigests;
 use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Utility\Application\FeaturePluginAwareTrait;
-use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
@@ -40,8 +44,7 @@ use Cake\Http\MiddlewareQueue;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
-use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
-use Passbolt\JwtAuthentication\Service\Middleware\JwtRequestDetectionService;
+use Cake\Routing\Router;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -74,6 +77,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
          * - Apply CSRF protection
          */
         $middlewareQueue
+            ->prepend(new ContainerInjectorMiddleware($this->getContainer()))
             ->add(new ContentSecurityPolicyMiddleware())
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
             ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
@@ -263,6 +267,16 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        parent::services($container);
+        $container->add(AuthenticationServiceInterface::class, SessionAuthenticationService::class);
+        $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
+    }
+
+    /**
      * Returns a service provider instance.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Request
@@ -270,30 +284,26 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
-        // If the middleware detected a JWT authentication attempt,
-        // return the Jwt dedicated service
-        if ($request->getAttribute(JwtRequestDetectionService::IS_JWT_AUTH_REQUEST)) {
-            return new JwtAuthenticationService();
-        }
-
-        $service = new AuthenticationService();
-
-        // Define where users should be redirected to when they are not authenticated
-        // The login url is provided in string format because the routes are not loaded yet
         /** @var \Cake\Http\ServerRequest $request */
+        $loginUrl = Router::url([
+            'prefix' => 'Auth',
+            'plugin' => null,
+            'controller' => 'AuthLogin',
+            'action' => 'loginGet',
+            '_method' => 'GET',
+            '_ext' => $request->is('json') ? 'json' : null,
+        ]);
+
+        /** @var \Authentication\AuthenticationService $auth */
+        $auth = $this->getContainer()->get(AuthenticationServiceInterface::class);
         if (!$request->is('json')) {
-            $loginUrl = '/auth/login';
-            $service->setConfig([
+            $auth->setConfig([
                 'unauthenticatedRedirect' => $loginUrl,
                 'logoutRedirect' => $loginUrl,
                 'queryParam' => 'redirect',
             ]);
         }
 
-        // Load the default authenticators. Session should be first.
-        $service->loadAuthenticator('Authentication.Session');
-        $service->loadAuthenticator('Gpg');
-
-        return $service;
+        return $auth;
     }
 }

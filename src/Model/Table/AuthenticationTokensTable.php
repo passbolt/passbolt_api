@@ -181,25 +181,32 @@ class AuthenticationTokensTable extends Table
      * @param string $userId uuid
      * @param string $type AuthenticationToken::TYPE_*
      * @param ?string $token token value (optional)
+     * @param ?array $data data value (optional)
      * @throws \App\Error\Exception\ValidationException is the user is not a valid uuid
      * @throws \App\Error\Exception\ValidationException is the user is not found
      * @throws \App\Error\Exception\ValidationException is the user is deleted
      * @return \App\Model\Entity\AuthenticationToken $token
      */
-    public function generate(string $userId, string $type, ?string $token = null): AuthenticationToken
-    {
+    public function generate(
+        string $userId,
+        string $type,
+        ?string $token = null,
+        ?array $data = []
+    ): AuthenticationToken {
         $token = $this->newEntity(
             [
                 'user_id' => $userId,
                 'token' => $token ?? UuidFactory::uuid(),
                 'active' => true,
                 'type' => $type,
+                'data' => empty($data) ? null : json_encode($data),
             ],
             ['accessibleFields' => [
                 'user_id' => true,
                 'token' => true,
                 'active' => true,
                 'type' => true,
+                'data' => true,
             ]]
         );
         $errors = $token->getErrors();

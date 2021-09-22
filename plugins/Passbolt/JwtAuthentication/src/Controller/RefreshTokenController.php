@@ -83,9 +83,8 @@ class RefreshTokenController extends AppController
     {
         $token = $this->getRequest()->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
         $userId = (new RefreshTokenFetchUserService($token))->getUserIdFromToken();
-        $this->renewRefreshTokenAndSetInResponseAsSecureCookie($token, $userId);
 
-        return (new JwtTokenCreateService())->createToken($userId);
+        return $this->renewRefreshTokenAndSetInResponseAsSecureCookie($token, $userId);
     }
 
     /**
@@ -98,9 +97,8 @@ class RefreshTokenController extends AppController
     {
         $token = $this->getRequest()->getData(RefreshTokenAbstractService::REFRESH_TOKEN_DATA_KEY);
         $userId = $this->getRequest()->getData('user_id');
-        $this->renewRefreshTokenAndSetInResponseAsSecureCookie($token, $userId);
 
-        return (new JwtTokenCreateService())->createToken($userId);
+        return $this->renewRefreshTokenAndSetInResponseAsSecureCookie($token, $userId);
     }
 
     /**
@@ -109,16 +107,21 @@ class RefreshTokenController extends AppController
      *
      * @param string|null $oldRefreshToken Refresh token passed in the request
      * @param string|null $userId User Id
-     * @return void
+     * @return string Access token newlyy created and associated to the new refresh token
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException if the token is not found
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException if the token was already consumed
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException if the token is expired
      */
-    protected function renewRefreshTokenAndSetInResponseAsSecureCookie(?string $oldRefreshToken, ?string $userId): void
-    {
-        $refreshService = new RefreshTokenRenewalService($userId, $oldRefreshToken);
+    protected function renewRefreshTokenAndSetInResponseAsSecureCookie(
+        ?string $oldRefreshToken,
+        ?string $userId
+    ): string {
+        $accessToken = (new JwtTokenCreateService())->createToken($userId);
+        $refreshService = new RefreshTokenRenewalService($userId, $oldRefreshToken, $accessToken);
         $refreshedToken = $refreshService->renewToken();
         $refreshHttpOnlySecureCookie = $refreshService->createHttpOnlySecureCookie($refreshedToken);
         $this->setResponse($this->getResponse()->withCookie($refreshHttpOnlySecureCookie));
+
+        return $accessToken;
     }
 }

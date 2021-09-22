@@ -16,7 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Test\Utility;
 
+use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
+use Authentication\Identifier\IdentifierInterface;
+use Cake\Http\ServerRequest;
+use Cake\I18n\FrozenTime;
+use Cake\Routing\Router;
+use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
 
@@ -36,6 +42,14 @@ trait JwtAuthTestTrait
     }
 
     /**
+     * @return string|null
+     */
+    public function getJwtTokenInHeader(): ?string
+    {
+        return $this->_request['headers'][JwtAuthenticationService::JWT_HEADER] ?? null;
+    }
+
+    /**
      * Creates a JWT token and sets it in the request header.
      *
      * @param string|null $userId
@@ -50,5 +64,34 @@ trait JwtAuthTestTrait
         $this->setJwtTokenInHeader($token);
 
         return $userId;
+    }
+
+    ////////////// GPG Utils ///////////////////
+
+    protected function getGpgJwtAuth(User $user): GpgJwtAuthenticator
+    {
+        $request = new ServerRequest();
+        $request = $request->withData('user_id', $user->id);
+
+        $GpgJwtAuth = new GpgJwtAuthenticator($this->createMock(IdentifierInterface::class));
+        $GpgJwtAuth->setRequest($request);
+        $GpgJwtAuth->init();
+
+        return $GpgJwtAuth;
+    }
+
+    protected function makeChallenge(User $user, string $verifyToken): string
+    {
+        return $this->getGpgJwtAuth($user)->getGpg()->encryptSign(json_encode([
+            'version' => GpgJwtAuthenticator::PROTOCOL_VERSION,
+            'domain' => Router::url('/', true),
+            'verify_token' => $verifyToken,
+            'verify_token_expiry' => FrozenTime::now()->addMinute()->toUnixString(),
+        ]));
+    }
+
+    protected function decryptChallenge(User $user, string $challenge): string
+    {
+        return $this->getGpgJwtAuth($user)->getGpg()->decrypt($challenge);
     }
 }

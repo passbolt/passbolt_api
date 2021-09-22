@@ -98,11 +98,13 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param string $data token type
+     * @param array $data token type
      * @return $this
      */
-    public function data(string $data)
+    public function data(array $data)
     {
+        $data = empty($data) ? null : json_encode($data);
+
         return $this->patchData(compact('data'));
     }
 

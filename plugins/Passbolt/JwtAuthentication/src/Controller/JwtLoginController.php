@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Controller;
 
 use App\Controller\AppController;
+use App\Utility\UserAccessControl;
+use App\Utility\UserAction;
 use Authentication\Authenticator\Result;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -49,8 +51,11 @@ class JwtLoginController extends AppController
 
         $result = $this->Authentication->getResult();
         if ($result->isValid()) {
-            $data = $result->getData();
-            $this->success(__('The authentication was a success.'), ['challenge' => $data['challenge']]);
+            $challenge = $result->getData()['challenge'];
+            $user = $result->getData()['user'];
+            $uac = new UserAccessControl($user['role']['name'], $user['id']);
+            UserAction::getInstance()->setUserAccessControl($uac);
+            $this->success(__('The authentication was a success.'), compact('challenge'));
         } else {
             $message = __('The authentication failed.') . ' ';
             switch ($result->getStatus()) {
