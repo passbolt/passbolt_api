@@ -20,7 +20,7 @@ namespace Passbolt\MultiFactorAuthentication\Service;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use Exception;
-use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
+use Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 
 class GetMfaAccountSettingsService

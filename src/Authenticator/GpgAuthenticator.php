@@ -110,12 +110,11 @@ class GpgAuthenticator extends SessionAuthenticator
      * in the GpgAuthHeadersMiddleware
      *
      * @see GpgAuthHeadersMiddleware
-     * @param \Cake\Http\ServerRequest $request The request.
      * @return \Authentication\Authenticator\ResultInterface
      */
-    private function authenticationSuccessResult(ServerRequest $request): ResultInterface
+    private function authenticationSuccessResult(): ResultInterface
     {
-        return new Result(['user' => $this->_user->toArray()], Result::SUCCESS, $this->headers);
+        return new Result($this->_user->toArray(), Result::SUCCESS, $this->headers);
     }
 
     /**
@@ -161,7 +160,7 @@ class GpgAuthenticator extends SessionAuthenticator
         }
 
         // Return the user to be set as active
-        return $this->authenticationSuccessResult($request);
+        return $this->authenticationSuccessResult();
     }
 
     /**

@@ -16,7 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Duo;
 
+use App\Test\Factory\AuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class DuoVerifyPostControllerTest extends MfaIntegrationTestCase
 {
@@ -29,5 +33,36 @@ class DuoVerifyPostControllerTest extends MfaIntegrationTestCase
     {
         $this->post('/mfa/verify/duo.json?api-version=v2', []);
         $this->assertResponseError('You need to login to access this location.');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     */
+    public function testMfaVerifyPostDuo_Valid()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
+        $this->mockValidMfaFormInterface(DuoVerifyForm::class, $this->makeUac($user));
+        $this->post('/mfa/verify/duo?api-version=v2', []);
+        $this->assertResponseSuccess();
+        $mfaToken = AuthenticationTokenFactory::find()->firstOrFail();
+        $this->assertCookie($mfaToken->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     */
+    public function testMfaVerifyPostDuo_Invalid()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
+        $this->mockInvalidMfaFormInterface(DuoVerifyForm::class, $this->makeUac($user));
+        $this->post('/mfa/verify/duo?api-version=v2', []);
+        $this->assertRedirectContains('mfa/verify/duo');
+        $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }

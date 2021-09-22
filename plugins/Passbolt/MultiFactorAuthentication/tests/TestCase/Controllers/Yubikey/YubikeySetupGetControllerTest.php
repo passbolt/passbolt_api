@@ -16,7 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Yubikey;
 
+use App\Test\Factory\AuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyOrganizationOnlyScenario;
 
 class YubikeySetupGetControllerTest extends MfaIntegrationTestCase
 {
@@ -29,5 +32,15 @@ class YubikeySetupGetControllerTest extends MfaIntegrationTestCase
     {
         $this->get('/mfa/setup/yubikey.json?api-version=v2');
         $this->assertResponseError('You need to login to access this location.');
+    }
+
+    public function testMfaSetupGetYubikey_Success()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaYubikeyOrganizationOnlyScenario::class);
+        $this->mockValidMfaFormInterface(YubikeySetupForm::class, $this->makeUac($user));
+        $this->get('/mfa/setup/yubikey?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertSame(0, AuthenticationTokenFactory::count());
     }
 }

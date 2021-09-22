@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpSetupPostController extends MfaSetupController
@@ -26,15 +27,17 @@ class TotpSetupPostController extends MfaSetupController
     /**
      * Handle TOTP setup POST request
      *
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID service
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $totpSetupForm MFA Form
      * @return void
      */
-    public function post()
-    {
+    public function post(
+        SessionIdentificationServiceInterface $sessionIdentificationService,
+        MfaFormInterface $totpSetupForm
+    ) {
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
         $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
 
-        $uac = $this->User->getAccessControl();
-        $totpSetupForm = new TotpSetupForm($uac);
         try {
             $totpSetupForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
@@ -55,6 +58,6 @@ class TotpSetupPostController extends MfaSetupController
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $this->_handlePostSuccess(MfaSettings::PROVIDER_TOTP);
+        $this->_handlePostSuccess(MfaSettings::PROVIDER_TOTP, $sessionIdentificationService);
     }
 }

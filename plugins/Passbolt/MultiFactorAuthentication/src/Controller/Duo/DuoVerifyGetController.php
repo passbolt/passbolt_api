@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoVerifyGetController extends MfaVerifyController
@@ -26,21 +27,24 @@ class DuoVerifyGetController extends MfaVerifyController
     /**
      * Duo Verify Get
      *
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $verifyForm MFA Form
      * @throws \Cake\Http\Exception\InternalErrorException if there is no MFA settings for the user
      * @throws \Cake\Http\Exception\BadRequestException if valid Verification token is already present in cookie
      * @throws \Cake\Http\Exception\BadRequestException if there is no MFA settings for this provider
      * @return void
      */
-    public function get()
-    {
+    public function get(
+        SessionIdentificationServiceInterface $sessionIdentificationService,
+        MfaFormInterface $verifyForm
+    ) {
         if ($this->request->is('json')) {
             throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
         }
-        $this->_handleVerifiedNotRequired();
+        $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
 
-        $uac = $this->User->getAccessControl();
-        $verifyForm = new DuoVerifyForm($uac, $this->mfaSettings);
+        /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm $verifyForm */
         $this->set('sigRequest', $verifyForm->getSigRequest());
         $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
         $this->set('verifyForm', $verifyForm);

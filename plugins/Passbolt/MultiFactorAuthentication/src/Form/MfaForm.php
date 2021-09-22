@@ -20,7 +20,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Form\Form;
 
-class MfaForm extends Form
+class MfaForm extends Form implements MfaFormInterface
 {
     /**
      * @var \App\Utility\UserAccessControl

@@ -18,7 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOtpFactory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
@@ -27,14 +27,15 @@ class TotpSetupGetController extends MfaSetupController
     /**
      * Totp Get Qr Code and provisioning urls
      *
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
      * @return void
      */
-    public function get()
+    public function get(MfaFormInterface $setupForm)
     {
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
         try {
             $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
-            $this->_handleGetNewSettings();
+            $this->_handleGetNewSettings($setupForm);
         } catch (BadRequestException $exception) {
             $this->_handleGetExistingSettings(MfaSettings::PROVIDER_TOTP);
         }
@@ -76,14 +77,14 @@ class TotpSetupGetController extends MfaSetupController
     /**
      * Handle get request when new settings are needed
      *
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $totpSetupForm MFA Form
      * @return void
      */
-    protected function _handleGetNewSettings()
+    protected function _handleGetNewSettings(MfaFormInterface $totpSetupForm)
     {
         // Build and return some URI and QR code to work from
         // even though they can be set manually in the post as well
         $uac = $this->User->getAccessControl();
-        $totpSetupForm = new TotpSetupForm($uac);
         $uri = MfaOtpFactory::generateTOTP($uac);
         $qrCode = MfaOtpFactory::getQrCodeInline($uri);
 

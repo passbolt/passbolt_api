@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
 use OTPHP\Factory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 
 class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 {
@@ -40,9 +41,8 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifyPostTotpUriSuccess()
     {
-        $user = 'ada';
-        $this->authenticateAs($user);
-        $uri = $this->mockMfaTotpSettings($user, 'valid');
+        $user = $this->logInAsUser();
+        [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $otp = Factory::loadFromProvisioningUri($uri);
         $this->post('/mfa/verify/totp?redirect=/app/users', [
             'totp' => $otp->now(),
@@ -58,9 +58,8 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifyPostTotpUriSuccessJson()
     {
-        $user = 'ada';
-        $this->authenticateAs($user);
-        $uri = $this->mockMfaTotpSettings($user, 'valid');
+        $user = $this->logInAsUser();
+        [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $otp = Factory::loadFromProvisioningUri($uri);
         $this->post('/mfa/verify/totp.json?api-version=v2', [
             'totp' => $otp->now(),

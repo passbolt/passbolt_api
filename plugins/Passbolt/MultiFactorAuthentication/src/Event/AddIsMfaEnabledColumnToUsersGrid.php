@@ -14,22 +14,34 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.12.0
  */
-namespace Passbolt\MultiFactorAuthentication\EventListener;
+namespace Passbolt\MultiFactorAuthentication\Event;
 
 use App\Controller\Component\QueryStringComponent;
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Controller\Users\UsersIndexController;
 use Cake\Event\EventListenerInterface;
+use Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper;
 use Passbolt\MultiFactorAuthentication\Model\Query\IsMfaEnabledQueryDecorator;
-use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
 
 class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
 {
     /**
-     * @param \App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal $event Event
+     * @return array
+     */
+    public function implementedEvents(): array
+    {
+        return [
+            ControllerFindIndexOptionsBeforeMarshal::EVENT_NAME => 'addIsMfaEnabledColumnToUsersGrid',
+        ];
+    }
+
+    /**
+     * On User Index Controller, add options.
+     *
+     * @param \App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal $event Before Marschal Event
      * @return void
      */
-    public function __invoke(ControllerFindIndexOptionsBeforeMarshal $event)
+    public function addIsMfaEnabledColumnToUsersGrid(ControllerFindIndexOptionsBeforeMarshal $event): void
     {
         if (!$event->getController() instanceof UsersIndexController) {
             return;
@@ -44,15 +56,5 @@ class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
 
             return QueryStringComponent::validateFilterBoolean($value, $filterName);
         });
-    }
-
-    /**
-     * @return array
-     */
-    public function implementedEvents(): array
-    {
-        return [
-            ControllerFindIndexOptionsBeforeMarshal::EVENT_NAME => $this,
-        ];
     }
 }

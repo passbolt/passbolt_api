@@ -64,4 +64,13 @@ class OrganizationSettingFactory extends CakephpBaseFactory
     {
         return $this->setPropertyValue('locale', $value);
     }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function value($value)
+    {
+        return $this->patchData(['value' => json_encode($value)]);
+    }
 }

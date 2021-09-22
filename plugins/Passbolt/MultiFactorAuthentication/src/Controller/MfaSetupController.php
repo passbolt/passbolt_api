@@ -16,12 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
-class MfaSetupController extends MfaController
+abstract class MfaSetupController extends MfaController
 {
     /**
      * Fail is account is already setup for this authentication provider
@@ -70,11 +71,14 @@ class MfaSetupController extends MfaController
      * Create auth token and cookie verification proof
      *
      * @param string $provider name of the provider
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
      * @return void
      */
-    protected function _handlePostSuccess(string $provider)
-    {
-        $sessionId = $this->getRequest()->getSession()->id();
+    protected function _handlePostSuccess(
+        string $provider,
+        SessionIdentificationServiceInterface $sessionIdentificationService
+    ) {
+        $sessionId = $sessionIdentificationService->getSessionId($this->getRequest());
         $token = MfaVerifiedToken::get($this->User->getAccessControl(), $provider, $sessionId);
         $secure = Configure::read('passbolt.security.cookies.secure') || $this->getRequest()->is('ssl');
         $cookie = MfaVerifiedCookie::get($token, null, $secure);

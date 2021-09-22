@@ -53,24 +53,7 @@ class AppController extends Controller
         ]);
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
-
-        /*
-         * Authentication Component
-         */
-        $loginUrl = Router::url([
-            'prefix' => 'Auth',
-            'plugin' => null,
-            'controller' => 'AuthLogin',
-            'action' => 'loginGet',
-            '_method' => 'GET',
-            '_ext' => $this->getRequest()->is('json') ? 'json' : null,
-        ]);
-
-        $this->loadComponent('Authentication.Authentication', [
-            'unauthenticatedRedirect' => $loginUrl,
-            'logoutRedirect' => $loginUrl,
-            'queryParam' => 'redirect',
-        ]);
+        $this->loadAuthenticationComponent();
 
         // Init user action.
         UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
@@ -198,5 +181,27 @@ class AppController extends Controller
 
         // Return what is given
         return $apiVersion;
+    }
+
+    /**
+     * Loads the authentication component and sets up the
+     * Authentication logout redirection.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    private function loadAuthenticationComponent(): void
+    {
+        $loginUrl = Router::url([
+            'prefix' => 'Auth',
+            'plugin' => null,
+            'controller' => 'AuthLogin',
+            'action' => 'loginGet',
+            '_method' => 'GET',
+        ]);
+
+        $this->loadComponent('Authentication.Authentication', [
+            'logoutRedirect' => $loginUrl,
+        ]);
     }
 }

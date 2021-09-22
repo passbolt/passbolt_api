@@ -23,18 +23,18 @@ use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Test\Fixture\AccountSettingsFixture;
+use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class UsersIndexControllerTest extends AppIntegrationTestCase
+class UsersIndexControllerTest extends MfaIntegrationTestCase
 {
     use GroupsUsersModelTrait;
     use MfaOrgSettingsTestTrait;

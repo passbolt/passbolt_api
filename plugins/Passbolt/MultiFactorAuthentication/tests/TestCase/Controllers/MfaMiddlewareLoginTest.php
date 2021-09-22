@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers;
 
+use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 
 class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
 {
@@ -61,7 +63,9 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
      */
     public function testMfaMiddlewareLoginSuccess200()
     {
-        $this->mockMfaDuoSettings('ada', 'valid');
+        $adaId = 'f848277c-5398-58f8-a82a-72397af2d450';
+        $user = UserFactory::get($adaId, ['contain' => 'Roles']);
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $this->gpgSetup();
         $this->postJson('/auth/login.json', [
             'data' => [

@@ -18,7 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeySetupGetController extends MfaSetupController
@@ -26,14 +26,15 @@ class YubikeySetupGetController extends MfaSetupController
     /**
      * Totp Get Qr Code and provisioning urls
      *
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
      * @return void
      */
-    public function get()
+    public function get(MfaFormInterface $setupForm)
     {
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);
         try {
             $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_YUBIKEY);
-            $this->_handleGetNewSettings();
+            $this->_handleGetNewSettings($setupForm);
         } catch (BadRequestException $exception) {
             $this->_handleGetExistingSettings(MfaSettings::PROVIDER_YUBIKEY);
         }
@@ -42,15 +43,13 @@ class YubikeySetupGetController extends MfaSetupController
     /**
      * Handle get request when new settings are needed
      *
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
      * @return void
      */
-    protected function _handleGetNewSettings()
+    protected function _handleGetNewSettings(MfaFormInterface $setupForm)
     {
-        $uac = $this->User->getAccessControl();
-        $totpSetupForm = new YubikeySetupForm($uac, MfaSettings::get($uac));
-
         if (!$this->request->is('json')) {
-            $this->set('yubikeySetupForm', $totpSetupForm);
+            $this->set('yubikeySetupForm', $setupForm);
             $this->set('theme', $this->User->theme());
             $this->viewBuilder()
                 ->setLayout('mfa_setup')

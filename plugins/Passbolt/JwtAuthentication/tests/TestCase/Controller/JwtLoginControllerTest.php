@@ -17,17 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Test\TestCase\Controller;
 
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Entity\User;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
-use Authentication\Identifier\IdentifierInterface;
 use Cake\Datasource\ModelAwareTrait;
-use Cake\Http\ServerRequest;
-use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
@@ -212,34 +208,5 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->createJwtTokenAndSetInHeader();
         $this->getJson('/auth/login.json');
         $this->assertResponseError('The route /auth/login is not permitted with JWT authentication.');
-    }
-
-    ////////////// GPG Utils ///////////////////
-
-    private function getGpgJwtAuth(User $user): GpgJwtAuthenticator
-    {
-        $request = new ServerRequest();
-        $request = $request->withData('user_id', $user->id);
-
-        $GpgJwtAuth = new GpgJwtAuthenticator($this->createMock(IdentifierInterface::class));
-        $GpgJwtAuth->setRequest($request);
-        $GpgJwtAuth->init();
-
-        return $GpgJwtAuth;
-    }
-
-    private function makeChallenge(User $user, string $verifyToken): string
-    {
-        return $this->getGpgJwtAuth($user)->getGpg()->encryptSign(json_encode([
-            'version' => GpgJwtAuthenticator::PROTOCOL_VERSION,
-            'domain' => Router::url('/', true),
-            'verify_token' => $verifyToken,
-            'verify_token_expiry' => FrozenTime::now()->addMinute()->toUnixString(),
-        ]));
-    }
-
-    private function decryptChallenge(User $user, string $challenge): string
-    {
-        return $this->getGpgJwtAuth($user)->getGpg()->decrypt($challenge);
     }
 }

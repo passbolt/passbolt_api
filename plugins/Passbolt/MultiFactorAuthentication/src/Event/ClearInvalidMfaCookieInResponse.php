@@ -12,16 +12,15 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.12.0
+ * @since         3.3.0
  */
-namespace Passbolt\MultiFactorAuthentication\EventListener;
+namespace Passbolt\MultiFactorAuthentication\Event;
 
-use App\Model\Table\UsersTable;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
+use Passbolt\MultiFactorAuthentication\Service\ClearMfaCookieInResponseService;
 
-class AddIsMfaEnabledBehavior implements EventListenerInterface
+class ClearInvalidMfaCookieInResponse implements EventListenerInterface
 {
     /**
      * @return array
@@ -29,23 +28,21 @@ class AddIsMfaEnabledBehavior implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            'Model.initialize' => $this,
+            'Controller.initialize' => 'clearInvalidMfaCookieInResponse',
         ];
     }
 
     /**
+     * If a user is authenticating with a non valid MFA cookie,
+     * the latter shall be removed from the request.
+     *
      * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
-    public function __invoke(EventInterface $event)
+    public function clearInvalidMfaCookieInResponse(EventInterface $event): void
     {
-        if (!$event->getSubject() instanceof UsersTable) {
-            return;
-        }
-
-        /** @var \App\Model\Table\UsersTable $users */
-        $users = $event->getSubject();
-
-        $users->addBehavior(IsMfaEnabledBehavior::class);
+        /** @var \Cake\Controller\Controller $controller */
+        $controller = $event->getSubject();
+        (new ClearMfaCookieInResponseService($controller))->clearMfaCookie();
     }
 }

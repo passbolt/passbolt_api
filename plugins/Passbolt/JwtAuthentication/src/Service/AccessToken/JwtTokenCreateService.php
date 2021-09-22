@@ -46,7 +46,7 @@ class JwtTokenCreateService extends JwtAbstractService
     public function createToken(string $userId, ?string $expiration = null): string
     {
         if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException(__('The resource identifier should be a valid UUID.'));
+            throw new InvalidArgumentException(__('The user identifier should be a valid UUID.'));
         }
 
         $privateKey = $this->readKeyFileContent();

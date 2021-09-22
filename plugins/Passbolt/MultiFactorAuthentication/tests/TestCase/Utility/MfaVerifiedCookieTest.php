@@ -22,6 +22,8 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class MfaVerifiedCookieTest extends MfaIntegrationTestCase
 {
+    public $autoFixtures = false;
+
     /**
      * @group mfa
      * @group mfaVerifiedCookie

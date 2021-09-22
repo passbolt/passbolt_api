@@ -26,11 +26,6 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class TotpVerifyForm extends MfaForm
 {
     /**
-     * @var \OTPHP\TOTPInterface
-     */
-    protected $totp;
-
-    /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
     protected $settings;
@@ -45,7 +40,6 @@ class TotpVerifyForm extends MfaForm
     {
         parent::__construct($uac);
         $this->settings = $settings;
-        $this->totp = Factory::loadFromProvisioningUri($settings->getAccountSettings()->getOtpProvisioningUri());
     }
 
     /**
@@ -97,10 +91,7 @@ class TotpVerifyForm extends MfaForm
      */
     public function isValidOtp(string $value)
     {
-        if (!isset($this->totp)) {
-            return false;
-        }
-
-        return $this->totp->verify($value);
+        return Factory::loadFromProvisioningUri($this->settings->getAccountSettings()->getOtpProvisioningUri())
+            ->verify($value);
     }
 }

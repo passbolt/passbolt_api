@@ -16,17 +16,31 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
+use Cake\Event\EventInterface;
+
 class MfaVerifyAjaxErrorController extends MfaController
 {
+    /**
+     * @inheritDoc
+     */
+    public function beforeRender(EventInterface $event)
+    {
+        parent::beforeRender($event);
+        $this->_invalidateMfaCookie();
+    }
+
     /**
      * @throw ForbiddenException
      * @return void
      */
     public function get()
     {
+        $providers = $this->mfaSettings->getProvidersVerifyUrls();
         // Use AppController:error instead of exception to avoid logging the error
         $this->error(__('MFA authentication is required.'), [
-            'providers' => $this->mfaSettings->getProvidersVerifyUrls(),
+            'mfa_providers' => array_keys($providers),
+            /** @deprecated on v4 */
+            'providers' => $providers,
         ], 403);
     }
 }

@@ -22,7 +22,7 @@ use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\UsersTable;
 use Cake\Collection\CollectionInterface;
 use Cake\ORM\Query;
-use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
+use Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class IsMfaEnabledQueryDecorator
@@ -35,13 +35,13 @@ class IsMfaEnabledQueryDecorator
     private $usersTable;
 
     /**
-     * @var \Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper
+     * @var \Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper
      */
     private $userMfaMapper;
 
     /**
      * @param \App\Model\Table\UsersTable $usersTable Users table
-     * @param \Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper $userMfaMapper Property mapper
+     * @param \Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper $userMfaMapper Property mapper
      */
     public function __construct(UsersTable $usersTable, MfaEntityMapper $userMfaMapper)
     {

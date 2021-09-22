@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Duo;
 
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoVerifyGetControllerTest extends MfaIntegrationTestCase
 {
@@ -29,5 +31,25 @@ class DuoVerifyGetControllerTest extends MfaIntegrationTestCase
     {
         $this->get('/mfa/verify/duo.json?api-version=v2');
         $this->assertResponseError('You need to login to access this location.');
+    }
+
+    public function testMfaVerifyGetDuo_Mfa_Required()
+    {
+        $user = $this->logInAsUser();
+        $hostName = 'Bar';
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user, true, $hostName);
+        $this->get('/mfa/verify/duo?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('data-host="' . $hostName . '"');
+    }
+
+    public function testMfaVerifyGetDuo_Mfa_Not_Required()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_DUO);
+        $this->get('/mfa/verify/duo?api-version=v2');
+        $this->assertResponseCode(400);
+        $this->assertResponseContains('The multi-factor authentication is not required.');
     }
 }

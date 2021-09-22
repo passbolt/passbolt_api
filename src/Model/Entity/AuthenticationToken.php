@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use App\Utility\AuthToken\AuthTokenExpiry;
+use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
@@ -42,6 +43,8 @@ class AuthenticationToken extends Entity
     public const TYPE_MOBILE_TRANSFER = 'mobile_transfer';
     public const TYPE_REFRESH_TOKEN = 'refresh_token';
     public const TYPE_VERIFY_TOKEN = 'verify_token';
+
+    public const SESSION_ID_KEY = 'session_id';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -89,5 +92,64 @@ class AuthenticationToken extends Entity
         $isNotExpired = $this->created->wasWithinLast($expiry);
 
         return !$isNotExpired;
+    }
+
+    /**
+     * Json decode the token data.
+     * Will return an empty array if the data is not unserializable.
+     *
+     * @return array
+     */
+    public function getJsonDecodedData(): array
+    {
+        return json_decode($this->data ?? '', true) ?? [];
+    }
+
+    /**
+     * Reads the session ID in the token data
+     *
+     * @see SessionIdentificationServiceInterface
+     * @return string|null
+     */
+    public function getSessionId(): ?string
+    {
+        $data = $this->getJsonDecodedData();
+
+        return $data[self::SESSION_ID_KEY] ?? null;
+    }
+
+    /**
+     * Writes the session ID in the token data
+     *
+     * @see SessionIdentificationServiceInterface
+     * @param string $sessionId Session ID
+     * @return void
+     */
+    public function hashAndSetSessionId(string $sessionId): void
+    {
+        $hashedSessionId = (new DefaultPasswordHasher())->hash($sessionId);
+        $data = array_merge(
+            $this->getJsonDecodedData(),
+            [self::SESSION_ID_KEY => $hashedSessionId]
+        );
+
+        $this->set('data', json_encode($data));
+    }
+
+    /**
+     * Checks that the session ID provided
+     * matches the hashed session ID in data->session_id
+     *
+     * @param string|null $sessionIdToCheck Session ID to check
+     * @return bool
+     */
+    public function checkSessionId(?string $sessionIdToCheck): bool
+    {
+        $tokenSessionId = $this->getSessionId();
+        if ($sessionIdToCheck === null || $tokenSessionId === null) {
+            return false;
+        }
+
+        return (new DefaultPasswordHasher())->check($sessionIdToCheck, $tokenSessionId);
     }
 }

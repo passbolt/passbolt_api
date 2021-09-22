@@ -16,8 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpVerifyGetController extends MfaVerifyController
@@ -25,21 +26,22 @@ class TotpVerifyGetController extends MfaVerifyController
     /**
      * TOTP Verify Get
      *
-     * @throws \Cake\Http\Exception\InternalErrorException if there is no MFA settings for the user
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $verifyForm MFA Form
+     * @return void
      * @throws \Cake\Http\Exception\BadRequestException if valid Verification token is already present in cookie
      * @throws \Cake\Http\Exception\BadRequestException if there is no MFA settings for this provider
-     * @return void
+     * @throws \Cake\Http\Exception\InternalErrorException if there is no MFA settings for the user
      */
-    public function get()
-    {
-        $this->_handleVerifiedNotRequired();
+    public function get(
+        SessionIdentificationServiceInterface $sessionIdentificationService,
+        MfaFormInterface $verifyForm
+    ) {
+        $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_TOTP);
 
         // Build and return some URI and QR code to work from
         // even though they can be set manually in the post as well
-        $uac = $this->User->getAccessControl();
-        $verifyForm = new TotpVerifyForm($uac, MfaSettings::get($uac));
-
         if (!$this->request->is('json')) {
             $this->set('providers', $this->mfaSettings->getEnabledProviders());
             $this->set('verifyForm', $verifyForm);

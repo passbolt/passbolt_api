@@ -19,9 +19,10 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use Cake\Http\Exception\BadRequestException;
+use Passbolt\MultiFactorAuthentication\Service\ClearMfaCookieInResponseService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class MfaController extends AppController
+abstract class MfaController extends AppController
 {
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
@@ -33,6 +34,7 @@ class MfaController extends AppController
      * Used to add common initialization code like loading components.
      *
      * @return void
+     * @see SetMfaSettingsInRequestMiddleware::setMfaSettingsInRequestAttribute()
      */
     public function initialize(): void
     {
@@ -57,5 +59,15 @@ class MfaController extends AppController
             $msg = __('This authentication provider is not enabled for your organization.');
             throw new BadRequestException($msg);
         }
+    }
+
+    /**
+     * Clear any dubious cookie if mfa check is required
+     *
+     * @return void
+     */
+    protected function _invalidateMfaCookie(): void
+    {
+        (new ClearMfaCookieInResponseService($this))->clearMfaCookie();
     }
 }

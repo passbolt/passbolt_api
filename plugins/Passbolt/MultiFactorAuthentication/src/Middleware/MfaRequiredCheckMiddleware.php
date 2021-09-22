@@ -16,27 +16,30 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Middleware;
 
-use App\Utility\UserAccessControl;
+use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Middleware\ContainerAwareMiddlewareTrait;
+use App\Middleware\UacAwareMiddlewareTrait;
 use Cake\Core\Configure;
+use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
+use Passbolt\MultiFactorAuthentication\Service\IsMfaAuthenticationRequiredService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class MfaMiddleware implements MiddlewareInterface
+class MfaRequiredCheckMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
-     */
-    private $mfaSettings;
+    use ContainerAwareMiddlewareTrait;
+    use UacAwareMiddlewareTrait;
 
     /**
-     * Mfa Middleware.
+     * Mfa Required check Middleware
+     * Checks if the MFA is required for the user authenticated
+     * and if the provided MFA token is valid.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Server\RequestHandlerInterface $handler The handler.
@@ -47,10 +50,9 @@ class MfaMiddleware implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
-        if ($this->requiredMfaCheck($request)) {
+        if ($this->isMfaCheckRequired($request)) {
             /** @var \Cake\Http\Response $response */
-            $response = $handler->handle($request);
-            // Clear any dubious cookie if mfa check required
+            $response = new Response();
             if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
                 $secure = Configure::read('passbolt.security.cookies.secure') || $request->is('ssl');
                 $response = $response
@@ -69,49 +71,28 @@ class MfaMiddleware implements MiddlewareInterface
      * @param \Cake\Http\ServerRequest $request request
      * @return bool
      */
-    protected function requiredMfaCheck(ServerRequest $request)
+    public function isMfaCheckRequired(ServerRequest $request): bool
     {
-        // Return false if user is not logged in
-        /** @var \Authentication\Identity $identity */
-        $identity = $request->getAttribute('identity', null);
-        if (empty($identity)) {
+        if ($this->isRouteWhiteListed($request)) {
             return false;
         }
 
-        $user = $identity->get('user') ?? $identity;
-
-        // Do not redirect on mfa setup or check page
-        // same goes for authentication pages
-        $whitelistedPaths = [
-            '/login',
-            '/auth/login',
-            '/mfa/verify',
-            '/auth/logout',
-            '/logout',
-        ];
-        foreach ($whitelistedPaths as $path) {
-            if (substr($request->getUri()->getPath(), 0, strlen($path)) === $path) {
-                return false;
-            }
-        }
-
-        // Mfa not enabled for org or user
-        $uac = new UserAccessControl($user['role']['name'], $user['id']);
-        $this->mfaSettings = MfaSettings::get($uac);
-        $providers = $this->mfaSettings->getEnabledProviders();
-        if (!count($providers)) {
+        $uac = $this->getUacInRequest($request);
+        // Return false if user is not authenticated
+        if (empty($uac)) {
             return false;
         }
 
-        // Mfa cookie is set and a valid token
-        $mfa = $request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
-        if (isset($mfa)) {
-            $sessionId = $request->getSession()->id();
+        $mfaSettings = MfaSettings::get($uac);
 
-            return !MfaVerifiedToken::check($uac, $mfa, $sessionId);
-        }
+        $isMfaAuthenticationRequiredService = new IsMfaAuthenticationRequiredService();
 
-        return true;
+        return $isMfaAuthenticationRequiredService->isMfaCheckRequired(
+            $request,
+            $mfaSettings,
+            $uac,
+            $this->getContainer($request)->get(SessionIdentificationServiceInterface::class)
+        );
     }
 
     /**
@@ -120,14 +101,40 @@ class MfaMiddleware implements MiddlewareInterface
      */
     protected function getVerifyUrl(ServerRequest $request)
     {
-        if (!$request->is('json')) {
-            $url = $this->mfaSettings
-                ->getDefaultVerifyUrl(false);
-            $url .= '?redirect=' . $request->getUri()->getPath();
-        } else {
+        $uac = $this->getUacInRequest($request);
+        $mfaSettings = MfaSettings::get($uac);
+        if ($request->is('json')) {
             $url = '/mfa/verify/error.json';
+        } else {
+            $url = $mfaSettings->getDefaultVerifyUrl(false);
+            $url .= '?redirect=' . $request->getUri()->getPath();
         }
 
         return Router::url($url, true);
+    }
+
+    /**
+     * @param \Cake\Http\ServerRequest $request request
+     * @return bool
+     */
+    protected function isRouteWhiteListed(ServerRequest $request): bool
+    {
+        // Do not redirect on mfa setup or check page
+        // same goes for authentication pages
+        $whitelistedPaths = [
+            '/login',
+            '/auth/login',
+            '/auth/jwt/login',
+            '/mfa/verify',
+            '/auth/logout',
+            '/logout',
+        ];
+        foreach ($whitelistedPaths as $path) {
+            if (substr($request->getUri()->getPath(), 0, strlen($path)) === $path) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

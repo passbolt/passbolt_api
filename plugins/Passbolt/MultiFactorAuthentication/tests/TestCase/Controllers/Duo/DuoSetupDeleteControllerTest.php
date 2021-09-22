@@ -16,23 +16,15 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Duo;
 
-use Passbolt\MultiFactorAuthentication\Test\Lib\MfaDuoSettingsTestTrait;
+use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupDeleteControllerTest extends MfaIntegrationTestCase
 {
-    use MfaDuoSettingsTestTrait;
-
-    /**
-     * @var array
-     */
-    public $fixtures = [
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-        'app.Base/Users',
-        'app.Base/Roles',
-    ];
-
     /**
      * @group mfa
      * @group mfaSetup
@@ -53,7 +45,7 @@ class DuoSetupDeleteControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupDeleteDuoSuccessNothingToDelete()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->delete('/mfa/setup/duo.json?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertResponseContains('Nothing to delete');
@@ -67,11 +59,15 @@ class DuoSetupDeleteControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupDeleteDuoSuccessDeleted()
     {
-        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_DUO);
-        $this->mockMfaDuoSettings('ada', 'valid');
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_DUO);
         $this->delete('/mfa/setup/duo.json?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertResponseContains('The configuration was deleted.');
+        $this->assertSame(0, AccountSettingFactory::count());
+        $this->assertSame(1, MfaOrganizationSettingFactory::count());
+        $this->assertSame(1, MfaAuthenticationTokenFactory::count());
+        $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true])->count());
     }
 }

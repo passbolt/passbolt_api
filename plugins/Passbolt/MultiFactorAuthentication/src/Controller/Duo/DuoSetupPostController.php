@@ -16,10 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupPostController extends MfaSetupController
@@ -27,22 +28,26 @@ class DuoSetupPostController extends MfaSetupController
     /**
      * Handle Duo setup POST request
      *
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID service
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
      * @return void
      */
-    public function post()
-    {
+    public function post(
+        SessionIdentificationServiceInterface $sessionIdentificationService,
+        MfaFormInterface $setupForm
+    ) {
         if ($this->request->is('json')) {
             throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
         }
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_DUO);
         $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_DUO);
 
-        $uac = $this->User->getAccessControl();
+        /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm $setupForm */
         try {
-            $setupForm = new DuoSetupForm($uac, MfaSettings::get($uac));
             $setupForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
-            $setupForm = new DuoSetupForm($this->User->getAccessControl(), $this->mfaSettings);
+            $this->set('setupForm', $setupForm);
+            $this->set('theme', $this->User->theme());
             $this->set('sigRequest', $setupForm->getSigRequest());
             $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
             $this->viewBuilder()
@@ -52,6 +57,6 @@ class DuoSetupPostController extends MfaSetupController
 
             return;
         }
-        $this->_handlePostSuccess(MfaSettings::PROVIDER_DUO);
+        $this->_handlePostSuccess(MfaSettings::PROVIDER_DUO, $sessionIdentificationService);
     }
 }

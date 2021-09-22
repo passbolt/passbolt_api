@@ -16,7 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Yubikey;
 
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAccountSettingFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeySetupDeleteControllerTest extends MfaIntegrationTestCase
@@ -41,7 +45,7 @@ class YubikeySetupDeleteControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupDeleteYubikeySuccessNothingToDelete()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->delete('/mfa/setup/yubikey.json?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertResponseContains('Nothing to delete');
@@ -55,11 +59,15 @@ class YubikeySetupDeleteControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupDeleteYubikeySuccessDeleted()
     {
-        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_YUBIKEY);
-        $this->mockMfaYubikeySettings('ada', 'valid');
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_YUBIKEY);
         $this->delete('/mfa/setup/yubikey.json?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertResponseContains('The configuration was deleted.');
+        $this->assertSame(0, MfaAccountSettingFactory::count());
+        $this->assertSame(1, MfaOrganizationSettingFactory::count());
+        $this->assertSame(1, MfaAuthenticationTokenFactory::count());
+        $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true])->count());
     }
 }

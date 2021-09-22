@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
@@ -41,9 +43,9 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifyGetTotpAlreadyVerified()
     {
-        $this->mockMfaTotpSettings('ada', 'valid');
-        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_TOTP);
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP);
         $this->get('/mfa/verify/totp');
         $this->assertResponseError();
         $this->assertResponseContains('The multi-factor authentication is not required');
@@ -57,8 +59,8 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifyGetTotpOrgSettingsNotEnabled()
     {
-        $this->mockMfaDuoSettings('ada', 'valid');
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
         $this->get('/mfa/verify/totp');
         $this->assertResponseError();
         $this->assertResponseContains('No valid multi-factor authentication settings found for this provider.');
@@ -72,8 +74,8 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifyGetTotpSuccess()
     {
-        $this->mockMfaTotpSettings('ada', 'valid');
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $this->get('/mfa/verify/totp');
         $this->assertResponseOk();
         $this->assertResponseContains('<form');
@@ -89,8 +91,8 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifyGetTotpSuccessJson()
     {
-        $this->mockMfaTotpSettings('ada', 'valid');
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $this->getJson('/mfa/verify/totp.json?api-version=v2');
         $this->assertResponseOk();
         $this->assertResponseContains('Please provide the one-time password.');
@@ -104,8 +106,8 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifyGetTotpErrorJson()
     {
-        $this->mockMfaDuoSettings('ada', 'valid');
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
         $this->getJson('/mfa/verify/totp.json?api-version=v2');
         $this->assertError();
         $this->assertResponseContains('No valid multi-factor authentication settings found for this provider.');

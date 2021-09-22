@@ -130,9 +130,9 @@ class MfaOrgSettings
     /**
      * Get the list of provider names that are enabled for that organization
      *
-     * @return array
+     * @return string[]
      */
-    public function getEnabledProviders()
+    public function getEnabledProviders(): array
     {
         $result = [];
         $providers = MfaSettings::getProviders();
@@ -148,7 +148,7 @@ class MfaOrgSettings
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return count($this->getEnabledProviders()) > 0;
     }

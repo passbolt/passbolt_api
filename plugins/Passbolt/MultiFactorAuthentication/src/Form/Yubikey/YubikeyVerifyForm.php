@@ -121,7 +121,7 @@ class YubikeyVerifyForm extends MfaForm
      * @param string $value hotp
      * @return bool
      */
-    public function isValidHotp(string $value)
+    public function isValidHotp(string $value): bool
     {
         try {
             $secretKey = $this->settings->getOrganizationSettings()->getYubikeyOTPSecretKey();
@@ -129,8 +129,23 @@ class YubikeyVerifyForm extends MfaForm
         } catch (RecordNotFoundException $exception) {
             throw new InternalErrorException($exception->getMessage());
         }
+
+        return $this->checkYubikey($value, $secretKey, $clientId);
+    }
+
+    /**
+     * Vendor validation.
+     * Mock this method in integration test.
+     *
+     * @param string $otp OTP
+     * @param string $secretKey Secret Key
+     * @param string $clientId Client ID
+     * @return bool
+     */
+    public function checkYubikey(string $otp, string $secretKey, string $clientId): bool
+    {
         $request = new Validate($secretKey, $clientId);
-        $response = $request->check($value);
+        $response = $request->check($otp);
 
         return $response->success();
     }

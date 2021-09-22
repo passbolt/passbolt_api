@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
+use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeySetupPostController extends MfaSetupController
@@ -26,15 +27,17 @@ class YubikeySetupPostController extends MfaSetupController
     /**
      * Handle Yubikey setup POST request
      *
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID service
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
      * @return void
      */
-    public function post()
-    {
+    public function post(
+        SessionIdentificationServiceInterface $sessionIdentificationService,
+        MfaFormInterface $setupForm
+    ) {
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);
         $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_YUBIKEY);
 
-        $uac = $this->User->getAccessControl();
-        $setupForm = new YubikeySetupForm($uac, MfaSettings::get($uac));
         try {
             $setupForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
@@ -51,6 +54,6 @@ class YubikeySetupPostController extends MfaSetupController
 
             return;
         }
-        $this->_handlePostSuccess(MfaSettings::PROVIDER_YUBIKEY);
+        $this->_handlePostSuccess(MfaSettings::PROVIDER_YUBIKEY, $sessionIdentificationService);
     }
 }
