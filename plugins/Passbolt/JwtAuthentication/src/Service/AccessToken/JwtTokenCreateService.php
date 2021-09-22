@@ -61,16 +61,15 @@ class JwtTokenCreateService extends JwtAbstractService
 
     /**
      * Create a UNIX time from a time expressed in words.
-     * This should return an integer.
      *
      * @param string|null $expirationPeriod Expiration period in words.
-     * @return int Unix time
+     * @return string Unix time
      */
-    public function createExpiryDate(?string $expirationPeriod = null): int
+    public function createExpiryDate(?string $expirationPeriod = null): string
     {
         $expiryPeriod = $expirationPeriod ?? Configure::read(JwtTokenCreateService::JWT_EXPIRY_CONFIG_KEY);
         try {
-            return (int)(new FrozenTime('+' . $expiryPeriod))->toUnixString();
+            return (new FrozenTime('+' . $expiryPeriod))->toUnixString();
         } catch (\Throwable $e) {
             throw new InternalErrorException(__(
                 'The configuration {0} is not correctly set.',
