@@ -46,7 +46,7 @@ class JwtTokenCreateService extends JwtAbstractService
     public function createToken(string $userId, ?string $expiration = null): string
     {
         if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException(__('The user identifier should be a valid UUID.'));
+            throw new InvalidArgumentException(__('The resource identifier should be a valid UUID.'));
         }
 
         $privateKey = $this->readKeyFileContent();
@@ -61,15 +61,16 @@ class JwtTokenCreateService extends JwtAbstractService
 
     /**
      * Create a UNIX time from a time expressed in words.
+     * This should return an integer.
      *
      * @param string|null $expirationPeriod Expiration period in words.
-     * @return string Unix time
+     * @return int Unix time
      */
-    public function createExpiryDate(?string $expirationPeriod = null): string
+    public function createExpiryDate(?string $expirationPeriod = null): int
     {
         $expiryPeriod = $expirationPeriod ?? Configure::read(JwtTokenCreateService::JWT_EXPIRY_CONFIG_KEY);
         try {
-            return (new FrozenTime('+' . $expiryPeriod))->toUnixString();
+            return (int)(new FrozenTime('+' . $expiryPeriod))->toUnixString();
         } catch (\Throwable $e) {
             throw new InternalErrorException(__(
                 'The configuration {0} is not correctly set.',
