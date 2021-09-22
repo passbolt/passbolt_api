@@ -20,12 +20,12 @@ use App\Middleware\CsrfProtectionMiddleware;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
-use Cake\Event\EventManager;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Passbolt\JwtAuthentication\Event\SetSessionIdentifierOnLoginEventListener;
+use Passbolt\JwtAuthentication\Middleware\JwtAuthDetectionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtCsrfDetectionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtDestroySessionMiddleware;
-use Passbolt\JwtAuthentication\Middleware\JwtDetectionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtRouteFilterMiddleware;
 use Passbolt\JwtAuthentication\Notification\Email\Redactor\JwtAuthenticationEmailRedactorPool;
 
@@ -38,7 +38,7 @@ class Plugin extends BasePlugin
     {
         parent::bootstrap($app);
 
-        $this->initEmails();
+        $this->registerListeners($app);
     }
 
     /**
@@ -47,8 +47,8 @@ class Plugin extends BasePlugin
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue
-            ->insertAfter(RoutingMiddleware::class, JwtDetectionMiddleware::class)
-            ->insertAfter(JwtDetectionMiddleware::class, JwtRouteFilterMiddleware::class)
+            ->insertAfter(RoutingMiddleware::class, JwtAuthDetectionMiddleware::class)
+            ->insertAfter(JwtAuthDetectionMiddleware::class, JwtRouteFilterMiddleware::class)
             ->insertBefore(AuthenticationMiddleware::class, JwtDestroySessionMiddleware::class)
             ->insertBefore(CsrfProtectionMiddleware::class, JwtCsrfDetectionMiddleware::class);
 
@@ -56,12 +56,15 @@ class Plugin extends BasePlugin
     }
 
     /**
-     * Setup the plugin's email pool.
+     * Register JWT related listeners.
      *
+     * @param \Cake\Core\PluginApplicationInterface $app App
      * @return void
      */
-    protected function initEmails(): void
+    public function registerListeners(PluginApplicationInterface $app): void
     {
-        EventManager::instance()->on(new JwtAuthenticationEmailRedactorPool());
+        $app->getEventManager()
+            ->on(new JwtAuthenticationEmailRedactorPool())
+            ->on(new SetSessionIdentifierOnLoginEventListener());
     }
 }

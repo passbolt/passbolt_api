@@ -9,7 +9,7 @@ use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
- * ProfileFactory
+ * AccountSettingFactory
  */
 class AccountSettingFactory extends CakephpBaseFactory
 {

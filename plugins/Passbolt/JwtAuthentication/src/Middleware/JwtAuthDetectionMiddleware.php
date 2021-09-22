@@ -16,14 +16,22 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Middleware;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Middleware\ContainerAwareMiddlewareTrait;
+use Authentication\AuthenticationServiceInterface;
+use Cake\Core\ContainerInterface;
+use Passbolt\JwtAuthentication\Authenticator\JwtSessionIdentificationService;
+use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtRequestDetectionService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class JwtDetectionMiddleware implements MiddlewareInterface
+class JwtAuthDetectionMiddleware implements MiddlewareInterface
 {
+    use ContainerAwareMiddlewareTrait;
+
     /**
      * Informs the request if JWT Authentication is detected.
      *
@@ -35,14 +43,32 @@ class JwtDetectionMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        $usesJWT = (new JwtRequestDetectionService($request))->useJwtAuthentication();
+        $usesJWTAuthentication = (new JwtRequestDetectionService($request))->useJwtAuthentication();
+
+        if ($usesJWTAuthentication) {
+            $this->services($this->getContainer($request));
+        }
 
         /** @var \Cake\Http\ServerRequest $request */
         $request = $request->withAttribute(
             JwtRequestDetectionService::IS_JWT_AUTH_REQUEST,
-            $usesJWT
+            $usesJWTAuthentication
         );
 
         return $handler->handle($request);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container
+            ->extend(AuthenticationServiceInterface::class)
+            ->setConcrete(JwtAuthenticationService::class);
+
+        $container
+            ->extend(SessionIdentificationServiceInterface::class)
+            ->setConcrete(JwtSessionIdentificationService::class);
     }
 }

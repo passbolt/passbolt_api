@@ -39,11 +39,17 @@ class RefreshTokenRenewalService extends RefreshTokenAbstractService
     protected $token;
 
     /**
-     * @param string|null $userId User ID.
-     * @param string|null $token refresh token uuid
+     * @var string $accessToken access token generated along the refresh token
+     */
+    protected $accessToken;
+
+    /**
+     * @param string $userId User ID.
+     * @param string $token refresh token uuid
+     * @param string $accessToken refresh token
      * @throws \InvalidArgumentException if the userId or the token are not valid UUIDs
      */
-    final public function __construct(?string $userId, ?string $token)
+    final public function __construct(string $userId, string $token, string $accessToken)
     {
         parent::__construct();
 
@@ -52,6 +58,7 @@ class RefreshTokenRenewalService extends RefreshTokenAbstractService
 
         $this->userId = $userId;
         $this->token = $token;
+        $this->accessToken = $accessToken;
     }
 
     /**
@@ -67,6 +74,6 @@ class RefreshTokenRenewalService extends RefreshTokenAbstractService
     {
         $this->consumeToken($this->token, $this->userId);
 
-        return (new RefreshTokenCreateService())->createToken($this->userId);
+        return (new RefreshTokenCreateService())->createToken($this->userId, $this->accessToken);
     }
 }

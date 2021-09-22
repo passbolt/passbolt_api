@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\AccountSettings\Model\Table;
 
 use App\Error\Exception\ValidationException;
-use App\Model\Table\UsersTable;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -72,7 +71,6 @@ class AccountSettingsTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
-            'className' => UsersTable::class,
         ]);
     }
 

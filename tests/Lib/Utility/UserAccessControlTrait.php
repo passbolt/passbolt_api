@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Lib\Utility;
 
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 
@@ -32,5 +33,15 @@ trait UserAccessControlTrait
     public function mockUserAccessControl($user, $role = Role::GUEST)
     {
         return new UserAccessControl($role, UuidFactory::uuid('user.id.' . $user), $user . '@passbolt.com');
+    }
+
+    public function mockAdminAccessControl()
+    {
+        return new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'), 'admin@passbolt.com');
+    }
+
+    public function makeUac(User $user)
+    {
+        return new UserAccessControl($user->role->name, $user->id, $user->username);
     }
 }
