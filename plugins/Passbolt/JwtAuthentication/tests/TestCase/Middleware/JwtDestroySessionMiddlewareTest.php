@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Test\TestCase\Middleware;
 
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 
 class JwtDestroySessionMiddlewareTest extends JwtAuthenticationIntegrationTestCase
@@ -30,6 +31,7 @@ class JwtDestroySessionMiddlewareTest extends JwtAuthenticationIntegrationTestCa
         $csrfTokenSessionKey = 'csrfToken';
         $this->session([$fooSessionKey => 'sessionValue',]);
 
+        // In session mode, session is set
         $this->logInAsUser();
         $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseSuccess();
@@ -37,6 +39,8 @@ class JwtDestroySessionMiddlewareTest extends JwtAuthenticationIntegrationTestCa
         $this->assertSessionHasKey($authSessionKey);
         $this->assertSessionHasKey($csrfTokenSessionKey);
 
+        // In JWT, no session, and session related cookies
+        // are expired.
         $this->createJwtTokenAndSetInHeader(UuidFactory::uuid());
         $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseError();
@@ -45,5 +49,10 @@ class JwtDestroySessionMiddlewareTest extends JwtAuthenticationIntegrationTestCa
         $this->assertSessionNotHasKey($authSessionKey);
         $this->assertSessionNotHasKey($csrfTokenSessionKey);
         $this->assertSession(null, '');
+        $this->assertCookieExpired('PHPSESSID');
+        $this->assertCookieExpired('csrfToken');
+        if (Configure::check('Session.cookie')) {
+            $this->assertCookieExpired(Configure::read('Session.cookie'));
+        }
     }
 }
