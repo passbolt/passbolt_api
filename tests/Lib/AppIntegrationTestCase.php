@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Middleware\CsrfProtectionMiddleware;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
@@ -32,10 +34,14 @@ use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ErrorTrait;
 use App\Test\Lib\Utility\JsonRequestTrait;
 use App\Test\Lib\Utility\ObjectTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Utility\UserAction;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
+use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 
 abstract class AppIntegrationTestCase extends TestCase
 {
@@ -43,6 +49,7 @@ abstract class AppIntegrationTestCase extends TestCase
     use AvatarsModelTrait;
     use EntityTrait;
     use ErrorTrait;
+    use FeaturePluginAwareTrait;
     use GpgkeysModelTrait;
     use IntegrationTestTrait;
     use JsonRequestTrait;
@@ -51,6 +58,7 @@ abstract class AppIntegrationTestCase extends TestCase
     use ProfilesModelTrait;
     use ResourcesModelTrait;
     use RolesModelTrait;
+    use ScenarioAwareTrait;
     use SecretsModelTrait;
     use UsersModelTrait;
 
@@ -60,9 +68,13 @@ abstract class AppIntegrationTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->cleanup();
         $this->enableCsrfToken();
         $this->loadRoutes();
         Configure::write('passbolt.plugins.log.enabled', false);
+        Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
+        OpenPGPBackendFactory::reset();
+        UserAction::destroy();
     }
 
     /**
@@ -104,7 +116,7 @@ abstract class AppIntegrationTestCase extends TestCase
      */
     public function logInAs(User $user)
     {
-        $this->session(['Auth' => $user->toArray()]);
+        $this->session(['Auth' => $user]);
     }
 
     /**
@@ -139,5 +151,23 @@ abstract class AppIntegrationTestCase extends TestCase
     public function disableCsrfToken()
     {
         $this->_csrfToken = false;
+    }
+
+    /**
+     * Injects in the DIC an Session Indentification Interface with the provided ID.
+     * In Session, will return the session ID
+     * In JWT, will return the access token
+     *
+     * @param string $sessionId Session Id to mock
+     * @return void
+     */
+    public function mockSessionId(string $sessionId)
+    {
+        $this->mockService(SessionIdentificationServiceInterface::class, function () use ($sessionId) {
+            $stubSessionIdentifier = $this->createMock(SessionIdentificationServiceInterface::class);
+            $stubSessionIdentifier->method('getSessionId')->willReturn($sessionId);
+
+            return $stubSessionIdentifier;
+        });
     }
 }

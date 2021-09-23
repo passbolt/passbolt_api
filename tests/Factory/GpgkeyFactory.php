@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
+use Cake\Core\Configure;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -47,8 +48,21 @@ class GpgkeyFactory extends CakephpBaseFactory
                 'armored_key' => $faker->text(),
                 'uid' => $faker->text(128),
                 'key_id' => $faker->text(16),
-                'fingerprint' => $faker->text(51),
+                'fingerprint' => $faker->shuffle('ABCDE12345ABCDE12345ABCDE12345ABCDE12345'), // 40 character random upper case
             ];
         });
+    }
+
+    /**
+     * Set the armored key and fingerprint as found in config
+     *
+     * @return $this
+     */
+    public function validFingerprint()
+    {
+        return $this->patchData([
+            'armored_key' => file_get_contents(Configure::read('passbolt.gpg.serverKey.private')),
+            'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'),
+        ]);
     }
 }

@@ -27,12 +27,12 @@ $this->Html->script('web_installer/gpg_key_import', ['block' => 'scriptBottom'])
         <div class="grid grid-responsive-12">
             <div class="row">
                 <div class="col6">
-                    <h3><?= __('Copy paste the OpenPGP private key below'); ?></h3>
+                    <h2><?= __('Copy paste the OpenPGP private key below'); ?></h2>
                     <?= $this->Flash->render() ?>
                     <?= $this->Form->control('armored_key', [
                         'type' => 'textarea',
                         'templates' => [
-                            'inputContainer' => '<div class="input {{type}}{{required}} gpgkey">{{content}} <div class="message error hidden" aria-live="polite"></div></div>',
+                            'inputContainer' => '<div class="input {{type}}{{required}} gpgkey">{{content}} <div class="message error-message hidden" aria-live="polite"></div></div>',
                         ],
                     ]); ?>
                     <div class="input file">

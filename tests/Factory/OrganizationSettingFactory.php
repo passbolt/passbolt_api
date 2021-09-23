@@ -33,8 +33,8 @@ class OrganizationSettingFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'created_by' => $faker->uuid,
-                'modified_by' => $faker->uuid,
+                'created_by' => $faker->uuid(),
+                'modified_by' => $faker->uuid(),
             ];
         });
     }
@@ -58,5 +58,14 @@ class OrganizationSettingFactory extends CakephpBaseFactory
     public function locale(string $value)
     {
         return $this->setPropertyValue('locale', $value);
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function value($value)
+    {
+        return $this->patchData(['value' => json_encode($value)]);
     }
 }

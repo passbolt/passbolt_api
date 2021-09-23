@@ -33,7 +33,6 @@ use Cake\Routing\Router;
  *
  * @property \App\Controller\Component\UserComponent $User
  * @property \App\Controller\Component\QueryStringComponent $QueryString
- * @property \Cake\Controller\Component\AuthComponent $Auth
  * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
@@ -54,24 +53,7 @@ class AppController extends Controller
         ]);
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
-
-        /*
-         * Authentication Component
-         */
-        $loginUrl = Router::url([
-            'prefix' => 'Auth',
-            'plugin' => null,
-            'controller' => 'AuthLogin',
-            'action' => 'loginGet',
-            '_method' => 'GET',
-            '_ext' => $this->getRequest()->is('json') ? 'json' : null,
-        ]);
-
-        $this->loadComponent('Authentication.Authentication', [
-            'unauthenticatedRedirect' => $loginUrl,
-            'logoutRedirect' => $loginUrl,
-            'queryParam' => 'redirect',
-        ]);
+        $this->loadAuthenticationComponent();
 
         // Init user action.
         UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
@@ -99,18 +81,18 @@ class AppController extends Controller
      * Success renders set the variables used to render the json view
      * All passbolt response contains an header (metadata like status) an a body (data)
      *
-     * @param string $message message in the header section
-     * @param mixed  $body data for the body section
+     * @param string|null $message message in the header section
+     * @param mixed $body data for the body section
      * @return void
      */
-    protected function success($message = null, $body = null)
+    protected function success(?string $message = null, $body = null): void
     {
         $header = [
             'id' => UserAction::getInstance()->getUserActionId(),
             'status' => 'success',
             'servertime' => time(),
             'action' => UserAction::getInstance()->getActionId(),
-            'message' => $message,
+            'message' => $message ?? 'The operation was successful.',
             'url' => Router::url(),
             'code' => 200,
         ];
@@ -123,12 +105,12 @@ class AppController extends Controller
     /**
      * Render an error response
      *
-     * @param string $message optional message
-     * @param mixed  $body optional json reponse body
-     * @param int    $errorCode optional http error code
+     * @param string|null $message optional message
+     * @param mixed $body optional json reponse body
+     * @param int|null $errorCode optional http error code
      * @return void
      */
-    protected function error($message = null, $body = null, $errorCode = 200)
+    protected function error(?string $message = null, $body = null, ?int $errorCode = 200): void
     {
         if ($errorCode !== 200) {
             $this->response = $this->response->withStatus($errorCode);
@@ -139,7 +121,7 @@ class AppController extends Controller
             'status' => 'error',
             'servertime' => time(),
             'action' => UserAction::getInstance()->getActionId(),
-            'message' => $message,
+            'message' => $message ?? 'The operation failed.',
             'url' => Router::url(),
             'code' => $errorCode,
         ];
@@ -199,5 +181,27 @@ class AppController extends Controller
 
         // Return what is given
         return $apiVersion;
+    }
+
+    /**
+     * Loads the authentication component and sets up the
+     * Authentication logout redirection.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    private function loadAuthenticationComponent(): void
+    {
+        $loginUrl = Router::url([
+            'prefix' => 'Auth',
+            'plugin' => null,
+            'controller' => 'AuthLogin',
+            'action' => 'loginGet',
+            '_method' => 'GET',
+        ]);
+
+        $this->loadComponent('Authentication.Authentication', [
+            'logoutRedirect' => $loginUrl,
+        ]);
     }
 }

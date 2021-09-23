@@ -25,6 +25,9 @@ use Faker\Generator;
 
 /**
  * AuthenticationTokenFactory
+ *
+ * @method \App\Model\Entity\AuthenticationToken persist()
+ * @method \App\Model\Entity\AuthenticationToken getEntity()
  */
 class AuthenticationTokenFactory extends CakephpBaseFactory
 {
@@ -48,11 +51,11 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'token' => $faker->uuid,
-                'user_id' => $faker->uuid,
+                'token' => $faker->uuid(),
+                'user_id' => $faker->uuid(),
                 'type' => AuthenticationToken::TYPE_LOGIN,
                 'data' => null,
-                'active' => $faker->boolean,
+                'active' => $faker->boolean(),
                 'created' => Chronos::now(),
                 'modified' => Chronos::now(),
             ];
@@ -95,11 +98,13 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param string $data token type
+     * @param array $data token type
      * @return $this
      */
-    public function data(string $data)
+    public function data(array $data)
     {
+        $data = empty($data) ? null : json_encode($data);
+
         return $this->patchData(compact('data'));
     }
 
@@ -117,5 +122,14 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
     public function active()
     {
         return $this->patchData(['active' => true]);
+    }
+
+    /**
+     * @param string $userId user ID
+     * @return $this
+     */
+    public function userId(string $userId)
+    {
+        return $this->patchData(['user_id' => $userId]);
     }
 }

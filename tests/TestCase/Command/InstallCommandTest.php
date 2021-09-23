@@ -19,16 +19,17 @@ namespace App\Test\TestCase\Command;
 use App\Command\InstallCommand;
 use App\Model\Entity\Role;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
 use Faker\Factory;
 
 class InstallCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
+    use FeaturePluginAwareTrait;
     use PassboltCommandTestTrait;
 
     /**
@@ -42,14 +43,13 @@ class InstallCommandTest extends TestCase
         $this->useCommandRunner();
         InstallCommand::$isUserRoot = false;
         $this->emptyDirectory(CACHE . 'database' . DS);
+        $this->enableFeaturePlugin('JwtAuthentication');
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
-
-        SnifferRegistry::get('test')->restart();
-        SnifferRegistry::get('test')->markAllTablesAsDirty();
+        $this->disableFeaturePlugin('JwtAuthentication');
     }
 
     /**
@@ -148,9 +148,9 @@ class InstallCommandTest extends TestCase
     public function testInstallCommandNormalForceWithAdminData()
     {
         $faker = Factory::create();
-        $userName = $faker->email;
-        $firstName = $faker->firstNameFemale;
-        $lastName = $faker->lastName;
+        $userName = $faker->email();
+        $firstName = $faker->firstNameFemale();
+        $lastName = $faker->lastName();
         $cmd = 'passbolt install --force --backup -q ';
         $cmd .= ' --admin-first-name ' . $firstName;
         $cmd .= ' --admin-last-name ' . $lastName;

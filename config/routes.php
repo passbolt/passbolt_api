@@ -50,6 +50,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 Router::scope('/auth', function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
+    // Session based
     $routes->connect('/login', ['prefix' => 'Auth', 'controller' => 'AuthLogin', 'action' => 'loginGet'])
         ->setMethods(['GET']);
 
@@ -65,8 +66,8 @@ Router::scope('/auth', function (RouteBuilder $routes) {
     $routes->connect('/is-authenticated', ['prefix' => 'Auth', 'controller' => 'AuthIsAuthenticated', 'action' => 'isAuthenticated'])
         ->setMethods(['GET']);
 
-    $routes->connect('/logout', ['prefix' => 'Auth', 'controller' => 'AuthLogout', 'action' => 'logoutGet'])
-        ->setMethods(['GET']);
+    $routes->connect('/logout', ['prefix' => 'Auth', 'controller' => 'AuthLogout', 'action' => 'logout'])
+        ->setMethods(['GET', 'POST']);
 });
 
 /**

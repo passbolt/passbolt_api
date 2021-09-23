@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use App\Authenticator\GpgAuthenticator;
+use Passbolt\JwtAuthentication\Service\Middleware\JwtRequestDetectionService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -38,6 +39,10 @@ class GpgAuthHeadersMiddleware implements MiddlewareInterface
         /** @var \Cake\Http\Response $response */
         $response = $handler->handle($request);
         $allowedHeaders = GpgAuthenticator::HTTP_HEADERS_WHITELIST;
+
+        if ($request->getAttribute(JwtRequestDetectionService::IS_JWT_AUTH_REQUEST)) {
+            return $response;
+        }
 
         $response = $response
             ->withHeader('X-GPGAuth-Version', '1.3.0')

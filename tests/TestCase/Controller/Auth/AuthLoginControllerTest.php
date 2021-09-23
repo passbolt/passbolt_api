@@ -22,6 +22,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 class AuthLoginControllerTest extends AppIntegrationTestCase
 {
@@ -32,13 +33,27 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     public $keyid;
 
     /**
-     * @var OpenPGPBackend $gpg
+     * @var \App\Utility\OpenPGP\OpenPGPBackend $gpg
      */
     public $gpg;
 
     // Keys ids used in this test. Set in _gpgSetup.
     protected $adaKeyId;
     protected $serverKeyId;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $jwtKeyPairService = new JwtKeyPairService();
+        $jwtKeyPairService->createKeyPair();
+        $this->enableFeaturePlugin('JwtAuthentication');
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->disableFeaturePlugin('JwtAuthentication');
+    }
 
     /**
      * Test getting login started with deleted account
@@ -62,6 +77,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginControllerLoginServerKeyFingerprintMissing()
     {
+        // Disable this plugin in this test as long as the cookie pepper is the fingerprint.
+        $this->disableFeaturePlugin('JwtAuthentication');
+
         Configure::delete('passbolt.gpg.serverKey.fingerprint');
         $this->postJson('/auth/login.json');
         $this->assertResponseCode(500);
@@ -294,7 +312,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->assertTrue($isValid, 'There should a valid auth token');
 
         // Send it back!
-        $this->post('/auth/login.json', [
+        $this->postJson('/auth/login.json', [
             'data' => [
                 'gpg_auth' => [
                     'keyid' => $this->adaKeyId, // Ada's key

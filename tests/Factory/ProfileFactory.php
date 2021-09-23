@@ -45,9 +45,9 @@ class ProfileFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'first_name' => $faker->firstNameFemale,
-                'last_name' => $faker->lastName,
-                'user_id' => $faker->uuid,
+                'first_name' => $faker->firstNameFemale(),
+                'last_name' => $faker->lastName(),
+                'user_id' => $faker->uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];

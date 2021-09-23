@@ -86,17 +86,26 @@ class AvatarsCacheServiceTest extends TestCase
     {
         $id = UuidFactory::uuid();
         $avatar = new Avatar(compact('id', 'data'));
+        $mediumFileName = $this->cachedFileLocation . $id . DS . 'medium.jpg';
+        $smallFileName = $this->cachedFileLocation . $id . DS . 'small.jpg';
 
         $this->avatarsCacheService->storeInCache($avatar);
 
-        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'medium.jpg');
-        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'small.jpg');
+        $this->assertFileExists($mediumFileName);
+        $this->assertFileExists($smallFileName);
 
         // Perform the action twice to ensure that no overwriting issues occur
         $this->avatarsCacheService->storeInCache($avatar);
 
-        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'medium.jpg');
-        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'small.jpg');
+        $this->assertFileExists($mediumFileName);
+        $this->assertFileExists($smallFileName);
+
+        // Ensure that both files are not executable
+        $getRights = function (string $filepath) {
+            return substr(decoct(fileperms($filepath)), -4);
+        };
+        $this->assertSame('0644', $getRights($mediumFileName));
+        $this->assertSame('0644', $getRights($smallFileName));
 
         $this->assertSame(
             file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png'),

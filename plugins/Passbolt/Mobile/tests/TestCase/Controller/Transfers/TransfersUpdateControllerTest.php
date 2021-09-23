@@ -30,16 +30,28 @@ use Passbolt\Mobile\Test\Lib\Model\TransfersModelTrait;
 
 class TransfersUpdateControllerTest extends AppIntegrationTestCase
 {
-    use TransfersModelTrait;
     use AuthenticationTokenModelTrait;
-    use UsersModelTrait;
-    use ProfilesModelTrait;
     use AvatarsModelTrait;
+    use ProfilesModelTrait;
+    use TransfersModelTrait;
+    use UsersModelTrait;
 
     public $fixtures = [
         'app.Base/Users',
         'app.Base/Profiles',
     ];
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin('mobile');
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->disableFeaturePlugin('mobile');
+    }
 
     public function testMobileTransfersUpdateController_Success()
     {

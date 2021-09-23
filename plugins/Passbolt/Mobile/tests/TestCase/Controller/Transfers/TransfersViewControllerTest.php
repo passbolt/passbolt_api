@@ -25,15 +25,27 @@ use Passbolt\Mobile\Test\Lib\Model\TransfersModelTrait;
 
 class TransfersViewControllerTest extends AppIntegrationTestCase
 {
+    use AvatarsModelTrait;
+    use ProfilesModelTrait;
     use TransfersModelTrait;
     use UsersModelTrait;
-    use ProfilesModelTrait;
-    use AvatarsModelTrait;
 
     public $fixtures = [
         'app.Base/Users',
         'app.Base/Profiles',
     ];
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin('mobile');
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->disableFeaturePlugin('mobile');
+    }
 
     public function testMobileTransfersViewController_Success()
     {

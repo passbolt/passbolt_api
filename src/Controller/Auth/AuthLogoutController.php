@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller\Auth;
 
 use App\Controller\AppController;
+use Cake\Http\Response;
 
 class AuthLogoutController extends AppController
 {
@@ -25,17 +26,17 @@ class AuthLogoutController extends AppController
      */
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->Authentication->allowUnauthenticated(['logoutGet']);
+        $this->Authentication->allowUnauthenticated(['logout']);
 
         return parent::beforeFilter($event);
     }
 
     /**
-     * User Index action
+     * User logout action
      *
      * @return \Cake\Http\Response|null
      */
-    public function logoutGet()
+    public function logout(): ?Response
     {
         return $this->redirect($this->Authentication->logout());
     }

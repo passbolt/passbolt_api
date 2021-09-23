@@ -19,7 +19,7 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                 <div class="col7">
                     <div class="row">
                         <div class="col12">
-                            <h3><?= __('Database configuration'); ?></h3>
+                            <h2><?= __('Database configuration'); ?></h2>
                             <?= $this->Flash->render() ?>
                             <?php
                             if (isset($stepInfo['defaultConfig'])) :
@@ -32,9 +32,9 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                                 <?php
                             endif;
                             ?>
-                            <div class="singleline connection_info protocol_host_port clearfix required">
+                            <div class="clearfix required">
                                 <label><?php echo __('Database connection url'); ?></label>
-                                <div class="input text field_protocol_host">
+                                <div class="input text singleline connection_info">
                                     <?= $this->Form->control('type', [
                                         'type' => 'select',
                                         'options' => ['mysql' => 'mysql://'],
@@ -54,19 +54,19 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                                         'label' => false,
                                         'class' => 'required fluid',
                                     ]); ?>
-                                </div>
-                                <?= $this->Form->control('port', [
-                                    'type' => 'number',
-                                    'templates' => [
-                                        'inputContainer' => '<div class="input text port">{{content}}</div>',
-                                    ],
-                                    'required' => 'required',
-                                    'placeholder' => '3306',
-                                    'label' => false,
-                                    'class' => 'required fluid',
-                                    'default' => '3306',
+                                    <?= $this->Form->control('port', [
+                                        'type' => 'number',
+                                        'templates' => [
+                                            'inputContainer' => '<div class="input text port">{{content}}</div>',
+                                        ],
+                                        'required' => 'required',
+                                        'placeholder' => '3306',
+                                        'label' => false,
+                                        'class' => 'required fluid',
+                                        'default' => '3306',
 
-                                ]); ?>
+                                    ]); ?>
+                                </div>
                             </div>
 
                             <div class="singleline clearfix">
@@ -103,9 +103,7 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                     </div>
                 </div>
                 <div class="col5 last">
-                    <h3>Existing installation?</h3>
-                    <p>If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data.</p>
-                    <p>As a precaution, do not forget to backup your database before you continue.</p>
+                    <?= $this->element('sidebar/existing_installation') ?>
                 </div>
             </div>
             <div class="row last">

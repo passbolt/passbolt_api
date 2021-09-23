@@ -27,7 +27,7 @@ use Cake\ORM\Entity;
  * @property string $property
  * @property string $value
  *
- * @property \Passbolt\OrganizationSettings\Model\Entity\User $user
+ * @property \App\Model\Entity\User $user
  * @property string $property_id
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified

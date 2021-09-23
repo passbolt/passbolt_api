@@ -46,4 +46,28 @@ class DirectoryUtility
 
         return rmdir($directoryName);
     }
+
+    /**
+     * The is_executable() PHP method is not reliable to check permissions,
+     * as it will return true on non executable files. The present method
+     * checks bitwise the permission of a given file.
+     *
+     * @param string $path File or directory path
+     * @return bool
+     * @throws \RuntimeException if the provided file/directory does not exist
+     */
+    public static function isExecutable(string $path): bool
+    {
+        if (!file_exists($path)) {
+            throw new \RuntimeException("The file $path could not be found.");
+        }
+        $code = str_split(decoct(fileperms($path) & 0777));
+        foreach ($code as $perm) {
+            if ($perm % 2 !== 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

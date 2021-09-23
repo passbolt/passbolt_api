@@ -29,24 +29,27 @@ use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
+    use JwtAuthTestTrait;
     use ResourcesModelTrait;
 
     /**
-     * @var ResourcesTable
+     * @var \App\Model\Table\ResourcesTable
      */
     public $Resources;
 
     /**
-     * @var SecretsTable
+     * @var \App\Model\Table\SecretsTable
      */
     public $Secrets;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     public $Permissions;
 
@@ -57,12 +60,15 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Resources->getEventManager()->setEventList(new EventList());
         ResourceTypeFactory::make()->default()->persist();
+        (new JwtKeyPairService())->createKeyPair();
+        $this->enableFeaturePlugin('JwtAuthentication');
         parent::setUp();
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
+        $this->disableFeaturePlugin('JwtAuthentication');
         unset($this->Resources);
         unset($this->Permissions);
         unset($this->Resources);
@@ -72,6 +78,71 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
     {
         $user = UserFactory::make()->user()->persist();
         $this->logInAs($user);
+
+        $data = $this->getDummyResourcesPostData([
+            'name' => '新的專用資源名稱',
+            'username' => 'username@domain.com',
+            'uri' => 'https://www.域.com',
+            'description' => '新的資源描述',
+        ]);
+
+        $this->postJson('/resources.json?api-version=2', $data);
+        $this->assertSuccess();
+
+        // Check the server response.
+        $resource = $this->_responseJsonBody;
+
+        // Check the resource attributes.
+        $this->assertResourceAttributes($resource);
+        $this->assertEquals($data['name'], $resource->name);
+        $this->assertEquals($data['username'], $resource->username);
+        $this->assertEquals($data['uri'], $resource->uri);
+        $this->assertEquals($data['description'], $resource->description);
+        $this->assertEquals($user->id, $resource->created_by);
+        $this->assertEquals($user->id, $resource->modified_by);
+
+        // Check the creator attribute
+        $this->assertNotNull($resource->creator);
+        $this->assertUserAttributes($resource->creator);
+        $this->assertEquals($user->id, $resource->creator->id);
+
+        // Check the modifier attribute
+        $this->assertNotNull($resource->modifier);
+        $this->assertUserAttributes($resource->modifier);
+        $this->assertEquals($user->id, $resource->modifier->id);
+
+        // Check the permission attribute
+        $this->assertNotNull($resource->permission);
+        $this->assertPermissionAttributes($resource->permission);
+        $this->assertEquals('Resource', $resource->permission->aco);
+        $this->assertEquals($resource->id, $resource->permission->aco_foreign_key);
+        $this->assertEquals('User', $resource->permission->aro);
+        $this->assertEquals($user->id, $resource->permission->aro_foreign_key);
+        $this->assertEquals(Permission::OWNER, $resource->permission->type);
+
+        // Check the secret attribute
+        $this->assertNotEmpty($resource->secrets);
+        $this->assertSecretAttributes($resource->secrets[0]);
+        $this->assertCount(1, $resource->secrets);
+        $this->assertEquals($user->id, $resource->secrets[0]->user_id);
+        $this->assertEquals($resource->id, $resource->secrets[0]->resource_id);
+        $this->assertEquals($data['secrets'][0]['data'], $resource->secrets[0]->data);
+
+        // Ensure that an email was sent
+        $this->assertEmailIsInQueue([
+            'email' => $user->username,
+            'subject' => 'You added the password ' . $data['name'],
+            'template' => ResourceCreateEmailRedactor::TEMPLATE,
+        ]);
+        $this->assertEmailQueueCount(1);
+
+        $this->assertEventFired(ResourcesAddService::ADD_SUCCESS_EVENT_NAME, $this->Resources->getEventManager());
+    }
+
+    public function testResourcesAddSuccessWithJWT()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $this->createJwtTokenAndSetInHeader($user->id);
 
         $data = $this->getDummyResourcesPostData([
             'name' => '新的專用資源名稱',

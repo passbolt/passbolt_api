@@ -15,7 +15,4 @@
  */
 use Cake\Core\Configure;
 
-$mobilePluginEnabled = Configure::read('passbolt.plugins.mobile.enabled');
-if (!isset($mobilePluginEnabled) || $mobilePluginEnabled === true) {
-    Configure::load('Passbolt/Mobile.config', 'default', true);
-}
+Configure::load('Passbolt/Mobile.config');

@@ -55,7 +55,7 @@ class UserFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'username' => $faker->userName . '@passbolt.com',
+                'username' => $faker->userName() . '@passbolt.com',
                 'active' => true,
                 'deleted' => false,
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
@@ -149,9 +149,7 @@ class UserFactory extends CakephpBaseFactory
      */
     public function nonPersistedUAC(): UserAccessControl
     {
-        $user = $this->getEntity();
-
-        return $this->makeUserAccessControl($user);
+        return $this->makeUserAccessControl($this->getEntity());
     }
 
     /**
@@ -161,13 +159,20 @@ class UserFactory extends CakephpBaseFactory
      */
     public function persistedUAC(): UserAccessControl
     {
-        $user = $this->persist();
-
-        return $this->makeUserAccessControl($user);
+        return $this->makeUserAccessControl($this->persist());
     }
 
+    /**
+     * @param User $user User
+     * @return UserAccessControl UAC
+     */
     private function makeUserAccessControl(User $user): UserAccessControl
     {
         return new UserAccessControl($user->role->name, $user->get('id'), $user->get('username'));
+    }
+
+    public function withAuthenticationTokens(AuthenticationTokenFactory $factory)
+    {
+        return $this->with('AuthenticationTokens', $factory);
     }
 }

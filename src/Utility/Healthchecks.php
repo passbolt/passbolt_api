@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use App\Model\Entity\Role;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\Healthchecks\DatabaseHealthchecks;
 use App\Utility\Healthchecks\GpgHealthchecks;
 use App\Utility\Healthchecks\SslHealthchecks;
@@ -25,9 +27,13 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 class Healthchecks
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * Run all healthchecks
      *
@@ -227,6 +233,30 @@ class Healthchecks
     }
 
     /**
+     * Returns JWT related checks:
+     *  - is the JWT Authentication enabled
+     *  - if true, are the JWT key files correctly set and valid.
+     *
+     * @param array|null $checks List of checks
+     * @return array
+     */
+    public static function jwt(?array $checks = []): array
+    {
+        try {
+            (new JwtKeyPairService())->validateKeyPair();
+            $keyPairIsValid = true;
+        } catch (\Throwable $e) {
+            $keyPairIsValid = false;
+        }
+
+        $checks['jwt']['isEnabled'] = (Configure::read('passbolt.plugins.jwtAuthentication.enabled') === true);
+        $checks['jwt']['keyPairValid'] = $keyPairIsValid;
+        $checks['jwt']['jwtWritable'] = is_writable(JwtAbstractService::JWT_CONFIG_DIR);
+
+        return $checks;
+    }
+
+    /**
      * Gpg checks
      *
      * @param array|null $checks List of checks
@@ -259,6 +289,9 @@ class Healthchecks
      */
     private static function _checkRecursiveDirectoryWritable(string $path): bool
     {
+        clearstatcache();
+
+        /** @var \SplFileInfo[] $iterator */
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path),
             \RecursiveIteratorIterator::SELF_FIRST
@@ -267,7 +300,11 @@ class Healthchecks
             if (in_array($fileInfo->getFilename(), ['.', '..', 'empty'])) {
                 continue;
             }
-            if (!is_writable($name)) {
+            // No file should be executable in tmp
+            if ($fileInfo->isFile() && DirectoryUtility::isExecutable($name)) {
+                return false;
+            }
+            if (!$fileInfo->isWritable()) {
                 return false;
             }
         }

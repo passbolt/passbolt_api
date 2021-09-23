@@ -15,7 +15,7 @@ use Cake\Routing\Router;
                 <div class="col7">
                     <div class="row">
                         <div class="col12">
-                            <h3><?= __('Options'); ?></h3>
+                            <h2><?= __('Options'); ?></h2>
                             <?= $this->Flash->render() ?>
                             <?php
                                 echo $this->Form->control('full_base_url', [
@@ -25,7 +25,7 @@ use Cake\Routing\Router;
                                     'label' => __('Full base url'),
                                     'class' => 'required fluid',
                                     'templates' => [
-                                        'inputContainer' => '<div class="input text required">{{content}}<div class="message">' . __('This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash.') . '</div></div>',
+                                        'inputContainer' => '<div class="input text required">{{content}}<div class="help-message">' . __('This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash.') . '</div></div>',
                                     ],
                                 ]);
                                 ?>
@@ -41,7 +41,7 @@ use Cake\Routing\Router;
                                         ]
                                     );
                                     ?>
-                                <div class="message"><?= __('Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea.') ?></div>
+                                <div class="help-message"><?= __('Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea.') ?></div>
                             </div>
                             <div class="input text required">
                                 <?php
@@ -52,7 +52,7 @@ use Cake\Routing\Router;
                                         'class' => 'required fluid',
                                     ]);
                                     ?>
-                                <div class="message"><?= __('Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so.') ?></div>
+                                <div class="help-message"><?= __('Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so.') ?></div>
                             </div>
                         </div>
                     </div>
