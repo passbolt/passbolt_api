@@ -17,8 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\Middleware;
 
 use Authentication\AuthenticationService;
+use Authentication\Authenticator\ResultInterface;
+use Cake\Http\ServerRequest;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
+use Psr\Http\Message\ServerRequestInterface;
 
 class JwtAuthenticationService extends AuthenticationService
 {
@@ -43,17 +46,31 @@ class JwtAuthenticationService extends AuthenticationService
             'algorithms' => [JwtTokenCreateService::JWT_ALG],
             'returnPayload' => false,
         ]);
-
-        $this->loadGpgAuthenticator();
     }
 
     /**
-     * Loads the JWT Specific Authenticator
+     * @inheritDoc
+     */
+    public function authenticate(ServerRequestInterface $request): ResultInterface
+    {
+        /** @var \Cake\Http\ServerRequest $request */
+        $this->loadGpgJwtAuthenticatorOnLoginEndpoint($request);
+
+        return parent::authenticate($request);
+    }
+
+    /**
+     * The GpgJwt Authentication is required only at the login end point.
      *
+     * @param \Cake\Http\ServerRequest $request Server request
      * @return void
      */
-    protected function loadGpgAuthenticator(): void
+    private function loadGpgJwtAuthenticatorOnLoginEndpoint(ServerRequest $request): void
     {
-        $this->loadAuthenticator('Passbolt/JwtAuthentication.GpgJwt');
+        $path = str_replace('.json', '', $request->getUri()->getPath());
+        $isLoginPath = ($path === '/auth/jwt/login');
+        if ($isLoginPath && $request->is('POST')) {
+            $this->loadAuthenticator('Passbolt/JwtAuthentication.GpgJwt');
+        }
     }
 }
