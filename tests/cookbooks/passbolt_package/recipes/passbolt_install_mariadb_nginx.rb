@@ -4,24 +4,19 @@
 #
 # Copyright:: 2020, The Authors, All Rights Reserved.
 #
-database_engine = ''
+
+# Defaul database engine
+database_engine = 'mysql'
 apt_update
 
 package 'mariadb-server' do
-  package_name [ 'debconf-utils', 'curl', 'mariadb-server', 'nginx' ]
+  package_name [ 'debconf-utils', 'curl', 'default-mysql-server', 'nginx' ]
   action       :install
 end
 
-case node['platform']
-when 'debian'
-  if node['platform_version'] =='10'
-    database_engine = 'mysql'
-  elsif node['platform_version'] =='11'
-    database_engine = 'mariadb'
-  end
-
-when 'ubuntu'
-  database_engine = 'mysql'
+# Use different database service depending on the OS
+if (node['platform'] == 'debian' && node['platform_version'] =='11')
+  database_engine = 'mariadb'
 end
 
 execute "Start mysql" do
