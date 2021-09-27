@@ -381,6 +381,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         foreach ($folder->children_resources as $childResource) {
             $this->assertResourceAttributes($childResource);
             $this->assertObjectHasFolderParentIdAttribute($childResource, $folderA->id);
+            $this->assertObjectNotHasAttribute('_joinData', $childResource);
         }
         $childrenResourceIds = Hash::extract($folder->children_resources, '{n}.id');
         $this->assertContains($resource1->id, $childrenResourceIds);
@@ -535,30 +536,5 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $user = $permission->user;
         $this->assertObjectHasAttribute('profile', $user);
         $this->assertProfileAttributes($user->profile);
-    }
-
-    public function testFoldersIndexShouldNotReturnJoinData()
-    {
-        $userId = UuidFactory::uuid('user.id.ada');
-
-        // Insert fixtures.
-        // Ada has access to folder A, R1 and R2 as a OWNER
-        // Ada see resources R1 and R2 in folder A
-        // A (Ada:O)
-        // |- R1 (Ada:O)
-        // |- R2 (Ada:O)
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $this->addResourceFor(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $this->authenticateAs('ada');
-        $this->getJson('/folders.json?contain[children_resources]=1');
-        $this->assertSuccess();
-
-        /** @var Folder[] $result */
-        $result = $this->_responseJsonBody;
-
-        foreach ($result[0]->children_resources as $childResource) {
-            $this->assertObjectNotHasAttribute('_joinData', $childResource);
-        }
     }
 }
