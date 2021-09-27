@@ -49,10 +49,8 @@ class JwtDestroySessionMiddlewareTest extends JwtAuthenticationIntegrationTestCa
         $this->assertSessionNotHasKey($authSessionKey);
         $this->assertSessionNotHasKey($csrfTokenSessionKey);
         $this->assertSession(null, '');
-        $this->assertCookieExpired('PHPSESSID');
         $this->assertCookieExpired('csrfToken');
-        if (Configure::check('Session.cookie')) {
-            $this->assertCookieExpired(Configure::read('Session.cookie'));
-        }
+        $sessionCookie = Configure::read('Session.cookie', session_name());
+        $this->assertCookieExpired($sessionCookie);
     }
 }

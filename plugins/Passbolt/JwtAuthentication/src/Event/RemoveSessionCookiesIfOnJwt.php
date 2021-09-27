@@ -51,8 +51,7 @@ class RemoveSessionCookiesIfOnJwt implements EventListenerInterface
         $request = $controller->getRequest();
         $service = new JwtRequestDetectionService($request);
         if ($service->useJwtAuthentication()) {
-            $response = $response->withExpiredCookie(new Cookie('PHPSESSID'));
-            $sessionCookie = Configure::read('Session.cookie');
+            $sessionCookie = Configure::read('Session.cookie', session_name());
             if (is_string($sessionCookie)) {
                 $response = $response->withExpiredCookie(new Cookie($sessionCookie));
             }
