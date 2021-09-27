@@ -96,10 +96,16 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
 
         $jwt = $this->_responseJsonBody->access_token;
 
+        $newRefreshToken = AuthenticationTokenFactory::find()->where([
+            'active' => true,
+            'user_id' => $user->id,
+            'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
+        ])->firstOrFail()->get('token');
+        $this->assertCookie($newRefreshToken, 'refresh_token');
         // Get a fresh request
         $this->cleanup();
         $this->setJwtTokenInHeader($jwt);
-        // Check that the delivered JWT is valid.
+        // Check that the delivered access token is valid.
         $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseOk();
     }
