@@ -139,6 +139,6 @@ class RolesTable extends Table
             return null;
         }
 
-        return $role->id;
+        return $role->get('id');
     }
 }

@@ -18,22 +18,25 @@ namespace Passbolt\Log\Test\TestCase\Controller\Share;
 
 use App\Model\Entity\Permission;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 use Passbolt\Log\Test\Lib\Traits\PermissionsHistoryTrait;
 use Passbolt\Log\Test\Lib\Traits\SecretsHistoryTrait;
 
+/**
+ * Class ShareControllerLogTest
+ *
+ * @property \Passbolt\Log\Model\Table\PermissionsHistoryTable $PermissionsHistory
+ * @property \App\Model\Table\SecretsTable $Secrets
+ * @property \Passbolt\Log\Model\Table\SecretsHistoryTable $SecretsHistory
+ */
 class ShareControllerLogTest extends LogIntegrationTestCase
 {
+    use ModelAwareTrait;
     use PermissionsHistoryTrait;
     use SecretsHistoryTrait;
-
-    /**
-     * @var PermissionsHistoryTable
-     */
-    protected $PermissionHistory;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles',
@@ -44,9 +47,9 @@ class ShareControllerLogTest extends LogIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
-        $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
-        $this->SecretsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretsHistory');
+        $this->loadModel('Passbolt/Log.PermissionsHistory');
+        $this->loadModel('Secrets');
+        $this->loadModel('Passbolt/Log.SecretsHistory');
     }
 
     public function testLogShareAddSuccess()
@@ -71,6 +74,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $data);
         $this->assertSuccess();
+        /** @var \App\Model\Entity\Secret $secret */
         $secret = $this->Secrets->findByResourceIdAndUserId($resourceId, $userEId)->first();
 
         // Assert action log is correct.

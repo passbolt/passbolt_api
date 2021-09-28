@@ -22,7 +22,7 @@ interface ExceptionWithErrorsDetailInterface
     /**
      * Get the validation errors
      *
-     * @return array
+     * @return array|null
      */
-    public function getErrors();
+    public function getErrors(): ?array;
 }

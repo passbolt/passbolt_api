@@ -62,15 +62,16 @@ class SenderCommandTest extends TestCase
      */
     public function testSenderCommandSender()
     {
+        /** @var \Cake\Datasource\EntityInterface $email */
         $email = EmailQueueFactory::make()->persist();
 
         $this->exec('passbolt sender');
 
         $this->assertExitSuccess();
-        $this->assertMailSentFrom($email->from_email);
-        $this->assertMailSentTo($email->email);
-        $this->assertMailContains('Sending email from: ' . $email->from_email);
-        $this->assertMailContains('Sending email to: ' . $email->email);
+        $this->assertMailSentFrom($email->get('from_email'));
+        $this->assertMailSentTo($email->get('email'));
+        $this->assertMailContains('Sending email from: ' . $email->get('from_email'));
+        $this->assertMailContains('Sending email to: ' . $email->get('email'));
     }
 
     /**

@@ -387,7 +387,7 @@ class AuthenticationTokensTable extends Table
      */
     public function findExpiredByType(Query $query, array $options): Query
     {
-        if (!isset($options['type']) || empty($options)) {
+        if (count($options) === 0 || !isset($options['type'])) {
             $msg = 'AuthenticationTokensTable::findExpiredByType error, a token type is required';
             throw new \InvalidArgumentException($msg);
         }

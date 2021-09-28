@@ -52,7 +52,7 @@ class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
 
     /**
      * @param string|null $recipient The email's recipient
-     * @param bool|null $expectException
+     * @param string $expectException
      * @throws \Exception
      * @dataProvider dataForTestEmailLocaleServiceGetLocale
      */

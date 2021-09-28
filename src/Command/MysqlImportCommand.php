@@ -92,7 +92,7 @@ class MysqlImportCommand extends PassboltCommand
     protected function getDir(Arguments $args, ConsoleIo $io): ?string
     {
         $dir = $args->getOption('dir');
-        if (isset($dir)) {
+        if (isset($dir) && is_string($dir)) {
             if (!file_exists($dir)) {
                 $this->error('Error: the directory does not exist' . $dir, $io);
 
@@ -123,7 +123,7 @@ class MysqlImportCommand extends PassboltCommand
     protected function getFile(string $dir, Arguments $args, ConsoleIo $io): ?string
     {
         $file = $args->getOption('file');
-        if (isset($file)) {
+        if (isset($file) && is_string($file)) {
             if (!file_exists($dir . $file)) {
                 $this->error('Error: could not find the SQL file ' . $file, $io);
 

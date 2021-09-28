@@ -69,7 +69,7 @@ class WebInstallerController extends Controller
      * Do not let the user proceed if the configuration is not found in the session.
      * Instead redirect him to the first step.
      *
-     * @param \Cake\Event\Event $event event
+     * @param \Cake\Event\EventInterface $event event
      * @return \Cake\Http\Response|null
      */
     public function beforeFilter(\Cake\Event\EventInterface $event): ?Response
@@ -91,7 +91,7 @@ class WebInstallerController extends Controller
     /**
      * Before render.
      *
-     * @param \Cake\Event\Event $event event
+     * @param \Cake\Event\EventInterface $event event
      * @return void
      */
     public function beforeRender(\Cake\Event\EventInterface $event): void

@@ -18,14 +18,21 @@ namespace Passbolt\Log\Test\TestCase\Model\Actions;
 
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 
+/**
+ * Class FindOrCreateTest
+ *
+ * @property \Passbolt\Log\Model\Table\ActionsTable $Actions
+ */
 class FindOrCreateTest extends AppTestCase
 {
+    use ModelAwareTrait;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->Actions = TableRegistry::getTableLocator()->get('Passbolt/Log.Actions');
+        $this->loadModel('Passbolt/Log.Actions');
     }
 
     /**

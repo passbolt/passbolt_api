@@ -11,6 +11,11 @@ return [
                     env('PASSBOLT_PLUGINS_IN_FORM_INTEGRATION_ENABLED', true)
                 ),
                 'version' => '1.0.0',
+                'settingsVisibility' => [
+                    'whiteListPublic' => [
+                        'enabled',
+                    ],
+                ],
             ],
         ],
     ],

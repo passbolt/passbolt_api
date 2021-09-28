@@ -34,9 +34,9 @@ class LocaleService
     /**
      * Read in configuration the locales available
      *
-     * @return array
+     * @return array|\ArrayAccess
      */
-    public static function getSystemLocales(): array
+    public static function getSystemLocales()
     {
         return Hash::extract(
             Configure::readOrFail('passbolt.plugins.locale.options'),

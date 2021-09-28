@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="4"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    autoloader="config/bootstrap.php"
+    usePhpDocMethodsWithoutMagicCall="true"
+    usePhpDocPropertiesWithoutMagicCall="true"
+>
+    <projectFiles>
+        <directory name="src" />
+        <directory name="plugins" />
+        <ignoreFiles>
+            <directory name="vendor" />
+            <directory name="templates" />
+            <directory name="tests" />
+            <directory name="plugins/Passbolt/Reports/templates" />
+            <directory name="plugins/Passbolt/WebInstaller/templates" />
+            <directory name="plugins/Passbolt/JwtAuthentication/templates" />
+            <directory name="plugins/Passbolt/EmailDigest/tests/Fixture/templates/" />
+        </ignoreFiles>
+    </projectFiles>
+</psalm>
