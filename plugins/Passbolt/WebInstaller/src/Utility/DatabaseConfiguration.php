@@ -84,7 +84,7 @@ class DatabaseConfiguration
     /**
      * Get the database tables names
      *
-     * @return array
+     * @return array|\ArrayAccess
      */
     public static function getTables()
     {

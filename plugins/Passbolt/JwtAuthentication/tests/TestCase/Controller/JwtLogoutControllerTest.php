@@ -68,6 +68,7 @@ class JwtLogoutControllerTest extends JwtAuthenticationIntegrationTestCase
     {
         $userId = $this->createJwtTokenAndSetInHeader();
         $nToken = 3;
+        /** @var array $tokens */
         $tokens = AuthenticationTokenFactory::make($nToken)
             ->active()
             ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
@@ -94,6 +95,7 @@ class JwtLogoutControllerTest extends JwtAuthenticationIntegrationTestCase
     {
         $userId = $this->createJwtTokenAndSetInHeader();
         $nToken = 3;
+        /** @var array $tokens */
         $tokens = AuthenticationTokenFactory::make($nToken)
             ->active()
             ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)

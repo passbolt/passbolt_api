@@ -425,7 +425,7 @@ class Gnupg extends OpenPGPBackend
         foreach ($msg->signatures() as $signatures) {
             foreach ($signatures as $signature) {
                 if ($signature instanceof \OpenPGP_UserIDPacket) {
-                    $userIds[] = sprintf('%s', $signature);
+                    $userIds[] = sprintf('%s', (string)$signature);
                 }
             }
         }
@@ -583,7 +583,7 @@ class Gnupg extends OpenPGPBackend
             if ($verifySignature === false) {
                 $decrypted = $this->_gpg->decrypt($text);
             } else {
-                /** @phpstan-ignore-next-line  */
+                /** @psalm-suppress InvalidArgument @phpstan-ignore-next-line  */
                 $signatureInfo = $this->_gpg->decryptverify($text, $decrypted);
             }
         } catch (\Exception $e) {
@@ -619,7 +619,7 @@ class Gnupg extends OpenPGPBackend
         $this->assertVerifyKey();
         $msg = __('The message cannot be verified.');
         try {
-            /** @phpstan-ignore-next-line */
+            /** @psalm-suppress InvalidArgument @phpstan-ignore-next-line */
             $signature = $this->_gpg->verify($signedText, false, $plainText);
             if (empty($signature) || $signature[0]['fingerprint'] !== $this->_verifyKeyFingerprint) {
                 throw new Exception($msg);

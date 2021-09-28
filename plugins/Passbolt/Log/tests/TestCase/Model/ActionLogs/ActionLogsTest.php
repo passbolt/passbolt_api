@@ -22,25 +22,23 @@ use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 
+/**
+ * Class ActionLogsTest
+ *
+ * @property \Passbolt\Log\Model\Table\ActionsTable $Actions
+ * @property \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs
+ */
 class ActionLogsTest extends AppTestCase
 {
-    /**
-     * @var ActionsTable
-     */
-    public $Actions;
-
-    /**
-     * @var ActionLogsTable
-     */
-    public $ActionLogs;
+    use ModelAwareTrait;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->Actions = TableRegistry::getTableLocator()->get('Passbolt/Log.Actions');
-        $this->ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        $this->loadModel('Passbolt/Log.Actions');
+        $this->loadModel('Passbolt/Log.ActionLogs');
     }
 
     /**
@@ -55,6 +53,7 @@ class ActionLogsTest extends AppTestCase
 
         $actionLog = $this->ActionLogs->create($userAction, 1);
 
+        /** @psalm-suppress UndefinedMagicMethod magic method exists */
         $action = $this->Actions->findByName('Resources.Index')->first();
         $this->assertEquals($action->id, UserAction::actionId('Resources.Index'));
         $this->assertEquals($action->name, 'Resources.Index');
@@ -78,6 +77,7 @@ class ActionLogsTest extends AppTestCase
         $accessControl = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $userAction = UserAction::getInstance($accessControl, $actionName, 'GET Resources.json');
 
+        /** @psalm-suppress UndefinedMagicMethod magic method exists */
         $action = $this->Actions->findByName($actionName)->first();
         $this->assertEmpty($action);
 

@@ -21,7 +21,7 @@ trait ErrorTrait
     /**
      * Asserts that the latest json request failed.
      *
-     * @param null $code (optional) Expected response code
+     * @param int|null $code (optional) Expected response code
      * @param string $message (optional) Expected response message.
      * @param string $errorMessage (optional) Test case error message to be displayed
      * @return void

@@ -110,10 +110,9 @@ class GpgAuthenticator extends SessionAuthenticator
      * in the GpgAuthHeadersMiddleware
      *
      * @see GpgAuthHeadersMiddleware
-     * @param \Cake\Http\ServerRequest $request The request.
      * @return \Authentication\Authenticator\ResultInterface
      */
-    private function authenticationSuccessResult(ServerRequest $request): ResultInterface
+    private function authenticationSuccessResult(): ResultInterface
     {
         return new Result(['user' => $this->_user->toArray()], Result::SUCCESS, $this->headers);
     }
@@ -122,12 +121,13 @@ class GpgAuthenticator extends SessionAuthenticator
      * Authenticate
      * See. https://www.passbolt.com/help/tech/auth
      *
-     * @param \Cake\Http\ServerRequest $request interface for accessing request parameters
+     * @param \Psr\Http\Message\ServerRequestInterface $request interface for accessing request parameters
      * @return \Authentication\Authenticator\ResultInterface User|false the user or false if authentication failed
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         try {
+            /** @var \Cake\Http\ServerRequest $request */
             // Init keyring and try to pre-identify the user using fingerprint
             if (!$this->_initForAllSteps($request)) {
                 return $this->authenticationFailedResult(Result::FAILURE_IDENTITY_NOT_FOUND);
@@ -161,7 +161,7 @@ class GpgAuthenticator extends SessionAuthenticator
         }
 
         // Return the user to be set as active
-        return $this->authenticationSuccessResult($request);
+        return $this->authenticationSuccessResult();
     }
 
     /**

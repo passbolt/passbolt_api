@@ -24,14 +24,8 @@ class EmailDigestServiceTest extends AppIntegrationTestCase
 {
     use EmailDigestMockTestTrait;
 
-    /**
-     * @var MockObject|DigestFactory
-     */
     //private $digestFactoryMock;
 
-    /**
-     * @var EmailDigestService
-     */
     //private $emailDigestService;
 
     public function setUp(): void

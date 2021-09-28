@@ -42,8 +42,10 @@ class JwtLogoutController extends AppController
      */
     protected function getRefreshToken(): ?string
     {
+        /** @var string|null $refreshToken */
         $refreshToken = $this->getRequest()->getData(RefreshTokenAbstractService::REFRESH_TOKEN_DATA_KEY);
         if ($refreshToken === null) {
+            /** @var string|null $refreshToken */
             $refreshToken = $this->getRequest()->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
         }
 

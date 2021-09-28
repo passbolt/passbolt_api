@@ -240,7 +240,7 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId user uuid
      * @param string $property user property
-     * @return \Cake\Datasource\EntityInterface|null
+     * @return \Cake\Datasource\EntityInterface|array|null
      */
     public function getByProperty(string $userId, string $property)
     {

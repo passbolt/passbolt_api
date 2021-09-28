@@ -31,9 +31,9 @@ class DigestsPool
     public const LOWEST_PRIORITY = -1;
 
     /**
-     * @var static
+     * @var static|null
      */
-    private static $instance;
+    private static $instance = null;
 
     /**
      * @var array

@@ -59,4 +59,10 @@ interface EmailDigestInterface extends EmailInterface
      * @return $this
      */
     public function setContent(string $digestContent);
+
+    /**
+     * @param string $template Template
+     * @return $this
+     */
+    public function setTemplate(string $template);
 }

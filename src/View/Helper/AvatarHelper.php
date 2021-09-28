@@ -48,6 +48,7 @@ class AvatarHelper extends Helper
      * Checks if the format provided is medium or small
      *
      * @param bool $withExtension Append the image file extension.
+     * @psalm-suppress InvalidReturnType false positive
      * @return array
      * @throws \RuntimeException if the avatar config is not set in config/file_storage.php
      */
@@ -60,6 +61,7 @@ class AvatarHelper extends Helper
             });
         }
 
+        /** @psalm-suppress InvalidReturnStatement false positive  */
         return $formats;
     }
 }
