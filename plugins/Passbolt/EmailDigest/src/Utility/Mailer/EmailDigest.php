@@ -58,9 +58,9 @@ class EmailDigest implements EmailDigestInterface
     private $subject;
 
     /**
-     * @var string Template to use to compose the email
+     * @var string|null Template to use to compose the email
      */
-    private $template;
+    private $template = null;
 
     /**
      * @var array
@@ -149,7 +149,7 @@ class EmailDigest implements EmailDigestInterface
      * Return the email recipient
      *
      * @param string $recipient Email Recipient of the digest, i.e: ada@passbolt.com
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
+     * @return $this
      */
     public function setEmailRecipient(string $recipient)
     {
@@ -170,7 +170,7 @@ class EmailDigest implements EmailDigestInterface
 
     /**
      * @param string $subject Subject of the digest
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
+     * @return $this
      */
     public function setSubject(string $subject)
     {

@@ -73,10 +73,11 @@ trait TransfersModelTrait
      */
     public function insertTransferFixture(?array $data = []): Transfer
     {
-        $transfersTable = $transfersTable ?? TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
+        /** @var \Passbolt\Mobile\Model\Table\TransfersTable $transfersTable */
+        $transfersTable = TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
+        /** @var \Passbolt\Mobile\Model\Entity\Transfer $transfer */
         $transfer = $transfersTable->newEntity($data, $this->getTransferEntityAccessibleFields());
 
-        /** @var Transfer $transfer */
         $transfersTable->save($transfer, ['checkRules' => false]);
 
         return $transfer;

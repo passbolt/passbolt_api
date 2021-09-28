@@ -41,13 +41,13 @@ class ResourceDigests implements EventListenerInterface
     public const RESOURCE_SHARE_MULTIPLE_TEMPLATE = 'LU/resources_share';
 
     /**
-     * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsCollection Instance of the marshaller
+     * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsPool Instance of the marshaller
      * @return void
      */
-    public function addDigestsPool(DigestsPool $digestsCollection)
+    public function addDigestsPool(DigestsPool $digestsPool)
     {
-        $digestsCollection->addDigest($this->createResourceShareDigest());
-        $digestsCollection->addDigest($this->createResourceChangesDigest());
+        $digestsPool->addDigest($this->createResourceShareDigest());
+        $digestsPool->addDigest($this->createResourceChangesDigest());
     }
 
     /**

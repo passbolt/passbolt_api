@@ -33,9 +33,9 @@ class CommandBootstrap
     /**
      * Instance of class used for singleton.
      *
-     * @var \App\Command\CommandBootstrap
+     * @var \App\Command\CommandBootstrap|null
      */
-    private static $instance;
+    private static $instance = null;
 
     /**
      * Init function.

@@ -34,7 +34,7 @@ use EmailQueue\Model\Table\EmailQueueTable;
 class EmailSender
 {
     /**
-     * @var \EmailQueue\EmailQueue
+     * @var \EmailQueue\Model\Table\EmailQueueTable
      */
     private $emailQueue;
 

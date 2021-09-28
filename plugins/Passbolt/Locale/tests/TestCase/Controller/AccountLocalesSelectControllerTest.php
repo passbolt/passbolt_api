@@ -19,21 +19,23 @@ namespace Passbolt\Locale\Test\TestCase\Controller;
 
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
+/**
+ * Class AccountLocalesSelectControllerTest
+ *
+ * @property \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings
+ */
 class AccountLocalesSelectControllerTest extends AppIntegrationTestCase
 {
-    /**
-     * @var AccountSettingsTable
-     */
-    public $accountSettings;
+    use ModelAwareTrait;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->accountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
+        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
     }
 
     public function tearDown(): void
@@ -58,7 +60,7 @@ class AccountLocalesSelectControllerTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
         $this->assertSame(
             $value,
-            $this->accountSettings->getByProperty($user->id, LocaleService::SETTING_PROPERTY)->get('value')
+            $this->AccountSettings->getByProperty($user->id, LocaleService::SETTING_PROPERTY)->get('value')
         );
     }
 

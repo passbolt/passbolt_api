@@ -50,7 +50,15 @@ class DatabaseHealthchecks
      */
     public static function canConnect(string $datasource, ?array $checks = []): array
     {
-        $checks['database']['connect'] = false;
+        $checks = array_replace_recursive(
+            [
+                'database' => [
+                    'connect' => false,
+                    'info' => [],
+                ],
+            ],
+            $checks
+        );
         try {
             /** @var \Cake\Database\Connection $connection */
             $connection = ConnectionManager::get($datasource);
@@ -61,7 +69,7 @@ class DatabaseHealthchecks
             if (method_exists($connectionError, 'getAttributes')) {
                 $attributes = $connectionError->getAttributes();
                 if (!empty($errorMsg)) {
-                    $checks['database']['info'] .= ' ' . $attributes['message'];
+                    $checks['database']['info']['connection'] = $attributes['message'];
                 }
             }
         }
@@ -97,8 +105,17 @@ class DatabaseHealthchecks
      */
     public static function tableCount(string $datasource, ?array $checks = []): array
     {
-        $checks['database']['info']['tablesCount'] = 0;
-        $checks['database']['tablesCount'] = false;
+        $checks = array_replace_recursive(
+            [
+                'database' => [
+                    'tablesCount' => false,
+                    'info' => [
+                        'tablesCount' => 0,
+                    ],
+                ],
+            ],
+            $checks
+        );
         try {
             $connection = ConnectionManager::get($datasource);
             $tables = $connection->execute('show tables')->fetchAll('assoc');
@@ -124,11 +141,9 @@ class DatabaseHealthchecks
     {
         $checks['database']['defaultContent'] = false;
         try {
-            $Roles = TableRegistry::getTableLocator()->get('Roles');
-            if (!empty($Roles)) {
-                $i = $Roles->find('all')->count();
-                $checks['database']['defaultContent'] = ($i > 3);
-            }
+            $roles = TableRegistry::getTableLocator()->get('Roles');
+            $i = $roles->find('all')->count();
+            $checks['database']['defaultContent'] = ($i > 3);
         } catch (DatabaseException $e) {
         }
 

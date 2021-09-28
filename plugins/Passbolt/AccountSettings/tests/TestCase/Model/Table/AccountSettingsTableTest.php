@@ -68,11 +68,13 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
         $this->AccountSettings->find('byProperty');
 
         // Return null if the property does not exist
+        /** @var mixed|null $result */
         $result = $this->AccountSettings->find('byProperty', compact('property'));
         $this->assertSame(null, $result);
 
         // Now all good with an existing acount setting
         AccountSettingFactory::make()->setPropertyValue($property, $value)->persist();
+        /** @var mixed|null $result */
         $result = $this->AccountSettings->find('byProperty', compact('property'));
         $this->assertInstanceOf(AccountSetting::class, $result);
         $this->assertSame($property, $result->get('property'));

@@ -74,7 +74,7 @@ class CustomValidationException extends HttpException implements
      *
      * @return array|null
      */
-    public function getErrors()
+    public function getErrors(): ?array
     {
         return $this->_errors;
     }
@@ -84,7 +84,7 @@ class CustomValidationException extends HttpException implements
      *
      * @return \Cake\ORM\Table|null
      */
-    public function getTable()
+    public function getTable(): ?Table
     {
         return $this->_table;
     }

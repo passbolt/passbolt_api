@@ -73,7 +73,7 @@ class PermissionsUpdatePermissionsService
         string $aco,
         string $acoForeignkey,
         ?array $data = []
-    ): ?array {
+    ): array {
         $addedPermissions = [];
         $updatedPermissions = [];
         $deletedPermissions = [];
@@ -166,10 +166,10 @@ class PermissionsUpdatePermissionsService
      * @param int $rowIndexRef The row index in the request data
      * @param string $acoForeignkey The target entity id
      * @param string $permissionId The permission identifier to retrieve.
-     * @return \App\Model\Entity\Permission
+     * @return \App\Model\Entity\Permission|null
      * @throws \App\Error\Exception\ValidationException If the permission does not exist.
      */
-    private function getPermission(int $rowIndexRef, string $acoForeignkey, string $permissionId): Permission
+    private function getPermission(int $rowIndexRef, string $acoForeignkey, string $permissionId): ?Permission
     {
         /** @var \App\Model\Entity\Permission|null $permission */
         $permission = $this->permissionsTable->findByIdAndAcoForeignKey($permissionId, $acoForeignkey)->first();

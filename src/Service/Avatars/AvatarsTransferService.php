@@ -198,7 +198,8 @@ class AvatarsTransferService
     private function deleteFileStorage(EntityInterface $fileStorage, string $filePath): void
     {
         if ($this->FileStorage->delete($fileStorage) === false) {
-            $this->logError("The file storage with id {$fileStorage->id} could not be deleted.");
+            $id = $fileStorage->get('id');
+            $this->logError("The file storage with id {$id} could not be deleted.");
         }
 
         try {

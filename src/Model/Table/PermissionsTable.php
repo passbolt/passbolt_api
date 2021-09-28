@@ -205,7 +205,7 @@ class PermissionsTable extends Table
      */
     public function isValidPermissionType(int $value)
     {
-        return is_int($value) && in_array($value, self::ALLOWED_TYPES);
+        return in_array($value, self::ALLOWED_TYPES);
     }
 
     /**
