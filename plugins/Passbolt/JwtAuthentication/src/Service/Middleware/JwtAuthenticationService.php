@@ -40,12 +40,6 @@ class JwtAuthenticationService extends AuthenticationService
                 'finder' => 'activeNotDeletedContainRole',
             ],
         ]);
-        $this->loadAuthenticator('Authentication.Jwt', [
-            'header' => self::JWT_HEADER,
-            'secretKey' => file_get_contents(JwksGetService::PUBLIC_KEY_PATH),
-            'algorithms' => [JwtTokenCreateService::JWT_ALG],
-            'returnPayload' => false,
-        ]);
     }
 
     /**
@@ -54,23 +48,32 @@ class JwtAuthenticationService extends AuthenticationService
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         /** @var \Cake\Http\ServerRequest $request */
-        $this->loadGpgJwtAuthenticatorOnLoginEndpoint($request);
+        if ($this->isLoginEndpointPost($request)) {
+            $this->loadAuthenticator('Passbolt/JwtAuthentication.GpgJwt');
+        } else {
+            $this->loadAuthenticator('Authentication.Jwt', [
+                'header' => self::JWT_HEADER,
+                'secretKey' => file_get_contents(JwksGetService::PUBLIC_KEY_PATH),
+                'algorithms' => [JwtTokenCreateService::JWT_ALG],
+                'returnPayload' => false,
+            ]);
+        }
 
         return parent::authenticate($request);
     }
 
     /**
-     * The GpgJwt Authentication is required only at the login end point.
+     * Is the user attempting to log in.
+     * If so, the authentication with access token in header is ignored.
      *
-     * @param \Cake\Http\ServerRequest $request Server request
-     * @return void
+     * @param \Cake\Http\ServerRequest $request Server Request
+     * @return bool
      */
-    private function loadGpgJwtAuthenticatorOnLoginEndpoint(ServerRequest $request): void
+    public function isLoginEndpointPost(ServerRequest $request): bool
     {
         $path = str_replace('.json', '', $request->getUri()->getPath());
         $isLoginPath = ($path === '/auth/jwt/login');
-        if ($isLoginPath && $request->is('POST')) {
-            $this->loadAuthenticator('Passbolt/JwtAuthentication.GpgJwt');
-        }
+
+        return $isLoginPath && $request->is('POST');
     }
 }
