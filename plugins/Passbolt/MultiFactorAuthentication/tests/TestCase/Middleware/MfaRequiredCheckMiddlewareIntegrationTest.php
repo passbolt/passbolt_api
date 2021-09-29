@@ -91,11 +91,10 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         RoleFactory::make()->guest()->persist();
         $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         // Authenticate with JWT access token
-        $this->createJwtTokenAndSetInHeader($user->id);
-        $sessionId = $this->getJwtTokenInHeader();
+        $sessionId = $this->createJwtTokenAndSetInHeader($user->id);
         $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP, false, $sessionId);
         $this->getJson('users.json');
-        $this->assertResponseSuccess();
+        $this->assertResponseOk();
         $this->assertResponseContains($user->username);
     }
 
