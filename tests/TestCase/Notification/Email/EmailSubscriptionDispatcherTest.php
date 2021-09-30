@@ -35,17 +35,17 @@ class EmailSubscriptionDispatcherTest extends TestCase
     use SubscribedEmailRedactorMockTrait;
 
     /**
-     * @var MockObject|EmailSender
+     * @var \PHPUnit\Framework\MockObject\MockObject|EmailSender
      */
     private $emailSenderMock;
 
     /**
-     * @var MockObject|EventManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|EventManager
      */
     private $eventManagerMock;
 
     /**
-     * @var MockObject|EmailSubscriptionManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|EmailSubscriptionManager
      */
     private $emailSubscriptionManagerMock;
 
@@ -55,7 +55,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
     private $sut;
 
     /**
-     * @var MockObject|LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|LoggerInterface
      */
     private $loggerMock;
 

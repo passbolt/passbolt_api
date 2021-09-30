@@ -58,6 +58,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
         ];
         $ldapObject = new LdapObject($userData, LdapObjectType::USER);
         $ldapUsers = new LdapObjectCollection();
+        /** @psalm-suppress InvalidArgument see signature */
         $ldapUsers->add($ldapObject);
         $ldapGroups = new LdapObjectCollection();
 
@@ -93,6 +94,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
         ];
         $ldapObject = new LdapObject($userData, LdapObjectType::USER);
         $ldapUsers = new LdapObjectCollection();
+        /** @psalm-suppress InvalidArgument see signature */
         $ldapUsers->add($ldapObject);
         $ldapGroups = new LdapObjectCollection();
 
@@ -129,6 +131,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
         ];
         $ldapObject = new LdapObject($userData, LdapObjectType::USER);
         $ldapUsers = new LdapObjectCollection();
+        /** @psalm-suppress InvalidArgument see signature */
         $ldapUsers->add($ldapObject);
         $ldapGroups = new LdapObjectCollection();
 

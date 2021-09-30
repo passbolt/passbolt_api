@@ -384,8 +384,8 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
             $this->assertObjectNotHasAttribute('_joinData', $childResource);
         }
         $childrenResourceIds = Hash::extract($folder->children_resources, '{n}.id');
-        $this->assertContains($resource1->id, $childrenResourceIds);
-        $this->assertContains($resource2->id, $childrenResourceIds);
+        $this->assertContains($resource1->get('id'), $childrenResourceIds);
+        $this->assertContains($resource2->get('id'), $childrenResourceIds);
     }
 
     public function testFoldersIndexSuccess_ContainChildrenFolders()
@@ -438,7 +438,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->getJson('/folders.json?contain[permission]=1&api-version=2');
         $this->assertSuccess();
 
-        /** @var Folder[] $result */
+        /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
         $result = $this->_responseJsonBody;
 
         $this->assertCount(3, $result);
@@ -466,7 +466,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->getJson('/folders.json?contain[permissions]=1&api-version=2');
         $this->assertSuccess();
 
-        /** @var Folder[] $result */
+        /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
         $result = $this->_responseJsonBody;
         $this->assertCount(3, $result);
         foreach ($result as $folder) {
@@ -486,14 +486,14 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->getJson('/folders.json?contain[permissions]=1&contain[permissions.group]=1&api-version=2');
         $this->assertSuccess();
 
-        /** @var Folder[] $result */
+        /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
         $result = $this->_responseJsonBody;
         $this->assertCount(1, $result);
         foreach ($result as $folder) {
             $this->assertFolderAttributes($folder);
             $this->assertObjectHasAttribute('permissions', $folder);
 
-            /** @var Permission $permission */
+            /** @var \App\Model\Entity\Permission $permission */
             foreach ($folder->permissions as $permission) {
                 if ($permission->aro === 'Group') {
                     break; // we are only interested in the group permission
@@ -526,7 +526,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->getJson('/folders.json?contain[permissions.user.profile]=1&api-version=2');
 
         $this->assertSuccess();
-        /** @var Folder[] $result */
+        /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
         $result = $this->_responseJsonBody;
         $folder = $result[0];
         $this->assertFolderAttributes($folder);

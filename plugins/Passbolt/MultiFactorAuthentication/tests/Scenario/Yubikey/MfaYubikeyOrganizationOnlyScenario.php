@@ -24,8 +24,9 @@ use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactor
  */
 class MfaYubikeyOrganizationOnlyScenario implements FixtureScenarioInterface
 {
-    public function load($isSupported = true, ...$args): array
+    public function load(...$args): array
     {
+        $isSupported = $args[0] ?? true;
         $orgSetting = MfaOrganizationSettingFactory::make()->yubikey($isSupported)->persist();
 
         return [$orgSetting];

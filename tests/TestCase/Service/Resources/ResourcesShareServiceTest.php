@@ -46,7 +46,7 @@ class ResourcesShareServiceTest extends AppTestCase
     public $Favorites;
 
     /**
-     * @var PermissionsTable $Permissions
+     * @var \Passbolt\AccountSettings\Model\Table\PermissionsTable $Permissions
      */
     public $Permissions;
 

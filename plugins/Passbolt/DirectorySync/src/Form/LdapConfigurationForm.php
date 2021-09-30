@@ -289,10 +289,9 @@ class LdapConfigurationForm extends Form
      * Check if a user exists.
      *
      * @param string $value user id
-     * @param array $context not in use
      * @return bool
      */
-    public function isValidUser(string $value, ?array $context = null)
+    public function isValidUser(string $value)
     {
         $User = TableRegistry::getTableLocator()->get('Users');
         $exist = $User->find()->where(['Users.id' => $value, 'Users.active' => 1, 'Users.deleted' => 0])->count();
@@ -306,13 +305,13 @@ class LdapConfigurationForm extends Form
     /**
      * Transform form data into the expected org settings format
      *
-     * @param array|null $data The form data
+     * @param array $data The form data
      * @return array $settings The org settings data
      */
     public static function formatFormDataToOrgSettings(?array $data = [])
     {
         $settings = [];
-        if (empty($data)) {
+        if (count($data) === 0) {
             return $data;
         }
 

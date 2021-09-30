@@ -76,6 +76,12 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         ProfilesFixture::class,
     ];
 
+    public $Groups;
+    public $GroupsUsers;
+    public $Permissions;
+    public $FoldersRelations;
+    public $Folders;
+
     /**
      * setUp method
      *
@@ -152,8 +158,8 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
             $this->assertFolderAttributes($childResource);
         }
         $childrenResourceIds = Hash::extract($result->children_resources, '{n}.id');
-        $this->assertContains($resource1->id, $childrenResourceIds);
-        $this->assertContains($resource2->id, $childrenResourceIds);
+        $this->assertContains($resource1->get('id'), $childrenResourceIds);
+        $this->assertContains($resource2->get('id'), $childrenResourceIds);
     }
 
     public function testFoldersViewError_NotValidIdParameter()
@@ -179,7 +185,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->getJson("/folders/{$folder->id}.json?contain[permissions]=1&contain[permissions.group]=1&api-version=2");
 
         $this->assertSuccess();
-        /** @var Folder[] $result */
+        /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
         $folder = $this->_responseJsonBody;
         $this->assertFolderAttributes($folder);
         $this->assertObjectHasAttribute('permissions', $folder);
@@ -218,7 +224,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->getJson("/folders/{$folder->id}.json?contain[permissions.user.profile]=1&api-version=2");
 
         $this->assertSuccess();
-        /** @var Folder[] $result */
+        /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
         $folder = $this->_responseJsonBody;
         $this->assertFolderAttributes($folder);
         $this->assertObjectHasAttribute('permissions', $folder);

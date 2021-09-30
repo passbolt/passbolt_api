@@ -156,7 +156,7 @@ trait GroupUsersSyncTrait
 
         // Send notification if group users are required to be added, and job not in dry-run mode.
         if (!empty($groupUsers) && !$this->isDryRun()) {
-            $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+            $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->get('id'));
             $eventData = ['groupUsers' => $groupUsers, 'group' => $group, 'requester' => $accessControl];
             $event = new Event('Model.Groups.requestGroupUsers.success', $this, $eventData);
             $this->getEventManager()->dispatch($event);
@@ -348,7 +348,7 @@ trait GroupUsersSyncTrait
      */
     protected function addGroupUsers(Group $group, array $userIdsToAdd)
     {
-        $uac = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+        $uac = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->get('id'));
         $groupUpdateGroupsUsersCreateService = new GroupsUpdateGroupUsersService();
 
         foreach ($userIdsToAdd as $userId) {
@@ -412,7 +412,7 @@ trait GroupUsersSyncTrait
      */
     protected function removeGroupUsers(Group $group, array $groupUserIdsToRemove)
     {
-        $uac = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+        $uac = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->get('id'));
         $groupUpdateGroupsUsersCreateService = new GroupsUpdateGroupUsersService();
 
         foreach ($groupUserIdsToRemove as $groupUserId) {

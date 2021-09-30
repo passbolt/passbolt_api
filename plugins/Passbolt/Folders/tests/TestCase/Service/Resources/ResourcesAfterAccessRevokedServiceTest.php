@@ -61,7 +61,7 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
     private $service;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
@@ -77,12 +77,13 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
         [$r1, $userAId, $userBId] = $this->insertFixture_UserPermissionRevoked();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->id, $userBId)->first();
+        /** @var \App\Model\Entity\Permission $permission */
+        $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->get('id'), $userBId)->first();
         $this->permissionsTable->delete($permission);
         $this->service->afterAccessRevoked($uac, $permission);
 
-        $this->assertItemIsInTrees($r1->id, 1);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
+        $this->assertItemIsInTrees($r1->get('id'), 1);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
     }
 
     public function insertFixture_UserPermissionRevoked()
@@ -102,7 +103,8 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
         [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_GroupPermissionRevoked();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->id, $g1->id)->first();
+        /** @var \App\Model\Entity\Permission $permission */
+        $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->get('id'), $g1->get('id'))->first();
         $this->permissionsTable->delete($permission);
         $this->service->afterAccessRevoked($uac, $permission);
 

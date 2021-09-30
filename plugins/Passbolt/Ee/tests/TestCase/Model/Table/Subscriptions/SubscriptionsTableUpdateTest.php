@@ -34,7 +34,7 @@ class SubscriptionsTableUpdateTest extends TestCase
     use DummySubscriptionTrait;
 
     /**
-     * @var SubscriptionsTable $Subscriptions
+     * @var \Passbolt\Ee\Model\Table\SubscriptionsTable $Subscriptions
      */
     public $Subscriptions;
 

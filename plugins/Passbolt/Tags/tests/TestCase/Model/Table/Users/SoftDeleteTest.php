@@ -29,6 +29,7 @@ class SoftDeleteTest extends TagTestCase
     public $Permissions;
     public $Resources;
     public $Users;
+    public $Tags;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',

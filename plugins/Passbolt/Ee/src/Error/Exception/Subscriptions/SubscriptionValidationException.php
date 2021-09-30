@@ -54,12 +54,12 @@ class SubscriptionValidationException extends SubscriptionException
     }
 
     /**
-     * @return array|string
+     * @return array|null
      */
-    public function getErrors()
+    public function getErrors(): ?array
     {
-        if (!isset($this->keyDto)) {
-            return '';
+        if (!is_object($this->keyDto)) {
+            return null;
         }
 
         return $this->keyDto->toArray();

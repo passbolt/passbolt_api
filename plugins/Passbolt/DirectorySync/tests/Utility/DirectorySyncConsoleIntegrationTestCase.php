@@ -31,6 +31,8 @@ abstract class DirectorySyncConsoleIntegrationTestCase extends TestCase
     use MockDirectoryTrait;
     use UserAccessControlTrait;
 
+    public $directoryOrgSettings;
+
     public function setUp(): void
     {
         parent::setUp();

@@ -58,12 +58,12 @@ class FoldersRelationsCleanupTest extends FoldersTestCase
     ];
 
     /**
-     * @var FoldersTable
+     * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
     private $foldersTable;
 
     /**
-     * @var ResourcesTable
+     * @var \App\Model\Table\ResourcesTable
      */
     private $resourcesTables;
 
@@ -91,7 +91,7 @@ class FoldersRelationsCleanupTest extends FoldersTestCase
         $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
         // The resource R2 is going to be soft deleted
         $resourceR2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $this->resourcesTables->updateAll(['deleted' => true], ['id' => $resourceR2->id]);
+        $this->resourcesTables->updateAll(['deleted' => true], ['id' => $resourceR2->get('id')]);
 
         $this->runCleanupChecks('Passbolt/Folders.FoldersRelations', 'cleanupSoftDeletedResources', $originalCount, $checkOptions);
     }
@@ -107,7 +107,7 @@ class FoldersRelationsCleanupTest extends FoldersTestCase
         $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
         // The resource R2 is going to be hard deleted
         $resourceR2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $this->resourcesTables->deleteAll(['id' => $resourceR2->id]);
+        $this->resourcesTables->deleteAll(['id' => $resourceR2->get('id')]);
 
         $this->runCleanupChecks('Passbolt/Folders.FoldersRelations', 'cleanupHardDeletedResources', $originalCount, $checkOptions);
     }
@@ -188,10 +188,10 @@ class FoldersRelationsCleanupTest extends FoldersTestCase
 
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
         $r1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER]);
-        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userBId);
+        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->get('id'), PermissionsTable::USER_ARO, $userBId);
 
         $this->runCleanupChecks('Passbolt/Folders.FoldersRelations', 'cleanupMissingResourcesFoldersRelations', $originalCount, $checkOptions);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folderA->id);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folderA->id);
     }
 
     public function testCleanupMissingFoldersFoldersRelationsSuccess()

@@ -59,6 +59,10 @@ class FoldersDeleteControllerTest extends FoldersIntegrationTestCase
         UsersFixture::class,
     ];
 
+    public $Permissions;
+    public $FoldersRelations;
+    public $Folders;
+
     /**
      * setUp method
      *

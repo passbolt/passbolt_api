@@ -53,7 +53,7 @@ class GroupEntry extends DirectoryEntry
      *
      * @param \LdapTools\Object\LdapObject $ldapObject ldap object.
      * @param array $mappingRules mapping rules
-     * @return $this|\Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryEntry directory entry
+     * @return $this directory entry
      * @throws \Exception
      */
     public function buildFromLdapObject(LdapObject $ldapObject, array $mappingRules)
@@ -92,7 +92,7 @@ class GroupEntry extends DirectoryEntry
      * Build a group Entry from array.
      *
      * @param array $data array
-     * @return $this|\Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryEntry the GroupEntry
+     * @return $this the GroupEntry
      */
     public function buildFromArray(array $data)
     {

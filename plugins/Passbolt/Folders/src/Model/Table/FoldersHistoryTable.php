@@ -30,8 +30,8 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
  * @method \Passbolt\Folders\Model\Entity\FolderHistory get($primaryKey, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory newEntity($data = null, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FolderHistory|false save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FolderHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FolderHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory[] patchEntities($entities, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FolderHistory findOrCreate($search, callable $callback = null, ?array $options = [])
@@ -163,14 +163,14 @@ class FoldersHistoryTable extends Table
         }
         $folderHistory = $this->save($folderHistory);
 
-        // Check for validation errors. (associated models too).
-        if (!empty($folderHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate folder history data.'), $folderHistory, $this);
-        }
-
         // Check for errors while saving.
         if (!$folderHistory) {
             throw new InternalErrorException('Could not save the folder history.');
+        }
+
+        // Check for validation errors. (associated models too).
+        if (!empty($folderHistory->getErrors())) {
+            throw new ValidationException(__('Could not validate folder history data.'), $folderHistory, $this);
         }
 
         return $folderHistory;

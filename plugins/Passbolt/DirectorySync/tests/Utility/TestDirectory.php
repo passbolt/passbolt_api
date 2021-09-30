@@ -104,21 +104,25 @@ class TestDirectory implements DirectoryInterface
     }
 
     /**
-     * @param $users
+     * @inheritDoc
      */
     public function setUsers($users)
     {
         $this->users = $users;
         $this->directoryResults->initializeWithEntries($this->users, []);
+
+        return $this;
     }
 
     /**
-     * @param $groups
+     * @inheritDoc
      */
     public function setGroups($groups)
     {
         $this->groups = $groups;
         $this->directoryResults->initializeWithEntries([], $groups);
+
+        return $this;
     }
 
     /**
