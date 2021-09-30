@@ -26,15 +26,8 @@ use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
  */
 class GroupsEventListenerTest extends FoldersIntegrationTestCase
 {
-   /**
-    * @var GroupsEventListener
-    */
-   //private $sut;
-
     public function setUp(): void
     {
-        //$this->sut = new GroupsEventListener();
-
         parent::setUp();
     }
 

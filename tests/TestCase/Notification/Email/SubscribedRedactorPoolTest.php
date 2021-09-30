@@ -33,7 +33,7 @@ class SubscribedRedactorPoolTest extends TestCase
     private $sut;
 
     /**
-     * @var SubscribedEmailRedactorInterface[]|MockObject[]
+     * @var SubscribedEmailRedactorInterface[]|\PHPUnit\Framework\MockObject\MockObject[]
      */
     private $subscribedRedactorsMock;
 

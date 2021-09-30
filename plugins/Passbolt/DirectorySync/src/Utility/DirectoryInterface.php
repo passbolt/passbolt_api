@@ -38,4 +38,20 @@ interface DirectoryInterface
      * @return mixed
      */
     public function getFilteredDirectoryResults();
+
+    /**
+     * Sets users.
+     *
+     * @param array $users users
+     * @return $this
+     */
+    public function setUsers($users);
+
+    /**
+     * Sets groups.
+     *
+     * @param array $groups groups
+     * @return $this
+     */
+    public function setGroups($groups);
 }

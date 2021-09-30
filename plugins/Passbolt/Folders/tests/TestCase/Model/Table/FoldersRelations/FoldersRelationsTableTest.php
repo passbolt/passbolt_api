@@ -44,6 +44,8 @@ class FoldersRelationsTableTest extends FoldersTestCase
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
     public $FoldersRelations;
+    public $Folders;
+    public $Permissions;
 
     /**
      * setUp method

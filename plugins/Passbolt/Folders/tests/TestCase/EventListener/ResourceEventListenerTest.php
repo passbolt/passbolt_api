@@ -74,7 +74,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
     public $autoFixtures = false;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
@@ -196,7 +196,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         [$folder, $resource, $userAId, $userBId] = $this->insertFixture_AfterAccessRevoked();
 
         $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($resource->id, $userBId)->first();
-        $data['permissions'][] = ['id' => $permission->id, 'delete' => true];
+        $data['permissions'][] = ['id' => $permission->get('id'), 'delete' => true];
 
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/{$resource->id}.json", $data);

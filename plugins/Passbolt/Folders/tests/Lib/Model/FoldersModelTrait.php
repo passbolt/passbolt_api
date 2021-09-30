@@ -79,7 +79,7 @@ trait FoldersModelTrait
      * @param array $users List of user to add a resource for. The first element should refer to a user id.
      * @param array $groups List of groups to add a resource for.
      * @param array $options The folder entity create options
-     * @return Folder
+     * @return \Passbolt\Folders\Model\Entity\Folder
      */
     public function addFolderFor(?array $data = [], ?array $users = [], ?array $groups = [], ?array $options = [])
     {
@@ -102,11 +102,11 @@ trait FoldersModelTrait
         $foldersTable->saveOrFail($folder);
 
         foreach ($users as $userId => $permissionType) {
-            $this->addPermission('Folder', $folder->id, null, $userId, $permissionType);
+            $this->addPermission('Folder', $folder->get('id'), null, $userId, $permissionType);
             $folderParentId = $data['folder_parent_id'] ?? null;
             $folderRelationData = [
                 'foreign_model' => PermissionsTable::FOLDER_ACO,
-                'foreign_id' => $folder->id,
+                'foreign_id' => $folder->get('id'),
                 'user_id' => $userId,
                 'folder_parent_id' => $folderParentId,
             ];
@@ -114,13 +114,13 @@ trait FoldersModelTrait
         }
 
         foreach ($groups as $groupId => $permissionType) {
-            $this->addPermission('Folder', $folder->id, null, $groupId, $permissionType);
+            $this->addPermission('Folder', $folder->get('id'), null, $groupId, $permissionType);
             $folderParentId = $data['folder_parent_id'] ?? null;
             $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
             foreach ($groupUsersIds as $groupUserId) {
                 $folderRelationData = [
                     'foreign_model' => PermissionsTable::FOLDER_ACO,
-                    'foreign_id' => $folder->id,
+                    'foreign_id' => $folder->get('id'),
                     'user_id' => $groupUserId,
                     'folder_parent_id' => $folderParentId,
                 ];

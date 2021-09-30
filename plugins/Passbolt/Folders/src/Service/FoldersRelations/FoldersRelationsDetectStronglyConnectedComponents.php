@@ -241,6 +241,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
     {
         $result = [];
 
+        /** @var int $i */
         foreach ($nodes as $i => $node) {
             // If first node, then its parent is the last element of the list, otherwise the previous one.
             $folderParentIdIndex = $i === 0 ? count($nodes) - 1 : $i - 1;

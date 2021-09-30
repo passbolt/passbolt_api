@@ -44,7 +44,7 @@ class MfaUserSettingsDeleteController extends MfaController
     }
 
     /**
-     * @param \Cake\Event\Event $event An event instance
+     * @param \Cake\Event\EventInterface $event An event instance
      * @return \Cake\Http\Response|null
      */
     public function beforeFilter(EventInterface $event)

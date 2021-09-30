@@ -147,7 +147,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         // |- B (Ada:O)
         $userAId = UuidFactory::uuid('user.id.ada');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER]);
 
         return [$folderA, $folderB, $userAId];
     }
@@ -158,7 +158,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
-            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $folderB->id);
+            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->get('id'), $folderB->get('id'));
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
@@ -174,7 +174,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         // |- B (Ada:O)
         $userAId = UuidFactory::uuid('user.id.ada');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER]);
 
         return [$folderA, $folderB, $userAId];
     }
@@ -186,7 +186,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_MoveFolderFromRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->get('id'), $folderA->get('id'));
 
         $this->assertItemIsInTrees($folderA->id, 2);
         $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
@@ -285,7 +285,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
         $folderC = $this->addFolderFor(['name' => 'C'], [$userAId => Permission::OWNER]);
 
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
@@ -297,7 +297,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->insertFixture_Folder_SharedWithUser_MoveFromSharedFolderToSharedFolder_DontMoveForUsersNotSeeingOriginalAndTargetFolders();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderD->id);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->get('id'), $folderD->get('id'));
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
@@ -337,9 +337,9 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $folderC = $this->addFolderFor(['name' => 'C'], [$userBId => Permission::OWNER]);
         $folderB = $this->addFolder(['name' => 'B']);
         $this->addPermission('Folder', $folderB->id, 'User', $userAId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->get('id')]);
         $this->addPermission('Folder', $folderB->id, 'User', $userBId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userBId, 'folder_parent_id' => $folderC->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userBId, 'folder_parent_id' => $folderC->get('id')]);
         $folderD = $this->addFolderFor(['name' => 'D'], [$userAId => Permission::OWNER]);
 
         return [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId];
@@ -386,7 +386,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $this->addPermission('Folder', $folderB->id, 'User', $userAId, Permission::OWNER);
         $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => FoldersRelation::ROOT]);
         $this->addPermission('Folder', $folderB->id, 'User', $userBId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userBId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userBId, 'folder_parent_id' => $folderA->get('id')]);
         $folderC = $this->addFolderFor(['name' => 'C'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
@@ -431,9 +431,9 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $folderB = $this->addFolderFor(['name' => 'B'], [$userBId => Permission::OWNER]);
         $folderC = $this->addFolder(['name' => 'C']);
         $this->addPermission('Folder', $folderC->id, 'User', $userAId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->get('id')]);
         $this->addPermission('Folder', $folderC->id, 'User', $userBId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userBId, 'folder_parent_id' => $folderB->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userBId, 'folder_parent_id' => $folderB->get('id')]);
 
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
     }
@@ -664,7 +664,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         return [$folderA, $folderB, $userAId, $userBId];
     }
@@ -696,7 +696,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
 
         return [$folderA, $folderB, $userAId, $userBId];
     }
@@ -708,7 +708,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SelfOrganize_MoveFromRootToPersonalFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->get('id'), $folderA->get('id'));
 
         $this->assertItemIsInTrees($folderA->id, 1);
         $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
@@ -758,7 +758,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
 
         return [$folderA, $folderB, $userAId, $userBId];
     }
@@ -769,7 +769,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
-            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $folderC->id);
+            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->get('id'), $folderC->get('id'));
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals('Could not validate move data.', $e->getMessage());
@@ -794,7 +794,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
         $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER]);
-        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
     }
@@ -868,7 +868,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
     {
         $userAId = UuidFactory::uuid('user.id.ada');
         $folderA = $this->addFolderFor([], [$userAId => Permission::OWNER]);
-        $resource = $this->addResourceFor(['folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER]);
+        $resource = $this->addResourceFor(['folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER]);
 
         return [$folderA, $resource, $userAId];
     }
@@ -979,7 +979,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $resource = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $resource = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
         $folderC = $this->addFolderFor(['name' => 'C'], [$userAId => Permission::OWNER]);
 
         return [$folderA, $resource, $folderC, $userAId, $userBId];
@@ -991,7 +991,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
             $this->insertFixture_Resource_SharedWithUser_MoveFromSharedFolderToSharedFolder_DontMoveForUsersNotSeeingOriginalAndTargetFolders();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderD->id);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->get('id'), $folderD->get('id'));
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
@@ -1031,9 +1031,9 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $folderC = $this->addFolderFor(['name' => 'C'], [$userBId => Permission::OWNER]);
         $resource = $this->addResource(['name' => 'R1']);
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, 'User', $userAId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->get('id')]);
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, 'User', $userBId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource->id, 'user_id' => $userBId, 'folder_parent_id' => $folderC->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource->id, 'user_id' => $userBId, 'folder_parent_id' => $folderC->get('id')]);
         $folderD = $this->addFolderFor(['name' => 'D'], [$userAId => Permission::OWNER]);
 
         return [$folderA, $resource, $folderC, $folderD, $userAId, $userBId];
@@ -1125,9 +1125,9 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $folderB = $this->addFolderFor(['name' => 'B'], [$userBId => Permission::OWNER]);
         $resource = $this->addResource(['name' => 'R1']);
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, 'User', $userAId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $resource->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $resource->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->get('id')]);
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, 'User', $userBId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $resource->id, 'user_id' => $userBId, 'folder_parent_id' => $folderB->id]);
+        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $resource->id, 'user_id' => $userBId, 'folder_parent_id' => $folderB->get('id')]);
 
         return [$folderA, $folderB, $resource, $userAId, $userBId];
     }
@@ -1188,7 +1188,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
-        $resource = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $resource = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         return [$folderA, $resource, $userAId, $userBId];
     }
@@ -1200,7 +1200,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SelfOrganize_MoveFromRootToPersonalFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->get('id'), $folderA->get('id'));
 
         $this->assertItemIsInTrees($folderA->id, 1);
         $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
@@ -1250,7 +1250,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-        $resource = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+        $resource = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
 
         return [$folderA, $resource, $userAId, $userBId];
     }

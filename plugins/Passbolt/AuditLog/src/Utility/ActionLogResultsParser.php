@@ -287,7 +287,6 @@ class ActionLogResultsParser
 
                 if (Configure::read('passbolt.plugins.folders.enabled')) {
                     if (isset($permission->permissions_history_folder)) {
-                        /** @phpstan-ignore-next-line */
                         $permission->folder = $permission->permissions_history_folder;
                         unset($permission->permissions_history_folder);
                     }

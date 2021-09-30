@@ -50,7 +50,7 @@ class PermissionsCleanupTest extends FoldersTestCase
     ];
 
     /**
-     * @var FoldersTable
+     * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
     private $foldersTable;
 

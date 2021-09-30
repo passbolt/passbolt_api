@@ -22,6 +22,11 @@ use Passbolt\DirectorySync\Utility\Alias;
 trait AssertDirectoryTrait
 {
     /**
+     * @var \Passbolt\DirectorySync\Actions\SyncAction
+     */
+    protected $action;
+
+    /**
      * @return void
      */
     public function assertDirectoryEntryEmpty()
@@ -51,7 +56,7 @@ trait AssertDirectoryTrait
 
     /**
      * @param array $where
-     * @return entry
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]
      */
     public function assertDirectoryEntryExists(array $where)
     {
@@ -63,7 +68,7 @@ trait AssertDirectoryTrait
 
     /**
      * @param array $where
-     * @return entry
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]
      */
     public function assertOrphanDirectoryEntryExists($id)
     {
@@ -75,14 +80,14 @@ trait AssertDirectoryTrait
 
     /**
      * @param array $where
-     * @return entry
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]
      */
     public function assertDirectoryEntryExistsForUser($where)
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $u = $Users->find()->where($where)->first();
 
-        $where = ['foreign_model' => Alias::MODEL_USERS, 'foreign_key' => $u->id];
+        $where = ['foreign_model' => Alias::MODEL_USERS, 'foreign_key' => $u->get('id')];
         $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
         $this->assertEquals(1, count($syncEntry));
 
@@ -91,14 +96,14 @@ trait AssertDirectoryTrait
 
     /**
      * @param array $where
-     * @return entry
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]
      */
     public function assertDirectoryEntryExistsForGroup($where)
     {
         $Groups = TableRegistry::getTableLocator()->get('Groups');
         $g = $Groups->find()->where($where)->first();
 
-        $where = ['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $g->id];
+        $where = ['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $g->get('id')];
         $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
         $this->assertEquals(1, count($syncEntry));
 
@@ -107,7 +112,7 @@ trait AssertDirectoryTrait
 
     /**
      * @param array $where
-     * @return entry
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[]
      */
     public function assertDirectoryEntryNotExists(array $where)
     {

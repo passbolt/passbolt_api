@@ -31,8 +31,11 @@ class MfaTotpScenario implements FixtureScenarioInterface
     use ScenarioAwareTrait;
     use UserAccessControlTrait;
 
-    public function load($user = null, $isSupported = true, ...$args): array
+    public function load(...$args): array
     {
+        $user = $args[0] ?? null;
+        $isSupported = $args[1] ?? true;
+
         if (is_null($user)) {
             $user = UserFactory::make()->user()->persist();
         }

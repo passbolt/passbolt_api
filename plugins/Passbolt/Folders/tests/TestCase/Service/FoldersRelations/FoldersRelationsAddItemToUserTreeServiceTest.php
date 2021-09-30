@@ -1511,7 +1511,7 @@ class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
         $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER]);
 
         // Add a permission for the user the folder will be added in the tree.
-        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userBId);
+        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->get('id'), PermissionsTable::USER_ARO, $userBId);
 
         return [$r1, $userAId, $userBId];
     }
@@ -1550,7 +1550,7 @@ class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
         $r1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER]);
 
         // Add a permission for the user the folder will be added in the tree.
-        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userBId);
+        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->get('id'), PermissionsTable::USER_ARO, $userBId);
 
         return [$folderA, $r1, $userAId, $userBId];
     }
@@ -1587,7 +1587,7 @@ class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
         $r1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER]);
 
         // Add a permission for the user the folder will be added in the tree.
-        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userBId);
+        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->get('id'), PermissionsTable::USER_ARO, $userBId);
 
         return [$folderA, $r1, $userAId, $userBId];
     }
@@ -1622,7 +1622,7 @@ class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
         $r1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER]);
 
         // Add a permission for the user the folder will be added in the tree.
-        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userBId);
+        $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->get('id'), PermissionsTable::USER_ARO, $userBId);
 
         return [$folderA, $r1, $userAId, $userBId];
     }
@@ -1663,7 +1663,7 @@ class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, 'User', $userAId, Permission::OWNER);
         $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $r1->id, 'user_id' => $userAId, 'folder_parent_id' => FoldersRelation::ROOT]);
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, 'User', $userCId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $r1->id, 'user_id' => $userCId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $r1->id, 'user_id' => $userCId, 'folder_parent_id' => $folderA->get('id')]);
 
         // Add a permission for the user the folder will be added in the tree.
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userBId);
@@ -1719,9 +1719,9 @@ class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
         $folderC = $this->addFolderFor(['name' => 'C'], [$userBId => Permission::OWNER, $userCId => Permission::OWNER]);
         $r1 = $this->addResource(['name' => 'R1']);
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, 'User', $userAId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $r1->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $r1->get('id'), 'user_id' => $userAId, 'folder_parent_id' => $folderA->get('id')]);
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, 'User', $userCId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $r1->id, 'user_id' => $userCId, 'folder_parent_id' => $folderC->id]);
+        $this->addFolderRelation(['foreign_model' => FoldersRelation::FOREIGN_MODEL_RESOURCE, 'foreign_id' => $r1->get('id'), 'user_id' => $userCId, 'folder_parent_id' => $folderC->get('id')]);
 
         // Add a permission for the user the folder will be added in the tree.
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userBId);

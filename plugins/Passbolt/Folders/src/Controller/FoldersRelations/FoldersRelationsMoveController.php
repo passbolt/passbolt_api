@@ -62,7 +62,7 @@ class FoldersRelationsMoveController extends AppController
      * Get and validate the folder parent id from the data.
      *
      * @param array|null $data The data
-     * @return string
+     * @return string|null
      */
     private function getAndValidateFolderParentId(?array $data = [])
     {

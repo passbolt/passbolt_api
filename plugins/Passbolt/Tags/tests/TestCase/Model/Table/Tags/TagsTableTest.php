@@ -22,14 +22,14 @@ use Cake\ORM\TableRegistry;
 use Passbolt\Tags\Test\Lib\TagTestCase;
 
 /**
- * App\Model\Table\TagsTable Test Case
+ * Passbolt\Tags\Model\Table\ Test Case
  */
 class TagsTableTest extends TagTestCase
 {
     /**
      * Test subject
      *
-     * @var \App\Model\Table\TagsTable
+     * @var \Passbolt\Tags\Model\Table\TagsTable
      */
     public $Tags;
 

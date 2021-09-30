@@ -23,7 +23,7 @@ use Cake\ORM\TableRegistry;
 class ResourcesAfterSoftDeleteService
 {
     /**
-     * @param resource $resource The soft deleted resource.
+     * @param \App\Model\Entity\Resource $resource The soft deleted resource.
      * @return void
      * @throws \Exception
      */

@@ -25,6 +25,10 @@ use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
 class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
 {
+    public $userSyncAction;
+    public $groupSyncAction;
+    public $directoryResults;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -33,9 +37,13 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
         $this->groupSyncAction = new GroupSyncAction();
 
         // Load directory results with data.
-        $users = $this->userSyncAction->getDirectory()->getUsersFixtures();
-        $groups = $this->userSyncAction->getDirectory()->getGroupsFixtures();
-        $this->directoryResults = $DirectoryResults = new DirectoryResults([]);
+        /** @var \Passbolt\DirectorySync\Test\Utility\TestDirectory $usersDirectory */
+        $usersDirectory = $this->userSyncAction->getDirectory();
+        $users = $usersDirectory->getUsersFixtures();
+        /** @var \Passbolt\DirectorySync\Test\Utility\TestDirectory $groupsDirectory */
+        $groupsDirectory = $this->groupSyncAction->getDirectory();
+        $groups = $groupsDirectory->getGroupsFixtures();
+        $this->directoryResults = new DirectoryResults([]);
         $this->directoryResults->initializeWithEntries($users, $groups);
     }
 

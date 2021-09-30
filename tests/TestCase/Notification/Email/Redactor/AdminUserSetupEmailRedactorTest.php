@@ -39,7 +39,7 @@ class AdminUserSetupEmailRedactorTest extends TestCase
     private $sut;
 
     /**
-     * @var MockObject|UsersTable
+     * @var \PHPUnit\Framework\MockObject\MockObject|UsersTable
      */
     private $usersTableMock;
 

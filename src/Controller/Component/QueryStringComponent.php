@@ -482,17 +482,17 @@ class QueryStringComponent extends Component
      * - No Bueno: ['this' => 'no']
      *
      * @param array $values array of group id to check
-     * @param string $filtername for error message display
+     * @param string|bool $filtername for error message display
      * @throw Exception if the filter is not valid
      * @return bool true if validate
      */
-    public static function validateFilterParentFolders(array $values, string $filtername)
+    public static function validateFilterParentFolders(array $values, $filtername)
     {
         foreach ($values as $i => $parentId) {
             if (!is_int($i)) {
                 throw new Exception(__('"{0}" is not a valid parent filter.', $i, $filtername));
             }
-            if (!is_scalar($parentId)) {
+            if (!is_string($parentId) && $parentId !== false) {
                 throw new Exception(__('"{0}" is not a valid parent filter.', $i));
             }
             self::validateFilterParentFolder($parentId, $filtername);
@@ -673,12 +673,10 @@ class QueryStringComponent extends Component
         if (!is_string($str)) {
             return false;
         }
-        if (is_string($str)) {
-            if ((strtolower($str) === 'true' || $str === '1')) {
-                return true;
-            } elseif ((strtolower($str) === 'false' || $str === '0')) {
-                return false;
-            }
+        if ((strtolower($str) === 'true' || $str === '1')) {
+            return true;
+        } elseif ((strtolower($str) === 'false' || $str === '0')) {
+            return false;
         }
 
         return $str;
