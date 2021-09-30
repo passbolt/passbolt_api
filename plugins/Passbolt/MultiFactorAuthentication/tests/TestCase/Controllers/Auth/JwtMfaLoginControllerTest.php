@@ -61,9 +61,59 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
             'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
         ]);
 
-        $this->assertResponseSuccess('The authentication was a success.');
+        $this->assertResponseOk('The authentication was a success.');
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge), true);
         $this->assertSame([MfaSettings::PROVIDER_TOTP], $challenge['providers']);
         $this->assertCookieExpired(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+    }
+
+    /**
+     * @Given a user has MFA not activated and no MFA token in header
+     * @When the user successfully logs in
+     * @Then the providers shall not be set in the challenge
+     * @And no MFA cookie is returned
+     */
+    public function testJwtLoginControllerTest_Success_But_No_MFA_Required()
+    {
+        $user = UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
+            ->persist();
+
+        $this->postJson('/auth/jwt/login.json', [
+            'user_id' => $user->id,
+            'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
+        ]);
+
+        $this->assertResponseOk('The authentication was a success.');
+        $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge), true);
+        $this->assertFalse(isset($challenge['providers']));
+        $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+    }
+
+    /**
+     * @Given a user has MFA activated and a valid MFA token
+     * @When the user successfully logs in
+     * @Then the MFA token should be passed in the response.
+     */
+    public function testJwtLoginControllerTest_Success_With_MFA_Cookie_Remember_Valid()
+    {
+        $user = UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
+            ->persist();
+
+        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $cookie = $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP, true);
+
+        $this->postJson('/auth/jwt/login.json', [
+            'user_id' => $user->id,
+            'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
+        ]);
+
+        $this->assertResponseOk('The authentication was a success.');
+        $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge), true);
+        $this->assertFalse(isset($challenge['providers']));
+        $this->assertCookie($cookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }

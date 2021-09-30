@@ -22,7 +22,7 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Event\AddIsMfaEnabledColumnToUsersGrid;
-use Passbolt\MultiFactorAuthentication\Event\AppendProvidersToJwtChallenge;
+use Passbolt\MultiFactorAuthentication\Event\OnSuccessfulJwtLoginEventListener;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaInjectFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRefreshTokenCreatedListenerMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
@@ -73,6 +73,6 @@ class Plugin extends BasePlugin
             // Decorate the users grid and add the column "is_mfa_enabled"
             ->on(new AddIsMfaEnabledColumnToUsersGrid()) // decorate the query to add the new property on the User entity
             ->on(new MfaRedactorPool()) // Register email redactors
-            ->on(new AppendProvidersToJwtChallenge());
+            ->on(new OnSuccessfulJwtLoginEventListener());
     }
 }
