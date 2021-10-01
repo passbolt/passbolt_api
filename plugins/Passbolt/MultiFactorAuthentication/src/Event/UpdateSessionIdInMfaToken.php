@@ -49,7 +49,7 @@ class UpdateSessionIdInMfaToken implements EventListenerInterface
     }
 
     /**
-     * On login with JWT, sets the access token as sesion ID in the MFA authentication token.
+     * On JWT authentication, sets the access token as session ID in the MFA authentication token.
      *
      * @param \Cake\Event\EventInterface $event Event
      * @return void
