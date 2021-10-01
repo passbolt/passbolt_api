@@ -62,7 +62,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
             'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
         ]);
 
-        $this->assertResponseSuccess('The authentication was a success.');
+        $this->assertResponseOk('The authentication was a success.');
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge), true);
         $this->assertSame([MfaSettings::PROVIDER_TOTP], $challenge['providers']);
         $this->assertCookieExpired(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
@@ -106,7 +106,12 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
         $this->assertFalse($mfaToken->checkSessionId($newAccessToken));
     }
 
-    public function testJwtLoginControllerTest_Login_With_Mfa_Remember_Me_And_No_Valid_Access_Token()
+    /**
+     * @Given a user has MFA activated and a valid MFA remember token
+     * @When the user successfully logs in
+     * @Then the MFA token should be passed in the response and the providers not set in the challenge
+     */
+    public function testJwtLoginControllerTest_Login_With_Valid_Mfa_Remember_Me()
     {
         $user = UserFactory::make()
             ->user()
@@ -129,12 +134,37 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
 
         $this->assertResponseSuccess('The authentication was a success.');
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge), true);
-        // Providers are not set because the provided mfa cookie is valid and associated to session $accessToken
+        // Providers are not set because the provided mfa cookie is valid
         $this->assertFalse(isset($challenge['providers']));
 
         /** @var \App\Model\Entity\AuthenticationToken $mfaToken */
         $mfaToken = MfaAuthenticationTokenFactory::find()->where(['token' => $mfaToken])->firstOrFail();
         $this->assertTrue($mfaToken->isActive());
         $this->assertFalse($mfaToken->isExpired());
+        $this->assertCookie($mfaToken->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+    }
+
+    /**
+     * @Given a user has MFA not activated and no MFA token in header
+     * @When the user successfully logs in
+     * @Then the providers shall not be set in the challenge
+     * @And no MFA cookie is returned
+     */
+    public function testJwtLoginControllerTest_Success_But_No_MFA_Required()
+    {
+        $user = UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
+            ->persist();
+
+        $this->postJson('/auth/jwt/login.json', [
+            'user_id' => $user->id,
+            'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
+        ]);
+
+        $this->assertResponseOk('The authentication was a success.');
+        $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge), true);
+        $this->assertFalse(isset($challenge['providers']));
+        $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }

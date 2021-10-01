@@ -121,13 +121,20 @@ class AuthenticationToken extends Entity
     /**
      * Writes the session ID in the token data
      *
+     * The password hasher has a limit of 71 characters.
+     * Therefore two sessions starting with the same 71 characters will
+     * be tested as identical, although they are not.
+     * Nullable bytes should also not be placed in the password
+     *
+     * Therefore we hash with sha256 the session ID before hashing it with password_hash.
+     *
      * @see SessionIdentificationServiceInterface
      * @param string $sessionId Session ID
      * @return void
      */
     public function hashAndSetSessionId(string $sessionId): void
     {
-        $hashedSessionId = (new DefaultPasswordHasher())->hash($sessionId);
+        $hashedSessionId = (new DefaultPasswordHasher())->hash(hash('sha256', $sessionId));
         $data = array_merge(
             $this->getJsonDecodedData(),
             [self::SESSION_ID_KEY => $hashedSessionId]
@@ -150,6 +157,6 @@ class AuthenticationToken extends Entity
             return false;
         }
 
-        return (new DefaultPasswordHasher())->check($sessionIdToCheck, $tokenSessionId);
+        return (new DefaultPasswordHasher())->check(hash('sha256', $sessionIdToCheck), $tokenSessionId);
     }
 }

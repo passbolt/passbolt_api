@@ -24,10 +24,16 @@ use Cake\Event\EventListenerInterface;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaAuthenticationRequiredService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
-class AppendProvidersToJwtChallenge implements EventListenerInterface
+class OnSuccessfulJwtLoginEventListener implements EventListenerInterface
 {
     use ContainerAwareMiddlewareTrait;
+
+    /**
+     * @var bool
+     */
+    private $loginSuccessfulAndMfaTokenValid;
 
     /**
      * @return array
@@ -36,6 +42,7 @@ class AppendProvidersToJwtChallenge implements EventListenerInterface
     {
         return [
             GpgJwtAuthenticator::MAKE_ARMORED_CHALLENGE_EVENT_NAME => 'appendProvidersToJwtChallenge',
+            'Controller.initialize' => 'addMfaTokenOnSuccessfulLogin',
         ];
     }
 
@@ -65,6 +72,31 @@ class AppendProvidersToJwtChallenge implements EventListenerInterface
         if ($isMfaAuthenticationRequired) {
             $challenge['providers'] = $mfaSettings->getEnabledProviders();
             $event->setData($challenge);
+        } else {
+            $this->loginSuccessfulAndMfaTokenValid = true;
+        }
+    }
+
+    /**
+     * If the login was successful and the MFA token is valid
+     * Set the MFA cookie in the response.
+     *
+     * @param \Cake\Event\EventInterface $event Initialize controller event
+     * @return void
+     */
+    public function addMfaTokenOnSuccessfulLogin(EventInterface $event): void
+    {
+        if ($this->loginSuccessfulAndMfaTokenValid !== true) {
+            return;
+        }
+
+        /** @var \Cake\Controller\Controller $controller */
+        $controller = $event->getSubject();
+        if ($controller->getRequest()->getCookieCollection()->has(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
+            $mfaCookie = $controller->getRequest()->getCookieCollection()->get(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+            $controller->setResponse(
+                $controller->getResponse()->withCookie($mfaCookie)
+            );
         }
     }
 }
