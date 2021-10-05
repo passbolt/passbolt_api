@@ -22,6 +22,7 @@ use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
+use Passbolt\Locale\Service\GetOrgLocaleService;
 
 /**
  * Decorate a Table class to add the "locale" property on its entities.
@@ -95,8 +96,13 @@ class LocaleBehavior extends Behavior
     {
         return $query->formatResults(function (\Cake\Collection\CollectionInterface $results) {
             return $results->map(function ($entity) {
-                if ($entity instanceof User && !is_null($entity->locale)) {
-                    $entity = $this->addLocalePropertyToEntity($entity, $entity->locale->value);
+                if ($entity instanceof User) {
+                    if (is_null($entity->locale)) {
+                        $locale = GetOrgLocaleService::getLocale();
+                    } else {
+                        $locale = $entity->locale->value;
+                    }
+                    $entity = $this->addLocalePropertyToEntity($entity, $locale);
                 }
 
                 return $entity;

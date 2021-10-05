@@ -28,6 +28,7 @@ use App\Service\Groups\GroupsUpdateService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Locale\Service\LocaleService;
 
 class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -101,29 +102,31 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
         // Retrieve the users to send an email to.
         $usersIds = Hash::extract($removedGroupsUsers, '{n}.user_id');
-        $users = $this->usersTable->find()
-            ->select(['id', 'username'])
-            ->where(['id IN' => $usersIds])
-            ->combine('id', 'username');
+        $users = $this->usersTable->find('locale')->where(['Users.id IN' => $usersIds]);
 
-        foreach ($users as $userId => $userName) {
-            $emails[] = $this->createGroupUserDeleteEmail($userName, $modifiedBy, $group);
+        foreach ($users as $user) {
+            $emails[] = $this->createGroupUserDeleteEmail($user, $modifiedBy, $group);
         }
 
         return $emails;
     }
 
     /**
-     * @param string $emailRecipient Email recipient
+     * @param \App\Model\Entity\User $recipient User recipient
      * @param \App\Model\Entity\User $admin Admin
      * @param \App\Model\Entity\Group $group Group
      * @return \App\Notification\Email\Email
      */
-    private function createGroupUserDeleteEmail(string $emailRecipient, User $admin, Group $group)
+    private function createGroupUserDeleteEmail(User $recipient, User $admin, Group $group): Email
     {
-        $subject = __('{0} removed you from the group {1}', $admin->profile->first_name, $group->name);
+        $subject = (new LocaleService())->translate(
+            $recipient->locale,
+            '{0} removed you from the group {1}',
+            $admin->profile->first_name,
+            $group->name
+        );
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
 
-        return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }

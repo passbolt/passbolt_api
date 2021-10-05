@@ -25,6 +25,8 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Resources\ResourcesAddService;
 use Cake\Event\Event;
+use Passbolt\Locale\Service\GetUserLocaleService;
+use Passbolt\Locale\Service\LocaleService;
 
 class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -76,7 +78,13 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createResourceCreateEmail(Resource $resource, User $user): Email
     {
-        $subject = __('You added the password {0}', $resource->name);
+        $locale = (new GetUserLocaleService())->getLocale($user->username);
+        $subject = (new LocaleService())->translate(
+            $locale,
+            'You added the password {0}',
+            $resource->name
+        );
+
         $data = [
             'body' => [
                 'user' => $user,

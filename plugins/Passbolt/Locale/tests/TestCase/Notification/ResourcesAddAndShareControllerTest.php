@@ -40,7 +40,7 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         GetOrgLocaleService::clearOrganisationLocale();
     }
 
-    public function testResourcesAdd_Shoudl_Send_Email_In_User_Locale()
+    public function testResourcesAdd_Should_Send_Email_In_User_Locale()
     {
         $frenchLocale = 'fr-FR';
         $frenchUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
@@ -83,7 +83,7 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
 
         $this->logInAs($frenchUser);
         $this->putJson("/share/resource/{$resource->id}.json?api-version=v2", $data);
-        $this->assertSuccess();
+        $this->assertResponseOk();
 
         $this->assertEmailQueueCount(3);
         $this->assetEmailLocale($defaultUser->username, $englishLocale);

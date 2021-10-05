@@ -28,6 +28,7 @@ use App\Service\Groups\GroupsUpdateService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Locale\Service\LocaleService;
 
 class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -113,7 +114,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
         // Send the email to all the group managers.
         foreach ($groupManagers as $groupManager) {
             $emailCollection->addEmail($this->createSummaryEmail(
-                $groupManager->username,
+                $groupManager,
                 $group,
                 $this->_getSummaryUser($addedUsersIds),
                 // Retrieve the user information corresponding to the users impacted by the changes.
@@ -128,7 +129,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
     }
 
     /**
-     * @param string $emailRecipient Email recipient
+     * @param \App\Model\Entity\User $recipient User recipient
      * @param \App\Model\Entity\Group $group Group
      * @param array $addedUsers List of added users
      * @param array $updatedUsers List of updated users
@@ -138,7 +139,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
      * @return \App\Notification\Email\Email
      */
     private function createSummaryEmail(
-        string $emailRecipient,
+        User $recipient,
         Group $group,
         array $addedUsers,
         array $updatedUsers,
@@ -146,7 +147,12 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
         array $whoIsAdmin,
         User $modifiedBy
     ): Email {
-        $subject = __('{0} updated the group {1}', $modifiedBy->profile->first_name, $group->name);
+        $subject = (new LocaleService())->translate(
+            $recipient->locale,
+            '{0} updated the group {1}',
+            $modifiedBy->profile->first_name,
+            $group->name
+        );
         $data = [
             'body' => [
                 'admin' => $modifiedBy,
@@ -159,7 +165,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
             'title' => $subject,
         ];
 
-        return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 
     /**
@@ -190,7 +196,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
      */
     private function getGroupManagers(Group $group, array $excludeUsersIds): array
     {
-        return $this->usersTable->find()
+        return $this->usersTable->find('locale')
             ->select(['Users.username'])
             ->innerJoinWith('GroupsUsers')
             ->where(

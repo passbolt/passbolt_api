@@ -17,14 +17,20 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Test\TestCase\Service;
 
+use Cake\I18n\I18n;
 use Cake\TestSuite\TestCase;
 use Passbolt\Locale\Service\LocaleService;
+use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
 class LocaleServiceTest extends TestCase
 {
+    use DummyTranslationTestTrait;
+
     public function setUp(): void
     {
+        parent::setUp();
         $this->loadPlugins(['Passbolt/Locale']);
+        I18n::setLocale('en_UK');
     }
 
     /**
@@ -38,7 +44,7 @@ class LocaleServiceTest extends TestCase
         ], LocaleService::getSystemLocales());
     }
 
-    public function dataForTestLocaleUtilityLocaleIsValid(): array
+    public function dataForTestLocaleServiceLocaleIsValid(): array
     {
         return [
             ['en-UK', true],
@@ -53,14 +59,54 @@ class LocaleServiceTest extends TestCase
     /**
      * @param string|null $locale
      * @param bool $expected
-     * @dataProvider dataForTestLocaleUtilityLocaleIsValid
+     * @dataProvider dataForTestLocaleServiceLocaleIsValid
      */
-    public function testLocaleUtilityLocaleIsValid(?string $locale, bool $expected): void
+    public function testLocaleServiceLocaleIsValid(?string $locale, bool $expected): void
     {
         $service = new LocaleService();
         $this->assertSame(
             $expected,
             $service->isValidLocale($locale)
         );
+    }
+
+    public function dataProviderForTestLocaleServiceLocaleTranslate_On_Existing_Locale()
+    {
+        return [
+            ['fr-FR', 'Courriel envoyé de: admin@passbolt.com'],
+            ['fr_FR', 'Courriel envoyé de: admin@passbolt.com'],
+            ['foo_BAR', 'Sending email from: admin@passbolt.com'],
+            ['', 'Sending email from: admin@passbolt.com'],
+        ];
+    }
+
+    public function testLocaleServiceLocaleTranslate_Plain_String()
+    {
+        $this->setDummyFrenchTranslator();
+        $service = new LocaleService();
+        $translation = $service->translate('fr-FR', $this->getDummyEnglishEmailSentence());
+
+        $this->assertSame($this->getDummyFrenchEmailSentence(), $translation);
+        // Ensure that the locale is set to the original one.
+        $this->assertSame('en_UK', I18n::getLocale());
+    }
+
+    /**
+     * @param string $locale locale to translate
+     * @param string $expectedSubject expected translation
+     * @dataProvider dataProviderForTestLocaleServiceLocaleTranslate_On_Existing_Locale
+     */
+    public function testLocaleServiceLocaleTranslate(string $locale, string $expectedSubject)
+    {
+        $this->setDummyFrenchTranslator();
+        $service = new LocaleService();
+
+        $msg = 'Sending email from: {0}';
+        $username = 'admin@passbolt.com';
+        $translation = $service->translate($locale, $msg, $username);
+
+        $this->assertSame($expectedSubject, $translation);
+        // Ensure that the locale is set to the original one.
+        $this->assertSame('en_UK', I18n::getLocale());
     }
 }

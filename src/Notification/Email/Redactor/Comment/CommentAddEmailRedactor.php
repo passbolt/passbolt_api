@@ -30,6 +30,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\Locale\Service\LocaleService;
 
 class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -88,8 +89,8 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
 
         // Find the users that have access to the resource (including via their groups)
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$comment->foreign_key]]];
-        $users = $this->usersTable->findIndex(Role::USER, $options)->all();
-        if (count($users) < 2) {
+        $users = $this->usersTable->findIndex(Role::USER, $options)->find('locale');
+        if ($users->count() < 2) {
             // if there is nobody or just one user, give it up
             return $emailCollection;
         }
@@ -110,15 +111,20 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param \App\Model\Entity\User $user User to notify
+     * @param \App\Model\Entity\User $recipient User to notify
      * @param \App\Model\Entity\User $creator Creator of the comment
      * @param Resource $resource Resource on which a comment was added
      * @param \App\Model\Entity\Comment $comment Comment added
      * @return \App\Notification\Email\Email
      */
-    private function createCommentAddEmail(User $user, User $creator, Resource $resource, Comment $comment): Email
+    private function createCommentAddEmail(User $recipient, User $creator, Resource $resource, Comment $comment): Email
     {
-        $subject = __('{0} commented on {1}', $creator->profile->first_name, $resource->name);
+        $subject = (new LocaleService())->translate(
+            $recipient->locale,
+            '{0} commented on {1}',
+            $creator->profile->first_name,
+            $resource->name
+        );
         $body = [
             'creator' => $creator,
             'comment' => $comment,
@@ -130,6 +136,6 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($user->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }

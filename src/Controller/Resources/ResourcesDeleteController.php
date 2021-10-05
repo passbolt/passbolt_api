@@ -72,7 +72,11 @@ class ResourcesDeleteController extends AppController
         // Get the list of users who have access to the resource
         // useful to do now to notify users later, since it wont be possible to after delete
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
-        $users = $this->Users->findIndex(Role::USER, $options)->all();
+        $users = $this->Users
+            ->findIndex(Role::USER, $options)
+            ->find('locale')
+            ->where(['Users.id !=' => $this->User->id()])
+            ->all();
 
         // Update the entity to delete=1, clear uri/desc/username and drop associated permissions
         if (!$this->Resources->softDelete($this->User->id(), $resource)) {
@@ -116,7 +120,7 @@ class ResourcesDeleteController extends AppController
      * Send email notification
      *
      * @param Resource $resource Resource
-     * @param \Cake\Datasource\ResultSetInterface $users list of User entity who had access to the resource
+     * @param \Cake\Datasource\ResultSetInterface $users Users who had access to the resource, deleter excluded
      * @return void
      */
     protected function _notifyUser(Resource $resource, ResultSetInterface $users): void

@@ -66,4 +66,19 @@ trait EmailQueueTrait
             $this->assertTextEquals($expectedLocale, $email->get('template_vars')['locale']);
         }
     }
+
+    /**
+     * Asserts that all emails of a given recipient have expected subject.
+     *
+     * @param string $email Recipient
+     * @param string $expectedSubject Expected subject
+     */
+    protected function assetEmailSubject(string $email, string $expectedSubject)
+    {
+        $emails = EmailQueueFactory::find()->where(compact('email'));
+        $this->assertTrue($emails->count() > 0);
+        foreach ($emails as $email) {
+            $this->assertTextEquals($expectedSubject, $email->get('subject'));
+        }
+    }
 }

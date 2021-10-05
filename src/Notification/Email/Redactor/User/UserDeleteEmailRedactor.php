@@ -19,40 +19,24 @@ namespace App\Notification\Email\Redactor\User;
 
 use App\Controller\Users\UsersDeleteController;
 use App\Model\Entity\User;
-use App\Model\Table\GroupsUsersTable;
-use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
+use Cake\ORM\Query;
+use Passbolt\Locale\Service\LocaleService;
 
+/**
+ * Class UserDeleteEmailRedactor
+ *
+ * @property \App\Model\Table\UsersTable $Users
+ */
 class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
+    use ModelAwareTrait;
     use SubscribedEmailRedactorTrait;
-
-    /**
-     * @var \App\Model\Table\UsersTable
-     */
-    private $usersTable;
-
-    /**
-     * @var \App\Model\Table\GroupsUsersTable
-     */
-    private $groupsUsersTable;
-
-    /**
-     * @param \App\Model\Table\UsersTable|null $usersTable UsersTable
-     * @param \App\Model\Table\GroupsUsersTable|null $groupsUsersTable GroupsUsersTable
-     */
-    public function __construct(?UsersTable $usersTable = null, ?GroupsUsersTable $groupsUsersTable = null)
-    {
-        /** @phpstan-ignore-next-line */
-        $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        /** @phpstan-ignore-next-line */
-        $this->groupsUsersTable = $groupsUsersTable ?? TableRegistry::getTableLocator()->get('GroupsUsers');
-    }
 
     /**
      * @param \Cake\Event\Event $event User delete event
@@ -60,6 +44,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function onSubscribedEvent(Event $event): EmailCollection
     {
+        $this->loadModel('Users');
         $emailCollection = new EmailCollection();
 
         $user = $event->getData('user');
@@ -70,16 +55,18 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
             return $emailCollection;
         }
 
-        $deletedBy = $this->usersTable->findFirstForEmail($deletedById);
-        $groupManagers = $this->getGroupManagers($groupsIds);
+        $deletedBy = $this->Users->findFirstForEmail($deletedById);
+        $recipients = $this->getRecipientsWithGroups($groupsIds);
 
-        $usersToNotify = [];
-        foreach ($groupManagers as $groupManager) {
-            $usersToNotify[$groupManager->user->username][] = $groupManager->group;
-        }
-
-        foreach ($usersToNotify as $username => $groups) {
-            $emailCollection->addEmail($this->createDeleteUserEmail($username, $user, $groups, $deletedBy));
+        foreach ($recipients as $recipient) {
+            $groups = [];
+            foreach ($recipient->groups_users as $gu) {
+                if (isset($gu->group)) {
+                    $groups[] = $gu->group;
+                }
+            }
+            $email = $this->createDeleteUserEmail($recipient, $user, $groups, $deletedBy);
+            $emailCollection->addEmail($email);
         }
 
         return $emailCollection;
@@ -87,30 +74,45 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param array $groupsIds Groups IDs
-     * @return \Cake\Datasource\ResultSetInterface
+     * @return \Cake\ORM\Query
      */
-    private function getGroupManagers(array $groupsIds)
+    private function getRecipientsWithGroups(array $groupsIds): Query
     {
-        return $this->groupsUsersTable->find()
-            ->select()
-            ->contain(['Users', 'Groups'])
-            ->where(['group_id IN' => $groupsIds, 'is_admin' => 1])
-            ->all();
+        $filter = [
+            'Groups.id IN' => $groupsIds,
+            'GroupsUsers.is_admin' => 1,
+        ];
+
+        // This is ugly CakePHP https://github.com/cakephp/cakephp/issues/15689
+        return $this->Users->find('locale')
+            ->group($this->Users->aliasField('id'))
+            ->select($this->Users)
+            ->contain('GroupsUsers.Groups', function (Query $q) use ($filter) {
+                return $q->where($filter);
+            })
+            ->innerJoinWith('GroupsUsers.Groups', function (Query $q) use ($filter) {
+                return $q->where($filter);
+            });
     }
 
     /**
-     * @param string  $recipient Email recipient
+     * @param \App\Model\Entity\User $recipient User recipient
      * @param \App\Model\Entity\User $user User
      * @param \App\Model\Entity\Group[] $groups Groups
      * @param \App\Model\Entity\User $deletedBy User admin who deleted the user
      * @return \App\Notification\Email\Email
      */
-    private function createDeleteUserEmail(string $recipient, User $user, array $groups, User $deletedBy)
+    private function createDeleteUserEmail(User $recipient, User $user, array $groups, User $deletedBy): Email
     {
-        $subject = __('{0} deleted user {1}', $deletedBy->profile->first_name, $user->profile->first_name);
+        $subject = (new LocaleService())->translate(
+            $recipient->locale,
+            '{0} deleted user {1}',
+            $deletedBy->profile->first_name,
+            $user->profile->first_name
+        );
 
         return new Email(
-            $recipient,
+            $recipient->username,
             $subject,
             ['body' => ['user' => $user, 'groups' => $groups, 'admin' => $deletedBy], 'title' => $subject],
             'GM/user_delete'

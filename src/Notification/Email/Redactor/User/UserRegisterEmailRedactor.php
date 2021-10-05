@@ -27,6 +27,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\Locale\Service\LocaleService;
 
 class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -76,7 +77,13 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function getSubject(User $user): string
     {
-        return __('Welcome to passbolt, {0}!', $user->profile->first_name);
+        $subject = (new LocaleService())->translate(
+            $user->locale,
+            'Welcome to passbolt, {0}!',
+            $user->profile->first_name
+        );
+
+        return $subject;
     }
 
     /**
@@ -110,6 +117,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     private function createEmailAdminRegister(User $user, AuthenticationToken $uac, string $adminId): Email
     {
         $admin = $this->usersTable->findFirstForEmail($adminId);
+        $user = $this->usersTable->findFirstForEmail($user->id);
 
         $this->usersTable->loadInto($user, [
             'Profiles' => AvatarsTable::addContainAvatar(),

@@ -18,7 +18,7 @@ namespace Passbolt\Locale\Event;
 
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\I18n\I18n;
+use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
 class LocaleRenderListener implements EventListenerInterface
@@ -57,7 +57,7 @@ class LocaleRenderListener implements EventListenerInterface
         $service = new LocaleService();
         if ($service->isValidLocale($locale)) {
             // Remember the locale before render.
-            self::$localeBeforeRender = self::$localeBeforeRender ?? I18n::getLocale();
+            self::$localeBeforeRender = self::$localeBeforeRender ?? GetOrgLocaleService::DEFAULT_LOCALE;
             $service->setLocale($locale);
         }
     }

@@ -28,6 +28,7 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Resources\ResourcesUpdateService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\Locale\Service\LocaleService;
 
 class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -76,26 +77,31 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
         // Get the users that can access this resource
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
-        $users = $this->usersTable->findIndex(Role::USER, $options)->all();
+        $users = $this->usersTable->findIndex(Role::USER, $options)->find('locale');
         $owner = $this->usersTable->findFirstForEmail($resource->modified_by);
 
         // Send emails to everybody that can see the resource
         foreach ($users as $user) {
-            $emailCollection->addEmail($this->createUpdateEmail($user->username, $owner, $resource));
+            $emailCollection->addEmail($this->createUpdateEmail($user, $owner, $resource));
         }
 
         return $emailCollection;
     }
 
     /**
-     * @param string   $emailRecipient Email of the recipient user
+     * @param \App\Model\Entity\User $recipient Email of the recipient user
      * @param \App\Model\Entity\User $owner User who executed the action
      * @param Resource $resource Resource
      * @return \App\Notification\Email\Email
      */
-    private function createUpdateEmail(string $emailRecipient, User $owner, Resource $resource)
+    private function createUpdateEmail(User $recipient, User $owner, Resource $resource): Email
     {
-        $subject = __('{0} edited the password {1}', $owner->profile->first_name, $resource->name);
+        $subject = (new LocaleService())->translate(
+            $recipient->locale,
+            '{0} edited the password {1}',
+            $owner->profile->first_name,
+            $resource->name
+        );
         $data = [
             'body' => [
                 'user' => $owner,
@@ -107,6 +113,6 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
             ], 'title' => $subject,
         ];
 
-        return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }

@@ -119,4 +119,24 @@ class LocaleService
     {
         return str_replace('-', '_', $locale);
     }
+
+    /**
+     * Translate a string in a given locale.
+     * This is useful for example when translating the subject of
+     * emails in the recipient's locale.
+     *
+     * @param string $locale Destination locale
+     * @param string $singular String to translate
+     * @param mixed ...$args additional arguments
+     * @return string
+     */
+    public function translate(string $locale, string $singular, ...$args): string
+    {
+        $backupLocale = I18n::getLocale();
+        $this->setLocaleIfIsValid($locale);
+        $subject = __($singular, ...$args);
+        $this->setLocaleIfIsValid($backupLocale);
+
+        return $subject;
+    }
 }

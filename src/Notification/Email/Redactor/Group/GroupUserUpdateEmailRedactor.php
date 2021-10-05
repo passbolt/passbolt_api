@@ -28,6 +28,7 @@ use App\Service\Groups\GroupsUpdateService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Locale\Service\LocaleService;
 
 class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -97,16 +98,13 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     {
         // Retrieve the users to send an email to.
         $usersIds = Hash::extract($updatedGroupsUsers, '{n}.user_id');
-        $users = $this->usersTable->find()
-            ->select(['id', 'username'])
-            ->where(['id IN' => $usersIds])
-            ->combine('id', 'username');
+        $users = $this->usersTable->find('locale')->where(['Users.id IN' => $usersIds]);
         $whoIsAdmin = Hash::combine($updatedGroupsUsers, '{n}.user_id', '{n}.is_admin');
 
         $emails = [];
-        foreach ($users as $userId => $name) {
-            $isAdmin = isset($whoIsAdmin[$userId]) && $whoIsAdmin[$userId];
-            $emails[] = $this->createUpdateMembershipGroupUpdateEmail($name, $isAdmin, $modifiedBy, $group);
+        foreach ($users as $user) {
+            $isAdmin = isset($whoIsAdmin[$user->id]) && $whoIsAdmin[$user->id];
+            $emails[] = $this->createUpdateMembershipGroupUpdateEmail($user, $isAdmin, $modifiedBy, $group);
         }
 
         return $emails;
@@ -115,21 +113,26 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * Create group update email for the user whom the membership has changed
      *
-     * @param string $recipient Email recipient
+     * @param \App\Model\Entity\User $recipient User recipient
      * @param bool $isAdmin Is user admin
      * @param \App\Model\Entity\User $modifiedBy person who did the change
      * @param \App\Model\Entity\Group $group Group the affected group
      * @return \App\Notification\Email\Email
      */
     public function createUpdateMembershipGroupUpdateEmail(
-        string $recipient,
+        User $recipient,
         bool $isAdmin,
         User $modifiedBy,
         Group $group
     ): Email {
-        $subject = __('{0} updated your membership in the group {1}', $modifiedBy->profile->first_name, $group->name);
+        $subject = (new LocaleService())->translate(
+            $recipient->locale,
+            '{0} updated your membership in the group {1}',
+            $modifiedBy->profile->first_name,
+            $group->name
+        );
         $data = ['body' => ['admin' => $modifiedBy, 'group' => $group, 'isAdmin' => $isAdmin], 'title' => $subject];
 
-        return new Email($recipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }
