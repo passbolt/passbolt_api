@@ -28,7 +28,7 @@ return [
                     [
                         'locale' => 'sv-SE',
                         'label' => 'Svenska',
-                    ]
+                    ],
                 ],
             ],
         ],
