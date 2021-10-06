@@ -30,6 +30,7 @@ class GetUserLocaleServiceTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->loadPlugins(['Passbolt/Locale']);
         $this->addFooSystemLocale();
     }
@@ -38,6 +39,7 @@ class GetUserLocaleServiceTest extends TestCase
     {
         GetOrgLocaleService::clearOrganisationLocale();
         $this->removeFooSystemLocale();
+        parent::tearDown();
     }
 
     public function dataForTestGetUserLocaleServiceGetLocale(): array

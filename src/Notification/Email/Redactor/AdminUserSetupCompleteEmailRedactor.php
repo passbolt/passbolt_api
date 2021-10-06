@@ -29,6 +29,7 @@ use Cake\Event\Event;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Passbolt\Locale\Service\LocaleService;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use RuntimeException;
 
@@ -117,7 +118,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         }
 
         /** @var \App\Model\Entity\User[] $admins */
-        $admins = $this->usersTable->findAdmins();
+        $admins = $this->usersTable->findAdmins()->find('locale');
         // Create an email for every admin
         foreach ($admins as $admin) {
             $emailCollection->addEmail(
@@ -140,7 +141,12 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         /** @var \App\Model\Entity\Profile $profile */
         $profile = $userCompletedSetup->profile;
 
-        $subject = __('{0} just activated their account on passbolt', $profile->first_name);
+        $subject = (new LocaleService())->translateString(
+            $admin->locale,
+            function () use ($profile) {
+                return __('{0} just activated their account on passbolt', $profile->first_name);
+            }
+        );
 
         return new Email(
             $admin->username,

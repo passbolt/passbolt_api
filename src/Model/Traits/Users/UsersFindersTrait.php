@@ -456,7 +456,7 @@ trait UsersFindersTrait
         }
 
         /** @var \App\Model\Entity\User $user */
-        $user = $this->find()
+        $user = $this->find('locale')
             ->where(['Users.id' => $userId])
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
@@ -493,7 +493,7 @@ trait UsersFindersTrait
      *
      * @return \Cake\ORM\Query
      */
-    public function findAdmins()
+    public function findAdmins(): Query
     {
         return $this->find()
             ->where(
