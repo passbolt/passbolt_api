@@ -70,13 +70,27 @@ class LocaleServiceTest extends TestCase
         );
     }
 
-    public function dataProviderForTestLocaleServiceLocaleTranslate_On_Existing_Locale()
+    public function dataProviderForTestLocaleServiceLocaleTranslate_On_Existing_Locale_English_Default()
     {
         return [
             ['fr-FR', 'Courriel envoyé de: admin@passbolt.com'],
             ['fr_FR', 'Courriel envoyé de: admin@passbolt.com'],
+            ['en-UK', 'Sending email from: admin@passbolt.com'],
+            ['en_UK', 'Sending email from: admin@passbolt.com'],
             ['foo_BAR', 'Sending email from: admin@passbolt.com'],
             ['', 'Sending email from: admin@passbolt.com'],
+        ];
+    }
+
+    public function dataProviderForTestLocaleServiceLocaleTranslate_On_Existing_Locale_French_Default()
+    {
+        return [
+            ['fr-FR', 'Courriel envoyé de: admin@passbolt.com'],
+            ['fr_FR', 'Courriel envoyé de: admin@passbolt.com'],
+            ['en-UK', 'Sending email from: admin@passbolt.com'],
+            ['en_UK', 'Sending email from: admin@passbolt.com'],
+            ['foo_BAR', 'Courriel envoyé de: admin@passbolt.com'],
+            ['', 'Courriel envoyé de: admin@passbolt.com'],
         ];
     }
 
@@ -94,7 +108,7 @@ class LocaleServiceTest extends TestCase
     /**
      * @param string $locale locale to translate
      * @param string $expectedSubject expected translation
-     * @dataProvider dataProviderForTestLocaleServiceLocaleTranslate_On_Existing_Locale
+     * @dataProvider dataProviderForTestLocaleServiceLocaleTranslate_On_Existing_Locale_English_Default
      */
     public function testLocaleServiceLocaleTranslate(string $locale, string $expectedSubject)
     {
@@ -108,5 +122,25 @@ class LocaleServiceTest extends TestCase
         $this->assertSame($expectedSubject, $translation);
         // Ensure that the locale is set to the original one.
         $this->assertSame('en_UK', I18n::getLocale());
+    }
+
+    /**
+     * @param string $locale locale to translate
+     * @param string $expectedSubject expected translation
+     * @dataProvider dataProviderForTestLocaleServiceLocaleTranslate_On_Existing_Locale_French_Default
+     */
+    public function testLocaleServiceLocaleTranslate_With_French_Org_Setting(string $locale, string $expectedSubject)
+    {
+        I18n::setLocale('fr_FR');
+        $this->setDummyFrenchTranslator();
+        $service = new LocaleService();
+
+        $msg = 'Sending email from: {0}';
+        $username = 'admin@passbolt.com';
+        $translation = $service->translate($locale, $msg, $username);
+
+        $this->assertSame($expectedSubject, $translation);
+        // Ensure that the locale is set to the original one.
+        $this->assertSame('fr_FR', I18n::getLocale());
     }
 }

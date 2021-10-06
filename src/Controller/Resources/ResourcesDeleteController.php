@@ -71,6 +71,7 @@ class ResourcesDeleteController extends AppController
 
         // Get the list of users who have access to the resource
         // useful to do now to notify users later, since it wont be possible to after delete
+        // The logged in user will not be notified.
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
         $users = $this->Users
             ->findIndex(Role::USER, $options)
