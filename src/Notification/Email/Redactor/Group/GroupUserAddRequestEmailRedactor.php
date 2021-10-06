@@ -107,12 +107,14 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
      */
     private function getGroupManagers(string $groupId): Query
     {
-        return $this->groupsUsersTable->find('locale')
+        return $this->groupsUsersTable->find()
             ->where([
                 $this->groupsUsersTable->aliasField('group_id') => $groupId,
                 $this->groupsUsersTable->aliasField('is_admin') => true,
             ])
-            ->contain(['Users']);
+            ->contain('Users', function (Query $q) {
+                return $q->find('locale');
+            });
     }
 
     /**
