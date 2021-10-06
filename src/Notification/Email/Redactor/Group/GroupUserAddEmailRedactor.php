@@ -170,11 +170,11 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createGroupUserAddEmail(User $recipient, User $admin, Group $group, bool $isAdmin): Email
     {
-        $subject = (new LocaleService())->translate(
+        $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            '{0} added you to the group {1}',
-            $admin->profile->first_name,
-            $group->name
+            function () use ($admin, $group) {
+                return __('{0} added you to the group {1}', $admin->profile->first_name, $group->name);
+            }
         );
         $data = ['body' => ['isAdmin' => $isAdmin, 'admin' => $admin, 'group' => $group], 'title' => $subject];
 

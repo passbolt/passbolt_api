@@ -119,11 +119,11 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createCommentAddEmail(User $recipient, User $creator, Resource $resource, Comment $comment): Email
     {
-        $subject = (new LocaleService())->translate(
+        $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            '{0} commented on {1}',
-            $creator->profile->first_name,
-            $resource->name
+            function () use ($creator, $resource) {
+                return __('{0} commented on {1}', $creator->profile->first_name, $resource->name);
+            }
         );
         $body = [
             'creator' => $creator,

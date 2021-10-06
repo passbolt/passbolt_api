@@ -104,11 +104,11 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createDeleteUserEmail(User $recipient, User $user, array $groups, User $deletedBy): Email
     {
-        $subject = (new LocaleService())->translate(
+        $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            '{0} deleted user {1}',
-            $deletedBy->profile->first_name,
-            $user->profile->first_name
+            function () use ($deletedBy, $user) {
+                return __('{0} deleted user {1}', $deletedBy->profile->first_name, $user->profile->first_name);
+            }
         );
 
         return new Email(

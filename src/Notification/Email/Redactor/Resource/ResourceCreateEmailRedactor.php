@@ -79,10 +79,11 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     private function createResourceCreateEmail(Resource $resource, User $user): Email
     {
         $locale = (new GetUserLocaleService())->getLocale($user->username);
-        $subject = (new LocaleService())->translate(
+        $subject = (new LocaleService())->translateString(
             $locale,
-            'You added the password {0}',
-            $resource->name
+            function () use ($resource) {
+                return __('You added the password {0}', $resource->name);
+            }
         );
 
         $data = [

@@ -96,11 +96,11 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createUpdateEmail(User $recipient, User $owner, Resource $resource): Email
     {
-        $subject = (new LocaleService())->translate(
+        $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            '{0} edited the password {1}',
-            $owner->profile->first_name,
-            $resource->name
+            function () use ($owner, $resource) {
+                return __('{0} edited the password {1}', $owner->profile->first_name, $resource->name);
+            }
         );
         $data = [
             'body' => [

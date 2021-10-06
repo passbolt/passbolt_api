@@ -121,20 +121,28 @@ class LocaleService
     }
 
     /**
-     * Translate a string in a given locale.
+     * Translates a string in a given locale.
      * This is useful for example when translating the subject of
      * emails in the recipient's locale.
      *
+     * The callable should return a string.
+     * Example:
+     *  $subject = (new LocaleService())->translateString(
+     *       $user->locale,
+     *       function () use ($user) {
+     *           return __('Welcome to passbolt, {0}!', $user->profile->first_name);
+     *       }
+     *   );
+     *
      * @param string $locale Destination locale
-     * @param string $singular String to translate
-     * @param mixed ...$args additional arguments
+     * @param callable $callable returns the __("string to be translated")
      * @return string
      */
-    public function translate(string $locale, string $singular, ...$args): string
+    public function translateString(string $locale, callable $callable): string
     {
         $backupLocale = I18n::getLocale();
         $this->setLocaleIfIsValid($locale);
-        $subject = __($singular, ...$args);
+        $subject = $callable();
         $this->setLocaleIfIsValid($backupLocale);
 
         return $subject;

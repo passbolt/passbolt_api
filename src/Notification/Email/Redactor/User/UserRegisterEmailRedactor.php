@@ -77,13 +77,12 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function getSubject(User $user): string
     {
-        $subject = (new LocaleService())->translate(
+        return (new LocaleService())->translateString(
             $user->locale,
-            'Welcome to passbolt, {0}!',
-            $user->profile->first_name
+            function () use ($user) {
+                return __('Welcome to passbolt, {0}!', $user->profile->first_name);
+            }
         );
-
-        return $subject;
     }
 
     /**

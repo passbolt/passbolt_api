@@ -72,10 +72,11 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
     private function createAccountRecoveryEmail(User $user, AuthenticationToken $token): Email
     {
         $locale = (new GetUserLocaleService())->getLocale($user->username);
-        $subject = (new LocaleService())->translate(
+        $subject = (new LocaleService())->translateString(
             $locale,
-            'Your account recovery, {0}!',
-            $user->profile->first_name
+            function () use ($user) {
+                return __('Your account recovery, {0}!', $user->profile->first_name);
+            }
         );
 
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];

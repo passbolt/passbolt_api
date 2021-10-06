@@ -147,11 +147,11 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
         array $whoIsAdmin,
         User $modifiedBy
     ): Email {
-        $subject = (new LocaleService())->translate(
+        $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            '{0} updated the group {1}',
-            $modifiedBy->profile->first_name,
-            $group->name
+            function () use ($modifiedBy, $group) {
+                return __('{0} updated the group {1}', $modifiedBy->profile->first_name, $group->name);
+            }
         );
         $data = [
             'body' => [

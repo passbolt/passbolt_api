@@ -97,11 +97,11 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createGroupDeleteEmail(User $recipient, User $admin, Group $group): Email
     {
-        $subject = (new LocaleService())->translate(
+        $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            '{0} deleted the group {1}',
-            $admin->profile->first_name,
-            $group->name
+            function () use ($admin, $group) {
+                return __('{0} deleted the group {1}', $admin->profile->first_name, $group->name);
+            }
         );
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
 

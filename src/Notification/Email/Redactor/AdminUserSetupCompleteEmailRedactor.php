@@ -141,10 +141,11 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         /** @var \App\Model\Entity\Profile $profile */
         $profile = $userCompletedSetup->profile;
 
-        $subject = (new LocaleService())->translate(
+        $subject = (new LocaleService())->translateString(
             $admin->locale,
-            '{0} just activated their account on passbolt',
-            $profile->first_name
+            function () use ($profile) {
+                return __('{0} just activated their account on passbolt', $profile->first_name);
+            }
         );
 
         return new Email(
