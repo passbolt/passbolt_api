@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Lib\Model;
 
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
+use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 trait EmailQueueTrait
@@ -32,10 +32,7 @@ trait EmailQueueTrait
      */
     protected function assertEmailIsInQueue(array $properties)
     {
-        $EmailQueues = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
-
-        $isFound = $EmailQueues->find()->where($properties)->count() > 0;
-        $this->assertTrue($isFound, 'The email is not in the email queue.');
+        $this->assertTrue(EmailQueueFactory::count() > 0, 'The email is not in the email queue.');
     }
 
     /**
@@ -51,8 +48,7 @@ trait EmailQueueTrait
      */
     protected function assertEmailQueueCount(int $n)
     {
-        $EmailQueues = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
-        $this->assertSame($n, $EmailQueues->find()->count());
+        $this->assertSame($n, EmailQueueFactory::find()->count());
     }
 
     /**
@@ -90,5 +86,35 @@ trait EmailQueueTrait
     {
         Configure::write('passbolt.email.send', $this->backupEmailNotificationSettings);
         EmailNotificationSettings::flushCache();
+    }
+
+    /**
+     * Asserts that all emails of a given recipient have a locale set and equal to the expectation.
+     *
+     * @param string $email Recipient
+     * @param string $expectedLocale Expected locale
+     */
+    protected function assetEmailLocale(string $email, string $expectedLocale)
+    {
+        $emails = EmailQueueFactory::find()->where(compact('email'));
+        $this->assertTrue($emails->count() > 0);
+        foreach ($emails as $email) {
+            $this->assertTextEquals($expectedLocale, $email->get('template_vars')['locale']);
+        }
+    }
+
+    /**
+     * Asserts that all emails of a given recipient have expected subject.
+     *
+     * @param string $email Recipient
+     * @param string $expectedSubject Expected subject
+     */
+    protected function assetEmailSubject(string $email, string $expectedSubject)
+    {
+        $emails = EmailQueueFactory::find()->where(compact('email'));
+        $this->assertTrue($emails->count() > 0);
+        foreach ($emails as $email) {
+            $this->assertTextEquals($expectedSubject, $email->get('subject'));
+        }
     }
 }

@@ -75,7 +75,7 @@ use App\Utility\Purifier;
                                                 <br>
                                             <?php endif; ?>
                                             <?php if (!empty($updatedUsers)): ?>
-                                                <span style="font-weight:bold;">Updated roles</span>
+                                                <span style="font-weight:bold;"><?= __('Updated roles') ?></span>
                                                 <table id="updated_roles" style="border:0; margin:5px 0 0 5px;">
                                                     <?php foreach ($updatedUsers as $updatedUser): ?>
                                                         <tr style="margin-left:5px;">

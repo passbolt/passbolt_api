@@ -27,8 +27,10 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Groups\GroupsUpdateService;
 use Cake\Event\Event;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Locale\Service\LocaleService;
 
 class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -94,16 +96,14 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * Return a list of user ids
+     * Return a list of recipients
      *
      * @param array $userIds List of user ids
-     * @return \Cake\Datasource\ResultSetInterface
+     * @return \Cake\ORM\Query
      */
-    private function getUserNames(array $userIds)
+    private function getRecipients(array $userIds): Query
     {
-        return $this->usersTable->find()
-            ->select(['id', 'username'])
-            ->where(['id IN' => $userIds])->all();
+        return $this->usersTable->find('locale')->where(['Users.id IN' => $userIds]);
     }
 
     /**
@@ -115,16 +115,17 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
         $emails = [];
         $admin = $this->usersTable->findFirstForEmail($group->created_by);
         $userIds = Hash::extract($group->groups_users, '{n}.user_id');
-        $userNames = $this->getUserNames($userIds);
-        $userNames = Hash::combine($userNames->toArray(), '{n}.id', '{n}.username');
+        // Don't send notification if the user added themselves
+        $recipients = $this->getRecipients($userIds)->where([
+            'Users.id !=' => $group->created_by,
+        ])->all();
 
         foreach ($group->groups_users as $group_user) {
-            // Don't send notification if the user added added themselves
             if ($group_user->user_id === $group->created_by) {
                 continue;
             }
 
-            $recipient = $userNames[$group_user->user_id];
+            $recipient = $recipients->firstMatch(['id' => $group_user->user_id]);
             $emails[] = $this->createGroupUserAddEmail($recipient, $admin, $group, $group_user->is_admin);
         }
 
@@ -149,29 +150,34 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
 
         // Retrieve the users to send an email to.
         $usersIds = Hash::extract($addedGroupsUsers, '{n}.user_id');
-        $users = $this->getUserNames($usersIds)->combine('id', 'username');
+        $users = $this->getRecipients($usersIds);
         $whoIsAdmin = Hash::combine($addedGroupsUsers, '{n}.user_id', '{n}.is_admin');
 
-        foreach ($users as $userId => $userName) {
-            $isAdmin = isset($whoIsAdmin[$userId]) && $whoIsAdmin[$userId];
-            $emails[] = $this->createGroupUserAddEmail($userName, $modifiedBy, $group, $isAdmin);
+        foreach ($users as $user) {
+            $isAdmin = isset($whoIsAdmin[$user->id]) && $whoIsAdmin[$user->id];
+            $emails[] = $this->createGroupUserAddEmail($user, $modifiedBy, $group, $isAdmin);
         }
 
         return $emails;
     }
 
     /**
-     * @param string $recipient Email recipient
+     * @param \App\Model\Entity\User $recipient User recipient
      * @param \App\Model\Entity\User $admin Admin
      * @param \App\Model\Entity\Group $group Group
      * @param bool $isAdmin Is user admin
      * @return \App\Notification\Email\Email
      */
-    private function createGroupUserAddEmail(string $recipient, User $admin, Group $group, bool $isAdmin): Email
+    private function createGroupUserAddEmail(User $recipient, User $admin, Group $group, bool $isAdmin): Email
     {
-        $subject = __('{0} added you to the group {1}', $admin->profile->first_name, $group->name);
+        $subject = (new LocaleService())->translateString(
+            $recipient->locale,
+            function () use ($admin, $group) {
+                return __('{0} added you to the group {1}', $admin->profile->first_name, $group->name);
+            }
+        );
         $data = ['body' => ['isAdmin' => $isAdmin, 'admin' => $admin, 'group' => $group], 'title' => $subject];
 
-        return new Email($recipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }

@@ -18,10 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\Locale\Service;
 
 use App\Model\Entity\OrganizationSetting;
-use Cake\I18n\I18n;
 
 class GetOrgLocaleService extends LocaleService
 {
+    public const DEFAULT_LOCALE = 'en-UK';
+
     /**
      * @var string|null
      */
@@ -81,7 +82,7 @@ class GetOrgLocaleService extends LocaleService
         if ($setting instanceof OrganizationSetting) {
             self::$organisationLocale = $setting->get('value');
         } else {
-            self::$organisationLocale = static::dasherizeLocale(I18n::getDefaultLocale());
+            self::$organisationLocale = self::DEFAULT_LOCALE;
         }
 
         return self::$organisationLocale;
