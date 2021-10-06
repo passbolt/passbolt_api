@@ -42,7 +42,6 @@ class GpgKeyFormTest extends AppTestCase
 
     public function testGpgKeyFormTestFieldPrivateKeyArmored()
     {
-        $this->markTestSkipped('Test produce test output in CLI on Travis');
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
@@ -326,7 +325,7 @@ GkkO+pcgU1wQ
     }
 
     /**
-     * Test cases for server private ket armored validation rule.
+     * Test cases for server private key armored validation rule.
      *
      * @return array
      */
@@ -443,7 +442,6 @@ Q1+E/vCUgdnk33EDxvk+LStE+6hQdfPTc6FIhB5ygHBcNLQB/1Txgj26reuPFKmj
 LWN2IVKPj2mia4lQHLub9OTlGkkO+pcgU1wQ
 =hgWr
 -----END PGP PRIVATE KEY BLOCK-----' => false,
-                $this->getDummyGpgkey()['private_key_armored'] => true,
             ],
         ];
     }
@@ -582,7 +580,6 @@ pwF4Zk2En6weG8lztoUUoNijoDNfbIpKVdPzyk5o+WD8EjU4uK+H5/6fEjeH7Pk+
 Wg==
 =Z91U
 -----END PGP PRIVATE KEY BLOCK-----' => false,
-                $this->getDummyGpgkey()['private_key_armored'] => true,
             ],
         ];
     }
