@@ -17,8 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\Middleware;
 
 use Authentication\AuthenticationService;
+use Authentication\Authenticator\ResultInterface;
+use Cake\Http\ServerRequest;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
+use Psr\Http\Message\ServerRequestInterface;
 
 class JwtAuthenticationService extends AuthenticationService
 {
@@ -37,23 +40,40 @@ class JwtAuthenticationService extends AuthenticationService
                 'finder' => 'activeNotDeletedContainRole',
             ],
         ]);
-        $this->loadAuthenticator('Authentication.Jwt', [
-            'header' => self::JWT_HEADER,
-            'secretKey' => file_get_contents(JwksGetService::PUBLIC_KEY_PATH),
-            'algorithms' => [JwtTokenCreateService::JWT_ALG],
-            'returnPayload' => false,
-        ]);
-
-        $this->loadGpgAuthenticator();
     }
 
     /**
-     * Loads the JWT Specific Authenticator
-     *
-     * @return void
+     * @inheritDoc
      */
-    protected function loadGpgAuthenticator(): void
+    public function authenticate(ServerRequestInterface $request): ResultInterface
     {
-        $this->loadAuthenticator('Passbolt/JwtAuthentication.GpgJwt');
+        /** @var \Cake\Http\ServerRequest $request */
+        if ($this->isLoginEndpointPost($request)) {
+            $this->loadAuthenticator('Passbolt/JwtAuthentication.GpgJwt');
+        } else {
+            $this->loadAuthenticator('Authentication.Jwt', [
+                'header' => self::JWT_HEADER,
+                'secretKey' => file_get_contents(JwksGetService::PUBLIC_KEY_PATH),
+                'algorithms' => [JwtTokenCreateService::JWT_ALG],
+                'returnPayload' => false,
+            ]);
+        }
+
+        return parent::authenticate($request);
+    }
+
+    /**
+     * Is the user attempting to log in.
+     * If so, the authentication with access token in header is ignored.
+     *
+     * @param \Cake\Http\ServerRequest $request Server Request
+     * @return bool
+     */
+    public function isLoginEndpointPost(ServerRequest $request): bool
+    {
+        $path = str_replace('.json', '', $request->getUri()->getPath());
+        $isLoginPath = ($path === '/auth/jwt/login');
+
+        return $isLoginPath && $request->is('POST');
     }
 }

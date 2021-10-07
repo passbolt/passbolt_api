@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Service\Middleware;
 
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
@@ -24,6 +25,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class JwtRequestDetectionService
 {
+    use FeaturePluginAwareTrait;
+
     public const IS_JWT_AUTH_REQUEST = 'is_jwt_auth_request';
 
     /**
@@ -55,6 +58,10 @@ class JwtRequestDetectionService
     {
         if ($this->request->getAttribute(self::IS_JWT_AUTH_REQUEST)) {
             return true;
+        }
+
+        if (!$this->isFeaturePluginEnabled('JwtAuthentication')) {
+            return false;
         }
 
         try {
@@ -98,5 +105,15 @@ class JwtRequestDetectionService
     public function isJwtRefreshTokenSetInCookie(): bool
     {
         return !empty($this->request->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE));
+    }
+
+    /**
+     * CSRF token is disabled (not necessary) anytime an access token is set in header.
+     *
+     * @return bool
+     */
+    public function skipCsrfProtectionForJwtRequests(): bool
+    {
+        return $this->isJwtAccessTokenSetInHeader();
     }
 }

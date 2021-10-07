@@ -28,6 +28,7 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Locale\Service\LocaleService;
 
 class ShareEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -82,12 +83,12 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
         if (!empty($userIds)) {
             // Get the details of whoever did the changes
             $owner = $this->usersTable->findFirstForEmail($ownerId);
-            $users = Hash::combine($this->getUserFromIds($userIds), '{n}.id', '{n}.username');
+            $users = $this->getUserFromIds($userIds);
             $secrets = Hash::combine($changes['secrets'], '{n}.user_id', '{n}.data');
 
-            foreach ($users as $userId => $userName) {
+            foreach ($users as $user) {
                 $emailCollection->addEmail(
-                    $this->createShareEmail($userName, $owner, $resource, $secrets[$userId])
+                    $this->createShareEmail($user, $owner, $resource, $secrets[$user->id])
                 );
             }
         }
@@ -99,27 +100,28 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      * Return a collection of users from a list of user ids
      *
      * @param array $userIds A list of user ids
-     * @return array
+     * @return \Cake\ORM\Query
      */
     private function getUserFromIds(array $userIds)
     {
-        return $this->usersTable->find()
-            ->select(['id', 'username'])
-            ->where(['id IN' => $userIds])
-            ->all()
-            ->toArray();
+        return $this->usersTable->find('locale')->where(['Users.id IN' => $userIds]);
     }
 
     /**
-     * @param string   $emailRecipient Email of the user to send email to
+     * @param \App\Model\Entity\User $recipient User to send email to
      * @param \App\Model\Entity\User $owner Owner
      * @param Resource $resource Resource
      * @param string   $secret Secret
      * @return \App\Notification\Email\Email
      */
-    private function createShareEmail(string $emailRecipient, User $owner, Resource $resource, string $secret)
+    private function createShareEmail(User $recipient, User $owner, Resource $resource, string $secret): Email
     {
-        $subject = __('{0} shared the password {1}', $owner->profile->first_name, $resource->name);
+        $subject = (new LocaleService())->translateString(
+            $recipient->locale,
+            function () use ($owner, $resource) {
+                return __('{0} shared the password {1}', $owner->profile->first_name, $resource->name);
+            }
+        );
 
         $data = [
             'body' => [
@@ -134,6 +136,6 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }
