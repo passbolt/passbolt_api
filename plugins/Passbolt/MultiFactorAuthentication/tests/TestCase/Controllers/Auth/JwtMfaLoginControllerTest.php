@@ -22,10 +22,10 @@ use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
-use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
@@ -76,17 +76,16 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
             ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
             ->persist();
 
-        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
 
         $accessToken = $this->createJwtTokenAndSetInHeader($user->id);
 
         $mfaToken = $this->mockMfaCookieValid(
             $this->makeUac($user),
-            MfaSettings::PROVIDER_TOTP,
+            MfaSettings::PROVIDER_YUBIKEY,
             false,
             $accessToken
         );
-        $this->mockValidMfaFormInterface(TotpVerifyForm::class, $this->makeUac($user));
 
         $this->postJson('/auth/jwt/login.json', [
             'user_id' => $user->id,
