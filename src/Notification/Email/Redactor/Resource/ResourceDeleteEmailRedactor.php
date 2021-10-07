@@ -27,6 +27,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\Locale\Service\LocaleService;
 
 class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -74,35 +75,37 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $resource = $event->getData('resource');
         /** @var string $deletedBy */
         $deletedBy = $event->getData('deletedBy');
-        /** @var \Cake\Datasource\ResultSetInterface $users */
+        /** @var \Cake\ORM\Query $users */
         $users = $event->getData('users');
 
-        // if there is nobody or just one user, give it up
-        if (count($users) < 2) {
+        // if there is nobody, give it up. The deleter has already been removed from $users.
+        if ($users->count() < 1) {
             return $emailCollection;
         }
 
         $owner = $this->usersTable->findFirstForEmail($deletedBy);
 
         foreach ($users as $user) {
-            if ($user->id === $deletedBy) {
-                continue;
-            }
-            $emailCollection->addEmail($this->createDeleteEmail($user->username, $owner, $resource));
+            $emailCollection->addEmail($this->createDeleteEmail($user, $owner, $resource));
         }
 
         return $emailCollection;
     }
 
     /**
-     * @param string   $emailRecipient Email of the recipient user
+     * @param \App\Model\Entity\User $recipient Email of the recipient user
      * @param \App\Model\Entity\User $owner User who executed the action
      * @param Resource $resource Resource
      * @return \App\Notification\Email\Email
      */
-    private function createDeleteEmail(string $emailRecipient, User $owner, Resource $resource)
+    private function createDeleteEmail(User $recipient, User $owner, Resource $resource): Email
     {
-        $subject = __('{0} deleted the password {1}', $owner->profile->first_name, $resource->name);
+        $subject = (new LocaleService())->translateString(
+            $recipient->locale,
+            function () use ($owner, $resource) {
+                return __('{0} deleted the password {1}', $owner->profile->first_name, $resource->name);
+            }
+        );
         $data = [
             'body' => [
                 'user' => $owner,
@@ -114,6 +117,6 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }

@@ -25,8 +25,9 @@ use Faker\Generator;
 /**
  * ResourceFactory
  *
- * @method \App\Model\Entity\Resource persist()
  * @method \App\Model\Entity\Resource getEntity()
+ * @method \App\Model\Entity\Resource[] getEntities()
+ * @method \App\Model\Entity\Resource persist()
  */
 class ResourceFactory extends CakephpBaseFactory
 {

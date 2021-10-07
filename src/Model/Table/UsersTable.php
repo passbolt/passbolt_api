@@ -81,6 +81,7 @@ class UsersTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
+        $this->addBehavior('Passbolt/Locale.Locale');
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Roles', [
