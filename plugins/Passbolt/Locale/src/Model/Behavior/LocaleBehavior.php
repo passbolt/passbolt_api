@@ -67,7 +67,7 @@ class LocaleBehavior extends Behavior
         $this->table()->hasOne('Locale', [
             'className' => 'Passbolt/AccountSettings.AccountSettings',
             'foreignKey' => 'user_id',
-            'conditions' => ['property' => self::LOCALE_PROPERTY],
+            'conditions' => ['Locale.property' => self::LOCALE_PROPERTY],
         ]);
     }
 

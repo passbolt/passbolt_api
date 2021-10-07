@@ -23,10 +23,12 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Service\Folders\FoldersDeleteService;
+use Passbolt\Locale\Service\LocaleService;
 
 class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -86,9 +88,9 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $operator = $this->usersTable->findFirstForEmail($uac->getId());
-        $usersUsernames = $this->findUsersUsernameToSendEmailTo($users);
-        foreach ($usersUsernames as $userUsername) {
-            $email = $this->createEmail($userUsername, $operator, $folder);
+        $recipients = $this->findUsersUsernameToSendEmailTo($users);
+        foreach ($recipients as $recipient) {
+            $email = $this->createEmail($recipient, $operator, $folder);
             $emailCollection->addEmail($email);
         }
 
@@ -96,29 +98,31 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * Find the users username the email has to be sent to.
+     * Find the users the email has to be sent to.
      *
      * @param array $usersIds The list of users id to send the email to.
-     * @return array The list of users username
+     * @return \Cake\ORM\Query The list of users username
      */
-    private function findUsersUsernameToSendEmailTo(array $usersIds)
+    private function findUsersUsernameToSendEmailTo(array $usersIds): Query
     {
-        return $this->usersTable->find()
-            ->where(['id IN' => $usersIds])
-            ->select('username')
-            ->extract('username')
-            ->toArray();
+        return $this->usersTable->find('locale')->where(['Users.id IN' => $usersIds]);
     }
 
     /**
-     * @param string $recipient The recipient email
+     * @param \App\Model\Entity\User $recipient The recipient
      * @param \App\Model\Entity\User $operator The user at the origin of the operation
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(string $recipient, User $operator, Folder $folder)
+    private function createEmail(User $recipient, User $operator, Folder $folder)
     {
-        $subject = __('{0} deleted the folder {1}', $operator->profile->first_name, $folder->name);
+        $subject = (new LocaleService())->translateString(
+            $recipient->locale,
+            function () use ($operator, $folder) {
+                return __('{0} deleted the folder {1}', $operator->profile->first_name, $folder->name);
+            }
+        );
+
         $data = [
             'body' => [
                 'user' => $operator,
@@ -127,6 +131,6 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($recipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }

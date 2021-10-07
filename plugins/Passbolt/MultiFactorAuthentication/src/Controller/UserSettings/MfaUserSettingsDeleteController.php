@@ -70,7 +70,7 @@ class MfaUserSettingsDeleteController extends MfaController
 
         try {
             /** @var \App\Model\Entity\User $user */
-            $user = $this->Users->findView($userId, $this->User->role())->firstOrFail();
+            $user = $this->Users->findView($userId, $this->User->role())->find('locale')->firstOrFail();
         } catch (RecordNotFoundException $exception) {
             throw new BadRequestException(__('The user id is not valid.'));
         }
