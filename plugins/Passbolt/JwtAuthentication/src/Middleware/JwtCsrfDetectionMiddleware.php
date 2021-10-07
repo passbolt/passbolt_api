@@ -65,15 +65,13 @@ class JwtCsrfDetectionMiddleware implements MiddlewareInterface
      */
     protected function isBrowserRefreshEndpoint(ServerRequest $request, JwtRequestDetectionService $service): bool
     {
-        if ($request->getAttribute('params')['_matchedRoute'] !== '/auth/jwt/refresh') {
-            return false;
-        } elseif ($request->is('get')) {
-            return false;
-        } elseif (!$service->isJwtRefreshTokenSetInCookie()) {
+        if ($request->is('get')) {
             return false;
         }
+        $isRefreshEndPoint = $request->getAttribute('params')['_matchedRoute'] === '/auth/jwt/refresh';
+        $isBrowserSolution = $service->isJwtRefreshTokenSetInCookie();
 
-        return true;
+        return $isRefreshEndPoint && $isBrowserSolution;
     }
 
     /**

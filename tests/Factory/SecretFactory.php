@@ -12,24 +12,22 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.0.0
+ * @since         3.3.0
  */
 namespace App\Test\Factory;
 
-use App\Model\Entity\User;
-use App\Model\Table\PermissionsTable;
-use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
- * ResourceFactory
+ * SecretFactory
  *
- * @method \App\Model\Entity\Resource getEntity()()
- * @method \App\Model\Entity\Resource[] getEntities()()
- * @method \App\Model\Entity\Resource persist()
+ * @method \App\Model\Entity\Secret getEntity()
+ * @method \App\Model\Entity\Secret[] getEntities()
+ * @method \App\Model\Entity\Secret|\App\Model\Entity\Secret[] persist()
+ * @static \App\Model\Entity\Secret get(mixed $primaryKey, array $options)
  */
-class ResourceFactory extends CakephpBaseFactory
+class SecretFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -38,7 +36,7 @@ class ResourceFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'Resources';
+        return 'Secrets';
     }
 
     /**
@@ -51,33 +49,34 @@ class ResourceFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'name' => $faker->text(64),
-                'username' => $faker->email(),
-                'uri' => $faker->url(),
-                'created_by' => $faker->uuid(),
-                'modified_by' => $faker->uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'data' => $this->getValidSecret(),
             ];
         });
+
+        $this
+            ->with('Users')
+            ->with('Resources');
     }
 
     /**
-     * Associates a previously persisted user with ACO permission.
+     * Produces a valid secret
      *
-     * @param \App\Model\Entity\User $creator Persisted creator
-     * @return $this
+     * @return string
      */
-    public function withCreatorAndPermission(User $creator)
+    protected function getValidSecret(): string
     {
-        $aco = PermissionsTable::RESOURCE_ACO;
-        $aro_foreign_key = $creator->id;
+        return "-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-        return $this
-            ->patchData(['created_by' => $creator->id])
-            ->with(
-                'Permission',
-                PermissionFactory::make(compact('aco', 'aro_foreign_key'))
-            );
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF
+-----END PGP MESSAGE-----";
     }
 }

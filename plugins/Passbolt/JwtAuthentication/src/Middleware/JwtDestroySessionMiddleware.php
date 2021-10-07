@@ -36,7 +36,7 @@ class JwtDestroySessionMiddleware implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
-        if ((new JwtRequestDetectionService($request))->isJwtAccessTokenSetInHeader()) {
+        if ((new JwtRequestDetectionService($request))->useJwtAuthentication()) {
             $request->getSession()->destroy();
         }
 
