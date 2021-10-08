@@ -200,7 +200,11 @@ zaZXtuDzZmnTOjWJm895TA==
 
     public function testGnupgAssertSignKeySuccess()
     {
-        $this->markTestIncomplete();
+        $keys = $this->getDummyGpgkey();
+        $this->gnupg->setSignKey($keys['private_key_armored'], '');
+        $signed = $this->gnupg->sign('test');
+        $this->assertNotEquals('test', $signed);
+        $this->assertStringContainsString('test', $signed);
     }
 
     public function testGnupgIsValidMessageError()
