@@ -185,7 +185,11 @@ zaZXtuDzZmnTOjWJm895TA==
 
     public function testGnupgAssertEncryptKeySuccess()
     {
-        $this->markTestIncomplete();
+        $keys = $this->getDummyGpgkey();
+        $this->gnupg->setEncryptKey($keys['public_key_armored']);
+        $encrypted = $this->gnupg->encrypt('test');
+
+        $this->assertStringNotContainsString('test', $encrypted);
     }
 
     public function testGnupgAssertSignKeyError()
