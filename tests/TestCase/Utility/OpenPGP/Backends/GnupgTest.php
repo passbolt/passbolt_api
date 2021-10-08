@@ -156,7 +156,25 @@ zaZXtuDzZmnTOjWJm895TA==
 
     public function testGnupgAssertDecryptKeySuccess()
     {
-        $this->markTestIncomplete();
+        $keys = $this->getDummyGpgkey();
+        $this->gnupg->setDecryptKey($keys['private_key_armored'], '');
+        $encrypted = '-----BEGIN PGP MESSAGE-----
+        hQIMAxWrZ+ffF0kbAQ/7Bbn3FDqVhUygbt2GuT/zZYJWbHLpxzHKS0Thn5sZeusp
+        W46co6ehOTTUOelK/8ODSAZo/7VHjqEhYdtonwBxTVqAfk9as3ffNlr2CTyUdlRD
+        1Rr7zj8zHKDGFaeA6M8oKR+gnIIweiCL9xhpSXZJdad+lC9862Ws0XekhqdMmckn
+        PZTJFyEOG6KUSlOgsHWDr4iDcGLSf6/6+R+/apTEFV8m6eAQLZW1pmFPQfMwdjdI
+        52I9aNoW7Eafn581ER/WeJkyX6VGUQBkEgph13tB3JB4V9NNxxllqBzdY5cH2xO/
+        6kRnIz722NZ7lgGjJz5zIUmV6aFwH5jgZWhLN6gwKRJuGdqb7ncMxxMqNTvv4Hkk
+        HFrl7m9XjAR9I4+mXTEqbD1w9JjBws4lXdschLHOKZjUrziAmSChBsegxPTm8mpI
+        YXhFPsLCkC3jaPj9TeTIgSemuxmmQMzjeHj+RpPVciNcFFv3tfMF9WM6JiEsuVeR
+        0io2rqHzEMBLhbmDIPQ4nsTWyVxWswqbzleMGcUUfgUwXyRJDD56M6kpXY7BI5lh
+        Z1pKGSbzO72RX9jSynanDhhv/BeIPklmSLKfqBZtG/y7x8b/HQJ1ugA2F7vymW3k
+        zi/cSx3JwgsAplFPGUTdGxX9Ht+EtP6GXfb2rCAmMNDUTc4kqP6LbObk3ib1PLrS
+        PwGOkDyjWQT0cvmL+P9lWaGwNwtqtxYtTiEoYS4fYK0sRjkFSrKsserkND3Ad/ol
+        p7hokpGnpTQXl9C5Oi/+uQ==
+        =lMs6
+        -----END PGP MESSAGE-----';
+        $this->assertEquals('test', $this->gnupg->decrypt($encrypted));
     }
 
     public function testGnupgAssertEncryptKeyError()
