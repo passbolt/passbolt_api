@@ -73,7 +73,19 @@ class FindViewAcoPermissionsTest extends AppTestCase
 
     public function testContainUserProfileAvatar()
     {
-        $this->markTestIncomplete();
+        $resourceId = UuidFactory::uuid('resource.id.debian');
+        $options['contain']['user.profile'] = true;
+        $permissions = $this->Permissions->findViewAcoPermissions($resourceId, $options)->all();
+
+        // retrieve a direct user permission
+        $permission = Hash::extract($permissions->toArray(), '{n}[aro=User]')[0];
+        $this->assertPermissionAttributes($permission);
+        $this->assertProfileAttributes($permission->user->profile);
+        $this->assertArrayHasKey('url', $permission->user->profile->avatar);
+        $this->assertArrayHasKey('medium', $permission->user->profile->avatar->url);
+        $this->assertArrayHasKey('small', $permission->user->profile->avatar->url);
+        $this->assertEquals('https://passbolt.local/img/avatar/user_medium.png', $permission->user->profile->avatar->url['medium']);
+        $this->assertEquals('https://passbolt.local/img/avatar/user.png', $permission->user->profile->avatar->url['small']);
     }
 
     public function testPermissions()
