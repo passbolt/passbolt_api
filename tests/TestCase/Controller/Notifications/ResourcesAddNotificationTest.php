@@ -112,10 +112,4 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertResponseCode(200);
         $this->assertResponseContains('You have saved a new password');
     }
-
-    public function testResourcesAddNotificationSettings()
-    {
-        // Test the configuration flags like passbolt.show.resource.url
-        $this->markTestIncomplete();
-    }
 }
