@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+## [3.2.1] - 2021-06-04
+### Fixed
+- GITHUB-402 Fix API v3 regression, login must accept JSON data
+
 ## [3.2.0] - 2021-05-31
 ### Added
 - PB-5054 French internationalization
@@ -808,7 +812,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.2.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.2.1...HEAD
+[3.2.1]: https://github.com/passbolt/passbolt_api/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/passbolt/passbolt_api/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/passbolt/passbolt_api/compare/v3.0.2...v3.1.0
 [3.0.2]: https://github.com/passbolt/passbolt_api/compare/v3.0.1...v3.0.2
