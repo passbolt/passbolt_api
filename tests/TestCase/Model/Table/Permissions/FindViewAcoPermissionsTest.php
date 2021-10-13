@@ -85,8 +85,8 @@ class FindViewAcoPermissionsTest extends AppTestCase
         $this->assertArrayHasKey('url', $permission->user->profile->avatar);
         $this->assertArrayHasKey('medium', $permission->user->profile->avatar->url);
         $this->assertArrayHasKey('small', $permission->user->profile->avatar->url);
-        $this->assertEquals('https://passbolt.local/img/avatar/user_medium.png', $permission->user->profile->avatar->url['medium']);
-        $this->assertEquals('https://passbolt.local/img/avatar/user.png', $permission->user->profile->avatar->url['small']);
+        $this->assertStringContainsString('/img/avatar/user_medium.png', $permission->user->profile->avatar->url['medium']);
+        $this->assertStringContainsString('/img/avatar/user.png', $permission->user->profile->avatar->url['small']);
     }
 
     public function testPermissions()
