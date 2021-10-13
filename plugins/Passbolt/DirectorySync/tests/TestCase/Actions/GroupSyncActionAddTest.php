@@ -924,11 +924,10 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupAdd
      */
-    public function testDirectorySyncGroup_Case34_Invalid_Null_Null_Ok_Null()
-    {
-        // can't test
-        $this->markTestSkipped();
-    }
+    // public function testDirectorySyncGroup_Case34_Invalid_Null_Null_Ok_Null()
+    // {
+    //     // can't test
+    // }
 
     /**
      * Scenario:
@@ -957,11 +956,10 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupAdd
      */
-    public function testDirectorySyncGroup_Case36a_Invalid_Null_Null_DeletedBefore_Null()
-    {
-        // Can't test.
-        $this->markTestSkipped();
-    }
+    // public function testDirectorySyncGroup_Case36a_Invalid_Null_Null_DeletedBefore_Null()
+    // {
+    //     // Can't test.
+    // }
 
     /**
      * Scenario:
@@ -971,11 +969,10 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupAdd
      */
-    public function testDirectorySyncGroup_Case36b_Invalid_Null_Null_DeletedAfter_Null()
-    {
-        // Can't test.
-        $this->markTestSkipped();
-    }
+    // public function testDirectorySyncGroup_Case36b_Invalid_Null_Null_DeletedAfter_Null()
+    // {
+    //     // Can't test.
+    // }
 
     /**
      * Scenario:
