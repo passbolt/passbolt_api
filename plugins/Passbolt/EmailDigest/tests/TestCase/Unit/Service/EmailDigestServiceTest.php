@@ -37,8 +37,8 @@ class EmailDigestServiceTest extends AppIntegrationTestCase
         parent::setUp();
     }
 
-    public function testThatEmailsAreGroupedByRecipient()
-    {
-        $this->markTestIncomplete();
-    }
+    // public function testThatEmailsAreGroupedByRecipient()
+    // {
+    //     $this->markTestIncomplete();
+    // }
 }
