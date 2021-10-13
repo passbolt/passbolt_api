@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
+use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
@@ -85,6 +86,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
             false,
             $accessToken
         );
+        $this->mockValidMfaFormInterface(TotpVerifyForm::class, $this->makeUac($user));
 
         $this->postJson('/auth/jwt/login.json', [
             'user_id' => $user->id,
