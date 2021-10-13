@@ -174,22 +174,6 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $this->assertEquals(AuthenticationToken::TYPE_REGISTER, $user->authentication_tokens[0]->type);
     }
 
-    public function testWebInstallerUtilityWriteLicenseFile()
-    {
-        $this->markTestSkipped('This test should be removed. I keep it though because it documents the v2.0 license approach');
-        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Ee')) {
-            $webInstaller = new WebInstaller(null);
-            $licenseSettings = [
-                'subscription_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_dev'),
-            ];
-            $webInstaller->setSettings('license', $licenseSettings);
-
-            $webInstaller->writeLicenseFile();
-            $this->assertFileExists(CONFIG . 'license');
-        }
-        $this->assertTrue(true);
-    }
-
     public function testWebInstallerImportSubscription()
     {
         $user = UserFactory::make()->admin()->persist();
