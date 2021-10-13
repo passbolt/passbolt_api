@@ -81,6 +81,7 @@ class FindViewAcoPermissionsTest extends AppTestCase
         $permission = Hash::extract($permissions->toArray(), '{n}[aro=User]')[0];
         $this->assertPermissionAttributes($permission);
         $this->assertProfileAttributes($permission->user->profile);
+        $this->assertObjectHasAttribute('avatar', $permission->user->profile);
         $this->assertArrayHasKey('url', $permission->user->profile->avatar);
         $this->assertArrayHasKey('medium', $permission->user->profile->avatar->url);
         $this->assertArrayHasKey('small', $permission->user->profile->avatar->url);

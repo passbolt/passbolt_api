@@ -25,7 +25,7 @@ trait ProfilesModelTrait
      */
     protected function assertProfileAttributes($profile)
     {
-        $attributes = ['id', 'user_id', 'first_name', 'last_name', 'created', 'modified', 'avatar'];
+        $attributes = ['id', 'user_id', 'first_name', 'last_name', 'created', 'modified'];
         $this->assertObjectHasAttributes($attributes, $profile);
     }
 }
