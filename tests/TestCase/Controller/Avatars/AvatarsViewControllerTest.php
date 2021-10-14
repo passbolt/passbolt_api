@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 
 namespace App\Test\TestCase\Controller\Avatars;
-
+use App\Utility\UuidFactory;
 use App\Model\Table\AvatarsTable;
 use App\Service\Avatars\AvatarsCacheService;
 use App\Test\Lib\AppIntegrationTestCase;
@@ -80,7 +80,8 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
      */
     public function testAvatarsViewController_ViewNonExistentAvatar(string $format)
     {
-        $this->get('avatars/view/1/' . $format . AvatarHelper::IMAGE_EXTENSION);
+
+        $this->get('avatars/view/' .UuidFactory::Uuid(). '/' .$format . AvatarHelper::IMAGE_EXTENSION);
         $defaultAvatarFileName = $this->avatarsCacheService->getFallBackFileName();
         $this->assertResponseEquals(file_get_contents($defaultAvatarFileName));
         $this->assertContentType('jpg');
