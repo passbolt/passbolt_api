@@ -134,18 +134,16 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAvatarCantOverrideData()
     {
-        $this->markTestSkipped('Not possible to fake file upload, issue with validation');
-        $adaAvatar = FIXTURES . 'Avatar' . DS . 'ada.png';
+        $irene = UserFactory::make()
+            ->user()
+            ->persist();
 
-        $this->authenticateAs('irene');
+        $this->logInAs($irene);
         $data = [
-            'id' => UuidFactory::uuid('user.id.irene'),
+            'id' => $irene->id,
             'profile' => [
                 'avatar' => [
-                    'file' => [
-                        'tmp_name' => $adaAvatar,
-                        'name' => 'irene.png',
-                    ],
+                    'file' => $this->createUploadFile(),
                     'user_id' => UuidFactory::uuid('user.id.whatever'),
                     'foreign_key' => UuidFactory::uuid('profile.id.whatever'),
                     'model' => 'Test',
@@ -159,7 +157,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                 ],
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
+        $this->postJson('/users/' . $irene->id . '.json', $data);
         $this->assertSuccess();
 
         $ireneAvatar = $this->Avatars
@@ -168,11 +166,11 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
             ->first();
 
         $data = $data['profile']['avatar'];
-        $this->assertNotEquals($data['user_id'], $ireneAvatar->user_id);
+
+        $this->assertNotEquals($data['user_id'], $ireneAvatar->profile_id);
         $this->assertNotEquals($data['foreign_key'], $ireneAvatar->foreign_key);
         $this->assertNotEquals($data['model'], $ireneAvatar->model);
         $this->assertNotEquals($data['filename'], $ireneAvatar->filename);
-        $this->assertEquals('irene.png', $ireneAvatar->filename);
         $this->assertNotEquals($data['filesize'], $ireneAvatar->filesize);
         $this->assertNotEquals($data['mime_type'], $ireneAvatar->mime_type);
         $this->assertNotEquals($data['extension'], $ireneAvatar->extension);
