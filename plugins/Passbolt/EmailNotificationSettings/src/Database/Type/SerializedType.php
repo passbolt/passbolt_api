@@ -49,19 +49,20 @@ class SerializedType extends BaseType
     /**
      * Marshal - Encodes a JSON string
      *
-     * @param string|null $value json string to decode
-     * @return null|string
+     * @param mixed $value json string to decode
+     * @return mixed
      */
-    public function marshal($value) 
+    public function marshal($value)
     {
         if ($value === null || is_array($value)) {
             return $value;
         }
-	$uns_value = unserialize($value);
-	if($uns_value!==False) {
-	    return $uns_value;
-	}
-	return $value;
+        $uns_value = unserialize($value);
+        if ($uns_value !== false) {
+            return $uns_value;
+        }
+
+        return $value;
     }
 
     /**
@@ -77,7 +78,7 @@ class SerializedType extends BaseType
         if ($value === null) {
             return null;
         }
-	$value = serialize($value);
+        $value = serialize($value);
         if (is_a($driver, Postgres::class)) {
             $value = str_replace(self::NULL_CHAR, self::NULL_CHAR_SUBSTITUTE, $value);
         }

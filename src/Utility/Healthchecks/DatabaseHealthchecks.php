@@ -120,7 +120,7 @@ class DatabaseHealthchecks
             $connection = ConnectionManager::get('default');
             $tables = $connection->getSchemaCollection()->listTables();
 
-            if ($tables !== false && count($tables)) {
+            if (count($tables) > 0) {
                 $checks['database']['tablesCount'] = true;
                 $checks['database']['info']['tablesCount'] = count($tables);
             }

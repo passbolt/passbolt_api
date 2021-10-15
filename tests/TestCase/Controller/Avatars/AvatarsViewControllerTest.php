@@ -16,11 +16,12 @@ declare(strict_types=1);
  */
 
 namespace App\Test\TestCase\Controller\Avatars;
-use App\Utility\UuidFactory;
+
 use App\Model\Table\AvatarsTable;
 use App\Service\Avatars\AvatarsCacheService;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Utility\UuidFactory;
 use App\View\Helper\AvatarHelper;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -80,8 +81,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
      */
     public function testAvatarsViewController_ViewNonExistentAvatar(string $format)
     {
-
-        $this->get('avatars/view/' .UuidFactory::Uuid(). '/' .$format . AvatarHelper::IMAGE_EXTENSION);
+        $this->get('avatars/view/' . UuidFactory::Uuid() . '/' . $format . AvatarHelper::IMAGE_EXTENSION);
         $defaultAvatarFileName = $this->avatarsCacheService->getFallBackFileName();
         $this->assertResponseEquals(file_get_contents($defaultAvatarFileName));
         $this->assertContentType('jpg');

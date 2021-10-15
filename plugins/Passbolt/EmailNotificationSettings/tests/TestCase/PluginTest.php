@@ -24,7 +24,7 @@ use Passbolt\EmailNotificationSettings\Database\Type\SerializedType;
 class PluginTest extends TestCase
 {
     /**
-     * @var EmailQueueTable
+     * @var \EmailQueue\Model\Table\EmailQueueTable
      */
     public $EmailQueue;
 

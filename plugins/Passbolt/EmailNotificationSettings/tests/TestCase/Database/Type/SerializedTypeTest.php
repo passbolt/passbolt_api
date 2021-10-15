@@ -18,13 +18,14 @@ namespace Passbolt\EmailNotificationSettings\Test\TestCase\Database\Type;
 
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 class SerializedTypeTest extends TestCase
 {
     /**
-     * @var EmailQueueTable
+     * @var \EmailQueue\Model\Table\EmailQueueTable
      */
     public $EmailQueue;
 
@@ -36,7 +37,7 @@ class SerializedTypeTest extends TestCase
 
     public function testThatEmailsGetCorrectlySerializedAndUnserialized()
     {
-	\Cake\Core\Configure::write("passbolt.plugins.locale.options",[]);
+        Configure::write('passbolt.plugins.locale.options', []);
         $users = UserFactory::make(2)->user()->getEntities();
         $someText = 'Foo bar';
         $someInteger = 123;
@@ -46,7 +47,7 @@ class SerializedTypeTest extends TestCase
         $result = $this->EmailQueue->enqueue('foo@bar.test', $data);
         $this->assertTrue($result);
 
-	\Cake\Core\Configure::write("passbolt.plugins.locale.options",[]);
+        Configure::write('passbolt.plugins.locale.options', []);
         $email = $this->EmailQueue->find()->firstOrFail();
         $vars = $email->get('template_vars');
 
