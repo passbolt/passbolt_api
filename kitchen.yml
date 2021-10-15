@@ -25,6 +25,7 @@ platforms:
       image: debian:buster
       ports:
         - '127.0.0.1:8080:8080'
+  - name: debian-bullseye
   - name: ubuntu-18.04
   - name: ubuntu-20.04
 
