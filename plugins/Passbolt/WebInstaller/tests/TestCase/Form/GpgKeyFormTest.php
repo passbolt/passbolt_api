@@ -47,7 +47,8 @@ class GpgKeyFormTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'isPrivateKey' => $this->getServerKeyPrivateArmoredTestCases(),
             'hasNoExpiry' => $this->getServerKeyPrivateArmoredHasNoExpiryTestCases(),
-            'canDecrypt' => $this->getServerKeyPrivateArmoredCanDecryptTestCases(),
+            // Keys with passphrases are not supported yet
+            // 'canDecrypt' => $this->getServerKeyPrivateArmoredCanDecryptTestCases(),
         ];
         $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'private_key_armored', $this->getDummyGpgkey(), $testCases);
     }
