@@ -82,6 +82,8 @@ abstract class RefreshTokenAbstractService
      */
     protected function consumeToken(string $token, string $userId): AuthenticationToken
     {
+        $this->validateRefreshToken($token);
+
         try {
             /** @var \App\Model\Entity\AuthenticationToken|null $refreshToken */
             $refreshToken = $this->queryRefreshToken($token)
@@ -142,6 +144,8 @@ abstract class RefreshTokenAbstractService
      */
     protected function queryRefreshToken(string $token): Query
     {
+        $this->validateRefreshToken($token);
+
         return $this->AuthenticationTokens->find()->where([
             'token' => $token,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
