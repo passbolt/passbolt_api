@@ -21,6 +21,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
+use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\TestSuite\TestCase;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
@@ -52,7 +53,7 @@ class RefreshTokenLogoutServiceTest extends TestCase
         $user = UserFactory::make()->persist();
         $this->expectExceptionMessage(RefreshTokenNotFoundException::class);
         $this->expectExceptionMessage('No active refresh token matching the request could be found.');
-        $this->service->logout($user->id, 'Bar');
+        $this->service->logout($user->id, UuidFactory::uuid());
     }
 
     public function testRefreshTokenLogoutServiceTest_Logout_With_Token()
