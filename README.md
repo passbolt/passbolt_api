@@ -9,6 +9,9 @@
 	Copyright (c) 2021 Passbolt SA
 	https://www.passbolt.com
 
+[![PHPStan Enabled](./webroot/img/third_party/phpstan.svg)](https://github.com/phpstan/phpstan)
+[![Psalm level](./webroot/img/third_party/psalm.svg)](https://psalm.dev/)
+
 ## License
 
 Passbolt - Open source password manager for teams
