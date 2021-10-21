@@ -926,7 +926,7 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     // public function testDirectorySyncGroup_Case34_Invalid_Null_Null_Ok_Null()
     // {
-    //     // can't test
+    //     We'll keep this test for documentation purpose. (on Kevin request)
     // }
 
     /**
@@ -958,7 +958,7 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     // public function testDirectorySyncGroup_Case36a_Invalid_Null_Null_DeletedBefore_Null()
     // {
-    //     // Can't test.
+    //     We'll keep this test for documentation purpose. (on Kevin request)
     // }
 
     /**
@@ -971,7 +971,7 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     // public function testDirectorySyncGroup_Case36b_Invalid_Null_Null_DeletedAfter_Null()
     // {
-    //     // Can't test.
+    //     We'll keep this test for documentation purpose. (on Kevin request)
     // }
 
     /**
