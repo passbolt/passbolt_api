@@ -297,9 +297,11 @@ class FoldersRelationsAddItemToUserTreeService
 
         // USERS_ITEMS = All the items the target user can see
         $userItems = $this->FoldersRelations
-            ->findByUserIdAndForeignModel($userId, FoldersRelation::FOREIGN_MODEL_FOLDER);
+            ->findByUserId($userId);
+
         // CHILDREN
         $query = $this->FoldersRelations->findByFolderParentId($foreignId);
+
         // R = USERS_ITEMS ⋂ CHILDREN
         $query->where(['foreign_id IN' => $userItems->select('foreign_id')]);
 

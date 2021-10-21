@@ -18,7 +18,7 @@ namespace Passbolt\Locale\Event;
 
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\I18n\I18n;
+use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
 class LocaleRenderListener implements EventListenerInterface
@@ -42,8 +42,7 @@ class LocaleRenderListener implements EventListenerInterface
     /**
      * Sets the locale if defined in the view variables.
      * This is required when sending emails.
-     * The locale previous to rendering is kept in memory in order
-     * to be reset after the rendering is done.
+     * Note that this is enables for CLI tools only  and at this point no user is logged in.
      *
      * @param \Cake\Event\EventInterface $event Event.
      * @return void
@@ -56,21 +55,17 @@ class LocaleRenderListener implements EventListenerInterface
         $locale = $View->get(LocaleEmailQueueListener::VIEW_VAR_KEY);
         $service = new LocaleService();
         if ($service->isValidLocale($locale)) {
-            // Remember the locale before render.
-            self::$localeBeforeRender = self::$localeBeforeRender ?? I18n::getLocale();
             $service->setLocale($locale);
         }
     }
 
     /**
-     * Reset the locale if set on memory prior to rendering.
+     * Reset the locale to the organization default locale.
      *
      * @return void
      */
     public function resetLocaleAfterLayoutIfDefinedInTemplateVar(): void
     {
-        $service = new LocaleService();
-        $service->setLocaleIfIsValid(self::$localeBeforeRender);
-        self::$localeBeforeRender = null;
+        (new LocaleService())->setLocale(GetOrgLocaleService::getLocale());
     }
 }

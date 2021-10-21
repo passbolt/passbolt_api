@@ -37,20 +37,13 @@ trait JwtAuthTestTrait
     public function setJwtTokenInHeader(string $token): void
     {
         $this->configRequest([
-            'headers' => [JwtAuthenticationService::JWT_HEADER => 'Bearer ' . $token],
+            'headers' => [JwtAuthenticationService::JWT_HEADER => $token],
         ]);
     }
 
     /**
-     * @return string|null
-     */
-    public function getJwtTokenInHeader(): ?string
-    {
-        return $this->_request['headers'][JwtAuthenticationService::JWT_HEADER] ?? null;
-    }
-
-    /**
-     * Creates a JWT token and sets it in the request header.
+     * Creates a JWT access token and sets it in the request header.
+     * Returns that token
      *
      * @param string|null $userId
      * @return string
@@ -63,7 +56,7 @@ trait JwtAuthTestTrait
         $token = (new JwtTokenCreateService())->createToken($userId);
         $this->setJwtTokenInHeader($token);
 
-        return $userId;
+        return $token;
     }
 
     ////////////// GPG Utils ///////////////////

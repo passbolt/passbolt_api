@@ -117,6 +117,8 @@ atlassian-ide-plugin.xml
 .buildpath
 *.iml
 
+# Tilt
+tilt_modules*
 ## File-based project format:
 *.ipr
 *.iws

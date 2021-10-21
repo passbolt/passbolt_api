@@ -31,6 +31,7 @@ use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshToken
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
 use Passbolt\JwtAuthentication\Error\Exception\VerifyToken\ConsumedVerifyTokenAccessException;
+use Passbolt\Locale\Service\LocaleService;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -94,16 +95,22 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
         AbstractJwtAttackException $exception,
         User $user
     ): void {
+        $subject = (new LocaleService())->translateString(
+            $user->locale,
+            function () use ($exception) {
+                return $exception->getUserEmailSubject();
+            }
+        );
         $email = new Email(
             $user->username,
-            $exception->getUserEmailSubject(),
+            $subject,
             [
                 'body' => [
                     'user' => $user,
                     'ip' => $exception->getController()->getRequest()->clientIp(),
                     'message' => $exception->getMessage(),
                 ],
-                'title' => $exception->getUserEmailSubject(),
+                'title' => $subject,
             ],
             $exception->getUserEmailTemplate()
         );
@@ -122,22 +129,28 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
         AbstractJwtAttackException $exception,
         User $user
     ): void {
-        $admins = $this->Users->findAdmins();
+        $admins = $this->Users
+            ->findAdmins()
+            ->find('locale')
+            ->where(['Users.id !=' => $user->id]);
 
         foreach ($admins as $admin) {
-            if ($admin->id === $user->id) {
-                continue;
-            }
+            $subject = (new LocaleService())->translateString(
+                $admin->locale,
+                function () use ($exception) {
+                    return $exception->getAdminEmailSubject();
+                }
+            );
             $email = new Email(
                 $admin->username,
-                $exception->getAdminEmailSubject(),
+                $subject,
                 [
                     'body' => [
                         'user' => $user,
                         'ip' => $exception->getController()->getRequest()->clientIp(),
                         'message' => $exception->getMessage(),
                     ],
-                    'title' => $exception->getAdminEmailSubject(),
+                    'title' => $subject,
                 ],
                 $exception->getAdminEmailTemplate()
             );

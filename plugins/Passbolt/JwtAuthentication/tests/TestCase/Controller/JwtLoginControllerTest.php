@@ -27,7 +27,6 @@ use Cake\Datasource\ModelAwareTrait;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
-use Passbolt\JwtAuthentication\Error\Exception\AbstractJwtAttackException;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
 
@@ -110,7 +109,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailQueueCount(1);
         $this->assertEmailIsInQueue([
             'email' => $user->username,
-            'subject' => AbstractJwtAttackException::USER_EMAIL_SUBJECT,
+            'subject' => 'Authentication security alert',
             'template' => 'JwtAuthentication.User/jwt_attack',
         ]);
 
@@ -208,5 +207,22 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->createJwtTokenAndSetInHeader();
         $this->getJson('/auth/login.json');
         $this->assertResponseError('The route /auth/login is not permitted with JWT authentication.');
+    }
+
+    public function testJwtLoginController_Authentication_Should_Even_If_Valid_Access_Token_Set_In_Header()
+    {
+        $user = UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
+            ->persist();
+
+        $this->createJwtTokenAndSetInHeader($user->id);
+
+        $this->postJson('/auth/jwt/login.json', [
+            'user_id' => $user->id,
+            'challenge' => 'Bar',
+        ]);
+
+        $this->assertBadRequestError('The credentials are invalid.');
     }
 }

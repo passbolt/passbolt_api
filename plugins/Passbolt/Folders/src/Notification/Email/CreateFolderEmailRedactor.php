@@ -27,6 +27,7 @@ use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Service\Folders\FoldersCreateService;
+use Passbolt\Locale\Service\LocaleService;
 
 class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -92,16 +93,20 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createEmail(Folder $folder, UserAccessControl $uac)
     {
-        $user = $this->usersTable->findFirstForEmail($uac->getId());
-
-        $subject = __('You added the folder {0}', $folder->name);
+        $recipient = $this->usersTable->findFirstForEmail($uac->getId());
+        $subject = (new LocaleService())->translateString(
+            $recipient->locale,
+            function () use ($folder) {
+                return __('You added the folder {0}', $folder->name);
+            }
+        );
 
         return new Email(
-            $user->username,
+            $recipient->username,
             $subject,
             [
                 'body' => [
-                    'user' => $user,
+                    'user' => $recipient,
                     'folder' => $folder,
                 ],
                 'title' => $subject,

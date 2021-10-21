@@ -101,13 +101,6 @@ class MfaVerifiedToken
             return false;
         }
 
-        // Check for user agent change
-        if ($data->user_agent !== env('HTTP_USER_AGENT')) {
-            $auth->setInactive($token->token);
-
-            return false;
-        }
-
         // Remember me
         if (isset($data->remember) && $data->remember === true) {
             if ($token->created->wasWithinLast(MfaVerifiedCookie::MAX_DURATION)) {
