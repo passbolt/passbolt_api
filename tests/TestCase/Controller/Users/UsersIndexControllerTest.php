@@ -110,7 +110,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         RoleFactory::make()->guest()->persist();
         UserFactory::make(5)->user()->with(
             'Profiles',
-            function (ProfileFactory $resourceFactory, Generator $faker) {
+            function (ProfileFactory $factory, Generator $faker) {
                 // Makes sure that all first name are distinct
                 return ['first_name' => $faker->unique()->firstName()];
             }
@@ -132,7 +132,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         RoleFactory::make()->guest()->persist();
         UserFactory::make(5)->user()->with(
             'Profiles',
-            function (ProfileFactory $resourceFactory, Generator $faker) {
+            function (ProfileFactory $factory, Generator $faker) {
                 // Makes sure that all last name are distinct
                 return ['last_name' => $faker->unique()->lastName(),];
             }
