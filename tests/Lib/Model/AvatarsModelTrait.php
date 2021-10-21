@@ -20,10 +20,12 @@ namespace App\Test\Lib\Model;
 use App\Model\Entity\Avatar;
 use App\Model\Table\AvatarsTable;
 use App\Service\Avatars\AvatarsCacheService;
+use App\Test\Factory\AvatarFactory;
 use App\Test\Factory\ProfileFactory;
 use Cake\ORM\TableRegistry;
 use Laminas\Diactoros\Stream;
 use Laminas\Diactoros\UploadedFile;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 
 /**
  * @property \App\Model\Table\AvatarsTable $Avatars
@@ -102,5 +104,17 @@ trait AvatarsModelTrait
         $this->assertInstanceOf(Stream::class, $service->readSteamFromId($avatar->id, 'whateverFormatWillReturnSmall'));
         $this->assertTextEndsWith('.jpg', $service->getAvatarFileName($avatar));
         $this->assertTextEndsWith('.jpg', $service->getAvatarFileName($avatar, 'medium'));
+    }
+
+    /**
+     * Set the avatar directory to tmp/tests/avatars
+     * The file system of both the regular table and avatar factory
+     * table need to be set
+     */
+    protected function setTestLocalFilesystemAdapter(): void
+    {
+        $testFileSystem = new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars');
+        TableRegistry::getTableLocator()->get('Avatars')->setFilesystem($testFileSystem);
+        AvatarFactory::make()->getTable()->setFilesystem($testFileSystem);
     }
 }

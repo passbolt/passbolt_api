@@ -36,16 +36,6 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     }
 
     /**
-     *  A test to make sure that orphan directoryEntry (foreign_key => null) do not get deleted.
-     *
-     * @return void
-     */
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Scenario:
      * Expected result:
      *

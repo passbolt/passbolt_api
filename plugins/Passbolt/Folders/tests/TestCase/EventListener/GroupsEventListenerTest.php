@@ -30,9 +30,4 @@ class GroupsEventListenerTest extends FoldersIntegrationTestCase
     {
         parent::setUp();
     }
-
-    public function testIncomplete()
-    {
-        $this->markTestIncomplete();
-    }
 }

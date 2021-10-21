@@ -16,8 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Command;
 
+use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
+use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncConsoleIntegrationTestCase;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
  * @uses \Passbolt\DirectorySync\Command\DebugCommand
@@ -38,12 +41,15 @@ class DebugCommandTest extends DirectorySyncConsoleIntegrationTestCase
 
     public function testDebugCommand(): void
     {
-        $this->markTestSkipped('Will need to get back to this.');
+        $uac = $this->mockUserAccessControl('admin', Role::ADMIN);
+        $settings = DirectoryOrgSettingsTest::getDummySettings();
+        $directoryOrgSettings = new DirectoryOrgSettings($settings);
+        $directoryOrgSettings->save($uac);
 
         UserFactory::make()->admin()->persist();
 
         $this->useCommandRunner();
         $this->exec('directory_sync debug');
-        $this->assertExitSuccess();
+        $this->assertEquals('<error>No LDAP server is available.</error>', $this->_out->messages()[0]);
     }
 }
