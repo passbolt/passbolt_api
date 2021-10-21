@@ -197,5 +197,3 @@ define('PROCESS_USER', $user['name']);
 
 // Are we running passbolt pro?
 define('PASSBOLT_PRO', Configure::read('passbolt.edition') === 'pro');
-
-require __DIR__ . '/file_storage.php';
