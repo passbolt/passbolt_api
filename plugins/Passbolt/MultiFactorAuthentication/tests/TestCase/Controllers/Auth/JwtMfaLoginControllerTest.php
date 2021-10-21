@@ -21,8 +21,11 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
+use Cake\Routing\Router;
+use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
-use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
@@ -47,6 +50,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
         parent::setUp();
 
         RoleFactory::make()->guest()->persist();
+        EventManager::instance()->setEventList(new EventList());
     }
 
     public function testJwtLoginControllerTest_Success_But_MFA_Cookie_Not_Valid()
@@ -72,7 +76,6 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
 
     public function testJwtLoginControllerTest_Login_With_Mfa_No_Remember_Me_And_With_Valid_Access_Token()
     {
-        $this->markTestSkipped('This test occasionally fails on CI, regardless of the environment. Please fix me.');
         $user = UserFactory::make()
             ->user()
             ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
@@ -88,7 +91,6 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
             false,
             $accessToken
         );
-        $this->mockValidMfaFormInterface(TotpVerifyForm::class, $this->makeUac($user));
 
         $this->postJson('/auth/jwt/login.json', [
             'user_id' => $user->id,
@@ -96,10 +98,14 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
         ]);
 
         $this->assertResponseOk('The authentication was a success.');
-        $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge), true);
-        $newAccessToken = $challenge['access_token'];
+        $this->assertEventFired(GpgJwtAuthenticator::MAKE_ARMORED_CHALLENGE_EVENT_NAME);
+
+        $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge));
+        $this->assertSame(Router::url('/', true), $challenge->domain);
+        $newAccessToken = $challenge->access_token;
         // MFA required and providers are set because the mfa cookie does not match the new access token
-        $this->assertTrue(isset($challenge['providers']));
+        $this->assertTrue(isset($challenge->providers));
+        $this->assertSame(['yubikey'], $challenge->providers);
 
         /** @var \App\Model\Entity\AuthenticationToken $mfaToken */
         $mfaToken = MfaAuthenticationTokenFactory::find()->where(['token' => $mfaToken])->firstOrFail();

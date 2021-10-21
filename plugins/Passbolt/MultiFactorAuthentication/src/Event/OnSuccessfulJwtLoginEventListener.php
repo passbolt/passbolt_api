@@ -47,7 +47,7 @@ class OnSuccessfulJwtLoginEventListener implements EventListenerInterface
     }
 
     /**
-     * On login with JWT, if the MFA authentication is required but missing,
+     * On login with JWT, if the MFA authentication token is required but missing,
      * appends the list of MFA providers within the challenge.
      *
      * @param \Cake\Event\EventInterface $event Event

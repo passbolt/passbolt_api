@@ -41,6 +41,7 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
         parent::setUp();
         $this->enableFeaturePlugin('MultiFactorAuthentication');
         $this->enableFeaturePlugin('JwtAuthentication');
+        MfaSettings::clear();
     }
 
     public function tearDown(): void
@@ -48,7 +49,6 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
         parent::tearDown();
         $this->disableFeaturePlugin('MultiFactorAuthentication');
         $this->disableFeaturePlugin('JwtAuthentication');
-        MfaSettings::clear();
     }
 
     /**
