@@ -28,11 +28,13 @@ class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
 {
     public function setUp(): void
     {
+        parent::setUp();
         $this->loadPlugins(['Passbolt/Locale']);
     }
 
     public function tearDown(): void
     {
+        parent::tearDown();
         GetOrgLocaleService::clearOrganisationLocale();
     }
 

@@ -18,7 +18,6 @@ namespace Passbolt\Locale\Test\Lib;
 
 use App\Utility\Filesystem\DirectoryUtility;
 use Cake\I18n\I18n;
-use Cake\I18n\Package;
 
 trait DummyTranslationTestTrait
 {
@@ -27,16 +26,11 @@ trait DummyTranslationTestTrait
      */
     public function setDummyFrenchTranslator(): void
     {
-        I18n::setTranslator('test', function () {
-            $package = new Package();
-            $package->setMessages([
-                'Sending email from: {0}' => 'Courriel envoyé de: {0}',
-                'Sending email to: {0}' => 'Courriel envoyé à: {0}',
-                $this->getDummyEnglishEmailSentence() => $this->getDummyFrenchEmailSentence(),
-            ]);
-
-            return $package;
-        }, 'fr_FR');
+        I18n::getTranslator('default', 'fr_FR')->getPackage()->addMessages([
+            'Sending email from: {0}' => 'Courriel envoyé de: {0}',
+            'Sending email to: {0}' => 'Courriel envoyé à: {0}',
+            $this->getDummyEnglishEmailSentence() => $this->getDummyFrenchEmailSentence(),
+        ]);
     }
 
     public function clearTranslationCache()

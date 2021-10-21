@@ -18,8 +18,16 @@ return [
                         'label' => 'English',
                     ],
                     [
+                        'locale' => 'de-DE',
+                        'label' => 'Deutsch',
+                    ],
+                    [
                         'locale' => 'fr-FR',
                         'label' => 'Français',
+                    ],
+                    [
+                        'locale' => 'sv-SE',
+                        'label' => 'Svenska',
                     ],
                 ],
             ],

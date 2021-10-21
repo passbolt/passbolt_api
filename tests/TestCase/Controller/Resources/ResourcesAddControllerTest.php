@@ -62,6 +62,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         ResourceTypeFactory::make()->default()->persist();
         (new JwtKeyPairService())->createKeyPair();
         $this->enableFeaturePlugin('JwtAuthentication');
+        $this->setEmailNotificationsSetting('password.create', true);
         parent::setUp();
     }
 
@@ -69,6 +70,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
     {
         parent::tearDown();
         $this->disableFeaturePlugin('JwtAuthentication');
+        $this->restoreEmailNotificationsSettings();
         unset($this->Resources);
         unset($this->Permissions);
         unset($this->Resources);

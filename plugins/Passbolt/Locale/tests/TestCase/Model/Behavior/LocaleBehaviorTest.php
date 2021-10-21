@@ -20,6 +20,7 @@ namespace Passbolt\Locale\Test\TestCase\Model\Behavior;
 use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Test\Lib\DummySystemLocaleTestTrait;
 
 class LocaleBehaviorTest extends TestCase
@@ -43,6 +44,8 @@ class LocaleBehaviorTest extends TestCase
      */
     public function testFindContainLocale(): void
     {
+        GetOrgLocaleService::clearOrganisationLocale();
+
         UserFactory::make(['username' => 'ada@passbolt.com'])
             ->withLocale('fr-FR')
             ->persist();
@@ -70,6 +73,6 @@ class LocaleBehaviorTest extends TestCase
             ->where(['username' => 'carol@passbolt.com'])
             ->contain('Locale')
             ->first();
-        $this->assertNull($user->get('locale'));
+        $this->assertEquals('en-UK', $user->get('locale'));
     }
 }

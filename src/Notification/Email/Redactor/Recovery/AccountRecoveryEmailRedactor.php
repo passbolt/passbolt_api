@@ -25,6 +25,8 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
+use Passbolt\Locale\Service\GetUserLocaleService;
+use Passbolt\Locale\Service\LocaleService;
 
 class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -67,9 +69,16 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\AuthenticationToken $token Token for recovery
      * @return \App\Notification\Email\Email
      */
-    private function createAccountRecoveryEmail(User $user, AuthenticationToken $token)
+    private function createAccountRecoveryEmail(User $user, AuthenticationToken $token): Email
     {
-        $subject = __('Your account recovery, {0}!', $user->profile->first_name);
+        $locale = (new GetUserLocaleService())->getLocale($user->username);
+        $subject = (new LocaleService())->translateString(
+            $locale,
+            function () use ($user) {
+                return __('Your account recovery, {0}!', $user->profile->first_name);
+            }
+        );
+
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
 
         return new Email($user->username, $subject, $data, self::TEMPLATE);

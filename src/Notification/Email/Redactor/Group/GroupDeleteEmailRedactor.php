@@ -28,6 +28,7 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Locale\Service\LocaleService;
 
 class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -75,31 +76,35 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
         $admin = $this->usersTable->findFirstForEmail($deletedBy);
         $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
-        $userNames = $this->usersTable->find()->select(['id', 'username'])->where(['id IN' => $usersIds])->all();
-        $userNames = Hash::combine($userNames->toArray(), '{n}.id', '{n}.username');
+        // Don't send notification if user is the one who deleted the group
+        $users = $this->usersTable->find('locale')
+            ->where(['Users.id IN' => $usersIds])
+            ->where(['Users.id !=' => $deletedBy]);
 
-        foreach ($usersIds as $userId) {
-            // Don't send notification if user is the one who deleted the group
-            if ($userId === $deletedBy) {
-                continue;
-            }
-            $emailCollection->addEmail($this->createGroupDeleteEmail($userNames[$userId], $admin, $group));
+        foreach ($users as $user) {
+            $email = $this->createGroupDeleteEmail($user, $admin, $group);
+            $emailCollection->addEmail($email);
         }
 
         return $emailCollection;
     }
 
     /**
-     * @param string $emailRecipient Email recipient
+     * @param \App\Model\Entity\User $recipient Email recipient
      * @param \App\Model\Entity\User $admin Admin
      * @param \App\Model\Entity\Group $group Group
      * @return \App\Notification\Email\Email
      */
-    private function createGroupDeleteEmail(string $emailRecipient, User $admin, Group $group): Email
+    private function createGroupDeleteEmail(User $recipient, User $admin, Group $group): Email
     {
-        $subject = __('{0} deleted the group {1}', $admin->profile->first_name, $group->name);
+        $subject = (new LocaleService())->translateString(
+            $recipient->locale,
+            function () use ($admin, $group) {
+                return __('{0} deleted the group {1}', $admin->profile->first_name, $group->name);
+            }
+        );
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
 
-        return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }
