@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Command;
 
-use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
 use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncConsoleIntegrationTestCase;
@@ -27,6 +26,8 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
  */
 class DebugCommandTest extends DirectorySyncConsoleIntegrationTestCase
 {
+    public $autoFixtures = false;
+
     /**
      * Test the help option
      *
@@ -39,17 +40,24 @@ class DebugCommandTest extends DirectorySyncConsoleIntegrationTestCase
         $this->assertOutputContains('Debug configuration helper');
     }
 
+    /**
+     * The aim if this test so far is to provide a minimum test coverage
+     * of the present command. Further tests will be required to
+     * cover the various cases of the business logic.
+     *
+     * @return void
+     */
     public function testDebugCommand(): void
     {
-        $uac = $this->mockUserAccessControl('admin', Role::ADMIN);
+        $admin = UserFactory::make()->admin()->persist();
+        $uac = $this->makeUac($admin);
         $settings = DirectoryOrgSettingsTest::getDummySettings();
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
 
-        UserFactory::make()->admin()->persist();
-
         $this->useCommandRunner();
         $this->exec('directory_sync debug');
-        $this->assertEquals('<error>No LDAP server is available.</error>', $this->_out->messages()[0]);
+        $this->assertExitError();
+        $this->assertOutputContains('<error>The directory type should be one of the following: ad, openldap.</error>');
     }
 }
