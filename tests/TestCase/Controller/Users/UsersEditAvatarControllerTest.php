@@ -16,13 +16,13 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Test\Factory\AvatarFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use League\Flysystem\Local\LocalFilesystemAdapter;
 
 class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 {
@@ -40,8 +40,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->Avatars->setFilesystem(new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars'));
-
+        $this->setTestLocalFilesystemAdapter();
         RoleFactory::make()->guest()->persist();
     }
 
@@ -134,9 +133,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAvatarCantOverrideData()
     {
-        $irene = UserFactory::make()
-            ->user()
-            ->persist();
+        $irene = UserFactory::make()->user()->persist();
 
         $this->logInAs($irene);
         $data = [
@@ -160,14 +157,15 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->postJson('/users/' . $irene->id . '.json', $data);
         $this->assertSuccess();
 
-        $ireneAvatar = $this->Avatars
-            ->find()
-            ->orderDesc('created')
-            ->first();
+        /** @var \App\Model\Entity\Avatar $ireneAvatar */
+        $ireneAvatar = AvatarFactory::find()
+            ->contain('Profiles')
+            ->orderDesc('Avatars.created')
+            ->firstOrFail();
 
         $data = $data['profile']['avatar'];
 
-        $this->assertNotEquals($data['user_id'], $ireneAvatar->profile_id);
+        $this->assertNotEquals($data['user_id'], $ireneAvatar->profile->user_id);
         $this->assertNotEquals($data['foreign_key'], $ireneAvatar->foreign_key);
         $this->assertNotEquals($data['model'], $ireneAvatar->model);
         $this->assertNotEquals($data['filename'], $ireneAvatar->filename);
@@ -177,5 +175,6 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($data['hash'], $ireneAvatar->hash);
         $this->assertNotEquals($data['path'], $ireneAvatar->path);
         $this->assertNotEquals($data['adapter'], $ireneAvatar->adapter);
+        $this->assertSame(1, AvatarFactory::count());
     }
 }
