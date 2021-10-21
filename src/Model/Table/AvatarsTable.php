@@ -31,6 +31,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Psr\Http\Message\UploadedFileInterface;
 
 /**
@@ -71,6 +72,7 @@ class AvatarsTable extends Table
     {
         parent::initialize($config);
 
+        $this->initializeConfiguration();
         $this->addBehavior('Timestamp');
         $this->belongsTo('Profiles');
     }
@@ -285,5 +287,55 @@ class AvatarsTable extends Table
     public function setFilesystem(FilesystemAdapter $adapter): void
     {
         Configure::write('AvatarFilesystem', new Filesystem($adapter));
+    }
+
+    /**
+     * Set the configurations on initialize.
+     *
+     * This logic used to be loaded in bootstrap.php, which made
+     * the tests run on the default config, and not the test config.
+     *
+     * @return void
+     */
+    protected function initializeConfiguration(): void
+    {
+        // Per default, use the local file system adapter. This may be overwritten on the fly if needed
+        // e.g. if storing the avatar on a cloud bucket.
+        $this->setFilesystem(new LocalFilesystemAdapter(TMP . 'avatars'));
+
+        // File storage and images
+        Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public' . DS);
+        Configure::write('ImageStorage.publicPath', 'img' . DS . 'public' . DS);
+        Configure::write('FileStorage', [
+            'imageDefaults' => [
+                'Avatar' => [
+                    self::FORMAT_MEDIUM => 'img' . DS . 'avatar' . DS . 'user_medium.png',
+                    self::FORMAT_SMALL => 'img' . DS . 'avatar' . DS . 'user.png',
+                ],
+            ],
+            // Configure image versions on a per model base
+            'imageSizes' => [
+                'Avatar' => [
+                    self::FORMAT_MEDIUM => [
+                        'thumbnail' => [
+                            'mode' => 'outbound',
+                            'width' => 200,
+                            'height' => 200,
+                        ],
+                    ],
+                    self::FORMAT_SMALL => [
+                        'thumbnail' => [
+                            'mode' => 'outbound',
+                            'width' => 80,
+                            'height' => 80,
+                        ],
+                        'crop' => [
+                            'width' => 80,
+                            'height' => 80,
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
 }

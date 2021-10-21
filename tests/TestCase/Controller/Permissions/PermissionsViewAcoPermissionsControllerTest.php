@@ -72,10 +72,6 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         // Contain group.
         $this->assertObjectHasAttribute('group', $permission);
         $this->assertGroupAttributes($permission->group);
-
-        $this->markTestIncomplete('TODO: create an Avatar for the user relevant to the test.');
-        $this->assertObjectHasAttribute('avatar', $permission->user->profile);
-        $this->assertAvatarAttributes($permission->user->profile->avatar);
     }
 
     public function testPermissionsViewErrorNotAuthenticated()
