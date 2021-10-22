@@ -82,4 +82,21 @@ class JwtTokenCreateServiceTest extends TestCase
         // Allow a difference of 1 second for test processing time.
         $this->assertLessThanOrEqual(1, $expiryDate - $expectedUXTime);
     }
+
+    /**
+     * JWT access tokens generated within the same second are identical, provided the user ID
+     * is the same. If we generate 3 JWT access tokens, we are sure that at two will be
+     * in the same second, and at least two shall be identical.
+     */
+    public function testJwtTokenCreateService_Multiple_Token_Within_One_Same_Second_Should_Be_Identical()
+    {
+        $n = 3;
+        $userId = UuidFactory::uuid();
+        $allTokens = [];
+        for ($i = 0; $i < $n; $i++) {
+            $allTokens[] = (new JwtTokenCreateService())->createToken($userId);
+        }
+
+        $this->assertNotSame($allTokens, array_unique($allTokens));
+    }
 }
