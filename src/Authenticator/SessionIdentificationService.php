@@ -16,16 +16,15 @@ declare(strict_types=1);
  */
 namespace App\Authenticator;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Cake\Http\ServerRequest;
 
 class SessionIdentificationService implements SessionIdentificationServiceInterface
 {
     /**
      * @inheritDoc
      */
-    public function getSessionId(ServerRequestInterface $request): ?string
+    public function getSessionId(ServerRequest $request): ?string
     {
-        /** @var \Cake\Http\ServerRequest $request */
         return $request->getSession()->id();
     }
 }
