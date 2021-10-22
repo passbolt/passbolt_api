@@ -20,6 +20,8 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\ContainerAwareMiddlewareTrait;
 use Authentication\AuthenticationServiceInterface;
 use Cake\Core\ContainerInterface;
+use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
+use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
 use Passbolt\JwtAuthentication\Authenticator\JwtSessionIdentificationService;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtRequestDetectionService;
@@ -70,5 +72,7 @@ class JwtAuthDetectionMiddleware implements MiddlewareInterface
         $container
             ->extend(SessionIdentificationServiceInterface::class)
             ->setConcrete(JwtSessionIdentificationService::class);
+
+        $container->add(JwtArmoredChallengeInterface::class, JwtArmoredChallengeService::class);
     }
 }

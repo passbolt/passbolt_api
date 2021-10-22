@@ -33,7 +33,7 @@ class SetSessionIdentifierOnLoginEventListener implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            GpgJwtAuthenticator::MAKE_ARMORED_CHALLENGE_EVENT_NAME => 'setSessionIdentifierOnLogin',
+            GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY => 'setSessionIdentifierOnLogin',
         ];
     }
 

@@ -71,7 +71,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
 
         $this->assertResponseOk('The authentication was a success.');
         $this->assertEmailQueueCount(0);
-        $this->assertEventFired(GpgJwtAuthenticator::MAKE_ARMORED_CHALLENGE_EVENT_NAME);
+        $this->assertEventFired(GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY);
 
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge));
         $this->assertSame(Router::url('/', true), $challenge->domain);

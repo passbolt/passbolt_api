@@ -263,7 +263,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $this->assertEquals($userChallenge['verify_token'], $deserializedChallenge->verify_token);
         $this->assertNotEmpty($deserializedChallenge->access_token);
         $this->assertNotEmpty($deserializedChallenge->refresh_token);
-        $this->assertEventFired(GpgJwtAuthenticator::MAKE_ARMORED_CHALLENGE_EVENT_NAME);
+        $this->assertEventFired(GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY);
     }
 
     // ========================================================================
