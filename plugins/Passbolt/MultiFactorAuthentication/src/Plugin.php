@@ -21,8 +21,10 @@ use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\ORM\TableRegistry;
+use Passbolt\JwtAuthentication\Middleware\JwtAuthDetectionMiddleware;
 use Passbolt\MultiFactorAuthentication\Event\AddIsMfaEnabledColumnToUsersGrid;
 use Passbolt\MultiFactorAuthentication\Event\OnSuccessfulJwtLoginEventListener;
+use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaJwtChallengeServiceMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaInjectFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRefreshTokenCreatedListenerMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
@@ -48,6 +50,10 @@ class Plugin extends BasePlugin
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         return $middlewareQueue
+            ->insertAfter(
+                JwtAuthDetectionMiddleware::class,
+                InjectMfaJwtChallengeServiceMiddleware::class
+            )
             ->insertAfter(AuthenticationMiddleware::class, MfaRequiredCheckMiddleware::class)
             ->insertAfter(MfaRequiredCheckMiddleware::class, MfaInjectFormMiddleware::class)
             ->add(MfaRefreshTokenCreatedListenerMiddleware::class);

@@ -86,12 +86,14 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
         $mfaSettings = MfaSettings::get($uac);
 
         $isMfaAuthenticationRequiredService = new IsMfaAuthenticationRequiredService();
+        /** @var \App\Authenticator\SessionIdentificationServiceInterface $sessionService */
+        $sessionService = $this->getContainer($request)->get(SessionIdentificationServiceInterface::class);
 
         return $isMfaAuthenticationRequiredService->isMfaCheckRequired(
             $request,
             $mfaSettings,
             $uac,
-            $this->getContainer($request)->get(SessionIdentificationServiceInterface::class)
+            $sessionService->getSessionId($request)
         );
     }
 

@@ -20,7 +20,7 @@ use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Passbolt\MultiFactorAuthentication\Service\ClearMfaCookieInResponseService;
 
-class ClearInvalidMfaCookieInResponse implements EventListenerInterface
+class ClearMfaCookieInResponse implements EventListenerInterface
 {
     /**
      * @return array

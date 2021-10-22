@@ -41,7 +41,7 @@ class OnSuccessfulJwtLoginEventListener implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            GpgJwtAuthenticator::MAKE_ARMORED_CHALLENGE_EVENT_NAME => 'appendProvidersToJwtChallenge',
+            GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY => 'appendProvidersToJwtChallenge',
             'Controller.initialize' => 'addMfaTokenOnSuccessfulLogin',
         ];
     }
@@ -61,12 +61,14 @@ class OnSuccessfulJwtLoginEventListener implements EventListenerInterface
         $request = $authenticator->getRequest();
         $uac = new UserAccessControl($user['role']['name'], $user['id']);
         $mfaSettings = MfaSettings::get($uac);
+        /** @var \App\Authenticator\SessionIdentificationServiceInterface $sessionService */
+        $sessionService = $this->getContainer($request)->get(SessionIdentificationServiceInterface::class);
 
         $isMfaAuthenticationRequired = (new IsMfaAuthenticationRequiredService())->isMfaCheckRequired(
             $request,
             $mfaSettings,
             $uac,
-            $this->getContainer($request)->get(SessionIdentificationServiceInterface::class)
+            $sessionService->getSessionId($request)
         );
 
         if ($isMfaAuthenticationRequired) {
