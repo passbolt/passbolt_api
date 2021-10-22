@@ -152,17 +152,8 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
         /** @var \Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface $armoredChallengeService */
         $armoredChallengeService = $this->getContainer($this->getRequest())->get(JwtArmoredChallengeInterface::class);
         $challenge = $armoredChallengeService->makeArmoredChallenge($this->request, $this->user, $verifyToken);
-//        $challengeBaseData = [
-//            'version' => self::PROTOCOL_VERSION,
-//            'domain' => Router::url('/', true),
-//            'access_token' => $accessToken,
-//            'refresh_token' => $refreshToken,
-//            'verify_token' => $verifyToken,
-//        ];
-//        // Collect additional data from other services to be added to the $challenge.
-        $event = $this->dispatchEvent(self::JWT_AUTHENTICATION_AFTER_IDENTIFY, $challenge, $this);
-//        $dataToAppendInChallenge = (array)$event->getData();
-//        $challenge = array_merge($dataToAppendInChallenge, $challengeBaseData);
+
+        $this->dispatchEvent(self::JWT_AUTHENTICATION_AFTER_IDENTIFY, $challenge, $this);
 
         return $this->gpg->encryptSign(json_encode($challenge));
     }
