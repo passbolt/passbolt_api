@@ -54,10 +54,8 @@ abstract class JwtAbstractService
     public function readKeyFileContent(): string
     {
         if (!is_readable($this->getKeyPath())) {
-            throw new InvalidJwtKeyPairException(__(
-                'The key pair for JWT Authentication is not complete. The following file could not be read: {0}.',
-                $this->getKeyPath()
-            ));
+            $userErrorMessage = __('The key pair for JWT Authentication is not complete.');
+            throw new InvalidJwtKeyPairException($userErrorMessage);
         }
 
         return file_get_contents($this->getKeyPath());
