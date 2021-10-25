@@ -110,7 +110,7 @@ class UsersRecoverController extends AppController
         $event = new Event($event, $this, $options);
         $this->getEventManager()->dispatch($event);
 
-        $this->success(__('Recovery process started, check your email.'), $user);
+        $this->success(__('Recovery process started, check your email.'));
     }
 
     /**
