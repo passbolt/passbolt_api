@@ -24,6 +24,7 @@
     <?= $this->Form->control('hotp', [
         'label' => 'Yubikey OTP',
         'type' => 'password',
+        'autofocus' => 'autofocus'
     ]); ?>
     <div class="input checkbox">
         <input type="checkbox" name="remember" value="remember" id="remember">

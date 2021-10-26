@@ -25,6 +25,7 @@
     <?= $this->Form->control('totp', [
         'label' => 'One Time Password (OTP)',
         'placeholder' => '123456',
+        'autofocus' => 'autofocus'
     ]); ?>
     <div class="input checkbox">
         <input type="checkbox" name="remember" value="remember" id="remember">
