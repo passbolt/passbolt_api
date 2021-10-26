@@ -181,11 +181,6 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($result['dry-run']['Secrets']);
     }
 
-    public function testGroupsUpdateDryRunCannotModifyNotAccessibleFields()
-    {
-        $this->markTestIncomplete();
-    }
-
     public function testGroupsUpdateDryRunErrorNotValidId()
     {
         $this->authenticateAs('ada');
