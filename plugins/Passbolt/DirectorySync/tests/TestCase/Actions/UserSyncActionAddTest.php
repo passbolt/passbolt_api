@@ -36,16 +36,6 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     }
 
     /**
-     *  A test to make sure that orphan directoryEntry (foreign_key => null) do not get deleted.
-     *
-     * @return void
-     */
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Scenario:
      * Expected result:
      *
@@ -78,7 +68,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
         // Get existing user.
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'ada@passbolt.com'])->first();
-        $creationDate = $ada->created;
+        $creationDate = $ada->get('created');
         $dateAfterCreation = $creationDate->addDays(1);
 
         $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com', $dateAfterCreation, $dateAfterCreation);
@@ -104,7 +94,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
         // Get existing user.
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'ada@passbolt.com'])->first();
-        $creationDate = $ada->created;
+        $creationDate = $ada->get('created');
         $dateBeforeCreation = $creationDate->subDays(1);
 
         $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com', $dateBeforeCreation, $dateBeforeCreation);
@@ -112,7 +102,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
         $this->assertReportNotEmpty($reports);
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_USERS, 'status' => Alias::STATUS_SYNC, 'type' => Alias::MODEL_USERS];
         $this->assertReport($reports[0], $expectedReport);
-        $this->assertDirectoryEntryExists(['id' => UuidFactory::uuid('ldap.user.id.ada'), 'foreign_key' => $ada->id]);
+        $this->assertDirectoryEntryExists(['id' => UuidFactory::uuid('ldap.user.id.ada'), 'foreign_key' => $ada->get('id')]);
         $this->assertUserExist(UuidFactory::uuid('user.id.ada'), ['active' => true, 'deleted' => false]);
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -149,7 +139,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $ada->modified;
+        $deletionDate = $ada->get('modified');
         $dateAfterDeletion = $deletionDate->addDays(1);
 
         $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateAfterDeletion, $dateAfterDeletion);
@@ -174,7 +164,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $ada->modified;
+        $deletionDate = $ada->get('modified');
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
         $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateBeforeDeletion, $dateBeforeDeletion);
@@ -199,7 +189,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $ada->modified;
+        $deletionDate = $ada->get('modified');
         $dateAfterDeletion = $deletionDate->addDays(1);
 
         $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateAfterDeletion, $dateAfterDeletion);
@@ -225,7 +215,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $ada->modified;
+        $deletionDate = $ada->get('modified');
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
         $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateBeforeDeletion, $dateBeforeDeletion);
@@ -272,7 +262,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
         // Get existing user.
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'ada@passbolt.com'])->first();
-        $creationDate = $ada->created;
+        $creationDate = $ada->get('created');
         $dateAfterCreation = $creationDate->addDays(1);
 
         $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com', $dateAfterCreation, $dateAfterCreation);
@@ -296,13 +286,13 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'ada@passbolt.com'])->first();
-        $creationDate = $ada->created;
+        $creationDate = $ada->get('created');
         $dateBeforeCreation = $creationDate->subDays(1);
 
         $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com', $dateBeforeCreation, $dateBeforeCreation);
         $this->mockOrphanDirectoryEntryUser(['fname' => 'ada']);
         $reports = $this->action->execute();
-        $this->assertDirectoryEntryExistsForUser(['id' => $ada->id]);
+        $this->assertDirectoryEntryExistsForUser(['id' => $ada->get('id')]);
         $this->assertDirectoryIgnoreEmpty();
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_USERS, 'status' => Alias::STATUS_SYNC, 'type' => Alias::MODEL_USERS];
         $this->assertReport($reports[0], $expectedReport);
@@ -341,7 +331,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $ada->modified;
+        $deletionDate = $ada->get('modified');
         $dateAfterDeletion = $deletionDate->addDays(1);
 
         $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', $dateAfterDeletion, $dateAfterDeletion);
@@ -367,7 +357,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $ada->modified;
+        $deletionDate = $ada->get('modified');
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
         $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', $dateBeforeDeletion, $dateBeforeDeletion);
@@ -393,7 +383,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateAfterDeletion = $deletionDate->addDays(1);
 
         $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateAfterDeletion, $dateAfterDeletion);
@@ -420,7 +410,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
         $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateBeforeDeletion, $dateBeforeDeletion);
@@ -526,7 +516,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateAfterDeletion = $deletionDate->addDays(1);
 
         $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateAfterDeletion, $dateAfterDeletion);
@@ -552,7 +542,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateBeforeDeletion = $deletionDate->addDays(1);
 
         $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateBeforeDeletion, $dateBeforeDeletion);
@@ -578,7 +568,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateAfterDeletion = $deletionDate->addDays(1);
 
         $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateAfterDeletion, $dateAfterDeletion);
@@ -605,7 +595,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
         $data = $this->mockDirectoryUserData('sofia', 'kovalevskaya', 'sofia@passbolt.com', $dateBeforeDeletion, $dateBeforeDeletion);
@@ -832,7 +822,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'ada@passbolt.com'])->first();
-        $creationDate = $ada->created;
+        $creationDate = $ada->get('created');
         $dateAfterCreation = $creationDate->addDays(1);
 
         $data = $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', $dateAfterCreation, $dateAfterCreation);
@@ -856,7 +846,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $ada = $Users->find()->where(['username' => 'ada@passbolt.com'])->first();
-        $creationDate = $ada->created;
+        $creationDate = $ada->get('created');
         $dateBeforeCreation = $creationDate->subDays(1);
 
         $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', $dateBeforeCreation, $dateBeforeCreation);
@@ -902,7 +892,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateAfterDeletion = $deletionDate->addDays(1);
 
         $data = $this->mockDirectoryUserData('sofia', null, 'sofia@passbolt.com', $dateAfterDeletion, $dateAfterDeletion);
@@ -927,7 +917,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
         $data = $this->mockDirectoryUserData('sofia', null, 'sofia@passbolt.com', $dateBeforeDeletion, $dateBeforeDeletion);
@@ -1066,7 +1056,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateAfterDeletion = $deletionDate->addDays(1);
 
         $this->mockDirectoryUserData('sofia', null, 'sofia@passbolt.com', $dateAfterDeletion, $dateAfterDeletion);
@@ -1094,7 +1084,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
         $this->mockDirectoryUserData('sofia', null, 'sofia@passbolt.com', $dateBeforeDeletion, $dateBeforeDeletion);
@@ -1225,7 +1215,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateAfterDeletion = $deletionDate->addDays(1);
 
         $data = $this->mockDirectoryUserData('sofia', null, 'sofia@passbolt.com', $dateAfterDeletion, $dateAfterDeletion);
@@ -1251,7 +1241,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $sofia = $Users->find()->where(['username' => 'sofia@passbolt.com'])->first();
-        $deletionDate = $sofia->modified;
+        $deletionDate = $sofia->get('modified');
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
         $data = $this->mockDirectoryUserData('sofia', null, 'sofia@passbolt.com', $dateBeforeDeletion, $dateBeforeDeletion);

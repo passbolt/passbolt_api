@@ -54,7 +54,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
     ];
 
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
@@ -75,6 +75,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
         [$r1, $r2, $g1, $userAId, $userBId] = $this->insertFixture_RemoveResourceFromUserTree();
 
         // Prepare the test by deleting the group user entry
+        /** @var \App\Model\Entity\GroupsUser $userBGroupUser */
         $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();
         $this->groupsUsersTable->delete($userBGroupUser);
 
@@ -102,8 +103,8 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
             ['user_id' => $userAId, 'is_admin' => true],
             ['user_id' => $userBId, 'is_admin' => true],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->get('id') => Permission::OWNER]);
+        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->get('id') => Permission::OWNER]);
 
         return [$r1, $r2, $g1, $userAId, $userBId];
     }
@@ -113,17 +114,18 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
         [$r1, $r2, $g1, $userAId, $userBId] = $this->insertFixture_KeepResourceInTreeWhenUserHasAnotherAccess();
 
         // Prepare the test by deleting the group user entry
-        $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();
+        /** @var \App\Model\Entity\GroupsUser $userBGroupUser */
+        $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->get('id'), $userBId)->first();
         $this->groupsUsersTable->delete($userBGroupUser);
 
         $this->service->afterUserRemoved($userBGroupUser);
 
-        $this->assertItemIsInTrees($r1->id, 2);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
-        $this->assertItemIsInTrees($r2->id, 2);
-        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($r2->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
+        $this->assertItemIsInTrees($r1->get('id'), 2);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
+        $this->assertFolderRelation($r1->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
+        $this->assertItemIsInTrees($r2->get('id'), 2);
+        $this->assertFolderRelation($r2->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
+        $this->assertFolderRelation($r2->get('id'), FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
     }
 
     public function insertFixture_KeepResourceInTreeWhenUserHasAnotherAccess()
@@ -151,6 +153,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
         [$folderA, $folderB, $g1, $userAId, $userBId] = $this->insertFixture_RemoveFolderFromUserTree();
 
         // Prepare the test by deleting the group user entry
+        /** @var \App\Model\Entity\GroupsUser $userBGroupUser */
         $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();
         $this->groupsUsersTable->delete($userBGroupUser);
 
@@ -190,6 +193,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
         [$folderA, $folderB, $g1, $userAId, $userBId] = $this->insertFixture_RemoveFolderFromUserTreeMoveContentToRoot();
 
         // Prepare the test by deleting the group user entry
+        /** @var \App\Model\Entity\GroupsUser $userBGroupUser */
         $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();
         $this->groupsUsersTable->delete($userBGroupUser);
 
@@ -231,6 +235,7 @@ class GroupsAfterUserRemovedServiceTest extends FoldersTestCase
         [$folderA, $folderB, $g1, $userAId, $userBId] = $this->insertFixture_KeepFolderInTreeWhenUserHasAnotherAccess();
 
         // Prepare the test by deleting the group user entry
+        /** @var \App\Model\Entity\GroupsUser $userBGroupUser */
         $userBGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first();
         $this->groupsUsersTable->delete($userBGroupUser);
 

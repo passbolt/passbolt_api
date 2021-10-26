@@ -28,7 +28,7 @@ class MfaOrgSettingsYubikeyTraitTest extends MfaIntegrationTestCase
     public $autoFixtures = false;
 
     /**
-     * @var OrganizationSettingsTable
+     * @var \App\Model\Table\OrganizationSettingsTable
      */
     protected $OrganizationSettings;
 

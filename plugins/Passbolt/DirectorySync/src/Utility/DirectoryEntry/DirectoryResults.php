@@ -244,6 +244,7 @@ class DirectoryResults
         if (!$ldapObject->has($idAttribute) && $ldapObject->has('dn')) {
             /** @var string $dn */
             $dn = $ldapObject->get('dn');
+            /** @psalm-suppress InvalidArgument it takes args, not an array */
             $ldapObject->add($idAttribute, UuidFactory::uuid($dn));
         }
 

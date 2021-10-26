@@ -32,8 +32,8 @@ use Passbolt\Folders\Model\Traits\Folders\FoldersRelationsFindersTrait;
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEntity($data = null, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities($entities, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, callable $callback = null, ?array $options = [])
@@ -167,15 +167,15 @@ class FoldersRelationsHistoryTable extends Table
         }
         $folderRelationHistory = $this->save($folderRelationHistory);
 
+        // Check for errors while saving.
+        if (!$folderRelationHistory) {
+            throw new InternalErrorException('Could not save the folder relation history.');
+        }
+
         // Check for validation errors. (associated models too).
         if (!empty($folderRelationHistory->getErrors())) {
             $msg = __('Could not validate folders relations history data.');
             throw new ValidationException($msg, $folderRelationHistory, $this);
-        }
-
-        // Check for errors while saving.
-        if (!$folderRelationHistory) {
-            throw new InternalErrorException('Could not save the folder relation history.');
         }
 
         return $folderRelationHistory;

@@ -40,11 +40,11 @@ trait SubscribedEmailRedactorTrait
     private $_defaultConfig = [];
 
     /**
-     * @param null $key Configuration key to retrieve
-     * @param null $default Default value
+     * @param string|null $key Configuration key to retrieve
+     * @param mixed $default Default value
      * @return mixed
      */
-    public function getConfig($key = null, $default = null)
+    public function getConfig(?string $key = null, $default = null)
     {
         return $this->parentGetConfig($key) ?? EmailNotificationSettings::get($key);
     }

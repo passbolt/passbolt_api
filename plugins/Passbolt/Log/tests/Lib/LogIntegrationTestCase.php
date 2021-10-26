@@ -36,32 +36,32 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
     public const SESSION_LOGIN = 'session_login';
 
     /**
-     * @var ResourcesTable
+     * @var \App\Model\Table\ResourcesTable
      */
     protected $Resources;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     protected $Permissions;
 
     /**
-     * @var SecretsTable
+     * @var \App\Model\Table\SecretsTable
      */
     protected $Secrets;
 
     /**
-     * @var SecretAccesses
+     * @var \Passbolt\Log\Model\Table\SecretAccessesTable
      */
     protected $SecretAccesses;
 
     /**
-     * @var EntitiesHistoryTable
+     * @var \Passbolt\Log\Model\Table\EntitiesHistoryTable
      */
     protected $EntitiesHistory;
 
     /**
-     * @var ActionLog
+     * @var \Passbolt\Log\Model\Table\ActionLogsTable
      */
     protected $ActionLogs;
 

@@ -69,7 +69,7 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
     private $service;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     private $permissionsTable;
 
@@ -108,7 +108,7 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         // Remove the permission for the user we want to remove the folder from the tree.
-        $this->permissionsTable->deleteAll(['aco_foreign_key' => $folderA->id, 'aro_foreign_key' => $userBId]);
+        $this->permissionsTable->deleteAll(['aco_foreign_key' => $folderA->get('id'), 'aro_foreign_key' => $userBId]);
 
         return [$folderA, $userAId, $userBId];
     }
@@ -143,10 +143,10 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         // Remove the permission for the user we want to remove the folder from the tree.
-        $this->permissionsTable->deleteAll(['aco_foreign_key' => $folderB->id, 'aro_foreign_key' => $userBId]);
+        $this->permissionsTable->deleteAll(['aco_foreign_key' => $folderB->get('id'), 'aro_foreign_key' => $userBId]);
 
         return [$folderA, $folderB, $userAId, $userBId];
     }
@@ -180,7 +180,7 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         // Remove the permission for the user we want to remove the folder from the tree.
         $this->permissionsTable->deleteAll(['aco_foreign_key' => $folderA->id, 'aro_foreign_key' => $userBId]);
@@ -226,8 +226,8 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         // Remove the permission for the user we want to remove the folder from the tree.
         $this->permissionsTable->deleteAll(['aco_foreign_key' => $folderA->id, 'aro_foreign_key' => $userBId]);
@@ -257,7 +257,7 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         // Remove the permission for the user we want to remove the folder from the tree.
-        $this->permissionsTable->deleteAll(['aco_foreign_key' => $r1->id, 'aro_foreign_key' => $userBId]);
+        $this->permissionsTable->deleteAll(['aco_foreign_key' => $r1->get('id'), 'aro_foreign_key' => $userBId]);
 
         return [$r1, $userAId, $userBId];
     }
@@ -291,10 +291,10 @@ class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $r1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->get('id')], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         // Remove the permission for the user we want to remove the folder from the tree.
-        $this->permissionsTable->deleteAll(['aco_foreign_key' => $r1->id, 'aro_foreign_key' => $userBId]);
+        $this->permissionsTable->deleteAll(['aco_foreign_key' => $r1->get('id'), 'aro_foreign_key' => $userBId]);
 
         return [$folderA, $r1, $userAId, $userBId];
     }

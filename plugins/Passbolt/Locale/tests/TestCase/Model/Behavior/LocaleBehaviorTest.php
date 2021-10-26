@@ -61,18 +61,18 @@ class LocaleBehaviorTest extends TestCase
             ->where(['username' => 'ada@passbolt.com'])
             ->contain('Locale')
             ->first();
-        $this->assertEquals('fr-FR', $user->locale);
+        $this->assertEquals('fr-FR', $user->get('locale'));
 
         $user = $this->usersTable->find('locale')
             ->where(['username' => 'betty@passbolt.com'])
             ->contain('Locale')
             ->first();
-        $this->assertEquals('en-UK', $user->locale);
+        $this->assertEquals('en-UK', $user->get('locale'));
 
         $user = $this->usersTable->find('locale')
             ->where(['username' => 'carol@passbolt.com'])
             ->contain('Locale')
             ->first();
-        $this->assertEquals('en-UK', $user->locale);
+        $this->assertEquals('en-UK', $user->get('locale'));
     }
 }

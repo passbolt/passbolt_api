@@ -37,7 +37,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
     ];
 
     /**
-     * @var OrganizationSettingsTable
+     * @var \Cake\ORM\Table
      */
     protected $OrganizationSettings;
 
@@ -68,7 +68,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
     protected $defaultAccountConfig;
 
     /**
-     * @var UserAccessControl
+     * @var \App\Utility\UserAccessControl
      */
     protected $uac;
 

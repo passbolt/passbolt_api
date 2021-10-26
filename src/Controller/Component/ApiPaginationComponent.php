@@ -174,7 +174,7 @@ class ApiPaginationComponent extends BaseApiComponent
 
         if (is_string($sort)) {
             return [$sort => $direction];
-        } else {
+        } elseif (is_array($sort)) {
             foreach ($sort as &$v) {
                 if ($v === '') {
                     $v = 'asc';
@@ -183,6 +183,8 @@ class ApiPaginationComponent extends BaseApiComponent
 
             return $sort;
         }
+
+        return [];
     }
 
     /**

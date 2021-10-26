@@ -8,6 +8,7 @@
     - composer install --dev --no-interaction
     - composer cs-check
     - composer stan
+    - composer psalm
 
 check-style-strict:
   extends: .cs-check

@@ -63,7 +63,7 @@ class DirectoryUtility
         }
         $code = str_split(decoct(fileperms($path) & 0777));
         foreach ($code as $perm) {
-            if ($perm % 2 !== 0) {
+            if ((int)$perm % 2 !== 0) {
                 return true;
             }
         }

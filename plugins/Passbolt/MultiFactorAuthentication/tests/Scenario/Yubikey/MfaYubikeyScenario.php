@@ -28,8 +28,12 @@ class MfaYubikeyScenario implements FixtureScenarioInterface
 {
     use ScenarioAwareTrait;
 
-    public function load($user = null, $isSupported = true, $yubikeyId = null, ...$args): array
+    public function load(...$args): array
     {
+        $user = $args[0] ?? null;
+        $isSupported = $args[1] ?? true;
+        $yubikeyId = $args[2] ?? null;
+
         if (is_null($user)) {
             $user = UserFactory::make()->user()->persist();
         }

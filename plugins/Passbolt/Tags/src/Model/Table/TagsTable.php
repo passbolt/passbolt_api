@@ -101,16 +101,15 @@ class TagsTable extends Table
      * Find tags for index
      *
      * @param string $userId uuid of the user to find tags for.
-     * @return array Array of tags
+     * @return array|\Cake\ORM\Query
      */
     public function findIndex(string $userId)
     {
-        $tags = [];
         $resources = $this->Resources->findIndex($userId);
         $resourcesId = Hash::extract($resources->toArray(), '{n}.id');
 
         if (!empty($resourcesId)) {
-            $tags = $this->find()
+            return $this->find()
                 ->innerJoinWith('ResourcesTags', function (Query $q) use ($resourcesId, $userId) {
                     return $q->where([
                         'ResourcesTags.resource_id IN' => $resourcesId,
@@ -124,7 +123,7 @@ class TagsTable extends Table
                 ->distinct();
         }
 
-        return $tags;
+        return [];
     }
 
     /**

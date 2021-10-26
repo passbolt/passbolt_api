@@ -187,6 +187,7 @@ class SubscriptionKeyAsciiForm extends Form
      * Verify the subscription signature
      *
      * @param string $subscriptionSigned The signed subscription to verify.
+     * @psalm-suppress InvalidNullableReturnType always returns a string
      * @return string The subscription info.
      * @throws \Exception If the gpg public subscription key cannot be imported into the keyring
      * @throws \Exception If the subscription cannot be verified
@@ -210,6 +211,7 @@ class SubscriptionKeyAsciiForm extends Form
             throw new SubscriptionSignatureException($subscriptionSigned, $msg);
         }
 
+        /** @psalm-suppress NullableReturnStatement this is always a string */
         return $subscription;
     }
 

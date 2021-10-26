@@ -50,11 +50,6 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
     public $DirectoryEntries;
     public $directoryOrgSettings;
 
-    /**
-     * @var \Passbolt\DirectorySync\Utility\SyncAction
-     */
-    protected $action;
-
     public function setUp(): void
     {
         parent::setUp();

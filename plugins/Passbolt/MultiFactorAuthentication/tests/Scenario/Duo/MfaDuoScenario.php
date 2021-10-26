@@ -29,14 +29,20 @@ class MfaDuoScenario implements FixtureScenarioInterface
     use ScenarioAwareTrait;
 
     /**
-     * @param \App\Utility\UserAccessControl|null $user
-     * @param bool $isSupported
-     * @param null $verified
-     * @param ...$args
+     * @param array $args
      * @return array
      */
-    public function load($user = null, $isSupported = true, $hostName = null, $verified = null, ...$args): array
+    public function load(...$args): array
     {
+        /** @var \App\Utility\UserAccessControl|null $user */
+        $user = $args[0] ?? null;
+        /** @var bool $isSupported */
+        $isSupported = $args[1] ?? true;
+        /** @var string|null $hostName */
+        $hostName = $args[2] ?? null;
+        /** @var null $verified */
+        $verified = $args[3] ?? null;
+
         if (is_null($user)) {
             $user = UserFactory::make()->user()->persist();
         }
@@ -44,7 +50,7 @@ class MfaDuoScenario implements FixtureScenarioInterface
         /** $@var \App\Utility\UserAccessControl $user */
         [$orgSetting] = $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class, $isSupported, $hostName);
         $accountSetting = MfaAccountSettingFactory::make()
-            ->setField('user_id', $user->id)
+            ->setField('user_id', $user->get('id'))
             ->duo($verified)
             ->persist();
 

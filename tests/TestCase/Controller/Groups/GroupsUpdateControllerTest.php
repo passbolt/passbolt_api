@@ -578,11 +578,6 @@ hcciUFw5
         $this->assertnotEmpty($groupUser);
     }
 
-    public function testGroupsUpdateCannotModifyNotAccessibleFields()
-    {
-        $this->markTestIncomplete();
-    }
-
     public function testGroupsUpdateErrorNotValidId()
     {
         $this->authenticateAs('ada');

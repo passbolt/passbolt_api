@@ -48,7 +48,9 @@ class SubscriptionKeyAsciiFormTest extends TestCase
         try {
             $licenseInfo = $this->_licenseKeyForm->parse();
         } catch (\Exception $e) {
-            return $this->fail('The license does not validate: ' . $e->getMessage());
+            $this->fail('The license does not validate: ' . $e->getMessage());
+
+            return null;
         }
         $expected = $this->getValidSubscription();
         $actual = $licenseInfo->toArray();

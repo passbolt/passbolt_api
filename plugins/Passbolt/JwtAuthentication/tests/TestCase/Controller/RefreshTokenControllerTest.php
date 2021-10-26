@@ -155,6 +155,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
     public function testAuthRefreshTokenControllerWithExpiredCookie()
     {
         $nAdmins = 3;
+        /** @var array $admins */
         $admins = UserFactory::make($nAdmins)->admin()->persist();
         // We suppose one of the admins is hacked, and will check that 3 mails, and not 4 get sent.
         $user = $admins[0];
@@ -235,6 +236,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $nAdmins = 3;
         $admins = UserFactory::make($nAdmins)->admin()->persist();
         // We suppose one of the admins is hacked, and will check that 3 mails, and not 4 get sent.
+        /** @var array $admins */
         $user = $admins[0];
         $oldRefreshToken = AuthenticationTokenFactory::make()
             ->inactive()

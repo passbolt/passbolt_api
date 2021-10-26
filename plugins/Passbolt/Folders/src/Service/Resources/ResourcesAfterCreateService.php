@@ -61,7 +61,7 @@ class ResourcesAfterCreateService
 
     /**
      * @param \App\Utility\UserAccessControl $uac The current user.
-     * @param resource $resource The created resource.
+     * @param \App\Model\Entity\Resource $resource The created resource.
      * @param array $data The data sent by the user to create the resource.
      * @return void
      * @throws \Exception
@@ -95,7 +95,7 @@ class ResourcesAfterCreateService
      * Validate the parent folder
      *
      * @param \App\Utility\UserAccessControl $uac The current user
-     * @param resource $resource The created resource.
+     * @param \App\Model\Entity\Resource $resource The created resource.
      * @param string|null $folderParentId The parent folder to validate
      * @return void
      * @throws \App\Error\Exception\CustomValidationException If the parent folder does not exist.

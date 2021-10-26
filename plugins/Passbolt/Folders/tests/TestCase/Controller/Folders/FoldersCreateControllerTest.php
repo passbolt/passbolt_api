@@ -59,6 +59,9 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         UsersFixture::class,
     ];
 
+    public $FoldersRelations;
+    public $Permissions;
+
     /**
      * setUp method
      *

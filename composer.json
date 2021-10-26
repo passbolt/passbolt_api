@@ -82,7 +82,8 @@
         "passbolt/passbolt-selenium-api": "^3.1.1",
         "passbolt/passbolt-test-data": "^3.2.0",
         "vierge-noire/cakephp-fixture-factories": "v2.4",
-        "cakephp/localized": "4.0.0"
+        "cakephp/localized": "4.0.0",
+        "vimeo/psalm": "^4.9"
     },
     "autoload": {
         "psr-4": {
@@ -146,6 +147,7 @@
           "./node_modules/.bin/grunt styleguide-update"
         ],
         "stan": "phpstan analyse --memory-limit=-1",
+        "psalm": "psalm",
         "test": "phpunit --colors=always",
         "externalize-locale-strings": [
           "./bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes",

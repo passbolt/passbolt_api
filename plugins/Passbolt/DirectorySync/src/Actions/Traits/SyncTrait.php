@@ -76,10 +76,10 @@ trait SyncTrait
     public function formatDirectoryData()
     {
         foreach ($this->directoryData as $key => $data) {
-            if (get_class($data['directory_created']) !== 'FrozenTime') {
+            if (get_class($data['directory_created']) !== FrozenTime::class) {
                 $this->directoryData[$key]['directory_created'] = new FrozenTime($data['directory_created']);
             }
-            if (get_class($data['directory_modified']) !== 'FrozenTime') {
+            if (get_class($data['directory_modified']) !== FrozenTime::class) {
                 $this->directoryData[$key]['directory_modified'] = new FrozenTime($data['directory_modified']);
             }
         }
@@ -133,6 +133,7 @@ trait SyncTrait
                 } else {
                     // Entity was deleted
                     $this->handleSuccessfulDelete($entry);
+                    /** @psalm-suppress TypeDoesNotContainType const ENTITY_TYPE is defined in two separate classes with different values */
                     if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
                         $this->handleGroupUsersDeleted($entry);
                     }
@@ -200,6 +201,7 @@ trait SyncTrait
      */
     protected function getEntityName(Entity $entity)
     {
+        /** @psalm-suppress TypeDoesNotContainType const ENTITY_TYPE is defined in two separate classes with different values */
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             return $entity->get('name');
         }
@@ -217,6 +219,7 @@ trait SyncTrait
      */
     protected function getNameFromData(array $data)
     {
+        /** @psalm-suppress TypeDoesNotContainType const ENTITY_TYPE is defined in two separate classes with different values */
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             return $data['group']['name'] ?? 'undefined';
         }
@@ -232,6 +235,7 @@ trait SyncTrait
      */
     protected function getEntityFromData(array $data)
     {
+        /** @psalm-suppress TypeDoesNotContainType const ENTITY_TYPE is defined in two separate classes with different values */
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             return $this->getGroupFromData($data['group']['name'] ?? '');
         }

@@ -26,6 +26,8 @@ use Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry;
 
 class GroupEntryTest extends DirectorySyncIntegrationTestCase
 {
+    public $mappingRules;
+
     public function setUp(): void
     {
         parent::setUp();

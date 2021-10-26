@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Utility;
 
+use Cake\Http\Exception\NotImplementedException;
 use LdapTools\Configuration;
 use LdapTools\Connection\LdapConnection;
 use LdapTools\Event\Event;
@@ -139,7 +140,7 @@ class LdapDirectory implements DirectoryInterface
      */
     public function getDirectoryType()
     {
-        if (isset($this->directoryType)) {
+        if (!is_string($this->directoryType)) {
             return $this->directoryType;
         }
 
@@ -234,7 +235,7 @@ class LdapDirectory implements DirectoryInterface
             ->setBaseDn($this->getDNFullPath(LdapObjectType::USER))
             ->fromUsers();
 
-        if (!empty($enabledUsersOnly) && $enabledUsersOnly == true) {
+        if (!!$enabledUsersOnly) {
             $usersQuery->andWhere(['enabled' => true]);
         }
 
@@ -382,5 +383,21 @@ class LdapDirectory implements DirectoryInterface
         $query = $this->_fetchAndInitializeGroupsQuery();
 
         return $query->toLdapFilter();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setUsers($users)
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setGroups($groups)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -57,7 +57,7 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
     {
         unset($this->GroupsUsers);
         unset($this->Resources);
-        unset($this->Tags);
+        unset($this->ResourcesTags);
         parent::tearDown();
     }
 
@@ -96,7 +96,7 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
             ['user_id' => $userBId, 'is_admin' => true],
         ]]);
         $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-        $t1 = $this->addResourcePersonalTagFor(['slug' => 'T1'], $r1->id, [$userAId, $userBId]);
+        $t1 = $this->addResourcePersonalTagFor(['slug' => 'T1'], $r1->get('id'), [$userAId, $userBId]);
 
         return [$r1, $t1, $g1, $userAId, $userBId];
     }

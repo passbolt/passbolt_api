@@ -25,6 +25,9 @@ use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
 class DirectoryResultsIgnoreInvalidTest extends DirectorySyncIntegrationTestCase
 {
+    public $userSyncAction;
+    public $groupSyncAction;
+
     public function setUp(): void
     {
         parent::setUp();

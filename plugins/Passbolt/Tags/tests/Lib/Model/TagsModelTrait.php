@@ -27,7 +27,7 @@ trait TagsModelTrait
      * @param array $data The tag data
      * @param string $resourceId The resource to add the tag for
      * @param array $usersIds The list of users ids
-     * @return Tag
+     * @return \Passbolt\Tags\Model\Entity\Tag
      */
     public function addResourcePersonalTagFor(array $data, string $resourceId, array $usersIds = [])
     {
@@ -50,7 +50,7 @@ trait TagsModelTrait
      *
      * @param array $data The tag data
      * @param array $options The entity options
-     * @return Tag
+     * @return \Passbolt\Tags\Model\Entity\Tag
      */
     public function addTag(array $data = [], ?array $options = [])
     {
@@ -67,7 +67,7 @@ trait TagsModelTrait
      *
      * @param array $data The tag data.
      * @param array $options The new entity options.
-     * @return Tag
+     * @return \Passbolt\Tags\Model\Entity\Tag
      */
     public function getDummyTagEntity(array $data = [], ?array $options = [])
     {

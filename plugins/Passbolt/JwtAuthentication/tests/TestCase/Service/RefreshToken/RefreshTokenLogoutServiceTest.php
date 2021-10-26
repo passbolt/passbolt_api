@@ -95,6 +95,7 @@ class RefreshTokenLogoutServiceTest extends TestCase
     private function persistTokenSet(User $user): AuthenticationToken
     {
         // Refresh tokens associated to user
+        /** @var array $refreshTokens */
         $refreshTokens = AuthenticationTokenFactory::make(2)
             ->active()
             ->userId($user->id)

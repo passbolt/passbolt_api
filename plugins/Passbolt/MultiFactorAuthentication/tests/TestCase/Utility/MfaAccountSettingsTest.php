@@ -34,7 +34,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
     ];
 
     /**
-     * @var AccountSettingsTable
+     * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
      */
     protected $AccountSettings;
 
