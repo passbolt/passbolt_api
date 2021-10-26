@@ -33,17 +33,17 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
     use EmailTrait;
 
     /**
-     * @var SendEmailBatchService
+     * @var \Passbolt\EmailDigest\Service\SendEmailBatchService
      */
     private $sut;
 
     /**
-     * @var MockObject|EmailDigestService
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $emailDigestServiceMock;
 
     /**
-     * @var EmailQueueTable|MockObject
+     * @var \Cake\ORM\Table|\PHPUnit\Framework\MockObject\MockObject
      */
     private $emailQueueTableMock;
 

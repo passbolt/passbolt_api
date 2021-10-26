@@ -20,7 +20,6 @@ namespace App\Test\TestCase\Model\Table\Avatars;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use Cake\ORM\TableRegistry;
-use League\Flysystem\Local\LocalFilesystemAdapter;
 
 class CreateTest extends AppTestCase
 {
@@ -36,7 +35,7 @@ class CreateTest extends AppTestCase
         parent::setUp();
         TableRegistry::getTableLocator()->clear();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->Avatars->setFilesystem(new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars'));
+        $this->setTestLocalFilesystemAdapter();
     }
 
     public function tearDown(): void

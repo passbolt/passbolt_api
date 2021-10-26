@@ -77,10 +77,10 @@ class UserAgentsTable extends Table
     /**
      * Sanitize and parse the user agent string
      *
-     * @param string $ua user agent (optional)
-     * @return string
+     * @param string|null $ua user agent (optional)
+     * @return string|null
      */
-    public function browserName(?string $ua = null)
+    public function browserName(?string $ua = null): ?string
     {
         if ($ua == null) {
             $ua = Purifier::clean(env('HTTP_USER_AGENT'));

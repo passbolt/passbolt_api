@@ -156,7 +156,25 @@ zaZXtuDzZmnTOjWJm895TA==
 
     public function testGnupgAssertDecryptKeySuccess()
     {
-        $this->markTestIncomplete();
+        $keys = $this->getDummyGpgkey();
+        $this->gnupg->setDecryptKey($keys['private_key_armored'], '');
+        $encrypted = '-----BEGIN PGP MESSAGE-----
+        hQIMAxWrZ+ffF0kbAQ/7Bbn3FDqVhUygbt2GuT/zZYJWbHLpxzHKS0Thn5sZeusp
+        W46co6ehOTTUOelK/8ODSAZo/7VHjqEhYdtonwBxTVqAfk9as3ffNlr2CTyUdlRD
+        1Rr7zj8zHKDGFaeA6M8oKR+gnIIweiCL9xhpSXZJdad+lC9862Ws0XekhqdMmckn
+        PZTJFyEOG6KUSlOgsHWDr4iDcGLSf6/6+R+/apTEFV8m6eAQLZW1pmFPQfMwdjdI
+        52I9aNoW7Eafn581ER/WeJkyX6VGUQBkEgph13tB3JB4V9NNxxllqBzdY5cH2xO/
+        6kRnIz722NZ7lgGjJz5zIUmV6aFwH5jgZWhLN6gwKRJuGdqb7ncMxxMqNTvv4Hkk
+        HFrl7m9XjAR9I4+mXTEqbD1w9JjBws4lXdschLHOKZjUrziAmSChBsegxPTm8mpI
+        YXhFPsLCkC3jaPj9TeTIgSemuxmmQMzjeHj+RpPVciNcFFv3tfMF9WM6JiEsuVeR
+        0io2rqHzEMBLhbmDIPQ4nsTWyVxWswqbzleMGcUUfgUwXyRJDD56M6kpXY7BI5lh
+        Z1pKGSbzO72RX9jSynanDhhv/BeIPklmSLKfqBZtG/y7x8b/HQJ1ugA2F7vymW3k
+        zi/cSx3JwgsAplFPGUTdGxX9Ht+EtP6GXfb2rCAmMNDUTc4kqP6LbObk3ib1PLrS
+        PwGOkDyjWQT0cvmL+P9lWaGwNwtqtxYtTiEoYS4fYK0sRjkFSrKsserkND3Ad/ol
+        p7hokpGnpTQXl9C5Oi/+uQ==
+        =lMs6
+        -----END PGP MESSAGE-----';
+        $this->assertEquals('test', $this->gnupg->decrypt($encrypted));
     }
 
     public function testGnupgAssertEncryptKeyError()
@@ -167,7 +185,11 @@ zaZXtuDzZmnTOjWJm895TA==
 
     public function testGnupgAssertEncryptKeySuccess()
     {
-        $this->markTestIncomplete();
+        $keys = $this->getDummyGpgkey();
+        $this->gnupg->setEncryptKey($keys['public_key_armored']);
+        $encrypted = $this->gnupg->encrypt('test');
+
+        $this->assertStringNotContainsString('test', $encrypted);
     }
 
     public function testGnupgAssertSignKeyError()
@@ -178,7 +200,11 @@ zaZXtuDzZmnTOjWJm895TA==
 
     public function testGnupgAssertSignKeySuccess()
     {
-        $this->markTestIncomplete();
+        $keys = $this->getDummyGpgkey();
+        $this->gnupg->setSignKey($keys['private_key_armored'], '');
+        $signed = $this->gnupg->sign('test');
+        $this->assertNotEquals('test', $signed);
+        $this->assertStringContainsString('test', $signed);
     }
 
     public function testGnupgIsValidMessageError()
@@ -283,21 +309,35 @@ gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
     {
         // ECDH (Encrypt only) - curve25519
         // Algorithm 22?
-        $this->markTestSkipped();
         $pkey = '-----BEGIN PGP PUBLIC KEY BLOCK-----
-Version: Mailvelope v4.4.0
-Comment: https://www.mailvelope.com
 
-xjMEX/6JgRYJKwYBBAHaRw8BAQdAvRfrNkvv+hzj95mnAKKb572W8Fw5tSsu
-ypTpEJn2HWHNJEVDQyBUZXN0IEtleSA8ZWNjLXRlc3RAcGFzc2JvbHQuY29t
-PsJ3BBAWCgAfBQJf/omBBgsJBwgDAgQVCAoCAxYCAQIZAQIbAwIeAQAKCRCP
-jtZ79Q2PWxz5AQDOnJ6Ux9lYC9RqN/Xxf6yM+PD0WczVZ2PI/6ICsnVEugD/
-RO44leGb/at6kXdMi+yGb8fDbP3QN/YbGTJe0H3XIQ3OOARf/omBEgorBgEE
-AZdVAQUBAQdABJrhHd7yhXF2x/UAJ1f7incWdMLpbaQdNLFK/VvNOTQDAQgH
-wmEEGBYIAAkFAl/+iYECGwwACgkQj47We/UNj1vKUAD9Gc9XF0mHXDn8E4TW
-VUbjxe+FtEFWymo5j0tGExtgBasA/182NTNv+mjJUjH4+l7WzdZzv7icliZ8
-kr4WH0WH9ycL
-=nkep
+mQENBFv/eJgBCADDkW8IYwHmaQXWw5Dce9OzPH4N5NMuhdgli286ADBH3/Tkfi96
+2SBtcf3sOfw0yNXlFU9F2yv9c+pAsjL+TUveTotCcKp3GflT4qCKbTTj2Vt09m8z
+8nrZUwe05szcWqnCKCh7sBGQlFG3GkiH42QQ7kqE0vuEa08eSYUhBWYsK28hBtUJ
+sXC2iP4sNymC+0DmzpdJ6DjZJUpoHnk77B1IvPAPTDo/jFH4/PwAMoi4khPvFjMJ
+gKq40exIL/a60osYZN1D2KrawEjPRo3jJslrr6F2OwBJ77bTLCScHLxRmE3LOULp
+YhkHx1A6GmVzZoF0BIBTKfWk21lM9BhI7wXxABEBAAG0I1Bhc3Nib2x0IGR1bW15
+IDxkdW1teUBwYXNzYm9sdC5jb20+iQFUBBMBCAA+FiEENlfUAuY5Y5ZX4xTR7Hu+
+/5sJExsFAlv/eJgCGwMFCQeGH4AFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQ
+7Hu+/5sJExsefQgAkW+m4AAE1skaUol2StivuwDaO5ncpo25YC9+jg8TTRlUq7qq
+cM1Dfys+7G5leOLNrIA98e+Rv3gtlLy3UevGVRN4R3iRhV7A9bgb3o/rQR2dVI3P
+XEkB2iKGY/YsmayebzaMwY2rWhYrqJC4VDkAiLP7nC1xFDkBvzGvIxg/fJWi0eiv
+NbQ/ztZla1ZctxttNRejDyLWzDgvR0aruv2+rRbO++QzrLEXv/NThD4Iy8diHM48
+QoVWKwKOgHNorNYi4zeBOycP6KJ3No0oOOvnQ1dMa8EUee7FEgDp9pZ7TKpcC2P0
+FEkjd4HDiLYZ0ppci0VAd4eLKddUbtEoseEYKrkBDQRb/3iYAQgA1SxFmNm4Byys
+7MFXebJsh9TfYDcS0wnAXKy6frABFS1O/e35djH5Emr9xKTFVQn9VouJ6jd5WDCg
+oplssKLC1izItQePe2p6JLP4p+Zv23MfsluyEEjlHviT/VOwGCYXuYjKgqrHd/Uj
+XPKijsrLKH2BIXWB1Zt8gHxS8StL+632SXT3ZONETf7nKKnHosIxa8ATBm9Ncr1Z
+aqahQmuOFqqyVw1U34vznBz8Xx009h39oKkJTymUXEzb/rYCdo6iKLSO6NqpG2Gz
+0H8wl2q6KiG84hcSEFiJ6t9m8U9iq08PxSyV8AUaY950Pa0yI/8AkX+yxLEXkHNF
+tbptB0fKPQARAQABiQE8BBgBCAAmFiEENlfUAuY5Y5ZX4xTR7Hu+/5sJExsFAlv/
+eJgCGwwFCQeGH4AACgkQ7Hu+/5sJExvluggApQcvGqkfyD4Eb115LUmi549IKKWq
+8FFf85MWoZJ0BLNpIiWLBZFIs8dC4GJYSc1TaBlqlPtaHVh4kxlMvmAWGvDJ0AiE
+GVhwE8B5T7pMkFZBIzKPpOPMxBSIue//K2XzxN0yXz+Rae7wpdQlgbcHByZZPnp3
+/9E46AOwf5WDWu9J3081jIspeoAl4XOOncVi4azCNX8iwPcJVERQnInnpqBEV9qf
+H7sFPO+a9XpBJWjB8mMJzoA3ICWzb0u5YyUpBU6LmHHCGWY+gBDaNKMbRoRUUYyK
+eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
+=OtIW
 -----END PGP PUBLIC KEY BLOCK-----
 ';
         $parsable = $this->gnupg->isParsableArmoredPublicKey($pkey);

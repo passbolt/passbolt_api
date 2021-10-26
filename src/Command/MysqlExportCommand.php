@@ -172,7 +172,7 @@ class MysqlExportCommand extends PassboltCommand
     protected function getFile($dir, Arguments $args, ConsoleIo $io): ?string
     {
         $file = $args->getOption('file');
-        if (empty($file)) {
+        if (!is_string($file) || empty($file)) {
             $file = 'backup_' . time() . '.sql';
         }
         if (file_exists($dir . $file)) {
@@ -203,7 +203,7 @@ class MysqlExportCommand extends PassboltCommand
                 mkdir($dir);
             }
         }
-        if (!file_exists($dir)) {
+        if (!is_string($dir) || !file_exists($dir)) {
             $this->error(__('Could not access the backup directory: ' . $dir), $io);
 
             return null;

@@ -19,7 +19,7 @@ class DebugSmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
      * Extends _smtpSend by storing the communication trace.
      *
      * @param null|string $data data to be sent
-     * @param string $checkCode check code
+     * @param string|false $checkCode check code
      * @return null|string
      */
     protected function _smtpSend(?string $data, $checkCode = '250'): ?string

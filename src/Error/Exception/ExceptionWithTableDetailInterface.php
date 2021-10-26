@@ -17,12 +17,14 @@ declare(strict_types=1);
 
 namespace App\Error\Exception;
 
+use Cake\ORM\Table;
+
 interface ExceptionWithTableDetailInterface
 {
     /**
      * Get the table associated to the exception
      *
-     * @return \Cake\ORM\Table
+     * @return \Cake\ORM\Table|null
      */
-    public function getTable();
+    public function getTable(): ?Table;
 }

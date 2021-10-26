@@ -67,6 +67,7 @@ class Installer
         static::setSecuritySalt($rootDir, $io);
 
         if (class_exists('\Cake\Codeception\Console\Installer')) {
+            /** @psalm-suppress UndefinedClass this code is not executed if the class doesn't exist */
             \Cake\Codeception\Console\Installer::customizeCodeceptionBinary($event);
         }
     }

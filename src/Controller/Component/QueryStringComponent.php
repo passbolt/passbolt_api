@@ -196,7 +196,7 @@ class QueryStringComponent extends Component
             }
             if (is_array($items)) {
                 foreach ($items as $subKey => $subItems) {
-                    if (is_string($subKey) && substr($subKey, -1) === 's' && is_scalar($query[$key][$subKey])) {
+                    if (is_string($subKey) && substr($subKey, -1) === 's' && is_string($query[$key][$subKey])) {
                         $query[$key][$subKey] = explode(',', $query[$key][$subKey]);
                     }
                 }
@@ -442,7 +442,7 @@ class QueryStringComponent extends Component
             if (!is_int($i)) {
                 throw new Exception(__('"{0}" is not a valid group filter.', $i, $filterName));
             }
-            if (!is_scalar($groupId) || empty($groupId)) {
+            if (!is_string($groupId) || empty($groupId)) {
                 throw new Exception(__('"{0}" is not a valid group filter.', $i));
             }
             self::validateFilterGroup($groupId, $filterName);
@@ -599,7 +599,7 @@ class QueryStringComponent extends Component
         if (is_bool($str)) {
             return $str;
         }
-        if (!is_scalar($str)) {
+        if (!is_string($str)) {
             return false;
         }
         if ((strtolower($str) === 'true' || $str === '1')) {
@@ -679,11 +679,11 @@ class QueryStringComponent extends Component
      */
     public static function isOrder($orderName): bool
     {
-        if (!is_scalar($orderName)) {
+        if (!is_string($orderName)) {
             return false;
         }
         $orderRegex = '/^[a-zA-Z]+(\.){1}([a-z_]+){1}(( ){1}(ASC|DESC){1}){0,1}$/';
 
-        return (bool)(preg_match($orderRegex, $orderName) === 1);
+        return preg_match($orderRegex, $orderName) === 1;
     }
 }
