@@ -17,11 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\JwtAuthentication\Error\Exception\AccessToken;
 
-use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
 
 /**
  * Exception raised if the JWT key pair is incomplete, of when both do not match.
  */
-class InvalidJwtKeyPairException extends BadRequestException
+class InvalidJwtKeyPairException extends InternalErrorException
 {
 }

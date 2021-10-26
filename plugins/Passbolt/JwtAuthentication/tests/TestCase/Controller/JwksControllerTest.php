@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Test\TestCase\Controller;
 
+use App\Utility\Filesystem\DirectoryUtility;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 
 class JwksControllerTest extends JwtAuthenticationIntegrationTestCase
@@ -43,5 +45,21 @@ class JwksControllerTest extends JwtAuthenticationIntegrationTestCase
     {
         $this->get('/.well-known/jwks.json');
         $this->assertResponseCode(301);
+    }
+
+    public function testAuthJwksControllerJwks_Key_Missing()
+    {
+        DirectoryUtility::removeRecursively(JwksGetService::PUBLIC_KEY_PATH);
+        $this->getJson('/auth/jwt/jwks.json');
+        $this->assertInternalError('The key pair for JWT Authentication is not complete.');
+        $this->assertSame('The key pair for JWT Authentication is not complete.', $this->_responseJsonHeader->message);
+    }
+
+    public function testAuthJwksControllerRsa_Key_Missing()
+    {
+        DirectoryUtility::removeRecursively(JwksGetService::PUBLIC_KEY_PATH);
+        $this->getJson('/auth/jwt/rsa.json');
+        $this->assertInternalError('The key pair for JWT Authentication is not complete.');
+        $this->assertSame('The key pair for JWT Authentication is not complete.', $this->_responseJsonHeader->message);
     }
 }
