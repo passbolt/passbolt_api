@@ -59,19 +59,6 @@ control 'passbolt-config-04' do                        # A unique ID for this co
 end
 
 # you add controls here
-control 'passbolt-config-05' do                        # A unique ID for this control
-  impact 1                                # The criticality, if this control fails.
-  title 'file_storage.php file is installed'             # A human-readable title
-  desc 'file_storage.php file is present with correct permissions'
-  describe file("#{config_dir}/file_storage.php") do                  # The actual test
-    it { should exist }
-    its('owner') { should eq 'root' }
-    its('group') { should eq 'www-data' }
-    its('mode') { should cmp '00640' }
-  end
-end
-
-# you add controls here
 control 'passbolt-config-06' do                        # A unique ID for this control
   impact 1                                # The criticality, if this control fails.
   title 'requirements.php file is installed'             # A human-readable title
