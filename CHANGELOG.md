@@ -6,39 +6,39 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [3.3.0] - 2021-10-25
 ### Added
-PB-7815 As a server administrator I should be able to enable / disable the in-form menu feature, enabled by default
-PB-6072 As a server administrator I should be able to enable / disable the password generator feature, enabled by default
-PB-8189 As a user I should be able to use the application in German or Swedish
-PB-7847 As AN I should be able to authenticate to passbolt via JWT access and refresh tokens [experimental][disabled by default]
-PB-6034  As LU I should be able to configure my mobile app [experimental][disabled by default]
+- PB-7815 As a server administrator I should be able to enable / disable the in-form menu feature, enabled by default
+- PB-6072 As a server administrator I should be able to enable / disable the password generator feature, enabled by default
+- PB-8189 As a user I should be able to use the application in German or Swedish
+- PB-7847 As AN I should be able to authenticate to passbolt via JWT access and refresh tokens [experimental][disabled by default]
+- PB-6034  As LU I should be able to configure my mobile app [experimental][disabled by default]
 
 ### Improvement
-PB-8908 As a user I should see the footer of the passbolt emails translated with my locale
-PB-8364 As a user I should see the subject of the passbolt emails translated with my locale
-PB-6032 As API user I shouldn’t see the _joinData properties in the resource entry points responses
-PB-8281 Add Debian 11 bullseye support
-PB-7750 As AD I should be notified by the healthcheck when a tmp files is executable
-PB-7760 Increase PHPStan level to 6
-PB-8081 As AD I should be able to configure passbolt over IPv6 while installing a passbolt package
-PB-5866 As AD I should be able to detect avatar data discrepancies using the passbolt cleanup command
-PB-7605 As a developer I should be able to enable/disable a plugin easily
+- PB-8908 As a user I should see the footer of the passbolt emails translated with my locale
+- PB-8364 As a user I should see the subject of the passbolt emails translated with my locale
+- PB-6032 As API user I shouldn’t see the _joinData properties in the resource entry points responses
+- PB-8281 Add Debian 11 bullseye support
+- PB-7750 As AD I should be notified by the healthcheck when a tmp files is executable
+- PB-7760 Increase PHPStan level to 6
+- PB-8081 As AD I should be able to configure passbolt over IPv6 while installing a passbolt package
+- PB-5866 As AD I should be able to detect avatar data discrepancies using the passbolt cleanup command
+- PB-7605 As a developer I should be able to enable/disable a plugin easily
 
 ### Fixed
-PB-5982 as LU sharing a folders with a user which contains resources already shared with this same user I should move the resources in the shared folders
-PB-5457 Fix as LU importing a batch of passwords I should not get an internal errors because of database deadlock
-PB-7840 Fix as AD I can install/reconfigure the passbolt package if ssl certificates are already present
+- PB-5982 as LU sharing a folders with a user which contains resources already shared with this same user I should move the resources in the shared folders
+- PB-5457 Fix as LU importing a batch of passwords I should not get an internal errors because of database deadlock
+- PB-7840 Fix as AD I can install/reconfigure the passbolt package if ssl certificates are already present
 
 ### Security
-PB-7961 Fix PBL-03-002 Missing CSRF protection on the user directories synchronize and ignore user entry points
-PB-8047 Fix PBL-02-002 As LU I should logout by posting to the API and the entry point should should be protected by CSRF
-PB-7751 Updates FlySystem dependency to v2.1.1
-SEC-181 Fix information disclosure: recover endpoint should not return user role and name.
+- PB-7961 Fix PBL-03-002 Missing CSRF protection on the user directories synchronize and ignore user entry points
+- PB-8047 Fix PBL-02-002 As LU I should logout by posting to the API and the entry point should should be protected by CSRF
+- PB-7751 Updates FlySystem dependency to v2.1.1
+- SEC-181 Fix information disclosure: recover endpoint should not return user role and name.
 
 ### Maintenance
-PB-8488 Remove user agent unnecessary check associated with MFA token
-PB-8336 Clean phpunit.xml file
-PB-8448 Hashes the session ID prior to passord_hash
-PB-8210 Replaces PHPSESSID with session_name()
+- PB-8488 Remove user agent unnecessary check associated with MFA token
+- PB-8336 Clean phpunit.xml file
+- PB-8448 Hashes the session ID prior to passord_hash
+- PB-8210 Replaces PHPSESSID with session_name()
 
 ## [3.2.2] - 2021-06-16
 ### Fixed
