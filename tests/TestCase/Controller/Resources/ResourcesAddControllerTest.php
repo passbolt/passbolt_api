@@ -296,7 +296,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 
     public function testResourcesAddNonValidUserUuid()
     {
-        $user = UserFactory::make(['id' => '123'])->getEntity();
+        $user = UserFactory::make(['id' => '123'])->persist();
         $this->logInAs($user);
         $this->postJson('/resources.json?api-version=v2');
         $this->assertResponseFailure('The user identifier should be a valid UUID.');
