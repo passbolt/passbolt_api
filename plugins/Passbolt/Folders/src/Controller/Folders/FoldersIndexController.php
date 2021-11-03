@@ -25,6 +25,28 @@ use App\Controller\AppController;
 class FoldersIndexController extends AppController
 {
     /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('ApiPagination', [
+            'model' => 'Folders',
+        ]);
+    }
+
+    public $paginate = [
+        'sortableFields' => [
+            'Folders.name',
+            'Folders.created',
+            'Folders.modified',
+        ],
+        'order' => [
+            'Folders.name' => 'asc', // Default sorted field
+        ],
+    ];
+
+    /**
      * Folders Index action
      *
      * @return void
@@ -56,6 +78,7 @@ class FoldersIndexController extends AppController
         $options = $this->QueryString->get($whitelist);
 
         $resources = $this->Folders->findIndex($this->User->id(), $options);
+        $this->paginate($resources);
         $this->success(__('The operation was successful.'), $resources);
     }
 }

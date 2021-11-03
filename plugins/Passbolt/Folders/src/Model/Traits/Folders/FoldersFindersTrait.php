@@ -146,8 +146,6 @@ trait FoldersFindersTrait
             $query->contain('Permissions.Groups');
         }
 
-        $query->orderAsc('Folders.name');
-
         return $query;
     }
 
