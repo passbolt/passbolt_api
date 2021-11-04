@@ -29,12 +29,12 @@ class SessionIdentifier extends AbstractIdentifier
     /**
      * @inheritDoc
      */
-    public function identify(array $data)
+    public function identify(array $credentials)
     {
-        if (!isset($data[self::CREDENTIAL_USERNAME])) {
+        if (!isset($credentials[self::CREDENTIAL_USERNAME])) {
             return null;
         }
 
-        return $this->getResolver()->find([self::CREDENTIAL_USERNAME => $data[self::CREDENTIAL_USERNAME],]);
+        return $this->getResolver()->find([self::CREDENTIAL_USERNAME => $credentials[self::CREDENTIAL_USERNAME],]);
     }
 }
