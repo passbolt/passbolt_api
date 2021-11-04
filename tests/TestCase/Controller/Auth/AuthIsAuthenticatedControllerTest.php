@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 
 class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
@@ -34,5 +35,15 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
         $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseOk();
         $this->assertTextContains('success', $this->_responseJsonHeader->status);
+    }
+
+    public function testIsAuthenticatedSoftDeletedLoggedUserShouldBeForbiddenToRequestTheApi()
+    {
+        $user = UserFactory::make()->user()->deleted()->persist();
+
+        $this->loginAs($user);
+        $this->getJson('/auth/is-authenticated.json');
+
+        $this->assertAuthenticationError();
     }
 }
