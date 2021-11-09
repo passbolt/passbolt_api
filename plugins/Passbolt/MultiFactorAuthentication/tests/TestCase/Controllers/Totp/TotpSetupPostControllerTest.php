@@ -246,7 +246,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
             'totp' => $otp->now(),
         ]);
         $this->assertResponseOk();
-        $this->assertResponseContains('successAnimation');
+        $this->assertResponseContains('icon-feedback-success');
         $this->assertResponseContains('js_mfa_provider_disable');
     }
 }
