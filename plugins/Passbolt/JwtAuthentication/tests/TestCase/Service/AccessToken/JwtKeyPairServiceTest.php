@@ -90,12 +90,21 @@ class JwtKeyPairServiceTest extends TestCase
     public function testJwtKeyPairService_NotValid()
     {
         $this->service->createKeyPair();
+
         $secretFileContentCorrupted = 'blah' . file_get_contents(self::$secretFilePath);
         file_put_contents(self::$secretFilePath, $secretFileContentCorrupted);
         $this->assertTrue(file_exists(self::$publicFilePath));
         $this->assertTrue(file_exists(self::$secretFilePath));
         $this->expectException(InvalidJwtKeyPairException::class);
+
+        // suppress warning
+        $errorReportingBackup = error_reporting();
+        error_reporting(0);
+
         $this->service->validateKeyPair();
+
+        // reinstate errors
+        error_reporting($errorReportingBackup);
     }
 
     public function testJwtKeyPairService_Key_Length_Too_Short()
