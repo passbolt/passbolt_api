@@ -22,6 +22,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 
 /**
  * @covers \App\View\Helper\AvatarHelper
@@ -47,6 +48,8 @@ class AvatarHelperTest extends AppIntegrationTestCase
 
     public function testGetDefaultAvatarUrl()
     {
+        TableRegistry::getTableLocator()->get('Avatars');
+
         $this->assertSame(
             $this->fullBaseUrl . '/img/avatar/user.png',
             AvatarHelper::getAvatarUrl()
