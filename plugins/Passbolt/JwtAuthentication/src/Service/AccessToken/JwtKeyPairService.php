@@ -107,6 +107,9 @@ class JwtKeyPairService
         $minSecretKeySize = JwtTokenCreateService::JWT_KEY_LENGTH;
         $uuid = $uuid ?? UuidFactory::uuid();
         try {
+            if (!is_readable($this->publicService->getKeyPath())) {
+                throw new \Exception(__('The JWT public key could not be read or is not valid.'));
+            }
             $publicKey = file_get_contents($this->publicService->getKeyPath());
             $details = openssl_pkey_get_details(
                 openssl_pkey_get_public($publicKey)
@@ -115,10 +118,7 @@ class JwtKeyPairService
             $secretKeySize = $details['bits'] ?? 0;
 
             if ($secretKeySize === 0) {
-                throw new \Exception(__(
-                    'The JWT public key could not be read or is not valid.',
-                    $this->secretService::JWT_KEY_LENGTH
-                ));
+                throw new \Exception(__('The JWT public key could not be read or is not valid.'));
             }
 
             if ($secretKeySize < $minSecretKeySize) {
