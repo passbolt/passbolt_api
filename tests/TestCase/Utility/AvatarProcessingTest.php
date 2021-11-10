@@ -68,6 +68,6 @@ class AvatarProcessingTest extends TestCase
         $imageSize = getimagesize($ouputFilename);
         $this->assertSame($width, $imageSize[0]);
         $this->assertSame($height, $imageSize[1]);
-        $this->assertSame('image/jpeg', $imageSize['mime']);
+        $this->assertSame('image/png', $imageSize['mime']);
     }
 }
