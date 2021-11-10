@@ -34,19 +34,21 @@ EventManager::instance()
     ->on(new FoldersEmailRedactorPool()); // Register email redactors
 
 // Add cleanup tasks jobs.
-$cleanups = [
-    'Permissions' => [
-        'Hard Deleted Folders',
-    ],
-    'Passbolt/Folders.FoldersRelations' => [
-        'Hard Deleted Users',
-        'Soft Deleted Users',
-        'Hard Deleted Resources',
-        'Soft Deleted Resources',
-        'Hard Deleted Folders',
-        'Hard Deleted Folders Parents',
-        'Missing Folders Folders Relations',
-        'Missing Resources Folders Relations',
-    ],
-];
-CleanupCommand::addCleanups($cleanups);
+if (PHP_SAPI === 'cli') {
+    $cleanups = [
+        'Permissions' => [
+            'Hard Deleted Folders',
+        ],
+        'Passbolt/Folders.FoldersRelations' => [
+            'Hard Deleted Users',
+            'Soft Deleted Users',
+            'Hard Deleted Resources',
+            'Soft Deleted Resources',
+            'Hard Deleted Folders',
+            'Hard Deleted Folders Parents',
+            'Missing Folders Folders Relations',
+            'Missing Resources Folders Relations',
+        ],
+    ];
+    CleanupCommand::addCleanups($cleanups);
+}
