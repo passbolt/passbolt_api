@@ -102,7 +102,7 @@ trait ConfigurationTrait
             chmod(CONFIG . 'passbolt.php', 0770);
         }
         if (file_exists(CONFIG . 'license')) {
-            chmod(CONFIG . 'license', 644);
+            chmod(CONFIG . 'license', 0644);
         }
         if (file_exists(CONFIG . 'subscription_key.txt')) {
             chmod(CONFIG . 'subscription_key.txt', 0644);
