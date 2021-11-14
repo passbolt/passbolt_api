@@ -42,7 +42,6 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
  */
 class AccountRecoveryOrganizationPoliciesTable extends Table
 {
-
     /**
      * Initialize method
      *

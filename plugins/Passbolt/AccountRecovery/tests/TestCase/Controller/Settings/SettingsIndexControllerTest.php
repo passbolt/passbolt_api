@@ -22,6 +22,7 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 class SettingsIndexControllerTest extends AccountRecoveryIntegrationTestCase
 {
     // Check that feature flag is absent from /settings.json if plugin is disabled
+
     public function testAccountRecoverySettingsIndex_DisabledSuccess()
     {
         $this->disableFeaturePlugin('AccountRecovery');
@@ -31,6 +32,7 @@ class SettingsIndexControllerTest extends AccountRecoveryIntegrationTestCase
     }
 
     // Check that feature flag and props are present in /settings.json if plugin is enabled and user logged in
+
     public function testAccountRecoverySettingsIndex_GetLUSuccess()
     {
         $this->authenticateAs('ada');
