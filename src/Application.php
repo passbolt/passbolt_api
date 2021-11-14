@@ -269,6 +269,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             $this->addPlugin('Passbolt/Folders', ['bootstrap' => true, 'routes' => true]);
         }
 
+        $accountRecoveryEnabled = Configure::read('passbolt.plugins.accountRecovery.enabled');
+        if (!isset($accountRecoveryEnabled) || $accountRecoveryEnabled) {
+            $this->addPlugin('Passbolt/AccountRecovery', ['bootstrap' => true, 'routes' => true]);
+        }
+
         return $this;
     }
 
