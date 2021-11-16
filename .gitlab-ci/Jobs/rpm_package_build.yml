@@ -1,0 +1,53 @@
+.build-rpm:
+  extends: .rules
+  image: rockylinux/rockylinux:8
+  stage: package-build
+  dependencies:
+    - composer
+  artifacts:
+    paths:
+      - '*.rpm'
+    expire_in: 1 week
+    when: on_success
+  script:
+    - |
+      yum install -y ${DEPENDENCIES}
+      rpmdev-setuptree
+       /bin/sh rpm/scripts/build-passbolt-server.sh
+
+build-yum:
+  extends: .build-rpm
+  variables:
+    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo firewalld"
+
+.clone-bucket-repo: &clone-bucket-repo |
+  yum install python39 -wget -y
+  # gcloud sdk https://cloud.google.com/sdk/docs/downloads-versioned-archives
+  wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/$GCLOUD_PACKAGE_VERSION
+  echo "$GCLOUD_SHA256SUM $GCLOUD_PACKAGE_VERSION" | sha256sum -c -
+  tar xvf $GCLOUD_PACKAGE_VERSION
+  ./google-cloud-sdk/install.sh --quiet
+  gsutil -m cp -r "gs://$BUCKET_NAME/$REPO_PATH" .
+
+.publish-rpm:
+  image: rockylinux/rockylinux:8
+  stage: publish
+  variables:
+    GCLOUD_SHA256SUM: "81d0ad64dca3e97d02e873d386bafcc77b416d7c9b45e5ec2387e5075b133fc0"
+    GCLOUD_PACKAGE_VERSION: "google-cloud-sdk-365.0.0-linux-x86_64.tar.gz"
+    BUCKET_NAME: "artifactory.passbolt.dev"
+    REPO_PATH: "ce/yum"
+    PACKAGE_ARCH: "noarch"
+  dependencies:
+    - build-yum
+  before_script: 
+    - *clone-bucket-repo
+
+publish-passbolt-yum-stable:
+  variables:
+    COMPONENT: stable
+  script: 
+    - |
+      cp passbolt-server*.rpm $REPO_PATH/$COMPONENT/$PACKAGE_ARCH
+      createrepo --update $REPO_PATH/$COMPONENT
+      gsutil -m rsync -r -d $REPO_PATH/$COMPONENT
