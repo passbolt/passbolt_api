@@ -111,7 +111,7 @@ class TransfersTable extends Table
             );
 
         $validator
-            ->nonNegativeInteger('total_pages', __('The total number of pages should a non negative integer.'))
+            ->nonNegativeInteger('total_pages', __('The total number of pages should be a non negative integer.'))
             ->requirePresence('total_pages', 'create', __('The total number of pages is required.'))
             ->greaterThan('total_pages', 0, __('The total number of pages should be greater than 0.'))
             ->lessThan(

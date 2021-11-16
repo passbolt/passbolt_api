@@ -88,7 +88,7 @@ class SetupStartController extends AppController
     {
         $user = $this->Users->findSetup($userId);
         if (empty($user)) {
-            throw new BadRequestException(__('The user does not exist or is active.'));
+            throw new BadRequestException(__('The user does not exist or is already active.'));
         }
 
         return $user;
