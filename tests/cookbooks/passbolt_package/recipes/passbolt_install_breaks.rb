@@ -15,6 +15,17 @@ if platform_family?('debian')
     action :run
   end
 elsif platform_family?('rhel')
+  package 'RHEL: Install dependencies' do
+    package_name ['rpmdevtools', 'bc', 'createrepo', 'firewalld']
+    action :install
+  end
+
+  execute "Setup remirepo" do
+    cwd     "#{node['dest_dir']}"
+    command  "/bin/sh rpm/scripts/setup-remirepo.sh"
+    action   :run
+  end
+
   execute "Setup local repository" do
     cwd     "#{node['dest_dir']}"
     command "/bin/sh rpm/scripts/setup-local-repository.sh"
@@ -25,6 +36,10 @@ elsif platform_family?('rhel')
     flush_cache [ :before ]
     package_name "passbolt-#{node['passbolt_flavour']}-server"
     action :install
+  end
+
+  service 'firewalld' do
+    action :restart
   end
 
   execute "Configure passbolt, expect to break, display output" do

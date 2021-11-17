@@ -16,6 +16,11 @@ if platform_family?('debian')
     action   :run
   end
 elsif platform_family?('rhel')
+  package 'RHEL: Install dependencies' do
+    package_name ['rpmdevtools', 'bc', 'createrepo', 'firewalld']
+    action :install
+  end
+
   execute "Setup remirepo" do
     cwd     "#{node['dest_dir']}"
     command  "/bin/sh rpm/scripts/setup-remirepo.sh"

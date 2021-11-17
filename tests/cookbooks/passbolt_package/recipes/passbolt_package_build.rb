@@ -69,34 +69,36 @@ if platform_family?('debian')
     end
   end
 elsif platform_family?('rhel')
-  package 'RHEL: Install dev dependencies' do
-    package_name ['rpmdevtools', 'rpmlint', 'rsync', 'selinux-policy-devel', 'rpm-build', 'bc', 'createrepo', 'firewalld']
-    action :install
-  end
-  
-  execute 'RHEL: Setup RPM devtree' do
-    cwd     "#{node['dest_dir']}"
-    command "rpmdev-setuptree"
-    action :run
-  end  
-  
-  execute 'RHEL: Build Passbolt RPM package' do
-    cwd     "#{node['dest_dir']}"
-    command "PASSBOLT_FLAVOUR=#{node['passbolt_flavour']} \
-              PKG_VERSION=3.4.0 \
-              /bin/sh rpm/scripts/build-passbolt-server.sh"
-    action :run
-  end
+  if Dir.glob("#{node['dest_dir']}/passbolt-*.rpm").empty? then
+    package 'RHEL: Install dev dependencies' do
+      package_name ['rpmdevtools', 'rpmlint', 'rsync', 'selinux-policy-devel', 'rpm-build']
+      action :install
+    end
 
-  execute 'RHEL: Build passbolt-selinux RPM package' do
-    cwd     "#{node['dest_dir']}"
-    command "PKG_VERSION=0.1 /bin/sh rpm/scripts/build-passbolt-selinux.sh"
-    action :run
-  end
+    execute 'RHEL: Setup RPM devtree' do
+      cwd     "#{node['dest_dir']}"
+      command "rpmdev-setuptree"
+      action :run
+    end  
 
-  execute 'RHEL: Copy packages in repository' do
-    cwd     "#{node['dest_dir']}"
-    command "cp -rf ~/rpmbuild/RPMS/noarch/passbolt-* ."
-    action :run
+    execute 'RHEL: Build Passbolt RPM package' do
+      cwd     "#{node['dest_dir']}"
+      command "PASSBOLT_FLAVOUR=#{node['passbolt_flavour']} \
+                PKG_VERSION=3.4.0 \
+                /bin/sh rpm/scripts/build-passbolt-server.sh"
+      action :run
+    end
+
+    execute 'RHEL: Build passbolt-selinux RPM package' do
+      cwd     "#{node['dest_dir']}"
+      command "PKG_VERSION=0.1 /bin/sh rpm/scripts/build-passbolt-selinux.sh"
+      action :run
+    end
+
+    execute 'RHEL: Copy packages in repository' do
+      cwd     "#{node['dest_dir']}"
+      command "cp -rf ~/rpmbuild/RPMS/noarch/passbolt-* ."
+      action :run
+    end
   end
 end
