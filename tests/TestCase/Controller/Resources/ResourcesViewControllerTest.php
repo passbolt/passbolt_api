@@ -29,7 +29,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
         'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions',
     ];
 

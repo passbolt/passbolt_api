@@ -39,6 +39,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users',
         'app.Base/Profiles',
+        'app.Base/Roles',
     ];
 
     public function setUp(): void
