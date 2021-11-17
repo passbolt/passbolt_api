@@ -55,7 +55,7 @@ class AvatarProcessing
 
         return $image
             ->crop(new Point($x, $y), new Box($cropWidth, $cropHeight))
-            ->get('jpeg', [
+            ->get('png', [
                 'quality' => self::JPEG_QUALITY,
             ]);
     }
