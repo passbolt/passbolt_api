@@ -29,6 +29,7 @@ use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\EmailDigest\DigestRegister\GroupDigests;
 use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
+use App\Service\Avatars\AvatarsConfigurationService;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
@@ -132,6 +133,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         }
 
         $this->initEmails();
+        (new AvatarsConfigurationService())->loadConfiguration();
     }
 
     /**
