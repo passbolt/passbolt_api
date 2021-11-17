@@ -22,6 +22,7 @@ use Cake\Core\Configure;
     <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
     <?= $this->element('Header/meta') ?>
     <?= $this->fetch('css') ?>
+    <?= $this->fetch('scriptTop') ?>
 </head>
 <body>
 <!-- main -->
