@@ -2,7 +2,12 @@
 
 set -eu
 
-export PKG_VERSION=0.1
+SCRIPT_DIR="$( cd "$( dirname "${0}" )" && pwd )"
+cd ${SCRIPT_DIR}/../..
+
+yum install -y rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc
+rpmdev-setuptree
+
 OS_VERSION=$(grep -E '^VERSION_ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/\"//g')
 OS_VERSION_MAJOR=$(echo ${OS_VERSION:0:1} | bc)
 _POLICYCOREUTILS_PYTHON=policycoreutils-python

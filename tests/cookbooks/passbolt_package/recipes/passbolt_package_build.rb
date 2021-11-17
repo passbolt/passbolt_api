@@ -73,16 +73,6 @@ elsif platform_family?('rhel')
     package_name ['rpmdevtools', 'rpmlint', 'rsync', 'selinux-policy-devel', 'rpm-build', 'bc', 'createrepo', 'firewalld']
     action :install
   end
-
-  service 'firewalld' do
-    action :restart
-  end
-
-  execute "Setup remirepo" do
-    cwd     "#{node['dest_dir']}"
-    command  "/bin/sh rpm/scripts/setup-remirepo.sh"
-    action   :run
-  end
   
   execute 'RHEL: Setup RPM devtree' do
     cwd     "#{node['dest_dir']}"
@@ -92,13 +82,15 @@ elsif platform_family?('rhel')
   
   execute 'RHEL: Build Passbolt RPM package' do
     cwd     "#{node['dest_dir']}"
-    command "PASSBOLT_FLAVOUR=#{node['passbolt_flavour']} /bin/sh rpm/scripts/build-passbolt-server.sh"
+    command "PASSBOLT_FLAVOUR=#{node['passbolt_flavour']} \
+              PKG_VERSION=3.4.0 \
+              /bin/sh rpm/scripts/build-passbolt-server.sh"
     action :run
   end
 
   execute 'RHEL: Build passbolt-selinux RPM package' do
     cwd     "#{node['dest_dir']}"
-    command "/bin/sh rpm/scripts/build-passbolt-selinux.sh"
+    command "PKG_VERSION=0.1 /bin/sh rpm/scripts/build-passbolt-selinux.sh"
     action :run
   end
 
