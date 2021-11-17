@@ -4,11 +4,20 @@
 #
 # Copyright:: 2020, The Authors, All Rights Reserved.
 #
-apt_update
-
-package 'Install mariadb and nginx' do
-  package_name ['debconf-utils', 'curl', 'nginx', 'default-mysql-server']
-  action :install
+if platform_family?('debian')
+  apt_update
+  package 'Debian: Install mariadb and nginx' do
+    package_name ['debconf-utils', 'curl', 'nginx', 'default-mysql-server']
+    action :install
+  end
+elsif platform_family?('rhel')
+  package 'RHEL: Install mariadb and nginx' do
+    package_name ['curl', 'nginx', 'mariadb-server', 'createrepo', 'firewalld']
+    action :install
+  end
+  service 'firewalld' do
+    action :restart
+  end
 end
 
 execute "Break nginx and mysql" do

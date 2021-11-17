@@ -28,6 +28,51 @@ platforms:
   - name: debian-bullseye
   - name: ubuntu-18.04
   - name: ubuntu-20.04
+  - name: redhat-8
+    driver:
+      image: redhat/ubi8
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: redhat-7
+    driver:
+      image: redhat/ubi7
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: rockylinux-8
+    driver:
+      image: rockylinux/rockylinux:8
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: almalinux-8
+    driver:
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: centos-8
+    driver:
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: centos-7
+    driver:
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: oraclelinux-8
+    driver:
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: oraclelinux-7
+    driver:
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: fedora-33
+    driver:
+      image: anatomicjc/fedora:33
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
+  - name: fedora-34
+    driver:
+      image: anatomicjc/fedora:34
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
 
 suites:
   - name: filesystem-benchmarks
