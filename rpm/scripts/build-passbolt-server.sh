@@ -4,6 +4,7 @@ set -eu
 
 SCRIPT_DIR="$( cd "$( dirname "${0}" )" && pwd )"
 cd ${SCRIPT_DIR}/../..
+PASSBOLT_DIR=$(basename $PWD)
 
 yum install -y rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc
 rpmdev-setuptree
@@ -18,7 +19,7 @@ rsync -a --delete --delete-excluded \
   --exclude tests \
   --exclude .git \
   --exclude *deb \
-  passbolt/ passbolt-${PASSBOLT_FLAVOUR}-server-${PKG_VERSION}
+  $PASSBOLT_DIR/ passbolt-${PASSBOLT_FLAVOUR}-server-${PKG_VERSION}
 tar \
     --exclude-vcs \
     --exclude debian \
