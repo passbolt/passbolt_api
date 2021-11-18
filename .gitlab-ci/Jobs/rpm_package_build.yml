@@ -36,18 +36,21 @@ build-yum:
     GCLOUD_SHA256SUM: "81d0ad64dca3e97d02e873d386bafcc77b416d7c9b45e5ec2387e5075b133fc0"
     GCLOUD_PACKAGE_VERSION: "google-cloud-sdk-365.0.0-linux-x86_64.tar.gz"
     BUCKET_NAME: "artifactory.passbolt.dev"
-    REPO_PATH: "ce/yum"
+    REPO_PATH: "$PASSBOLT_FLAVOUR/yum"
     PACKAGE_ARCH: "noarch"
   dependencies:
     - build-yum
   before_script: 
     - *clone-bucket-repo
 
-publish-passbolt-yum-stable:
+publish-passbolt-yum-testing:
   variables:
-    COMPONENT: stable
+    COMPONENT: testing
   script: 
     - |
       cp passbolt-server*.rpm $REPO_PATH/$COMPONENT/$PACKAGE_ARCH
       createrepo --update $REPO_PATH/$COMPONENT
       gsutil -m rsync -r -d $REPO_PATH/$COMPONENT
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
