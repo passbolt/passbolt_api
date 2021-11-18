@@ -11,7 +11,7 @@
     when: on_success
   script:
     - |
-      export PASSBOLT_VERSION=$(jq '.version' package.json)
+      export PKG_VERSION=$(jq '.version' package.json)
       yum install -y ${DEPENDENCIES}
       rpmdev-setuptree
       /bin/sh rpm/scripts/build-passbolt-server.sh
