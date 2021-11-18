@@ -10,7 +10,7 @@
     expire_in: 1 week
     when: on_success
   script:
-    - yum install -y ${DEPENDENCIES}
+    - yum install -y jq ${DEPENDENCIES}
     - rpmdev-setuptree
     - /bin/sh PKG_VERSION=$(jq '.version' package.json) PASSBOLT_VERSION=$(jq '.version' package.json) rpm/scripts/build-passbolt-server.sh
 
