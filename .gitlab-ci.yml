@@ -18,6 +18,7 @@ include:
   - local: '/.gitlab-ci/Jobs/php_unit_tests.yml'
   - local: '/.gitlab-ci/Jobs/artifact_build.yml'
   - local: '/.gitlab-ci/Jobs/debian_package_build.yml'
+  - local: '/.gitlab-ci/Jobs/packages_tests.yml'
   - local: '/.gitlab-ci/Jobs/style_check.yml'
   - local: '/.gitlab-ci/Jobs/rpm_package_build.yml'
 
