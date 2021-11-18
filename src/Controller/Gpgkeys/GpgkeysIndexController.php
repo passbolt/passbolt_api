@@ -24,6 +24,26 @@ use App\Controller\AppController;
 class GpgkeysIndexController extends AppController
 {
     /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('ApiPagination', [
+            'model' => 'Gpgkeys',
+        ]);
+    }
+
+    public $paginate = [
+        'sortableFields' => [
+            'Gpgkeys.key_id',
+        ],
+        'order' => [
+            'Gpgkeys.key_id' => 'asc', // Default sorted field
+        ],
+    ];
+
+    /**
      * Gpgkey Index action
      *
      * @return void
@@ -34,6 +54,7 @@ class GpgkeysIndexController extends AppController
         $whitelist = ['filter' => ['modified-after', 'is-deleted']];
         $options = $this->QueryString->get($whitelist);
         $gpgkeys = $this->Gpgkeys->find('index', $options);
+        $this->paginate($gpgkeys);
         $this->success(__('The operation was successful.'), $gpgkeys);
     }
 }
