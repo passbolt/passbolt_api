@@ -23,8 +23,8 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\JwtAuthentication\Event\RemoveCsrfCookieOnJwt;
-use Passbolt\JwtAuthentication\Event\RemoveSessionCookiesIfOnJwt;
-use Passbolt\JwtAuthentication\Event\SetSessionIdentifierOnLoginEventListener;
+use Passbolt\JwtAuthentication\Event\RemoveSessionCookiesOnJwt;
+use Passbolt\JwtAuthentication\Event\SetSessionIdentifierOnLogin;
 use Passbolt\JwtAuthentication\Middleware\JwtAuthDetectionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtCsrfDetectionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtDestroySessionMiddleware;
@@ -67,8 +67,8 @@ class Plugin extends BasePlugin
     {
         $app->getEventManager()
             ->on(new JwtAuthenticationEmailRedactorPool())
-            ->on(new RemoveSessionCookiesIfOnJwt())
+            ->on(new RemoveSessionCookiesOnJwt())
             ->on(new RemoveCsrfCookieOnJwt())
-            ->on(new SetSessionIdentifierOnLoginEventListener());
+            ->on(new SetSessionIdentifierOnLogin());
     }
 }

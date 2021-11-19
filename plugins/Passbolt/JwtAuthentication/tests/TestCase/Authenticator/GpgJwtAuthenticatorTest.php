@@ -16,11 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Test\TestCase\Authenticator;
 
+use App\Middleware\ContainerInjectorMiddleware;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\UuidFactory;
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\TokenIdentifier;
 use Cake\Core\Configure;
+use Cake\Core\Container;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\BadRequestException;
@@ -29,6 +31,8 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
+use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
+use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 class GpgJwtAuthenticatorTest extends TestCase
@@ -231,8 +235,12 @@ class GpgJwtAuthenticatorTest extends TestCase
         ];
         $msg = $this->gpg->encryptSign(json_encode($userChallenge));
 
-        $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
-        $request = $request->withData('challenge', $msg);
+        $container = new Container();
+        $container->add(JwtArmoredChallengeInterface::class, JwtArmoredChallengeService::class);
+        $request = $request
+            ->withData('user_id', UuidFactory::uuid('user.id.ada'))
+            ->withData('challenge', $msg)
+            ->withAttribute(ContainerInjectorMiddleware::CONTAINER_ATTRIBUTE, $container);
         $result = $this->sut->authenticate($request);
 
         $this->assertEquals(Result::SUCCESS, $result->getStatus());
