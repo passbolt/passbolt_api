@@ -23,7 +23,7 @@ use Cake\Event\EventListenerInterface;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Authenticator\JwtSessionIdentificationService;
 
-class SetSessionIdentifierOnLoginEventListener implements EventListenerInterface
+class SetSessionIdentifierOnLogin implements EventListenerInterface
 {
     use ContainerAwareMiddlewareTrait;
 
