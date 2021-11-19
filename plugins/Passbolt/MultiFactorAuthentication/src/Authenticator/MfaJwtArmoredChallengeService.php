@@ -41,31 +41,17 @@ class MfaJwtArmoredChallengeService extends JwtArmoredChallengeService
         $uac = new UserAccessControl($user['role']['name'], $user['id'], $user['username']);
         $mfaSettings = MfaSettings::get($uac);
 
-        if ($this->isMfaAuthenticationRequired($request, $uac, $mfaSettings, $sessionId)) {
-            $challenge['providers'] = $mfaSettings->getEnabledProviders();
-        }
-
-        return $challenge;
-    }
-
-    /**
-     * @param \Cake\Http\ServerRequest $request Server Request
-     * @param \App\Utility\UserAccessControl $uac UAC
-     * @param \Passbolt\MultiFactorAuthentication\Utility\MfaSettings $mfaSettings MFA Settings
-     * @param string $sessionId Session ID (here access token)
-     * @return bool
-     */
-    public function isMfaAuthenticationRequired(
-        ServerRequest $request,
-        UserAccessControl $uac,
-        MfaSettings $mfaSettings,
-        string $sessionId
-    ): bool {
-        return (new IsMfaAuthenticationRequiredService())->isMfaCheckRequired(
+        $isMfaAuthenticationRequired = (new IsMfaAuthenticationRequiredService())->isMfaCheckRequired(
             $request,
             $mfaSettings,
             $uac,
             $sessionId
         );
+
+        if ($isMfaAuthenticationRequired) {
+            $challenge['providers'] = $mfaSettings->getEnabledProviders();
+        }
+
+        return $challenge;
     }
 }

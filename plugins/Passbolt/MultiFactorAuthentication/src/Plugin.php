@@ -23,9 +23,9 @@ use Cake\Http\MiddlewareQueue;
 use Cake\ORM\TableRegistry;
 use Passbolt\JwtAuthentication\Middleware\JwtAuthDetectionMiddleware;
 use Passbolt\MultiFactorAuthentication\Event\AddIsMfaEnabledColumnToUsersGrid;
-use Passbolt\MultiFactorAuthentication\Event\OnSuccessfulJwtLoginEventListener;
+use Passbolt\MultiFactorAuthentication\Event\AddMfaCookieOnSuccessfulJwtLogin;
+use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaJwtChallengeServiceMiddleware;
-use Passbolt\MultiFactorAuthentication\Middleware\MfaInjectFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRefreshTokenCreatedListenerMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
@@ -55,8 +55,11 @@ class Plugin extends BasePlugin
                 InjectMfaJwtChallengeServiceMiddleware::class
             )
             ->insertAfter(AuthenticationMiddleware::class, MfaRequiredCheckMiddleware::class)
-            ->insertAfter(MfaRequiredCheckMiddleware::class, MfaInjectFormMiddleware::class)
-            ->add(MfaRefreshTokenCreatedListenerMiddleware::class);
+            ->insertAfter(MfaRequiredCheckMiddleware::class, InjectMfaFormMiddleware::class)
+            ->insertAfter(
+                MfaRequiredCheckMiddleware::class,
+                MfaRefreshTokenCreatedListenerMiddleware::class
+            );
     }
 
     /**
@@ -79,6 +82,6 @@ class Plugin extends BasePlugin
             // Decorate the users grid and add the column "is_mfa_enabled"
             ->on(new AddIsMfaEnabledColumnToUsersGrid()) // decorate the query to add the new property on the User entity
             ->on(new MfaRedactorPool()) // Register email redactors
-            ->on(new OnSuccessfulJwtLoginEventListener());
+            ->on(new AddMfaCookieOnSuccessfulJwtLogin());
     }
 }

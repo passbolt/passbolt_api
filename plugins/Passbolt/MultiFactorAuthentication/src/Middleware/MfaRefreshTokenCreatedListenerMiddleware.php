@@ -27,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class MfaRefreshTokenCreatedListenerMiddleware implements MiddlewareInterface
 {
     /**
-     * Whenever a refresh token is issued,
+     * Whenever a refresh token is created,
      * the MFA cookie passed as parameter should be updated with
      * the associated access token.
      *

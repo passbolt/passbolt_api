@@ -37,6 +37,13 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
     use UacAwareMiddlewareTrait;
 
     /**
+     * Documents in the request, if an MFA check is required,
+     * according to the user settings and the absence of a
+     * valid MFA token in the cookies.
+     */
+    public const IS_MFA_CHECK_NOT_REQUIRED_ATTRIBUTE = 'is_mfa_check_not_required';
+
+    /**
      * Mfa Required check Middleware
      * Checks if the MFA is required for the user authenticated
      * and if the provided MFA token is valid.
@@ -51,7 +58,6 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         if ($this->isMfaCheckRequired($request)) {
-            /** @var \Cake\Http\Response $response */
             $response = new Response();
             if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
                 $secure = Configure::read('passbolt.security.cookies.secure') || $request->is('ssl');
@@ -62,6 +68,8 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
             return $response
                 ->withStatus(302)
                 ->withLocation($this->getVerifyUrl($request));
+        } else {
+            $request = $request->withAttribute(self::IS_MFA_CHECK_NOT_REQUIRED_ATTRIBUTE, true);
         }
 
         return $handler->handle($request);
