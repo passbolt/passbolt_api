@@ -3,7 +3,7 @@ services:
 
 .rules:
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ /^(feature\/debian\_*|master|release)/ || ($CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE == "schedule")'
+    - if: '$CI_COMMIT_BRANCH =~ /^(snyk-fix*|feature\/debian\_*|master|release)/ || ($CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE == "schedule")'
       when: on_success
 
 .dependencies:

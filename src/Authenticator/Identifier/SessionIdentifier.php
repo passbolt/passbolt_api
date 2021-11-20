@@ -12,16 +12,29 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         3.3.1
  */
+namespace App\Authenticator\Identifier;
 
-namespace Passbolt\JwtAuthentication\Error\Exception\AccessToken;
-
-use Cake\Http\Exception\InternalErrorException;
+use Authentication\Identifier\AbstractIdentifier;
+use Authentication\Identifier\Resolver\ResolverAwareTrait;
 
 /**
- * Exception raised if the JWT key pair is incomplete, of when both do not match.
+ * Session Identifier
  */
-class InvalidJwtKeyPairException extends InternalErrorException
+class SessionIdentifier extends AbstractIdentifier
 {
+    use ResolverAwareTrait;
+
+    /**
+     * @inheritDoc
+     */
+    public function identify(array $credentials)
+    {
+        if (!isset($credentials[self::CREDENTIAL_USERNAME])) {
+            return null;
+        }
+
+        return $this->getResolver()->find([self::CREDENTIAL_USERNAME => $credentials[self::CREDENTIAL_USERNAME],]);
+    }
 }
