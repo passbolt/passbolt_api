@@ -135,12 +135,12 @@ class FolderizableBehavior extends Behavior
             $itemsUsageHash = $this->getItemsUsageHash($itemsIds);
 
             return $results->map(function (EntityInterface $entity) use ($itemsFolderParentIdsHash, $itemsUsageHash) {
-                if (array_key_exists($entity->id, $itemsFolderParentIdsHash)) {
-                    $folderParentId = $itemsFolderParentIdsHash[$entity->id];
+                if (array_key_exists($entity->get('id'), $itemsFolderParentIdsHash)) {
+                    $folderParentId = $itemsFolderParentIdsHash[$entity->get('id')];
                     $entity = $this->addFolderParentIdProperty($entity, $folderParentId);
                 }
-                if (array_key_exists($entity->id, $itemsUsageHash)) {
-                    $isPersonal = $itemsUsageHash[$entity->id] === 1;
+                if (array_key_exists($entity->get('id'), $itemsUsageHash)) {
+                    $isPersonal = $itemsUsageHash[$entity->get('id')] === 1;
                     $entity = $this->addPersonalStatusProperty($entity, $isPersonal);
                 }
 
@@ -279,8 +279,8 @@ class FolderizableBehavior extends Behavior
             if ($when === 'always' || ($when === 'new' && $new) || ($when === 'existing' && !$new)) {
                 // When the entity is a new entity, we use the created_by property.
                 $folderParentId = $this->foldersRelationsTable
-                    ->getItemFolderParentIdInUserTree($entity->get('created_by'), $entity->id);
-                $isPersonal = $this->foldersRelationsTable->isItemPersonal($entity->id);
+                    ->getItemFolderParentIdInUserTree($entity->get('created_by'), $entity->get('id'));
+                $isPersonal = $this->foldersRelationsTable->isItemPersonal($entity->get('id'));
                 $this->addPersonalStatusProperty($entity, $isPersonal);
                 $this->addFolderParentIdProperty($entity, $folderParentId);
             }

@@ -36,7 +36,7 @@ class UserComponent extends Component
     /**
      * User agent cache to avoid parsing multiple times per request
      *
-     * @var null
+     * @var array|null
      */
     protected $_userAgent = null;
 
@@ -63,9 +63,9 @@ class UserComponent extends Component
     /**
      * Return the current user role or GUEST if the user is not identified
      *
-     * @return string
+     * @return string|null
      */
-    public function role(): string
+    public function role(): ?string
     {
         return $this->getAuthenticatedUserProperty('role.name', Role::GUEST);
     }
@@ -118,6 +118,7 @@ class UserComponent extends Component
         if (!isset($this->_userAgent)) {
             // Parse the user agent string.
             try {
+                /** @var string|null $agent */
                 $agent = env('HTTP_USER_AGENT');
                 if ($agent === null) {
                     throw new Exception(__('undefined user agent'));

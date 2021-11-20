@@ -30,7 +30,7 @@ class DirectorySyncController extends DirectoryController
     /**
      * Before filter
      *
-     * @param \Cake\Event\Event $event An Event instance
+     * @param \Cake\Event\EventInterface $event An Event instance
      * @throws \Cake\Http\Exception\ForbiddenException if the controller is accessed by a non admin
      * @return \Cake\Http\Response|null
      */

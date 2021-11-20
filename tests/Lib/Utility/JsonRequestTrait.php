@@ -35,7 +35,7 @@ trait JsonRequestTrait
     /**
      * The response body for the most recent json request.
      *
-     * @var Object
+     * @var array|object
      */
     protected $_responseJsonBody;
 

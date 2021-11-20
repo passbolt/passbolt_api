@@ -35,10 +35,10 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
@@ -53,6 +53,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  * Passbolt\Folders\Service\FoldersDeleteService Test Case
  *
  * @uses \Passbolt\Folders\Service\Folders\FoldersDeleteService
+ * @property \App\Model\Table\ResourcesTable $Resources
  */
 class FoldersDeleteServiceTest extends FoldersTestCase
 {
@@ -61,11 +62,12 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use IntegrationTestTrait;
+    use ModelAwareTrait;
     use PermissionsModelTrait;
     use ResourcesModelTrait;
 
     public $fixtures = [
-    GpgkeysFixture::class,
+        GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -91,7 +93,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     {
         parent::setUp();
         $this->service = new FoldersDeleteService();
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->loadModel('Resources');
         $this->loadNotificationSettings();
         EventManager::instance()->on(new FolderNotificationSettingsDefinition());
         EventManager::instance()->on(new FoldersEmailRedactorPool());

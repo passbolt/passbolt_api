@@ -68,7 +68,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
     ];
 
     /**
-     * @var FoldersTable
+     * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
     private $foldersTable;
 
@@ -108,7 +108,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $this->service->update($uac, $folderA->id, ['name' => 'new name']);
 
         $folderBUpdated = $this->foldersTable->findById($folderA->id)->first();
-        $this->assertEquals('new name', $folderBUpdated->name);
+        $this->assertEquals('new name', $folderBUpdated->get('name'));
     }
 
     private function insertFixture_UpdateFolderMeta()

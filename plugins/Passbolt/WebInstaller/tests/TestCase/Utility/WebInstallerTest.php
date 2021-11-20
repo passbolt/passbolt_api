@@ -161,6 +161,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $webInstaller->setSettings('first_user', $userSettings);
         $webInstaller->createFirstUser();
 
+        /** @var \App\Model\Entity\User $user */
         $user = $Users->find()
             ->where(['username' => 'aurore@passbolt.com'])
             ->contain(['Profiles', 'AuthenticationTokens'])
@@ -172,22 +173,6 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $this->assertEquals($userSettings['profile']['first_name'], $user->profile->first_name);
         $this->assertEquals($userSettings['profile']['last_name'], $user->profile->last_name);
         $this->assertEquals(AuthenticationToken::TYPE_REGISTER, $user->authentication_tokens[0]->type);
-    }
-
-    public function testWebInstallerUtilityWriteLicenseFile()
-    {
-        $this->markTestSkipped('This test should be removed. I keep it though because it documents the v2.0 license approach');
-        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Ee')) {
-            $webInstaller = new WebInstaller(null);
-            $licenseSettings = [
-                'subscription_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_dev'),
-            ];
-            $webInstaller->setSettings('license', $licenseSettings);
-
-            $webInstaller->writeLicenseFile();
-            $this->assertFileExists(CONFIG . 'license');
-        }
-        $this->assertTrue(true);
     }
 
     public function testWebInstallerImportSubscription()

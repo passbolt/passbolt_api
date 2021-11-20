@@ -20,17 +20,17 @@ use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Passbolt\DirectorySync\Utility\Alias;
 
+/**
+ * @property \Passbolt\DirectorySync\Actions\SyncAction $action
+ */
 trait MockDirectoryTrait
 {
     protected function mockDirectoryIgnore($id, $model)
     {
-        if (!isset($created)) {
-            $created = '2018-07-20 06:31:57';
-        }
         $entry = [
             'id' => $id,
             'foreign_model' => $model,
-            'created' => $created,
+            'created' => '2018-07-20 06:31:57',
         ];
         $ignore = $this->action->DirectoryEntries->DirectoryIgnore->newEntity($entry, ['validate' => false]);
         $save = $this->action->DirectoryEntries->DirectoryIgnore->save($ignore, ['checkRules' => false]);

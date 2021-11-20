@@ -29,7 +29,7 @@ class ReportPool
     /**
      * Instance of class used for singleton.
      *
-     * @var \Passbolt\Reports\Service\ReportPool
+     * @var \Passbolt\Reports\Service\ReportPool|null
      */
     private static $instance;
 

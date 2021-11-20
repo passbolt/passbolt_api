@@ -46,7 +46,7 @@ class SoftDeleteTest extends FoldersTestCase
     ];
 
     /**
-     * @var UsersTable
+     * @var \App\Model\Table\UsersTable
      */
     private $usersTable;
 

@@ -79,6 +79,7 @@ trait SyncAddTrait
             }
         }
 
+        /** @psalm-suppress TypeDoesNotContainType const ENTITY_TYPE is defined in two separate classes with different values */
         // If it's a group. We need to process the group users.
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'update')) {
@@ -174,6 +175,7 @@ trait SyncAddTrait
         }
         $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, $status, $reportData));
 
+        /** @psalm-suppress TypeDoesNotContainType const ENTITY_TYPE is defined in two separate classes with different values */
         if ($status == Alias::STATUS_SUCCESS && self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             $this->handleGroupUsersAfterGroupCreate($data, $entity);
         }
@@ -234,6 +236,7 @@ trait SyncAddTrait
         }
         $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, $status, $reportData));
 
+        /** @psalm-suppress TypeDoesNotContainType const ENTITY_TYPE is defined in two separate classes with different values */
         if ($status == Alias::STATUS_SUCCESS && self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             $this->handleGroupUsersAfterGroupCreate($data, $entity);
         }
@@ -248,11 +251,12 @@ trait SyncAddTrait
      */
     public function createEntity(array $data, DirectoryEntry $entry)
     {
-        $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+        $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->get('id'));
+        /** @psalm-suppress TypeDoesNotContainType const ENTITY_TYPE is defined in two separate classes with different values */
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             // Define default admin for group.
             $data['group']['groups_users'][] = [
-                'user_id' => $this->defaultGroupAdmin->id,
+                'user_id' => $this->defaultGroupAdmin->get('id'),
                 'is_admin' => true,
             ];
             // Create.

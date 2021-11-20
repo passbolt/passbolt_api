@@ -146,14 +146,14 @@ class SecretsHistoryTable extends Table
 
         $secretHistory = $this->save($secretHistory);
 
-        // Check for validation errors. (associated models too).
-        if (!empty($secretHistory->getErrors())) {
-            throw new ValidationException(__('Could not validate secret history data.'), $secretHistory, $this);
-        }
-
         // Check for errors while saving.
         if (!$secretHistory) {
             throw new InternalErrorException('Could not save the secret history.');
+        }
+
+        // Check for validation errors. (associated models too).
+        if (!empty($secretHistory->getErrors())) {
+            throw new ValidationException(__('Could not validate secret history data.'), $secretHistory, $this);
         }
 
         return $secretHistory;

@@ -71,7 +71,7 @@ class RefreshTokenRenewalServiceTest extends TestCase
         ])->firstOrFail();
 
         $this->assertTrue($newRefreshToken->checkSessionId($newAccessToken));
-        $this->assertTrue($this->AuthenticationTokens->exists(['id' => $tokenInTheRequest->id, 'active' => false]));
+        $this->assertTrue($this->AuthenticationTokens->exists(['id' => $tokenInTheRequest->get('id'), 'active' => false]));
     }
 
     public function testRefreshTokenRenewalService_Renew_On_Consumed_Token()

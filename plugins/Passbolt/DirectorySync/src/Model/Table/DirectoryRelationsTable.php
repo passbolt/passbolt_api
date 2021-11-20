@@ -166,8 +166,8 @@ class DirectoryRelationsTable extends Table
 
         $relation = [
             'id' => $groupUser->id,
-            'parent_key' => $groupEntry->id,
-            'child_key' => $userEntry->id,
+            'parent_key' => $groupEntry->get('id'),
+            'child_key' => $userEntry->get('id'),
         ];
 
         return $this->createOrUpdate($relation);

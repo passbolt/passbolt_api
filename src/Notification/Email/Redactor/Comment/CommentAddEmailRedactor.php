@@ -85,6 +85,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     {
         $emailCollection = new EmailCollection();
 
+        /** @var \App\Model\Entity\Comment $comment */
         $comment = $event->getData('comment');
 
         // Find the users that have access to the resource (including via their groups)

@@ -54,9 +54,6 @@ class UserAccessControl
      */
     public function __construct(string $roleName, ?string $userId = null, ?string $username = null)
     {
-        if (!is_string($roleName)) {
-            throw new InternalErrorException('Invalid UserControl role name.');
-        }
         if (isset($userId) && !Validation::uuid($userId)) {
             throw new InternalErrorException('Invalid UserControl user id.');
         }

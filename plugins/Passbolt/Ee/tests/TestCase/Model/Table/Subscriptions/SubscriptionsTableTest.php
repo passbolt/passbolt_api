@@ -38,7 +38,7 @@ class SubscriptionsTableTest extends TestCase
     use DummySubscriptionTrait;
 
     /**
-     * @var SubscriptionsTable
+     * @var \Passbolt\Ee\Model\Table\SubscriptionsTable
      */
     public $Subscriptions;
 
@@ -77,7 +77,7 @@ class SubscriptionsTableTest extends TestCase
         $persistedSub = SubscriptionFactory::make()->persist();
         $retrievedSub = $this->Subscriptions->getOrFail();
         $this->assertInstanceOf(Subscription::class, $retrievedSub);
-        $this->assertSame($persistedSub->id, $retrievedSub->id);
+        $this->assertSame($persistedSub->get('id'), $retrievedSub->id);
     }
 
     public function testSubscriptionsTableSaveValidSubscriptionWithoutUserAuthenticated()

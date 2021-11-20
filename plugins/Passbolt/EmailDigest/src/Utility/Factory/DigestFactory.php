@@ -32,9 +32,9 @@ use Passbolt\EmailDigest\Utility\Digest\SingleDigest;
 class DigestFactory
 {
     /**
-     * @var static
+     * @var static|null
      */
-    private static $instance;
+    private static $instance = null;
 
     /**
      * @var \Passbolt\EmailDigest\Utility\Digest\DigestsPool

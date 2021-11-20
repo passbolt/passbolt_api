@@ -154,6 +154,7 @@ class Digest extends AbstractDigest implements DigestInterface
             $digest->setContent($this->renderDigestContentFromEmailPreview($this->emailPreviewFactory, $digest));
         }
 
+        /** @var \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[] $result */
         return $result;
     }
 

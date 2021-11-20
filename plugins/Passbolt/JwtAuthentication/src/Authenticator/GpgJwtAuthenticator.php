@@ -88,11 +88,13 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
     /**
      * Authenticate
      *
-     * @param \Cake\Http\ServerRequest $request interface for accessing request parameters
+     * @param \Psr\Http\Message\ServerRequestInterface $request interface for accessing request parameters
      * @return \Authentication\Authenticator\ResultInterface User|false the user or false if authentication failed
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
+        /** @var \Cake\Http\ServerRequest $request */
+
         try {
             $this->setRequest($request);
             $this->init();

@@ -45,11 +45,13 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
                 return [];
             }
 
+            /** @psalm-suppress InvalidReturnType no return type */
             public function setDescription(string $description)
             {
             }
         };
 
+        /** @psalm-suppress UndefinedClass unconventional stuff is happening here */
         $report = new $ReportClass();
         $report->setSlug($slug)
             ->setName(__('Sample report'))
@@ -105,11 +107,13 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
                 return [];
             }
 
+            /** @psalm-suppress InvalidReturnType no return type */
             public function setDescription(string $description)
             {
             }
         };
 
+        /** @psalm-suppress UndefinedClass unconventional stuff is happening here */
         $report = new $ReportClass();
         $report->setSlug($slug)
             ->setName(__('Sample report with argument'))

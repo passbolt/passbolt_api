@@ -18,21 +18,23 @@ declare(strict_types=1);
 namespace Passbolt\Locale\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
+/**
+ * Class OrganizationLocalesSelectControllerTest
+ *
+ * @property \App\Model\Table\OrganizationSettingsTable $OrganizationSettings
+ */
 class OrganizationLocalesSelectControllerTest extends AppIntegrationTestCase
 {
-    /**
-     * @var OrganizationSettingsTable
-     */
-    public $organizationSettings;
+    use ModelAwareTrait;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->organizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
+        $this->loadModel('OrganizationSettings');
     }
 
     public function tearDown(): void
@@ -56,7 +58,7 @@ class OrganizationLocalesSelectControllerTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
         $this->assertSame(
             $value,
-            $this->organizationSettings->getByProperty(LocaleService::SETTING_PROPERTY)->get('value')
+            $this->OrganizationSettings->getByProperty(LocaleService::SETTING_PROPERTY)->get('value')
         );
     }
 

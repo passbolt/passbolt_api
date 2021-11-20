@@ -33,6 +33,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Group|null $permissions_history_group
  * @property \App\Model\Entity\User|null $permissions_history_user
  * @property \App\Model\Entity\Resource $permissions_history_resource
+ * @property \App\Model\Entity\Folder $folder
  */
 class PermissionHistory extends Entity
 {

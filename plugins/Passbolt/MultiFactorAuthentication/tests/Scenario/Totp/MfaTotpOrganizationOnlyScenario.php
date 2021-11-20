@@ -25,8 +25,9 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
  */
 class MfaTotpOrganizationOnlyScenario implements FixtureScenarioInterface
 {
-    public function load($isSupported = true, ...$args): array
+    public function load(...$args): array
     {
+        $isSupported = $args[0] ?? true;
         $orgSetting = MfaOrganizationSettingFactory::make()
             ->setProviders(MfaSettings::PROVIDER_TOTP, $isSupported)
             ->persist();

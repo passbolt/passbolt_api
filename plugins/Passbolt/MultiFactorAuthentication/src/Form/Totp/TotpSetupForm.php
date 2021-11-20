@@ -80,9 +80,6 @@ class TotpSetupForm extends MfaForm
      */
     public function isValidOtpProvisioningUri(string $value)
     {
-        if (!is_string($value)) {
-            return false;
-        }
         try {
             $this->otp = Factory::loadFromProvisioningUri($value);
         } catch (\InvalidArgumentException $exception) {
@@ -100,13 +97,7 @@ class TotpSetupForm extends MfaForm
      */
     public function isValidOtp(string $value)
     {
-        if (!isset($this->otp)) {
-            return false;
-        }
-        if (!is_string($value)) {
-            return false;
-        }
-        if (!is_numeric($value)) {
+        if (!is_object($this->otp) || !is_numeric($value)) {
             return false;
         }
 

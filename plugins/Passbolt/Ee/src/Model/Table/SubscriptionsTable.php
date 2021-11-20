@@ -125,10 +125,10 @@ class SubscriptionsTable extends OrganizationSettingsTable
     }
 
     /**
-     * @return \Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      * @throws \Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException
      */
-    public function getOrFail(): EntityInterface
+    public function getOrFail()
     {
         try {
             return $this->find()->firstOrFail();

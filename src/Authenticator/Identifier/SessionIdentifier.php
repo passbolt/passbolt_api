@@ -12,34 +12,29 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.13.0
+ * @since         3.3.1
  */
+namespace App\Authenticator\Identifier;
 
-namespace Passbolt\Folders\Test\TestCase\EventListener;
-
-use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
+use Authentication\Identifier\AbstractIdentifier;
+use Authentication\Identifier\Resolver\ResolverAwareTrait;
 
 /**
- * \Passbolt\Folders\EventListener\GroupsEventListener test case
- *
- * @covers \Passbolt\Folders\EventListener\GroupsEventListener
+ * Session Identifier
  */
-class GroupsEventListenerTest extends FoldersIntegrationTestCase
+class SessionIdentifier extends AbstractIdentifier
 {
-   /**
-    * @var GroupsEventListener
-    */
-   //private $sut;
+    use ResolverAwareTrait;
 
-    public function setUp(): void
+    /**
+     * @inheritDoc
+     */
+    public function identify(array $credentials)
     {
-        //$this->sut = new GroupsEventListener();
+        if (!isset($credentials[self::CREDENTIAL_USERNAME])) {
+            return null;
+        }
 
-        parent::setUp();
-    }
-
-    public function testIncomplete()
-    {
-        $this->markTestIncomplete();
+        return $this->getResolver()->find([self::CREDENTIAL_USERNAME => $credentials[self::CREDENTIAL_USERNAME],]);
     }
 }

@@ -21,7 +21,7 @@ use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
 class MfaRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
     /**
-     * @return array of SubscribedEmailRedactors
+     * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
      */
     public function getSubscribedRedactors()
     {

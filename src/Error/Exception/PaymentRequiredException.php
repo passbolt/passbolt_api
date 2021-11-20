@@ -24,15 +24,15 @@ use Cake\Http\Exception\HttpException;
 class PaymentRequiredException extends HttpException implements ExceptionWithErrorsDetailInterface
 {
     /**
-     * @var mixed $data
+     * @var array|null $data
      */
-    protected $data = '';
+    protected $data = null;
 
     /**
      * Constructor
      *
      * @param string|null $message If no message is given 'Forbidden' will be the message
-     * @param mixed|null $data data to return to the end user as information
+     * @param array|null $data data to return to the end user as information
      * @param int|null $code status code, defaults to 402
      * @param \Exception|null $previous The previous exception.
      */
@@ -47,9 +47,9 @@ class PaymentRequiredException extends HttpException implements ExceptionWithErr
     }
 
     /**
-     * @return mixed
+     * @return array|null
      */
-    public function getErrors()
+    public function getErrors(): ?array
     {
         return $this->data;
     }

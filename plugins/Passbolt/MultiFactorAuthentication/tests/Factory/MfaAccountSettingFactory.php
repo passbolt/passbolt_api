@@ -44,7 +44,7 @@ class MfaAccountSettingFactory extends AccountSettingFactory
     }
 
     /**
-     * @param string|null $uri Provisioning URI
+     * @param string $uri Provisioning URI
      * @param FrozenTime|null $verified Date of verification
      * @return self
      */

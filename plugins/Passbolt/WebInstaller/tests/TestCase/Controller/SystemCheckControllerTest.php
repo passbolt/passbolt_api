@@ -28,27 +28,30 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
         $this->initWebInstallerSession();
     }
 
+    /**
+     * note: creates an issue with healthcheck on a webserverless environment.
+     */
     public function testWebInstallerSystemCheckViewSuccess()
     {
-        $this->markTestSkipped('creates an issue with healthcheck on a webserverless environment.');
-//        $this->get('/install/system_check');
-//        $data = ($this->_getBodyAsString());
-//        $this->assertResponseOk();
-//        $this->assertContains('2. Database', $data);
-//        $this->assertContains('Nice one! Your environment is ready for passbolt.', $data);
-//        $this->assertContains('Environment is configured correctly.', $data);
-//        $this->assertContains('GPG is configured correctly.', $data);
-//        $this->assertContains('install/database" class="button primary next big">Start configuration', $data);
+        $this->get('/install/system_check');
+        $data = $this->_getBodyAsString();
+        $this->assertResponseOk();
+        $this->assertStringContainsString('. Database', $data);
+        $this->assertStringContainsString('Nice one! Your environment is ready for passbolt.', $data);
+        $this->assertStringContainsString('Environment is configured correctly.', $data);
+        $this->assertStringContainsString('GPG is configured correctly.', $data);
+        $this->assertStringContainsString('Start configuration', $data);
     }
 
+    /**
+     * note: creates an issue with healthcheck on a webserverless environment.
+     */
     public function testWebInstallerSystemCheckViewSuccess_LicensePluginEnabled()
     {
-        $this->markTestSkipped('creates an issue with healthcheck on a webserverless environment.');
-//        Configure::write('passbolt.plugins.ee', ['version' => '2.0.0']);
-//        $this->get('/install/system_check');
-//        $data = ($this->_getBodyAsString());
-//        $this->assertResponseOk();
-//        $this->assertContains('2. Subscription key', $data);
-//        $this->assertContains('install/license_key" class="button primary next big">Start configuration', $data);
+        $this->get('/install/system_check');
+        $data = $this->_getBodyAsString();
+        $this->assertResponseOk();
+        $this->assertStringContainsString('. Subscription key', $data);
+        $this->assertStringContainsString('Start configuration', $data);
     }
 }

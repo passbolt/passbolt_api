@@ -153,9 +153,19 @@ class GpgHealthchecks
      */
     public static function gpgFingerprint(?array $checks = []): array
     {
-        $checks['gpg']['gpgKeyPrivateFingerprint'] = false;
-        $checks['gpg']['gpgKeyPublicFingerprint'] = false;
-        $checks['gpg']['gpgKeyPublicEmail'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'gpgKeyPrivateFingerprint' => false,
+                    'gpgKeyPublicFingerprint' => false,
+                    'gpgKeyPublicEmail' => false,
+                    'gpgKeyPublicReadable' => false,
+                    'gpgKeyPrivateReadable' => false,
+                    'gpgKey' => false,
+                ],
+            ],
+            $checks
+        );
         $areKeysReadable = $checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPrivateReadable'];
         if ($areKeysReadable && $checks['gpg']['gpgKey']) {
             $gpg = OpenPGPBackendFactory::get();
@@ -186,7 +196,15 @@ class GpgHealthchecks
      */
     public static function gpgKeyInKeyring(?array $checks = []): array
     {
-        $checks['gpg']['gpgKeyPublicInKeyring'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'gpgHome' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
         if (!$checks['gpg']['gpgHome'] || $fingerprint === null) {
             return $checks;
@@ -208,17 +226,24 @@ class GpgHealthchecks
      */
     public static function gpgCanEncrypt(?array $checks = []): array
     {
-        $checks['gpg']['canEncrypt'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canEncrypt' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
             try {
                 $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-                $encryptedMessage = $_gpg->encrypt($messageToEncrypt);
-                if ($encryptedMessage !== false) {
-                    $checks['gpg']['canEncrypt'] = true;
-                }
+                $_gpg->encrypt($messageToEncrypt);
+                $checks['gpg']['canEncrypt'] = true;
             } catch (Exception $e) {
+                $checks['gpg']['canEncrypt'] = false;
             }
         }
 
@@ -233,7 +258,15 @@ class GpgHealthchecks
      */
     public static function gpgCanEncryptSign(?array $checks = []): array
     {
-        $checks['gpg']['canEncryptSign'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canEncryptSign' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
@@ -242,11 +275,10 @@ class GpgHealthchecks
                 $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
                 $_gpg->setEncryptKeyFromFingerprint($fingerprint);
                 $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-                $encryptedMessage2 = $_gpg->encrypt($messageToEncrypt, true);
-                if ($encryptedMessage2 !== false) {
-                    $checks['gpg']['canEncryptSign'] = true;
-                }
+                $_gpg->encrypt($messageToEncrypt, true);
+                $checks['gpg']['canEncryptSign'] = true;
             } catch (Exception $e) {
+                $checks['gpg']['canEncryptSign'] = false;
             }
         }
 
@@ -261,7 +293,16 @@ class GpgHealthchecks
      */
     public static function gpgCanDecrypt(?array $checks = []): array
     {
-        $checks['gpg']['canDecrypt'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canEncrypt' => false,
+                    'canDecrypt' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             if ($checks['gpg']['canEncrypt']) {
                 $_gpg = OpenPGPBackendFactory::get();
@@ -292,7 +333,15 @@ class GpgHealthchecks
      */
     public static function gpgCanDecryptVerify(?array $checks = []): array
     {
-        $checks['gpg']['canDecryptVerify'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canDecryptVerify' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
@@ -323,7 +372,15 @@ class GpgHealthchecks
      */
     public static function gpgCanSign(?array $checks = []): array
     {
-        $checks['gpg']['canSign'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'gpgKeyPublicInKeyring' => false,
+                    'canSign' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
             $_gpg->setSignKeyFromFingerprint(
@@ -332,11 +389,10 @@ class GpgHealthchecks
             );
             $messageToEncrypt = 'test message';
             try {
-                $signature = $_gpg->sign($messageToEncrypt);
-                if ($signature !== false) {
-                    $checks['gpg']['canSign'] = true;
-                }
+                $_gpg->sign($messageToEncrypt);
+                $checks['gpg']['canSign'] = true;
             } catch (Exception $e) {
+                $checks['gpg']['canSign'] = false;
             }
         }
 
@@ -351,7 +407,15 @@ class GpgHealthchecks
      */
     public static function gpgCanVerify(?array $checks = []): array
     {
-        $checks['gpg']['canVerify'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canDecryptVerify' => false,
+                    'canVerify' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['canDecryptVerify']) {
             $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';

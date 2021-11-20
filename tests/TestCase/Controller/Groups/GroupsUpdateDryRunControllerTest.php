@@ -26,7 +26,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
-        'app.Base/Users', 'app.Base/Secrets',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Secrets',
     ];
 
     public function setUp(): void
@@ -179,11 +179,6 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($result['dry-run']);
         $this->assertEmpty($result['dry-run']['SecretsNeeded']);
         $this->assertEmpty($result['dry-run']['Secrets']);
-    }
-
-    public function testGroupsUpdateDryRunCannotModifyNotAccessibleFields()
-    {
-        $this->markTestIncomplete();
     }
 
     public function testGroupsUpdateDryRunErrorNotValidId()

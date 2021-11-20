@@ -17,8 +17,12 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Utility;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 
 class HealthchecksTest extends AppIntegrationTestCase
 {
@@ -93,11 +97,14 @@ class HealthchecksTest extends AppIntegrationTestCase
 
     public function testJwt()
     {
+        DirectoryUtility::removeRecursively(JwtTokenCreateService::JWT_SECRET_KEY_PATH);
+        DirectoryUtility::removeRecursively(JwksGetService::PUBLIC_KEY_PATH);
         Configure::delete('passbolt.plugins.jwtAuthentication.enabled');
         $check = Healthchecks::jwt();
         $attributes = ['isEnabled',];
         $this->assertArrayHasAttributes($attributes, $check['jwt']);
 
+        (new JwtKeyPairService())->createKeyPair();
         $this->enableFeaturePlugin('JwtAuthentication');
         $check = Healthchecks::jwt();
         $attributes = ['isEnabled', 'keyPairValid',];

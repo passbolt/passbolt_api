@@ -20,14 +20,19 @@ namespace Passbolt\AuditLog\Test\TestCase\Utility;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 use Passbolt\AuditLog\Test\TestCase\Traits\ActionLogsOperationsTrait;
 use Passbolt\AuditLog\Utility\ActionLogsFinder;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
+/**
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \Passbolt\Log\Model\Table\PermissionsHistoryTable&\Cake\ORM\Association\BelongsTo $PermissionsHistory
+ */
 class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
 {
     use ActionLogsOperationsTrait;
+    use ModelAwareTrait;
 
     public $fixtures = [
         'app.Base/Users',
@@ -46,8 +51,8 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
+        $this->loadModel('Users');
+        $this->loadModel('Passbolt/Log.PermissionsHistory');
     }
 
     public function testAuditLogsActionLogsFinderResourceSecretUpdated()

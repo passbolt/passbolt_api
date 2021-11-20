@@ -16,7 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\Mobile\Test\Factory;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
+use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\Chronos\ChronosInterface;
 use Cake\Utility\Security;
@@ -26,6 +28,10 @@ use Passbolt\Mobile\Model\Entity\Transfer;
 
 /**
  * TransferFactory
+ *
+ * @method \Passbolt\Mobile\Model\Entity\Transfer|\Passbolt\Mobile\Model\Entity\Transfer[] persist()
+ * @method \Passbolt\Mobile\Model\Entity\Transfer getEntity()
+ * @method \Passbolt\Mobile\Model\Entity\Transfer[] getEntities()
  */
 class TransferFactory extends CakephpBaseFactory
 {
@@ -47,9 +53,10 @@ class TransferFactory extends CakephpBaseFactory
      */
     protected function setDefaultTemplate(): void
     {
-        $this->setDefaultData(function (Generator $faker) {
+        $userId = UuidFactory::uuid();
+        $this->setDefaultData(function (Generator $faker) use ($userId) {
             return [
-                'user_id' => $faker->uuid(),
+                'user_id' => $userId,
                 'total_pages' => 2,
                 'current_page' => 0,
                 'status' => Transfer::TRANSFER_STATUS_START,
@@ -59,8 +66,13 @@ class TransferFactory extends CakephpBaseFactory
             ];
         });
 
-        $this
-            ->with('AuthenticationTokens');
+        $this->with(
+            'AuthenticationTokens',
+            AuthenticationTokenFactory::make()
+                ->userId($userId)
+                ->type(AuthenticationToken::TYPE_MOBILE_TRANSFER)
+                ->active()
+        );
     }
 
     /**
@@ -114,6 +126,15 @@ class TransferFactory extends CakephpBaseFactory
      */
     public function status(string $status)
     {
-        return $this->patchData(compact('status'));
+        return $this->setField('status', $status);
+    }
+
+    /**
+     * @param string $userId user id
+     * @return $this
+     */
+    public function userId(string $userId)
+    {
+        return $this->setField('user_id', $userId);
     }
 }

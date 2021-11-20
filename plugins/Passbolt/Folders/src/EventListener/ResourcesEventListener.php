@@ -54,7 +54,7 @@ class ResourcesEventListener implements EventListenerInterface
      * Handle a resource after create event.
      *
      * @param \Cake\Event\Event $event The event.
-     * @param Resource $resource The resource saved.
+     * @param \App\Model\Entity\Resource $resource The resource saved.
      * @return void
      * @throws \Exception
      */

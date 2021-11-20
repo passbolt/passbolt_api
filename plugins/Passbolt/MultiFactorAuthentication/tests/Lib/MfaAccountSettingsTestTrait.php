@@ -36,7 +36,7 @@ trait MfaAccountSettingsTestTrait
             $userId = UuidFactory::uuid('user.id.' . $user);
         }
         $data = json_encode($data);
-        /** @var AccountSettingsTable $AccountSettings */
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
         $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $AccountSettings->createOrUpdateSetting($userId, MfaSettings::MFA, $data);
     }

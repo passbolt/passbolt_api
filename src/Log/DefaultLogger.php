@@ -26,13 +26,10 @@ class DefaultLogger implements LoggerInterface
     use LoggerTrait;
 
     /**
-     * @param mixed $level Level
-     * @param string $message Message
-     * @param array|null $context Context
-     * @return bool|void
+     * @inheritDoc
      */
     public function log($level, $message, ?array $context = [])
     {
-        return CakeLog::write($level, $message, $context);
+        CakeLog::write($level, $message, $context);
     }
 }

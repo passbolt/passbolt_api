@@ -26,6 +26,8 @@ use Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry;
 
 class UserEntryTest extends DirectorySyncIntegrationTestCase
 {
+    public $mappingRules;
+
     public function setUp(): void
     {
         parent::setUp();
