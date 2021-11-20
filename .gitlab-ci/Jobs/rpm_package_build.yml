@@ -12,7 +12,8 @@
   script:
     - yum install -y jq ${DEPENDENCIES}
     - rpmdev-setuptree
-    - /bin/sh PKG_VERSION=$(jq '.version' package.json) PASSBOLT_VERSION=$(jq '.version' package.json) rpm/scripts/build-passbolt-server.sh
+    - PKG_VERSION=$(jq -r '.version' package.json) PASSBOLT_VERSION=$(jq -r '.version' package.json) /bin/sh rpm/scripts/build-passbolt-server.sh
+#- cp -rf ~/rpmbuild/RPMS/noarch/passbolt-* .
 
 build-yum:
   extends: .build-rpm
