@@ -15,9 +15,6 @@ elsif platform_family?('rhel')
     package_name ['curl', 'nginx', 'mariadb-server', 'createrepo', 'firewalld']
     action :install
   end
-  service 'firewalld' do
-    action :restart
-  end
 end
 
 execute "Break nginx and mysql" do

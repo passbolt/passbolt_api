@@ -38,10 +38,6 @@ elsif platform_family?('rhel')
     action :install
   end
 
-  service 'firewalld' do
-    action :restart
-  end
-
   execute "Configure passbolt, expect to break, display output" do
     command "/usr/local/bin/passbolt-configure \
               -P passbolt \

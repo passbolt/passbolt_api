@@ -29,9 +29,6 @@ elsif platform_family?('rhel')
     package_name ['curl', 'nginx', 'mariadb-server', 'createrepo', 'firewalld']
     action :install
   end
-  service 'firewalld' do
-    action :restart
-  end
 end
 
 include_recipe '::passbolt_responses_nginx_mysql'
