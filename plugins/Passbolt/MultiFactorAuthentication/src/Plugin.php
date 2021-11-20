@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication;
 
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
@@ -33,6 +34,8 @@ use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 
 class Plugin extends BasePlugin
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * @inheritDoc
      */
@@ -73,8 +76,12 @@ class Plugin extends BasePlugin
         $app->getEventManager()
             // Decorate the users grid and add the column "is_mfa_enabled"
             ->on(new AddIsMfaEnabledColumnToUsersGrid()) // decorate the query to add the new property on the User entity
-            ->on(new MfaRedactorPool()) // Register email redactors
-            ->on(new AddMfaCookieOnSuccessfulJwtLogin()); // If a JWT login is successful, and a valid MFA cookie was sent, pass it to the response
+            ->on(new MfaRedactorPool()); // Register email redactors
+
+        if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
+            $app->getEventManager()
+                ->on(new AddMfaCookieOnSuccessfulJwtLogin()); // If a JWT login is successful, and a valid MFA cookie was sent, pass it to the response
+        }
     }
 
     /**
@@ -82,8 +89,10 @@ class Plugin extends BasePlugin
      */
     public function services(ContainerInterface $container): void
     {
-        $container
-            ->extend(JwtArmoredChallengeInterface::class)
-            ->setConcrete(MfaJwtArmoredChallengeService::class);
+        if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
+            $container
+                ->extend(JwtArmoredChallengeInterface::class)
+                ->setConcrete(MfaJwtArmoredChallengeService::class);
+        }
     }
 }
