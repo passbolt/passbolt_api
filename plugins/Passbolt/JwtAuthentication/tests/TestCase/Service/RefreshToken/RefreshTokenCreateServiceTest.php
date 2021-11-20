@@ -21,6 +21,7 @@ use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Cake\Http\ServerRequest;
 use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
@@ -44,7 +45,7 @@ class RefreshTokenCreateServiceTest extends TestCase
         $userId = UserFactory::make()->persist()->id;
         $accessToken = 'Foo';
 
-        $token = (new RefreshTokenCreateService())->createToken($userId, $accessToken);
+        $token = (new RefreshTokenCreateService())->createToken(new ServerRequest(), $userId, $accessToken);
         $cookie = (new RefreshTokenCreateService())->createHttpOnlySecureCookie($token);
 
         $this->assertTrue($token->checkSessionId($accessToken));

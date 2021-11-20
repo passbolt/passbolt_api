@@ -19,9 +19,12 @@ namespace Passbolt\JwtAuthentication;
 use App\Middleware\CsrfProtectionMiddleware;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
+use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
 use Passbolt\JwtAuthentication\Event\RemoveCsrfCookieOnJwt;
 use Passbolt\JwtAuthentication\Event\RemoveSessionCookiesOnJwt;
 use Passbolt\JwtAuthentication\Event\SetSessionIdentifierOnLogin;
@@ -70,5 +73,13 @@ class Plugin extends BasePlugin
             ->on(new RemoveSessionCookiesOnJwt())
             ->on(new RemoveCsrfCookieOnJwt())
             ->on(new SetSessionIdentifierOnLogin());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container->add(JwtArmoredChallengeInterface::class, JwtArmoredChallengeService::class);
     }
 }
