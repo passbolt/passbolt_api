@@ -30,9 +30,9 @@ class JwtArmoredChallengeService implements JwtArmoredChallengeInterface
      */
     public function makeArmoredChallenge(ServerRequest $request, User $user, string $verifyToken): array
     {
-        $accessToken = $this->createAccessToken($user);
-        $refreshToken = $this->createRefreshToken($user, $accessToken);
-        $verifyToken = $this->createVerifyToken($user, $verifyToken);
+        $accessToken = (new JwtTokenCreateService())->createToken($user->id);
+        $refreshToken = (new RefreshTokenCreateService())->createToken($request, $user->id, $accessToken)->token;
+        $verifyToken = (new VerifyTokenCreateService())->createToken($verifyToken, $user->id)->token;
 
         return [
             'version' => GpgJwtAuthenticator::PROTOCOL_VERSION,
@@ -41,34 +41,5 @@ class JwtArmoredChallengeService implements JwtArmoredChallengeInterface
             'refresh_token' => $refreshToken,
             'verify_token' => $verifyToken,
         ];
-    }
-
-    /**
-     * @param \App\Model\Entity\User $user Successfully authenticated user
-     * @return string
-     */
-    protected function createAccessToken(User $user): string
-    {
-        return (new JwtTokenCreateService())->createToken($user->id);
-    }
-
-    /**
-     * @param \App\Model\Entity\User $user Successfully authenticated user
-     * @param string $accessToken Access token
-     * @return string
-     */
-    protected function createRefreshToken(User $user, string $accessToken): string
-    {
-        return (new RefreshTokenCreateService())->createToken($user->id, $accessToken)->token;
-    }
-
-    /**
-     * @param \App\Model\Entity\User $user Successfully authenticated user
-     * @param string $verifyToken Verify token provided by the client
-     * @return string
-     */
-    protected function createVerifyToken(User $user, string $verifyToken): string
-    {
-        return (new VerifyTokenCreateService())->createToken($verifyToken, $user->id)->token;
     }
 }
