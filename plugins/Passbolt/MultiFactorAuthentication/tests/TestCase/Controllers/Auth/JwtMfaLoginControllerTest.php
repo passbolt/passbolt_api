@@ -79,7 +79,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
     /**
      * @Given a user has a valid access token and valid MFA token not remembered
      * @When the user logs in (which is not rational)
-     * @Then a different access token is generated
+     * @Then a new access token is generated
      * @And the previous MFA token is deactivated
      */
     public function testJwtLoginControllerTest_Login_With_Mfa_No_Remember_Me_And_With_Valid_Access_Token()

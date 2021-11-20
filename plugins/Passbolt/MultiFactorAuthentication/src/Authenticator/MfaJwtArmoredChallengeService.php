@@ -24,9 +24,9 @@ use Passbolt\MultiFactorAuthentication\Service\IsMfaAuthenticationRequiredServic
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 /**
- * When successfully authenticated with MFA required
- * appends the MFA providers to inform that an additional
- * MFA token is required.
+ * When successfully logged in, but with MFA required,
+ * appends the MFA providers to the challenge to inform
+ * that an additional MFA token is required.
  */
 class MfaJwtArmoredChallengeService extends JwtArmoredChallengeService
 {

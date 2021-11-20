@@ -18,15 +18,15 @@ namespace Passbolt\MultiFactorAuthentication;
 
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\ORM\TableRegistry;
-use Passbolt\JwtAuthentication\Middleware\JwtAuthDetectionMiddleware;
+use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
+use Passbolt\MultiFactorAuthentication\Authenticator\MfaJwtArmoredChallengeService;
 use Passbolt\MultiFactorAuthentication\Event\AddIsMfaEnabledColumnToUsersGrid;
 use Passbolt\MultiFactorAuthentication\Event\AddMfaCookieOnSuccessfulJwtLogin;
 use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
-use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaJwtChallengeServiceMiddleware;
-use Passbolt\MultiFactorAuthentication\Middleware\MfaRefreshTokenCreatedListenerMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
@@ -50,16 +50,8 @@ class Plugin extends BasePlugin
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         return $middlewareQueue
-            ->insertAfter(
-                JwtAuthDetectionMiddleware::class,
-                InjectMfaJwtChallengeServiceMiddleware::class
-            )
             ->insertAfter(AuthenticationMiddleware::class, MfaRequiredCheckMiddleware::class)
-            ->insertAfter(MfaRequiredCheckMiddleware::class, InjectMfaFormMiddleware::class)
-            ->insertAfter(
-                MfaRequiredCheckMiddleware::class,
-                MfaRefreshTokenCreatedListenerMiddleware::class
-            );
+            ->insertAfter(MfaRequiredCheckMiddleware::class, InjectMfaFormMiddleware::class);
     }
 
     /**
@@ -82,6 +74,16 @@ class Plugin extends BasePlugin
             // Decorate the users grid and add the column "is_mfa_enabled"
             ->on(new AddIsMfaEnabledColumnToUsersGrid()) // decorate the query to add the new property on the User entity
             ->on(new MfaRedactorPool()) // Register email redactors
-            ->on(new AddMfaCookieOnSuccessfulJwtLogin());
+            ->on(new AddMfaCookieOnSuccessfulJwtLogin()); // If a JWT login is successful, and a valid MFA cookie was sent, pass it to the response
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container
+            ->extend(JwtArmoredChallengeInterface::class)
+            ->setConcrete(MfaJwtArmoredChallengeService::class);
     }
 }
