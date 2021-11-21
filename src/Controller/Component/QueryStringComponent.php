@@ -353,7 +353,7 @@ class QueryStringComponent extends Component
     }
 
     /**
-     * Check if the filter is a valid tag slug
+     * Check if the filter is a valid boolean
      *
      * @param mixed $values to check
      * @param string $filterName for error message display
