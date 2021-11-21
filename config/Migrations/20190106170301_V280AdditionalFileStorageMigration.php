@@ -14,6 +14,7 @@
  */
 
 use Migrations\AbstractMigration;
+use Migrations\Migrations;
 
 class V280AdditionalFileStorageMigration extends AbstractMigration
 {

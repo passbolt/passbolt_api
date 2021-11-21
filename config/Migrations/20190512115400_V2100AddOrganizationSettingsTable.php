@@ -25,7 +25,6 @@ class V2100AddOrganizationSettingsTable extends AbstractMigration
      */
     public function up()
     {
-        // If coming from passbolt PRO, the table could already exist.
         if ($this->hasTable('organization_settings')) {
             return;
         }
