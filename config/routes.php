@@ -375,17 +375,3 @@ Router::scope('/app', function ($routes) {
     $routes->connect('/settings/mfa', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
     $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiExtApp']);
 });
-
-/**
- * Other editions fallback routes
- * Use this section to silently fail a route used by other versions without logging error
- */
-if(!file_exists(PLUGINS . 'Passbolt' . DS . 'AccountSettings')) {
-    Router::scope('/account/settings', function ($routes) {
-        $routes->setExtensions(['json']);
-
-        // See. https://github.com/passbolt/passbolt_api/issues/270
-        $routes->connect('/', ['prefix' => 'Errors', 'controller' => 'ErrorNotFound', 'action' => 'notSupported'])
-            ->setMethods(['GET']);
-    });
-}

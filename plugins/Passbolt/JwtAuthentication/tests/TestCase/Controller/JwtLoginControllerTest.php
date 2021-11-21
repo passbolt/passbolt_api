@@ -29,7 +29,6 @@ use Cake\Event\EventManager;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
-use Passbolt\JwtAuthentication\Error\Exception\AbstractJwtAttackException;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
 
@@ -113,7 +112,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailQueueCount(1);
         $this->assertEmailIsInQueue([
             'email' => $user->username,
-            'subject' => AbstractJwtAttackException::USER_EMAIL_SUBJECT,
+            'subject' => 'Authentication security alert',
             'template' => 'JwtAuthentication.User/jwt_attack',
         ]);
 

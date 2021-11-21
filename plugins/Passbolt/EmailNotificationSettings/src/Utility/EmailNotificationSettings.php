@@ -61,6 +61,8 @@ class EmailNotificationSettings
      */
     public static function flushCache()
     {
+        static::$configSettingsSource = null;
+        static::$defaultSettingsSource = null;
         static::$settings = null;
     }
 

@@ -19,14 +19,15 @@ namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 
 /**
  * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesSelectController
+ * @property \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings
  */
 class ThemesSelectControllerTest extends AppIntegrationTestCase
 {
-    public $AccountSettings;
+    use ModelAwareTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
@@ -36,7 +37,7 @@ class ThemesSelectControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings');
+        $this->loadModel('AccountSettings');
     }
 
     public function testThemesSelectSuccess()

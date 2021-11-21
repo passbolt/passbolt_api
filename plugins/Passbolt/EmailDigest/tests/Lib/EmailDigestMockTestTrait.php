@@ -89,7 +89,7 @@ trait EmailDigestMockTestTrait
      * @param array|null $properties props
      * @return EmailDigest
      */
-    protected function createEmailDigest(array $emailsData = [], ?array $properties = []): EmailDigest
+    protected function createEmailDigest(?array $emailsData = [], ?array $properties = []): EmailDigest
     {
         $defaultProperties = [
             'recipient' => 'digest_recipient@passbolt.com',
