@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class MfaInjectFormMiddleware implements MiddlewareInterface
+class InjectMfaFormMiddleware implements MiddlewareInterface
 {
     use ContainerAwareMiddlewareTrait;
     use UacAwareMiddlewareTrait;
