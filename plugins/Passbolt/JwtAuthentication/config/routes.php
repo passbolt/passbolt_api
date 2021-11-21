@@ -23,14 +23,17 @@ Router::scope('/', function (RouteBuilder $routes) {
 Router::plugin('Passbolt/JwtAuthentication', ['path' => '/auth/jwt'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/login', ['controller' => 'JwtLogin', 'action' => 'loginPost'])
-        ->setMethods(['POST']);
+    // WARNING - if you add routes, check whether it should be included in
+    // JwtRequestDetectionService::useJwtAuthentication / isJwtLoginRoute
 
     $routes->connect('/rsa', ['controller' => 'Jwks', 'action' => 'rsa'])
         ->setMethods(['GET']);
 
     $routes->connect('/jwks', ['controller' => 'Jwks', 'action' => 'jwks'])
         ->setMethods(['GET']);
+
+    $routes->connect('/login', ['controller' => 'JwtLogin', 'action' => 'loginPost'])
+        ->setMethods(['POST']);
 
     $routes->connect('/refresh', ['controller' => 'RefreshToken', 'action' => 'refreshPost'])
         ->setMethods(['POST']);

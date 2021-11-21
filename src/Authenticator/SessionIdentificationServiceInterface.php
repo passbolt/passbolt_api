@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Authenticator;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Cake\Http\ServerRequest;
 
 /**
  * Interface SessionIdentificationServiceInterface
@@ -30,8 +30,8 @@ interface SessionIdentificationServiceInterface
     /**
      * Find the user session ID
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request Request
+     * @param \Cake\Http\ServerRequest $request Request
      * @return string|null
      */
-    public function getSessionId(ServerRequestInterface $request): ?string;
+    public function getSessionId(ServerRequest $request): ?string;
 }

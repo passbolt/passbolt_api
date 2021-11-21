@@ -24,6 +24,8 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
@@ -53,6 +55,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->loadModel('Passbolt/Log.ActionLogs');
         $this->enableFeaturePlugin('Log');
         RoleFactory::make()->guest()->persist();
+        EventManager::instance()->setEventList(new EventList());
     }
 
     public function testJwtLoginControllerTest_Success()
@@ -67,11 +70,11 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
             'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
         ]);
 
-        $this->assertResponseSuccess('The authentication was a success.');
+        $this->assertResponseOk('The authentication was a success.');
         $this->assertEmailQueueCount(0);
+        $this->assertEventFired(GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY);
 
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge));
-
         $this->assertSame(Router::url('/', true), $challenge->domain);
         $this->assertSame(GpgJwtAuthenticator::PROTOCOL_VERSION, $challenge->version);
         $this->assertIsString($challenge->access_token);
@@ -186,7 +189,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
 
         $this->logInAs($user);
         $this->getJson('/auth/is-authenticated.json');
-        $this->assertResponseSuccess();
+        $this->assertResponseOk();
 
         $this->postJson('/auth/jwt/login.json', [
             'user_id' => $user->id,
@@ -198,9 +201,9 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
 
         $this->setJwtTokenInHeader($accessToken);
         $this->getJson('/auth/is-authenticated.json');
-        $this->assertResponseSuccess();
+        $this->assertResponseOk();
 
-        $this->assertResponseSuccess('The authentication was a success.');
+        $this->assertResponseOk('The authentication was a success.');
     }
 
     public function testSessionLoginWithJwtTokenInHeaderIsNotPermitted()

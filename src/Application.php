@@ -273,7 +273,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function services(ContainerInterface $container): void
     {
-        parent::services($container);
         $container->add(AuthenticationServiceInterface::class, SessionAuthenticationService::class);
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
     }
