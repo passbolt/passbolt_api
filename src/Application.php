@@ -23,6 +23,7 @@ use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
+use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
@@ -84,7 +85,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new RoutingMiddleware($this))
             ->add(new SessionPreventExtensionMiddleware())
             ->add(new BodyParserMiddleware())
-            ->add(new AuthenticationMiddleware($this))
+            ->add(SessionAuthPreventDeletedUsersMiddleware::class)
+            ->insertAfter(SessionAuthPreventDeletedUsersMiddleware::class, new AuthenticationMiddleware($this))
             ->add(new GpgAuthHeadersMiddleware())
             ->add($csrf);
 
