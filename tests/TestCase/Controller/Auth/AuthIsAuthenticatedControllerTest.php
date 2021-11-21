@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 
@@ -34,16 +35,20 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseOk();
+        $this->assertInstanceOf(User::class, $this->getSession()->read('Auth.user'));
         $this->assertTextContains('success', $this->_responseJsonHeader->status);
     }
 
+    /**
+     * @covers \App\Middleware\SessionAuthPreventDeletedUsersMiddleware::process
+     */
     public function testIsAuthenticatedSoftDeletedLoggedUserShouldBeForbiddenToRequestTheApi()
     {
         $user = UserFactory::make()->user()->deleted()->persist();
 
         $this->loginAs($user);
         $this->getJson('/auth/is-authenticated.json');
-
+        $this->assertEmpty($this->getSession()->read());
         $this->assertAuthenticationError();
     }
 }

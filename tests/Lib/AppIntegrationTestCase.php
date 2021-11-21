@@ -131,7 +131,7 @@ abstract class AppIntegrationTestCase extends TestCase
      */
     public function logInAs(User $user)
     {
-        $this->session(['Auth' => $user]);
+        $this->session(['Auth' => compact('user')]);
     }
 
     /**
