@@ -18,8 +18,12 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Middleware;
 
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
+use Passbolt\JwtAuthentication\Test\Factory\RefreshTokenAuthenticationTokenFactory;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
+use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
@@ -139,5 +143,73 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->loadFixtureScenario(MfaDuoScenario::class, $user);
         $this->delete('/mfa/setup/duo.json?api-version=v2');
         $this->assertRedirect('/mfa/verify/error.json');
+    }
+
+    public function testMfaRefreshTokenCreatedListenerMiddleware_RefreshTokenSuccessful_No_MFA_Token()
+    {
+        $user = UserFactory::make()
+            ->user()
+            ->with(
+                'AuthenticationTokens',
+                RefreshTokenAuthenticationTokenFactory::make()->active()->getEntity()
+            )
+            ->persist();
+
+        $oldRefreshToken = $user->authentication_tokens[0];
+        $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
+        $this->postJson('/auth/jwt/refresh.json');
+        $this->assertResponseSuccess();
+    }
+
+    public function testMfaRefreshTokenCreatedListenerMiddleware_RefreshTokenSuccessful_Invalid_MFA_Token()
+    {
+        $user = UserFactory::make()
+            ->user()
+            ->with('AuthenticationTokens', [
+                RefreshTokenAuthenticationTokenFactory::make()->active()->getEntity(),
+                MfaAuthenticationTokenFactory::make()->inactive()->getEntity(),
+            ])
+            ->persist();
+
+        $oldRefreshToken = $user->authentication_tokens[0];
+        $mfaToken = $user->authentication_tokens[1];
+
+        $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
+        $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $mfaToken->token);
+
+        $this->postJson('/auth/jwt/refresh.json');
+        $this->assertBadRequestError('The MFA token provided does not exist or is inactive.');
+    }
+
+    public function testMfaRefreshTokenCreatedListenerMiddleware_RefreshTokenSuccessful_MFA_Required()
+    {
+        // This route, with cookie set, should have CSRF protection
+        $this->enableCsrfToken();
+
+        MfaOrganizationSettingFactory::make()->totp()->persist();
+        $user = UserFactory::make()
+            ->user()
+            ->with('AuthenticationTokens', [
+                RefreshTokenAuthenticationTokenFactory::make()->active()->getEntity(),
+                MfaAuthenticationTokenFactory::make()->active()->getEntity(),
+            ])
+            ->with('AccountSettings', MfaAccountSettingFactory::make()->totp())
+            ->persist();
+
+        $oldRefreshToken = $user->authentication_tokens[0];
+        $mfaToken = $user->authentication_tokens[1];
+
+        $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
+        $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $mfaToken->token);
+
+        $this->postJson('/auth/jwt/refresh.json');
+        $this->assertResponseOk();
+
+        $accessToken = $this->_responseJsonBody->access_token;
+        /** @var \App\Model\Entity\AuthenticationToken $mfaToken */
+        $mfaToken = MfaAuthenticationTokenFactory::find()->where(['id' => $mfaToken->id])->firstOrFail();
+
+        // Checks that the session ID of the MFA token (here access token) is updated
+        $this->assertTrue($mfaToken->checkSessionId($accessToken));
     }
 }

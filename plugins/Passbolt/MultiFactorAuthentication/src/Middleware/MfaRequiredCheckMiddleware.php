@@ -19,13 +19,13 @@ namespace Passbolt\MultiFactorAuthentication\Middleware;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Middleware\UacAwareMiddlewareTrait;
-use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Passbolt\MultiFactorAuthentication\Event\UpdateMfaTokenSessionIdOnRefreshTokenCreated;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaAuthenticationRequiredService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -35,6 +35,13 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
 {
     use ContainerAwareMiddlewareTrait;
     use UacAwareMiddlewareTrait;
+
+    /**
+     * Documents in the request, if an MFA check is required,
+     * according to the user settings and the absence of a
+     * valid MFA token in the cookies.
+     */
+    public const IS_MFA_CHECK_NOT_REQUIRED_ATTRIBUTE = 'is_mfa_check_not_required';
 
     /**
      * Mfa Required check Middleware
@@ -51,18 +58,21 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         if ($this->isMfaCheckRequired($request)) {
-            /** @var \Cake\Http\Response $response */
-            $response = new Response();
-            if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
-                $secure = Configure::read('passbolt.security.cookies.secure') || $request->is('ssl');
-                $response = $response
-                    ->withCookie(MfaVerifiedCookie::clearCookie($secure));
-            }
             // Exception if ajax or redirect
-            return $response
+            return (new Response())
                 ->withStatus(302)
                 ->withLocation($this->getVerifyUrl($request));
+        } else {
+            $request = $request->withAttribute(self::IS_MFA_CHECK_NOT_REQUIRED_ATTRIBUTE, true);
         }
+
+        // Listen to the creation of refresh tokens
+        // This listener must be activated after the AuthenticationMiddleware
+        // And is therefore activated here.
+        TableRegistry::getTableLocator()
+            ->get('AuthenticationTokens')
+            ->getEventManager()
+            ->on(new UpdateMfaTokenSessionIdOnRefreshTokenCreated());
 
         return $handler->handle($request);
     }
@@ -83,15 +93,15 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
             return false;
         }
 
-        $mfaSettings = MfaSettings::get($uac);
-
         $isMfaAuthenticationRequiredService = new IsMfaAuthenticationRequiredService();
+        /** @var \App\Authenticator\SessionIdentificationServiceInterface $sessionService */
+        $sessionService = $this->getContainer($request)->get(SessionIdentificationServiceInterface::class);
 
         return $isMfaAuthenticationRequiredService->isMfaCheckRequired(
             $request,
-            $mfaSettings,
+            MfaSettings::get($uac),
             $uac,
-            $this->getContainer($request)->get(SessionIdentificationServiceInterface::class)
+            $sessionService->getSessionId($request)
         );
     }
 
@@ -99,7 +109,7 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
      * @param \Cake\Http\ServerRequest $request request
      * @return string
      */
-    protected function getVerifyUrl(ServerRequest $request)
+    protected function getVerifyUrl(ServerRequest $request): string
     {
         $uac = $this->getUacInRequest($request);
         $mfaSettings = MfaSettings::get($uac);

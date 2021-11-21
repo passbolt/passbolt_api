@@ -18,8 +18,8 @@ namespace Passbolt\JwtAuthentication\Authenticator;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
 use Authentication\AuthenticationService;
+use Cake\Http\ServerRequest;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
-use Psr\Http\Message\ServerRequestInterface;
 
 class JwtSessionIdentificationService implements SessionIdentificationServiceInterface
 {
@@ -43,7 +43,7 @@ class JwtSessionIdentificationService implements SessionIdentificationServiceInt
     /**
      * @inheritDoc
      */
-    public function getSessionId(ServerRequestInterface $request): ?string
+    public function getSessionId(ServerRequest $request): ?string
     {
         if (isset($this->accessToken)) {
             return $this->accessToken;
@@ -56,10 +56,10 @@ class JwtSessionIdentificationService implements SessionIdentificationServiceInt
     }
 
     /**
-     * @param \Psr\Http\Message\ServerRequestInterface $request Request
+     * @param \Cake\Http\ServerRequest $request Request
      * @return bool
      */
-    protected function isAuthenticated(ServerRequestInterface $request): bool
+    protected function isAuthenticated(ServerRequest $request): bool
     {
         $authService = $request->getAttribute('authentication');
         if ($authService instanceof AuthenticationService) {

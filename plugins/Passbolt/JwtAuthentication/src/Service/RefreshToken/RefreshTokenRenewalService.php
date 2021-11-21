@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\RefreshToken;
 
 use App\Model\Entity\AuthenticationToken;
+use Cake\Http\ServerRequest;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -65,15 +66,16 @@ class RefreshTokenRenewalService extends RefreshTokenAbstractService
      * 1. Consume the refresh token passed in the request
      * 2. Return a new token
      *
+     * @param \Cake\Http\ServerRequest $request Server Request
      * @return \App\Model\Entity\AuthenticationToken
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException if the token is not found
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException if the token was already consumed
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException if the token is expired
      */
-    public function renewToken(): AuthenticationToken
+    public function renewToken(ServerRequest $request): AuthenticationToken
     {
         $this->consumeToken($this->token, $this->userId);
 
-        return (new RefreshTokenCreateService())->createToken($this->userId, $this->accessToken);
+        return (new RefreshTokenCreateService())->createToken($request, $this->userId, $this->accessToken);
     }
 }

@@ -14,48 +14,35 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.3.0
  */
-namespace Passbolt\JwtAuthentication\Event;
+namespace Passbolt\MultiFactorAuthentication\Event;
 
-use App\Middleware\ContainerAwareMiddlewareTrait;
-use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Cake\Http\Cookie\Cookie;
-use Passbolt\JwtAuthentication\Service\Middleware\JwtRequestDetectionService;
+use Passbolt\MultiFactorAuthentication\Service\ClearMfaCookieInResponseService;
 
-class RemoveSessionCookiesIfOnJwt implements EventListenerInterface
+class ClearMfaCookieInResponse implements EventListenerInterface
 {
-    use ContainerAwareMiddlewareTrait;
-
     /**
      * @return array
      */
     public function implementedEvents(): array
     {
         return [
-            'Controller.initialize' => 'removeSessionIdCookieIfOnJwtAuth',
+            'Controller.initialize' => 'clearInvalidMfaCookieInResponse',
         ];
     }
 
     /**
-     * Remove all session related cookies.
+     * If a user is authenticating with a non valid MFA cookie,
+     * the latter shall be removed from the request.
      *
      * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
-    public function removeSessionIdCookieIfOnJwtAuth(EventInterface $event): void
+    public function clearInvalidMfaCookieInResponse(EventInterface $event): void
     {
         /** @var \Cake\Controller\Controller $controller */
         $controller = $event->getSubject();
-        $response = $controller->getResponse();
-        $request = $controller->getRequest();
-        $service = new JwtRequestDetectionService($request);
-        if ($service->useJwtAuthentication()) {
-            $sessionCookie = Configure::read('Session.cookie', session_name());
-            if (is_string($sessionCookie)) {
-                $response = $response->withExpiredCookie(new Cookie($sessionCookie));
-            }
-            $controller->setResponse($response);
-        }
+        (new ClearMfaCookieInResponseService($controller))->clearMfaCookie();
     }
 }
