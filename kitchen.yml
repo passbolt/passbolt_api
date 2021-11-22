@@ -13,6 +13,7 @@ provisioner:
   attributes:
     dest_dir: '/tmp/passbolt'
     passbolt_flavour: <%= ENV['PASSBOLT_FLAVOUR'] %>
+    passbolt_version: <%= ENV['PASSBOLT_VERSION'] %>
 
 verifier:
   name: inspec

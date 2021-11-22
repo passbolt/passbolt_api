@@ -84,7 +84,7 @@ elsif platform_family?('rhel')
     execute 'RHEL: Build Passbolt RPM package' do
       cwd     "#{node['dest_dir']}"
       command "PASSBOLT_FLAVOUR=#{node['passbolt_flavour']} \
-                PKG_VERSION=3.4.0 \
+                PKG_VERSION=#{node['passbolt_version']} \
                 /bin/sh rpm/scripts/build-passbolt-server.sh"
       action :run
     end
