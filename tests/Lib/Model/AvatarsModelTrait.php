@@ -81,18 +81,19 @@ trait AvatarsModelTrait
     /**
      * Create a dummy upload file
      *
+     * @param string $format Format
      * @return UploadedFile
      */
-    public function createUploadFile()
+    public function createUploadFile(string $format = 'png')
     {
-        $adaAvatar = FIXTURES . 'Avatar' . DS . 'ada.png';
+        $uploadFile = FIXTURES . 'Avatar' . DS . 'ada' . '.' . $format;
 
         return new UploadedFile(
-            $adaAvatar,
-            filesize($adaAvatar),
+            $uploadFile,
+            filesize($uploadFile),
             \UPLOAD_ERR_OK,
-            $adaAvatar,
-            'image/png'
+            $uploadFile,
+            'image/' . $format
         );
     }
 
