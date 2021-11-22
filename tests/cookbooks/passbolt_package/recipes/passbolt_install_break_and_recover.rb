@@ -11,6 +11,10 @@ if platform_family?('debian')
     action :install
   end
 elsif platform_family?('rhel')
+  package 'RHEL: Install epel-release repository' do
+    package_name ['epel-release']
+    action :install
+  end
   package 'RHEL: Install mariadb and nginx' do
     package_name ['curl', 'nginx', 'mariadb-server', 'createrepo', 'firewalld']
     action :install
