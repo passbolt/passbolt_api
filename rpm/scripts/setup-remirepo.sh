@@ -11,7 +11,7 @@ OS_VERSION_MAJOR=$(echo ${OS_VERSION:0:1} | bc)
 
 if [ ${OS_VERSION_MAJOR} -eq 7 ]
 then
-    yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -y
+    rpm -qa | grep epel-release || yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -y
     if ! rpm -qa | grep -q remi-release
     then
       yum install https://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
