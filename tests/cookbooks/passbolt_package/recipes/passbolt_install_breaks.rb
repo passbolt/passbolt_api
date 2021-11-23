@@ -11,7 +11,6 @@ if platform_family?('debian')
   execute "Install passbolt, expect to break, display output" do
     command "VERBOSE=1 DEBIAN_FRONTEND=noninteractive apt-get install -y #{node['parameters']} /tmp/passbolt/passbolt*.deb"
     ignore_failure true
-    live_stream true
     action :run
   end
 elsif platform_family?('rhel')
@@ -47,7 +46,6 @@ elsif platform_family?('rhel')
               -H pro.rockylinux8.jc \
               -e -n"
     ignore_failure true
-    live_stream true
     action :run
   end
 end
