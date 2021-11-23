@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\EmailDigest\Test\TestCase\Unit\Service;
 
+use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
 use Cake\TestSuite\TestCase;
@@ -41,6 +42,7 @@ class PreviewEmailBatchServiceTest extends TestCase
         $this->loadPlugins(['Passbolt/EmailDigest']);
         $this->setDummyFrenchTranslator();
         $this->previewEmailBatchService = new PreviewEmailBatchService();
+        (new AvatarsConfigurationService())->loadConfiguration();
     }
 
     public function tearDown(): void
