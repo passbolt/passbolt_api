@@ -703,11 +703,12 @@ class HealthcheckCommand extends PassboltCommand
         $this->assert(
             $checks['jwt']['jwtWritable'],
             "The {$directory} directory is not writable.",
-            "The {$directory} directory is writable",
+            "The {$directory} directory should not be writable.",
             [
                 'You can try: ',
                 'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $directory,
-                'sudo chmod 444 ' . $directory,
+                'sudo chmod 550 ' . $directory,
+                'sudo chmod 440 $(find ' . $directory . ' -type f)',
             ]
         );
 
