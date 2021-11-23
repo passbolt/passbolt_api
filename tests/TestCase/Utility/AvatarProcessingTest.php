@@ -42,6 +42,8 @@ class AvatarProcessingTest extends TestCase
     {
         return [
             ['ada.png'],
+            ['ada.jpg'],
+            ['ada.gif'],
             ['50_80.png'],
             ['50_60.png'],
             ['100_50.gif'],
@@ -68,6 +70,6 @@ class AvatarProcessingTest extends TestCase
         $imageSize = getimagesize($ouputFilename);
         $this->assertSame($width, $imageSize[0]);
         $this->assertSame($height, $imageSize[1]);
-        $this->assertSame('image/png', $imageSize['mime']);
+        $this->assertSame('image/jpeg', $imageSize['mime']);
     }
 }

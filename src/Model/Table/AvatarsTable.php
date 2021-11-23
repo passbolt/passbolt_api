@@ -262,7 +262,9 @@ class AvatarsTable extends Table
                 Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.height')
             );
             $avatar->set('data', $img);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+
             return false;
         }
 
