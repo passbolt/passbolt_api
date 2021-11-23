@@ -73,8 +73,18 @@ class HealthchecksTest extends AppIntegrationTestCase
     public function testHealthcheckEnvironment()
     {
         $check = Healthchecks::environment();
-        $attributes = ['phpVersion', 'pcre', 'tmpWritable'];
-        $this->assertArrayHasAttributes($attributes, $check['environment']);
+        $expectedCheck = [ 'environment' => [
+            'phpVersion' => true,
+            'pcre' => true,
+            'mbstring' => true,
+            'gnupg' => true,
+            'intl' => true,
+            'image' => true,
+            'tmpWritable' => true,
+            'logWritable' => true,
+            'allow_url_fopen' => true,
+        ]];
+        $this->assertSame($expectedCheck, $check);
     }
 
     public function testHealthcheckGpg()
