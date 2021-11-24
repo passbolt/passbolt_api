@@ -17,8 +17,8 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Avatars;
 
-use App\Model\Table\AvatarsTable;
 use App\Service\Avatars\AvatarsCacheService;
+use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use App\View\Helper\AvatarHelper;
@@ -65,8 +65,8 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     public function validFormatDataProvider()
     {
         return [
-            [AvatarsTable::FORMAT_SMALL],
-            [AvatarsTable::FORMAT_MEDIUM],
+            [AvatarsConfigurationService::FORMAT_SMALL],
+            [AvatarsConfigurationService::FORMAT_MEDIUM],
         ];
     }
 
@@ -108,8 +108,8 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
 
         // Ensure that the virtual field is correctly constructed.
         $virtualField = [
-            AvatarsTable::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar, AvatarsTable::FORMAT_MEDIUM),
-            AvatarsTable::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar),
+            AvatarsConfigurationService::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar, AvatarsConfigurationService::FORMAT_MEDIUM),
+            AvatarsConfigurationService::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar),
         ];
         $this->assertSame($virtualField, $avatar->url);
     }
@@ -139,8 +139,8 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
 
         // Ensure that the virtual field is correctly constructed.
         $virtualField = [
-            AvatarsTable::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar, AvatarsTable::FORMAT_MEDIUM),
-            AvatarsTable::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar),
+            AvatarsConfigurationService::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar, AvatarsConfigurationService::FORMAT_MEDIUM),
+            AvatarsConfigurationService::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar),
         ];
         $this->assertSame($virtualField, $avatar->url);
     }
