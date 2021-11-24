@@ -98,11 +98,12 @@ class SendTestEmailCommand extends PassboltCommand
      * The Email from parameter in the config can take either a string or an array. The purpose
      * of this function is to provided a standardized way to display the from field.
      *
-     * @return array|string
+     * @return string
      */
-    protected static function getEmailFromAsString()
+    protected static function getEmailFromAsString(): string
     {
         $config = Mailer::getConfig('default');
+        /** @var array|string $from */
         $from = $config['from'] ?? '';
         if (is_array($from)) {
             $emailFrom = key($from);
@@ -148,7 +149,7 @@ class SendTestEmailCommand extends PassboltCommand
     protected function getRecipient(Arguments $args): string
     {
         $recipient = $args->getOption('recipient');
-        if (empty($recipient)) {
+        if (!is_string($recipient) || empty($recipient)) {
             $recipient = 'doesnotexist@passboltdummydomain.com';
         }
 

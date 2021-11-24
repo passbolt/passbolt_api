@@ -18,14 +18,15 @@ declare(strict_types=1);
 namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\ORM\TableRegistry;
+use Cake\Datasource\ModelAwareTrait;
 
 /**
  * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesIndexController
+ * @property \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings
  */
 class ThemesIndexControllerTest extends AppIntegrationTestCase
 {
-    public $AccountSettings;
+    use ModelAwareTrait;
 
     public $fixtures = [
         'plugin.Passbolt/AccountSettings.AccountSettings',
@@ -34,7 +35,7 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings');
+        $this->loadModel('AccountSettings');
     }
 
     public function testThemesIndexSuccess()

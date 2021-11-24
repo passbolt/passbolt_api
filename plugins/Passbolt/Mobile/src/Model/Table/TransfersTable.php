@@ -33,7 +33,7 @@ use Passbolt\Mobile\Model\Entity\Transfer;
  * @method \Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer newEntity($data = null, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer[] newEntities(array $data, ?array $options = [])
- * @method \Passbolt\Mobile\Model\Entity\Transfer|bool save(\Cake\Datasource\EntityInterface $entity, ?array $options = [])
+ * @method \Cake\Datasource\EntityInterface|false save(\Cake\Datasource\EntityInterface $entity, \ArrayAccess|\Cake\ORM\SaveOptionsBuilder|array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer[] patchEntities($entities, array $data, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer findOrCreate($search, callable $callback = null, ?array $options = [])
@@ -111,7 +111,7 @@ class TransfersTable extends Table
             );
 
         $validator
-            ->nonNegativeInteger('total_pages', __('The total number of pages should a non negative integer.'))
+            ->nonNegativeInteger('total_pages', __('The total number of pages should be a non negative integer.'))
             ->requirePresence('total_pages', 'create', __('The total number of pages is required.'))
             ->greaterThan('total_pages', 0, __('The total number of pages should be greater than 0.'))
             ->lessThan(

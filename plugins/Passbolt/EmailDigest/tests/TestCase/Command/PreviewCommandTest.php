@@ -61,11 +61,12 @@ class PreviewCommandTest extends TestCase
      */
     public function testPreviewCommandPreview(): void
     {
+        /** @var \Cake\Datasource\EntityInterface $email */
         $email = EmailQueueFactory::make()->persist();
         $this->exec('passbolt preview --body true');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Sending email from: ' . $email->from_email);
-        $this->assertOutputContains('Sending email to: ' . $email->email);
+        $this->assertOutputContains('Sending email from: ' . $email->get('from_email'));
+        $this->assertOutputContains('Sending email to: ' . $email->get('email'));
     }
 
     /**

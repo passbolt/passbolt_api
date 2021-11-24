@@ -79,7 +79,7 @@ abstract class MfaVerifyController extends MfaController
     ) {
         $uac = $this->User->getAccessControl();
         $sessionId = $sessionIdentificationService->getSessionId($this->getRequest());
-        $token = MfaVerifiedToken::get($uac, $provider, $sessionId, (bool)$this->request->getData('remember') ?? false);
+        $token = MfaVerifiedToken::get($uac, $provider, $sessionId, (bool)$this->request->getData('remember'));
         $expiryAt = $this->request->getData('remember') ?
             (new Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
             null;

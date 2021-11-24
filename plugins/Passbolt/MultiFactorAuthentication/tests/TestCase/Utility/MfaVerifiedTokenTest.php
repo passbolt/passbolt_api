@@ -39,7 +39,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     ];
 
     /**
-     * @var AuthenticationTokensTable;
+     * @var \App\Model\Table\AuthenticationTokensTable
      */
     protected $AuthenticationTokens;
 
@@ -202,7 +202,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $this->assertFalse($success);
         // Check that the token was deactivated
         $failingToken = MfaAuthenticationTokenFactory::get($failingToken->id);
-        $this->assertFalse($failingToken->active);
+        $this->assertFalse($failingToken->get('active'));
     }
 
     /**

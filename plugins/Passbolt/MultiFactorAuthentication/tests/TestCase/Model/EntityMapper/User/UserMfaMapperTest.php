@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 class UserMfaMapperTest extends TestCase
 {
     /**
-     * @var MockObject|IsMfaEnabledService
+     * @var \PHPUnit\Framework\MockObject\MockObject|IsMfaEnabledService
      */
     private $isMfaEnabledServiceMock;
 

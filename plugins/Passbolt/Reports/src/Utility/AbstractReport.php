@@ -142,6 +142,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
      */
     public function getOptions()
     {
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
         return $this->options ?? new FindIndexOptions();
     }
 
@@ -150,6 +151,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
      */
     public function getCreator()
     {
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
         return $this->creator ?? null;
     }
 

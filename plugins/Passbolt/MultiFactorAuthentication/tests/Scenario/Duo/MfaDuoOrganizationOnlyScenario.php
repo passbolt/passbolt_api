@@ -25,8 +25,10 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
  */
 class MfaDuoOrganizationOnlyScenario implements FixtureScenarioInterface
 {
-    public function load($isSupported = true, $hostName = null, ...$args): array
+    public function load(...$args): array
     {
+        $isSupported = $args[0] ?? true;
+        $hostName = $args[1] ?? null;
         $orgSetting = MfaOrganizationSettingFactory::make()
             ->setProviders(MfaSettings::PROVIDER_DUO, $isSupported)
             ->duo($isSupported, $hostName)

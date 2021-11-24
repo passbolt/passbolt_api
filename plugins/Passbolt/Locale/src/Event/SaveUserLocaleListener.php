@@ -58,6 +58,7 @@ class SaveUserLocaleListener implements EventListenerInterface
             return;
         }
 
+        /** @var \App\Model\Entity\User $user */
         $user = $event->getData('user');
         $service = new SetUserLocaleService();
         if ($service->isValidLocale($locale)) {

@@ -172,9 +172,9 @@ class GroupsUpdateGroupUsersService
      * @param int $rowIndexRef The row index in the request data
      * @param string $groupId The target group
      * @param string $groupUserId The target group user
-     * @return \App\Model\Entity\GroupsUser
+     * @return \App\Model\Entity\GroupsUser|null
      */
-    private function getGroupUser(int $rowIndexRef, string $groupId, string $groupUserId): GroupsUser
+    private function getGroupUser(int $rowIndexRef, string $groupId, string $groupUserId): ?GroupsUser
     {
         /** @var \App\Model\Entity\GroupsUser|null $groupUser */
         $groupUser = $this->groupsUsersTable->findByIdAndGroupId($groupUserId, $groupId)->first();

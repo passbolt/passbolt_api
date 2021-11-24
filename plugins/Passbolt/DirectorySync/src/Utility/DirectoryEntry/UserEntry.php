@@ -46,7 +46,7 @@ class UserEntry extends DirectoryEntry
      *
      * @param \LdapTools\Object\LdapObject $ldapObject ldap object.
      * @param array $mappingRules mapping rules.
-     * @return $this|\Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryEntry directory entry.
+     * @return $this directory entry.
      * @throws \Exception
      */
     public function buildFromLdapObject(LdapObject $ldapObject, array $mappingRules)
@@ -84,7 +84,7 @@ class UserEntry extends DirectoryEntry
      * Build user entry from array.
      *
      * @param array $data data
-     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryEntry
+     * @return $this
      */
     public function buildFromArray(array $data)
     {

@@ -37,7 +37,6 @@ use Cake\Event\EventManager;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
-use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
@@ -182,7 +181,6 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $folderData = ['name' => 'A'];
         $folder = $this->service->create($uac, $folderData);
 
-        $this->assertTrue($folder instanceof Folder);
         $this->assertEquals('A', $folder->name);
         $this->assertEquals(null, $folder->folder_parent_id);
         $this->assertEquals($userId, $folder->created_by);
@@ -200,7 +198,6 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $folderData = ['name' => 'B', 'folder_parent_id' => $parentFolder->id];
         $folder = $this->service->create($uac, $folderData);
 
-        $this->assertTrue($folder instanceof Folder);
         $this->assertEquals('B', $folder->name);
         $this->assertEquals($parentFolder->id, $folder->folder_parent_id);
         $this->assertEquals($userId, $folder->created_by);
@@ -260,7 +257,6 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $folderData = ['name' => 'B', 'folder_parent_id' => $folderA->id];
         $folderB = $this->service->create($uac, $folderData);
 
-        $this->assertTrue($folderB instanceof Folder);
         $this->assertEquals('B', $folderB->name);
         $this->assertEquals($folderA->id, $folderB->folder_parent_id);
         $this->assertEquals($userAId, $folderB->created_by);
@@ -268,7 +264,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $this->assertPermission($folderB->id, $userAId, Permission::OWNER);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
         $this->assertPermissionNotExist($folderB->id, $userBId);
-        $this->assertFolderRelationNotExist($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderA->id);
+        $this->assertFolderRelationNotExist($folderB->id, $userBId, $folderA->id);
     }
 
     private function insertSharedSuccess1Fixture()

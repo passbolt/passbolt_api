@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
 class IsMfaEnabledServiceTest extends TestCase
 {
     /**
-     * @var MockObject|MfaOrgSettings
+     * @var \PHPUnit\Framework\MockObject\MockObject|MfaOrgSettings
      */
     private $mfaOrgSettingsMock;
 
@@ -39,12 +39,12 @@ class IsMfaEnabledServiceTest extends TestCase
     private $sut;
 
     /**
-     * @var MockObject|GetMfaAccountSettingsService
+     * @var \PHPUnit\Framework\MockObject\MockObject|GetMfaAccountSettingsService
      */
     private $getMfaAccountSettingsServiceMock;
 
     /**
-     * @var MockObject|GetMfaOrgSettingsService
+     * @var \PHPUnit\Framework\MockObject\MockObject|GetMfaOrgSettingsService
      */
     private $getMfaOrgSettingsServiceMock;
 

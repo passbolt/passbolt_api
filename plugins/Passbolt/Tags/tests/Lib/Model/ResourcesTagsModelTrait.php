@@ -26,7 +26,7 @@ trait ResourcesTagsModelTrait
      *
      * @param array $data The tag data
      * @param array $options The entity options
-     * @return ResourcesTag
+     * @return \Passbolt\Tags\Model\Entity\ResourcesTag
      */
     public function addResourceTag(array $data = [], ?array $options = [])
     {
@@ -43,7 +43,7 @@ trait ResourcesTagsModelTrait
      *
      * @param array $data The tag data.
      * @param array $options The new entity options.
-     * @return ResourcesTag
+     * @return \Passbolt\Tags\Model\Entity\ResourcesTag
      */
     public function getDummyResourceTagEntity(array $data = [], ?array $options = [])
     {

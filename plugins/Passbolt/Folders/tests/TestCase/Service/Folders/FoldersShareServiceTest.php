@@ -41,7 +41,6 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
-use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
@@ -187,8 +186,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::READ];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
-        $this->assertTrue($folder instanceof Folder);
-
         $this->assertItemIsInTrees($folderA->id, 2);
         $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
         $this->assertPermission($folderA->id, $userBId, Permission::READ);
@@ -233,8 +230,6 @@ class FoldersShareServiceTest extends FoldersTestCase
 
         $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $g1->id, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderA->id, $data);
-
-        $this->assertTrue($folder instanceof Folder);
 
         $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
         $this->assertPermission($folderA->id, $g1->id, Permission::OWNER);
@@ -299,7 +294,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'delete' => true];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
-        $this->assertTrue($folder instanceof Folder);
         $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         $this->assertFolderRelationNotExist($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId);
         $this->assertPermission($folder->id, $userAId, Permission::OWNER);
@@ -326,8 +320,6 @@ class FoldersShareServiceTest extends FoldersTestCase
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$g1->id}"), 'delete' => true];
         $folder = $this->service->share($uac, $folderA->id, $data);
-
-        $this->assertTrue($folder instanceof Folder);
 
         $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
         $this->assertPermissionNotExist($folderA->id, $g1->id);
@@ -361,9 +353,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'type' => Permission::OWNER];
-        $folder = $this->service->share($uac, $folderA->id, $data);
-
-        $this->assertTrue($folder instanceof Folder);
+        $this->service->share($uac, $folderA->id, $data);
 
         // Folder A.
         $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
@@ -393,8 +383,6 @@ class FoldersShareServiceTest extends FoldersTestCase
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$g1->id}"), 'type' => Permission::READ];
         $folder = $this->service->share($uac, $folderA->id, $data);
-
-        $this->assertTrue($folder instanceof Folder);
 
         // Folder A.
         $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
@@ -432,8 +420,6 @@ class FoldersShareServiceTest extends FoldersTestCase
 
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderA->id, $data);
-
-        $this->assertTrue($folder instanceof Folder);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);

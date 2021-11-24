@@ -50,11 +50,6 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
     public $DirectoryEntries;
     public $directoryOrgSettings;
 
-    /**
-     * @var \Passbolt\DirectorySync\Utility\SyncAction
-     */
-    protected $action;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -67,5 +62,6 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
         Configure::write('passbolt.plugins.directorySync.enabled', true);
         Configure::write('passbolt.plugins.directorySync.test', true);
         $this->enableDirectoryIntegration();
+        $this->loadPlugins(['Passbolt/Locale']);
     }
 }

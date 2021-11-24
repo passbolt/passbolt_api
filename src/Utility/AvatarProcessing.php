@@ -44,8 +44,8 @@ class AvatarProcessing
         $heightRatio = $size->getHeight() / $cropHeight; // < 1 if the image height is smaller than the crop
         $minRatio = min($widthRatio, $heightRatio); // Resize along the smallest ratio
 
-        $newWidth = $size->getWidth() / $minRatio;
-        $newHeight = $size->getHeight() / $minRatio;
+        $newWidth = (int)($size->getWidth() / $minRatio);
+        $newHeight = (int)($size->getHeight() / $minRatio);
         $image->resize(new Box($newWidth, $newHeight));
 
         // Crop that resized image
@@ -55,7 +55,7 @@ class AvatarProcessing
 
         return $image
             ->crop(new Point($x, $y), new Box($cropWidth, $cropHeight))
-            ->get('jpeg', [
+            ->get('png', [
                 'quality' => self::JPEG_QUALITY,
             ]);
     }

@@ -52,6 +52,7 @@ use Cake\Validation\Validator;
  * @method \Cake\ORM\Query findById(string $id)
  * @method \Cake\ORM\Query findByGroupId(string $groupId)
  * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
+ * @method \Cake\ORM\Query findByGroupIdAndUserId(string $groupId, string $userId)
  */
 class GroupsUsersTable extends Table
 {

@@ -29,6 +29,7 @@ use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\ResourceTypesFixture;
+use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
@@ -68,6 +69,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         GroupsUsersFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,
+        RolesFixture::class,
         UsersFixture::class,
         SecretsFixture::class,
         ResourcesFixture::class,
@@ -75,6 +77,12 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         GroupsFixture::class,
         ProfilesFixture::class,
     ];
+
+    public $Groups;
+    public $GroupsUsers;
+    public $Permissions;
+    public $FoldersRelations;
+    public $Folders;
 
     /**
      * setUp method
@@ -152,8 +160,8 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
             $this->assertFolderAttributes($childResource);
         }
         $childrenResourceIds = Hash::extract($result->children_resources, '{n}.id');
-        $this->assertContains($resource1->id, $childrenResourceIds);
-        $this->assertContains($resource2->id, $childrenResourceIds);
+        $this->assertContains($resource1->get('id'), $childrenResourceIds);
+        $this->assertContains($resource2->get('id'), $childrenResourceIds);
     }
 
     public function testFoldersViewError_NotValidIdParameter()
@@ -179,7 +187,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->getJson("/folders/{$folder->id}.json?contain[permissions]=1&contain[permissions.group]=1&api-version=2");
 
         $this->assertSuccess();
-        /** @var Folder[] $result */
+        /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
         $folder = $this->_responseJsonBody;
         $this->assertFolderAttributes($folder);
         $this->assertObjectHasAttribute('permissions', $folder);
@@ -218,7 +226,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->getJson("/folders/{$folder->id}.json?contain[permissions.user.profile]=1&api-version=2");
 
         $this->assertSuccess();
-        /** @var Folder[] $result */
+        /** @var \Passbolt\Folders\Model\Entity\Folder[] $result */
         $folder = $this->_responseJsonBody;
         $this->assertFolderAttributes($folder);
         $this->assertObjectHasAttribute('permissions', $folder);

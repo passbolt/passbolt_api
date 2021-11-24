@@ -197,7 +197,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
         Configure::write('passbolt.email.send.comment.add', true);
 
         // Using low level table insert as the utility checks for invalid json
-        /** @var OrganizationSettingsTable $organizationSettings */
+        /** @var \App\Model\Table\OrganizationSettingsTable $organizationSettings */
         $organizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
         $organizationSettings->createOrUpdateSetting(EmailNotificationSettings::NAMESPACE, $invalidJsonString, $accessControl);

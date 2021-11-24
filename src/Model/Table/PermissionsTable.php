@@ -53,6 +53,7 @@ use Cake\Validation\Validator;
  * @method \Cake\ORM\Query findByAcoForeignKeyAndType(string $acoForeignKey, int $type)
  * @method \Cake\ORM\Query findByAroAndAcoForeignKey(string $aro, string $acoForeignKey)
  * @method \Cake\ORM\Query findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
+ * @method \Cake\ORM\Query findByAcoForeignKeyAndAroForeignKey(string $acoForeignKey, string $aroForeignKey)
  */
 class PermissionsTable extends Table
 {
@@ -205,7 +206,7 @@ class PermissionsTable extends Table
      */
     public function isValidPermissionType(int $value)
     {
-        return is_int($value) && in_array($value, self::ALLOWED_TYPES);
+        return in_array($value, self::ALLOWED_TYPES);
     }
 
     /**

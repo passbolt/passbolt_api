@@ -81,7 +81,7 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
         $this->gpg->setVerifyKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
         $this->gpg->setDecryptKeyFromFingerprint($this->adaKeyId, '');
         $plaintext = $this->gpg->decrypt($msg, true);
-        $this->assertFalse(($plaintext === false), 'Could not decrypt the server generated User Auth Token: ' . $msg);
+        $this->assertFalse(!$plaintext, 'Could not decrypt the server generated User Auth Token: ' . $msg);
 
         // Decrypt and check if the token is in the right format
         $info = explode('|', $plaintext);

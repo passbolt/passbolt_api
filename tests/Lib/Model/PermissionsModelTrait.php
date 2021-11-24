@@ -97,9 +97,9 @@ trait PermissionsModelTrait
      *
      * @param string $acoForeignKey
      * @param string $aroForeignKey
-     * @param string $type
+     * @param int $type
      */
-    protected function assertPermission($acoForeignKey, $aroForeignKey, $type)
+    protected function assertPermission(string $acoForeignKey, string $aroForeignKey, int $type): void
     {
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $permission = $permissionsTable->find()->where([

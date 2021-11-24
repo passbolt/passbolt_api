@@ -42,17 +42,17 @@ class FoldersTableTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     /**
-     * @var FoldersTable
+     * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
     public $Folders;
 
     /**
-     * @var FoldersRelationsTable
+     * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
     public $FoldersRelations;
 
     /**
-     * @var PermissionsTable
+     * @var \App\Model\Table\PermissionsTable
      */
     public $Permissions;
 
@@ -133,11 +133,11 @@ class FoldersTableTest extends FoldersTestCase
         // Expected fields.
         $this->assertFolderAttributes($folder);
         $this->assertObjectHasAttribute('children_folders', $folder);
-        $this->assertCount(2, $folder->children_folders);
-        foreach ($folder->children_folders as $childFolder) {
+        $this->assertCount(2, $folder->get('children_folders'));
+        foreach ($folder->get('children_folders') as $childFolder) {
             $this->assertFolderAttributes($childFolder);
         }
-        $childrenFoldersIds = Hash::extract($folder->children_folders, '{n}.id');
+        $childrenFoldersIds = Hash::extract($folder->get('children_folders'), '{n}.id');
         $this->assertContains($folderB->id, $childrenFoldersIds);
         $this->assertContains($folderC->id, $childrenFoldersIds);
     }
@@ -157,7 +157,7 @@ class FoldersTableTest extends FoldersTestCase
         $folder = $this->Folders->findView($userId, $folderB->id)->first();
 
         // Expected fields.
-        $this->assertEquals($folderA->id, $folder->folder_parent_id);
+        $this->assertEquals($folderA->id, $folder->get('folder_parent_id'));
     }
 
     public function testFindView_ContainPersonal()
@@ -174,9 +174,9 @@ class FoldersTableTest extends FoldersTestCase
         $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         $folderA = $this->Folders->findView($userAId, $folderA->id)->first();
-        $this->assertEquals(true, $folderA->personal);
+        $this->assertEquals(true, $folderA->get('personal'));
         $folderB = $this->Folders->findView($userAId, $folderB->id)->first();
-        $this->assertEquals(false, $folderB->personal);
+        $this->assertEquals(false, $folderB->get('personal'));
     }
 
     /* FINDER TESTS */

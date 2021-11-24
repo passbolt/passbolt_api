@@ -91,7 +91,7 @@ class UsersIndexControllerTest extends MfaIntegrationTestCase
         $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
 
         $userId = UuidFactory::uuid('user.id.ada');
-        /** @var AccountSettingsTable $accountSettings */
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $accountSettings */
         $accountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $accountSettings->createOrUpdateSetting($userId, MfaSettings::MFA, json_encode([
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
@@ -125,7 +125,7 @@ class UsersIndexControllerTest extends MfaIntegrationTestCase
         $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
 
         $userId = UuidFactory::uuid('user.id.ada');
-        /** @var AccountSettingsTable $accountSettings */
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $accountSettings */
         $accountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $accountSettings->createOrUpdateSetting($userId, MfaSettings::MFA, json_encode([
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],

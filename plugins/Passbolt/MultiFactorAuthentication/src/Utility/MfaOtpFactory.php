@@ -37,7 +37,7 @@ class MfaOtpFactory
      */
     public static function getIssuer(?string $url = null): string
     {
-        if (!isset($url) || !is_string($url)) {
+        if ($url === null) {
             $url = Router::url('/', true);
         }
         $url = parse_url($url, PHP_URL_HOST) . parse_url($url, PHP_URL_PATH);

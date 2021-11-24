@@ -25,9 +25,9 @@ use Cake\ORM\TableRegistry;
 class CleanupCommand extends PassboltCommand
 {
     /**
-     * @var array The list of cleanup jobs to perform.
+     * @var array|null The list of cleanup jobs to perform.
      */
-    private static $cleanups;
+    private static $cleanups = null;
 
     /**
      * @var array The list of default cleanup jobs to perform.
@@ -129,6 +129,10 @@ class CleanupCommand extends PassboltCommand
         $this->loadModel('GroupsUsers');
         $this->loadModel('Permissions');
         $this->loadModel('AuthenticationTokens');
+
+        if (!isset(self::$cleanups)) {
+            self::resetCleanups();
+        }
     }
 
     /**

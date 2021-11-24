@@ -44,10 +44,10 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
 
     /**
      * @param array $notificationSettingsData Notification settings data
-     * @param \App\Utility\UserAccessControl $uac Instance of user access control
+     * @param \App\Utility\UserAccessControl $userAccessControl Instance of user access control
      * @return void
      */
-    public function write(array $notificationSettingsData, UserAccessControl $uac)
+    public function write(array $notificationSettingsData, UserAccessControl $userAccessControl)
     {
         $data = json_encode($notificationSettingsData);
 
@@ -56,7 +56,11 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
             throw new InternalErrorException('The Email Notification Settings configs are invalid');
         }
 
-        $this->organizationSettingsTable->createOrUpdateSetting(EmailNotificationSettings::NAMESPACE, $data, $uac);
+        $this->organizationSettingsTable->createOrUpdateSetting(
+            EmailNotificationSettings::NAMESPACE,
+            $data,
+            $userAccessControl
+        );
     }
 
     /**

@@ -31,6 +31,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\User|null $modifier
  * @property \App\Model\Entity\Permission|null $permission
  * @property \App\Model\Entity\Permission[] $permissions
+ * @property int|null $folder_parent_id
  * @property \Passbolt\Folders\Model\Entity\FoldersRelation[] $folders_relations
  * @property \Passbolt\Folders\Model\Entity\Folder[] $children_folders
  * @property \App\Model\Entity\Resource[] $children_resources

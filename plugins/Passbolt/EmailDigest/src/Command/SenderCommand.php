@@ -49,7 +49,7 @@ class SenderCommand extends PassboltCommand
     {
         $emailSenderService = new SendEmailBatchService();
 
-        $emailSenderService->sendNextEmailsBatch($args->getOption('limit'));
+        $emailSenderService->sendNextEmailsBatch((int)$args->getOption('limit'));
 
         return self::CODE_SUCCESS;
     }

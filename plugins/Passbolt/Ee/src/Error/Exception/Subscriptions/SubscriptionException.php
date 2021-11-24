@@ -45,12 +45,12 @@ class SubscriptionException extends CakeException implements ExceptionWithErrors
     }
 
     /**
-     * @return array|string
+     * @return array|null
      */
-    public function getErrors()
+    public function getErrors(): ?array
     {
         if (!isset($this->data)) {
-            return '';
+            return null;
         }
 
         return ['data' => $this->data];

@@ -24,9 +24,9 @@ namespace Passbolt\DirectorySync\Actions\Reports;
 class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, \Countable
 {
     /**
-     * @var array|null
+     * @var array
      */
-    protected $reports;
+    protected $reports = [];
 
     /**
      * @var int
@@ -234,7 +234,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
     /**
      * Count
      *
-     * @return int|void
+     * @return int
      */
     public function count()
     {

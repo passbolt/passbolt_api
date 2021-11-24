@@ -26,6 +26,7 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
 {
+    public $ResourcesTags;
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/ResourceTypes',
         'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Groups', 'app.Alt0/GroupsUsers',
@@ -243,7 +244,9 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     public function testTagUpdateUserWithExistingTagHandleTagsAssociationDuplicate()
     {
         $this->authenticateAs('ada');
+        /** @psalm-suppress UndefinedClass trait exists */
         $resourceData = ResourcesModelTrait::getDummyResourceData();
+        /** @psalm-suppress UndefinedClass trait exists */
         $resourceData['secrets'][0] = SecretsModelTrait::getDummySecretData();
         $resource = $this->_addTestResource($resourceData);
         $tags = $this->_addTestTag($resource->id, ['test-tag-1', 'test-tag-2']);
@@ -345,7 +348,9 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     public function testTagAdminPersonalUpdateResponseContainsTag()
     {
         $this->authenticateAs('admin');
+        /** @psalm-suppress UndefinedClass trait exists */
         $resourceData = ResourcesModelTrait::getDummyResourceData();
+        /** @psalm-suppress UndefinedClass trait exists */
         $resourceData['secrets'][0] = SecretsModelTrait::getDummySecretData();
         $resource = $this->_addTestResource($resourceData);
         $tags = $this->_addTestTag($resource->id, ['admin-personal']);
@@ -379,7 +384,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      *
      * @param string $resourceId ID of the resource where tag is to be added
      * @param array|null $tags List of tags to be added
-     * @return Object List of tags
+     * @return mixed List of tags
      */
     protected function _addTestTag(string $resourceId, ?array $tags = [])
     {

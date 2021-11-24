@@ -33,6 +33,7 @@ abstract class AbstractCombinedReport extends AbstractReport implements Combined
      */
     public function getTemplate(): string
     {
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
         return $this->template ?? self::COMBINED_REPORT_TEMPLATE;
     }
 

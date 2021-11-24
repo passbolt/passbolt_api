@@ -51,7 +51,7 @@ class ShareTest extends TagTestCase
     {
         unset($this->Permissions);
         unset($this->Resources);
-        unset($this->Tags);
+        unset($this->ResourcesTags);
         parent::tearDown();
     }
 

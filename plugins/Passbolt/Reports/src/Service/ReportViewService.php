@@ -49,6 +49,7 @@ class ReportViewService
     public function getReport(string $reportSlug, ?array $parameters = [])
     {
         $reports = $this->reportPool->getReports();
+        /** @var class-string $reportClass */
         $reportClass = $reports[$reportSlug] ?? false;
 
         if (!$reportClass) {
