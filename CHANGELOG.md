@@ -2,7 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [unreleased]
+## [3.3.1] - 2021-11-24
+### Security fixes
+- PB-9820 / PBL-06-008 WP3: JWT key confusion leads to authentication bypass (High) [experimental][disabled by default]
 
 ## [3.3.0] - 2021-10-25
 ### Added
