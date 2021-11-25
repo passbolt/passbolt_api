@@ -1,3 +1,8 @@
+passbolt-pro-server (3.3.1-1) buster; urgency=medium
+  * PB-9820 / PBL-06-008 WP3: JWT key confusion leads to authentication bypass (High) [experimental][disabled by default]
+
+ -- Daniel Del Rio <daniel@passbolt.com>  Wed, 24 Nov 2021 15:00:00 +0000
+
 passbolt-pro-server (3.3.0-1) buster; urgency=medium
   * PB-8414 Adapting package to be compatible with Debian 11
   * PB-7815 As a server administrator I should be able to enable / disable the in-form menu feature, enabled by default
