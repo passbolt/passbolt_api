@@ -118,6 +118,8 @@ module.exports = function(grunt) {
             'third_party/FirefoxAMO_white.svg',
             'third_party/ChromeWebStore_black.svg',
             'third_party/ChromeWebStore_white.svg',
+            'third_party/edge-addon-black.svg',
+            'third_party/edge-addon-white.svg',
             'third_party/chosen-sprite.png',
             'third_party/chosen-sprite@2x.png',
             // Setup
