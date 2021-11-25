@@ -113,6 +113,16 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     }
 
     /**
+     * Check that GET /auth/login.json triggers a not found error.
+     */
+    public function testAuthLoginControllerGetJson()
+    {
+        $this->getJson('/auth/login.json');
+        $this->assertResponseError('Page not found.');
+        $this->assertResponseCode(404);
+    }
+
+    /**
      * Check that GPGAuth headers are set everywhere
      */
     public function testAuthLoginControllerGetHeadersPost()
