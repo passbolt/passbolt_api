@@ -27,6 +27,7 @@ use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactor
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
@@ -187,6 +188,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->enableCsrfToken();
 
         MfaOrganizationSettingFactory::make()->totp()->persist();
+
         $user = UserFactory::make()
             ->user()
             ->with('AuthenticationTokens', [
@@ -196,18 +198,23 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
             ->with('AccountSettings', MfaAccountSettingFactory::make()->totp())
             ->persist();
 
-        $oldRefreshToken = $user->authentication_tokens[0];
-        $mfaToken = $user->authentication_tokens[1];
+        $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
+        $mfaToken = $this->mockMfaCookieValid(
+            $this->makeUac($user),
+            MfaSettings::PROVIDER_YUBIKEY,
+            true
+        );
 
+
+        $oldRefreshToken = $user->authentication_tokens[0];
         $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
-        $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $mfaToken->token);
 
         $this->postJson('/auth/jwt/refresh.json');
         $this->assertResponseOk();
 
         $accessToken = $this->_responseJsonBody->access_token;
         /** @var \App\Model\Entity\AuthenticationToken $mfaToken */
-        $mfaToken = MfaAuthenticationTokenFactory::find()->where(['id' => $mfaToken->id])->firstOrFail();
+        $mfaToken = MfaAuthenticationTokenFactory::find()->where(['token' => $mfaToken])->firstOrFail();
 
         // Checks that the session ID of the MFA token (here access token) is updated
         $this->assertTrue($mfaToken->checkSessionId($accessToken));

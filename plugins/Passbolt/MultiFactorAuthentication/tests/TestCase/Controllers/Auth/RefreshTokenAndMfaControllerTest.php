@@ -83,7 +83,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
 
         $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken);
 
-        $sessionId = $accessToken; // The asesion associated to the MFA token
+        $sessionId = $accessToken; // The session associated to the MFA token
         $mfaCookie = $this->mockMfaCookieValid(
             $this->makeUac($user),
             MfaSettings::PROVIDER_YUBIKEY,
