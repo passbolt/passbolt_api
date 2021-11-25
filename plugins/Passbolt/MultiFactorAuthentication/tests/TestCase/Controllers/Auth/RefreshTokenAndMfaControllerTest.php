@@ -22,6 +22,8 @@ use App\Test\Factory\UserFactory;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyScenario;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 /**
  * Class AuthRefreshTokenControllerTest
@@ -31,9 +33,47 @@ use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
  */
 class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
 {
-    public function testAuthRefreshTokenControllerWithValidRefreshTokenCookie()
+    public function dataProviderWithAndWithoutAccessToken(): array
+    {
+        return [
+            [true], [false],
+        ];
+    }
+
+    /**
+     * MFA should apply to the refresh token endpoint.
+     *
+     * @dataProvider dataProviderWithAndWithoutAccessToken
+     * @param bool $withAccessToken With valid access token in header or no access token
+     */
+    public function testRefreshTokenController_With_Mfa_Required_And_No_Mfa_Token_Should_Fail(bool $withAccessToken)
     {
         $user = UserFactory::make()->user()->persist();
+        if ($withAccessToken) {
+            $this->createJwtTokenAndSetInHeader($user->id);
+        }
+
+        $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
+        $oldRefreshToken = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->userId($user->id)
+            ->persist()
+            ->token;
+
+        $this->post('/auth/jwt/refresh.json', [
+            'user_id' => $user->id,
+            'refresh_token' => $oldRefreshToken,
+        ]);
+        $this->assertRedirect('/mfa/verify/error.json');
+        $this->assertResponseEquals('');
+    }
+
+    public function testAuthRefreshTokenControllerWithValidRefreshTokenCookieAndValidMfaToken()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
+        $accessToken = $this->createJwtTokenAndSetInHeader($user->id);
         $oldRefreshToken = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
@@ -43,11 +83,11 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
 
         $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken);
 
-        $sessionId = 'Foo'; // Some random session ID
+        $sessionId = $accessToken; // The asesion associated to the MFA token
         $mfaCookie = $this->mockMfaCookieValid(
             $this->makeUac($user),
-            'Bar', // The provider is not relevant
-            false, // Remember me is not relevant
+            MfaSettings::PROVIDER_YUBIKEY,
+            false, // Remember me is false, so sessionId is checked
             $sessionId
         );
 
@@ -64,7 +104,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
         ])->firstOrFail()->get('token');
         $this->assertCookie($newRefreshToken, 'refresh_token');
 
-        // We check that the session ID of the MFA tocken has well been updated
+        // We check that the session ID of the MFA token has been updated
         /** @var AuthenticationToken $updatedMfaCookie */
         $updatedMfaCookie = MfaAuthenticationTokenFactory::find()->where(['token' => $mfaCookie])->firstOrFail();
         $this->assertTrue($updatedMfaCookie->isActive());
