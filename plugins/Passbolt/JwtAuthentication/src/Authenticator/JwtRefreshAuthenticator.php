@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Authenticator;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Model\Entity\User;
 use Authentication\Authenticator\AbstractAuthenticator;
 use Authentication\Authenticator\Result;
@@ -32,6 +34,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class JwtRefreshAuthenticator extends AbstractAuthenticator
 {
+    use ContainerAwareMiddlewareTrait;
+
+    /**
+     * @var string
+     */
+    private $refreshToken;
+
     /**
      * @inheritDoc
      */
@@ -44,6 +53,12 @@ class JwtRefreshAuthenticator extends AbstractAuthenticator
             } else {
                 $user = $this->getUserViaCookie($request);
             }
+
+            $container = $this->getContainer($request);
+            $container
+                ->extend(SessionIdentificationServiceInterface::class)
+                ->setConcrete(RefreshTokenSessionIdentificationService::class)
+                ->addArgument($this->refreshToken);
 
             return new Result(compact('user'), Result::SUCCESS);
         } catch (\Exception $exception) {
@@ -63,6 +78,8 @@ class JwtRefreshAuthenticator extends AbstractAuthenticator
         $tokenUserId = (new RefreshTokenFetchUserService($token))->getUserIdFromToken();
 
         if ($tokenUserId === $userId) {
+            $this->refreshToken = $token;
+
             return $this->findUser($userId);
         } else {
             throw new RefreshTokenUserIdMismatchException(
@@ -80,6 +97,7 @@ class JwtRefreshAuthenticator extends AbstractAuthenticator
     {
         $token = $request->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
         $userId = (new RefreshTokenFetchUserService($token))->getUserIdFromToken();
+        $this->refreshToken = $token;
 
         return $this->findUser($userId);
     }

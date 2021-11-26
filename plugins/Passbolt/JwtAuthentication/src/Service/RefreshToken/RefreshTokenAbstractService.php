@@ -140,7 +140,7 @@ abstract class RefreshTokenAbstractService
      * @param string $token Refresh token
      * @return \Cake\ORM\Query
      */
-    protected function queryRefreshToken(string $token): Query
+    public function queryRefreshToken(string $token): Query
     {
         return $this->AuthenticationTokens->find()->where([
             'token' => $token,

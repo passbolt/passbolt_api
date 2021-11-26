@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use App\Utility\AuthToken\AuthTokenExpiry;
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
@@ -134,7 +133,7 @@ class AuthenticationToken extends Entity
      */
     public function hashAndSetSessionId(string $sessionId): void
     {
-        $hashedSessionId = (new DefaultPasswordHasher())->hash(hash('sha256', $sessionId));
+        $hashedSessionId = hash('sha256', $sessionId);
         $data = array_merge(
             $this->getJsonDecodedData(),
             [self::SESSION_ID_KEY => $hashedSessionId]
@@ -145,7 +144,9 @@ class AuthenticationToken extends Entity
 
     /**
      * Checks that the session ID provided
-     * matches the hashed session ID in data->session_id
+     * matches the hashed session ID in data->session_id.
+     *
+     * The session ID can be non hashed or hashed.
      *
      * @param string|null $sessionIdToCheck Session ID to check
      * @return bool
@@ -157,6 +158,9 @@ class AuthenticationToken extends Entity
             return false;
         }
 
-        return (new DefaultPasswordHasher())->check(hash('sha256', $sessionIdToCheck), $tokenSessionId);
+        $isMatchingUnHashedValid = (hash('sha256', $sessionIdToCheck) === $tokenSessionId);
+        $isMatchingHashedValid = ($sessionIdToCheck === $tokenSessionId);
+
+        return $isMatchingUnHashedValid || $isMatchingHashedValid;
     }
 }
