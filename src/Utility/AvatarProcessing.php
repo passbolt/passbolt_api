@@ -18,11 +18,13 @@ namespace App\Utility;
 
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
+use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 
 class AvatarProcessing
 {
     public const JPEG_QUALITY = 90;
+    public const BACKGROUND_COLOR = '#FFFFFF';
 
     /**
      * Resize and crop at center an image.
@@ -50,12 +52,20 @@ class AvatarProcessing
 
         // Crop that resized image
         $size = $image->getSize();
-        $x = (int)round(($size->getWidth() - $cropWidth) / 2);
-        $y = (int)round(($size->getHeight() - $cropHeight) / 2);
+        $x = max(0, (int)round(($size->getWidth() - $cropWidth) / 2));
+        $y = max(0, (int)round(($size->getHeight() - $cropHeight) / 2));
 
-        return $image
-            ->crop(new Point($x, $y), new Box($cropWidth, $cropHeight))
-            ->get('jpeg', [
+        $image = $image->crop(new Point($x, $y), new Box($cropWidth, $cropHeight));
+
+        // Create a non transparent canvas wth white background
+        $color = (new RGB())->color(self::BACKGROUND_COLOR);
+        $topLeft = new Point(0, 0);
+        $canvas = $imagine->create($image->getSize(), $color);
+
+        // Paste the image in the canvas and return the collage
+        return $canvas
+            ->paste($image, $topLeft)
+            ->get('jpg', [
                 'quality' => self::JPEG_QUALITY,
             ]);
     }

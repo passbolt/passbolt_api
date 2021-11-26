@@ -56,6 +56,7 @@ class JwtRequestDetectionService
      */
     public function useJwtAuthentication(): bool
     {
+        // Already cached
         if ($this->request->getAttribute(self::IS_JWT_AUTH_REQUEST)) {
             return true;
         }
@@ -64,24 +65,49 @@ class JwtRequestDetectionService
             return false;
         }
 
+        // JWT cannot be used because of configuration issue
+        if (!$this->isJwtServerKeyUsable()) {
+            return false;
+        }
+
+        // Uses if it's a JWT login route
+        if ($this->isJWTAuthRoute()) {
+            return true;
+        }
+
+        // Uses if the access token is set in header or if a refresh_token is set in the cookies
+        if ($this->isJwtAccessTokenSetInHeader() || $this->isJwtRefreshTokenSetInCookie()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isJwtServerKeyUsable()
+    {
         try {
             (new JwksGetService())->getPublicKey();
         } catch (InvalidJwtKeyPairException $e) {
             return false;
         }
 
-        // Reads if the request is a route from the JWT plugin
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isJWTAuthRoute()
+    {
         $params = $this->request->getAttribute('params', null);
-        if (isset($params)) {
+        if (isset($params) && !$this->request->is('get')) {
             $plugin = Hash::get($params, 'plugin');
             if ($plugin === 'Passbolt/JwtAuthentication') {
                 return true;
             }
-        }
-
-        // Check that the Bearer token is set in header or if a refresh_token is set in the cookies
-        if ($this->isJwtAccessTokenSetInHeader() || $this->isJwtRefreshTokenSetInCookie()) {
-            return true;
         }
 
         return false;

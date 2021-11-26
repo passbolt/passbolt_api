@@ -48,8 +48,12 @@ class CreateTest extends AppTestCase
     public function dataProviderForCreateAvatarFile()
     {
         return [
-            [false,],
-            [true,],
+            [false, 'png'],
+            [true, 'png'],
+            [false, 'jpg'],
+            [true, 'jpg'],
+            [false, 'gif'],
+            [true, 'gif'],
         ];
     }
 

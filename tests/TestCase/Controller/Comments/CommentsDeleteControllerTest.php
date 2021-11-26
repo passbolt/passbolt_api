@@ -23,10 +23,7 @@ use Cake\ORM\TableRegistry;
 
 class CommentsDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
-        'app.Base/Secrets', 'app.Base/Comments',
-    ];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments'];
 
     public function testCommentsDeleteSuccess()
     {
@@ -52,7 +49,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('irene');
         $commentId = 'invalid-id';
-        $this->deleteJson("/comments/$commentId.json?api-version=v2");
+        $this->deleteJson("/comments/$commentId.json");
         $this->assertError(400, 'The comment id is not valid.');
     }
 
@@ -60,7 +57,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('irene');
         $commentId = UuidFactory::uuid();
-        $this->deleteJson("/comments/$commentId.json?api-version=v2");
+        $this->deleteJson("/comments/$commentId.json");
         $this->assertError(404, 'The comment does not exist.');
     }
 
@@ -68,14 +65,14 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('jean');
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->deleteJson("/comments/$commentId.json?api-version=v2");
+        $this->deleteJson("/comments/$commentId.json");
         $this->assertError(404, 'The comment does not exist.');
     }
 
     public function testCommentsDeleteErrorNotAuthenticated()
     {
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->deleteJson("/comments/$commentId.json?api-version=v2");
+        $this->deleteJson("/comments/$commentId.json?api-version=2");
         $this->assertAuthenticationError();
     }
 }

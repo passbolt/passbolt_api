@@ -116,8 +116,10 @@ module.exports = function(grunt) {
             'third_party/firefox_logo.png',
             'third_party/FirefoxAMO_black.svg',
             'third_party/FirefoxAMO_white.svg',
-            'third_party/ChromeWebStore_black.png',
-            'third_party/ChromeWebStore_white.png',
+            'third_party/ChromeWebStore_black.svg',
+            'third_party/ChromeWebStore_white.svg',
+            'third_party/edge-addon-black.svg',
+            'third_party/edge-addon-white.svg',
             'third_party/chosen-sprite.png',
             'third_party/chosen-sprite@2x.png',
             'third_party/duo.svg',
@@ -135,13 +137,13 @@ module.exports = function(grunt) {
         }, {
           // CSS
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
-          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css'],
+          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
         }, {
           // Midgar css theme
           cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
-          src: ['api_main.min.css'],
+          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
           expand: true
         },{
