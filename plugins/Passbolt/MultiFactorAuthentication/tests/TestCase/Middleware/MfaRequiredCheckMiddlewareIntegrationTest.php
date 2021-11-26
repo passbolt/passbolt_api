@@ -205,7 +205,6 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
             true
         );
 
-
         $oldRefreshToken = $user->authentication_tokens[0];
         $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
 
