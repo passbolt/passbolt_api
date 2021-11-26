@@ -12,31 +12,30 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         3.4.0
  */
 namespace Passbolt\JwtAuthentication\Authenticator;
 
 use App\Authenticator\AbstractSessionIdentificationService;
 use Cake\Http\ServerRequest;
-use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenFetchUserService;
 
-class JwtSessionIdentificationService extends AbstractSessionIdentificationService
+class RefreshTokenSessionIdentificationService extends AbstractSessionIdentificationService
 {
     /**
-     * @var string|null
+     * @var string
      */
-    private $accessToken;
+    private $refreshToken;
 
     /**
-     * On login, one can pass the access token generated as parameter.
-     * This way, the newly login user has a session id.
-     * If not set, the token in the header is taken.
+     * On the refresh token endpoint, the session ID is read as
+     * the access token associated to the provided refresh token.
      *
-     * @param string|null $accessToken Access Token
+     * @param string $refreshToken Refresh Token
      */
-    public function __construct(?string $accessToken = null)
+    public function __construct(string $refreshToken)
     {
-        $this->accessToken = $accessToken;
+        $this->refreshToken = $refreshToken;
     }
 
     /**
@@ -44,13 +43,14 @@ class JwtSessionIdentificationService extends AbstractSessionIdentificationServi
      */
     public function getSessionId(ServerRequest $request): ?string
     {
-        if (isset($this->accessToken)) {
-            return $this->accessToken;
-        }
         if (!$this->isAuthenticated($request)) {
             return null;
         }
 
-        return $request->getHeaderLine(JwtAuthenticationService::JWT_HEADER);
+        $service = new RefreshTokenFetchUserService($this->refreshToken);
+        /** @var \App\Model\Entity\AuthenticationToken $token */
+        $token = $service->queryRefreshToken($this->refreshToken)->firstOrFail();
+
+        return $token->getSessionId();
     }
 }
