@@ -1,11 +1,12 @@
 #!/bin/sh
 
-set -eu
+set -exu
 
 SCRIPT_DIR="$( cd "$( dirname "${0}" )" && pwd )"
 cd ${SCRIPT_DIR}/../..
 
 yum install -y rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc
+echo "setuptree"
 rpmdev-setuptree
 
 OS_VERSION=$(grep -E '^VERSION_ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/\"//g')
@@ -19,6 +20,7 @@ fi
 cp rpm/specs/passbolt-server-selinux.spec ~/rpmbuild/SPECS/
 cd rpm/passbolt-server-selinux-${PKG_VERSION}
 make clean
+echo "make"
 make
 cd ..
 tar --create \
