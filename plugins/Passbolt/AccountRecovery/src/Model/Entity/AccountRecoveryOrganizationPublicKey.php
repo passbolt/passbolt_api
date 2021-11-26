@@ -20,18 +20,18 @@ namespace Passbolt\AccountRecovery\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * AccountRecoveryOrganizationPolicy Entity
+ * AccountRecoveryOrganizationPublicKey Entity
  *
  * @property string $id
- * @property string $policy
+ * @property string $fingerprint
+ * @property string $armored_key
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  * @property string $created_by
  * @property string $modified_by
- *
- * @property AccountRecoveryOrganizationPublicKey $account_recovery_organization_public_key
+ * @property \Cake\I18n\FrozenTime|null $deleted
  */
-class AccountRecoveryOrganizationPolicy extends Entity
+class AccountRecoveryOrganizationPublicKey extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -42,26 +42,12 @@ class AccountRecoveryOrganizationPolicy extends Entity
      * @var array
      */
     protected $_accessible = [
-        'policy' => false,
+        'fingerprint' => false,
+        'armored_key' => false,
         'created' => false,
         'modified' => false,
         'created_by' => false,
         'modified_by' => false,
-
-        // associated data
-        'account_recovery_organization_public_key_id' => false,
-        'account_recovery_organization_public_key' => false,
-    ];
-
-    public const ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_IN = 'opt-in';
-    public const ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT = 'opt-out';
-    public const ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY = 'mandatory';
-    public const ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED = 'disabled';
-
-    public const SUPPORTED_POLICIES = [
-        self::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_IN,
-        self::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT,
-        self::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY,
-        self::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
+        'deleted' => false
     ];
 }

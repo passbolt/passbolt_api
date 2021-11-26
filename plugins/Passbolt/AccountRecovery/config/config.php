@@ -21,8 +21,8 @@ return [
             'accountRecovery' => [
                 'version' => '1.0.0',
                 'enabled' => Configure::read(
-                    'passbolt.plugins.inFormIntegration.enabled',
-                    env('PASSBOLT_PLUGINS_IN_FORM_INTEGRATION_ENABLED', true)
+                    'passbolt.plugins.accountRecovery.enabled',
+                    env('PASSBOLT_PLUGINS_ACCOUNT_RECOVERY_ENABLED', true)
                 ),
                 'settingsVisibility' => [
                     'whiteListPublic' => [

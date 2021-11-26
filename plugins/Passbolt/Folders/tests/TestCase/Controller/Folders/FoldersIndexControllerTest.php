@@ -26,6 +26,7 @@ use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\ResourceTypesFixture;
+use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
@@ -54,6 +55,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         GroupsUsersFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,
+        RolesFixture::class,
         UsersFixture::class,
         ResourcesFixture::class,
         ResourceTypesFixture::class,

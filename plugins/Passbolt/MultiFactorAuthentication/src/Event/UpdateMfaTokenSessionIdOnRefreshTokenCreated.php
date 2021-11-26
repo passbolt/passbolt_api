@@ -20,43 +20,35 @@ use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenCreateService;
 use Passbolt\MultiFactorAuthentication\Service\UpdateMfaTokenSessionIdService;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
-class UpdateSessionIdInMfaToken implements EventListenerInterface
+class UpdateMfaTokenSessionIdOnRefreshTokenCreated implements EventListenerInterface
 {
-    /**
-     * @var string
-     */
-    private $mfaToken;
-
-    /**
-     * UpdateSessionIdInMfaToken constructor.
-     *
-     * @param string $mfaToken MFA Token
-     */
-    public function __construct(string $mfaToken)
-    {
-        $this->mfaToken = $mfaToken;
-    }
-
     /**
      * @return array
      */
     public function implementedEvents(): array
     {
         return [
-            RefreshTokenCreateService::REFRESH_TOKEN_CREATED_EVENT => 'updateSessionIdInMfaToken',
+            RefreshTokenCreateService::REFRESH_TOKEN_CREATED_EVENT => 'updateMfaTokenSessionId',
         ];
     }
 
     /**
-     * On JWT authentication, sets the access token as session ID in the MFA authentication token.
+     * On JWT authentication, when a new refresh token is created,
+     * sets the access token as session ID in the MFA authentication token.
      *
      * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
-    public function updateSessionIdInMfaToken(EventInterface $event): void
+    public function updateMfaTokenSessionId(EventInterface $event): void
     {
-        $accessToken = $event->getData(RefreshTokenCreateService::ACCESS_TOKEN_DATA_KEY);
-        (new UpdateMfaTokenSessionIdService())->updateSessionId($this->mfaToken, $accessToken);
+        /** @var \Cake\Http\ServerRequest $request */
+        $request = $event->getData(RefreshTokenCreateService::REQUEST_DATA_KEY);
+        $mfaToken = $request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        if (is_string($mfaToken)) {
+            $accessToken = $event->getData(RefreshTokenCreateService::ACCESS_TOKEN_DATA_KEY);
+            (new UpdateMfaTokenSessionIdService())->updateSessionId($mfaToken, $accessToken);
+        }
     }
 }

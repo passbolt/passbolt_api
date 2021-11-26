@@ -99,7 +99,14 @@ class UserComponent extends Component
     {
         try {
             // Get the user delivered by the authentication result.
-            $user = $this->Authentication->getResult()->getData() ?? [];
+            $data = $this->Authentication->getResult()->getData() ?? null;
+            if (!isset($data)) {
+                $user = [];
+            } elseif (!isset($data['user'])) {
+                $user = $data;
+            } else {
+                $user = $data['user'];
+            }
         } catch (Exception $e) {
             $user = [];
         } finally {

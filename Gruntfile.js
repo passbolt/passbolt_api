@@ -105,6 +105,7 @@ module.exports = function(grunt) {
             'controls/check_white.svg',
             'controls/chevron-down_black.svg',
             'controls/chevron-down_white.svg',
+            'controls/chevron-down_blue.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
             'controls/dot_black.svg',

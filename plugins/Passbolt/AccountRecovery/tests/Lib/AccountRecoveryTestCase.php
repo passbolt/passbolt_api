@@ -16,10 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Test\Lib;
 
+use App\Test\Lib\AppTestCase;
 use App\Utility\Application\FeaturePluginAwareTrait;
-use Cake\TestSuite\TestCase;
 
-class AccountRecoveryTestCase extends TestCase
+class AccountRecoveryTestCase extends AppTestCase
 {
     use FeaturePluginAwareTrait;
 

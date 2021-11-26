@@ -68,8 +68,8 @@ class ResourcesIndexController extends AppController
             'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id'],
         ];
 
-        if (Configure::read('passbolt.plugins.tags.enabled')) {
-            $whitelist['contain'][] = 'tag';
+        if (Configure::read('passbolt.plugins.tags')) {
+            $whitelist['contain'][] = 'tag'; // @deprecate should be tags
             $whitelist['filter'][] = 'has-tag';
         }
         if (Configure::read('passbolt.plugins.folders')) {

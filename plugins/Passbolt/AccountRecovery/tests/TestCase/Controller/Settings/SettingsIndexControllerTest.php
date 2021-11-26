@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Controller\Settings;
 
+use App\Test\Factory\UserFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
 class SettingsIndexControllerTest extends AccountRecoveryIntegrationTestCase

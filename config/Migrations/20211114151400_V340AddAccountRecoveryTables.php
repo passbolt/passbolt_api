@@ -31,6 +31,9 @@ class V340AddAccountRecoveryTables extends AbstractMigration
             ->addColumn('id', 'uuid', [
                 'null' => false,
             ])
+            ->addColumn('account_recovery_organization_key_id', 'uuid', [
+                'null' => false,
+            ])
             ->addColumn('policy', 'string', [
                 'default' => null,
                 'limit' => 36,
@@ -49,13 +52,56 @@ class V340AddAccountRecoveryTables extends AbstractMigration
             ->addColumn('created_by', 'uuid', [
                 'null' => false,
             ])
-            ->addColumn('modified_by', 'char', [
+            ->addColumn('modified_by', 'uuid', [
                 'null' => false,
             ])
-            ->addIndex(
-                'id',
-                ['unique' => true]
-            )
+            ->addIndex('id', ['unique' => true])
+            ->addIndex('account_recovery_organization_key_id', ['unique' => false])
+            ->create();
+
+        $this->table('account_recovery_organization_public_keys', [
+                'id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->addColumn('id', 'uuid', [
+                'null' => false,
+            ])
+            ->addColumn('armored_key', 'text', [
+                'default' => null,
+                'limit' => null,
+                'null' => false,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->addColumn('fingerprint', 'string', [
+                'default' => null,
+                'limit' => 40,
+                'null' => false,
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci'
+            ])
+            ->addColumn('created', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => false,
+            ])
+            ->addColumn('modified', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => false,
+            ])
+            ->addColumn('deleted', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->addColumn('created_by', 'uuid', [
+                'null' => false,
+            ])
+            ->addColumn('modified_by', 'uuid', [
+                'null' => false,
+            ])
+            ->addIndex('id', ['unique' => true])
+            ->addIndex('fingerprint', ['unique' => true])
             ->create();
     }
 }

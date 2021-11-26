@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Test\Factory;
 
+use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
@@ -45,13 +46,38 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
-            return [
-                'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
-                'last_name' => $faker->lastName(),
-                'created_by' => $faker->uuid(),
-                'modified_by' => $faker->uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),];
+            return self::getDefaultData($faker);
         });
+    }
+
+    /**
+     * Get some default entity data
+     * @return array
+     */
+    static public function getDefaultData(?Generator $faker = null): array
+    {
+        $faker = $faker ?? new Generator();
+        return [
+            'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
+            'created_by' => UuidFactory::uuid(),
+            'modified_by' => UuidFactory::uuid(),
+            'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+            'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+            'account_recovery_organization_key_id' => UuidFactory::uuid(),
+        ];
+    }
+
+    /**
+     * Get default entity options.
+     * @return array checkRules, accessibleFields
+     */
+    static public function getDefaultOptions(): array
+    {
+        return [
+            'checkRules' => true,
+            'accessibleFields' => [
+                '*' => true,
+            ],
+        ];
     }
 }
