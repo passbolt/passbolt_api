@@ -101,7 +101,7 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
             $request,
             MfaSettings::get($uac),
             $uac,
-            $sessionService->getSessionId($request)
+            $sessionService
         );
     }
 

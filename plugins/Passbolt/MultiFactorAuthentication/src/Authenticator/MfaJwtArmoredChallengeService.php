@@ -37,16 +37,11 @@ class MfaJwtArmoredChallengeService extends JwtArmoredChallengeService
     {
         $challenge = parent::makeArmoredChallenge($request, $user, $verifyToken);
 
-        $sessionId = $challenge['access_token'];
         $uac = new UserAccessControl($user['role']['name'], $user['id'], $user['username']);
         $mfaSettings = MfaSettings::get($uac);
 
-        $isMfaAuthenticationRequired = (new IsMfaAuthenticationRequiredService())->isMfaCheckRequired(
-            $request,
-            $mfaSettings,
-            $uac,
-            $sessionId
-        );
+        $isMfaAuthenticationRequired = (new IsMfaAuthenticationRequiredService())
+            ->isMfaCheckRequired($request, $mfaSettings, $uac);
 
         if ($isMfaAuthenticationRequired) {
             $challenge['providers'] = $mfaSettings->getEnabledProviders();

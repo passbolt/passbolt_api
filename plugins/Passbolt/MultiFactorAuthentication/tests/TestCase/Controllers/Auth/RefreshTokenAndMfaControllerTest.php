@@ -48,7 +48,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
      * @dataProvider dataProviderWithAndWithoutAccessToken
      * @param bool $withAccessToken With valid access token in header or no access token
      */
-    public function testRefreshTokenController_With_Mfa_Required_And_No_Mfa_Token_Should_Fail(bool $withAccessToken)
+    public function testRefreshTokenController_With_Mfa_Required_And_No_Mfa_Token_Provided_Should_Redirect(bool $withAccessToken)
     {
         $user = UserFactory::make()->user()->persist();
         if ($withAccessToken) {
@@ -56,16 +56,12 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
         }
 
         $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
-        $oldRefreshToken = AuthenticationTokenFactory::make()
-            ->active()
-            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
-            ->userId($user->id)
-            ->persist()
-            ->token;
+        $oldRefreshToken = (new RefreshTokenCreateService())
+            ->createToken(new ServerRequest(), $user->id, 'Foo');
 
         $this->post('/auth/jwt/refresh.json', [
             'user_id' => $user->id,
-            'refresh_token' => $oldRefreshToken,
+            'refresh_token' => $oldRefreshToken->token,
         ]);
         $this->assertRedirect('/mfa/verify/error.json');
         $this->assertResponseEquals('');
