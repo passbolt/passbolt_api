@@ -47,16 +47,13 @@ class RefreshTokenCreateServiceTest extends TestCase
 
         $token = (new RefreshTokenCreateService())->createToken(new ServerRequest(), $userId, $accessToken);
         $cookie = (new RefreshTokenCreateService())->createHttpOnlySecureCookie($token);
-        $cookieExpiry = $cookie->getExpiry();
 
         $this->assertTrue($token->checkSessionId($accessToken));
         $this->assertTrue($cookie->isSecure());
         $this->assertTrue($cookie->isHttpOnly());
         $this->assertFalse($cookie->isExpired());
         // Allow a difference of five seconds second for CPU process
-        if (method_exists($cookie->getExpiry(), 'toUnixString')) {
-            $this->assertLessThanOrEqual(5, $cookie->getExpiry()->toUnixString() - $expectedExpiration);
-        }
+        $this->assertLessThanOrEqual(5, $cookie->getExpiry()->toUnixString() - $expectedExpiration);
 
         // Assert that the create refresh token event is dispatched
         $this->assertEventFired(RefreshTokenCreateService::REFRESH_TOKEN_CREATED_EVENT);

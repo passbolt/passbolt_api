@@ -16,17 +16,15 @@ declare(strict_types=1);
  */
 namespace App\Authenticator;
 
+use App\Model\Entity\AuthenticationToken;
 use Authentication\AuthenticationService;
 use Cake\Http\ServerRequest;
 
 abstract class AbstractSessionIdentificationService implements SessionIdentificationServiceInterface
 {
     /**
-     * @inheritDoc
-     */
-    abstract public function getSessionId(ServerRequest $request): ?string;
-
-    /**
+     * Checks in the request if the user is authenticated.
+     *
      * @param \Cake\Http\ServerRequest $request Request
      * @return bool
      */
@@ -38,5 +36,36 @@ abstract class AbstractSessionIdentificationService implements SessionIdentifica
         }
 
         return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function checkSessionId(ServerRequest $request, ?string $hashedSessionIdToCheck): bool
+    {
+        $hashedSessionId = $this->getHashedSessionId($request);
+        if ($hashedSessionIdToCheck === null || $hashedSessionId === null) {
+            return false;
+        }
+
+        return $hashedSessionIdToCheck === $hashedSessionId;
+    }
+
+    /**
+     * Hashes the request session ID.
+     *
+     * To be overwritten for session identifiers handling the case when
+     * the request's session ID is already provided hashed.
+     *
+     * E.g. when requesting a new refresh token, the
+     * session ID is the hashed access token associated
+     * to the old refresh token.
+     *
+     * @param \Cake\Http\ServerRequest $request Server Request
+     * @return string|null
+     */
+    protected function getHashedSessionId(ServerRequest $request): ?string
+    {
+        return hash(AuthenticationToken::HASH_ALGO, $this->getSessionId($request));
     }
 }

@@ -44,6 +44,7 @@ class JwtSessionIdentificationService extends AbstractSessionIdentificationServi
      */
     public function getSessionId(ServerRequest $request): ?string
     {
+        // When logging in, the access token generated is injected, and it is the session ID
         if (isset($this->accessToken)) {
             return $this->accessToken;
         }

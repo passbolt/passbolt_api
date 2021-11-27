@@ -51,6 +51,14 @@ class RefreshTokenSessionIdentificationService extends AbstractSessionIdentifica
         /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = $service->queryRefreshToken($this->refreshToken)->firstOrFail();
 
-        return $token->getSessionId();
+        return $token->getHashedSessionId();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getHashedSessionId(ServerRequest $request): ?string
+    {
+        return $this->getSessionId($request);
     }
 }

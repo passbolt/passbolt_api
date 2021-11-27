@@ -18,7 +18,7 @@ namespace App\Authenticator;
 
 use Cake\Http\ServerRequest;
 
-class SessionIdentificationService implements SessionIdentificationServiceInterface
+class SessionIdentificationService extends AbstractSessionIdentificationService
 {
     /**
      * @inheritDoc

@@ -28,10 +28,23 @@ use Cake\Http\ServerRequest;
 interface SessionIdentificationServiceInterface
 {
     /**
-     * Find the user session ID
+     * Get the user session ID
      *
      * @param \Cake\Http\ServerRequest $request Request
      * @return string|null
      */
     public function getSessionId(ServerRequest $request): ?string;
+
+    /**
+     * Compares a provided sting with the session ID of the present
+     * Session Identification class.
+     *
+     * This abstraction is useful if the session is provided in the hash format,
+     * e.g. for the JWT refresh token endpoint.
+     *
+     * @param \Cake\Http\ServerRequest $request Server Request
+     * @param string|null $hashedSessionIdToCheck Hashed session, typically found in a token's data
+     * @return bool
+     */
+    public function checkSessionId(ServerRequest $request, ?string $hashedSessionIdToCheck): bool;
 }
