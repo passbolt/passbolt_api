@@ -44,6 +44,7 @@ class AuthenticationToken extends Entity
     public const TYPE_VERIFY_TOKEN = 'verify_token';
 
     public const SESSION_ID_KEY = 'session_id';
+    public const HASH_ALGO = 'sha256';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -105,12 +106,13 @@ class AuthenticationToken extends Entity
     }
 
     /**
-     * Reads the session ID in the token data
+     * Reads the session ID in the token data.
+     * The session ID is stored hashed.
      *
      * @see SessionIdentificationServiceInterface
      * @return string|null
      */
-    public function getSessionId(): ?string
+    public function getHashedSessionId(): ?string
     {
         $data = $this->getJsonDecodedData();
 
@@ -133,7 +135,7 @@ class AuthenticationToken extends Entity
      */
     public function hashAndSetSessionId(string $sessionId): void
     {
-        $hashedSessionId = hash('sha256', $sessionId);
+        $hashedSessionId = hash(self::HASH_ALGO, $sessionId);
         $data = array_merge(
             $this->getJsonDecodedData(),
             [self::SESSION_ID_KEY => $hashedSessionId]
@@ -153,14 +155,11 @@ class AuthenticationToken extends Entity
      */
     public function checkSessionId(?string $sessionIdToCheck): bool
     {
-        $tokenSessionId = $this->getSessionId();
+        $tokenSessionId = $this->getHashedSessionId();
         if ($sessionIdToCheck === null || $tokenSessionId === null) {
             return false;
         }
 
-        $isMatchingUnHashedValid = (hash('sha256', $sessionIdToCheck) === $tokenSessionId);
-        $isMatchingHashedValid = ($sessionIdToCheck === $tokenSessionId);
-
-        return $isMatchingUnHashedValid || $isMatchingHashedValid;
+        return hash(self::HASH_ALGO, $sessionIdToCheck) === $tokenSessionId;
     }
 }
