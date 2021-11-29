@@ -38,6 +38,13 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         parent::setUp();
         ResourceTypeFactory::make()->default()->persist();
         GetOrgLocaleService::clearOrganisationLocale();
+        $this->setEmailNotificationsSetting('password.create', true);
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->restoreEmailNotificationsSettings();
     }
 
     public function testResourcesAdd_Should_Send_Email_In_User_Locale()
