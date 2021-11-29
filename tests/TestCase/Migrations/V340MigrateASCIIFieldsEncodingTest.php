@@ -39,8 +39,12 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
 
                 $colType = $col['Type'];
                 $collation = $col['Collation'];
+                $fullName = $table . '.' . $columnName;
                 // Skip if it is an integer
                 if (substr($colType, 0, 3) === 'int') {
+                    continue;
+                }
+                if (in_array($fullName, $this->getWhiteList())) {
                     continue;
                 }
                 $isSuspiciousType = in_array($colType, $this->getSuspiciousColumnTypes());
@@ -81,11 +85,29 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
         ];
     }
 
+    /**
+     * Column types that should most probably be ascii_general_ci
+     *
+     * @return string[]
+     */
     public function getSuspiciousColumnTypes(): array
     {
         return [
             'char(1)',
             'char(36)',
+        ];
+    }
+
+    /**
+     * Columns that are OK, skip the check there.
+     *
+     * @return string[]
+     */
+    public function getWhiteList(): array
+    {
+        return [
+            'gpgkeys.key_id',
+            'gpgkeys.type',
         ];
     }
 }
