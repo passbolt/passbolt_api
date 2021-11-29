@@ -244,7 +244,7 @@ class JwtRefreshTokenAuthenticatorTest extends TestCase
         $user = $refreshToken->user;
         $this->assertTrue($result->isValid());
 
-        /** @var RefreshTokenSessionIdentificationService $sessionIdentification */
+        /** @var \Passbolt\JwtAuthentication\Authenticator\RefreshTokenSessionIdentificationService $sessionIdentification */
         $sessionIdentification = $container->get(SessionIdentificationServiceInterface::class);
         $successfulAuthentication = $this->createMock(AuthenticationService::class);
         $successfulAuthentication->method('getResult')->willReturn($result);
