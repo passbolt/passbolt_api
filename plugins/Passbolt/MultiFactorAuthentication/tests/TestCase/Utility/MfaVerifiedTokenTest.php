@@ -88,7 +88,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $uac = UserFactory::make()->persistedUAC();
         $sessionId = uniqid();
         $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
-        $stubSessionIdentifier->method('getSessionId')->willReturn($sessionId);
+        $stubSessionIdentifier->method('getSessionIdentifier')->willReturn($sessionId);
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         $success = MfaVerifiedToken::check($uac, $token, $stubSessionIdentifier, new ServerRequest());
         $this->assertTrue($success);
@@ -103,7 +103,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $uac = UserFactory::make()->persistedUAC();
         $sessionId = 'Foo';
         $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
-        $stubSessionIdentifier->method('getSessionId')->willReturn('Bar');
+        $stubSessionIdentifier->method('getSessionIdentifier')->willReturn('Bar');
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         $success = MfaVerifiedToken::check($uac, $token, $stubSessionIdentifier, new ServerRequest());
         $this->assertFalse($success);
@@ -131,7 +131,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $uac2 = UserFactory::make()->persistedUAC();
         $sessionId = 'Foo';
         $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
-        $stubSessionIdentifier->method('getSessionId')->willReturn($sessionId);
+        $stubSessionIdentifier->method('getSessionIdentifier')->willReturn($sessionId);
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         $this->assertTrue(MfaVerifiedToken::check($uac, $token, $stubSessionIdentifier, new ServerRequest()));
         $this->assertFalse(MfaVerifiedToken::check($uac2, $token));
@@ -145,7 +145,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     {
         $uac = UserFactory::make()->persistedUAC();
         $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
-        $stubSessionIdentifier->method('getSessionId')->willReturn('Foo');
+        $stubSessionIdentifier->method('getSessionIdentifier')->willReturn('Foo');
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, 'Bar');
         $success = MfaVerifiedToken::check($uac, $token, $stubSessionIdentifier, new ServerRequest());
         $this->assertFalse($success);
@@ -190,7 +190,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $uac = UserFactory::make()->persistedUAC();
         $sessionId = 'Foo';
         $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
-        $stubSessionIdentifier->method('getSessionId')->willReturn($sessionId);
+        $stubSessionIdentifier->method('getSessionIdentifier')->willReturn($sessionId);
         $entityData = [
             'user_id' => $uac->getId(),
             'token' => UuidFactory::uuid(),

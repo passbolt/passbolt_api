@@ -78,7 +78,7 @@ abstract class MfaSetupController extends MfaController
         string $provider,
         SessionIdentificationServiceInterface $sessionIdentificationService
     ) {
-        $sessionId = $sessionIdentificationService->getSessionId($this->getRequest());
+        $sessionId = $sessionIdentificationService->getSessionIdentifier($this->getRequest());
         $token = MfaVerifiedToken::get($this->User->getAccessControl(), $provider, $sessionId);
         $secure = Configure::read('passbolt.security.cookies.secure') || $this->getRequest()->is('ssl');
         $cookie = MfaVerifiedCookie::get($token, null, $secure);

@@ -118,7 +118,7 @@ class MfaVerifiedToken
         // Check Session ID
         if (
             isset($sessionIdentificationService) &&
-            $sessionIdentificationService->checkSessionId($request, $token->getHashedSessionId())
+            $sessionIdentificationService->checkAuthenticationToken($request, $token)
         ) {
             return true;
         }
