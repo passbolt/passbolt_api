@@ -18,7 +18,6 @@ namespace Passbolt\JwtAuthentication\Service\RefreshToken;
 
 use App\Model\Entity\AuthenticationToken;
 use Cake\Core\Configure;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Cookie\Cookie;
 use Cake\I18n\FrozenTime;
@@ -27,6 +26,8 @@ use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
+use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\UserDeactivatedException;
+use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\UserDeletedException;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -73,40 +74,15 @@ abstract class RefreshTokenAbstractService
      * Throw a security error if this token is inactive.
      * Set it to inactive.
      *
-     * @param string $token Refresh token to retrieve.
-     * @param string $userId User ID.
+     * @param \App\Model\Entity\AuthenticationToken $refreshToken User ID.
      * @return \App\Model\Entity\AuthenticationToken
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException if the token is not found
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException if the token was already consumed
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException if the token is expired
      */
-    protected function consumeToken(string $token, string $userId): AuthenticationToken
+    protected function consumeToken(AuthenticationToken $refreshToken): AuthenticationToken
     {
-        try {
-            /** @var \App\Model\Entity\AuthenticationToken|null $refreshToken */
-            $refreshToken = $this->queryRefreshToken($token)
-                ->where([
-                    'user_id' => $userId,
-                ])
-                ->firstOrFail();
-        } catch (RecordNotFoundException $e) {
-            throw new RefreshTokenNotFoundException(
-                __('No active refresh token matching the request could be found.')
-            );
-        }
-
-        if ($refreshToken->isNotActive()) {
-            throw new ConsumedRefreshTokenAccessException(
-                __('The refresh token provided was already used.')
-            );
-        }
-
-        if ($refreshToken->isExpired()) {
-            throw new ExpiredRefreshTokenAccessException(
-                __('Expired refresh token provided.')
-            );
-        }
-
+        $this->throwSecurityExceptionsOnInvalidRefreshToken($refreshToken);
         $refreshToken->set('active', false);
 
         return $this->AuthenticationTokens->saveOrFail($refreshToken);
@@ -117,7 +93,7 @@ abstract class RefreshTokenAbstractService
      * @return void
      * @throws \InvalidArgumentException if the $token is not valid
      */
-    protected function validateRefreshToken($token): void
+    public function validateRefreshToken($token): void
     {
         if (!Validation::uuid($token)) {
             throw new \InvalidArgumentException(__('The refresh token should be a valid UUID.'));
@@ -129,22 +105,90 @@ abstract class RefreshTokenAbstractService
      * @return void
      * @throws \InvalidArgumentException if the $id is not valid
      */
-    protected function validateUserId($userId): void
+    public function validateUserId($userId): void
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('This is not a valid user id.'));
+            throw new \InvalidArgumentException(__('The user ID should be a valid UUID.'));
         }
     }
 
     /**
-     * @param string $token Refresh token
+     * @param ?string $token Refresh token
      * @return \Cake\ORM\Query
      */
-    public function queryRefreshToken(string $token): Query
+    public function queryRefreshToken(?string $token): Query
     {
+        $this->validateRefreshToken($token);
+
         return $this->AuthenticationTokens->find()->where([
             'token' => $token,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
         ]);
+    }
+
+    /**
+     * @param string $token Refresh token
+     * @param string $userId User ID
+     * @return \Cake\ORM\Query
+     * @throws \InvalidArgumentException if the $id is not valid
+     */
+    public function queryRefreshTokenWithUserId(string $token, string $userId): Query
+    {
+        $this->validateUserId($userId);
+
+        return $this
+            ->queryRefreshToken($token)
+            ->where([$this->AuthenticationTokens->aliasField('user_id') => $userId]);
+    }
+
+    /**
+     * @param string $token token to retrieve
+     * @param string $userId user ID
+     * @return \App\Model\Entity\AuthenticationToken Refresh token
+     * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException if the token is not found
+     * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException if the token was already consumed
+     * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException if the token is expired
+     */
+    public function getActiveRefreshToken(string $token, string $userId): AuthenticationToken
+    {
+        /** @var \App\Model\Entity\AuthenticationToken|null $refreshToken */
+        $refreshToken = $this->queryRefreshTokenWithUserId($token, $userId)->contain('Users')->first();
+
+        if ($refreshToken === null) {
+            throw new RefreshTokenNotFoundException();
+        }
+
+        // Check if the user was not deleted or deactivated since the refresh token was issued.
+        $user = $refreshToken->user;
+        if ($user->deleted) {
+            throw new UserDeletedException();
+        } elseif (!$user->active) {
+            throw new UserDeactivatedException();
+        }
+
+        $this->throwSecurityExceptionsOnInvalidRefreshToken($refreshToken);
+
+        return $refreshToken;
+    }
+
+    /**
+     * @param \App\Model\Entity\AuthenticationToken $refreshToken Refresh token
+     * @return void
+     * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException if the token was already consumed
+     * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException if the token is expired
+     */
+    public function throwSecurityExceptionsOnInvalidRefreshToken(AuthenticationToken $refreshToken): void
+    {
+        if ($refreshToken->isNotActive()) {
+            throw new ConsumedRefreshTokenAccessException(
+                __('The refresh token provided was already used.')
+            );
+        }
+
+        if ($refreshToken->isExpired()) {
+            throw new ExpiredRefreshTokenAccessException(
+                __('Expired refresh token provided.')
+            );
+        }
     }
 }

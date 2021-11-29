@@ -167,7 +167,7 @@ abstract class AppIntegrationTestCase extends TestCase
     }
 
     /**
-     * Injects in the DIC an Session Indentification Interface with the provided ID.
+     * Injects in the DIC a session identification Interface with the provided ID.
      * In Session, will return the session ID
      * In JWT, will return the access token
      * In JWT refresh token, will return the hashed access token associated to the refresh token
@@ -179,7 +179,7 @@ abstract class AppIntegrationTestCase extends TestCase
     {
         $this->mockService(SessionIdentificationServiceInterface::class, function () use ($sessionId) {
             $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
-            $stubSessionIdentifier->method('getSessionId')->willReturn($sessionId);
+            $stubSessionIdentifier->method('getSessionIdentifier')->willReturn($sessionId);
 
             return $stubSessionIdentifier;
         });

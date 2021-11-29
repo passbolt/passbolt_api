@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Model\Entity;
 
+use App\Service\AuthenticationTokens\AuthenticationTokensSessionService;
 use App\Utility\AuthToken\AuthTokenExpiry;
 use Cake\ORM\Entity;
 
@@ -44,7 +45,6 @@ class AuthenticationToken extends Entity
     public const TYPE_VERIFY_TOKEN = 'verify_token';
 
     public const SESSION_ID_KEY = 'session_id';
-    public const HASH_ALGO = 'sha256';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -135,7 +135,7 @@ class AuthenticationToken extends Entity
      */
     public function hashAndSetSessionId(string $sessionId): void
     {
-        $hashedSessionId = hash(self::HASH_ALGO, $sessionId);
+        $hashedSessionId = (new AuthenticationTokensSessionService())->hash($sessionId);
         $data = array_merge(
             $this->getJsonDecodedData(),
             [self::SESSION_ID_KEY => $hashedSessionId]
@@ -148,18 +148,13 @@ class AuthenticationToken extends Entity
      * Checks that the session ID provided
      * matches the hashed session ID in data->session_id.
      *
-     * The session ID can be non hashed or hashed.
+     * The session ID can be a string or another authentication token.
      *
-     * @param string|null $sessionIdToCheck Session ID to check
+     * @param \App\Model\Entity\AuthenticationToken|string|null $sessionIdentifier Session ID to check
      * @return bool
      */
-    public function checkSessionId(?string $sessionIdToCheck): bool
+    public function checkSessionId($sessionIdentifier): bool
     {
-        $tokenSessionId = $this->getHashedSessionId();
-        if ($sessionIdToCheck === null || $tokenSessionId === null) {
-            return false;
-        }
-
-        return hash(self::HASH_ALGO, $sessionIdToCheck) === $tokenSessionId;
+        return (new AuthenticationTokensSessionService())->checkSession($this, $sessionIdentifier);
     }
 }

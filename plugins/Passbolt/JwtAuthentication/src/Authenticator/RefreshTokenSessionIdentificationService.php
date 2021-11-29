@@ -17,13 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Authenticator;
 
 use App\Authenticator\AbstractSessionIdentificationService;
+use App\Model\Entity\AuthenticationToken;
 use Cake\Http\ServerRequest;
-use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenFetchUserService;
 
 class RefreshTokenSessionIdentificationService extends AbstractSessionIdentificationService
 {
     /**
-     * @var string
+     * @var \App\Model\Entity\AuthenticationToken
      */
     private $refreshToken;
 
@@ -31,9 +31,9 @@ class RefreshTokenSessionIdentificationService extends AbstractSessionIdentifica
      * On the refresh token endpoint, the session ID is read as
      * the access token associated to the provided refresh token.
      *
-     * @param string $refreshToken Refresh Token
+     * @param \App\Model\Entity\AuthenticationToken $refreshToken Refresh Token
      */
-    public function __construct(string $refreshToken)
+    public function __construct(AuthenticationToken $refreshToken)
     {
         $this->refreshToken = $refreshToken;
     }
@@ -41,24 +41,12 @@ class RefreshTokenSessionIdentificationService extends AbstractSessionIdentifica
     /**
      * @inheritDoc
      */
-    public function getSessionId(ServerRequest $request): ?string
+    public function getSessionIdentifier(ServerRequest $request): ?AuthenticationToken
     {
         if (!$this->isAuthenticated($request)) {
             return null;
         }
 
-        $service = new RefreshTokenFetchUserService($this->refreshToken);
-        /** @var \App\Model\Entity\AuthenticationToken $token */
-        $token = $service->queryRefreshToken($this->refreshToken)->firstOrFail();
-
-        return $token->getHashedSessionId();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getHashedSessionId(ServerRequest $request): ?string
-    {
-        return $this->getSessionId($request);
+        return $this->refreshToken;
     }
 }
