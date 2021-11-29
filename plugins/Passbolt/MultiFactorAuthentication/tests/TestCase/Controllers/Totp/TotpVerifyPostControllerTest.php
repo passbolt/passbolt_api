@@ -16,9 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
+use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\UserFactory;
 use OTPHP\Factory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 {
@@ -61,9 +65,50 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $otp = Factory::loadFromProvisioningUri($uri);
+        $sessionId = 'Foo';
+        $this->mockSessionId($sessionId);
         $this->post('/mfa/verify/totp.json?api-version=v2', [
             'totp' => $otp->now(),
         ]);
         $this->assertResponseOk();
+
+        /** @var AuthenticationToken $mfaToken */
+        $mfaToken = AuthenticationTokenFactory::find()
+            ->where([
+                'type' => AuthenticationToken::TYPE_MFA,
+                'user_id' => $user->id,
+            ])->firstOrFail();
+
+        $this->assertTrue($mfaToken->checkSessionId($sessionId));
+        $this->assertCookie($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerifys
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testMfaVerifyPostTotpUriSuccessJson_JwtLogin()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $accessToken = $this->createJwtTokenAndSetInHeader($user->id);
+        [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $otp = Factory::loadFromProvisioningUri($uri);
+
+        $this->post('/mfa/verify/totp.json?api-version=v2', [
+            'totp' => $otp->now(),
+        ]);
+        $this->assertResponseOk();
+
+        /** @var AuthenticationToken $mfaToken */
+        $mfaToken = AuthenticationTokenFactory::find()
+            ->where([
+                'type' => AuthenticationToken::TYPE_MFA,
+                'user_id' => $user->id,
+            ])->orderDesc('created')->firstOrFail();
+
+        $this->assertTrue($mfaToken->checkSessionId($accessToken));
+        $this->assertCookie($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }
