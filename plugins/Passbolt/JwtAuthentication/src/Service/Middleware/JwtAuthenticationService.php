@@ -51,7 +51,7 @@ class JwtAuthenticationService extends AuthenticationService
         if ($this->isLoginEndpointPost($request)) {
             $this->loadAuthenticator('Passbolt/JwtAuthentication.GpgJwt');
         } elseif ($this->isRefreshEndpointPost($request)) {
-            $this->loadAuthenticator('Passbolt/JwtAuthentication.JwtRefresh');
+            $this->loadAuthenticator('Passbolt/JwtAuthentication.JwtRefreshToken');
         } else {
             $this->loadAuthenticator('Authentication.Jwt', [
                 'header' => self::JWT_HEADER,
