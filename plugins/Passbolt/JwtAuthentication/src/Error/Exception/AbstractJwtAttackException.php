@@ -71,7 +71,7 @@ abstract class AbstractJwtAttackException extends AbstractExceptionWithEmailEven
      */
     public function getUserEmailTemplate(): string
     {
-        return 'JwtAuthentication.User/jwt_attack';
+        return 'Passbolt/JwtAuthentication.User/jwt_attack';
     }
 
     /**
@@ -79,7 +79,7 @@ abstract class AbstractJwtAttackException extends AbstractExceptionWithEmailEven
      */
     public function getAdminEmailTemplate(): string
     {
-        return 'JwtAuthentication.Admin/jwt_attack';
+        return 'Passbolt/JwtAuthentication.Admin/jwt_attack';
     }
 
     /**

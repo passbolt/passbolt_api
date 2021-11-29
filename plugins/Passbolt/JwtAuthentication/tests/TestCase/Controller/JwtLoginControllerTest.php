@@ -113,8 +113,9 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailIsInQueue([
             'email' => $user->username,
             'subject' => 'Authentication security alert',
-            'template' => 'JwtAuthentication.User/jwt_attack',
+            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
         ]);
+        $this->assertEmailInBatchContains('Verify token has been already used in the past.');
 
         // Assert login action log
         $this->assertOneActionLog();

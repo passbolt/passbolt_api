@@ -84,7 +84,7 @@ class EmailPreviewFactory
      * @see Email::send()
      * @see DebugTransport::send()
      */
-    private function renderEmailContent(Mailer $email)
+    private function renderEmailContent(Mailer $email): EmailPreview
     {
         $email->setTransport('Debug');
 

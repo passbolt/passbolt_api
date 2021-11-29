@@ -66,7 +66,7 @@ class PreviewEmailBatchService
      * Get and send the next emails batch from the email queue. The size of the email batch is determined by $limit.
      *
      * @param int $limit Size of the emails batch.
-     * @return array
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview[]
      * @throws \Exception
      */
     public function previewNextEmailsBatch(int $limit = 10): array
