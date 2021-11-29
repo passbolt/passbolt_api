@@ -37,7 +37,7 @@ trait JwtAuthTestTrait
     public function setJwtTokenInHeader(string $token): void
     {
         $this->configRequest([
-            'headers' => [JwtAuthenticationService::JWT_HEADER => $token],
+            'headers' => [JwtAuthenticationService::JWT_HEADER => 'Bearer ' . $token], // Prefix with Bearer
         ]);
     }
 

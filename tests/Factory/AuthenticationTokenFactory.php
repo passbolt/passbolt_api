@@ -132,4 +132,18 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
     {
         return $this->patchData(['user_id' => $userId]);
     }
+
+    /**
+     * @param string $sessionId Session Id
+     * @return AuthenticationTokenFactory|CakephpBaseFactory
+     */
+    public function setSessionId(string $sessionId)
+    {
+        $entities = $this->getEntities();
+        foreach ($entities as $entity) {
+            $entity->hashAndSetSessionId($sessionId);
+        }
+
+        return self::make($entities);
+    }
 }
