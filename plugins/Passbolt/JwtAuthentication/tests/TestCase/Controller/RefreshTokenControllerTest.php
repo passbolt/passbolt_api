@@ -177,17 +177,19 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailIsInQueue([
             'email' => $user->username,
             'subject' => 'Authentication security alert',
-            'template' => 'JwtAuthentication.User/jwt_attack',
+            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
         ]);
         foreach ($admins as $i => $admin) {
             if ($i === 0) {
+                $this->assertEmailInBatchContains('Please get in touch with one of your administrators.');
                 continue;
             }
             $this->assertEmailIsInQueue([
                 'email' => $admin->username,
                 'subject' => 'Authentication security alert',
-                'template' => 'JwtAuthentication.Admin/jwt_attack',
+                'template' => 'Passbolt/JwtAuthentication.Admin/jwt_attack',
             ]);
+            $this->assertEmailInBatchContains('This is a potential security issue. Please investigate!', $i);
         }
     }
 
@@ -217,7 +219,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailIsInQueue([
             'email' => $user->username,
             'subject' => 'Authentication security alert',
-            'template' => 'JwtAuthentication.User/jwt_attack',
+            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
         ]);
         foreach ($admins as $i => $admin) {
             if ($i === 0) {
@@ -226,7 +228,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
             $this->assertEmailIsInQueue([
                 'email' => $admin->username,
                 'subject' => 'Authentication security alert',
-                'template' => 'JwtAuthentication.Admin/jwt_attack',
+                'template' => 'Passbolt/JwtAuthentication.Admin/jwt_attack',
             ]);
         }
     }
@@ -259,7 +261,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailIsInQueue([
             'email' => $user->username,
             'subject' => 'Authentication security alert',
-            'template' => 'JwtAuthentication.User/jwt_attack',
+            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
         ]);
         foreach ($admins as $i => $admin) {
             if ($i === 0) {
@@ -268,7 +270,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
             $this->assertEmailIsInQueue([
                 'email' => $admin->username,
                 'subject' => 'Authentication security alert',
-                'template' => 'JwtAuthentication.Admin/jwt_attack',
+                'template' => 'Passbolt/JwtAuthentication.Admin/jwt_attack',
             ]);
         }
     }

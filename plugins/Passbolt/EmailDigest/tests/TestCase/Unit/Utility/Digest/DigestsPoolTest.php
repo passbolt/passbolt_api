@@ -36,6 +36,13 @@ class DigestsPoolTest extends TestCase
         parent::setUp();
     }
 
+    public function tearDown(): void
+    {
+        unset($this->digestsPool);
+        DigestsPool::clearInstance();
+        parent::tearDown();
+    }
+
     public function testEmailDigestDigestsPoolAddDigest()
     {
         // Create a lambda digest

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Lib\Model;
 
 use Cake\Core\Configure;
+use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
@@ -32,7 +33,7 @@ trait EmailQueueTrait
      */
     protected function assertEmailIsInQueue(array $properties)
     {
-        $this->assertTrue(EmailQueueFactory::count() > 0, 'The email is not in the email queue.');
+        $this->assertTrue(EmailQueueFactory::find()->where($properties)->count() === 1, 'The email is not in the email queue.');
     }
 
     /**
@@ -116,5 +117,23 @@ trait EmailQueueTrait
         foreach ($emails as $email) {
             $this->assertTextEquals($expectedSubject, $email->get('subject'));
         }
+    }
+
+    /**
+     * Asserts that a string is found in an email of the email queue.
+     *
+     * @param string $string String to search for
+     * @param int $i Email position in the queue (start with 0), default 0
+     * @param string $message Error message
+     * @throws \Exception If the test fails.
+     */
+    protected function assertEmailInBatchContains(string $string, int $i = 0, string $message = ''): void
+    {
+        $previewer = new PreviewEmailBatchService();
+        if (!isset($previewer->previewNextEmailsBatch()[$i])) {
+            $this->fail("The email queue does not have an email at index $i");
+        }
+        $email = $previewer->previewNextEmailsBatch()[$i];
+        $this->assertStringContainsString($string, $email->getContent(), $message);
     }
 }
