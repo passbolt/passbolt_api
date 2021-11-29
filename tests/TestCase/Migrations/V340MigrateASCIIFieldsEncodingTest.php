@@ -50,7 +50,6 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
                 if ($isId || $isSuspiciousType || $isSuspiciousName) {
                     if ($collation != 'ascii_general_ci') {
                         $errors[] = "Column '$columnName' in table '$table' is no ascii_general_ci but '$collation'";
-                        debug($colType);
                     }
                 }
             }
