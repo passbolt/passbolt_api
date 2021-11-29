@@ -82,6 +82,9 @@ build-yum-7:
   rpm --resign $COMPONENT/$PACKAGE_ARCH/*rpm
   createrepo --update $COMPONENT
   google-cloud-sdk/bin/gsutil -m rsync -r -d $COMPONENT "gs://$REPO"
+  gsutil -m setmeta -r -h "Content-Type:text/html" \
+    -h "Cache-Control:no-cache" \
+    "gs://$REPO"
 
 .publish-rpm:
   image: rockylinux/rockylinux:8
@@ -92,7 +95,7 @@ build-yum-7:
     COMPONENT: "testing"
     BUCKET_NAME: "artifactory.passbolt.dev"
     EL_VERSION: "el8"
-    REPO_PATH: "$PASSBOLT_FLAVOUR/yum/$EL_VERSION"
+    REPO_PATH: "$PASSBOLT_FLAVOUR/rpm/$EL_VERSION"
     REPO: "$BUCKET_NAME/$REPO_PATH/$COMPONENT"
     PACKAGE_ARCH: "noarch"
   before_script: 
