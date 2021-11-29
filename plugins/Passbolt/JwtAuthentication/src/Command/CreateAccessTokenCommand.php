@@ -22,9 +22,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
-use Cake\Http\ServerRequest;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
-use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenCreateService;
 
 /**
  * Class JwtCreateTokenCommand
@@ -84,15 +82,9 @@ class CreateAccessTokenCommand extends PassboltCommand
             $io->abort($e->getMessage());
         }
         $token = (new JwtTokenCreateService())->createToken($user->id, $expiry);
-        $refreshToken = (new RefreshTokenCreateService())
-            ->createToken(new ServerRequest(), $user->id, $token);
         $io->out("Access token for {$user->username} valid {$expiry}:");
         $io->hr();
         $io->success($token);
-        $io->hr();
-        $io->out("Refresh token for {$user->username}:");
-        $io->hr();
-        $io->success($refreshToken->token);
         $io->hr();
 
         return $this->successCode();
