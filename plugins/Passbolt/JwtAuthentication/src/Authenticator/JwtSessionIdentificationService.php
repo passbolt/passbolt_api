@@ -52,6 +52,8 @@ class JwtSessionIdentificationService extends AbstractSessionIdentificationServi
             return null;
         }
 
-        return $request->getHeaderLine(JwtAuthenticationService::JWT_HEADER);
+        $token = $request->getHeaderLine(JwtAuthenticationService::JWT_HEADER);
+
+        return str_replace('Bearer ', '', $token);
     }
 }
