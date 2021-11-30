@@ -34,7 +34,7 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
             $columns = $schemaCollection->describe($table, ['forceRefresh' => true])->columns();
             foreach ($columns as $columnName) {
                 $col = ConnectionManager::get('test')
-                    ->execute("SHOW FULL COLUMNS FROM $table WHERE Field = '$columnName';")
+                    ->execute("SHOW FULL COLUMNS FROM `$table` WHERE Field = '$columnName';")
                     ->fetch('assoc');
 
                 $colType = $col['Type'];
