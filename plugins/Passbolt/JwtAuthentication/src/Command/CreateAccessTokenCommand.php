@@ -125,6 +125,7 @@ class CreateAccessTokenCommand extends PassboltCommand
      */
     protected function getExpiry(Arguments $args): string
     {
+        /** @var string $expiry */
         $expiry = $args->getOption('expiry');
         if (is_numeric($expiry)) {
             $expiry .= ' minutes';

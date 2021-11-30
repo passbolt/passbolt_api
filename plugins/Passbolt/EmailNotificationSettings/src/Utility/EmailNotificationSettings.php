@@ -40,19 +40,19 @@ class EmailNotificationSettings
     private static $settings;
 
     /**
-     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource
+     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource|null
      */
-    private static $configSettingsSource;
+    private static $configSettingsSource = null;
 
     /**
-     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource
+     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource|null
      */
-    private static $dbSettingsSource;
+    private static $dbSettingsSource = null;
 
     /**
-     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource
+     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource|null
      */
-    private static $defaultSettingsSource;
+    private static $defaultSettingsSource = null;
 
     /**
      * Flush the cache version of the settings.
@@ -61,6 +61,8 @@ class EmailNotificationSettings
      */
     public static function flushCache()
     {
+        static::$configSettingsSource = null;
+        static::$defaultSettingsSource = null;
         static::$settings = null;
     }
 

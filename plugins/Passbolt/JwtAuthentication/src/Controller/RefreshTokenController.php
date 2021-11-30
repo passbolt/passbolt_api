@@ -118,7 +118,7 @@ class RefreshTokenController extends AppController
     ): string {
         $accessToken = (new JwtTokenCreateService())->createToken($userId);
         $refreshService = new RefreshTokenRenewalService($userId, $oldRefreshToken, $accessToken);
-        $refreshedToken = $refreshService->renewToken();
+        $refreshedToken = $refreshService->renewToken($this->getRequest());
         $refreshHttpOnlySecureCookie = $refreshService->createHttpOnlySecureCookie($refreshedToken);
         $this->setResponse($this->getResponse()->withCookie($refreshHttpOnlySecureCookie));
 

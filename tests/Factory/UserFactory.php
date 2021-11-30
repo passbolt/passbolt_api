@@ -19,7 +19,7 @@ namespace App\Test\Factory;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
-use Cake\Chronos\Chronos;
+use Cake\I18n\Time;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
@@ -58,8 +58,8 @@ class UserFactory extends CakephpBaseFactory
                 'username' => $faker->userName() . '@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Time::now()->subDay($faker->randomNumber(4)),
+                'modified' => Time::now()->subDay($faker->randomNumber(4)),
             ];
         });
 

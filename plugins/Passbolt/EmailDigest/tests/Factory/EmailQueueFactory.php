@@ -10,6 +10,9 @@ use Faker\Generator;
 
 /**
  * EmailQueueFactory
+ *
+ * @method \Cake\Datasource\EntityInterface persist()
+ * @method \Cake\Datasource\EntityInterface getEntity()
  */
 class EmailQueueFactory extends CakephpBaseFactory
 {

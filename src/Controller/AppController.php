@@ -167,7 +167,7 @@ class AppController extends Controller
     {
         $apiVersion = $this->request->getQuery('api-version');
         // Default to v2 in v3
-        if (!isset($apiVersion)) {
+        if (!isset($apiVersion) || !is_string($apiVersion)) {
             return 'v2';
         }
 

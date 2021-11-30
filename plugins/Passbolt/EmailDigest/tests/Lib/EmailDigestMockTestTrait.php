@@ -20,6 +20,7 @@ use App\Model\Entity\Profile;
 use App\Model\Entity\User;
 use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Utility\Digest\AbstractDigest;
+use Passbolt\EmailDigest\Utility\Digest\DigestInterface;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
 
 trait EmailDigestMockTestTrait
@@ -29,9 +30,9 @@ trait EmailDigestMockTestTrait
      *
      * @param bool $canAddToDigests Returned by canAddToDigests method of the digest.
      * @param array $digests Some email digests that the digest must return
-     * @return DigestInterface
+     * @return \Passbolt\EmailDigest\Utility\Digest\DigestInterface
      */
-    public function createDigest(bool $canAddToDigests, array $digests)
+    public function createDigest(bool $canAddToDigests, array $digests): DigestInterface
     {
         return new class ($canAddToDigests, $digests) extends AbstractDigest
         {
@@ -88,7 +89,7 @@ trait EmailDigestMockTestTrait
      * @param array|null $properties props
      * @return EmailDigest
      */
-    protected function createEmailDigest(array $emailsData = [], ?array $properties = []): EmailDigest
+    protected function createEmailDigest(?array $emailsData = [], ?array $properties = []): EmailDigest
     {
         $defaultProperties = [
             'recipient' => 'digest_recipient@passbolt.com',

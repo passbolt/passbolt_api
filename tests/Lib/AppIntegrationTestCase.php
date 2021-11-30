@@ -18,7 +18,6 @@ namespace App\Test\Lib;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\CsrfProtectionMiddleware;
-use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\AvatarsModelTrait;
@@ -39,9 +38,11 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAction;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
+use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
 
 abstract class AppIntegrationTestCase extends TestCase
 {
@@ -75,6 +76,7 @@ abstract class AppIntegrationTestCase extends TestCase
         Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
         OpenPGPBackendFactory::reset();
         UserAction::destroy();
+        DigestsPool::clearInstance();
     }
 
     /**
@@ -91,24 +93,36 @@ abstract class AppIntegrationTestCase extends TestCase
      *
      * @param string $userFirstName The user first name.
      * @return void
+     * @deprecated use logInAs.
      */
     public function authenticateAs($userFirstName)
     {
-        $data = [
-            'id' => UuidFactory::uuid('user.id.' . $userFirstName),
-            'username' => $userFirstName . '@passbolt.com',
-            'profile' => [
-                'first_name' => $userFirstName,
-                'last_name' => 'testing',
-            ],
-            'role' => [
-                'name' => Role::USER,
-            ],
-        ];
-        if ($userFirstName === 'admin') {
-            $data['role']['name'] = Role::ADMIN;
+        $userId = UuidFactory::uuid('user.id.' . $userFirstName);
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        $user = $Users->find()
+            ->where(['Users.id' => $userId])
+            ->contain(['Profiles', 'Roles'])
+            ->first();
+
+        if ($user === null) {
+            $user = UserFactory::make([
+                'id' => $userId,
+                'username' => $userFirstName . '@passbolt.com',
+                'profile' => [
+                    'first_name' => $userFirstName,
+                    'last_name' => 'testing',
+                ],
+            ]);
+            if ($userFirstName === 'admin') {
+                $user->admin();
+            } else {
+                $user->user();
+            }
+
+            $user = $user->persist();
         }
-        $this->session(['Auth' => $data]);
+
+        $this->logInAs($user);
     }
 
     /**
@@ -116,7 +130,7 @@ abstract class AppIntegrationTestCase extends TestCase
      */
     public function logInAs(User $user)
     {
-        $this->session(['Auth' => $user]);
+        $this->session(['Auth' => compact('user')]);
     }
 
     /**

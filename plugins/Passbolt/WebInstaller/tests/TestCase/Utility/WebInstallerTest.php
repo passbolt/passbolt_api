@@ -157,6 +157,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $webInstaller->setSettings('first_user', $userSettings);
         $webInstaller->createFirstUser();
 
+        /** @var \App\Model\Entity\User $user */
         $user = $Users->find()
             ->where(['username' => 'aurore@passbolt.com'])
             ->contain(['Profiles', 'AuthenticationTokens'])

@@ -23,7 +23,6 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
-use Passbolt\JwtAuthentication\Error\Exception\AbstractJwtAttackException;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 
@@ -156,6 +155,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
     public function testAuthRefreshTokenControllerWithExpiredCookie()
     {
         $nAdmins = 3;
+        /** @var array $admins */
         $admins = UserFactory::make($nAdmins)->admin()->persist();
         // We suppose one of the admins is hacked, and will check that 3 mails, and not 4 get sent.
         $user = $admins[0];
@@ -176,18 +176,20 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailQueueCount($nAdmins);
         $this->assertEmailIsInQueue([
             'email' => $user->username,
-            'subject' => AbstractJwtAttackException::USER_EMAIL_SUBJECT,
-            'template' => 'JwtAuthentication.User/jwt_attack',
+            'subject' => 'Authentication security alert',
+            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
         ]);
         foreach ($admins as $i => $admin) {
             if ($i === 0) {
+                $this->assertEmailInBatchContains('Please get in touch with one of your administrators.');
                 continue;
             }
             $this->assertEmailIsInQueue([
                 'email' => $admin->username,
-                'subject' => AbstractJwtAttackException::ADMIN_EMAIL_SUBJECT,
-                'template' => 'JwtAuthentication.Admin/jwt_attack',
+                'subject' => 'Authentication security alert',
+                'template' => 'Passbolt/JwtAuthentication.Admin/jwt_attack',
             ]);
+            $this->assertEmailInBatchContains('This is a potential security issue. Please investigate!', $i);
         }
     }
 
@@ -216,8 +218,8 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailQueueCount($nAdmins);
         $this->assertEmailIsInQueue([
             'email' => $user->username,
-            'subject' => AbstractJwtAttackException::USER_EMAIL_SUBJECT,
-            'template' => 'JwtAuthentication.User/jwt_attack',
+            'subject' => 'Authentication security alert',
+            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
         ]);
         foreach ($admins as $i => $admin) {
             if ($i === 0) {
@@ -225,8 +227,8 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
             }
             $this->assertEmailIsInQueue([
                 'email' => $admin->username,
-                'subject' => AbstractJwtAttackException::ADMIN_EMAIL_SUBJECT,
-                'template' => 'JwtAuthentication.Admin/jwt_attack',
+                'subject' => 'Authentication security alert',
+                'template' => 'Passbolt/JwtAuthentication.Admin/jwt_attack',
             ]);
         }
     }
@@ -236,6 +238,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $nAdmins = 3;
         $admins = UserFactory::make($nAdmins)->admin()->persist();
         // We suppose one of the admins is hacked, and will check that 3 mails, and not 4 get sent.
+        /** @var array $admins */
         $user = $admins[0];
         $oldRefreshToken = AuthenticationTokenFactory::make()
             ->inactive()
@@ -257,8 +260,8 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailQueueCount($nAdmins);
         $this->assertEmailIsInQueue([
             'email' => $user->username,
-            'subject' => AbstractJwtAttackException::USER_EMAIL_SUBJECT,
-            'template' => 'JwtAuthentication.User/jwt_attack',
+            'subject' => 'Authentication security alert',
+            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
         ]);
         foreach ($admins as $i => $admin) {
             if ($i === 0) {
@@ -266,8 +269,8 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
             }
             $this->assertEmailIsInQueue([
                 'email' => $admin->username,
-                'subject' => AbstractJwtAttackException::ADMIN_EMAIL_SUBJECT,
-                'template' => 'JwtAuthentication.Admin/jwt_attack',
+                'subject' => 'Authentication security alert',
+                'template' => 'Passbolt/JwtAuthentication.Admin/jwt_attack',
             ]);
         }
     }

@@ -49,7 +49,7 @@ trait ActionLogsTrait
      */
     public function getDummyActionLogEntity(?array $data = [], ?array $options = []): ActionLog
     {
-        /** @var ActionLogsTable $actionLogsTable */
+        /** @var \Passbolt\Log\Model\Table\ActionLogsTable $actionLogsTable */
         $actionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
         $defaultOptions = [
             'checkRules' => true,

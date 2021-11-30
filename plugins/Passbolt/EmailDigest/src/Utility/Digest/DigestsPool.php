@@ -31,9 +31,9 @@ class DigestsPool
     public const LOWEST_PRIORITY = -1;
 
     /**
-     * @var static
+     * @var static|null
      */
-    private static $instance;
+    private static $instance = null;
 
     /**
      * @var array
@@ -59,6 +59,16 @@ class DigestsPool
         }
 
         return static::$instance;
+    }
+
+    /**
+     * Clear the singleton of the DigestsPool
+     *
+     * @return void
+     */
+    public static function clearInstance(): void
+    {
+        static::$instance = null;
     }
 
     /**

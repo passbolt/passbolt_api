@@ -136,7 +136,7 @@ class SecretsUpdateSecretsService
      * @param int $rowIndexRef The row index in the request data
      * @param string $resourceId The target resource
      * @param array $data The secrets data
-     * @return \App\Model\Entity\Secret
+     * @return \App\Model\Entity\Secret|null
      * @throws \Exception
      */
     private function addSecret(UserAccessControl $uac, int $rowIndexRef, string $resourceId, array $data)

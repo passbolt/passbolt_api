@@ -19,22 +19,10 @@ namespace Passbolt\AccountSettings\Test\TestCase\Controller\AccountSettings;
 
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 
 class AccountSettingsIndexControllerTest extends AppIntegrationTestCase
 {
-    /**
-     * @var AccountSettingsTable
-     */
-    public $AccountSettings;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
-    }
-
     /**
      * @Given I have a theme, a locale and a dummy property set in my settings
      * @When I get '/account/settings.json'

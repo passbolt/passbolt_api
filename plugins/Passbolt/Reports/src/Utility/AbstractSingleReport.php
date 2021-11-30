@@ -32,6 +32,7 @@ abstract class AbstractSingleReport extends AbstractReport
      */
     public function getTemplate(): string
     {
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
         return $this->template ?? self::SINGLE_REPORT_TEMPLATE;
     }
 

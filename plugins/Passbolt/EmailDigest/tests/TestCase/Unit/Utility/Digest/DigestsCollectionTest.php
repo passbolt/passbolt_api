@@ -36,7 +36,7 @@ class DigestsCollectionTest extends TestCase
     private $sut;
 
     /**
-     * @var MockObject|DigestsPool
+     * @var \PHPUnit\Framework\MockObject\MockObject|DigestsPool
      */
     private $digestsCollectionMock;
 

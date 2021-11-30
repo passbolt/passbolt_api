@@ -23,9 +23,12 @@ trait DummyTranslationTestTrait
 {
     /**
      * Set some translations for testing purpose.
+     *
+     * @psalm-suppress InternalMethod
      */
     public function setDummyFrenchTranslator(): void
     {
+        /** @psalm-suppress InternalMethod */
         I18n::getTranslator('default', 'fr_FR')->getPackage()->addMessages([
             'Sending email from: {0}' => 'Courriel envoyé de: {0}',
             'Sending email to: {0}' => 'Courriel envoyé à: {0}',

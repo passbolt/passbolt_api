@@ -100,6 +100,7 @@ class SslHealthchecks
      * Check that the certificate is not self signed
      *
      * @param array|null $checks List of checks
+     * @psalm-suppress InvalidNullableReturnType false positive
      * @return array
      */
     public static function notSelfSigned(?array $checks = []): array
@@ -116,6 +117,7 @@ class SslHealthchecks
         } catch (\Exception $e) {
         }
 
+        /** @psalm-suppress NullableReturnStatement false positive  */
         return $checks;
     }
 }

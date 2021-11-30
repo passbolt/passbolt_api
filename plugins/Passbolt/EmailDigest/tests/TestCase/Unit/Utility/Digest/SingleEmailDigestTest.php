@@ -28,12 +28,12 @@ class SingleEmailDigestTest extends TestCase
     use EmailDigestMockTestTrait;
 
     /**
-     * @var Digest
+     * @var \Passbolt\EmailDigest\Utility\Digest\DigestInterface
      */
     private $sut;
 
     /**
-     * @var MockObject|EmailPreviewFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $emailPreviewFactoryMock;
 

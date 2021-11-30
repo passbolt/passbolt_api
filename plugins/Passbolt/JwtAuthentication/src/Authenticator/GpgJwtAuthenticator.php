@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Authenticator;
 
+use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\GpgkeysTable;
@@ -37,19 +38,17 @@ use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Error\Exception\Challenge\InvalidDomainException;
 use Passbolt\JwtAuthentication\Error\Exception\Challenge\InvalidUserSignatureException;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
-use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenCreateService;
-use Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenCreateService;
 use Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenValidationService;
 use Psr\Http\Message\ServerRequestInterface;
 
 class GpgJwtAuthenticator extends AbstractAuthenticator
 {
+    use ContainerAwareMiddlewareTrait;
     use EventDispatcherTrait;
 
     public const PROTOCOL_VERSION = '1.0.0';
 
-    public const MAKE_ARMORED_CHALLENGE_EVENT_NAME = 'gpg_jwt_auth_make_armored_challenge_event_name';
+    public const JWT_AUTHENTICATION_AFTER_IDENTIFY = 'jwt_authentication_after_identify';
 
     /**
      * @var \App\Utility\OpenPGP\OpenPGPBackend $gpg gpg backend
@@ -89,11 +88,13 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
     /**
      * Authenticate
      *
-     * @param \Cake\Http\ServerRequest $request interface for accessing request parameters
+     * @param \Psr\Http\Message\ServerRequestInterface $request interface for accessing request parameters
      * @return \Authentication\Authenticator\ResultInterface User|false the user or false if authentication failed
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
+        /** @var \Cake\Http\ServerRequest $request */
+
         try {
             $this->setRequest($request);
             $this->init();
@@ -136,10 +137,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      */
     public function successResult(string $verifyToken): Result
     {
-        $accessToken = (new JwtTokenCreateService())->createToken($this->user->id);
-        $refreshToken = (new RefreshTokenCreateService())->createToken($this->user->id, $accessToken);
-        $verifyToken = (new VerifyTokenCreateService())->createToken($verifyToken, $this->user->id);
-        $armoredChallenge = $this->makeArmoredChallenge($accessToken, $refreshToken->token, $verifyToken->token);
+        $armoredChallenge = $this->makeArmoredChallenge($verifyToken);
         $data = ['challenge' => $armoredChallenge, 'user' => $this->user];
 
         return new Result($data, Result::SUCCESS);
@@ -148,24 +146,16 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
     /**
      * Create an encrypted challenge.
      *
-     * @param string $accessToken access token.
-     * @param string $refreshToken access token.
      * @param string $verifyToken verify token.
      * @return string encrypted challenge
      */
-    public function makeArmoredChallenge(string $accessToken, string $refreshToken, string $verifyToken): string
+    public function makeArmoredChallenge(string $verifyToken): string
     {
-        $challengeBaseData = [
-            'version' => self::PROTOCOL_VERSION,
-            'domain' => Router::url('/', true),
-            'access_token' => $accessToken,
-            'refresh_token' => $refreshToken,
-            'verify_token' => $verifyToken,
-        ];
-        // Collect additional data from other services to be added to the $challenge.
-        $event = $this->dispatchEvent(self::MAKE_ARMORED_CHALLENGE_EVENT_NAME, $challengeBaseData, $this);
-        $dataToAppendInChallenge = (array)$event->getData();
-        $challenge = array_merge($dataToAppendInChallenge, $challengeBaseData);
+        /** @var \Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface $armoredChallengeService */
+        $armoredChallengeService = $this->getContainer($this->getRequest())->get(JwtArmoredChallengeInterface::class);
+        $challenge = $armoredChallengeService->makeArmoredChallenge($this->request, $this->user, $verifyToken);
+
+        $this->dispatchEvent(self::JWT_AUTHENTICATION_AFTER_IDENTIFY, $challenge, $this);
 
         return $this->gpg->encryptSign(json_encode($challenge));
     }

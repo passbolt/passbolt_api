@@ -23,7 +23,7 @@ use Cake\Event\EventListenerInterface;
 use Cake\Http\Cookie\Cookie;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtRequestDetectionService;
 
-class RemoveSessionCookiesIfOnJwt implements EventListenerInterface
+class RemoveSessionCookiesOnJwt implements EventListenerInterface
 {
     use ContainerAwareMiddlewareTrait;
 

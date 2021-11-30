@@ -83,12 +83,12 @@ class EmailNotificationSettingsForm extends Form
     /**
      * Transform form data into the expected org settings format
      *
-     * @param array|null $data The form data
+     * @param array $data The form data
      * @return array $settings The org settings data
      */
     public static function formatFormDataToOrgSettings(?array $data = []): array
     {
-        if (empty($data)) {
+        if (count($data) === 0) {
             return $data;
         }
 

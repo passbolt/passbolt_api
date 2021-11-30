@@ -23,7 +23,7 @@ use Cake\Event\EventListenerInterface;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Authenticator\JwtSessionIdentificationService;
 
-class SetSessionIdentifierOnLoginEventListener implements EventListenerInterface
+class SetSessionIdentifierOnLogin implements EventListenerInterface
 {
     use ContainerAwareMiddlewareTrait;
 
@@ -33,7 +33,7 @@ class SetSessionIdentifierOnLoginEventListener implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            GpgJwtAuthenticator::MAKE_ARMORED_CHALLENGE_EVENT_NAME => 'setSessionIdentifierOnLogin',
+            GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY => 'setSessionIdentifierOnLogin',
         ];
     }
 

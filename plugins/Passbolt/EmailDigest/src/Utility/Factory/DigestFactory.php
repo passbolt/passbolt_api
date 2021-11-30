@@ -32,9 +32,9 @@ use Passbolt\EmailDigest\Utility\Digest\SingleDigest;
 class DigestFactory
 {
     /**
-     * @var static
+     * @var static|null
      */
-    private static $instance;
+    private static $instance = null;
 
     /**
      * @var \Passbolt\EmailDigest\Utility\Digest\DigestsPool
@@ -75,7 +75,7 @@ class DigestFactory
      *
      * @return \Passbolt\EmailDigest\Utility\Digest\SingleDigest
      */
-    public function createSingleDigest()
+    public function createSingleDigest(): SingleDigest
     {
         return new SingleDigest();
     }
@@ -85,7 +85,7 @@ class DigestFactory
      *
      * @return \Passbolt\EmailDigest\Utility\Digest\DigestsCollection
      */
-    public function createDigestsCollection()
+    public function createDigestsCollection(): DigestsCollection
     {
         if (!$this->isDigestRegisterEventDispatched) {
             // Dispatch an event to offer possibility to other components to register more digests.

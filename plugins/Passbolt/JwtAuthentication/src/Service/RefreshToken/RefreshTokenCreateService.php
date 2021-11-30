@@ -18,21 +18,24 @@ namespace Passbolt\JwtAuthentication\Service\RefreshToken;
 
 use App\Model\Entity\AuthenticationToken;
 use Cake\Event\Event;
+use Cake\Http\ServerRequest;
 
 class RefreshTokenCreateService extends RefreshTokenAbstractService
 {
     public const REFRESH_TOKEN_CREATED_EVENT = 'refresh_token_created_event';
+    public const REQUEST_DATA_KEY = 'request_data_key';
 
     /**
      * Creates a new refresh token
      * Triggers an event with the refresh token as subject and
      * the associated access token in the data.
      *
+     * @param \Cake\Http\ServerRequest $request Server request.
      * @param string $userId user uuid
      * @param string $accessToken access token associated to the created refresh token
      * @return \App\Model\Entity\AuthenticationToken
      */
-    public function createToken(string $userId, string $accessToken): AuthenticationToken
+    public function createToken(ServerRequest $request, string $userId, string $accessToken): AuthenticationToken
     {
         $data = $this->getTokenData($accessToken);
         $refreshToken = $this->AuthenticationTokens->generate(
@@ -41,7 +44,7 @@ class RefreshTokenCreateService extends RefreshTokenAbstractService
             null,
             $data
         );
-        $this->dispatchRefreshTokenCreatedEvent($refreshToken, $accessToken);
+        $this->dispatchRefreshTokenCreatedEvent($request, $refreshToken, $accessToken);
 
         return $refreshToken;
     }
@@ -49,17 +52,20 @@ class RefreshTokenCreateService extends RefreshTokenAbstractService
     /**
      * Dispatch an event when a new refresh token has been created.
      *
+     * @param \Cake\Http\ServerRequest $request Server request.
      * @param \App\Model\Entity\AuthenticationToken $refreshToken Refresh token issued
      * @param string $accessToken Access token associated to the refresh token issued
      * @return void
      */
-    protected function dispatchRefreshTokenCreatedEvent(AuthenticationToken $refreshToken, string $accessToken): void
-    {
-        $event = new Event(
-            self::REFRESH_TOKEN_CREATED_EVENT,
-            $refreshToken,
-            [self::ACCESS_TOKEN_DATA_KEY => $accessToken]
-        );
+    protected function dispatchRefreshTokenCreatedEvent(
+        ServerRequest $request,
+        AuthenticationToken $refreshToken,
+        string $accessToken
+    ): void {
+        $event = new Event(self::REFRESH_TOKEN_CREATED_EVENT, $refreshToken, [
+            self::ACCESS_TOKEN_DATA_KEY => $accessToken,
+            self::REQUEST_DATA_KEY => $request,
+        ]);
         $this->AuthenticationTokens->getEventManager()->dispatch($event);
     }
 
