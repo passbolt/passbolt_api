@@ -62,7 +62,7 @@ build-yum-7:
   echo "$GCLOUD_SHA256SUM $GCLOUD_PACKAGE_VERSION" | sha256sum -c -
   tar xvf $GCLOUD_PACKAGE_VERSION
   ./google-cloud-sdk/install.sh --quiet
-  google-cloud-sdk/bin/gcloud auth activate-service-account --key-file "$PACKAGE_SVC_ACCOUNT"
+  google-cloud-sdk/bin/gcloud auth activate-service-account --key-file "$PACKAGE_SVC_ACC"
   google-cloud-sdk/bin/gsutil -m cp -r "gs://$REPO" .
 
 .gpg-setup: &gpg-setup
