@@ -497,29 +497,43 @@ class FoldersRelationsTable extends Table
             throw new InternalErrorException('The foreignIds parameter cannot be empty.');
         }
 
-        // R = All the users that have access to all the given items.
-        //
-        // Details :
-        // USERS_HAVING_ACCESS_TO_ITEM_1 = All the users having access to the first item of the list
-        // USERS_HAVING_ACCESS_TO_ITEM_1 = All the users having access to the second item of the list
-        // ....
-        // USERS_HAVING_ACCESS_TO_ITEM_N = All the users having access to the N item of the list
-        // R = USERS_HAVING_ACCESS_TO_ITEM_1 ⋂ USERS_HAVING_ACCESS_TO_ITEM_2 ⋂ ... ⋂ USERS_HAVING_ACCESS_TO_ITEM_N
+        $itemsCount = count($foreignIds);
 
-        $query = $this->find();
-
-        foreach ($foreignIds as $foreignId) {
-            // R = R ⋂ USERS_HAVING_ACCESS_TO_ITEM_N
-            $query->where([
-                'user_id IN' => $this->findUsersIdsHavingAccessToItem($foreignId),
-            ]);
-        }
-
-        return $query
-            ->select('user_id')
-            ->distinct('user_id')
+        return $this->find()
+            ->select(['user_id'])
+            ->where(['foreign_id IN' => $foreignIds])
+            ->group('user_id')
+            ->having("count(user_id) = $itemsCount")
             ->extract('user_id')
             ->toArray();
+    }
+
+    /**
+     * Retrieve the users ids who have access to a target item and a target folder parent but who don't have them organized
+     * like this: target item in target folder parentL
+     *
+     * @param string $foreignId The target item id
+     * @param string $folderParentId The target item folder parent id
+     * @return array An array of users ids
+     */
+    public function getUsersIdsHavingAccessToItemsButNotOrganizedAs(string $foreignId, string $folderParentId): array
+    {
+        $usersIdsHavingAccessToItems = $this->getUsersIdsHavingAccessToMultipleItems([$foreignId, $folderParentId]);
+
+        if (empty($usersIdsHavingAccessToItems)) {
+            return [];
+        }
+
+        return $this->find()
+            ->where([
+                'foreign_id' => $foreignId,
+                'OR' => [
+                    'folder_parent_id !=' => $folderParentId,
+                    'folder_parent_id IS NULL',
+                ],
+                'user_id IN' => $usersIdsHavingAccessToItems,
+            ])
+            ->extract('user_id')->toArray();
     }
 
     /**
@@ -592,6 +606,10 @@ class FoldersRelationsTable extends Table
      */
     public function moveItemFor(string $foreignId, array $forUsersIds, ?string $folderParentId = null): void
     {
+        if (empty($forUsersIds)) {
+            return;
+        }
+
         $fields = [
             'folder_parent_id' => $folderParentId,
         ];

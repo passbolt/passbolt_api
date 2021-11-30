@@ -42,14 +42,14 @@ class FoldersRelationsAddItemToUserTreeService
     private $foldersRelationsCreateService;
 
     /**
-     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDetectStronglyConnectedComponents
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDetectStronglyConnectedComponentsService
      */
-    private $folderRelationsDetectStronglyConnectedComponents;
+    private $folderRelationsDetectStronglyConnectedComponentsService;
 
     /**
-     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRepairStronglyConnectedComponents
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRepairStronglyConnectedComponentsService
      */
-    private $foldersRelationsRepairStronglyConnectedComponents;
+    private $foldersRelationsRepairStronglyConnectedComponentsService;
 
     /**
      * Instantiate the service.
@@ -59,10 +59,10 @@ class FoldersRelationsAddItemToUserTreeService
         $this->loadModel('Passbolt/Folders.Folders');
         $this->loadModel('Passbolt/Folders.FoldersRelations');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
-        $this->folderRelationsDetectStronglyConnectedComponents =
-            new FoldersRelationsDetectStronglyConnectedComponents();
-        $this->foldersRelationsRepairStronglyConnectedComponents =
-            new FoldersRelationsRepairStronglyConnectedComponents();
+        $this->folderRelationsDetectStronglyConnectedComponentsService =
+            new FoldersRelationsDetectStronglyConnectedComponentsService();
+        $this->foldersRelationsRepairStronglyConnectedComponentsService =
+            new FoldersRelationsRepairStronglyConnectedComponentsService();
     }
 
     /**
@@ -367,7 +367,7 @@ class FoldersRelationsAddItemToUserTreeService
         array $change
     ): void {
         // If no one see the newly added item in the proposed parent, then this change is not valid anymore.
-        // It happens when the item has already been organized already by a change with a higher priority.
+        // It happens when the item has already been organized by a change with a higher priority.
         $exists = $this->FoldersRelations
             ->exists(['foreign_id' => $foreignId, 'folder_parent_id' => $change['foreignId']]);
         if (!$exists) {
@@ -383,15 +383,16 @@ class FoldersRelationsAddItemToUserTreeService
         }
 
         // Move the item to the proposed parent folder for all users seeing the proposed parent folder and the target
-        // item.
-        $usersIdsHavingAccessToFolderParent = $this->FoldersRelations
-            ->getUsersIdsHavingAccessToMultipleItems([$foreignId, $change['foreignId']]);
-        $this->FoldersRelations
-            ->moveItemFor($foreignId, $usersIdsHavingAccessToFolderParent, $change['foreignId']);
+        // item but not having it organized like this yet.
+        $usersIdsToApplyChangeFor = $this->FoldersRelations
+            ->getUsersIdsHavingAccessToItemsButNotOrganizedAs($foreignId, $change['foreignId']);
+        $this->FoldersRelations->moveItemFor($foreignId, $usersIdsToApplyChangeFor, $change['foreignId']);
 
         // If the newly added item is a folder, detect and fix conflicts.
         if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
-            $this->detectAndRepairConflicts($uac, $userId, $usersIdsHavingAccessToFolderParent);
+            $indirectlyImpactedUsersIds = $usersIdsToApplyChangeFor;
+            array_splice($indirectlyImpactedUsersIds, array_search($userId, $indirectlyImpactedUsersIds), 1);
+            $this->detectAndRepairConflicts($uac, $userId, $indirectlyImpactedUsersIds);
         }
     }
 
@@ -430,7 +431,7 @@ class FoldersRelationsAddItemToUserTreeService
      */
     private function detectAndRepairCycleInUserTree(string $userId)
     {
-        $scc = $this->folderRelationsDetectStronglyConnectedComponents->detectInUserTree($userId);
+        $scc = $this->folderRelationsDetectStronglyConnectedComponentsService->detectInUserTree($userId);
         if (empty($scc)) {
             return;
         }
@@ -477,7 +478,7 @@ class FoldersRelationsAddItemToUserTreeService
     }
 
     /**
-     * Look for strongly connected components between the users impacted by a change and other passbolt users.
+     * Look for strongly connected components between the users impacted by a change and other users.
      *
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $userId The target user id the item is added for
@@ -490,12 +491,13 @@ class FoldersRelationsAddItemToUserTreeService
         array $usersIdsImpacted
     ): void {
         $usersIdsToDetectSCCsFor = array_merge([$userId], $usersIdsImpacted);
-        $scc = $this->folderRelationsDetectStronglyConnectedComponents->bulkDetectForUsers($usersIdsToDetectSCCsFor);
+        $scc = $this->folderRelationsDetectStronglyConnectedComponentsService
+            ->bulkDetectForUsers($usersIdsToDetectSCCsFor);
         if (empty($scc)) {
             return;
         }
 
-        $this->foldersRelationsRepairStronglyConnectedComponents->repair($uac, $userId, $scc);
+        $this->foldersRelationsRepairStronglyConnectedComponentsService->repair($uac, $userId, $scc);
 
         // Run the repair function again in order to find others SCCs.
         $this->detectAndRepairStronglyConnectedComponents($uac, $userId, $usersIdsImpacted);
