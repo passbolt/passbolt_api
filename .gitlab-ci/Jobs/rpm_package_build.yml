@@ -130,7 +130,7 @@ publish-passbolt-yum-el8-stable:
   dependencies:
     - build-yum
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
       when: on_success
 
 publish-passbolt-yum-el7-stable:
@@ -141,5 +141,5 @@ publish-passbolt-yum-el7-stable:
   dependencies:
     - build-yum-7
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
       when: on_success
