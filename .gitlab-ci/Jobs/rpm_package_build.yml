@@ -62,7 +62,7 @@ build-yum-7:
   echo "$GCLOUD_SHA256SUM $GCLOUD_PACKAGE_VERSION" | sha256sum -c -
   tar xvf $GCLOUD_PACKAGE_VERSION
   ./google-cloud-sdk/install.sh --quiet
-  google-cloud-sdk/bin/gcloud auth activate-service-account --key-file "$RPM_SVC_ACCOUNT"
+  google-cloud-sdk/bin/gcloud auth activate-service-account --key-file "$PACKAGE_SVC_ACCOUNT"
   google-cloud-sdk/bin/gsutil -m cp -r "gs://$REPO" .
 
 .gpg-setup: &gpg-setup
@@ -116,6 +116,28 @@ publish-passbolt-yum-el7-testing:
   extends: .publish-rpm
   variables:
     EL_VERSION: "el7"
+    COMPONENT: "testing"
+  dependencies:
+    - build-yum-7
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+publish-passbolt-yum-el8-stable:
+  extends: .publish-rpm
+  variables:
+    COMPONENT: "stable"
+  dependencies:
+    - build-yum
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+publish-passbolt-yum-el7-stable:
+  extends: .publish-rpm
+  variables:
+    EL_VERSION: "el7"
+    COMPONENT: "stable"
   dependencies:
     - build-yum-7
   rules:
