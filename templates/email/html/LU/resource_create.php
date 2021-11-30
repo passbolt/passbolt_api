@@ -26,36 +26,34 @@ $showDescription = $body['showDescription'];
 $showSecret = $body['showSecret'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($user->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($user->username),
-        'first_name' => Purifier::clean($user->profile->first_name),
-        'last_name' => Purifier::clean($user->profile->last_name),
-        'datetime' => $resource->created,
+        'user' => $user,
+        'datetime' => $resource['created'],
         'text' => __('You have saved a new password')
     ])
 ]);
 
-$text = __('Name: {0}', Purifier::clean($resource->name)) . '<br/>';
+$text = __('Name: {0}', Purifier::clean($resource['name'])) . '<br/>';
 
 if ($showUsername) {
-    $text .= __('Username: {0}', Purifier::clean($resource->username)) . '<br/>';
+    $text .= __('Username: {0}', Purifier::clean($resource['username'])) . '<br/>';
 }
 if ($showUri) {
-    $text .= __('URL: {0}', Purifier::clean($resource->uri)) . '<br/>';
+    $text .= __('URL: {0}', Purifier::clean($resource['uri'])) . '<br/>';
 }
 if ($showDescription) {
-    $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
+    $text .= __('Description: {0}', Purifier::clean($resource['description'])) . '<br/>';
 }
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
 if ($showSecret) {
     echo $this->element('Email/module/code', [
-        'text' => $resource->secrets[0]->data
+        'text' => $resource['secrets'][0]['data']
     ]);
 }
 echo $this->element('Email/module/button', [
-    'url' => Router::url("/app/passwords/view/{$resource->id}", true),
+    'url' => Router::url("/app/passwords/view/{$resource['id']}", true),
     'text' => __('view it in passbolt')
 ]);

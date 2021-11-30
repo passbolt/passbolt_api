@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace Passbolt\EmailDigest\Test\TestCase\Unit\Service;
+namespace Passbolt\EmailDigest\Test\TestCase\Service;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Mailer\Message;

@@ -24,11 +24,9 @@ $user = $body['user'];
 $count = $body['count'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($user->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($user->username),
-        'first_name' => Purifier::clean($user->profile->first_name),
-        'last_name' => Purifier::clean($user->profile->last_name),
+        'user' => $user,
         'datetime' => new FrozenTime(),
         'text' => __('Edited multiple resources')
     ])

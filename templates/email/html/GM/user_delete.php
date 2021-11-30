@@ -24,20 +24,18 @@ $user = $body['user'];
 $groups = $body['groups'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($admin->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($admin->username),
-        'first_name' => Purifier::clean($admin->profile->first_name),
-        'last_name' => Purifier::clean($admin->profile->last_name),
+        'user' => $admin,
         'datetime' => FrozenTime::now(),
-        'text' => __('{0} deleted the user {1}', null, Purifier::clean($user->profile->first_name))
+        'text' => __('{0} deleted the user {1}', null, Purifier::clean($user['profile']['first_name']))
     ])
 ]);
 
 $text = __('The user {0} {1} ({2}) is now deleted from your organisation in passbolt.',
-    Purifier::clean($user->profile->first_name),
-    Purifier::clean($user->profile->last_name),
-    Purifier::clean($user->username)
+    Purifier::clean($user['profile']['first_name']),
+    Purifier::clean($user['profile']['last_name']),
+    Purifier::clean($user['username'])
 );
 $text .= ' ' . __('This user was a member of the following group(s) you manage:') . '<br>';
 

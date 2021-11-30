@@ -44,6 +44,7 @@ class SenderCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->setDummyFrenchTranslator();
+        $this->loadPlugins(['Passbolt/EmailDigest']);
     }
 
     /**
