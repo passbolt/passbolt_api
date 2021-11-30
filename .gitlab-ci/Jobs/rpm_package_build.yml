@@ -82,7 +82,7 @@ build-yum-7:
   rpm --resign $COMPONENT/$PACKAGE_ARCH/*rpm
   createrepo --update $COMPONENT
   google-cloud-sdk/bin/gsutil -m rsync -r -d $COMPONENT "gs://$REPO"
-  gsutil -m setmeta -r -h "Content-Type:text/html" \
+  google-cloud-sdk/bin/gsutil -m setmeta -r -h "Content-Type:text/html" \
     -h "Cache-Control:no-cache" \
     "gs://$REPO"
 
