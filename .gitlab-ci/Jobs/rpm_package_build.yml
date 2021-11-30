@@ -93,7 +93,7 @@ build-yum-7:
     GCLOUD_SHA256SUM: "81d0ad64dca3e97d02e873d386bafcc77b416d7c9b45e5ec2387e5075b133fc0"
     GCLOUD_PACKAGE_VERSION: "google-cloud-sdk-365.0.0-linux-x86_64.tar.gz"
     COMPONENT: "testing"
-    BUCKET_NAME: "artifactory.passbolt.dev"
+    BUCKET_NAME: "download.passbolt.com"
     EL_VERSION: "el8"
     REPO_PATH: "$PASSBOLT_FLAVOUR/rpm/$EL_VERSION"
     REPO: "$BUCKET_NAME/$REPO_PATH/$COMPONENT"
