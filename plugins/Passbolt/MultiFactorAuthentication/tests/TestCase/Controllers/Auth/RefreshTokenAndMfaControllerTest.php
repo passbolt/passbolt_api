@@ -108,8 +108,8 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             'user_id' => $user->id,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
         ])->firstOrFail();
-        $this->assertCookie($newRefreshToken->get('token'), RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
-        $this->assertCookie($mfaCookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($newRefreshToken->get('token'), RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
+        $this->assertCookieIsSecure($mfaCookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
 
         // We check that the session ID of the MFA token has been updated
         /** @var AuthenticationToken $updatedMfaCookie */
@@ -197,8 +197,8 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             'user_id' => $user->id,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
         ])->firstOrFail()->get('token');
-        $this->assertCookie($newRefreshToken, RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
-        $this->assertCookie($mfaCookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($newRefreshToken, RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
+        $this->assertCookieIsSecure($mfaCookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 
     /**
@@ -248,8 +248,8 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             'user_id' => $user->id,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
         ])->firstOrFail()->get('token');
-        $this->assertCookie($newRefreshToken, RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
-        $this->assertCookie($mfaCookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($newRefreshToken, RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
+        $this->assertCookieIsSecure($mfaCookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
 
         $oldRefreshTokenInCookie = AuthenticationTokenFactory::get($oldRefreshTokenInCookie->id);
         $oldRefreshTokenInPayload = AuthenticationTokenFactory::get($oldRefreshTokenInPayload->id);

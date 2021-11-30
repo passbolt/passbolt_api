@@ -162,7 +162,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
         $mfaToken = MfaAuthenticationTokenFactory::find()->where(['token' => $mfaToken])->firstOrFail();
         $this->assertTrue($mfaToken->isActive());
         $this->assertFalse($mfaToken->isExpired());
-        $this->assertCookie($mfaToken->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($mfaToken->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 
     /**
