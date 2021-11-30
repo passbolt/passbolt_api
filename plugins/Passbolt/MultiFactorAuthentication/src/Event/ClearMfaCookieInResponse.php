@@ -28,7 +28,7 @@ class ClearMfaCookieInResponse implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            'Controller.initialize' => 'clearInvalidMfaCookieInResponse',
+            'Controller.shutdown' => 'clearInvalidMfaCookieInResponse',
         ];
     }
 

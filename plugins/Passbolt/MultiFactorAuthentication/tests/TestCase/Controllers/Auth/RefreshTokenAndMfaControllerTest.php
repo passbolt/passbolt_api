@@ -27,6 +27,7 @@ use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactor
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 /**
  * Class AuthRefreshTokenControllerTest
@@ -108,6 +109,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
         ])->firstOrFail();
         $this->assertCookie($newRefreshToken->get('token'), RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
+        $this->assertCookie($mfaCookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
 
         // We check that the session ID of the MFA token has been updated
         /** @var AuthenticationToken $updatedMfaCookie */
@@ -196,6 +198,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
         ])->firstOrFail()->get('token');
         $this->assertCookie($newRefreshToken, RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
+        $this->assertCookie($mfaCookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 
     /**
@@ -246,6 +249,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
         ])->firstOrFail()->get('token');
         $this->assertCookie($newRefreshToken, RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
+        $this->assertCookie($mfaCookie, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
 
         $oldRefreshTokenInCookie = AuthenticationTokenFactory::get($oldRefreshTokenInCookie->id);
         $oldRefreshTokenInPayload = AuthenticationTokenFactory::get($oldRefreshTokenInPayload->id);

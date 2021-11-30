@@ -19,7 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Event;
 use App\Middleware\ContainerAwareMiddlewareTrait;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenCreateService;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
@@ -30,21 +30,26 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
  *
  * On JWT login, it is possible that the request
  * contains a valid MFA token. If so, and if the login was successful,
- * the MFA token will be provided in the response.
+ * the MFA token will be provided in the response. Same applies to the creation
+ * of a new refresh token.
  *
- * Since the response is not accessible from the authenticator,
+ * Since a refresh token is created on both successful login and successful refresh token creation
+ * we here listen to the creation of refresh tokens.
+ *
+ * Because the response is not accessible from the authenticator,
  * the present event has to be split in two methods
- * 1. detecting
- * that
+ * 1. Detecting the creation of a refresh token
+ * 2. At controller initialization, set the MFA cookie if valid
+ * or an expired one if not valid.
  */
-class AddMfaCookieOnSuccessfulJwtLogin implements EventListenerInterface
+class AddMfaCookieOnSuccessfulRefreshTokenCreation implements EventListenerInterface
 {
     use ContainerAwareMiddlewareTrait;
 
     /**
      * @var bool
      */
-    private $onSuccessfulJwtLogin = false;
+    private $onSuccessfulRefreshTokenCreated = false;
 
     /**
      * @return array
@@ -52,8 +57,9 @@ class AddMfaCookieOnSuccessfulJwtLogin implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY => 'isJwtLoginSuccessful',
-            'Controller.initialize' => 'addMfaTokenOnSuccessfulJwtLogin',
+            RefreshTokenCreateService::REFRESH_TOKEN_CREATED_EVENT => 'isRefreshTokenCreated',
+            'Controller.beforeRedirect' => 'addMfaTokenOnSuccessfulRefreshTokenCreation',
+            'Controller.beforeRender' => 'addMfaTokenOnSuccessfulRefreshTokenCreation',
         ];
     }
 
@@ -63,21 +69,21 @@ class AddMfaCookieOnSuccessfulJwtLogin implements EventListenerInterface
      *
      * @return void
      */
-    public function isJwtLoginSuccessful(): void
+    public function isRefreshTokenCreated(): void
     {
-        $this->onSuccessfulJwtLogin = true;
+        $this->onSuccessfulRefreshTokenCreated = true;
     }
 
     /**
-     * If the login was successful and a valid MFA token is found in the request
+     * If a refresh token was successfully created and a valid MFA token is found in the request
      * set the MFA cookie in the response.
      *
      * @param \Cake\Event\EventInterface $event Initialize controller event
      * @return void
      */
-    public function addMfaTokenOnSuccessfulJwtLogin(EventInterface $event): void
+    public function addMfaTokenOnSuccessfulRefreshTokenCreation(EventInterface $event): void
     {
-        if ($this->onSuccessfulJwtLogin !== true) {
+        if ($this->onSuccessfulRefreshTokenCreated !== true) {
             return;
         }
 
@@ -85,12 +91,12 @@ class AddMfaCookieOnSuccessfulJwtLogin implements EventListenerInterface
         $controller = $event->getSubject();
         $request = $controller->getRequest();
 
-        $mfaCheckNotRequired = $request->getAttribute(
-            MfaRequiredCheckMiddleware::IS_MFA_CHECK_NOT_REQUIRED_ATTRIBUTE
+        $isMfaTokenValid = $request->getAttribute(
+            MfaRequiredCheckMiddleware::IS_MFA_TOKEN_VALID_ATTRIBUTE
         );
 
         if (
-            $mfaCheckNotRequired &&
+            $isMfaTokenValid &&
             $controller->getRequest()->getCookieCollection()->has(MfaVerifiedCookie::MFA_COOKIE_ALIAS)
         ) {
             $mfaCookie = $controller->getRequest()->getCookieCollection()->get(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
