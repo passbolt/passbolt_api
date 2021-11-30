@@ -82,7 +82,10 @@ class AvatarHelperTest extends AppIntegrationTestCase
         // We now test the AvatarHelper as such.
         $this->assertSame(
             $expectedUrl,
-            AvatarHelper::getAvatarUrl($avatar)
+            AvatarHelper::getAvatarUrl([
+                'id' => $avatar['id'],
+                'data' => $avatar['data'],
+            ])
         );
     }
 
