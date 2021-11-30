@@ -22,39 +22,24 @@ use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFound
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  */
-class RefreshTokenFetchUserService extends RefreshTokenAbstractService
+class RefreshTokenAuthenticationService extends RefreshTokenAbstractService
 {
-    /**
-     * @var string $token uuid
-     */
-    protected $token;
-
-    /**
-     * @param string|null $token refresh token uuid
-     * @throws \InvalidArgumentException if the token is not a valid UUIDs
-     */
-    final public function __construct(?string $token)
-    {
-        parent::__construct();
-
-        $this->validateRefreshToken($token);
-        $this->token = $token;
-    }
-
     /**
      * Fetch the user from a provided refresh token.
      *
-     * @return string
+     * @param ?string $token Token to retrieve
+     * @return string refresh token
+     * @throws \InvalidArgumentException if the token is not a valid UUIDs
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException When there is no user associated to this token.
      */
-    public function getUserIdFromToken(): string
+    public function getUserIdFromToken(?string $token): string
     {
+        $this->validateRefreshToken($token);
+
         try {
-            return $this->queryRefreshToken($this->token)->firstOrFail()->get('user_id');
+            return $this->queryRefreshToken($token)->firstOrFail()->get('user_id');
         } catch (RecordNotFoundException $e) {
-            throw new RefreshTokenNotFoundException(
-                __('No active refresh token matching the request could be found.')
-            );
+            throw new RefreshTokenNotFoundException();
         }
     }
 }

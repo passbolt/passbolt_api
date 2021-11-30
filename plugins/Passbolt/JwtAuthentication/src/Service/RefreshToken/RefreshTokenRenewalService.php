@@ -25,57 +25,24 @@ use Cake\Http\ServerRequest;
 class RefreshTokenRenewalService extends RefreshTokenAbstractService
 {
     /**
-     * @var \Cake\Http\ServerRequest|null
-     */
-    protected $request;
-
-    /**
-     * @var string $userId uuid
-     */
-    protected $userId;
-
-    /**
-     * @var string $token uuid
-     */
-    protected $token;
-
-    /**
-     * @var string $accessToken access token generated along the refresh token
-     */
-    protected $accessToken;
-
-    /**
-     * @param string $userId User ID.
-     * @param string $token refresh token uuid
-     * @param string $accessToken refresh token
-     * @throws \InvalidArgumentException if the userId or the token are not valid UUIDs
-     */
-    final public function __construct(string $userId, string $token, string $accessToken)
-    {
-        parent::__construct();
-
-        $this->validateRefreshToken($token);
-        $this->validateUserId($userId);
-
-        $this->userId = $userId;
-        $this->token = $token;
-        $this->accessToken = $accessToken;
-    }
-
-    /**
      * 1. Consume the refresh token passed in the request
      * 2. Return a new token
      *
      * @param \Cake\Http\ServerRequest $request Server Request
+     * @param \App\Model\Entity\AuthenticationToken $oldRefreshToken Refresh token to consume
+     * @param string $accessToken access token
      * @return \App\Model\Entity\AuthenticationToken
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException if the token is not found
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException if the token was already consumed
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException if the token is expired
      */
-    public function renewToken(ServerRequest $request): AuthenticationToken
-    {
-        $this->consumeToken($this->token, $this->userId);
+    public function renewToken(
+        ServerRequest $request,
+        AuthenticationToken $oldRefreshToken,
+        string $accessToken
+    ): AuthenticationToken {
+        $this->consumeToken($oldRefreshToken);
 
-        return (new RefreshTokenCreateService())->createToken($request, $this->userId, $this->accessToken);
+        return (new RefreshTokenCreateService())->createToken($request, $oldRefreshToken->user_id, $accessToken);
     }
 }
