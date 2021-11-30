@@ -5,7 +5,9 @@
 # Copyright:: 2020, The Authors, All Rights Reserved.
 #
 
-apt_update
+if platform_family?('debian')
+  apt_update
+end
 
 include_recipe '::passbolt_install'
 

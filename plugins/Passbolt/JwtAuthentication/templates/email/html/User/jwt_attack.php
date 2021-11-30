@@ -33,7 +33,7 @@ echo $this->element('Email/module/avatar',[
 $text = '<h3>' . __('Security warning!') . '</h3><br/>';
 $text = '<h4>' . $message . '</h4><br/>';
 $text .= __('An unknown user with IP: {0}  attempted to steal your login data.', $ip);
-$text .= ' ' . __('Please get in tough with one of your administrators.');
+$text .= ' ' . __('Please get in touch with one of your administrators.');
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);

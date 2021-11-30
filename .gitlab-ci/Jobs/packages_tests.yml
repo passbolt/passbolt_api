@@ -1,0 +1,175 @@
+.kitchen-test:
+  extends: .rules
+  image: chef/chefdk:latest
+  stage: package-test
+  script:
+    - gem install bundler:2.1.2
+    - kitchen verify $KITCHEN_JOB -t tests/integration
+
+# Debian/Ubuntu package testing
+#
+.kitchen-test-debian:
+  extends: .kitchen-test
+  dependencies:
+    - composer
+    - build-debian
+  script:
+    - ls -las
+    - gem install bundler:2.1.2
+    - kitchen verify $KITCHEN_JOB -t tests/integration
+
+debian-buster-fs:
+  extends: .kitchen-test-debian
+  dependencies:
+    - composer
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-debian-buster
+
+debian-buster-purge:
+  extends: .kitchen-test-debian
+  variables:
+    KITCHEN_JOB: purge-benchmarks-debian-buster
+
+debian-buster-runtime:
+  extends: .kitchen-test-debian
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-debian-buster
+
+debian-buster-break:
+  extends: .kitchen-test-debian
+  variables:
+    KITCHEN_JOB: break-benchmarks-debian-buster
+
+debian-bullseye-fs:
+  extends: .kitchen-test-debian
+  dependencies:
+    - composer
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-debian-bullseye
+
+debian-bullseye-purge:
+  extends: .kitchen-test-debian
+  variables:
+    KITCHEN_JOB: purge-benchmarks-debian-bullseye
+
+debian-bullseye-runtime:
+  extends: .kitchen-test-debian
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-debian-bullseye
+
+debian-bullseye-break:
+  extends: .kitchen-test-debian
+  variables:
+    KITCHEN_JOB: break-benchmarks-debian-bullseye
+
+ubuntu-1804-fs:
+  extends: .kitchen-test-debian
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-ubuntu-1804
+
+ubuntu-1804-purge:
+  extends: .kitchen-test-debian
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: purge-benchmarks-ubuntu-1804
+
+ubuntu-1804-runtime:
+  extends: .kitchen-test-debian
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-ubuntu-1804
+
+ubuntu-2004-fs:
+  extends: .kitchen-test-debian
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-ubuntu-2004
+
+ubuntu-2004-purge:
+  extends: .kitchen-test-debian
+  variables:
+    KITCHEN_JOB: purge-benchmarks-ubuntu-2004
+
+ubuntu-2004-runtime:
+  extends: .kitchen-test-debian
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-ubuntu-2004
+
+# Yum package testing
+
+.kitchen-test-yum:
+  extends: .kitchen-test
+  needs:
+    - job: composer
+      artifacts: true
+    - job: build-yum
+      artifacts: true
+
+.kitchen-test-yum-7:
+  extends: .kitchen-test
+  needs:
+    - job: composer
+      artifacts: true
+    - job: build-yum-7
+      artifacts: true
+
+centos-7-fs:
+  extends: .kitchen-test-yum-7
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-centos-7
+
+centos-7-purge:
+  extends: .kitchen-test-yum-7
+  variables:
+    KITCHEN_JOB: purge-benchmarks-centos-7
+
+centos-7-runtime:
+  extends: .kitchen-test-yum-7
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-centos-7
+
+centos-7-break:
+  extends: .kitchen-test-yum-7
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: break-benchmarks-centos-7
+
+centos-8-fs:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-centos-8
+
+centos-8-purge:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: purge-benchmarks-centos-8
+
+centos-8-runtime:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-centos-8
+
+centos-8-break:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: break-benchmarks-centos-8
+
+rockylinux-8-fs:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-rockylinux-8
+
+rockylinux-8-purge:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: purge-benchmarks-rockylinux-8
+
+rockylinux-8-runtime:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-rockylinux-8
+
+rockylinux-8-break:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: break-benchmarks-rockylinux-8

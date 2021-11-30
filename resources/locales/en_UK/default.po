@@ -2054,7 +2054,7 @@ msgstr ""
 msgid "An unknown user with IP: {0}  attempted to steal your login data."
 msgstr ""
 
-msgid "Please get in tough with one of your administrators."
+msgid "Please get in touch with one of your administrators."
 msgstr ""
 
 msgid "This is not a valid locale."
