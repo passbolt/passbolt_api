@@ -38,13 +38,11 @@ $avatar = 'img/avatar/user.png';
 echo $this->element('Email/module/avatar',[
     'url' => Router::url($avatar, true),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($user->username),
-        'first_name' => Purifier::clean($user->profile->first_name),
-        'last_name' => Purifier::clean($user->profile->last_name),
-        'datetime' => $user->modified,
+        'user' => $user,
+        'datetime' => $user['modified'],
         'text' => __(
             '{0} just activated their account on passbolt!',
-            $user->profile->first_name
+            $user['profile']['first_name']
         )
     ])
 ]);
@@ -53,10 +51,10 @@ $text = ' ' . __('The user is now active on passbolt and you can share passwords
 $text .= ' ';
 if ($invitedByYou) {
     $text .= __('This user was invited by you {0}.', $invitedWhen);
-} else if ($user->username === $invitedBy->username) {
+} else if ($user['username'] === $invitedBy['username']) {
     $text .= __('This user signed up themselves, since the public registration is enabled.');
 } else {
-    $text .= __('This user was invited by {0} {1}.', $invitedBy->profile->first_name, $invitedWhen);
+    $text .= __('This user was invited by {0} {1}.', $invitedBy['profile']['first_name'], $invitedWhen);
 }
 $text .= '<br/>';
 echo $this->element('Email/module/text', [

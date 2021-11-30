@@ -48,7 +48,7 @@ class EmailQueueFactory extends CakephpBaseFactory
                 'config' => 'default',
                 'template' => 'test_email',
                 'layout' => 'default',
-                'template_vars' => serialize(compact('email', 'from_email')),
+                'template_vars' => json_encode(compact('email', 'from_email')),
                 'theme' => '',
                 'format' => 'html',
                 'sent' => 0,
@@ -99,5 +99,15 @@ class EmailQueueFactory extends CakephpBaseFactory
     public function listeningToBeforeSave()
     {
         return $this->listeningToModelEvents('Model.beforeSave');
+    }
+
+    /**
+     * Mark the email as sent.
+     *
+     * @return $this
+     */
+    public function sent()
+    {
+        return $this->setField('sent', true);
     }
 }

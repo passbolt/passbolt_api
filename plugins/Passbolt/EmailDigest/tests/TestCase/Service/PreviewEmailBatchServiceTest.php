@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.2.0
  */
 
-namespace Passbolt\EmailDigest\Test\TestCase\Unit\Service;
+namespace Passbolt\EmailDigest\Test\TestCase\Service;
 
 use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;

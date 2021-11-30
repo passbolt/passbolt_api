@@ -25,17 +25,15 @@ $user = $body['user'];
 $folder = $body['folder'];
 
 echo $this->element('Email/module/avatar', [
-    'url' => AvatarHelper::getAvatarUrl($user->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($user->username),
-        'first_name' => Purifier::clean($user->profile->first_name),
-        'last_name' => Purifier::clean($user->profile->last_name),
-        'datetime' => $folder->modified,
-        'text' => __('{0} deleted the folder {1}', null, Purifier::clean($folder->name)),
+        'user' => $user,
+        'datetime' => $folder['modified'],
+        'text' => __('{0} deleted the folder {1}', null, Purifier::clean($folder['name'])),
     ]),
 ]);
 
-$text = __('Name: {0}', Purifier::clean($folder->name)) . '<br/>';
+$text = __('Name: {0}', Purifier::clean($folder['name'])) . '<br/>';
 
 echo $this->element('Email/module/text', [
     'text' => $text,

@@ -23,17 +23,15 @@ $group = $body['group'];
 $count = $body['count'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($admin->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($admin->username),
-        'first_name' => Purifier::clean($admin->profile->first_name),
-        'last_name' => Purifier::clean($admin->profile->last_name),
-        'datetime' => $group->modified,
-        'text' => __('{0} deleted several group', Purifier::clean($admin->profile->first_name))
+        'user' => $admin,
+        'datetime' => $group['modified'],
+        'text' => __('{0} deleted several group', Purifier::clean($admin['profile']['first_name']))
     ])
 ]);
 
-$text = __('{0} deleted {1} groups you were a member of.', Purifier::clean($admin->profile->first_name), $count) . ' ';
+$text = __('{0} deleted {1} groups you were a member of.', Purifier::clean($admin['profile']['first_name']), $count) . ' ';
 $text .= __('All passwords that were shared only with this group were also deleted.') . ' ';
 $text .= __('It would be too much to list them here, but you can get more information on passbolt.') ;
 

@@ -26,22 +26,20 @@ $user = $body['user'];
 $folder = $body['folder'];
 
 echo $this->element('Email/module/avatar', [
-    'url' => AvatarHelper::getAvatarUrl($user->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($user->username),
-        'first_name' => Purifier::clean($user->profile->first_name),
-        'last_name' => Purifier::clean($user->profile->last_name),
+        'user' => $user,
         'datetime' => FrozenTime::now(),
         'text' => __('shared a folder with you'),
     ]),
 ]);
 
-$text = __('Name: {0}', Purifier::clean($folder->name)) . '<br/>';
+$text = __('Name: {0}', Purifier::clean($folder['name'])) . '<br/>';
 
 echo $this->element('Email/module/text', [
     'text' => $text,
 ]);
 echo $this->element('Email/module/button', [
-    'url' => Router::url("/app/folders/view/{$folder->id}", true),
+    'url' => Router::url("/app/folders/view/{$folder['id']}", true),
     'text' => __('view it in passbolt'),
 ]);
