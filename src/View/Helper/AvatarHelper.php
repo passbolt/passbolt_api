@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\View\Helper;
 
-use App\Model\Entity\Avatar;
 use App\Service\Avatars\AvatarsConfigurationService;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
@@ -14,15 +13,15 @@ class AvatarHelper extends Helper
     public const IMAGE_EXTENSION = '.jpg';
 
     /**
-     * @param \App\Model\Entity\Avatar|null $avatar Avatar instance
+     * @param array|null $avatar Avatar instance
      * @param string|null $format Format of the avatar
      * @return string
      */
     public static function getAvatarUrl(
-        ?Avatar $avatar = null,
+        ?array $avatar = null,
         ?string $format = AvatarsConfigurationService::FORMAT_SMALL
     ): string {
-        if (empty($avatar) || empty($avatar->get('data')) || empty($avatar->get('id'))) {
+        if (empty($avatar) || empty($avatar['data']) || empty($avatar['id'])) {
             return self::getAvatarFallBackUrl($format);
         } else {
             return Router::url([
@@ -30,7 +29,7 @@ class AvatarHelper extends Helper
                 'prefix' => 'Avatars',
                 'controller' => 'AvatarsView',
                 'action' => 'view',
-                'id' => $avatar->get('id'),
+                'id' => $avatar['id'],
                 'format' => $format,
                 '_ext' => trim(self::IMAGE_EXTENSION, '.'),
             ], true);

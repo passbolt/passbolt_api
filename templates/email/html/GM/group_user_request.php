@@ -24,17 +24,15 @@ $group = $body['group'];
 $groupUsers = $body['groupUsers'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($admin->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($admin->username),
-        'first_name' => Purifier::clean($admin->profile->first_name),
-        'last_name' => Purifier::clean($admin->profile->last_name),
+        'user' => $admin,
         'datetime' => FrozenTime::now(),
         'text' => __('{0} requested you to add members to a group', null)
     ])
 ]);
 
-$text = __('Group: {0}', Purifier::clean($group->name)) . '<br><br>';
+$text = __('Group: {0}', Purifier::clean($group['name'])) . '<br><br>';
 $text .= ' ' . __('The following members should be added:') . '<br>';
 
 $text .= $this->element('Email/content/group_users_summary', [
@@ -46,6 +44,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/app/groups/edit/'. $group->id, true),
+    'url' => Router::url('/app/groups/edit/'. $group['id'], true),
     'text' => __('Edit group members')
 ]);

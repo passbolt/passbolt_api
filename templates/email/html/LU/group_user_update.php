@@ -24,15 +24,13 @@ $group = $body['group'];
 $isAdmin = $body['isAdmin'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($admin->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($admin->username),
-        'first_name' => Purifier::clean($admin->profile->first_name),
-        'last_name' => Purifier::clean($admin->profile->last_name),
+        'user' => $admin,
         'datetime' => FrozenTime::now(),
         'text' => __('{0} updated your membership in the group {1}',
-            Purifier::clean($admin->profile->first_name),
-            Purifier::clean($group->name)
+            Purifier::clean($admin['profile']['first_name']),
+            Purifier::clean($group['name'])
         )
     ])
 ]);

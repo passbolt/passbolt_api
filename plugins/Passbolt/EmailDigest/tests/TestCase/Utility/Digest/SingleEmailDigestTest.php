@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         2.13.0
  */
 
-namespace Passbolt\EmailDigest\Test\TestCase\Unit\Utility\Digest;
+namespace Passbolt\EmailDigest\Test\TestCase\Utility\Digest;
 
 use Cake\TestSuite\TestCase;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;

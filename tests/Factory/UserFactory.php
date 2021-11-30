@@ -30,6 +30,7 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
  *
  * @method \App\Model\Entity\User persist()
  * @method \App\Model\Entity\User getEntity()
+ * @method \App\Model\Entity\User[] getEntities()
  */
 class UserFactory extends CakephpBaseFactory
 {

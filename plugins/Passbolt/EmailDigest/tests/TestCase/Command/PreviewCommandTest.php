@@ -45,6 +45,7 @@ class PreviewCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->setDummyFrenchTranslator();
+        $this->loadPlugins(['Passbolt/EmailDigest']);
     }
 
     /**

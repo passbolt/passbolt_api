@@ -27,13 +27,11 @@ $owner = $body['owner'];
 $count = $body['count'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($user->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($owner->username),
-        'first_name' => Purifier::clean($owner->profile->first_name),
-        'last_name' => Purifier::clean($owner->profile->last_name),
+        'user' => $owner,
         'datetime' => FrozenTime::now(),
-        'text' => __('{0} shared passwords with you', $owner->profile->first_name)
+        'text' => __('{0} shared passwords with you', $owner['profile']['first_name'])
     ])
 ]);
 
