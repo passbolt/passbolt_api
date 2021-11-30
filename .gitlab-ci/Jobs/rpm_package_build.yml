@@ -1,0 +1,145 @@
+.gpg-functions: &gpg-functions |
+  kms_decrypt() {
+    payload="$1"
+    echo "$payload" | base64 -d | \
+    google-cloud-sdk/bin/gcloud kms decrypt \
+      --project "$CRYPTOKEYS_PROJECT" \
+      --location "europe-west1" \
+      --keyring "$CRYPTOKEYS_KEYRING" \
+      --key "$KMS_KEY_NAME" \
+      --plaintext-file - \
+      --ciphertext-file -
+  }
+
+.install-jq-rhel-8: &install-jq-rhel-8 
+  yum install -y jq ${DEPENDENCIES}
+
+.install-jq-rhel-7: &install-jq-rhel-7 
+  - yum install -y epel-release
+  - yum install -y jq ${DEPENDENCIES}
+
+.build-passbolt-rpm-package: &build-passbolt-rpm-package |
+  rpmdev-setuptree
+  PKG_VERSION=$(jq -r '.version' package.json) \
+  PASSBOLT_VERSION=$(jq -r '.version' package.json) \
+  /bin/sh rpm/scripts/build-passbolt-server.sh
+  PKG_VERSION=0.1 /bin/sh rpm/scripts/build-passbolt-selinux.sh
+  cp ~/rpmbuild/RPMS/noarch/passbolt-* .
+
+.build-rpm:
+  extends: .rules
+  image: rockylinux/rockylinux:8
+  stage: package-build
+  dependencies:
+    - composer
+  artifacts:
+    paths:
+      - '*.rpm'
+    expire_in: 1 week
+    when: on_success
+
+build-yum:
+  extends: .build-rpm
+  variables:
+    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo firewalld"
+  script:
+    - *install-jq-rhel-8
+    - *build-passbolt-rpm-package
+
+build-yum-7:
+  extends: .build-rpm
+  image: centos:7
+  variables:
+    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo firewalld"
+  script:
+    - *install-jq-rhel-7
+    - *build-passbolt-rpm-package
+
+# gcloud sdk https://cloud.google.com/sdk/docs/downloads-versioned-archives
+.clone-repo-bucket: &clone-repo-bucket |
+  yum install python39 wget -y
+  wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/$GCLOUD_PACKAGE_VERSION
+  echo "$GCLOUD_SHA256SUM $GCLOUD_PACKAGE_VERSION" | sha256sum -c -
+  tar xvf $GCLOUD_PACKAGE_VERSION
+  ./google-cloud-sdk/install.sh --quiet
+  google-cloud-sdk/bin/gcloud auth activate-service-account --key-file "$PACKAGE_SVC_ACCOUNT"
+  google-cloud-sdk/bin/gsutil -m cp -r "gs://$REPO" .
+
+.gpg-setup: &gpg-setup
+  - *gpg-functions
+  - yum install gpg -y && mkdir ~/.gnupg
+  - echo "allow-preset-passphrase" >> ~/.gnupg/gpg-agent.conf
+  - gpg-connect-agent reloadagent /bye
+  - gpg --batch --import <(kms_decrypt "$GPG_KEY" | base64 -d)
+  - /usr/libexec/gpg-preset-passphrase --passphrase "$(kms_decrypt $GPG_PASS | base64 -d)" --preset $GPG_KEYGRIP
+  - echo "%_signature gpg" > ~/.rpmmacros
+  - echo "%_gpg_name $GPG_KEY_ID" >> ~/.rpmmacros
+
+.publish-script: &publish-script |
+  yum install -y createrepo rpm-sign
+  [ $COMPONENT == "testing" ] && rm $COMPONENT/$PACKAGE_ARCH/*rpm
+  cp passbolt-*.rpm $COMPONENT/$PACKAGE_ARCH
+  rpm --resign $COMPONENT/$PACKAGE_ARCH/*rpm
+  createrepo --update $COMPONENT
+  google-cloud-sdk/bin/gsutil -m rsync -r -d $COMPONENT "gs://$REPO"
+  gsutil -m setmeta -r -h "Content-Type:text/html" \
+    -h "Cache-Control:no-cache" \
+    "gs://$REPO"
+
+.publish-rpm:
+  image: rockylinux/rockylinux:8
+  stage: publish
+  variables:
+    GCLOUD_SHA256SUM: "81d0ad64dca3e97d02e873d386bafcc77b416d7c9b45e5ec2387e5075b133fc0"
+    GCLOUD_PACKAGE_VERSION: "google-cloud-sdk-365.0.0-linux-x86_64.tar.gz"
+    COMPONENT: "testing"
+    BUCKET_NAME: "download.passbolt.com"
+    EL_VERSION: "el8"
+    REPO_PATH: "$PASSBOLT_FLAVOUR/rpm/$EL_VERSION"
+    REPO: "$BUCKET_NAME/$REPO_PATH/$COMPONENT"
+    PACKAGE_ARCH: "noarch"
+  before_script: 
+    - *clone-repo-bucket
+    - *gpg-setup
+  script: 
+    - *publish-script
+
+publish-passbolt-yum-el8-testing:
+  extends: .publish-rpm
+  dependencies:
+    - build-yum
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+publish-passbolt-yum-el7-testing:
+  extends: .publish-rpm
+  variables:
+    EL_VERSION: "el7"
+    COMPONENT: "testing"
+  dependencies:
+    - build-yum-7
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+publish-passbolt-yum-el8-stable:
+  extends: .publish-rpm
+  variables:
+    COMPONENT: "stable"
+  dependencies:
+    - build-yum
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+publish-passbolt-yum-el7-stable:
+  extends: .publish-rpm
+  variables:
+    EL_VERSION: "el7"
+    COMPONENT: "stable"
+  dependencies:
+    - build-yum-7
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
