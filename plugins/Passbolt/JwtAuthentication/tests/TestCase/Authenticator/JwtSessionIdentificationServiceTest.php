@@ -53,7 +53,7 @@ class JwtSessionIdentificationServiceTest extends TestCase
 
         $SessionService = new JwtSessionIdentificationService();
         $expected = $isAuthenticated ? $accessToken : null;
-        $this->assertSame($expected, $SessionService->getSessionId($request));
+        $this->assertSame($expected, $SessionService->getSessionIdentifier($request));
     }
 
     public function testJwtSessionIdentificationService_No_Authentication_Service()
@@ -64,6 +64,6 @@ class JwtSessionIdentificationServiceTest extends TestCase
         $request->withHeader(JwtAuthenticationService::JWT_HEADER, $accessToken);
 
         $SessionService = new JwtSessionIdentificationService();
-        $this->assertNull($SessionService->getSessionId($request));
+        $this->assertNull($SessionService->getSessionIdentifier($request));
     }
 }

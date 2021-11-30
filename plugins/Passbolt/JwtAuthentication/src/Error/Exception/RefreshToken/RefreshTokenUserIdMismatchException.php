@@ -12,27 +12,16 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         4.0.0
  */
 
 namespace Passbolt\JwtAuthentication\Error\Exception\RefreshToken;
 
 use Passbolt\JwtAuthentication\Error\Exception\AbstractJwtAttackException;
-use Throwable;
 
 /**
  * Exception raised when the refresh token is not associated to any user.
  */
-class RefreshTokenNotFoundException extends AbstractJwtAttackException
+class RefreshTokenUserIdMismatchException extends AbstractJwtAttackException
 {
-    /**
-     * @inheritDoc
-     */
-    public function __construct(?string $message = null, ?int $code = null, ?Throwable $previous = null)
-    {
-        if (empty($message)) {
-            $message = __('No active refresh token matching the request could be found.');
-        }
-        parent::__construct($message, $code, $previous);
-    }
 }

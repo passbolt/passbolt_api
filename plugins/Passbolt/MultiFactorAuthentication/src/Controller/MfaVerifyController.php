@@ -39,9 +39,8 @@ abstract class MfaVerifyController extends MfaController
         // Mfa cookie is set and a valid token
         $uac = $this->User->getAccessControl();
         $mfaVerifiedToken = $this->request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
-        $sessionId = $sessionIdentificationService->getSessionId($this->getRequest());
         if (isset($mfaVerifiedToken)) {
-            if (MfaVerifiedToken::check($uac, $mfaVerifiedToken, $sessionId)) {
+            if (MfaVerifiedToken::check($uac, $mfaVerifiedToken, $sessionIdentificationService, $this->getRequest())) {
                 throw new BadRequestException(__('The multi-factor authentication is not required.'));
             }
         }
@@ -78,7 +77,7 @@ abstract class MfaVerifyController extends MfaController
         SessionIdentificationServiceInterface $sessionIdentificationService
     ) {
         $uac = $this->User->getAccessControl();
-        $sessionId = $sessionIdentificationService->getSessionId($this->getRequest());
+        $sessionId = $sessionIdentificationService->getSessionIdentifier($this->getRequest());
         $token = MfaVerifiedToken::get($uac, $provider, $sessionId, (bool)$this->request->getData('remember'));
         $expiryAt = $this->request->getData('remember') ?
             (new Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :

@@ -17,21 +17,21 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\RefreshToken;
 
 use App\Model\Entity\AuthenticationToken;
+use Cake\Http\ServerRequest;
 
 class RefreshTokenLogoutService extends RefreshTokenAbstractService
 {
     /**
      * @param string $userId user uuid
-     * @param string|null $token token passed in the request
+     * @param \Cake\Http\ServerRequest $request server request
      * @return int The number of tokens deactivated.
      */
-    public function logout(string $userId, ?string $token): int
+    public function logout(string $userId, ServerRequest $request): int
     {
-        if ($token !== null) {
-            $this->consumeToken($token, $userId);
+        $token = $this->getRefreshTokenInRequest($request);
 
-            return 1;
-        } else {
+        // If no refresh token is specified in the request, deactivate all the user's refresh token
+        if (!is_string($token)) {
             return $this->AuthenticationTokens->updateAll(
                 ['active' => false],
                 [
@@ -40,5 +40,28 @@ class RefreshTokenLogoutService extends RefreshTokenAbstractService
                 ]
             );
         }
+
+        $token = $this->getActiveRefreshToken($token, $userId);
+        $this->consumeToken($token);
+
+        return 1;
+    }
+
+    /**
+     * Read the refresh token in the payload or in the cookies.
+     *
+     * @param \Cake\Http\ServerRequest $request Server request
+     * @return string|null
+     */
+    protected function getRefreshTokenInRequest(ServerRequest $request): ?string
+    {
+        /** @var string|null $refreshToken */
+        $refreshToken = $request->getData(self::REFRESH_TOKEN_DATA_KEY);
+        if ($refreshToken === null) {
+            /** @var string|null $refreshToken */
+            $refreshToken = $request->getCookie(self::REFRESH_TOKEN_COOKIE);
+        }
+
+        return $refreshToken;
     }
 }

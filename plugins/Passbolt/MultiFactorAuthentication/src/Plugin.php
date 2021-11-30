@@ -26,7 +26,7 @@ use Cake\ORM\TableRegistry;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\MultiFactorAuthentication\Authenticator\MfaJwtArmoredChallengeService;
 use Passbolt\MultiFactorAuthentication\Event\AddIsMfaEnabledColumnToUsersGrid;
-use Passbolt\MultiFactorAuthentication\Event\AddMfaCookieOnSuccessfulJwtLogin;
+use Passbolt\MultiFactorAuthentication\Event\AddMfaCookieOnSuccessfulRefreshTokenCreation;
 use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
@@ -80,7 +80,7 @@ class Plugin extends BasePlugin
 
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
             $app->getEventManager()
-                ->on(new AddMfaCookieOnSuccessfulJwtLogin()); // If a JWT login is successful, and a valid MFA cookie was sent, pass it to the response
+                ->on(new AddMfaCookieOnSuccessfulRefreshTokenCreation()); // If a JWT login or refresh token is successful, and a valid MFA cookie was sent, pass it to the response
         }
     }
 
