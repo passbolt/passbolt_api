@@ -21,7 +21,7 @@ use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 
-class FoldersRelationsRepairStronglyConnectedComponents
+class FoldersRelationsRepairStronglyConnectedComponentsService
 {
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable

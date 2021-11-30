@@ -21,7 +21,7 @@ use Cake\Datasource\ModelAwareTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Utility\Tarjan;
 
-class FoldersRelationsDetectStronglyConnectedComponents
+class FoldersRelationsDetectStronglyConnectedComponentsService
 {
     use ModelAwareTrait;
 
@@ -61,7 +61,7 @@ class FoldersRelationsDetectStronglyConnectedComponents
     public function bulkDetectForUsers(array $usersIds)
     {
         $result = [];
-        $usersIdsToCompareWith = $this->getAllNonDeletedUsersIds();
+        $usersIdsToCompareWith = $this->Users->findActive()->extract('id')->toArray();
         $usersFoldersRelations = $this->getUsersFoldersRelationsGroupedByUser($usersIdsToCompareWith);
 
         foreach ($usersIds as $firstUserId) {
@@ -79,26 +79,12 @@ class FoldersRelationsDetectStronglyConnectedComponents
             // deleted users, then it has already been compared with all the users given in parameter, remove it from
             // the list of users to compare with
             $firstUserIndex = array_search($firstUserId, $usersIdsToCompareWith);
-            if ($firstUserIndex != -1) {
+            if ($firstUserIndex !== false) {
                 unset($usersIdsToCompareWith[$firstUserIndex]);
             }
         }
 
         return $result;
-    }
-
-    /**
-     * Get all non deleted users.
-     *
-     * @return array
-     */
-    private function getAllNonDeletedUsersIds()
-    {
-        return $this->Users->find()
-            ->where(['deleted' => false])
-            ->select('id')
-            ->extract('id')
-            ->toArray();
     }
 
     /**
@@ -120,20 +106,19 @@ class FoldersRelationsDetectStronglyConnectedComponents
         $result = array_fill_keys($usersIds, []);
 
         $query = $this->FoldersRelations->find();
-        $query = $this->FoldersRelations->filterByUsersIds($query, $usersIds);
         $query = $this->FoldersRelations->filterByForeignModel($query, FoldersRelation::FOREIGN_MODEL_FOLDER);
+        $query = $this->FoldersRelations->filterByUsersIds($query, $usersIds);
         if (!$includePersonal) {
             $query = $this->FoldersRelations->filterQueryByIsNotPersonalFolder($query);
         }
         $foldersRelations = $query->select(['foreign_id', 'folder_parent_id', 'user_id'])
-            ->disableHydration()->toArray();
+            ->execute()->fetchAll();
 
-        foreach ($foldersRelations as $key => $folderRelation) {
-            $result[$folderRelation['user_id']][] = [
-                'foreign_id' => $folderRelation['foreign_id'],
-                'folder_parent_id' => $folderRelation['folder_parent_id'],
+        foreach ($foldersRelations as $folderRelation) {
+            $result[$folderRelation[2]][] = [
+                'foreign_id' => $folderRelation[0],
+                'folder_parent_id' => $folderRelation[1],
             ];
-            unset($foldersRelations[$key]);
         }
 
         return $result;
@@ -196,23 +181,22 @@ class FoldersRelationsDetectStronglyConnectedComponents
     {
         $graphForeignIdsMap = [];
         $graph = [];
+        $graphCount = 0;
 
         // Build the adjacency graph.
         foreach ($foldersRelations as $folderRelation) {
-            $foreignId = $folderRelation['foreign_id'];
-            $folderParentId = $folderRelation['folder_parent_id'];
-
-            if (!array_key_exists($foreignId, $graphForeignIdsMap)) {
-                $graphForeignIdsMap[$foreignId] = count($graphForeignIdsMap);
-                $graph[$graphForeignIdsMap[$foreignId]] = [];
+            if (!isset($graphForeignIdsMap[$folderRelation['foreign_id']])) {
+                $graphForeignIdsMap[$folderRelation['foreign_id']] = $graphCount++;
+                $graph[$graphForeignIdsMap[$folderRelation['foreign_id']]] = [];
             }
 
-            if (!is_null($folderParentId)) {
-                if (!array_key_exists($folderParentId, $graphForeignIdsMap)) {
-                    $graphForeignIdsMap[$folderParentId] = count($graphForeignIdsMap);
-                    $graph[$graphForeignIdsMap[$folderParentId]] = [];
+            if (!is_null($folderRelation['folder_parent_id'])) {
+                if (!isset($graphForeignIdsMap[$folderRelation['folder_parent_id']])) {
+                    $graphForeignIdsMap[$folderRelation['folder_parent_id']] = $graphCount++;
+                    $graph[$graphForeignIdsMap[$folderRelation['folder_parent_id']]] = [];
                 }
-                $graph[$graphForeignIdsMap[$folderParentId]][] = $graphForeignIdsMap[$foreignId];
+                $graph[$graphForeignIdsMap[$folderRelation['folder_parent_id']]][] =
+                    &$graphForeignIdsMap[$folderRelation['foreign_id']];
             }
         }
 

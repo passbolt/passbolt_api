@@ -34,12 +34,12 @@ class FoldersRelationsMoveItemInUserTreeService
     private $foldersRelationsTable;
 
     /**
-     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDetectStronglyConnectedComponents
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDetectStronglyConnectedComponentsService
      */
     private $folderRelationsDetectStronglyConnectedComponents;
 
     /**
-     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRepairStronglyConnectedComponents
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRepairStronglyConnectedComponentsService
      */
     private $foldersRelationsRepairStronglyConnectedComponents;
 
@@ -55,8 +55,8 @@ class FoldersRelationsMoveItemInUserTreeService
     {
         /** @phpstan-ignore-next-line  */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
-        $this->folderRelationsDetectStronglyConnectedComponents = new FoldersRelationsDetectStronglyConnectedComponents(); //phpcs:ignore
-        $this->foldersRelationsRepairStronglyConnectedComponents = new FoldersRelationsRepairStronglyConnectedComponents(); //phpcs:ignore
+        $this->folderRelationsDetectStronglyConnectedComponents = new FoldersRelationsDetectStronglyConnectedComponentsService(); //phpcs:ignore
+        $this->foldersRelationsRepairStronglyConnectedComponents = new FoldersRelationsRepairStronglyConnectedComponentsService(); //phpcs:ignore
         $this->userHasPermissionService = new UserHasPermissionService();
     }
 
