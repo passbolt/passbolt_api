@@ -114,7 +114,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
             'user_id' => $user->id,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
         ])->firstOrFail()->get('token');
-        $this->assertCookie($newRefreshToken, 'refresh_token');
+        $this->assertCookieIsSecure($newRefreshToken, 'refresh_token');
         // Get a fresh request
         $this->cleanup();
         $this->setJwtTokenInHeader($jwt);
