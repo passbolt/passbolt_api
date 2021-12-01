@@ -33,13 +33,15 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
 {
     public function testConvertEmailVariablesToJsonService_Convert()
     {
+        $this->loadRoutes();
+
         // Create an email with objects in v3.3.0 mode
         // Forces the serialization to serialize (no Json)
         Configure::write('EmailQueue.serialization_type', 'email_queue.serialize');
         FactoryTableRegistry::getTableLocator()->clear();
 
-        $users = UserFactory::make(2)->with('Profiles.Avatars', ['data' => 'Foo'])->getEntities();
-        $resource = ResourceFactory::make()->getEntity()->toArray();
+        $users = UserFactory::make(2)->with('Profiles.Avatars', ['data' => 'Foo'])->persist();
+        $resource = ResourceFactory::make()->persist()->toArray();
 
         $baseFactory = EmailQueueFactory::make()
             ->setField('template_vars', compact('users', 'resource'));
