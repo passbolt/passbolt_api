@@ -80,7 +80,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ])->firstOrFail();
 
         $this->assertTrue($mfaToken->checkSessionId($sessionId));
-        $this->assertCookie($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 
     /**
@@ -109,6 +109,6 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ])->orderDesc('created')->firstOrFail();
 
         $this->assertTrue($mfaToken->checkSessionId($accessToken));
-        $this->assertCookie($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }

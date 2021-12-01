@@ -100,8 +100,10 @@ class AddMfaCookieOnSuccessfulRefreshTokenCreation implements EventListenerInter
             $controller->getRequest()->getCookieCollection()->has(MfaVerifiedCookie::MFA_COOKIE_ALIAS)
         ) {
             $mfaCookie = $controller->getRequest()->getCookieCollection()->get(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+            $newMfaCookie = MfaVerifiedCookie::get($controller->getRequest(), (string)$mfaCookie->getValue());
+
             $controller->setResponse(
-                $controller->getResponse()->withCookie($mfaCookie)
+                $controller->getResponse()->withCookie($newMfaCookie)
             );
         }
     }

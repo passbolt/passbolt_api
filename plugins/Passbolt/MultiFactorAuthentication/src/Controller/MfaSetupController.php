@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
-use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
@@ -80,8 +79,7 @@ abstract class MfaSetupController extends MfaController
     ) {
         $sessionId = $sessionIdentificationService->getSessionIdentifier($this->getRequest());
         $token = MfaVerifiedToken::get($this->User->getAccessControl(), $provider, $sessionId);
-        $secure = Configure::read('passbolt.security.cookies.secure') || $this->getRequest()->is('ssl');
-        $cookie = MfaVerifiedCookie::get($token, null, $secure);
+        $cookie = MfaVerifiedCookie::get($this->getRequest(), $token, null);
         $this->response = $this->getResponse()->withCookie($cookie);
 
         if (!$this->request->is('json')) {

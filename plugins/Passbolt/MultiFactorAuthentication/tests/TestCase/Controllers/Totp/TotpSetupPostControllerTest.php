@@ -176,7 +176,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
 
         /** @var \App\Model\Entity\AuthenticationToken $mfaCookie */
         $mfaCookie = MfaAuthenticationTokenFactory::find()->first();
-        $this->assertCookie($mfaCookie->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($mfaCookie->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         $this->assertTrue($mfaCookie->checkSessionId($sessionId));
     }
 
@@ -201,7 +201,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
 
         /** @var \App\Model\Entity\AuthenticationToken $mfaCookie */
         $mfaCookie = MfaAuthenticationTokenFactory::find()->first();
-        $this->assertCookie($mfaCookie->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($mfaCookie->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         $this->assertTrue($mfaCookie->checkSessionId($accessToken));
     }
 
