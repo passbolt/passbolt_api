@@ -46,6 +46,7 @@ class CleanupTest extends TestCase
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Avatars') ? [] : ['className' => AvatarsTable::class];
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars', $config);
+        $this->loadRoutes();
     }
 
     /**

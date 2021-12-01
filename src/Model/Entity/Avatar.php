@@ -35,6 +35,15 @@ class Avatar extends Entity
     protected $_virtual = ['url'];
 
     /**
+     * The avatar data never needs to be served. it is stored in cache.
+     *
+     * @var string[]
+     */
+    protected $_hidden = [
+        'data',
+    ];
+
+    /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
      *
