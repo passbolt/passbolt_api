@@ -28,7 +28,7 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
 /**
  * UserFactory
  *
- * @method \App\Model\Entity\User persist()
+ * @method \App\Model\Entity\User|\App\Model\Entity\User[] persist()
  * @method \App\Model\Entity\User getEntity()
  * @method \App\Model\Entity\User[] getEntities()
  */
