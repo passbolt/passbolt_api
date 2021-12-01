@@ -22,7 +22,7 @@ use App\Error\Exception\AdminsEmailNotificationExceptionTrait;
 use App\Error\Exception\UserEmailNotificationExceptionTrait;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
-use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenFetchUserService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAuthenticationService;
 
 /**
  * Abstract class for all JWT attack related exceptions.
@@ -54,7 +54,7 @@ abstract class AbstractJwtAttackException extends AbstractExceptionWithEmailEven
         $token = $request->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
         if (!empty($token)) {
             try {
-                $userId = (new RefreshTokenFetchUserService($token))->getUserIdFromToken();
+                $userId = (new RefreshTokenAuthenticationService())->getUserIdFromToken($token);
             } catch (RefreshTokenNotFoundException $e) {
                 $userId = null;
             }

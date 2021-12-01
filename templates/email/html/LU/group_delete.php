@@ -22,18 +22,16 @@ $admin = $body['admin'];
 $group = $body['group'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($admin->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($admin->username),
-        'first_name' => Purifier::clean($admin->profile->first_name),
-        'last_name' => Purifier::clean($admin->profile->last_name),
-        'datetime' => $group->modified,
-        'text' => __('{0} deleted a group', Purifier::clean($admin->profile->first_name))
+        'user' => $admin,
+        'datetime' => $group['modified'],
+        'text' => __('{0} deleted a group', Purifier::clean($admin['profile']['first_name']))
     ])
 ]);
 
 $text = __('{0} deleted the group "{1}" you were a member of.',
-    Purifier::clean($admin->profile->first_name), Purifier::clean($group->name)
+    Purifier::clean($admin['profile']['first_name']), Purifier::clean($group['name'])
 );
 $text .= ' ' . __('All passwords that were shared only with this group were also deleted.');
 

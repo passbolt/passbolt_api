@@ -63,13 +63,13 @@ class LocaleEmailQueueListener implements EventListenerInterface
         $template_vars = $entity->get('template_vars') ?? [];
         $isArray = is_array($template_vars);
         if (!$isArray) {
-            $template_vars = unserialize($template_vars);
+            $template_vars = json_decode($template_vars, true);
         }
 
         $template_vars[self::VIEW_VAR_KEY] = $locale;
 
         if (!$isArray) {
-            $template_vars = serialize($template_vars);
+            $template_vars = json_encode($template_vars);
         }
 
         $entity->set(compact('template_vars'));

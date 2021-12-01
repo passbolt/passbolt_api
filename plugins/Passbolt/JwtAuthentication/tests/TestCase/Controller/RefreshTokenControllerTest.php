@@ -76,9 +76,23 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailQueueCount(0);
     }
 
-    public function testAuthRefreshTokenControllerWithValidRefreshTokenCookie()
+    public function dataProviderWithAndWithoutAccessToken(): array
+    {
+        return [
+            [true], [false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderWithAndWithoutAccessToken
+     * @param bool $withAccessToken With valid access token in header or no access token
+     */
+    public function testAuthRefreshTokenControllerWithValidRefreshTokenCookie(bool $withAccessToken)
     {
         $user = UserFactory::make()->user()->persist();
+        if ($withAccessToken) {
+            $this->createJwtTokenAndSetInHeader($user->id);
+        }
         $oldRefreshToken = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
@@ -100,7 +114,7 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
             'user_id' => $user->id,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
         ])->firstOrFail()->get('token');
-        $this->assertCookie($newRefreshToken, 'refresh_token');
+        $this->assertCookieIsSecure($newRefreshToken, 'refresh_token');
         // Get a fresh request
         $this->cleanup();
         $this->setJwtTokenInHeader($jwt);
@@ -109,9 +123,16 @@ class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function testAuthRefreshTokenControllerWithValidPayload()
+    /**
+     * @dataProvider dataProviderWithAndWithoutAccessToken
+     * @param bool $withAccessToken With valid access token in header or no access token
+     */
+    public function testAuthRefreshTokenControllerWithValidPayload(bool $withAccessToken)
     {
         $user = UserFactory::make()->user()->persist();
+        if ($withAccessToken) {
+            $this->createJwtTokenAndSetInHeader($user->id);
+        }
         $oldRefreshToken = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)

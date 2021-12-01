@@ -108,8 +108,8 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
 
         // Ensure that the virtual field is correctly constructed.
         $virtualField = [
-            AvatarsConfigurationService::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar, AvatarsConfigurationService::FORMAT_MEDIUM),
-            AvatarsConfigurationService::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar),
+            AvatarsConfigurationService::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar->toArray(), AvatarsConfigurationService::FORMAT_MEDIUM),
+            AvatarsConfigurationService::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar->toArray()),
         ];
         $this->assertSame($virtualField, $avatar->url);
     }
@@ -139,8 +139,8 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
 
         // Ensure that the virtual field is correctly constructed.
         $virtualField = [
-            AvatarsConfigurationService::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar, AvatarsConfigurationService::FORMAT_MEDIUM),
-            AvatarsConfigurationService::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar),
+            AvatarsConfigurationService::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar->toArray(), AvatarsConfigurationService::FORMAT_MEDIUM),
+            AvatarsConfigurationService::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar->toArray()),
         ];
         $this->assertSame($virtualField, $avatar->url);
     }

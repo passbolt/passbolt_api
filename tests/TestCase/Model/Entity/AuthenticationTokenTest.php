@@ -48,7 +48,7 @@ class AuthenticationTokenTest extends TestCase
             ->data($data)
             ->getEntity();
 
-        $this->assertEquals($expectedSessionId, $entity->getSessionId());
+        $this->assertEquals($expectedSessionId, $entity->getHashedSessionId());
     }
 
     /**

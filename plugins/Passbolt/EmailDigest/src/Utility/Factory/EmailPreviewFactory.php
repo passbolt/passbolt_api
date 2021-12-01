@@ -143,7 +143,6 @@ class EmailPreviewFactory
     {
         $headers = empty($emailData->headers) ? [] : (array)$emailData->headers;
         $viewVars = empty($emailData->template_vars) ? [] : $emailData->template_vars;
-        $emailDataErrorMessage = null;
 
         if (!empty($emailData->from_email) && !empty($emailData->from_name)) {
             $email->setFrom($emailData->from_email, $emailData->from_name);

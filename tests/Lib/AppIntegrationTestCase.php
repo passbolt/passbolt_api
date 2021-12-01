@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib;
 
+use App\Authenticator\AbstractSessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Model\Entity\User;
@@ -168,9 +169,10 @@ abstract class AppIntegrationTestCase extends TestCase
     }
 
     /**
-     * Injects in the DIC an Session Indentification Interface with the provided ID.
+     * Injects in the DIC a session identification Interface with the provided ID.
      * In Session, will return the session ID
      * In JWT, will return the access token
+     * In JWT refresh token, will return the hashed access token associated to the refresh token
      *
      * @param string $sessionId Session Id to mock
      * @return void
@@ -178,10 +180,24 @@ abstract class AppIntegrationTestCase extends TestCase
     public function mockSessionId(string $sessionId)
     {
         $this->mockService(SessionIdentificationServiceInterface::class, function () use ($sessionId) {
-            $stubSessionIdentifier = $this->createMock(SessionIdentificationServiceInterface::class);
-            $stubSessionIdentifier->method('getSessionId')->willReturn($sessionId);
+            $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
+            $stubSessionIdentifier->method('getSessionIdentifier')->willReturn($sessionId);
 
             return $stubSessionIdentifier;
         });
+    }
+
+    /**
+     * @param mixed $expected Expected value
+     * @param string $name Cookie name
+     */
+    public function assertCookieIsSecure($expected, string $name): void
+    {
+        $this->assertCookie($expected, $name);
+        /** @var Response $response */
+        $response = $this->_response;
+        $cookie = $response->getCookieCollection()->get($name);
+        $this->assertTrue($cookie->isSecure());
+        $this->assertTrue($cookie->isHttpOnly());
     }
 }
