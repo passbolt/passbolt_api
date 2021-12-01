@@ -186,4 +186,18 @@ abstract class AppIntegrationTestCase extends TestCase
             return $stubSessionIdentifier;
         });
     }
+
+    /**
+     * @param mixed $expected Expected value
+     * @param string $name Cookie name
+     */
+    public function assertCookieIsSecure($expected, string $name): void
+    {
+        $this->assertCookie($expected, $name);
+        /** @var Response $response */
+        $response = $this->_response;
+        $cookie = $response->getCookieCollection()->get($name);
+        $this->assertTrue($cookie->isSecure());
+        $this->assertTrue($cookie->isHttpOnly());
+    }
 }
