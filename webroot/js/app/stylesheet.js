@@ -22,9 +22,11 @@
   const cssFile = selfTag.dataset.file;
   const version = selfTag.getAttribute("cache-version");
 
-  const theme = window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? "midgar"
-    : "default";
+  const theme = selfTag.dataset.theme
+    ? selfTag.dataset.theme
+    : window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? "midgar"
+      : "default";
 
   const link = document.createElement('link');
   link.setAttribute("href", `${baseUrl}/css/themes/${theme}/${cssFile}?v=${version}`);
