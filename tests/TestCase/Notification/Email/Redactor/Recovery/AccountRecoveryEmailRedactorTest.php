@@ -25,6 +25,7 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\ORM\TableRegistry;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 
 class AccountRecoveryEmailRedactorTest extends AppIntegrationTestCase
@@ -47,13 +48,22 @@ class AccountRecoveryEmailRedactorTest extends AppIntegrationTestCase
     {
         $this->getJson('/auth/is-authenticated.json');
 
-        $user = UserFactory::make()->persist();
+        $user = UserFactory::make()->withAvatar()->user()->persist();
+
+        /** @var UsersTable $Users */
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        /** @var User $user */
+        $user = $Users->findRecover($user->username)->first();
         $token = AuthenticationTokenFactory::make()->persist();
         $event = new Event(UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME, null, compact('user', 'token'));
         EventManager::instance()->dispatch($event);
 
         $this->assertSame(1, EmailQueueFactory::count());
-        $this->assertEmailWithRecipientIsInQueue($user->username);
+        $this->assertEmailIsInQueue([
+            'email' => $user->username,
+            'subject' => "Your account recovery, {$user->profile->first_name}!",
+            'template' => 'AN/user_recover',
+        ]);
         $emailVars = EmailQueueFactory::find()->firstOrFail()->get('template_vars');
         $this->assertSame($user->username, $emailVars['body']['user']['username']);
         $this->assertSame($user->profile->first_name, $emailVars['body']['user']['profile']['first_name']);
