@@ -38,7 +38,7 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         Configure::write('EmailQueue.serialization_type', 'email_queue.serialize');
         FactoryTableRegistry::getTableLocator()->clear();
 
-        $users = UserFactory::make(2)->getEntities();
+        $users = UserFactory::make(2)->with('Profiles.Avatars', ['data' => 'Foo'])->getEntities();
         $resource = ResourceFactory::make()->getEntity()->toArray();
 
         $baseFactory = EmailQueueFactory::make()
@@ -81,8 +81,10 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         $assertVars = function (array $vars) use ($users, $resource) {
             $this->assertSame($users[0]->username, $vars['users'][0]['username']);
             $this->assertSame($users[0]->role->name, $vars['users'][0]['role']['name']);
+            $this->assertNull($vars['users'][0]['profile']['avatar']['data'] ?? null);
             $this->assertSame($users[1]->username, $vars['users'][1]['username']);
             $this->assertSame($users[1]->role->name, $vars['users'][1]['role']['name']);
+            $this->assertNull($vars['users'][1]['profile']['avatar']['data'] ?? null);
             $this->assertSame($resource['name'], $vars['resource']['name']);
             // Dates are accessible under the $date['date] key!
             $this->assertInstanceOf(FrozenTime::class, FrozenTime::parse($vars['resource']['created']['date']));

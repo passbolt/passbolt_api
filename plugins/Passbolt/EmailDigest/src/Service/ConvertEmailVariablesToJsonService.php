@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\EmailDigest\Service;
 
+use App\Model\Entity\User;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
@@ -108,11 +109,13 @@ class ConvertEmailVariablesToJsonService
 
         foreach ($vars as $var => $value) {
             if ($value instanceof EntityInterface) {
+                $this->removeAvatarDataFromUser($value);
                 $vars[$var] = $value->toArray();
             }
             if (is_array($value)) {
                 foreach ($value as $k => $v) {
                     if ($v instanceof EntityInterface) {
+                        $this->removeAvatarDataFromUser($v);
                         $vars[$var][$k] = $v->toArray();
                     }
                 }
@@ -120,5 +123,15 @@ class ConvertEmailVariablesToJsonService
         }
 
         return $vars;
+    }
+
+    /**
+     * @param EntityInterface $entity Entity
+     */
+    public function removeAvatarDataFromUser(EntityInterface $entity): void
+    {
+        if ($entity instanceof User && isset($entity['profile']['avatar']['data'])) {
+            unset($entity['profile']['avatar']['data']);
+        }
     }
 }

@@ -219,9 +219,11 @@ class AvatarsTable extends Table
         return [
             'Avatars' => function (Query $q) {
                 // Formatter for empty avatars.
-                return $q->formatResults(function (CollectionInterface $avatars) {
-                    return AvatarsTable::formatResults($avatars);
-                });
+                return $q
+                    ->select(['Avatars.id', 'Avatars.profile_id', 'Avatars.created', 'Avatars.modified'])
+                    ->formatResults(function (CollectionInterface $avatars) {
+                        return AvatarsTable::formatResults($avatars);
+                    });
             },
         ];
     }
