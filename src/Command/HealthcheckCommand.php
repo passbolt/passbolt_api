@@ -255,14 +255,14 @@ class HealthcheckCommand extends PassboltCommand
                 __('See. https://secure.php.net/manual/en/book.mbstring.php'),
             ]
         );
-        $this->assert(
-            $checks['environment']['allow_url_fopen'],
-            __('The allow_url_fopen setting is activated in php.ini.'),
-            __('You must activate the allow_url_fopen setting in php.ini to use Passbolt.'),
-            [
-                __('See. https://www.php.net/manual/en/filesystem.configuration.php'),
-            ]
-        );
+//        $this->assert(
+//            $checks['environment']['allow_url_fopen'],
+//            __('The allow_url_fopen setting is activated in php.ini.'),
+//            __('You must activate the allow_url_fopen setting in php.ini to use Passbolt.'),
+//            [
+//                __('See. https://www.php.net/manual/en/filesystem.configuration.php'),
+//            ]
+//        );
     }
 
     /**

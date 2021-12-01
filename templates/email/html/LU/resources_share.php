@@ -27,7 +27,7 @@ $owner = $body['owner'];
 $count = $body['count'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
+    'url' => AvatarHelper::getAvatarUrl($owner['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $owner,
         'datetime' => FrozenTime::now(),

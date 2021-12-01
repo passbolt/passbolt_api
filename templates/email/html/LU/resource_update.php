@@ -42,7 +42,7 @@ if ($showUsername) {
 if ($showUri) {
     $text .= __('URL: {0}', Purifier::clean($resource['uri'])) . '<br/>';
 }
-if ($showDescription) {
+if ($showDescription && isset($resource['description'])) {
     $text .= __('Description: {0}', Purifier::clean($resource['description'])) . '<br/>';
 }
 echo $this->element('Email/module/text', [

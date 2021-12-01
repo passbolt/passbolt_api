@@ -228,7 +228,7 @@ class Healthchecks
         $checks['environment']['image'] = (extension_loaded('gd') || extension_loaded('imagick'));
         $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);
         $checks['environment']['logWritable'] = is_writable(LOGS);
-        $checks['environment']['allow_url_fopen'] = ini_get('allow_url_fopen') === '1';
+        //$checks['environment']['allow_url_fopen'] = ini_get('allow_url_fopen') === '1';
 
         return $checks;
     }
