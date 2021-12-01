@@ -21,7 +21,7 @@ class AvatarHelper extends Helper
         ?array $avatar = null,
         ?string $format = AvatarsConfigurationService::FORMAT_SMALL
     ): string {
-        if (empty($avatar) || empty($avatar['data']) || empty($avatar['id'])) {
+        if (empty($avatar) || empty($avatar['id'])) {
             return self::getAvatarFallBackUrl($format);
         } else {
             return Router::url([

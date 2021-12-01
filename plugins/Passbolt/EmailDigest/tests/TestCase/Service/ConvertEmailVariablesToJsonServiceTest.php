@@ -33,13 +33,15 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
 {
     public function testConvertEmailVariablesToJsonService_Convert()
     {
+        $this->loadRoutes();
+
         // Create an email with objects in v3.3.0 mode
         // Forces the serialization to serialize (no Json)
         Configure::write('EmailQueue.serialization_type', 'email_queue.serialize');
         FactoryTableRegistry::getTableLocator()->clear();
 
-        $users = UserFactory::make(2)->getEntities();
-        $resource = ResourceFactory::make()->getEntity()->toArray();
+        $users = UserFactory::make(2)->with('Profiles.Avatars', ['data' => 'Foo'])->persist();
+        $resource = ResourceFactory::make()->persist()->toArray();
 
         $baseFactory = EmailQueueFactory::make()
             ->setField('template_vars', compact('users', 'resource'));
@@ -81,8 +83,10 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         $assertVars = function (array $vars) use ($users, $resource) {
             $this->assertSame($users[0]->username, $vars['users'][0]['username']);
             $this->assertSame($users[0]->role->name, $vars['users'][0]['role']['name']);
+            $this->assertNull($vars['users'][0]['profile']['avatar']['data'] ?? null);
             $this->assertSame($users[1]->username, $vars['users'][1]['username']);
             $this->assertSame($users[1]->role->name, $vars['users'][1]['role']['name']);
+            $this->assertNull($vars['users'][1]['profile']['avatar']['data'] ?? null);
             $this->assertSame($resource['name'], $vars['resource']['name']);
             // Dates are accessible under the $date['date] key!
             $this->assertInstanceOf(FrozenTime::class, FrozenTime::parse($vars['resource']['created']['date']));
