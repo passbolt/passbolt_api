@@ -10,14 +10,12 @@ if (!isset($user)) {
 
 ?>
 <?= $this->element('Email/module/avatar',[
-'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
-'text' => $this->element('Email/module/avatar_text', [
-'username' => Purifier::clean($user['username']),
-'first_name' => Purifier::clean($user['profile']['first_name']),
-'last_name' => Purifier::clean($user['profile']['last_name']),
-'datetime' => $user['created'],
-'text' => __('This is an email used by tests only!')
-])
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
+    'text' => $this->element('Email/module/avatar_text', [
+        'user' => $user,
+        'datetime' => $user['created'],
+        'text' => __('This is an email used by tests only!')
+    ])
 ]); ?>
 
 <h1><?= __d('test', 'This is an email in english.'); ?></h1>
