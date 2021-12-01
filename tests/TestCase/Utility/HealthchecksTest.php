@@ -82,7 +82,7 @@ class HealthchecksTest extends AppIntegrationTestCase
             'image' => true,
             'tmpWritable' => true,
             'logWritable' => true,
-            'allow_url_fopen' => true,
+            //'allow_url_fopen' => true,
         ]];
         $this->assertSame($expectedCheck, $check);
     }
