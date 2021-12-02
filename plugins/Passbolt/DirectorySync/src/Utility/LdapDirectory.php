@@ -51,7 +51,7 @@ class LdapDirectory implements DirectoryInterface
     private $mappingRules;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $directoryType;
 
@@ -80,7 +80,6 @@ class LdapDirectory implements DirectoryInterface
         } elseif (file_exists(PLUGINS . 'Passbolt' . DS . 'DirectorySync' . DS . 'config' . DS . 'schema')) {
             $ldapConfig->setSchemaFolder(PLUGINS . 'Passbolt' . DS . 'DirectorySync' . DS . 'config' . DS . 'schema');
         }
-
         $this->ldap = new LdapManager($ldapConfig);
         $this->directoryType = $this->getDirectoryType();
         $this->mappingRules = $this->getMappingRules();
@@ -140,7 +139,7 @@ class LdapDirectory implements DirectoryInterface
      */
     public function getDirectoryType()
     {
-        if (!is_string($this->directoryType)) {
+        if (isset($this->directoryType)) {
             return $this->directoryType;
         }
 
@@ -235,13 +234,11 @@ class LdapDirectory implements DirectoryInterface
             ->setBaseDn($this->getDNFullPath(LdapObjectType::USER))
             ->fromUsers();
 
-        if (!!$enabledUsersOnly) {
+        if (isset($enabledUsersOnly) && $enabledUsersOnly == true) {
             $usersQuery->andWhere(['enabled' => true]);
         }
 
-        $usersQuery = $this->_customizeUsersQuery($usersQuery);
-
-        return $usersQuery;
+        return $this->_customizeUsersQuery($usersQuery);
     }
 
     /**
