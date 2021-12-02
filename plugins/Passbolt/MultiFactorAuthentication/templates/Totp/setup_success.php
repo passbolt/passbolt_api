@@ -8,9 +8,6 @@
 
     $title = __('Time based One Time Password (TOTP) is enabled!');
     $this->assign('title', $title);
-    $version = Configure::read('passbolt.version');
-    $themePath = "themes/$theme/api_main.min.css?v=$version";
-    $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'iframe mfa');
     $this->Html->script('app/mfa-settings.js?v=' . Configure::read('passbolt.version'), ['block' => 'js', 'fullBase' => true]);
 ?>

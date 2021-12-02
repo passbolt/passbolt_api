@@ -9,9 +9,6 @@
 
     $title = __('Multi factor authentication');
     $this->assign('title', $title);
-    $version = Configure::read('passbolt.version');
-    $themePath = "themes/$theme/api_main.min.css?v=$version";
-    $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'iframe mfa');
 
     $mfaPossible = false;

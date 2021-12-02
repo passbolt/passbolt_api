@@ -6,14 +6,12 @@
     use Cake\Core\Configure;
     use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
+    $version = Configure::read('passbolt.version');
     $title = __('Duo multi-factor authentication is enabled!');
     $this->assign('title', $title);
-    $version = Configure::read('passbolt.version');
-    $themePath = "themes/$theme/api_main.min.css?v=$version";
-    $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'iframe mfa');
     $this->Html->script(
-        'app/mfa-settings.js?v=' . Configure::read('passbolt.version'),
+        "app/mfa-settings.js?v=$version",
         ['block' => 'js', 'fullBase' => true]
     );
 ?>

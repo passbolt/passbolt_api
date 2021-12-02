@@ -12,10 +12,6 @@
 
     $title = __('Duo multi-factor authentication');
     $this->assign('title', $title);
-    $this->Html->css(
-        'themes/default/api_authentication.min.css?v=' . Configure::read('passbolt.version'),
-        ['block' => 'css', 'fullBase' => true]
-    );
     $this->assign('pageClass', 'login');
     $this->Html->css('Duo-Frame.css', ['block' => 'css', 'fullBase' => true]);
     $formContext = [
