@@ -225,7 +225,7 @@ class DirectoryOrgSettings
     /**
      * Get the value of enabledUsersOnly.
      *
-     * @return bool|string
+     * @return bool|string|null
      */
     public function getEnabledUsersOnly()
     {

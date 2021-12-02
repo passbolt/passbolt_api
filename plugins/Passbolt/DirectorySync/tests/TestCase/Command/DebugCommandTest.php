@@ -58,6 +58,6 @@ class DebugCommandTest extends DirectorySyncConsoleIntegrationTestCase
         $this->useCommandRunner();
         $this->exec('directory_sync debug');
         $this->assertExitError();
-        $this->assertOutputContains('<error>The directory type should be one of the following: ad, openldap.</error>');
+        $this->assertOutputContains('<error>No LDAP server is available.</error>');
     }
 }
