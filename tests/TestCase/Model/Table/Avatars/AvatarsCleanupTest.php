@@ -25,7 +25,7 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
-class CleanupTest extends TestCase
+class AvatarsCleanupTest extends TestCase
 {
     use AvatarsModelTrait;
 

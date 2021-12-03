@@ -21,7 +21,7 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use Cake\ORM\TableRegistry;
 
-class CreateTest extends AppTestCase
+class AvatarsCreateTest extends AppTestCase
 {
     use AvatarsModelTrait;
 
@@ -52,6 +52,8 @@ class CreateTest extends AppTestCase
             [true, 'png'],
             [false, 'jpg'],
             [true, 'jpg'],
+            [false, 'jpeg'],
+            [true, 'jpeg'],
             [false, 'gif'],
             [true, 'gif'],
         ];
