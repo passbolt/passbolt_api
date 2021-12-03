@@ -27,7 +27,7 @@ use Laminas\Diactoros\UploadedFile;
 /**
  * App\Model\Table\FileStorageTable Test Case
  */
-class ValidationTest extends TestCase
+class AvatarsValidationTest extends TestCase
 {
     use AvatarsModelTrait;
 
@@ -72,26 +72,33 @@ class ValidationTest extends TestCase
         $this->assertSame('avatars', $this->Avatars->getTable());
     }
 
+    public function dataProviderForValidationDefaultSuccess(): array
+    {
+        return [
+            ['png'],
+            ['jpg'],
+            ['jpeg'],
+            ['gif'],
+        ];
+    }
+
     /**
      * Test validationDefault method
      *
+     * @dataProvider dataProviderForValidationDefaultSuccess
      * @return void
      */
-    public function testValidationDefaultSuccess()
+    public function testValidationDefaultSuccess(string $extension)
     {
-        $adaAvatar = FIXTURES . 'Avatar' . DS . 'ada.png';
-
         $file = new UploadedFile(
-            $adaAvatar,
+            FIXTURES . 'Avatar' . DS . 'ada.' . $extension,
             170049,
             \UPLOAD_ERR_OK,
-            'ada.png',
-            'image/png'
+            'ada.' . $extension,
+            'image/' . $extension
         );
 
-        $data = compact('file');
-
-        $file = $this->Avatars->newEntity($data);
+        $file = $this->Avatars->newEntity(compact('file'));
         $this->assertEmpty($file->getErrors());
     }
 
@@ -102,21 +109,17 @@ class ValidationTest extends TestCase
      */
     public function testValidationDefaultError()
     {
-        $adaAvatar = FIXTURES . 'Avatar' . DS . 'ada.png';
-
-        for ($i = 1; $i <= 8; $i++) {
+        for ($errorStatus = 1; $errorStatus <= 8; $errorStatus++) {
             $file = new UploadedFile(
-                $adaAvatar,
+                FIXTURES . 'Avatar' . DS . 'ada.png',
                 170049,
-                $i,
+                $errorStatus,
                 'ada.png',
                 'image/png'
             );
         }
 
-        $data = compact('file');
-
-        $file = $this->Avatars->newEntity($data);
+        $file = $this->Avatars->newEntity(compact('file'));
         $this->assertNotEmpty($file->getErrors());
     }
 
