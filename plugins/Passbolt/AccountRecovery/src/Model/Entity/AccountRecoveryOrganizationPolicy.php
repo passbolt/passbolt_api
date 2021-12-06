@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.4.0
+ * @since         3.5.0
  */
 
 namespace Passbolt\AccountRecovery\Model\Entity;
@@ -29,7 +29,7 @@ use Cake\ORM\Entity;
  * @property string $created_by
  * @property string $modified_by
  *
- * @property AccountRecoveryOrganizationPublicKey $account_recovery_organization_public_key
+ * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $account_recovery_organization_public_key
  */
 class AccountRecoveryOrganizationPolicy extends Entity
 {

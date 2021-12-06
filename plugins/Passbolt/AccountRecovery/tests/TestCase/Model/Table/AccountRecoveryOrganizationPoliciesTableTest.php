@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.4.0
+ * @since         3.5.0
  */
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Model\Table;
@@ -42,7 +42,7 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('AccountRecoveryOrganizationPolicies') ? [] : [
-            'className' => AccountRecoveryOrganizationPoliciesTable::class
+            'className' => AccountRecoveryOrganizationPoliciesTable::class,
         ];
         $this->AccountRecoveryOrganizationPolicies = TableRegistry::getTableLocator()->get('AccountRecoveryOrganizationPolicies', $config);
     }
@@ -59,6 +59,19 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
     }
 
     /**
+     * @return array Default options
+     */
+    private function getDefaultOptions(): array
+    {
+        return [
+            'checkRules' => true,
+            'accessibleFields' => [
+                '*' => true,
+            ],
+        ];
+    }
+
+    /**
      * Check org id field validation rules
      */
     public function testAccountRecoveryOrganizationPoliciesTable_ValidationId()
@@ -69,8 +82,8 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
         $this->assertFieldFormatValidation(
             $this->AccountRecoveryOrganizationPolicies,
             'id',
-            AccountRecoveryOrganizationPolicyFactory::getDefaultData(),
-            AccountRecoveryOrganizationPolicyFactory::getDefaultOptions(),
+            AccountRecoveryOrganizationPolicyFactory::make()->getEntity()->toArray(),
+            $this->getDefaultOptions(),
             $testCases
         );
     }
@@ -88,8 +101,8 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
         $this->assertFieldFormatValidation(
             $this->AccountRecoveryOrganizationPolicies,
             'policy',
-            AccountRecoveryOrganizationPolicyFactory::getDefaultData(),
-            AccountRecoveryOrganizationPolicyFactory::getDefaultOptions(),
+            AccountRecoveryOrganizationPolicyFactory::make()->getEntity()->toArray(),
+            $this->getDefaultOptions(),
             $testCases
         );
     }

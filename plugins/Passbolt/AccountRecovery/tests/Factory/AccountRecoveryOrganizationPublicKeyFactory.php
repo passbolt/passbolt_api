@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.4.0
+ * @since         3.5.0
  */
 namespace Passbolt\AccountRecovery\Test\Factory;
 
@@ -20,7 +20,6 @@ use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 
 /**
  * AccountRecoveryOrganizationPublicKeyFactory
@@ -45,18 +44,25 @@ class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
      */
     protected function setDefaultTemplate(): void
     {
-        $this->setDefaultData(self::getDefaultData());
+        $this->setDefaultData(function (Generator $faker) {
+            return [
+                'armored_key' => $this->getDummyArmoredKey(),
+                'fingerprint' => 'B16B0A095A9AF46D7D7FAA440A848FBED334B3EC',
+                'created_by' => UuidFactory::uuid(),
+                'modified_by' => UuidFactory::uuid(),
+                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'deleted' => null,
+            ];
+        });
     }
 
     /**
-     * Get some default entity data
-     * @return array
+     * @return string
      */
-    static public function getDefaultData(): array
+    public function getDummyArmoredKey(): string
     {
-        $faker = new Generator();
-        return [
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+        return '-----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQINBFxZYsMBEADaHvuNsno1PDvagd+50n0j+EonuPuEsDzNaj4U1BXpoBwSHRkM
 QPaTBnOajs60BrUAw70JLQr5ExyAR3/5OQhL3Haj/vnQvOvM97wED2Z3rA6jkQQ3
@@ -107,27 +113,6 @@ XBF8VcSFRObz0gCy3eWHO1qGwPJZpl+nA16+gPMRMDqJvEnhp4NQxD305d/9Xm9c
 DTfTTCqwEieuLV9Rk0VlZMhc7ifSPClNM63oO+2p5HKOPDacrddRKIm7eLO+fTv3
 WXi2h/I=
 =L/Vu
------END PGP PUBLIC KEY BLOCK-----',
-            'fingerprint' => 'B16B0A095A9AF46D7D7FAA440A848FBED334B3EC',
-            'created_by' => UuidFactory::uuid(),
-            'modified_by' => UuidFactory::uuid(),
-            'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-            'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
-            'deleted' => null
-        ];
-    }
-
-    /**
-     * Get default entity options.
-     * @return array checkRules, accessibleFields
-     */
-    static public function getDefaultOptions(): array
-    {
-        return [
-            'checkRules' => true,
-            'accessibleFields' => [
-                '*' => true,
-            ],
-        ];
+-----END PGP PUBLIC KEY BLOCK-----';
     }
 }

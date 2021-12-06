@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.4.0
+ * @since         3.5.0
  */
 
 namespace Passbolt\AccountRecovery\Model\Table;
@@ -118,7 +118,7 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
      */
     public function isParsableArmoredPublicKeyRule(string $value, ?array $context = null): bool
     {
-        return (OpenPGPBackendFactory::get())->isParsableArmoredPublicKey($value);
+        return OpenPGPBackendFactory::get()->isParsableArmoredPublicKey($value);
     }
 
     /**

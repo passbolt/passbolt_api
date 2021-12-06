@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.4.0
+ * @since         3.5.0
  */
 namespace Passbolt\AccountRecovery\Test\Factory;
 
@@ -46,38 +46,14 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
-            return self::getDefaultData($faker);
+            return [
+                'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
+                'created_by' => UuidFactory::uuid(),
+                'modified_by' => UuidFactory::uuid(),
+                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'account_recovery_organization_key_id' => UuidFactory::uuid(),
+            ];
         });
-    }
-
-    /**
-     * Get some default entity data
-     * @return array
-     */
-    static public function getDefaultData(?Generator $faker = null): array
-    {
-        $faker = $faker ?? new Generator();
-        return [
-            'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
-            'created_by' => UuidFactory::uuid(),
-            'modified_by' => UuidFactory::uuid(),
-            'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-            'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
-            'account_recovery_organization_key_id' => UuidFactory::uuid(),
-        ];
-    }
-
-    /**
-     * Get default entity options.
-     * @return array checkRules, accessibleFields
-     */
-    static public function getDefaultOptions(): array
-    {
-        return [
-            'checkRules' => true,
-            'accessibleFields' => [
-                '*' => true,
-            ],
-        ];
     }
 }

@@ -14,29 +14,18 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.5.0
  */
-namespace Passbolt\AccountRecovery\Test\Lib;
+namespace Passbolt\AccountRecovery;
 
-use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Core\BasePlugin;
+use Cake\Core\PluginApplicationInterface;
 
-class AccountRecoveryIntegrationTestCase extends AppIntegrationTestCase
+class Plugin extends BasePlugin
 {
-    protected $pluginEnabled;
-
     /**
-     * Setup.
+     * @inheritDoc
      */
-    public function setUp(): void
+    public function bootstrap(PluginApplicationInterface $app): void
     {
-        parent::setUp();
-        $this->pluginEnabled = $this->isFeaturePluginEnabled('AccountRecovery');
-        $this->enableFeaturePlugin('AccountRecovery');
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        if (!$this->pluginEnabled) {
-            $this->disableFeaturePlugin('AccountRecovery');
-        }
+        parent::bootstrap($app);
     }
 }

@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.4.0
+ * @since         3.5.0
  */
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Model\Table;
@@ -41,7 +41,7 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
     {
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('AccountRecoveryOrganizationPublicKeys') ? [] : [
-            'className' => AccountRecoveryOrganizationPublicKeysTable::class
+            'className' => AccountRecoveryOrganizationPublicKeysTable::class,
         ];
         $this->AccountRecoveryOrganizationPublicKeys = TableRegistry::getTableLocator()->get('AccountRecoveryOrganizationPublicKeys', $config);
     }
@@ -58,6 +58,21 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
     }
 
     /**
+     * Get default entity options.
+     *
+     * @return array checkRules, accessibleFields
+     */
+    private function getDefaultOptions(): array
+    {
+        return [
+            'checkRules' => true,
+            'accessibleFields' => [
+                '*' => true,
+            ],
+        ];
+    }
+
+    /**
      * Check org id field validation rules
      */
     public function testAccountRecoveryOrganizationPublicKeysTable_ValidationId()
@@ -68,8 +83,8 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
         $this->assertFieldFormatValidation(
             $this->AccountRecoveryOrganizationPublicKeys,
             'id',
-            AccountRecoveryOrganizationPublicKeyFactory::getDefaultData(),
-            AccountRecoveryOrganizationPublicKeyFactory::getDefaultOptions(),
+            AccountRecoveryOrganizationPublicKeyFactory::make()->getEntity()->toArray(),
+            $this->getDefaultOptions(),
             $testCases
         );
     }
@@ -87,8 +102,8 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
         $this->assertFieldFormatValidation(
             $this->AccountRecoveryOrganizationPublicKeys,
             'armored_key',
-            AccountRecoveryOrganizationPublicKeyFactory::getDefaultData(),
-            AccountRecoveryOrganizationPublicKeyFactory::getDefaultOptions(),
+            AccountRecoveryOrganizationPublicKeyFactory::make()->getEntity()->toArray(),
+            $this->getDefaultOptions(),
             $testCases
         );
     }
@@ -106,8 +121,8 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
         $this->assertFieldFormatValidation(
             $this->AccountRecoveryOrganizationPublicKeys,
             'fingerprint',
-            AccountRecoveryOrganizationPublicKeyFactory::getDefaultData(),
-            AccountRecoveryOrganizationPublicKeyFactory::getDefaultOptions(),
+            AccountRecoveryOrganizationPublicKeyFactory::make()->getEntity()->toArray(),
+            $this->getDefaultOptions(),
             $testCases
         );
     }

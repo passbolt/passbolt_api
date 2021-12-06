@@ -11,19 +11,15 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.4.0
+ * @since         3.5.0
  */
-use Cake\Core\Configure;
 
 return [
     'passbolt' => [
         'plugins' => [
             'accountRecovery' => [
                 'version' => '1.0.0',
-                'enabled' => Configure::read(
-                    'passbolt.plugins.accountRecovery.enabled',
-                    env('PASSBOLT_PLUGINS_ACCOUNT_RECOVERY_ENABLED', true)
-                ),
+                'enabled' => true,
                 'settingsVisibility' => [
                     'whiteListPublic' => [
                         'enabled',

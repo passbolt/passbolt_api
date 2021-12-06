@@ -12,17 +12,15 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.4.0
+ * @since         3.5.0
  */
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 
 /**
  * AccountRecoveryOrganizationPolicies Model
@@ -41,7 +39,6 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
- *
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPublicKeysTable&\Cake\ORM\Association\HasOne $Avatars
  */
 class AccountRecoveryOrganizationPoliciesTable extends Table
@@ -121,12 +118,12 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     }
 
     /**
-     * @return AccountRecoveryOrganizationPolicy
-     * @throws RecordNotFoundException
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function getCurrentPolicy(): string
     {
-        /** @var AccountRecoveryOrganizationPolicy $policy */
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
         $policy = $this->find()
             ->where(function ($exp, $q) {
                 return $exp->isNull('AccountRecoveryOrganizationPolicies.deleted');
@@ -140,7 +137,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     /**
      * Validate that the public key is provided when 'enabling' the feature
      *
-     * @param AccountRecoveryOrganizationPolicy $entity The entity that will be created.
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $entity The entity that will be created.
      * @param array|null $options options
      * @return bool
      */
@@ -154,7 +151,6 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
         if (!isset($entity->account_recovery_organization_public_key)) {
             return false;
         }
-
     }
 
     /**
