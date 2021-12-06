@@ -58,8 +58,8 @@ class AvatarsTable extends Table
     use AvatarsCleanupTrait;
 
     public const MAX_SIZE = '5MB';
-    public const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-    public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif'];
+    public const ALLOWED_MIME_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+    public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif'];
 
     /**
      * Initialize method
