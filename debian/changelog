@@ -1,3 +1,8 @@
+passbolt-ce-server (3.4.0-2) buster; urgency=medium
+  * Synchronising with RPM package
+
+ -- Gerold Mougenel <gerold@passbolt.com>  Tue, 07 Dec 2021 14:00:00 +0000
+
 passbolt-ce-server (3.4.0) buster; urgency=medium
 
   * PB-9826 As a user I want to use passbolt natively on Edge
