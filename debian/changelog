@@ -1,3 +1,8 @@
+passbolt-pro-server (3.4.0-2) buster; urgency=medium
+  * Synchronising with RPM package
+
+ -- Gerold Mougenel <gerold@passbolt.com>  Tue, 07 Dec 2021 14:00:00 +0000
+
 passbolt-pro-server (3.4.0-1) buster; urgency=medium
   * PB-9826 As a user I want to use passbolt natively on Edge
   * PB-8371 As LU I want to see the login/MFA/recover/register screens in dark mode
@@ -23,7 +28,7 @@ passbolt-pro-server (3.4.0-1) buster; urgency=medium
   * PB-9785 Update JWT healthcheck help messages
   * PB-9656 Migrate fields from utf8mb4 to a more performant encoding when possible
 
- -- Gerold Mougenel <gerold@passbolt.com>  Tue, 07 Dec 2021 12:00:00 +0000
+ -- Gerold Mougenel <gerold@passbolt.com>  Tue, 07 Dec 2021 12:30:00 +0000
 
 passbolt-pro-server (3.3.1-1) buster; urgency=medium
   * PB-9820 / PBL-06-008 WP3: JWT key confusion leads to authentication bypass (High) [experimental][disabled by default]
