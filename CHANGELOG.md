@@ -2,6 +2,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.0] - 2021-12-07
+### Added
+- PB-9826 As a user I want to use passbolt natively on Edge
+- PB-8371 As LU I want to see the login/MFA/recover/register screens in dark mode
+
+### Improvement
+- PB-8522 As LU I should see the MFA verify field having focus
+- PB-9730 As AD I should be able to check avatars read issues from the healthcheck
+
+### Fix
+- PB-8932 Fix as LU I should see an animation when I successfully configured MFA
+- PB-9286 Fix as LU I should see the locale dropdown field of the setup/recover screen well positioned
+- PB-9397 Fix as AD I shouldn't see an error on the healthcheck if the JWT auth is disabled and I never configured it
+- PB-9114 Fix as lu I should be able to upload a transparent avatar in .png format.
+- PB-9750 Fix spelling mistakes reported by the community
+- PB-9762 Fix requesting /auth/login.json should not trigger an unexpected error
+- PB-9888 Fix MFA & JWT refresh token issue, remove Bearer from the hashed session identifier
+- PB-12817 Fix as LU I should be able to update jpeg avatar
+
+### Security
+- PB-7374 As soft deleted but logged in user I should be forbidden to request the API
+- PB-9340 Fix email queue data should be stored and deserialized as json and not php
+
+### Maintenance
+- PB-9311 Refactor JWT and MFA plugins for better code maintainability.
+- PB-8320 Implement the tests that are marked as incomplete for cleaner continuous integration test reports
+- PB-8211 Psalm set to level 4
+- PB-9726 Fix do not load cleanup tasks unless in CLI mode
+- PB-9753 Improve table fields validation tests, do not save entity when testing the validation of properties
+- PB-9310 Move avatar file_storage logic into AvatarsTable
+- PB-9785 Update JWT healthcheck help messages
+- PB-9656 Migrate fields from utf8mb4 to a more performant encoding when possible
+
 ## [3.3.1] - 2021-11-24
 ### Security fixes
 - PB-9820 / PBL-06-008 WP3: JWT key confusion leads to authentication bypass (High) [experimental][disabled by default]
@@ -849,7 +882,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.3.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.4.0...HEAD
+[3.4.0]: https://github.com/passbolt/passbolt_api/compare/v3.3.1...v3.4.0
+[3.3.1]: https://github.com/passbolt/passbolt_api/compare/v3.3.0...v3.3.1
 [3.3.0]: https://github.com/passbolt/passbolt_api/compare/v3.2.1...v3.3.0
 [3.2.1]: https://github.com/passbolt/passbolt_api/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/passbolt/passbolt_api/compare/v3.1.0...v3.2.0
