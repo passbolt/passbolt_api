@@ -49,7 +49,7 @@ class DuoSetupPostControllerTest extends MfaIntegrationTestCase
         /** @var \App\Model\Entity\AuthenticationToken $mfaToken */
         $mfaToken = AuthenticationTokenFactory::find()->firstOrFail();
         $this->assertTrue($mfaToken->checkSessionId($sessionID));
-        $this->assertCookie($mfaToken->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($mfaToken->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 
     /**

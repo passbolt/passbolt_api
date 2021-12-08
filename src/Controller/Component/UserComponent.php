@@ -147,23 +147,20 @@ class UserComponent extends Component
     /**
      * Get the user theme
      *
-     * @return string
+     * @return string|null
      */
     public function theme()
     {
-        $defaultTheme = 'default';
         if (Configure::read('passbolt.plugins.accountSettings')) {
             /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
             $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
             $theme = $AccountSettings->getTheme($this->id());
-            if (!$theme) {
-                $theme = $defaultTheme;
+            if ($theme) {
+                return $theme;
             }
-
-            return $theme;
         }
 
-        return $defaultTheme;
+        return null;
     }
 
     /**

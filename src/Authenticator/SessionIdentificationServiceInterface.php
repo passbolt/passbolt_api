@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Authenticator;
 
+use App\Model\Entity\AuthenticationToken;
 use Cake\Http\ServerRequest;
 
 /**
@@ -28,10 +29,22 @@ use Cake\Http\ServerRequest;
 interface SessionIdentificationServiceInterface
 {
     /**
-     * Find the user session ID
+     * Get the user session identifier.
+     *
+     * This can be a string, like a session ID or an access token,
+     * or an authentication token, e.g. when requesting a new refresh token.
      *
      * @param \Cake\Http\ServerRequest $request Request
-     * @return string|null
+     * @return \App\Model\Entity\AuthenticationToken|string|null
      */
-    public function getSessionId(ServerRequest $request): ?string;
+    public function getSessionIdentifier(ServerRequest $request);
+
+    /**
+     * Compares a provided authentication token with the session identification.
+     *
+     * @param \Cake\Http\ServerRequest $request Server Request
+     * @param \App\Model\Entity\AuthenticationToken $tokenToValidate Hashed session, typically found in a token's data
+     * @return bool
+     */
+    public function checkAuthenticationToken(ServerRequest $request, AuthenticationToken $tokenToValidate): bool;
 }

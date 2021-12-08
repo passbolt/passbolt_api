@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\EmailDigest\Utility\Digest;
 
 use Cake\ORM\Entity;
+use Cake\Validation\Validation;
 use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
@@ -114,7 +115,11 @@ class Digest extends AbstractDigest implements DigestInterface
         }
 
         $operator = $this->getOperatorFromEmail($emailQueueEntity);
-        $operator = $operator->username;
+        if (!isset($operator['username']) || !Validation::email($operator['username'])) {
+            throw new UnsupportedEmailDigestDataException($emailQueueEntity);
+        }
+
+        $operator = $operator['username'];
         $username = $emailQueueEntity['email'];
         $this->addToUserCount($username, $operator);
 
@@ -167,7 +172,11 @@ class Digest extends AbstractDigest implements DigestInterface
         $digest = new EmailDigest();
         foreach ($emails as $i => $emailQueueEntity) {
             $operator = $this->getOperatorFromEmail($emailQueueEntity);
-            $firstName = $operator->profile->first_name;
+            if (!isset($operator['profile']['first_name']) || !is_string($operator['profile']['first_name'])) {
+                throw new UnsupportedEmailDigestDataException($emailQueueEntity);
+            }
+
+            $firstName = $operator['profile']['first_name'];
             $digest->addEmailData($emailQueueEntity)
                 ->setSubject(__($this->subject, $firstName))
                 ->setEmailRecipient($emailQueueEntity->email);

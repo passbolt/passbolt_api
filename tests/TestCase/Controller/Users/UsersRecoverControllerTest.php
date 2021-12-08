@@ -16,13 +16,18 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
+    use EmailQueueTrait;
+
+    public $autoFixtures = false;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
-
     ];
 
     public $fails = [
@@ -65,6 +70,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testRecoverPostErrors()
     {
+        $this->loadFixtures();
+
         foreach ($this->fails as $case => $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
             $result = $this->_getBodyAsString();
@@ -74,6 +81,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testRecoverPostError_UserDeleted()
     {
+        $this->loadFixtures();
+
         $data = ['username' => 'sofia@passbolt.com'];
         $error = 'This user does not exist or has been deleted.';
         $this->postJson('/users/recover.json', $data);
@@ -84,6 +93,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testRecoverPostError_UserNotExist()
     {
+        $this->loadFixtures();
+
         $data = ['username' => 'notauser@passbolt.com'];
         $error = 'This user does not exist or has been deleted.';
         $this->postJson('/users/recover.json', $data);
@@ -94,6 +105,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testRecoverPostSuccess()
     {
+        $this->loadFixtures();
+
         foreach ($this->successes as $case => $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
             $result = $this->_getBodyAsString();
@@ -111,6 +124,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testRecoverPostJsonSuccess()
     {
+        $this->loadFixtures();
+
         foreach ($this->successes as $case => $data) {
             $this->postJson('/users/recover.json?api-version=v2', $data['form-data']);
             $this->assertSuccess();
@@ -122,5 +137,19 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->disableCsrfToken();
         $this->post('/users/recover.json?api-version=v2');
         $this->assertResponseCode(403);
+    }
+
+    public function testRecoverPostJsonSuccess_For_User_With_Avatar()
+    {
+        $user = UserFactory::make()->withAvatar()->user()->persist();
+
+        $this->postJson('/users/recover.json?api-version=v2', ['username' => $user->username]);
+        $this->assertSuccess();
+
+        $this->assertEmailIsInQueue([
+            'email' => $user->username,
+            'subject' => "Your account recovery, {$user->profile->first_name}!",
+            'template' => 'AN/user_recover',
+        ]);
     }
 }

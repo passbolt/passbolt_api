@@ -26,6 +26,7 @@ use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Event\UpdateMfaTokenSessionIdOnRefreshTokenCreated;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaAuthenticationRequiredService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -42,6 +43,7 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
      * valid MFA token in the cookies.
      */
     public const IS_MFA_CHECK_NOT_REQUIRED_ATTRIBUTE = 'is_mfa_check_not_required';
+    public const IS_MFA_TOKEN_VALID_ATTRIBUTE = 'is_mfa_token_valid';
 
     /**
      * Mfa Required check Middleware
@@ -64,6 +66,9 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
                 ->withLocation($this->getVerifyUrl($request));
         } else {
             $request = $request->withAttribute(self::IS_MFA_CHECK_NOT_REQUIRED_ATTRIBUTE, true);
+        }
+        if ($request->getCookieCollection()->has(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
+            $request = $request->withAttribute(self::IS_MFA_TOKEN_VALID_ATTRIBUTE, true);
         }
 
         // Listen to the creation of refresh tokens
@@ -101,7 +106,7 @@ class MfaRequiredCheckMiddleware implements MiddlewareInterface
             $request,
             MfaSettings::get($uac),
             $uac,
-            $sessionService->getSessionId($request)
+            $sessionService
         );
     }
 

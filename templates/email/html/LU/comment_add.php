@@ -24,23 +24,21 @@ $resource = $body['resource'];
 $showComment = $body['showComment'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($creator->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($creator['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($creator->username),
-        'first_name' => Purifier::clean($creator->profile->first_name),
-        'last_name' => Purifier::clean($creator->profile->last_name),
-        'datetime' => $comment->created,
-        'text' => __('{0} commented on {1}', Purifier::clean($creator->profile->first_name), Purifier::clean($resource->name))
+        'user' => $creator,
+        'datetime' => $comment['created'],
+        'text' => __('{0} commented on {1}', Purifier::clean($creator['profile']['first_name']), Purifier::clean($resource['name']))
     ])
 ]);
 
 if ($showComment) {
     echo $this->element('Email/module/text', [
-        'text' => Purifier::clean($comment->content)
+        'text' => Purifier::clean($comment['content'])
     ]);
 }
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url("/app/passwords/view/{$resource->id}", true),
+    'url' => Router::url("/app/passwords/view/{$resource['id']}", true),
     'text' => __('view it in passbolt')
 ]);

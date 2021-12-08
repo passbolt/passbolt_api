@@ -28,8 +28,9 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
 /**
  * UserFactory
  *
- * @method \App\Model\Entity\User persist()
+ * @method \App\Model\Entity\User|\App\Model\Entity\User[] persist()
  * @method \App\Model\Entity\User getEntity()
+ * @method \App\Model\Entity\User[] getEntities()
  */
 class UserFactory extends CakephpBaseFactory
 {
@@ -171,8 +172,23 @@ class UserFactory extends CakephpBaseFactory
         return new UserAccessControl($user->role->name, $user->get('id'), $user->get('username'));
     }
 
-    public function withAuthenticationTokens(AuthenticationTokenFactory $factory)
+    /**
+     * @param AuthenticationTokenFactory $factory Authentication token
+     * @return UserFactory this
+     */
+    public function withAuthenticationTokens(AuthenticationTokenFactory $factory): self
     {
         return $this->with('AuthenticationTokens', $factory);
+    }
+
+    /**
+     * @param string $filename File to import
+     * @return UserFactory this
+     */
+    public function withAvatar(string $filename = FIXTURES . 'Avatar' . DS . 'ada.jpg'): self
+    {
+        return $this->with('Profiles.Avatars', [
+            'data' => file_get_contents($filename),
+        ]);
     }
 }

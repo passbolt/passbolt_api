@@ -62,6 +62,16 @@ class DigestsPool
     }
 
     /**
+     * Clear the singleton of the DigestsPool
+     *
+     * @return void
+     */
+    public static function clearInstance(): void
+    {
+        static::$instance = null;
+    }
+
+    /**
      * Add a digest instance to the pool of digests with an optional priority.
      *
      * @param \Passbolt\EmailDigest\Utility\Digest\DigestInterface $digest Digest digest instance

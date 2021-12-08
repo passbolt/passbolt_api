@@ -45,7 +45,7 @@ class YubikeyVerifyPostControllerTest extends MfaIntegrationTestCase
         ]);
         $this->assertResponseSuccess();
         $mfaToken = AuthenticationTokenFactory::find()->firstOrFail();
-        $this->assertCookie($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 
     public function testMfaVerifyPostYubikey_OTP_Not_Valid()
