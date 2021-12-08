@@ -41,14 +41,13 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         ],
     ];
 
-    public $successes = [
-        'can recover an active user' => [
-            'form-data' => ['username' => 'ada@passbolt.com'],
-        ],
-        'can recover a user that has not completed setup' => [
-            'form-data' => ['username' => 'ruth@passbolt.com'],
-        ],
-    ];
+    public function dataProviderForPostSuccess(): array
+    {
+        return [
+            ['can recover an active user' => 'ada@passbolt.com', 'email template' => 'AN/user_recover'],
+            ['can recover a user that has not completed setup' => 'ruth@passbolt.com', 'email template' => 'AN/user_register_self'],
+        ];
+    }
 
     public function testRecoverGetRedirect()
     {
@@ -103,15 +102,20 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->assertStringContainsString($error, $result);
     }
 
-    public function testRecoverPostSuccess()
+    /**
+     * @dataProvider dataProviderForPostSuccess
+     */
+    public function testRecoverPostSuccess(string $username, string $emailTemplate)
     {
         $this->loadFixtures();
 
-        foreach ($this->successes as $case => $data) {
-            $this->postJson('/users/recover.json', $data['form-data']);
-            $result = $this->_getBodyAsString();
-            $this->assertResponseSuccess('Recovery process started, check your email.');
-        }
+        $this->postJson('/users/recover.json', compact('username'));
+        $result = $this->_getBodyAsString();
+        $this->assertResponseSuccess('Recovery process started, check your email.');
+        $this->assertSuccess();
+
+        $this->assertEmailIsInQueue(['email' => $username, 'template' => $emailTemplate]);
+        $this->assertEmailQueueCount(1);
     }
 
     public function testRecoverPostJsonError()
@@ -119,16 +123,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         foreach ($this->fails as $case => $data) {
             $this->postJson('/users/recover.json?api-version=v2', $data['form-data']);
             $this->assertError(400, $data['error']);
-        }
-    }
-
-    public function testRecoverPostJsonSuccess()
-    {
-        $this->loadFixtures();
-
-        foreach ($this->successes as $case => $data) {
-            $this->postJson('/users/recover.json?api-version=v2', $data['form-data']);
-            $this->assertSuccess();
         }
     }
 

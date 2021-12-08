@@ -19,12 +19,15 @@ namespace App\Test\TestCase\Controller\Setup;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
 class RecoverCompleteControllerTest extends AppIntegrationTestCase
 {
     use AuthenticationTokenModelTrait;
+    use EmailQueueTrait;
 
     public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',];
     public $AuthenticationTokens;
@@ -44,6 +47,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverCompleteSuccess()
     {
+        $logEnabled = Configure::read('passbolt.plugins.log.enabled');
+        Configure::write('passbolt.plugins.log.enabled', true);
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_RECOVER);
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
@@ -61,6 +66,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         // Check that token is now inactive
         $t2 = $this->AuthenticationTokens->get($t->id);
         $this->assertFalse($t2->active);
+        $this->assertEmailQueueIsEmpty();
+        Configure::write('passbolt.plugins.log.enabled', $logEnabled);
     }
 
     /**
