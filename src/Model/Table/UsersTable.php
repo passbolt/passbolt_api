@@ -439,7 +439,7 @@ class UsersTable extends Table
      * @throws \App\Error\Exception\ValidationException if the user data do not validate
      * @return \App\Model\Entity\User entity
      */
-    public function register(array $data, ?UserAccessControl $control = null)
+    public function register(array $data, ?UserAccessControl $control = null): User
     {
         // if role id is empty make it a user
         // Only admins are allowed to set the role

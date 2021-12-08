@@ -23,6 +23,7 @@ use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
+use App\Middleware\ServerRequestInterfaceInjectionMiddleware;
 use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
@@ -31,6 +32,8 @@ use App\Notification\EmailDigest\DigestRegister\GroupDigests;
 use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Service\Avatars\AvatarsConfigurationService;
+use App\ServiceProvider\SetupServiceProvider;
+use App\ServiceProvider\UserServiceProvider;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
@@ -89,7 +92,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(SessionAuthPreventDeletedUsersMiddleware::class)
             ->insertAfter(SessionAuthPreventDeletedUsersMiddleware::class, new AuthenticationMiddleware($this))
             ->add(new GpgAuthHeadersMiddleware())
-            ->add($csrf);
+            ->add($csrf)
+            ->insertAt(1000, ServerRequestInterfaceInjectionMiddleware::class); // Injects the server request at the end of the middleware queue
 
         /*
          * Additional security headers
@@ -306,6 +310,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $container->add(AuthenticationServiceInterface::class, SessionAuthenticationService::class);
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
+        $container->addServiceProvider(new SetupServiceProvider());
+        $container->addServiceProvider(new UserServiceProvider());
     }
 
     /**

@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
@@ -26,6 +27,8 @@ use Passbolt\Locale\Service\GetUserLocaleService;
 
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
         'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
@@ -37,61 +40,72 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function testUsersRegisterPostSuccess()
+    public function dataProviderFortTestUsersRegisterPostSuccess(): array
     {
-        $success = [
-            'chinese_name' => [
+        return [
+            ['chinese_name' => [
                 'username' => 'ping.fu@passbolt.com',
                 'profile' => [
                     'first_name' => '傅',
                     'last_name' => '苹',
                 ],
-            ],
-            'slavic_name' => [
+            ]],
+            ['slavic_name' => [
                 'username' => 'borka@passbolt.com',
                 'profile' => [
                     'first_name' => 'Borka',
                     'last_name' => 'Jerman Blažič',
                 ],
-            ],
-            'french_name' => [
+            ]],
+            ['french_name' => [
                 'username' => 'aurore@passbolt.com',
                 'profile' => [
                     'first_name' => 'Aurore',
                     'last_name' => 'Avarguès-Weber',
                 ],
                 'locale' => 'fr-FR',
-            ],
+            ]],
         ];
+    }
 
-        foreach ($success as $case => $data) {
-            $this->postJson('/users/register.json', $data);
-            $this->assertResponseSuccess();
+    /**
+     * @dataProvider dataProviderFortTestUsersRegisterPostSuccess
+     */
+    public function testUsersRegisterPostSuccess(array $data)
+    {
+        $this->postJson('/users/register.json', $data);
+        $this->assertResponseSuccess();
 
-            // Check user was saved
-            $users = TableRegistry::getTableLocator()->get('Users');
-            $query = $users->find()->where(['username' => $data['username']]);
-            $this->assertEquals(1, $query->count());
-            $user = $query->first();
-            $this->assertFalse($user->active);
-            $this->assertFalse($user->deleted);
+        // Check user was saved
+        $users = TableRegistry::getTableLocator()->get('Users');
+        $query = $users->find()->where(['username' => $data['username']]);
+        $this->assertEquals(1, $query->count());
+        $user = $query->first();
+        $this->assertFalse($user->active);
+        $this->assertFalse($user->deleted);
 
-            // Check profile exist
-            $profiles = TableRegistry::getTableLocator()->get('Profiles');
-            $query = $profiles->find()->where(['first_name' => $data['profile']['first_name']]);
-            $this->assertEquals(1, $query->count());
+        // Check profile exist
+        $profiles = TableRegistry::getTableLocator()->get('Profiles');
+        $query = $profiles->find()->where(['first_name' => $data['profile']['first_name']]);
+        $this->assertEquals(1, $query->count());
 
-            // Check role exist
-            $roles = TableRegistry::getTableLocator()->get('Roles');
-            $role = $roles->get($user->get('role_id'));
-            $this->assertEquals(Role::USER, $role->name);
+        // Check role exist
+        $roles = TableRegistry::getTableLocator()->get('Roles');
+        $role = $roles->get($user->get('role_id'));
+        $this->assertEquals(Role::USER, $role->name);
 
-            // Check locale was stored
-            GetOrgLocaleService::clearOrganisationLocale();
-            $expectedLocale = $data['locale'] ?? GetOrgLocaleService::getLocale();
-            $locale = (new GetUserLocaleService())->getLocale($user->username);
-            $this->assertSame($expectedLocale, $locale);
-        }
+        // Check locale was stored
+        GetOrgLocaleService::clearOrganisationLocale();
+        $expectedLocale = $data['locale'] ?? GetOrgLocaleService::getLocale();
+        $locale = (new GetUserLocaleService())->getLocale($user->username);
+        $this->assertSame($expectedLocale, $locale);
+
+        // Check that an email was sent
+        $this->assertEmailIsInQueue([
+            'email' => $data['username'],
+            'subject' => "Welcome to passbolt, {$data['profile']['first_name']}!",
+            'template' => 'AN/user_register_self',
+        ]);
     }
 
     public function testUsersRegisterPostFailValidation()
