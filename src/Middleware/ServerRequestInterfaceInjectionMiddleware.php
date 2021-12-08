@@ -12,38 +12,23 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         3.5.0
  */
 namespace App\Middleware;
 
-use Cake\Core\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class ContainerInjectorMiddleware implements MiddlewareInterface
+class ServerRequestInterfaceInjectionMiddleware implements MiddlewareInterface
 {
-    public const CONTAINER_ATTRIBUTE = 'container';
+    use ContainerAwareMiddlewareTrait;
 
     /**
-     * @var \Cake\Core\ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * Constructor
-     *
-     * @param \Cake\Core\ContainerInterface $container The container to build controllers with.
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * Sets the container in the request as attribute.
-     * This makes the container accessible to other middlewares.
+     * Injects the Server Request in the container.
+     * This middleware should be called as the last, in order to
+     * inject the request processed by all other middlewares.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
@@ -51,6 +36,8 @@ class ContainerInjectorMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return $handler->handle($request->withAttribute(self::CONTAINER_ATTRIBUTE, $this->container));
+        $this->getContainer($request)->add(ServerRequestInterface::class)->setConcrete($request)->setShared(true);
+
+        return $handler->handle($request);
     }
 }

@@ -18,7 +18,9 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use App\Service\Users\UserRegisterServiceInterface;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
@@ -33,7 +35,7 @@ class UsersRegisterController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         if (Configure::read('passbolt.registration.public') === true) {
             $this->Authentication->allowUnauthenticated(['registerGet', 'registerPost']);
@@ -41,8 +43,6 @@ class UsersRegisterController extends AppController
             $msg = __('Registration is not opened to public. Please contact your administrator.');
             throw new NotFoundException($msg);
         }
-
-        $this->loadModel('Users');
 
         return parent::beforeFilter($event);
     }
@@ -52,9 +52,10 @@ class UsersRegisterController extends AppController
      * Display a registration form
      *
      * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
+     * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Service
      * @return void
      */
-    public function registerGet()
+    public function registerGet(UserRegisterServiceInterface $userRegisterService)
     {
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
@@ -62,19 +63,17 @@ class UsersRegisterController extends AppController
         }
 
         $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->viewBuilder()
-            ->setTemplatePath('Auth')
-            ->setLayout('default')
-            ->setTemplate('triage');
+        $userRegisterService->setTemplate($this->viewBuilder());
     }
 
     /**
      * Register user action POST
      *
      * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
+     * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Service
      * @return void
      */
-    public function registerPost()
+    public function registerPost(UserRegisterServiceInterface $userRegisterService)
     {
         if (!$this->request->is('json')) {
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
@@ -85,13 +84,7 @@ class UsersRegisterController extends AppController
             throw new ForbiddenException(__('Only guest are allowed to register.'));
         }
 
-        $data = $this->request->getData();
-        $user = $this->Users->register($data);
-
-        $this->dispatchEvent(static::USERS_REGISTER_EVENT_NAME, [
-            'user' => $user,
-            'data' => $this->getRequest()->getData(),
-        ]);
+        $user = $userRegisterService->register();
 
         $this->success(__('The operation was successful.'), $user);
     }
