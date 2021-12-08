@@ -16,7 +16,7 @@
 use Migrations\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
 
-class V340AddAccountRecoveryTables extends AbstractMigration
+class V350AddAccountRecoveryTables extends AbstractMigration
 {
     /**
      * Up
@@ -30,14 +30,20 @@ class V340AddAccountRecoveryTables extends AbstractMigration
             ])
             ->addColumn('id', 'uuid', [
                 'null' => false,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addColumn('account_recovery_organization_key_id', 'uuid', [
                 'null' => false,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addColumn('policy', 'string', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addColumn('created', 'datetime', [
                 'default' => null,
@@ -51,9 +57,13 @@ class V340AddAccountRecoveryTables extends AbstractMigration
             ])
             ->addColumn('created_by', 'uuid', [
                 'null' => false,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addColumn('modified_by', 'uuid', [
                 'null' => false,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addIndex('id', ['unique' => true])
             ->addIndex('account_recovery_organization_key_id', ['unique' => false])
@@ -64,6 +74,8 @@ class V340AddAccountRecoveryTables extends AbstractMigration
             ])
             ->addColumn('id', 'uuid', [
                 'null' => false,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addColumn('armored_key', 'text', [
                 'default' => null,
@@ -96,9 +108,13 @@ class V340AddAccountRecoveryTables extends AbstractMigration
             ])
             ->addColumn('created_by', 'uuid', [
                 'null' => false,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addColumn('modified_by', 'uuid', [
                 'null' => false,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addIndex('id', ['unique' => true])
             ->addIndex('fingerprint', ['unique' => true])

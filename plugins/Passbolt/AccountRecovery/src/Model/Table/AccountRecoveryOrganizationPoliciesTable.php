@@ -118,7 +118,9 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     }
 
     /**
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
+     * Get the current policy
+     *
+     * @return string
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function getCurrentPolicy(): string

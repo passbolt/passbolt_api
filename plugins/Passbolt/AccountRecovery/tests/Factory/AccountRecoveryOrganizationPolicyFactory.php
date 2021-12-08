@@ -56,4 +56,12 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
             ];
         });
     }
+
+    /**
+     * @return $this
+     */
+    public function mandatory(): self
+    {
+        return $this->setField('policy', AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY);
+    }
 }

@@ -41,10 +41,7 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
     public function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('AccountRecoveryOrganizationPolicies') ? [] : [
-            'className' => AccountRecoveryOrganizationPoliciesTable::class,
-        ];
-        $this->AccountRecoveryOrganizationPolicies = TableRegistry::getTableLocator()->get('AccountRecoveryOrganizationPolicies', $config);
+        $this->AccountRecoveryOrganizationPolicies = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
     }
 
     /**
@@ -105,5 +102,20 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
             $this->getDefaultOptions(),
             $testCases
         );
+    }
+
+    /**
+     *
+     */
+    public function testAccountRecoveryOrganizationPoliciesTable_GetCurrentPolicy()
+    {
+        $this->markTestIncomplete('The method under test is not ready yet.');
+        $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
+        $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED, $disabledPolicy);
+
+        AccountRecoveryOrganizationPolicyFactory::make()->mandatory()->persist();
+
+        $mandatoryPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
+        $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY, $mandatoryPolicy);
     }
 }
