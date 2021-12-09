@@ -33,7 +33,7 @@ class V350AddAccountRecoveryTables extends AbstractMigration
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci'
             ])
-            ->addColumn('account_recovery_organization_key_id', 'uuid', [
+            ->addColumn('account_recovery_organization_public_key_id', 'uuid', [
                 'null' => false,
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci'
@@ -66,7 +66,7 @@ class V350AddAccountRecoveryTables extends AbstractMigration
                 'collation' => 'ascii_general_ci'
             ])
             ->addIndex('id', ['unique' => true])
-            ->addIndex('account_recovery_organization_key_id', ['unique' => false])
+            ->addIndex('account_recovery_organization_public_key_id', ['unique' => false])
             ->create();
 
         $this->table('account_recovery_organization_public_keys', [

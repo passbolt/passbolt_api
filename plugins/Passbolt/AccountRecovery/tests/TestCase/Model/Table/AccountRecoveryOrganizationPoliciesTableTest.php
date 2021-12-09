@@ -20,8 +20,8 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Model\Table;
 use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
-use Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 /**
@@ -105,15 +105,38 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
     }
 
     /**
-     *
+     * Account Recovery Organization Policy is disabled if no policy is in the DB
+     * or if the policy has no associated public key
+     * or if the associated public key is deleted.
      */
-    public function testAccountRecoveryOrganizationPoliciesTable_GetCurrentPolicy()
+    public function testAccountRecoveryOrganizationPoliciesTable_GetCurrentPolicy_Disabled()
     {
-        $this->markTestIncomplete('The method under test is not ready yet.');
         $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
         $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED, $disabledPolicy);
 
         AccountRecoveryOrganizationPolicyFactory::make()->mandatory()->persist();
+        $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
+        $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED, $disabledPolicy);
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->withAccountRecoveryOrganizationPublicKey(AccountRecoveryOrganizationPublicKeyFactory::make()->deleted())
+            ->mandatory()
+            ->persist();
+        $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
+        $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED, $disabledPolicy);
+    }
+
+    /**
+     * Account Recovery Organization Policy is disabled if no policy is in the DB
+     * or if the policy has no associated public key
+     * or if the associated public key is deleted.
+     */
+    public function testAccountRecoveryOrganizationPoliciesTable_GetCurrentPolicy_Mandatory()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->mandatory()
+            ->persist();
 
         $mandatoryPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
         $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY, $mandatoryPolicy);

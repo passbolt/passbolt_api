@@ -1,0 +1,59 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.5.0
+ */
+namespace Passbolt\AccountRecovery\Test\TestCase\Controller\Setup;
+
+use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\UserFactory;
+use Cake\ORM\TableRegistry;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
+use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
+
+class SetupStartControllerTest extends AccountRecoveryIntegrationTestCase
+{
+    public $AuthenticationTokens;
+
+    public function setUp(): void
+    {
+        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
+        parent::setUp();
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupStart
+     */
+    public function testSetupStartSuccess()
+    {
+        $user = UserFactory::make()->inactive()->persist();
+        $policy = AccountRecoveryOrganizationPolicyFactory::make()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
+
+        $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
+        $url = "/setup/install/{$user->id}/{$token->token}.json";
+        $this->getJson($url);
+        $this->assertResponseOk();
+        $this->assertObjectHasAttribute('user', $this->_responseJsonBody);
+        $this->assertObjectHasAttribute('account_recovery_organization_policy', $this->_responseJsonBody);
+        $this->assertSame($policy->id, $this->_responseJsonBody->account_recovery_organization_policy->id);
+        $this->assertSame($policy->policy, $this->_responseJsonBody->account_recovery_organization_policy->policy);
+        $this->assertSame($policy->account_recovery_organization_public_key_id, $this->_responseJsonBody->account_recovery_organization_policy->account_recovery_organization_public_key_id);
+        $this->assertSame($policy->account_recovery_organization_public_key->armored_key, $this->_responseJsonBody->account_recovery_organization_policy->account_recovery_organization_public_key->armored_key);
+        $this->assertSame(['id', 'armored_key'], array_keys((array)$this->_responseJsonBody->account_recovery_organization_policy->account_recovery_organization_public_key));
+    }
+}

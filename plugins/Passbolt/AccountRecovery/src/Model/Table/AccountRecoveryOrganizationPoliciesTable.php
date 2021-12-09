@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -58,7 +59,8 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
-        $this->hasOne('AccountRecoveryOrganizationPublicKeys', [
+        $this->belongsTo('AccountRecoveryOrganizationPublicKeys', [
+            'className' => 'Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys',
             'foreignKey' => 'account_recovery_organization_public_key_id',
         ]);
     }
@@ -121,14 +123,15 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
      * Get the current policy
      *
      * @return string
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function getCurrentPolicy(): string
     {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
         $policy = $this->find()
-            ->where(function ($exp, $q) {
-                return $exp->isNull('AccountRecoveryOrganizationPolicies.deleted');
+            ->innerJoinWith('AccountRecoveryOrganizationPublicKeys', function (Query $q) {
+                return $q->where(function ($exp) {
+                    return $exp->isNull('AccountRecoveryOrganizationPublicKeys.deleted');
+                });
             })
             ->order(['AccountRecoveryOrganizationPolicies.created' => 'DESC'])
             ->first();
@@ -143,8 +146,11 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
      * @param array|null $options options
      * @return bool
      */
-    public function isAccountRecoveryOrganizationPublicKeyProvided(AccountRecoveryOrganizationPolicy $entity, ?array $options = [])
-    {
+    public function isAccountRecoveryOrganizationPublicKeyProvided(
+        AccountRecoveryOrganizationPolicy $entity,
+        ?array $options = []
+    ): bool {
+        // TODO: this method has been refactored to pass the cs-check but its implementation is not completed
         $currentPolicy = $this->getCurrentPolicy();
 
         $this->isOrganizationPublicKeyNeeded($currentPolicy, $entity->policy);
@@ -158,13 +164,14 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     /**
      * Is a revocation key needed to perform the change?
      *
-     * @param string $currentPolicy
-     * @param string $targetPolicy
-     * @param bool $keyChange
+     * @param string $currentPolicy current policy
+     * @param string $targetPolicy target policy
+     * @param bool $keyChange key change
      * @return bool
      */
-    public function isKeyRevocationNeededForChange(string $currentPolicy, string $targetPolicy, bool $keyChange)
+    public function isKeyRevocationNeededForChange(string $currentPolicy, string $targetPolicy, bool $keyChange): bool
     {
+        // TODO: this method has been refactored to pass the cs-check but its implementation is not completed
         // If there is no public key at the moment, there is no need for revocation
         if ($currentPolicy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
             return false;
@@ -179,10 +186,13 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     }
 
     /**
+     * @param string $currentPolicy current policy
+     * @param string $targetPolicy target polica
      * @return bool
      */
-    public function isKeyNeededForChange($currentPolicy, $targetPolicy)
+    public function isKeyNeededForChange(string $currentPolicy, string $targetPolicy): bool
     {
+        // TODO: this method has been refactored to pass the cs-check but its implementation is not completed
         // No need to provide new key when setting policy to disabled
         if ($targetPolicy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
             return false;

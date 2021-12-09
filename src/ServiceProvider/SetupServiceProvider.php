@@ -23,8 +23,8 @@ use App\Service\Setup\RecoverStartService;
 use App\Service\Setup\RecoverStartServiceInterface;
 use App\Service\Setup\SetupCompleteService;
 use App\Service\Setup\SetupCompleteServiceInterface;
+use App\Service\Setup\SetupStartService;
 use App\Service\Setup\SetupStartServiceInterface;
-use App\Service\Setup\StartStartService;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,7 +44,7 @@ class SetupServiceProvider extends ServiceProvider
     public function services(ContainerInterface $container): void
     {
         $container->add(RecoverStartServiceInterface::class, RecoverStartService::class);
-        $container->add(SetupStartServiceInterface::class, StartStartService::class);
+        $container->add(SetupStartServiceInterface::class, SetupStartService::class);
         $container
             ->add(SetupCompleteServiceInterface::class, SetupCompleteService::class)
             ->addArgument(ServerRequestInterface::class);

@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Query;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 
 /**
@@ -30,7 +31,6 @@ class GetAccountRecoveryOrganizationPolicyService
 
     /**
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no policy set.
      */
     public function get(): AccountRecoveryOrganizationPolicy
     {
@@ -40,6 +40,13 @@ class GetAccountRecoveryOrganizationPolicyService
             /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
             $policy = $this->AccountRecoveryOrganizationPolicies
                 ->find()
+                ->select()
+                ->contain('AccountRecoveryOrganizationPublicKeys', function (Query $q) {
+                    return $q->select([
+                        'AccountRecoveryOrganizationPublicKeys.id',
+                        'AccountRecoveryOrganizationPublicKeys.armored_key',
+                    ]);
+                })
                 ->order(['AccountRecoveryOrganizationPolicies.created' => 'ASC'])
                 ->firstOrFail();
         } catch (RecordNotFoundException $exception) {
