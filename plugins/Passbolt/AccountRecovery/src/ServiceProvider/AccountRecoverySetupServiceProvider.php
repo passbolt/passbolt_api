@@ -14,28 +14,28 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.5.0
  */
-namespace Passbolt\AccountRecovery;
 
-use Cake\Core\BasePlugin;
+namespace Passbolt\AccountRecovery\ServiceProvider;
+
+use App\Service\Setup\RecoverStartServiceInterface;
+use App\Service\Setup\SetupStartServiceInterface;
+use App\ServiceProvider\SetupServiceProvider;
 use Cake\Core\ContainerInterface;
-use Cake\Core\PluginApplicationInterface;
-use Passbolt\AccountRecovery\ServiceProvider\AccountRecoverySetupServiceProvider;
+use Passbolt\AccountRecovery\Service\Setup\AccountRecoveryRecoverStartService;
+use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupStartService;
 
-class Plugin extends BasePlugin
+class AccountRecoverySetupServiceProvider extends SetupServiceProvider
 {
-    /**
-     * @inheritDoc
-     */
-    public function bootstrap(PluginApplicationInterface $app): void
-    {
-        parent::bootstrap($app);
-    }
-
     /**
      * @inheritDoc
      */
     public function services(ContainerInterface $container): void
     {
-        $container->addServiceProvider(new AccountRecoverySetupServiceProvider());
+        $container
+            ->extend(RecoverStartServiceInterface::class)
+            ->setConcrete(AccountRecoveryRecoverStartService::class);
+        $container
+            ->extend(SetupStartServiceInterface::class)
+            ->setConcrete(AccountRecoverySetupStartService::class);
     }
 }

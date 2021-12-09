@@ -58,6 +58,14 @@ class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
     }
 
     /**
+     * @return $this
+     */
+    public function deleted()
+    {
+        return $this->setField('deleted', Chronos::now());
+    }
+
+    /**
      * @return string
      */
     public function getDummyArmoredKey(): string

@@ -32,12 +32,13 @@ class GetAccountRecoveryOrganizationPolicyServiceTest extends AccountRecoveryTes
     {
         $service = new GetAccountRecoveryOrganizationPolicyService();
         $policy = $service->get();
-        $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED);
+        $this->assertEquals(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED, $policy->policy);
         $this->assertEmpty($policy->id);
         $this->assertEmpty($policy->created);
         $this->assertEmpty($policy->modified);
         $this->assertEmpty($policy->created_by);
         $this->assertEmpty($policy->modified_by);
+        $this->assertEmpty($policy->account_recovery_organization_public_key);
     }
 
     /**
@@ -45,7 +46,9 @@ class GetAccountRecoveryOrganizationPolicyServiceTest extends AccountRecoveryTes
      */
     public function testAccountRecoveryOrganizationPolicyGetService_DefaultSuccess()
     {
-        AccountRecoveryOrganizationPolicyFactory::make()->persist();
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
 
         $service = new GetAccountRecoveryOrganizationPolicyService();
         $policy = $service->get();

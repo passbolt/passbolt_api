@@ -26,6 +26,7 @@ use Cake\Validation\Validation;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * @property \App\Model\Table\UserAgentsTable $UserAgents
  * @property \App\Model\Table\UsersTable $Users
  */
 abstract class AbstractStartService
@@ -38,6 +39,7 @@ abstract class AbstractStartService
     public function __construct()
     {
         $this->loadModel('AuthenticationTokens');
+        $this->loadModel('UserAgents');
         $this->loadModel('Users');
     }
 
@@ -58,6 +60,22 @@ abstract class AbstractStartService
         if (!Validation::uuid($tokenId)) {
             throw new BadRequestException(__('The token should be a valid UUID.'));
         }
+    }
+
+    /**
+     * Assert if the browser is supported. Redirect if the browser is not supported.
+     *
+     * @return bool
+     */
+    protected function isBrowserSupported(): bool
+    {
+        $supportedBrowsers = ['firefox', 'chrome'];
+        $browserName = strtolower($this->UserAgents->browserName());
+        if (!in_array($browserName, $supportedBrowsers)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

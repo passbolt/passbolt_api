@@ -24,6 +24,9 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 
 /**
  * AccountRecoveryOrganizationPolicyFactory
+ *
+ * @method AccountRecoveryOrganizationPolicy persist()
+ * @method AccountRecoveryOrganizationPolicy getEntity()
  */
 class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
 {
@@ -52,15 +55,24 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
                 'modified_by' => UuidFactory::uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'account_recovery_organization_key_id' => UuidFactory::uuid(),
+                'account_recovery_organization_public_key_id' => UuidFactory::uuid(),
             ];
         });
     }
 
     /**
+     * @param ?AccountRecoveryOrganizationPublicKeyFactory $factory factory
      * @return $this
      */
-    public function mandatory(): self
+    public function withAccountRecoveryOrganizationPublicKey(?AccountRecoveryOrganizationPublicKeyFactory $factory = null)
+    {
+        return $this->with('AccountRecoveryOrganizationPublicKeys', $factory);
+    }
+
+    /**
+     * @return $this
+     */
+    public function mandatory()
     {
         return $this->setField('policy', AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY);
     }

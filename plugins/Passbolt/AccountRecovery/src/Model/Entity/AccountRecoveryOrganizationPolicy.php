@@ -28,6 +28,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime|null $modified
  * @property string $created_by
  * @property string $modified_by
+ * @property string $account_recovery_organization_public_key_id
  *
  * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $account_recovery_organization_public_key
  */

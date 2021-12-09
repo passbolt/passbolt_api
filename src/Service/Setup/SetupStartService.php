@@ -22,7 +22,11 @@ use App\Model\Entity\User;
 use Cake\Http\Exception\BadRequestException;
 use Cake\View\ViewBuilder;
 
-class StartStartService extends AbstractStartService implements SetupStartServiceInterface
+/**
+ * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * @property \App\Model\Table\UsersTable $Users
+ */
+class SetupStartService extends AbstractStartService implements SetupStartServiceInterface
 {
     /**
      * @inheritDoc
