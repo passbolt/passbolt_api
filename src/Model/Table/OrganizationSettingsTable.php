@@ -85,7 +85,7 @@ class OrganizationSettingsTable extends Table
             ->regex(
                 'property',
                 '/^[a-zA-Z][a-zA-Z.]+[a-z]$/',
-                __('The property should be an alphabetical string and only point is accepted as special characters.')
+                __('The property should be an alphabetical string and only dot is accepted as special characters.')
             );
 
         $validator

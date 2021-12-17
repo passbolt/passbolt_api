@@ -17,11 +17,12 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\View\Helper;
 
-use App\Model\Table\AvatarsTable;
+use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 
 /**
  * @covers \App\View\Helper\AvatarHelper
@@ -47,6 +48,8 @@ class AvatarHelperTest extends AppIntegrationTestCase
 
     public function testGetDefaultAvatarUrl()
     {
+        TableRegistry::getTableLocator()->get('Avatars');
+
         $this->assertSame(
             $this->fullBaseUrl . '/img/avatar/user.png',
             AvatarHelper::getAvatarUrl()
@@ -54,12 +57,12 @@ class AvatarHelperTest extends AppIntegrationTestCase
 
         $this->assertSame(
             $this->fullBaseUrl . '/img/avatar/user.png',
-            AvatarHelper::getAvatarUrl(null, AvatarsTable::FORMAT_SMALL)
+            AvatarHelper::getAvatarUrl(null, AvatarsConfigurationService::FORMAT_SMALL)
         );
 
         $this->assertSame(
             $this->fullBaseUrl . '/img/avatar/user_medium.png',
-            AvatarHelper::getAvatarUrl(null, AvatarsTable::FORMAT_MEDIUM)
+            AvatarHelper::getAvatarUrl(null, AvatarsConfigurationService::FORMAT_MEDIUM)
         );
 
         $this->expectException(\RuntimeException::class);
@@ -70,7 +73,7 @@ class AvatarHelperTest extends AppIntegrationTestCase
     {
         $this->loadRoutes();
         $avatar = $this->createAvatar();
-        $expectedUrl = $this->fullBaseUrl . '/avatars/view/' . $avatar->get('id') . '/' . AvatarsTable::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION;
+        $expectedUrl = $this->fullBaseUrl . '/avatars/view/' . $avatar->get('id') . '/' . AvatarsConfigurationService::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION;
 //        // We are performing a unit test here. But the routes are loaded in the Middleware in CakePHP4
 //        // Therefore an application needs to be build, which is here made using a call to a dummy url (an avatar one)
 //        $this->get($expectedUrl);
@@ -79,7 +82,10 @@ class AvatarHelperTest extends AppIntegrationTestCase
         // We now test the AvatarHelper as such.
         $this->assertSame(
             $expectedUrl,
-            AvatarHelper::getAvatarUrl($avatar)
+            AvatarHelper::getAvatarUrl([
+                'id' => $avatar['id'],
+                'data' => $avatar['data'],
+            ])
         );
     }
 

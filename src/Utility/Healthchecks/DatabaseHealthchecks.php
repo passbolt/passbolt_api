@@ -144,7 +144,7 @@ class DatabaseHealthchecks
             $roles = TableRegistry::getTableLocator()->get('Roles');
             $i = $roles->find('all')->count();
             $checks['database']['defaultContent'] = ($i > 3);
-        } catch (DatabaseException $e) {
+        } catch (DatabaseException | \PDOException $e) {
         }
 
         return $checks;

@@ -416,16 +416,16 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @throws \InvalidArgumentException if the user id is not a uuid
-     * @return \App\Model\Entity\User $user entity
+     * @return \App\Model\Entity\User|null $user entity
      */
-    public function findSetupRecover(string $userId)
+    public function findSetupRecover(string $userId): ?User
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // show active first and do not count deleted ones
-        /** @var \App\Model\Entity\User $user */
+        /** @var \App\Model\Entity\User|null $user */
         $user = $this->find('locale')
             ->contain([
                 'Roles',
@@ -455,7 +455,7 @@ trait UsersFindersTrait
         }
 
         /** @var \App\Model\Entity\User $user */
-        $user = $this->find()
+        $user = $this->find('locale')
             ->where(['Users.id' => $userId])
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
@@ -492,7 +492,7 @@ trait UsersFindersTrait
      *
      * @return \Cake\ORM\Query
      */
-    public function findAdmins()
+    public function findAdmins(): Query
     {
         return $this->find()
             ->where(

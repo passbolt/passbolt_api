@@ -23,20 +23,18 @@ $admin = $body['admin'];
 $group = $body['group'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($admin->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($admin->username),
-        'first_name' => Purifier::clean($admin->profile->first_name),
-        'last_name' => Purifier::clean($admin->profile->last_name),
+        'user' => $admin,
         'datetime' => FrozenTime::now(),
-        'text' => __('{0} removed you from the group {1}', Purifier::clean($admin->profile->first_name), Purifier::clean($group->name))
+        'text' => __('{0} removed you from the group {1}', Purifier::clean($admin['profile']['first_name']), Purifier::clean($group['name']))
     ])
 ]);
 
 $text = __('You are no longer a member of this group.');
 $text .= ' ' . __('You are no longer authorized to access the passwords shared with this group.');
 $text .= ' ' . __('Please contact {0} or another group manager if this is a mistake.',
-    Purifier::clean($admin->profile->first_name)
+    Purifier::clean($admin['profile']['first_name'])
 );
 
 echo $this->element('Email/module/text', [

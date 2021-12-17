@@ -73,7 +73,7 @@ class AvatarsCacheService
     {
         if (empty($avatar->data)) {
             return $this->getFallBackFileName($format);
-        } elseif ($format === AvatarsTable::FORMAT_SMALL) {
+        } elseif ($format === AvatarsConfigurationService::FORMAT_SMALL) {
             return $this->getSmallAvatarFileName($avatar);
         } else {
             return $this->getMediumAvatarFileName($avatar);
@@ -139,8 +139,10 @@ class AvatarsCacheService
      * @param string $format The format to recover.
      * @return \Laminas\Diactoros\Stream The full path to the filename.
      */
-    protected function readStreamInCache(Avatar $avatar, string $format = AvatarsTable::FORMAT_SMALL): Stream
-    {
+    protected function readStreamInCache(
+        Avatar $avatar,
+        string $format = AvatarsConfigurationService::FORMAT_SMALL
+    ): Stream {
         $fileName = $this->getAvatarFileName($avatar, $format);
         try {
             $stream = $this->Avatars->getFilesystem()->readStream($fileName);
@@ -188,7 +190,9 @@ class AvatarsCacheService
      */
     protected function getSmallAvatarFileName(Avatar $avatar): string
     {
-        return $this->getOrCreateAvatarDirectory($avatar) . AvatarsTable::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION;
+        return $this->getOrCreateAvatarDirectory($avatar)
+            . AvatarsConfigurationService::FORMAT_SMALL
+            . AvatarHelper::IMAGE_EXTENSION;
     }
 
     /**
@@ -197,7 +201,9 @@ class AvatarsCacheService
      */
     protected function getMediumAvatarFileName(Avatar $avatar): string
     {
-        return $this->getOrCreateAvatarDirectory($avatar) . AvatarsTable::FORMAT_MEDIUM . AvatarHelper::IMAGE_EXTENSION;
+        return $this->getOrCreateAvatarDirectory($avatar)
+            . AvatarsConfigurationService::FORMAT_MEDIUM
+            . AvatarHelper::IMAGE_EXTENSION;
     }
 
     /**
@@ -227,6 +233,6 @@ class AvatarsCacheService
      */
     protected function getDefaultFormat(): string
     {
-        return AvatarsTable::FORMAT_MEDIUM;
+        return AvatarsConfigurationService::FORMAT_MEDIUM;
     }
 }

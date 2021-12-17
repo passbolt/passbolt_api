@@ -42,6 +42,8 @@ class AvatarProcessingTest extends TestCase
     {
         return [
             ['ada.png'],
+            ['ada.jpg'],
+            ['ada.gif'],
             ['50_80.png'],
             ['50_60.png'],
             ['100_50.gif'],

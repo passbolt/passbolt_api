@@ -17,23 +17,20 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountSettings\Test\TestCase\Model\Table;
 
-use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
+use BadMethodCallException;
+use Cake\Datasource\ModelAwareTrait;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 use Passbolt\AccountSettings\Test\Lib\AccountSettingsPluginTestCase;
 
 /**
  * Passbolt\AccountSettings\Model\Table\AccountSettingsTable Test Case
+ *
+ * @property \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings
  */
 class AccountSettingsTableTest extends AccountSettingsPluginTestCase
 {
-    /**
-     * Test subject
-     *
-     * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
-     */
-    public $AccountSettings;
+    use ModelAwareTrait;
 
     /**
      * setUp method
@@ -43,7 +40,7 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
+        $this->loadModel('AccountSettings');
     }
 
     /**
@@ -64,7 +61,7 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
         $value = 'Bar';
 
         // Expect exception if no property is passed
-        $this->expectException(InternalErrorException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->AccountSettings->find('byProperty');
 
         // Return null if the property does not exist

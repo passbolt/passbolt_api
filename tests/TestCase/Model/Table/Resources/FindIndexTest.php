@@ -66,7 +66,16 @@ class FindIndexTest extends AppTestCase
 
     public function testExcludeSoftDeletedResources()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = UserFactory::make()->persist();
+        $factory = ResourceFactory::make()->withCreatorAndPermission($user);
+
+        $notDeletedResource = $factory->persist();
+        $factory->setField('deleted', true)->persist();
+
+        $resources = $this->Resources->findIndex($user->id);
+
+        $this->assertSame(1, $resources->count());
+        $this->assertSame($notDeletedResource->id, $resources->firstOrFail()->id);
     }
 
     public function testContainSecrets()
@@ -297,7 +306,6 @@ class FindIndexTest extends AppTestCase
 
     public function testErrorInvalidUserIdParameter()
     {
-        $this->loadFixtures();
         try {
             $this->Resources->findIndex('not-valid');
         } catch (\InvalidArgumentException $e) {

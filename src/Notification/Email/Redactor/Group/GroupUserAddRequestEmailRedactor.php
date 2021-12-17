@@ -25,9 +25,10 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Passbolt\Locale\Service\LocaleService;
 
 class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -93,7 +94,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
         // Send to all group managers.
         foreach ($groupManagers as $groupManager) {
             $emailCollection->addEmail(
-                $this->createGroupUserAddEmail($groupManager->user->username, $admin, $group, $requestedGroupUsers)
+                $this->createGroupUserAddEmail($groupManager->user, $admin, $group, $requestedGroupUsers)
             );
         }
 
@@ -102,33 +103,42 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
 
     /**
      * @param string $groupId Group for which to get group managers
-     * @return \Cake\Datasource\ResultSetInterface
+     * @return \Cake\ORM\Query
      */
-    private function getGroupManagers(string $groupId): ResultSetInterface
+    private function getGroupManagers(string $groupId): Query
     {
         return $this->groupsUsersTable->find()
-            ->where(['group_id' => $groupId, 'is_admin' => true])
-            ->contain(['Users'])
-            ->all();
+            ->where([
+                $this->groupsUsersTable->aliasField('group_id') => $groupId,
+                $this->groupsUsersTable->aliasField('is_admin') => true,
+            ])
+            ->contain('Users', function (Query $q) {
+                return $q->find('locale');
+            });
     }
 
     /**
-     * @param string $recipient Email of the group manager to send the notification to
+     * @param \App\Model\Entity\User $recipient User of the group manager to send the notification to
      * @param \App\Model\Entity\User $admin the admin that requested the action
      * @param \App\Model\Entity\Group $group the group on which to add groupUsers
      * @param array  $groupUsers the list of groupUsers entity to request to add
      * @return \App\Notification\Email\Email
      */
-    private function createGroupUserAddEmail(string $recipient, User $admin, Group $group, array $groupUsers): Email
+    private function createGroupUserAddEmail(User $recipient, User $admin, Group $group, array $groupUsers): Email
     {
-        $subject = __('{0} requested you to add members to {1}', $admin->profile->first_name, $group->name);
+        $subject = (new LocaleService())->translateString(
+            $recipient->locale,
+            function () use ($admin, $group) {
+                return __('{0} requested you to add members to {1}', $admin->profile->first_name, $group->name);
+            }
+        );
         $data = ['body' => [
             'admin' => $admin,
             'group' => $group,
             'groupUsers' => $groupUsers,
         ], 'title' => $subject];
 
-        return new Email($recipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 
     /**

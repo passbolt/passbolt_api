@@ -44,17 +44,15 @@ trait EmailNotificationSettingsTestTrait
      */
     protected function setEmailNotificationSetting(string $config, bool $value)
     {
-        $settings = [];
-        $settings[$config] = $value;
-        $this->setEmailNotificationSettings($settings);
+        $this->setEmailNotificationSettings([$config => $value]);
     }
 
     /**
      * Set email notification settings
      *
-     * @param array|null $settings Array of settings
+     * @param array $settings Array of settings
      */
-    protected function setEmailNotificationSettings(?array $settings = [])
+    protected function setEmailNotificationSettings(array $settings)
     {
         $settingsToSave = [];
         foreach ($settings as $key => $setting) {

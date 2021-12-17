@@ -4,16 +4,35 @@
 #
 # Copyright:: 2020, The Authors, All Rights Reserved.
 #
-apt_update
 
-package 'mariadb-server' do
-  package_name [ 'debconf-utils', 'curl', 'mariadb-server', 'nginx' ]
-  action       :install
-end
+# Defaul database engine
+database_engine = 'mysql'
 
-execute "Start mysql" do
-  command "service mysql start"
-  action  :run
+if platform_family?('debian')
+  apt_update
+  package 'Debian: Install mariadb and nginx' do
+    package_name ['debconf-utils', 'curl', 'nginx', 'default-mysql-server']
+    action :install
+  end
+
+  # Use different database service depending on the OS
+  if (node['platform'] == 'debian' && node['platform_version'] =='11')
+    database_engine = 'mariadb'
+  end
+  
+  execute "Start mysql" do
+    command "service #{database_engine} start"
+    action  :run
+  end
+elsif platform_family?('rhel')
+  package 'RHEL: Install epel-release repository' do
+    package_name ['epel-release']
+    action :install
+  end
+  package 'RHEL: Install mariadb and nginx' do
+    package_name ['curl', 'nginx', 'mariadb-server', 'createrepo', 'firewalld']
+    action :install
+  end
 end
 
 include_recipe '::passbolt_responses_nginx_mysql'

@@ -1,6 +1,9 @@
 title 'Check passbolt database'
 
-sql=mysql_session('root','')
+sql_username = 'passboltadmin'
+sql_user_password = 'hawhawhaw'
+
+sql=mysql_session(sql_username, sql_user_password)
 
 control 'passbolt-mysql-0' do
   impact 1

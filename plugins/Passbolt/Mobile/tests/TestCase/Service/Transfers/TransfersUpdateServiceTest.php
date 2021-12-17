@@ -18,14 +18,18 @@ declare(strict_types=1);
 namespace Passbolt\Mobile\Test\TestCase\Service\Transfers;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
+use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Passbolt\Mobile\Model\Entity\Transfer;
 use Passbolt\Mobile\Service\Transfers\TransfersUpdateService;
+use Passbolt\Mobile\Test\Factory\TransferFactory;
 use Passbolt\Mobile\Test\Lib\Model\TransfersModelTrait;
 
 /**
@@ -35,8 +39,11 @@ use Passbolt\Mobile\Test\Lib\Model\TransfersModelTrait;
  */
 class TransfersUpdateServiceTest extends AppTestCase
 {
-    use TransfersModelTrait;
     use AuthenticationTokenModelTrait;
+    use UserAccessControlTrait;
+    use TransfersModelTrait;
+
+    public $autoFixtures = false;
 
     /**
      * Fixtures
@@ -49,14 +56,9 @@ class TransfersUpdateServiceTest extends AppTestCase
 
     public function testMobileTransfersUpdateService_Success()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer(
-            'ada',
-            Transfer::TRANSFER_STATUS_IN_PROGRESS,
-            0,
-            2
-        ));
+        $transfer = TransferFactory::make()->status(Transfer::TRANSFER_STATUS_IN_PROGRESS)->persist();
+        $uac = new UserAccessControl(Role::USER, $transfer->user_id);
+
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
             'current_page' => 1,
@@ -83,6 +85,7 @@ class TransfersUpdateServiceTest extends AppTestCase
 
     public function testMobileTransfersUpdateService_Success_TestTransitions()
     {
+        $this->loadFixtures();
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
         $transfer = $this->insertTransferFixture($this->getDummyTransfer(
@@ -124,6 +127,7 @@ class TransfersUpdateServiceTest extends AppTestCase
 
     public function testMobileTransfersCreateService_Error_TransitionsNotAllowed()
     {
+        $this->loadFixtures();
         $service = new TransfersUpdateService();
         $transfer = $service->Transfers->newEntity($this->getDummyTransfer(
             'ada',
@@ -179,6 +183,7 @@ class TransfersUpdateServiceTest extends AppTestCase
 
     public function testMobileTransfersCreateService_Error_TransitionsNotAllowed_CurrentPageBiggerThanTotal()
     {
+        $this->loadFixtures();
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
         $transfer = $this->insertTransferFixture($this->getDummyTransfer(
@@ -201,11 +206,37 @@ class TransfersUpdateServiceTest extends AppTestCase
 
     public function testMobileTransfersUpdateService_Error_ValidationError()
     {
-        $this->markTestIncomplete();
+        $transfer = TransferFactory::make()->status(Transfer::TRANSFER_STATUS_IN_PROGRESS)->persist();
+        $service = new TransfersUpdateService();
+        $uac = new UserAccessControl(Role::USER, $transfer->user_id);
+        $data = [];
+
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('Could not validate the transfer data.');
+        $service->update($transfer, $data, $uac);
     }
 
     public function testMobileTransfersUpdateService_Error_ExpiredAuthToken()
     {
-        $this->markTestIncomplete();
+        $userId = UuidFactory::uuid();
+        $transfer = TransferFactory::make()
+            ->status(Transfer::TRANSFER_STATUS_IN_PROGRESS)
+            ->userId($userId)
+            ->withAuthenticationToken(
+                AuthenticationTokenFactory::make()
+                    ->type(AuthenticationToken::TYPE_MOBILE_TRANSFER)
+                    ->userId($userId)
+                    ->active()
+                    ->expired()
+            )
+            ->persist();
+
+        $service = new TransfersUpdateService();
+        $uac = new UserAccessControl(Role::USER, $transfer->user_id);
+        $data = [];
+
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('The authentication token is expired.');
+        $service->update($transfer, $data, $uac);
     }
 }

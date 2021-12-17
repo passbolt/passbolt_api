@@ -15,8 +15,6 @@ use Cake\Core\Configure;
 
 $this->assign('title', $title);
 $version = Configure::read('passbolt.version');
-$themePath = "themes/$theme/api_main.min.css?v=$version";
-$this->Html->css($themePath, ['block' => 'css', 'fullBase' => true, 'id' => 'js_css_theme']);
 
 // See. fetch('scriptBottom')
 $this->start('scriptBottom');
@@ -25,4 +23,15 @@ echo $this->Html->script('/js/app/api-vendors.js?v=' . Configure::read('passbolt
 echo $this->Html->script('/js/app/api-app.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
 $this->end();
 echo $this->element('Loader/skeleton');
+
+$this->start('scriptTop');
+
+echo $this->Html->script('/js/app/stylesheet.js?v=' . $version, [
+    'id' => 'stylesheet-manager',
+    'fullBase' => true,
+    'data-file' => 'api_main.min.css',
+    'data-theme' => isset($theme) ? $theme : null,
+    'cache-version' => $version]);
+
+$this->end();
 ?>

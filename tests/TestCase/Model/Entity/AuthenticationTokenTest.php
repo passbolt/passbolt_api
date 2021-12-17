@@ -19,8 +19,10 @@ namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
+use App\Utility\UuidFactory;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\SkipTablesTruncation;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 
 class AuthenticationTokenTest extends TestCase
 {
@@ -46,7 +48,7 @@ class AuthenticationTokenTest extends TestCase
             ->data($data)
             ->getEntity();
 
-        $this->assertEquals($expectedSessionId, $entity->getSessionId());
+        $this->assertEquals($expectedSessionId, $entity->getHashedSessionId());
     }
 
     /**
@@ -65,6 +67,20 @@ class AuthenticationTokenTest extends TestCase
         $this->assertTrue($entity->checkSessionId($newSession));
     }
 
+    /**
+     * @see \App\Model\Entity\AuthenticationToken::checkSessionId()
+     */
+    public function testAuthenticationToken_hashAndSetSessionId_LongId()
+    {
+        $accessToken1 = (new JwtTokenCreateService())->createToken(UuidFactory::uuid());
+        $accessToken2 = (new JwtTokenCreateService())->createToken(UuidFactory::uuid());
+        $entity = AuthenticationTokenFactory::make()->getEntity();
+        $entity->hashAndSetSessionId($accessToken1);
+        $this->assertTextNotEquals($accessToken1, $accessToken2);
+        $this->assertTrue($entity->checkSessionId($accessToken1));
+        $this->assertFalse($entity->checkSessionId($accessToken2));
+    }
+
     public function testAuthenticationToken_getJsonDecodedData()
     {
         $data = ['foo' => 'bar'];
@@ -72,7 +88,7 @@ class AuthenticationTokenTest extends TestCase
             ->data($data)
             ->getEntity();
 
-        $this->assertSame($data, (array)$entity->getJsonDecodedData());
+        $this->assertSame($data, $entity->getJsonDecodedData());
 
         // Empty data
         $entity = AuthenticationTokenFactory::make()->getEntity();

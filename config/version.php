@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '3.0.0',
-        'name' => 'Our House'
+        'version' => '3.4.0',
+        'name' => 'Black Sunrise'
     ]
 ];

@@ -95,9 +95,32 @@ trait ConfigurationTrait
             return;
         }
 
-        if (file_exists(CONFIG . 'passbolt.php')) {
-            chmod(CONFIG . 'passbolt.php', 0777);
+        if (is_dir(CONFIG)) {
+            chmod(CONFIG, 0770);
         }
+        if (file_exists(CONFIG . 'passbolt.php')) {
+            chmod(CONFIG . 'passbolt.php', 0770);
+        }
+        if (file_exists(CONFIG . 'license')) {
+            chmod(CONFIG . 'license', 0644);
+        }
+        if (file_exists(CONFIG . 'subscription_key.txt')) {
+            chmod(CONFIG . 'subscription_key.txt', 0644);
+        }
+        if (is_dir(CONFIG . 'gpg')) {
+            chmod(CONFIG . 'gpg', 0770);
+        }
+        if (file_exists(CONFIG . 'gpg/unsecure.key')) {
+            chmod(CONFIG . 'gpg/unsecure.key', 0644);
+        }
+        if (file_exists(CONFIG . 'gpg/unsecure_private.key')) {
+            chmod(CONFIG . 'gpg/unsecure_private.key', 0644);
+        }
+
+        if (is_dir(CONFIG . 'jwt')) {
+            chmod(CONFIG . 'jwt', 0770);
+        }
+
         if (isset($this->backupConfig['passboltConfig'])) {
             file_put_contents(CONFIG . 'passbolt.php', $this->backupConfig['passboltConfig']);
         } else {

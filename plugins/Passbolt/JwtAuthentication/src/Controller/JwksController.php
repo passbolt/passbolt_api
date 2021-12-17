@@ -19,6 +19,8 @@ namespace Passbolt\JwtAuthentication\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\EventInterface;
+use Cake\Log\Log;
+use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 
 class JwksController extends AppController
@@ -39,7 +41,13 @@ class JwksController extends AppController
      */
     public function rsa(): void
     {
-        $keydata['keydata'] = (new JwksGetService())->getRawPublicKey();
+        $jwksGetService = new JwksGetService();
+        $keydata = [];
+        try {
+            $keydata['keydata'] = $jwksGetService->getRawPublicKey();
+        } catch (InvalidJwtKeyPairException $e) {
+            $this->logAndThrowInvalidJwtKeyPairException($e);
+        }
         $this->success(__('The operation was successful.'), $keydata);
     }
 
@@ -50,11 +58,32 @@ class JwksController extends AppController
      */
     public function jwks(): void
     {
-        $keys['keys'][] = (new JwksGetService())->getPublicKey();
+        $jwksGetService = new JwksGetService();
+        $keys = [];
+        try {
+            $keys['keys'][] = $jwksGetService->getPublicKey();
+        } catch (InvalidJwtKeyPairException $e) {
+            $this->logAndThrowInvalidJwtKeyPairException($e);
+        }
 
         // Do not use regular envelope as this is a normalized endpoint
         $this->set(compact('keys'));
         $this->viewBuilder()->setOption('serialize', 'keys');
         $this->setViewBuilderOptions();
+    }
+
+    /**
+     * Logs the message encountered by the user and logs
+     * further information for the admins.
+     *
+     * @param \Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException $e Exception to be logged
+     * @return void
+     * @throws \Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException the exception to be logged
+     */
+    protected function logAndThrowInvalidJwtKeyPairException(InvalidJwtKeyPairException $e): void
+    {
+        Log::alert($e->getMessage());
+        Log::error(__('The following file could not be read: {0}.', JwksGetService::PUBLIC_KEY_PATH));
+        throw $e;
     }
 }

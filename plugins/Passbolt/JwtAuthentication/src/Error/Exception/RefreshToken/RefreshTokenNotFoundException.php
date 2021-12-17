@@ -18,10 +18,21 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Error\Exception\RefreshToken;
 
 use Passbolt\JwtAuthentication\Error\Exception\AbstractJwtAttackException;
+use Throwable;
 
 /**
  * Exception raised when the refresh token is not associated to any user.
  */
 class RefreshTokenNotFoundException extends AbstractJwtAttackException
 {
+    /**
+     * @inheritDoc
+     */
+    public function __construct(?string $message = null, ?int $code = null, ?Throwable $previous = null)
+    {
+        if (empty($message)) {
+            $message = __('No active refresh token matching the request could be found.');
+        }
+        parent::__construct($message, $code, $previous);
+    }
 }

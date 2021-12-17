@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\EmailDigest\Test\TestCase\Command;
 
 use App\Test\Factory\UserFactory;
+use App\View\Helper\AvatarHelper;
+use Cake\Core\Configure;
 use Cake\I18n\I18n;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\EmailTrait;
@@ -43,6 +45,7 @@ class PreviewCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->setDummyFrenchTranslator();
+        $this->loadPlugins(['Passbolt/EmailDigest']);
     }
 
     /**
@@ -58,15 +61,22 @@ class PreviewCommandTest extends TestCase
 
     /**
      * Basic Preview test.
+     *
+     * @covers \App\Service\Avatars\AvatarsConfigurationService::loadConfiguration
      */
     public function testPreviewCommandPreview(): void
     {
+        // Ensure that avatar image configs are null and
+        // will be correctly loaded by the command.
+        Configure::delete('FileStorage');
+
         /** @var \Cake\Datasource\EntityInterface $email */
         $email = EmailQueueFactory::make()->persist();
         $this->exec('passbolt preview --body true');
         $this->assertExitSuccess();
         $this->assertOutputContains('Sending email from: ' . $email->get('from_email'));
         $this->assertOutputContains('Sending email to: ' . $email->get('email'));
+        $this->assertOutputContains(AvatarHelper::getAvatarFallBackUrl());
     }
 
     /**
