@@ -162,7 +162,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->assertResponseSuccess();
     }
 
-    public function testMfaRefreshTokenCreatedListenerMiddleware_RefreshTokenSuccessful_Invalid_MFA_Token()
+    public function testMfaRefreshTokenCreatedListenerMiddleware_RefreshTokenSuccessful_Invalid_MFA_Token_Should_Redirect()
     {
         $user = UserFactory::make()
             ->user()
@@ -171,6 +171,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
                 MfaAuthenticationTokenFactory::make()->inactive()->getEntity(),
             ])
             ->persist();
+        $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
 
         $oldRefreshToken = $user->authentication_tokens[0];
         $mfaToken = $user->authentication_tokens[1];
@@ -178,8 +179,8 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
         $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $mfaToken->token);
 
-        $this->postJson('/auth/jwt/refresh.json');
-        $this->assertBadRequestError('The MFA token provided does not exist or is inactive.');
+        $this->post('/auth/jwt/refresh.json');
+        $this->assertRedirect('/mfa/verify/error.json');
     }
 
     public function testMfaRefreshTokenCreatedListenerMiddleware_RefreshTokenSuccessful_MFA_Required()

@@ -181,7 +181,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             'refresh_token' => $oldRefreshToken->token,
         ]);
 
-        $this->assertResponseSuccess();
+        $this->assertResponseOk();
         $accessToken = $this->_responseJsonBody->access_token;
 
         // We check that the session ID of the MFA token has well been updated
@@ -231,7 +231,7 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
             'refresh_token' => $oldRefreshTokenInPayload->token,
         ]);
 
-        $this->assertResponseSuccess();
+        $this->assertResponseOk();
         $accessToken = $this->_responseJsonBody->access_token;
 
         // We check that the session ID of the MFA token has well been updated
@@ -255,5 +255,29 @@ class RefreshTokenAndMfaControllerTest extends MfaIntegrationTestCase
         $oldRefreshTokenInPayload = AuthenticationTokenFactory::get($oldRefreshTokenInPayload->id);
         $this->assertTrue($oldRefreshTokenInCookie->isActive());
         $this->assertFalse($oldRefreshTokenInPayload->isActive());
+    }
+
+    /**
+     * @dataProvider dataProviderWithAndWithoutAccessToken
+     * @param bool $withAccessToken With valid access token in header or no access token
+     */
+    public function testAuthRefreshTokenControllerWithInvalidMfaAndMfaDeactivatedShouldSkipMfaCheck(bool $withAccessToken)
+    {
+        $user = UserFactory::make()->user()->persist();
+        if ($withAccessToken) {
+            $this->createJwtTokenAndSetInHeader($user->id);
+        }
+
+        $refreshToken = (new RefreshTokenCreateService())->createToken(new ServerRequest(), $user->id, 'Bar');
+
+        $mfaToken = 'Foo';
+        $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $mfaToken);
+
+        $this->postJson('/auth/jwt/refresh.json', [
+            'user_id' => $user->id,
+            'refresh_token' => $refreshToken->token,
+        ]);
+
+        $this->assertResponseOk();
     }
 }

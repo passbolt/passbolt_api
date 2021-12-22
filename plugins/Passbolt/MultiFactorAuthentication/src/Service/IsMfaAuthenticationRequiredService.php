@@ -47,8 +47,7 @@ class IsMfaAuthenticationRequiredService
         ?SessionIdentificationServiceInterface $sessionIdentificationService = null
     ): bool {
         // Mfa not enabled for org or user
-        $providers = $mfaSettings->getEnabledProviders();
-        if (!count($providers)) {
+        if (!$mfaSettings->hasEnabledProviders()) {
             return false;
         }
 
