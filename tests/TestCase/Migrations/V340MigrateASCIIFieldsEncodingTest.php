@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Migrations;
 
+use Cake\Database\Driver\Mysql;
+use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\TestCase;
 
@@ -24,9 +26,16 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
     /**
      * Check that fields susceptible to be UUID or basic strings are well encoded in ASCII
      */
-    public function testV340MigrateASCIIFieldsEncoding()
+    public function testV340MigrateASCIIFieldsEncoding_MySQL()
     {
-        $schemaCollection = ConnectionManager::get('test')->getSchemaCollection();
+        $connection = ConnectionManager::get('test');
+        if (!($connection->getDriver() instanceof Mysql)) {
+            $this->expectNotToPerformAssertions();
+
+            return;
+        }
+
+        $schemaCollection = $connection->getSchemaCollection();
         $tables = $schemaCollection->listTables();
 
         $errors = [];
@@ -63,6 +72,42 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
     }
 
     /**
+     * Check that fields susceptible to be UUID are of UUID type
+     */
+    public function testV340MigrateUuidFields_Postgres()
+    {
+        $connection = ConnectionManager::get('test');
+        if (!($connection->getDriver() instanceof Postgres)) {
+            $this->expectNotToPerformAssertions();
+
+            return;
+        }
+        $schemaCollection = ConnectionManager::get('test')->getSchemaCollection();
+        $tables = $schemaCollection->listTables();
+
+        $errors = [];
+        foreach ($tables as $table) {
+            $columns = $schemaCollection->describe($table, ['forceRefresh' => true])->columns();
+            foreach ($columns as $columnName) {
+                $col = ConnectionManager::get('test')
+                    ->execute("SELECT table_name, column_name, data_type
+                                FROM information_schema.columns WHERE
+                               table_name = '$table' AND column_name = '$columnName';
+                       ")
+                    ->fetch('assoc');
+
+                $dataType = $col['data_type'];
+
+                if ($this->isUuid($table, $columnName) && $dataType !== 'uuid') {
+                    $errors[] = "Column '$columnName' data type in table '$table' is not UUID but $dataType";
+                }
+            }
+        }
+
+        $this->assertSame([], $errors);
+    }
+
+    /**
      * Column names that are probably UUIDs
      *
      * @return string[]
@@ -83,6 +128,28 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
             'created_by',
             'modified_by',
         ];
+    }
+
+    /**
+     * Indicate if this id is most probably an uuid
+     *
+     * @param string $tableName table name
+     * @param string $columnName column name
+     * @return bool
+     */
+    public function isUuid(string $tableName, string $columnName): bool
+    {
+        // Some columns do not follow the general pattern and are not UUIDs
+        $exceptions = ['email_queue.id', 'gpgkeys.key_id', 'permissions_history.aro_foreign_key'];
+
+        if (in_array("$tableName.$columnName", $exceptions)) {
+            return false;
+        }
+
+        return $columnName === 'id'
+            || strpos($columnName, '_id') !== false
+            || strpos($columnName, 'foreign_key') !== false
+            || strpos($columnName, '_by') !== false;
     }
 
     /**

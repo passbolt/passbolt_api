@@ -19,6 +19,7 @@ namespace Passbolt\EmailDigest\Test\TestCase\Service;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
+use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\EntityInterface;
 use Cake\I18n\FrozenTime;
@@ -43,9 +44,9 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         $users = UserFactory::make(2)->with('Profiles.Avatars', ['data' => 'Foo'])->persist();
         $resource = ResourceFactory::make()->persist()->toArray();
 
-        $baseFactory = EmailQueueFactory::make()
-            ->setField('template_vars', compact('users', 'resource'));
-        $originalUnsentEmail = $baseFactory->persist();
+        $originalUnsentEmail = EmailQueueFactory::make()
+            ->setField('template_vars', compact('users', 'resource'))
+            ->persist();
 
 
         // Swith to v3.3.1 mode, with variables saved in Json
@@ -68,6 +69,12 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         array $users,
         array $resource
     ): void {
+        // ConvertEmailVariablesToJsonService was meant to migrate MySQL serialized email variables
+        // into JSON. PostGRES came after and is therefore not concerned.
+        if (ConnectionManager::get('test')->getDriver() instanceof Postgres) {
+            $this->expectNotToPerformAssertions();
+            return;
+        }
         $hydratedVars = EmailQueueFactory::find()->where([
             'id' => $originalUnsentEmail->get('id'),
             'email' => $originalUnsentEmail->get('email'),

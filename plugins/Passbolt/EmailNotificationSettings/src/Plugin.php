@@ -17,22 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\EmailNotificationSettings;
 
 use Cake\Core\BasePlugin;
-use Cake\Core\Configure;
-use Cake\Core\PluginApplicationInterface;
-use Cake\Database\Type;
-use Passbolt\EmailNotificationSettings\Database\Type\SerializedType;
 
 class Plugin extends BasePlugin
 {
-    /**
-     * @inheritDoc
-     */
-    public function bootstrap(PluginApplicationInterface $app): void
-    {
-        parent::bootstrap($app);
-
-        // Set the EmailQueue Serialization type. This was required for Postgres to render emails correctly
-        Type::map('passbolt.serialized', SerializedType::class);
-        Configure::write('EmailQueue.serialization_type', 'passbolt.serialized');
-    }
 }
