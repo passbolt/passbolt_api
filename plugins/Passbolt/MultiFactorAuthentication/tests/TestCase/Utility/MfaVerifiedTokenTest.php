@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 use App\Authenticator\AbstractSessionIdentificationService;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Http\ServerRequest;
@@ -223,6 +224,46 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         // Check that the token was deactivated
         $failingToken = MfaAuthenticationTokenFactory::get($failingToken->id);
         $this->assertFalse($failingToken->get('active'));
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerifiedToken
+     */
+    public function testMfaVerifiedTokenCheckFailsWhenDataIsNotValidJson()
+    {
+        $user = UserFactory::make()
+            ->withAuthenticationTokens(
+                MfaAuthenticationTokenFactory::make()
+                    ->active()
+                    ->setField('data', '{This is no valid JSON!{')
+            )
+            ->persist();
+        $token = $user->authentication_tokens[0];
+
+        $success = MfaVerifiedToken::check($this->makeUac($user), $token->token);
+        $this->assertFalse($success);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerifiedToken
+     */
+    public function testMfaVerifiedTokenCheckFailsWhenExpired()
+    {
+        $user = UserFactory::make()
+            ->withAuthenticationTokens(
+                MfaAuthenticationTokenFactory::make()
+                    ->active()
+                    ->created((new Date())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS))
+            )
+            ->persist();
+        $token = $user->authentication_tokens[0];
+
+        $success = MfaVerifiedToken::check($this->makeUac($user), $token->token);
+        $this->assertFalse($success);
+        $token = AuthenticationTokenFactory::get($token->id);
+        $this->assertFalse($token->isActive());
     }
 
     /**
