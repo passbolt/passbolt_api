@@ -9,14 +9,22 @@ crontabs_dir = '/etc/cron.d'
 logrotate_dir = '/etc/logrotate.d'
 cron_script = '/usr/share/php/passbolt/bin/cron'
 
+webserver_owner = 'www-data'
+webserver_group = 'www-data'
+
+if os.family == 'redhat'
+  webserver_owner = 'nginx'
+  webserver_group = 'nginx'
+end
+
 control 'passbolt-logs-01' do
   impact 1
   title 'passbolt logs directory'
   desc 'passbolt logs directory is present and has write permissions for www user'
   describe directory("#{logs_dir}") do
     it { should exist }
-    its('owner') { should eq 'www-data' }
-    its('group') { should eq 'www-data' }
+    its('owner') { should eq webserver_owner }
+    its('group') { should eq webserver_group }
     its('mode') { should cmp '0755' }
   end
 end
@@ -27,8 +35,8 @@ control 'passbolt-tmp-01' do
   desc 'passbolt temporary directory is present and has write permissions for www user'
   describe directory("#{tmp_dir}") do
     it { should exist }
-    its('owner') { should eq 'www-data' }
-    its('group') { should eq 'www-data' }
+    its('owner') { should eq webserver_owner }
+    its('group') { should eq webserver_group }
     its('mode') { should cmp '0755' }
   end
 end
@@ -40,7 +48,7 @@ control 'passbolt-config-01' do
   describe directory("#{config_dir}") do
     it { should exist }
     its('owner') { should eq 'root' }
-    its('group') { should eq 'www-data' }
+    its('group') { should eq webserver_group }
     its('mode') { should cmp '00770' }
   end
 end

@@ -17,13 +17,12 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 
 class UsersDeleteNotificationTest extends AppIntegrationTestCase
 {
-    public $Users;
-    public $GroupsUsers;
-    public $Permissions;
+    use EmailQueueTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
@@ -53,5 +52,8 @@ class UsersDeleteNotificationTest extends AppIntegrationTestCase
         $this->get('/seleniumtests/showlastemail/wang@passbolt.com');
         $this->assertResponseCode(500);
         $this->assertResponseContains('No email was sent to this user.');
+
+        // Two mails should be in the queue
+        $this->assertEmailQueueCount(2);
     }
 }

@@ -2,7 +2,80 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [3.4.0] - 2021-12-07
+### Added
+- PB-9826 As a user I want to use passbolt natively on Edge
+- PB-8371 As LU I want to see the login/MFA/recover/register screens in dark mode
+
+### Improvement
+- PB-8522 As LU I should see the MFA verify field having focus
+- PB-9730 As AD I should be able to check avatars read issues from the healthcheck
+
+### Fix
+- PB-8932 Fix as LU I should see an animation when I successfully configured MFA
+- PB-9286 Fix as LU I should see the locale dropdown field of the setup/recover screen well positioned
+- PB-9397 Fix as AD I shouldn't see an error on the healthcheck if the JWT auth is disabled and I never configured it
+- PB-9114 Fix as lu I should be able to upload a transparent avatar in .png format.
+- PB-9750 Fix spelling mistakes reported by the community
+- PB-9762 Fix requesting /auth/login.json should not trigger an unexpected error
+- PB-9888 Fix MFA & JWT refresh token issue, remove Bearer from the hashed session identifier
+- PB-12817 Fix as LU I should be able to update jpeg avatar
+- PB-12581 Fix as AD I should be able to configure the users directory integration
+
+### Security
+- PB-7374 As soft deleted but logged in user I should be forbidden to request the API
+- PB-9340 Fix email queue data should be stored and deserialized as json and not php
+
+### Maintenance
+- PB-9311 Refactor JWT and MFA plugins for better code maintainability.
+- PB-8320 Implement the tests that are marked as incomplete for cleaner continuous integration test reports
+- PB-8211 Psalm set to level 4
+- PB-9726 Fix do not load cleanup tasks unless in CLI mode
+- PB-9753 Improve table fields validation tests, do not save entity when testing the validation of properties
+- PB-9310 Move avatar file_storage logic into AvatarsTable
+- PB-9785 Update JWT healthcheck help messages
+- PB-9656 Migrate fields from utf8mb4 to a more performant encoding when possible
+
+## [3.3.1] - 2021-11-24
+### Security fixes
+- PB-9820 / PBL-06-008 WP3: JWT key confusion leads to authentication bypass (High) [experimental][disabled by default]
+
+## [3.3.0] - 2021-10-25
+### Added
+- PB-7815 As a server administrator I should be able to enable / disable the in-form menu feature, enabled by default
+- PB-6072 As a server administrator I should be able to enable / disable the password generator feature, enabled by default
+- PB-8189 As a user I should be able to use the application in German or Swedish
+- PB-7847 As AN I should be able to authenticate to passbolt via JWT access and refresh tokens [experimental][disabled by default]
+- PB-6034  As LU I should be able to configure my mobile app [experimental][disabled by default]
+
+### Improvement
+- PB-8908 As a user I should see the footer of the passbolt emails translated with my locale
+- PB-8364 As a user I should see the subject of the passbolt emails translated with my locale
+- PB-6032 As API user I shouldn’t see the _joinData properties in the resource entry points responses
+- PB-8281 Add Debian 11 bullseye support
+- PB-7750 As AD I should be notified by the healthcheck when a tmp files is executable
+- PB-7760 Increase PHPStan level to 6
+- PB-8081 As AD I should be able to configure passbolt over IPv6 while installing a passbolt package
+- PB-5866 As AD I should be able to detect avatar data discrepancies using the passbolt cleanup command
+- PB-7605 As a developer I should be able to enable/disable a plugin easily
+
+### Fixed
+- PB-5982 as LU sharing a folders with a user which contains resources already shared with this same user I should move the resources in the shared folders
+- PB-5457 Fix as LU importing a batch of passwords I should not get an internal errors because of database deadlock
+- PB-7840 Fix as AD I can install/reconfigure the passbolt package if ssl certificates are already present
+
+### Security
+- PB-7961 Fix PBL-03-002 Missing CSRF protection on the user directories synchronize and ignore user entry points
+- PB-8047 Fix PBL-02-002 As LU I should logout by posting to the API and the entry point should should be protected by CSRF
+- PB-7751 Updates FlySystem dependency to v2.1.1
+- SEC-181 Fix information disclosure: recover endpoint should not return user role and name.
+
+### Maintenance
+- PB-8488 Remove user agent unnecessary check associated with MFA token
+- PB-8336 Clean phpunit.xml file
+- PB-8448 Hashes the session ID prior to passord_hash
+- PB-8210 Replaces PHPSESSID with session_name()
+
 ## [3.2.2] - 2021-06-16
 ### Fixed
 - PB-5910 Fix ldap admin screen should load only default admin users which are active and not deleted
@@ -953,7 +1026,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.2.2...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.4.0...HEAD
+[3.4.0]: https://github.com/passbolt/passbolt_api/compare/v3.3.1...v3.4.0
+[3.3.1]: https://github.com/passbolt/passbolt_api/compare/v3.3.0...v3.3.1
+[3.3.0]: https://github.com/passbolt/passbolt_api/compare/v3.2.2...v3.3.0
 [3.2.2]: https://github.com/passbolt/passbolt_api/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/passbolt/passbolt_api/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/passbolt/passbolt_api/compare/v3.1.0...v3.2.0

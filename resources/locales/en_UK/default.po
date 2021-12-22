@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2021-05-17 07:39+0000\n"
+"POT-Creation-Date: 2021-10-06 16:57+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -267,9 +267,6 @@ msgid "The resource type does not exist."
 msgstr ""
 
 msgid "The resource has been added successfully."
-msgstr ""
-
-msgid "Could not validate resource data."
 msgstr ""
 
 msgid "The resource has been deleted successfully."
@@ -1142,10 +1139,10 @@ msgstr ""
 msgid "Validation success for authenticationToken {0}"
 msgstr ""
 
-msgid "Could not save the avatar in cache."
+msgid "Could not save the avatar in the {0} file."
 msgstr ""
 
-msgid "Could not read the avatar in cache."
+msgid "The avatar id is not valid."
 msgstr ""
 
 msgid "Validation failed for comment {0}. {1}"
@@ -1203,6 +1200,15 @@ msgid "Validation failed for profile {0}. {1}"
 msgstr ""
 
 msgid "Validation success for profile {0}"
+msgstr ""
+
+msgid "Could not validate resource data."
+msgstr ""
+
+msgid "An unexpected error occured, please contact an administrator."
+msgstr ""
+
+msgid "The server returned the following error:"
 msgstr ""
 
 msgid "Validation failed for resource {0}. {1}"
@@ -1691,9 +1697,6 @@ msgstr ""
 msgid "Subscription key could not be found."
 msgstr ""
 
-msgid "The subscription cannot be verified. Invalid signature."
-msgstr ""
-
 msgid "A subscription key is required."
 msgstr ""
 
@@ -1709,7 +1712,10 @@ msgstr ""
 msgid "The subscription format is not valid. Invalid format."
 msgstr ""
 
-msgid "The subscription key cannot be verified. The passbolt OpenPGP public key could not be found."
+msgid "The subscription key cannot be verified."
+msgstr ""
+
+msgid "The passbolt OpenPGP public key could not be found."
 msgstr ""
 
 msgid "A users quantity is required."
@@ -1931,6 +1937,126 @@ msgstr ""
 msgid "{0} updated the folder {1}"
 msgstr ""
 
+msgid "The challenge cannot be decrypted."
+msgstr ""
+
+msgid "The challenge is invalid. Deserialization failed."
+msgstr ""
+
+msgid "The challenge is invalid. Validation Failed."
+msgstr ""
+
+msgid "The config for the server private key fingerprint is not available or incomplete."
+msgstr ""
+
+msgid "The config for the server private key passphrase is invalid."
+msgstr ""
+
+msgid "The user id is missing or invalid."
+msgstr ""
+
+msgid "The user OpenPGP key does not exist, or is invalid, or has been deleted."
+msgstr ""
+
+msgid "The user signature is invalid."
+msgstr ""
+
+msgid "The user challenge is missing or invalid."
+msgstr ""
+
+msgid "The version is invalid."
+msgstr ""
+
+msgid "The domain is invalid."
+msgstr ""
+
+msgid "The domain is invalid. Expected: {0} and got {1}"
+msgstr ""
+
+msgid "The authentication was a success."
+msgstr ""
+
+msgid "The authentication failed."
+msgstr ""
+
+msgid "The credentials are missing."
+msgstr ""
+
+msgid "The user does not exist or is not active or has been deleted."
+msgstr ""
+
+msgid "The credentials are invalid."
+msgstr ""
+
+msgid "An internal error occurred."
+msgstr ""
+
+msgid "The verify token is invalid."
+msgstr ""
+
+msgid "The route {0} is not permitted with JWT authentication."
+msgstr ""
+
+msgid "The key pair for JWT Authentication is not complete. The following file could not be read: {0}."
+msgstr ""
+
+msgid "The JWT public key could not be read or is not valid."
+msgstr ""
+
+msgid "The JWT private key should be at least {0} bytes long."
+msgstr ""
+
+msgid "The configuration {0} is not correctly set."
+msgstr ""
+
+msgid "No active refresh token matching the request could be found."
+msgstr ""
+
+msgid "The refresh token provided was already used."
+msgstr ""
+
+msgid "Expired refresh token provided."
+msgstr ""
+
+msgid "The refresh token should be a valid UUID."
+msgstr ""
+
+msgid "This is not a valid user id."
+msgstr ""
+
+msgid "Invalid verify token expiry."
+msgstr ""
+
+msgid "Attempt to access an expired verify token."
+msgstr ""
+
+msgid "Invalid verify token format."
+msgstr ""
+
+msgid "Invalid user ID format."
+msgstr ""
+
+msgid "Verify token has been already used in the past."
+msgstr ""
+
+msgid "Security warning!"
+msgstr ""
+
+msgid "An unknown user with IP: {0} attempted to identify as {1}."
+msgstr ""
+
+msgid "This is a potential security issue."
+msgstr ""
+
+msgid "Please investigate!"
+msgstr ""
+
+msgid "An unknown user with IP: {0}  attempted to steal your login data."
+msgstr ""
+
+msgid "Please get in touch with one of your administrators."
+msgstr ""
+
 msgid "This is not a valid locale."
 msgstr ""
 
@@ -2033,6 +2159,117 @@ msgstr ""
 msgid "Could not validate secret history data."
 msgstr ""
 
+msgid "Information about the transfer is required."
+msgstr ""
+
+msgid "The operation was successful"
+msgstr ""
+
+msgid "The transfer id is not valid."
+msgstr ""
+
+msgid "The authentication token should be a valid uuid."
+msgstr ""
+
+msgid "The authentication token is invalid."
+msgstr ""
+
+msgid "The transfer id should be a uuid."
+msgstr ""
+
+msgid "The user id should be a uuid."
+msgstr ""
+
+msgid "A user id is required"
+msgstr ""
+
+msgid "The hash should be an ascii string."
+msgstr ""
+
+msgid "The hash should be {0} characters in length."
+msgstr ""
+
+msgid "The data transfer hash is required."
+msgstr ""
+
+msgid "The current page should be a non negative integer."
+msgstr ""
+
+msgid "The current page number is required"
+msgstr ""
+
+msgid "The current page number should be equal or inferior to the total number of pages."
+msgstr ""
+
+msgid "The current page cannot be greater than {0}"
+msgstr ""
+
+msgid "The total number of pages should a non negative integer."
+msgstr ""
+
+msgid "The total number of pages is required."
+msgstr ""
+
+msgid "The total number of pages should be greater than 0."
+msgstr ""
+
+msgid "The total number of pages cannot be greater than {0}"
+msgstr ""
+
+msgid "The status should not be empty."
+msgstr ""
+
+msgid "The status is required."
+msgstr ""
+
+msgid "The status must be one of the following: {0}."
+msgstr ""
+
+msgid "The user must be active."
+msgstr ""
+
+msgid "Could not validate the transfer data."
+msgstr ""
+
+msgid "The transfer could not be created."
+msgstr ""
+
+msgid "Could not update the transfer data."
+msgstr ""
+
+msgid "The transfer could not be updated."
+msgstr ""
+
+msgid "This operation is not allowed."
+msgstr ""
+
+msgid "Restarting a transfer is not allowed."
+msgstr ""
+
+msgid "The operation is already over."
+msgstr ""
+
+msgid "The current page does not match the total number of pages."
+msgstr ""
+
+msgid "This operation is not allowed for this user."
+msgstr ""
+
+msgid "The authentication token is missing."
+msgstr ""
+
+msgid "The authentication token is not valid for this user."
+msgstr ""
+
+msgid "The authentication token type is invalid."
+msgstr ""
+
+msgid "The authentication token is not active."
+msgstr ""
+
+msgid "The authentication token is expired."
+msgstr ""
+
 msgid "This functionality is not available using AJAX/JSON."
 msgstr ""
 
@@ -2118,6 +2355,9 @@ msgid "Multi-factor authentication settings were reset."
 msgstr ""
 
 msgid "Your multi-factor authentication settings were reset by an administrator."
+msgstr ""
+
+msgid "The MFA token provided does not exist or is inactive."
 msgstr ""
 
 msgid "No MFA provider set."
@@ -2313,6 +2553,9 @@ msgid "Please contact your administrator if you didn't request this action."
 msgstr ""
 
 msgid "Log in passbolt"
+msgstr ""
+
+msgid "The password generator value \"{0}\" is not valid."
 msgstr ""
 
 msgid "5 minutes"
@@ -2723,21 +2966,6 @@ msgstr ""
 msgid "Port"
 msgstr ""
 
-msgid "The test email has been sent successfully!"
-msgstr ""
-
-msgid "Email could not be sent:"
-msgstr ""
-
-msgid "See trace"
-msgstr ""
-
-msgid "Your email address"
-msgstr ""
-
-msgid "Send test email"
-msgstr ""
-
 msgid "Passbolt is not configured."
 msgstr ""
 
@@ -2775,9 +3003,6 @@ msgid "add a comment (optional)"
 msgstr ""
 
 msgid "Comment"
-msgstr ""
-
-msgid "Key Expire"
 msgstr ""
 
 msgid "Import an existing key or {0} a new one."
@@ -2888,10 +3113,40 @@ msgstr ""
 msgid "Installing"
 msgstr ""
 
+msgid "Existing installation?"
+msgstr ""
+
+msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
+msgstr ""
+
+msgid "As a precaution, do not forget to backup your database before you continue."
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
+msgstr ""
+
+msgid "Send test email"
+msgstr ""
+
+msgid "The test email has been sent successfully!"
+msgstr ""
+
+msgid "Email could not be sent:"
+msgstr ""
+
+msgid "See trace"
+msgstr ""
+
+msgid "Your email address"
+msgstr ""
+
+msgid "Why do I need a SMTP server?"
+msgstr ""
+
+msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr ""
 
 msgid "What subscription key?"
@@ -2922,6 +3177,9 @@ msgid "Group manager"
 msgstr ""
 
 msgid "Member"
+msgstr ""
+
+msgid "Updated roles"
 msgstr ""
 
 msgid "is now group manager"

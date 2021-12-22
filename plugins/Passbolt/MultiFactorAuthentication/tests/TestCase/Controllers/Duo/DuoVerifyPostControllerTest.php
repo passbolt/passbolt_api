@@ -48,7 +48,7 @@ class DuoVerifyPostControllerTest extends MfaIntegrationTestCase
         $this->post('/mfa/verify/duo?api-version=v2', []);
         $this->assertResponseSuccess();
         $mfaToken = AuthenticationTokenFactory::find()->firstOrFail();
-        $this->assertCookie($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 
     /**

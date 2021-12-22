@@ -16,14 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
+use Cake\Http\ServerRequest;
 use Cake\I18n\Date;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class MfaVerifiedCookieTest extends MfaIntegrationTestCase
 {
-    public $autoFixtures = false;
-
     /**
      * @group mfa
      * @group mfaVerifiedCookie
@@ -31,12 +30,12 @@ class MfaVerifiedCookieTest extends MfaIntegrationTestCase
     public function testMfaVerifiedCookieGet()
     {
         $expiryAt = (new Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS);
-        $cookie = MfaVerifiedCookie::get('test', $expiryAt, true);
+        $cookie = MfaVerifiedCookie::get(new ServerRequest(), 'test', $expiryAt);
         $this->assertTrue($cookie->isSecure());
         $this->assertEquals($cookie->getValue(), 'test');
         $this->assertFalse($cookie->isExpired());
 
-        $cookie = MfaVerifiedCookie::get('test', null, true);
+        $cookie = MfaVerifiedCookie::get(new ServerRequest(), 'test', null);
         $this->assertFalse($cookie->isExpired());
         $this->assertEmpty($cookie->getExpiry());
     }
@@ -47,7 +46,7 @@ class MfaVerifiedCookieTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifiedCookieClearCookie()
     {
-        $cookie = MfaVerifiedCookie::clearCookie(true);
+        $cookie = MfaVerifiedCookie::clearCookie(new ServerRequest());
         $this->assertTrue($cookie->isSecure());
         $this->assertTrue($cookie->isExpired());
     }

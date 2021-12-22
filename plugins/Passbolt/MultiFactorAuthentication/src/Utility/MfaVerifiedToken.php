@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 
 class MfaVerifiedToken
@@ -76,11 +78,16 @@ class MfaVerifiedToken
      *
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param string $tokenString token
-     * @param string $sessionId Session ID
+     * @param \App\Authenticator\SessionIdentificationServiceInterface|null $sessionIdentificationService Session ID identifier, required unless logging in
+     * @param \Cake\Http\ServerRequest|null $request Server request, required only if $sessionIdentificationService is required
      * @return bool
      */
-    public static function check(UserAccessControl $uac, string $tokenString, string $sessionId): bool
-    {
+    public static function check(
+        UserAccessControl $uac,
+        string $tokenString,
+        ?SessionIdentificationServiceInterface $sessionIdentificationService = null,
+        ?ServerRequest $request = null
+    ): bool {
         // Baseline validity check
         /** @var \App\Model\Table\AuthenticationTokensTable $auth */
         $auth = TableRegistry::getTableLocator()->get('AuthenticationTokens');
@@ -101,13 +108,6 @@ class MfaVerifiedToken
             return false;
         }
 
-        // Check for user agent change
-        if ($data->user_agent !== env('HTTP_USER_AGENT')) {
-            $auth->setInactive($token->token);
-
-            return false;
-        }
-
         // Remember me
         if (isset($data->remember) && $data->remember === true) {
             if ($token->created->wasWithinLast(MfaVerifiedCookie::MAX_DURATION)) {
@@ -115,8 +115,11 @@ class MfaVerifiedToken
             }
         }
 
-        // Check Session id
-        if ($token->checkSessionId($sessionId)) {
+        // Check Session ID
+        if (
+            isset($sessionIdentificationService) &&
+            $sessionIdentificationService->checkAuthenticationToken($request, $token)
+        ) {
             return true;
         }
 

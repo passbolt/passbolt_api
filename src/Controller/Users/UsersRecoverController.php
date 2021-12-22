@@ -17,14 +17,12 @@ declare(strict_types=1);
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
-use App\Model\Table\UsersTable;
+use App\Service\Users\UserRecoverServiceInterface;
 use Cake\Core\Configure;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Exception\NotFoundException;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -37,11 +35,9 @@ class UsersRecoverController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated(['recoverGet', 'recoverPost']);
-        $this->loadModel('Users');
-        $this->loadModel('AuthenticationTokens');
 
         return parent::beforeFilter($event);
     }
@@ -50,9 +46,10 @@ class UsersRecoverController extends AppController
      * Recover user action GET
      * Display a recovery form
      *
+     * @param \App\Service\Users\UserRecoverServiceInterface $userRecoverService User recover service
      * @return void
      */
-    public function recoverGet()
+    public function recoverGet(UserRecoverServiceInterface $userRecoverService)
     {
         // Do not allow logged in user to recover
         if ($this->User->role() !== Role::GUEST) {
@@ -60,21 +57,19 @@ class UsersRecoverController extends AppController
         }
 
         $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->viewBuilder()
-            ->setTemplatePath('Auth')
-            ->setLayout('default')
-            ->setTemplate('triage');
+        $userRecoverService->setTemplate($this->viewBuilder());
         $this->success();
     }
 
     /**
      * Register user action POST
      *
+     * @param \App\Service\Users\UserRecoverServiceInterface $userRecoverService User recover service
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the username is not valid
      * @throws \Cake\Http\Exception\BadRequestException if the username is not provided
      */
-    public function recoverPost()
+    public function recoverPost(UserRecoverServiceInterface $userRecoverService)
     {
         if (!$this->request->is('json')) {
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
@@ -85,80 +80,7 @@ class UsersRecoverController extends AppController
             throw new ForbiddenException(__('Only guest are allowed to recover an account. Please logout first.'));
         }
 
-        $this->_assertValidation();
-        $user = $this->_assertRules();
-        $token = null;
-        $adminId = null;
-        if ($user->active) {
-            $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
-            $event = static::RECOVER_SUCCESS_EVENT_NAME;
-        } else {
-            // The user has not completed the setup, restart setup
-            // Fixes https://github.com/passbolt/passbolt_api/issues/73
-            $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
-            $event = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
-            if ($this->User->role() === Role::ADMIN) {
-                $adminId = $this->User->id();
-            }
-        }
-
-        // Create an event to build email with token
-        $options = ['user' => $user, 'token' => $token];
-        if (isset($adminId)) {
-            $options['adminId'] = $adminId;
-        }
-        $event = new Event($event, $this, $options);
-        $this->getEventManager()->dispatch($event);
-
-        $this->success(__('Recovery process started, check your email.'), $user);
-    }
-
-    /**
-     * Assert some username data is provided
-     *
-     * @return \App\Model\Entity\User user entity
-     * @throws \Cake\Http\Exception\BadRequestException if the username is not valid
-     * @throws \Cake\Http\Exception\BadRequestException if the username is not provided
-     */
-    protected function _assertValidation()
-    {
-        $data = $this->request->getData();
-        if (!isset($data['username']) || empty($data['username'])) {
-            throw new BadRequestException(__('Please provide a valid email address.'));
-        }
-
-        $user = $this->Users->newEntity(
-            $data,
-            ['validate' => 'recover', 'accessibleFields' => ['username' => true]]
-        );
-        if ($user->getErrors()) {
-            throw new BadRequestException(__('Please provide a valid email address.'));
-        }
-
-        return $user;
-    }
-
-    /**
-     * Assert the user can actually perform a recovery on their account
-     *
-     * @return mixed
-     * @throws \Cake\Http\Exception\BadRequestException if the user does not exist or has been deleted
-     */
-    protected function _assertRules()
-    {
-        $data = $this->request->getData();
-        $user = $this->Users->findRecover($data['username'])->first();
-
-        if (empty($user)) {
-            $msg = __('This user does not exist or has been deleted.') . ' ';
-            if (Configure::read('passbolt.registration.public')) {
-                $msg .= __('Please register and complete the setup first.');
-            } else {
-                $msg .= __('Please contact your administrator.');
-            }
-            throw new NotFoundException($msg);
-        }
-
-        return $user;
+        $userRecoverService->recover($this->User->getAccessControl());
+        $this->success(__('Recovery process started, check your email.'));
     }
 }

@@ -44,6 +44,6 @@ trait UacAwareMiddlewareTrait
         // the identity itself (general way)
         $user = $identity->get('user') ?? $identity;
 
-        return new UserAccessControl($user['role']['name'], $user['id']);
+        return new UserAccessControl($user['role']['name'], $user['id'], $user['username']);
     }
 }

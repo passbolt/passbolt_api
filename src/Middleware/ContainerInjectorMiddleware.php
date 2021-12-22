@@ -42,7 +42,8 @@ class ContainerInjectorMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Serve assets if the path matches one.
+     * Sets the container in the request as attribute.
+     * This makes the container accessible to other middlewares.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.

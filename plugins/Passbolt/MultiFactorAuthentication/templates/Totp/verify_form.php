@@ -10,7 +10,6 @@
 
     $title = __('Multi factor authentication verification');
     $this->assign('title', $title);
-    $this->Html->css('themes/default/api_authentication.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'login v240918');
     $formContext = [
         'url' => Router::url('/mfa/verify/totp', true),
@@ -25,6 +24,7 @@
     <?= $this->Form->control('totp', [
         'label' => 'One Time Password (OTP)',
         'placeholder' => '123456',
+        'autofocus' => 'autofocus'
     ]); ?>
     <div class="input checkbox">
         <input type="checkbox" name="remember" value="remember" id="remember">

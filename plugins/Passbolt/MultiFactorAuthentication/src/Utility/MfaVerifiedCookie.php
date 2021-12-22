@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
+use Cake\Http\ServerRequest;
 use DateTimeInterface;
 
 class MfaVerifiedCookie
@@ -29,18 +31,18 @@ class MfaVerifiedCookie
     /**
      * Get a new mfa verification cookie
      *
+     * @param \Cake\Http\ServerRequest $request server request
      * @param string $token token
      * @param \DateTimeInterface|null $expirationDate Expiration date for the token
-     * @param bool $ssl if ssl is required
      * @return \Cake\Http\Cookie\Cookie|static
      */
-    public static function get(string $token, ?DateTimeInterface $expirationDate = null, ?bool $ssl = true)
+    public static function get(ServerRequest $request, string $token, ?DateTimeInterface $expirationDate = null)
     {
         $mfaCookie = (new Cookie(self::MFA_COOKIE_ALIAS))
             ->withValue($token)
             ->withPath('/')
             ->withHttpOnly(true)
-            ->withSecure($ssl);
+            ->withSecure(self::isSslRequired($request));
 
         if ($expirationDate !== null) {
             /** @phpstan-ignore-next-line Cake is a bit late on its typing here. */
@@ -53,18 +55,31 @@ class MfaVerifiedCookie
     /**
      * Return an expired cookie to clear it
      *
-     * @param bool $ssl if ssl is required
+     * @param \Cake\Http\ServerRequest $request server request
      * @return \Cake\Http\Cookie\Cookie
      */
-    public static function clearCookie(bool $ssl = true)
+    public static function clearCookie(ServerRequest $request)
     {
         $mfaCookie = (new Cookie(self::MFA_COOKIE_ALIAS))
             ->withValue(UuidFactory::uuid())
             ->withExpired()
             ->withPath('/')
             ->withHttpOnly(true)
-            ->withSecure($ssl);
+            ->withSecure(self::isSslRequired($request));
 
         return $mfaCookie;
+    }
+
+    /**
+     * Read in the config and in the request is ssl is required.
+     *
+     * Set to true in the configs by default.
+     *
+     * @param \Cake\Http\ServerRequest $request Server request
+     * @return bool
+     */
+    private static function isSslRequired(ServerRequest $request): bool
+    {
+        return Configure::read('passbolt.security.cookies.secure') || $request->is('ssl');
     }
 }

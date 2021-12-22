@@ -106,19 +106,19 @@ trait FormatValidationTrait
                     $entityData = array_merge($entityData, [$fieldName => $testCaseData]);
                     $entityData = $this->_adjustEntityData($entityData);
                     $entity = $entityTable->newEntity($entityData, $entityOptions);
-                } elseif ($context == 'update') {
+                } else {
                     $entity = $entityTable->get($entityData['id']);
                     $entityData = array_merge($entityData, [$fieldName => $testCaseData]);
                     $entityData = $this->_adjustEntityData($entityData);
                     $entity = $entityTable->patchEntity($entity, $entityData, $entityOptions);
                 }
 
-                $save = $entityTable->save($entity, ['checkRules' => false]);
+                $result = count($entity->getErrors()) === 0;
 
                 if ($expectedResult == true) {
-                    $this->assertEquals(true, (bool)$save, __('The test for {0}:{1} = {2} is expected to save data', $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(true, $result, __('The test for {0}:{1} = {2} is expected to save data', $fieldName, $testCaseName, $testCaseData));
                 } else {
-                    $this->assertEquals(false, (bool)$save, __('The test for {0}:{1} = {2} is not expected to save data', $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(false, $result, __('The test for {0}:{1} = {2} is not expected to save data', $fieldName, $testCaseName, $testCaseData));
                     $errors = $entity->getErrors();
                     $this->assertNotEmpty($errors, __('The test {0}:{1} = {2} should have returned an error.', $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
@@ -188,12 +188,13 @@ trait FormatValidationTrait
                 $entityData = [$fieldName => $testCaseData];
                 $entityData = $this->_adjustEntityData($entityData);
                 $entity = $entityTable->patchEntity($entity, $entityData, $entityOptions);
-                $save = $entityTable->save($entity, ['checkRules' => false]);
+
+                $result = count($entity->getErrors()) === 0;
 
                 if ($expectedResult == true) {
-                    $this->assertEquals(true, (bool)$save, __('The test for {0}:{1} = {2} is expected to save data', $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(true, $result, __('The test for {0}:{1} = {2} is expected to save data', $fieldName, $testCaseName, $testCaseData));
                 } else {
-                    $this->assertEquals(false, (bool)$save, __('The test for {0}:{1} = {2} is not expected to save data', $fieldName, $testCaseName, $testCaseData));
+                    $this->assertEquals(false, $result, __('The test for {0}:{1} = {2} is not expected to save data', $fieldName, $testCaseName, $testCaseData));
                     $errors = $entity->getErrors();
                     $this->assertNotEmpty($errors, __('The test {0}:{1} = {2} should have returned an error.', $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(

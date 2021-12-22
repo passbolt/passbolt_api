@@ -130,7 +130,9 @@ class CleanupCommand extends PassboltCommand
         $this->loadModel('Permissions');
         $this->loadModel('AuthenticationTokens');
 
-        self::resetCleanups();
+        if (!isset(self::$cleanups)) {
+            self::resetCleanups();
+        }
     }
 
     /**

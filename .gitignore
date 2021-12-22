@@ -41,6 +41,12 @@ debian/passbolt-api-pro/
 debian/*debhelper*
 debian/*substvars*
 
+# RPM Package #
+###############
+/_passbolt-configure
+/cron.d
+/logrotate.d
+
 # CakePHP specific files #
 ##########################
 /config/app_local.php
@@ -117,6 +123,8 @@ atlassian-ide-plugin.xml
 .buildpath
 *.iml
 
+# Tilt
+tilt_modules*
 ## File-based project format:
 *.ipr
 *.iws

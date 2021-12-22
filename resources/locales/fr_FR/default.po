@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2021-04-02 14:05+0000\n"
-"PO-Revision-Date: 2021-04-29 16:00\n"
+"POT-Creation-Date: 2021-10-06 16:57+0000\n"
+"PO-Revision-Date: 2021-10-13 07:28\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,8 @@ msgstr ""
 "X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "X-Crowdin-Project-ID: 2\n"
 "X-Crowdin-Language: fr\n"
-"X-Crowdin-File: /[passbolt.passbolt-pro-api] develop/resources/locales/en_UK/default.po\n"
-"X-Crowdin-File-ID: 204\n"
+"X-Crowdin-File: /[passbolt.passbolt-pro-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 220\n"
 "Language: fr_FR\n"
 
 msgid "You need to login to access this location."
@@ -109,6 +109,18 @@ msgstr "Vous n'êtes pas autorisé à modifier ce commentaire."
 msgid "Could not find comments for the requested model."
 msgstr "Impossible de trouver les commentaires pour le modèle demandé."
 
+msgid "Invalid order. \"{0}\" is not in the list of allowed order."
+msgstr "Tri incorrect \"{0}\" n'est pas dans la liste des tris autorisés."
+
+msgid "Invalid order. \"{0}\" is not a valid order."
+msgstr "Tri incorrect. \"{0}\" n'est pas un ordre valide."
+
+msgid "Invalid order. \"{0}\" is not a valid field."
+msgstr "Tri incorrect. \"{0}\" n'est pas une valeur correcte."
+
+msgid "Invalid pagination."
+msgstr "Pagination invalide."
+
 msgid "Invalid query string. The filter parameter should be an array."
 msgstr "Chaîne de requête invalide. Le paramètre de filtre doit être un tableau."
 
@@ -180,6 +192,9 @@ msgstr "\"{0}\" n'est pas une valeur contenue valide."
 
 msgid "undefined user agent"
 msgstr "agent utilisateur indéfini"
+
+msgid "Access restricted to administrators."
+msgstr "Accès limité aux administrateurs."
 
 msgid "This feature is not supported by your version of passbolt."
 msgstr "Cette fonctionnalité n'est pas supportée par votre version de passbolt."
@@ -256,9 +271,6 @@ msgstr "Le type de ressource n'existe pas."
 msgid "The resource has been added successfully."
 msgstr "La ressource a été ajoutée avec succès."
 
-msgid "Could not validate resource data."
-msgstr "Impossible de valider les données de la ressource."
-
 msgid "The resource has been deleted successfully."
 msgstr "La ressource a été supprimée avec succès."
 
@@ -318,12 +330,6 @@ msgstr "Une clé OpenPGP doit être fournie."
 
 msgid "A valid OpenPGP key must be provided."
 msgstr "Une clé OpenPGP valide doit être fournie."
-
-msgid "The user id is missing."
-msgstr "L'identifiant de l'utilisateur est manquant."
-
-msgid "The authentication token is missing."
-msgstr "Le jeton d'authentification est manquant."
 
 msgid "The token should be a valid UUID."
 msgstr "Le jeton doit être un UUID valide."
@@ -462,9 +468,6 @@ msgstr "Le fichier n'est pas valide ou dépasse la taille maximale de {0} octets
 
 msgid "Could not save the data in {0} format."
 msgstr "Impossible d'enregistrer les données au format {0}."
-
-msgid "Could not save the avatar in cache."
-msgstr "Impossible d'enregistrer l'avatar en cache."
 
 msgid "The parent comment identifier should be a valid UUID."
 msgstr "L'identifiant du commentaire parent doit être un UUID valide."
@@ -1138,6 +1141,12 @@ msgstr "Échec de la validation pour le jeton d'authentification {0}. {1}"
 msgid "Validation success for authenticationToken {0}"
 msgstr "Validation du jeton d'authentification {0} réussie"
 
+msgid "Could not save the avatar in the {0} file."
+msgstr "Impossible d'enregistrer l'avatar dans le fichier {0}."
+
+msgid "The avatar id is not valid."
+msgstr "L'identifiant de l'avatar n'est pas valide."
+
 msgid "Validation failed for comment {0}. {1}"
 msgstr "Échec de validation du commentaire {0}. {1}"
 
@@ -1194,6 +1203,15 @@ msgstr "Échec de validation du profil {0}. {1}"
 
 msgid "Validation success for profile {0}"
 msgstr "Validation du profil {0} réussie"
+
+msgid "Could not validate resource data."
+msgstr "Impossible de valider les données de la ressource."
+
+msgid "An unexpected error occured, please contact an administrator."
+msgstr "Une erreur inattendue s'est produite, veuillez contacter un administrateur."
+
+msgid "The server returned the following error:"
+msgstr "Le serveur a retourné l'erreur suivante:"
 
 msgid "Validation failed for resource {0}. {1}"
 msgstr "Échec de validation de la ressource {0}. {1}"
@@ -1333,11 +1351,17 @@ msgstr "Une valeur de paramètre est requise."
 msgid "The setting value should not be empty."
 msgstr "La valeur de la configuration ne doit pas être vide."
 
+msgid "The parameter {0} is not set."
+msgstr "Le paramètre {0} n'est pas défini."
+
 msgid "This theme is not supported."
 msgstr "Ce thème n'est pas supporté."
 
 msgid "The folder id is not valid."
 msgstr "L'identifiant du dossier n'est pas valide."
+
+msgid "Resources or folders supported only."
+msgstr "Seuls les ressources ou dossiers sont supportés."
 
 msgid "The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt."
 msgstr "L'utilisateur {0} n'a pas pu être ajouté au groupe {1} car son compte a été préalablement supprimé sur passbolt."
@@ -1439,13 +1463,13 @@ msgid "The record model is not valid."
 msgstr "Le modèle d'enregistrement n'est pas valide."
 
 msgid "The record is currently ignored as part of directory synchronization."
-msgstr ""
+msgstr "L'enregistrement est actuellement ignoré dans le cadre de la synchronisation du répertoire."
 
 msgid "The record is currently not ignored as part of directory synchronization."
-msgstr ""
+msgstr "L'enregistrement n'est actuellement pas ignoré dans le cadre de la synchronisation du répertoire."
 
 msgid "The record will be ignored in the next directory synchronization."
-msgstr ""
+msgstr "L'enregistrement sera ignoré lors de la prochaine synchronisation du répertoire."
 
 msgid "The record id is not valid."
 msgstr "L'identifiant de l'enregistrement n'est pas valide."
@@ -1454,22 +1478,22 @@ msgid "The record does not exist."
 msgstr "L'enregistrement n'existe pas."
 
 msgid "The record could not be unmarked as ignored. Please try again later."
-msgstr ""
+msgstr "L'enregistrement n'a pas pu être marqué comme ignoré. Veuillez réessayer plus tard."
 
 msgid "The record will not be ignored in the next directory synchronization."
-msgstr ""
+msgstr "L'enregistrement ne sera pas ignoré lors de la prochaine synchronisation du répertoire."
 
 msgid "Could not validate settings."
 msgstr "Échec de la validation des paramètres."
 
 msgid "Could not save the settings. {0}"
-msgstr ""
+msgstr "Impossible d'enregistrer les paramètres. {0}"
 
 msgid "The directory structure cannot be retrieved."
 msgstr "La structure du répertoire ne peut pas être récupérée."
 
 msgid "There was an issue while retrieving the invalid entries."
-msgstr ""
+msgstr "Un problème est survenu lors de la récupération des entrées non valides."
 
 msgid "The synchronization was done successfully."
 msgstr "La synchronisation a été effectuée avec succès."
@@ -1675,9 +1699,6 @@ msgstr "La souscription est valide."
 msgid "Subscription key could not be found."
 msgstr "La clé de souscription est introuvable."
 
-msgid "The subscription cannot be verified. Invalid signature."
-msgstr "La souscription ne peut pas être vérifié. Signature invalide."
-
 msgid "A subscription key is required."
 msgstr "Une clé de souscription est requise."
 
@@ -1693,8 +1714,11 @@ msgstr "Le format de l'abonnement n'est pas valide."
 msgid "The subscription format is not valid. Invalid format."
 msgstr "Le format de l'abonnement n'est pas valide. Format invalide."
 
-msgid "The subscription key cannot be verified. The passbolt OpenPGP public key could not be found."
-msgstr "La clé d'abonnement est introuvable. La clé publique OpenPGP de passbolt est introuvable."
+msgid "The subscription key cannot be verified."
+msgstr "La clé de souscription ne peut pas être vérifiée."
+
+msgid "The passbolt OpenPGP public key could not be found."
+msgstr "La clé publique OpenPGP de passbolt n'a pas pu être trouvé."
 
 msgid "A users quantity is required."
 msgstr "Une quantité d'utilisateur est requise."
@@ -1734,6 +1758,15 @@ msgstr "Le format de la clé d'abonnement n'est pas valide."
 
 msgid "Only administrators can view the subscription details."
 msgstr "Seuls les administrateurs peuvent voir les détails de souscription."
+
+msgid "No active admins were found."
+msgstr "Aucun administrateur actif n'a été trouvé."
+
+msgid "The file {0} could not be found."
+msgstr "Le fichier {0} est introuvable."
+
+msgid "The file {0} could not be read."
+msgstr "Le fichier {0} n'a pas pu être lu."
 
 msgid "Only administrators can update the subscription details."
 msgstr "Seuls les administrateurs peuvent mettre à jour les détails de la souscription."
@@ -1906,6 +1939,132 @@ msgstr "a partagé un dossier avec vous"
 msgid "{0} updated the folder {1}"
 msgstr "{0} a mis à jour le dossier {1}"
 
+msgid "The challenge cannot be decrypted."
+msgstr "Le challenge ne peut pas être déchiffré."
+
+msgid "The challenge is invalid. Deserialization failed."
+msgstr "Le challenge est invalide. La désérialisation a échoué."
+
+msgid "The challenge is invalid. Validation Failed."
+msgstr "Le challenge est invalide. La validation a échoué."
+
+msgid "The config for the server private key fingerprint is not available or incomplete."
+msgstr "La configuration de l'empreinte de la clé privée du serveur n'est pas disponible ou incomplète."
+
+msgid "The config for the server private key passphrase is invalid."
+msgstr "La configuration du mot de passe de la clé privée du serveur est invalide."
+
+msgid "The user id is missing or invalid."
+msgstr "L'identifiant de l'utilisateur est manquant ou invalide."
+
+msgid "The user OpenPGP key does not exist, or is invalid, or has been deleted."
+msgstr "La clé OpenPGP de l'utilisateur n'existe pas, est invalide ou a été supprimée."
+
+msgid "The user signature is invalid."
+msgstr "La signature de l'utilisateur est invalide."
+
+msgid "The user challenge is missing or invalid."
+msgstr "Le challenge utilisateur est manquant ou invalide."
+
+msgid "The version is invalid."
+msgstr "La version est invalide."
+
+msgid "The domain is invalid."
+msgstr "Le domaine est invalide."
+
+msgid "The domain is invalid. Expected: {0} and got {1}"
+msgstr "Le domaine n'est pas valide. Attendu : {0} et obtenu {1}"
+
+msgid "The authentication was a success."
+msgstr "L'authentification a été un succès."
+
+msgid "The authentication failed."
+msgstr "L’authentification a échoué."
+
+msgid "The credentials are missing."
+msgstr "Les identifiants sont manquants."
+
+msgid "The user does not exist or is not active or has been deleted."
+msgstr "L'utilisateur n'existe pas ou n'est pas actif ou a été supprimé."
+
+msgid "The credentials are invalid."
+msgstr "Les identifiants sont invalides."
+
+msgid "An internal error occurred."
+msgstr "Une erreur interne est survenue."
+
+msgid "The verify token is invalid."
+msgstr "Le jeton de vérification est invalide."
+
+msgid "The route {0} is not permitted with JWT authentication."
+msgstr "La route {0} n'est pas autorisée avec l'authentification JWT."
+
+msgid "The key pair for JWT Authentication is not complete. The following file could not be read: {0}."
+msgstr "La paire de clés d'authentification JWT n'est pas complète. Le fichier suivant n'a pas pu être lu : {0}."
+
+msgid "The JWT public key could not be read or is not valid."
+msgstr "La clé publique JWT n'a pas pu être lue ou n'est pas valide."
+
+msgid "The JWT private key should be at least {0} bytes long."
+msgstr "La clé privée JWT doit faire au moins {0} octets."
+
+msgid "The configuration {0} is not correctly set."
+msgstr "La configuration {0} n'est pas correctement définie."
+
+msgid "No active refresh token matching the request could be found."
+msgstr "Aucun jeton de rafraîchissement actif correspondant à la requête n'a pu être trouvé."
+
+msgid "The refresh token provided was already used."
+msgstr "Le jeton de rafraîchissement fourni était déjà utilisé."
+
+msgid "Expired refresh token provided."
+msgstr "Jeton de rafraîchissement fourni expiré."
+
+msgid "The refresh token should be a valid UUID."
+msgstr "Le jeton de rafraîchissement doit être un UUID valide."
+
+msgid "This is not a valid user id."
+msgstr "Ce n'est pas un identifiant d'utilisateur valide."
+
+msgid "Invalid verify token expiry."
+msgstr "Expiration de jeton de vérification invalide."
+
+msgid "Attempt to access an expired verify token."
+msgstr "Tentative d'accès à un jeton de vérification expiré."
+
+msgid "Invalid verify token format."
+msgstr "Format de jeton de vérification invalide."
+
+msgid "Invalid user ID format."
+msgstr "Format d'identifiant d'utilisateur invalide."
+
+msgid "Verify token has been already used in the past."
+msgstr "Le jeton de vérification a déjà été utilisé dans le passé."
+
+msgid "Security warning!"
+msgstr "Avertissement de sécurité !"
+
+msgid "An unknown user with IP: {0} attempted to identify as {1}."
+msgstr "Un utilisateur inconnu avec l'IP : {0} a tenté de s'identifier en tant que {1}."
+
+msgid "This is a potential security issue."
+msgstr "Il s'agit d'un problème de sécurité potentiel."
+
+msgid "Please investigate!"
+msgstr "Veuillez vérifier !"
+
+msgid "An unknown user with IP: {0}  attempted to steal your login data."
+msgstr "Un utilisateur inconnu avec l'IP: {0}  a tenté de voler vos données de connexion."
+
+msgid "Please get in tough with one of your administrators."
+msgstr "Merci de prendre contact avec l'un de vos administrateurs."
+
+msgid "This is not a valid locale."
+msgstr "Ce n'est pas une locale valide."
+
+msgid "This is not a valid {0}."
+msgstr "Ce n'est pas un {0} valide."
+
 msgid "The action log identifier should be a valid UUID."
 msgstr "L'identifiant du journal d'action doit être un UUID valide."
 
@@ -2002,6 +2161,117 @@ msgstr "Impossible de valider les données d'accès au secret."
 msgid "Could not validate secret history data."
 msgstr "Impossible de valider les données de l'historique de secret."
 
+msgid "Information about the transfer is required."
+msgstr "Les informations sur le transfert sont requises."
+
+msgid "The operation was successful"
+msgstr "L'opération a réussi"
+
+msgid "The transfer id is not valid."
+msgstr "L'identifiant de transfert n'est pas valide."
+
+msgid "The authentication token should be a valid uuid."
+msgstr "Le jeton d'authentification doit être un uuid valide."
+
+msgid "The authentication token is invalid."
+msgstr "Le jeton d'authentification est invalide."
+
+msgid "The transfer id should be a uuid."
+msgstr "L'id de transfert doit être un uuid."
+
+msgid "The user id should be a uuid."
+msgstr "L'identifiant de l'utilisateur doit être un uuid."
+
+msgid "A user id is required"
+msgstr "Un identifiant d'utilisateur est requis"
+
+msgid "The hash should be an ascii string."
+msgstr "Le hash doit être une chaîne ascii."
+
+msgid "The hash should be {0} characters in length."
+msgstr "Le hash doit être de {0} caractères."
+
+msgid "The data transfer hash is required."
+msgstr "Le hash de transfert de données est requis."
+
+msgid "The current page should be a non negative integer."
+msgstr "La page courante doit être un entier non négatif."
+
+msgid "The current page number is required"
+msgstr "Le numéro de page courant est requis"
+
+msgid "The current page number should be equal or inferior to the total number of pages."
+msgstr "Le numéro de page courant doit être égal ou inférieur au nombre total de pages."
+
+msgid "The current page cannot be greater than {0}"
+msgstr "La page courante ne peut pas être supérieure à {0}"
+
+msgid "The total number of pages should a non negative integer."
+msgstr "Le nombre total de pages doit être un entier non négatif."
+
+msgid "The total number of pages is required."
+msgstr "Le nombre total de pages est requis."
+
+msgid "The total number of pages should be greater than 0."
+msgstr "Le nombre total de pages doit être supérieur à 0."
+
+msgid "The total number of pages cannot be greater than {0}"
+msgstr "Le nombre total de pages ne peut pas être supérieur à {0}"
+
+msgid "The status should not be empty."
+msgstr "Le statut ne doit pas être vide."
+
+msgid "The status is required."
+msgstr "Le statut est requis."
+
+msgid "The status must be one of the following: {0}."
+msgstr "Le statut doit être l'un des suivants : {0}."
+
+msgid "The user must be active."
+msgstr "L'utilisateur doit être actif."
+
+msgid "Could not validate the transfer data."
+msgstr "Impossible de valider les données de transfert."
+
+msgid "The transfer could not be created."
+msgstr "Le transfert n'a pas pu être créé."
+
+msgid "Could not update the transfer data."
+msgstr "Impossible de mettre à jour les données de transfert."
+
+msgid "The transfer could not be updated."
+msgstr "Le transfert n'a pas pu être mis à jour."
+
+msgid "This operation is not allowed."
+msgstr "Cette opération n'est pas autorisée."
+
+msgid "Restarting a transfer is not allowed."
+msgstr "Redémarrer un transfert n'est pas autorisé."
+
+msgid "The operation is already over."
+msgstr "L'opération est déjà terminée."
+
+msgid "The current page does not match the total number of pages."
+msgstr "La page courante ne correspond pas au nombre total de pages."
+
+msgid "This operation is not allowed for this user."
+msgstr "Cette opération n’est pas autorisée pour cet utilisateur."
+
+msgid "The authentication token is missing."
+msgstr "Le jeton d'authentification est manquant."
+
+msgid "The authentication token is not valid for this user."
+msgstr "Le jeton d'authentification n'est pas valide pour cet utilisateur."
+
+msgid "The authentication token type is invalid."
+msgstr "Le type de jeton d'authentification n'est pas valide."
+
+msgid "The authentication token is not active."
+msgstr "Le jeton d'authentification n'est pas actif."
+
+msgid "The authentication token is expired."
+msgstr "Le jeton d'authentification a expiré."
+
 msgid "This functionality is not available using AJAX/JSON."
 msgstr "Cette fonctionnalité n'est pas disponible en utilisant AJAX/JSON."
 
@@ -2089,6 +2359,9 @@ msgstr "Les paramètres d'authentification multi-facteurs ont été réinitialis
 msgid "Your multi-factor authentication settings were reset by an administrator."
 msgstr "Vos paramètres d'authentification multi-facteurs ont été réinitialisés par un administrateur."
 
+msgid "The MFA token provided does not exist or is inactive."
+msgstr "Le jeton MFA fourni n'existe pas ou est inactif."
+
 msgid "No MFA provider set."
 msgstr "Aucun fournisseur MFA défini."
 
@@ -2099,7 +2372,7 @@ msgid "MFA setting OTP provisioning uri is not set."
 msgstr "Le paramétrage de l'uri d'approvisionnement OTP n'est pas défini."
 
 msgid "MFA setting Yubikey Id is not set."
-msgstr ""
+msgstr "Le paramètre MFA Yubikey id n'est pas défini."
 
 msgid "The multi-factor authentication settings data should not be empty."
 msgstr "Les données des paramètres d'authentification multi-facteurs ne doivent pas être vides."
@@ -2178,6 +2451,12 @@ msgstr "Veuillez contacter votre administrateur pour activer l'authentification 
 
 msgid "Please select a provider"
 msgstr "Veuillez sélectionner un fournisseur"
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "Disabled"
+msgstr "Désactivé"
 
 msgid "What is multi-factor authentication?"
 msgstr "Qu'est-ce que l'authentification multi-facteurs ?"
@@ -2277,6 +2556,9 @@ msgstr "Veuillez contacter votre administrateur si vous n'êtes pas à l'origine
 
 msgid "Log in passbolt"
 msgstr "Se connecter à passbolt"
+
+msgid "The password generator value \"{0}\" is not valid."
+msgstr "La valeur du générateur de mot de passe \"{0}\" n'est pas valide."
 
 msgid "5 minutes"
 msgstr "5 minutes"
@@ -2686,21 +2968,6 @@ msgstr "port"
 msgid "Port"
 msgstr "Port"
 
-msgid "The test email has been sent successfully!"
-msgstr "L'e-mail de test a été envoyé avec succès !"
-
-msgid "Email could not be sent:"
-msgstr "L'e-mail n'a pas pu être envoyé:"
-
-msgid "See trace"
-msgstr "Voir la trace"
-
-msgid "Your email address"
-msgstr "Votre adresse e-mail"
-
-msgid "Send test email"
-msgstr "Envoyer un e-mail de test"
-
 msgid "Passbolt is not configured."
 msgstr "Passbolt n'est pas configuré."
 
@@ -2740,9 +3007,6 @@ msgstr "ajouter un commentaire (facultatif)"
 msgid "Comment"
 msgstr "Commentaire"
 
-msgid "Key Expire"
-msgstr "Clé expirant"
-
 msgid "Import an existing key or {0} a new one."
 msgstr "Importer une clé existante ou {0} une nouvelle clé."
 
@@ -2759,7 +3023,7 @@ msgid "Or select a file from your computer"
 msgstr "Ou sélectionnez un fichier depuis votre ordinateur"
 
 msgid "Some binary things are happening..."
-msgstr ""
+msgstr "Des choses binaires se produisent..."
 
 msgid "Choose your preferences."
 msgstr "Sélectionnez vos préférences."
@@ -2851,11 +3115,41 @@ msgstr "Détails des erreurs"
 msgid "Installing"
 msgstr "Installation en cours"
 
+msgid "Existing installation?"
+msgstr "Installation existante?"
+
+msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
+msgstr "Si vous voulez utiliser une base de données passbolt existante, l'installateur s'occupera de la mettre à jour vers la version actuelle de passbolt tout en conservant vos données."
+
+msgid "As a precaution, do not forget to backup your database before you continue."
+msgstr "Par précaution, n'oubliez pas de sauvegarder votre base de données avant de continuer."
+
 msgid "Help"
 msgstr "Aide"
 
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr "Besoin d'aide ? Vous trouverez plus d'informations sur l'installation de passbolt dans l'aide en ligne officielle."
+
+msgid "Send test email"
+msgstr "Envoyer un e-mail de test"
+
+msgid "The test email has been sent successfully!"
+msgstr "L'e-mail de test a été envoyé avec succès !"
+
+msgid "Email could not be sent:"
+msgstr "L'e-mail n'a pas pu être envoyé:"
+
+msgid "See trace"
+msgstr "Voir la trace"
+
+msgid "Your email address"
+msgstr "Votre adresse e-mail"
+
+msgid "Why do I need a SMTP server?"
+msgstr "Pourquoi ai-je besoin d'un serveur SMTP ?"
+
+msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
+msgstr "Passbolt a besoin d'un serveur smtp pour envoyer des e-mails d'invitation après la création d'un compte et pour envoyer des notifications par e-mail."
 
 msgid "What subscription key?"
 msgstr "Quelle clé de souscription ?"
@@ -2886,6 +3180,9 @@ msgstr "Responsable du groupe"
 
 msgid "Member"
 msgstr "Membre"
+
+msgid "Updated roles"
+msgstr "Rôles mis à jour"
 
 msgid "is now group manager"
 msgstr "est maintenant gestionnaire de groupe"
@@ -3090,6 +3387,9 @@ msgstr "Cet utilisateur a été invité par {0} {1}."
 
 msgid "view users"
 msgstr "voir les utilisateurs"
+
+msgid "The locale {0} is not valid or not supported."
+msgstr "La locale {0} n'est pas valide ou n'est pas supportée."
 
 msgid "An Internal Error Has Occurred"
 msgstr "Une erreur interne est survenue"

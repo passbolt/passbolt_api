@@ -27,6 +27,7 @@ use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Service\Folders\FoldersShareService;
+use Passbolt\Locale\Service\LocaleService;
 
 class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -86,7 +87,8 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $operator = $this->usersTable->findFirstForEmail($uac->getId());
-        $recipient = $this->usersTable->findById($userId)->select('username')->extract('username')->first();
+        /** @var \App\Model\Entity\User $recipient */
+        $recipient = $this->usersTable->findById($userId)->find('locale')->first();
 
         $email = $this->createEmail($recipient, $operator, $folder);
         $emailCollection->addEmail($email);
@@ -95,14 +97,19 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param string $recipient The recipient email
+     * @param \App\Model\Entity\User $recipient The recipient
      * @param \App\Model\Entity\User $operator The user at the origin of the operation
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(string $recipient, User $operator, Folder $folder)
+    private function createEmail(User $recipient, User $operator, Folder $folder)
     {
-        $subject = __('{0} shared the folder {1}', $operator->profile->first_name, $folder->name);
+        $subject = (new LocaleService())->translateString(
+            $recipient->locale,
+            function () use ($operator, $folder) {
+                return __('{0} shared the folder {1}', $operator->profile->first_name, $folder->name);
+            }
+        );
         $data = [
             'body' => [
                 'user' => $operator,
@@ -111,6 +118,6 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($recipient, $subject, $data, self::TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
     }
 }

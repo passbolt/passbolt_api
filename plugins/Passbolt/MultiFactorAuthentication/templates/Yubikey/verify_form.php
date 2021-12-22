@@ -10,7 +10,6 @@
 
     $title = __('Multi factor authentication verification');
     $this->assign('title', $title);
-    $this->Html->css('themes/default/api_authentication.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'login');
     $formContext = [
         'url' => Router::url('/mfa/verify/yubikey', true),
@@ -24,6 +23,7 @@
     <?= $this->Form->control('hotp', [
         'label' => 'Yubikey OTP',
         'type' => 'password',
+        'autofocus' => 'autofocus'
     ]); ?>
     <div class="input checkbox">
         <input type="checkbox" name="remember" value="remember" id="remember">

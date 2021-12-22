@@ -23,6 +23,7 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenLogoutService;
@@ -48,23 +49,34 @@ class RefreshTokenLogoutServiceTest extends TestCase
         unset($this->service);
     }
 
-    public function testRefreshTokenLogoutServiceTest_Logout_With_WrongToken()
+    public function testRefreshTokenLogoutServiceTest_Logout_With_NonUUID_Refresh_Token()
     {
-        $user = UserFactory::make()->persist();
         $this->expectExceptionMessage(RefreshTokenNotFoundException::class);
-        $this->expectExceptionMessage('No active refresh token matching the request could be found.');
-        $this->service->logout($user->id, UuidFactory::uuid());
+        $this->expectExceptionMessage('The refresh token should be a valid UUID.');
+        $request = (new ServerRequest())->withData($this->service::REFRESH_TOKEN_DATA_KEY, 'Bar');
+        $this->service->logout(UuidFactory::uuid(), $request);
     }
 
-    public function testRefreshTokenLogoutServiceTest_Logout_With_Token()
+    public function testRefreshTokenLogoutServiceTest_Logout_With_WrongToken()
+    {
+        $this->expectExceptionMessage(RefreshTokenNotFoundException::class);
+        $this->expectExceptionMessage('No active refresh token matching the request could be found.');
+        $request = (new ServerRequest())->withData($this->service::REFRESH_TOKEN_DATA_KEY, UuidFactory::uuid());
+        $this->service->logout(UuidFactory::uuid(), $request);
+    }
+
+    public function testRefreshTokenLogoutServiceTest_Logout_With_Valid_Token()
     {
         $user = UserFactory::make()->persist();
         $tokenToDeactivate = $this->persistTokenSet($user);
+        $request = (new ServerRequest())
+            ->withData($this->service::REFRESH_TOKEN_DATA_KEY, $tokenToDeactivate->token)
+            ->withData('user_id', UuidFactory::uuid()); // This mismatch is ignored by the JwtLogoutController
 
-        $deactivated = $this->service->logout($user->id, $tokenToDeactivate->token);
+        $deactivated = $this->service->logout($user->id, $request);
 
         $this->assertSame(1, $deactivated);
-        $this->assertSame(5, $this->AuthenticationTokens->find()->where(['active' => true])->count());
+        $this->assertSame(5, AuthenticationTokenFactory::find()->where(['active' => true])->count());
         $this->assertTrue($this->AuthenticationTokens->exists([
             'active' => false,
             'id' => $tokenToDeactivate->id,
@@ -76,7 +88,7 @@ class RefreshTokenLogoutServiceTest extends TestCase
         $user = UserFactory::make()->persist();
          $this->persistTokenSet($user);
 
-        $deactivated = $this->service->logout($user->id, null);
+        $deactivated = $this->service->logout($user->id, new ServerRequest());
 
         $this->assertSame(2, $deactivated);
         $this->assertSame(4, $this->AuthenticationTokens->find()->where(['active' => true])->count());
@@ -89,6 +101,10 @@ class RefreshTokenLogoutServiceTest extends TestCase
 
     /**
      * Create a set of token.
+     * 1 active target
+     * 1 active of the same user as the target
+     * 2 active same user as the target of another type
+     * 2 active of another user and another type
      *
      * @param User $user
      * @return AuthenticationToken A refresh token.

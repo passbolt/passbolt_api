@@ -63,7 +63,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         PermissionsFixture::class,
         ProfilesFixture::class,
         UsersFixture::class,
-    FavoritesFixture::class,
+        FavoritesFixture::class,
         RolesFixture::class,
         SecretsFixture::class,
         ProfilesFixture::class,

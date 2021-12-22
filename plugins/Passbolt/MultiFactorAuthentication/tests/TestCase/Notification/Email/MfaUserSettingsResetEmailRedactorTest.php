@@ -15,26 +15,28 @@ declare(strict_types=1);
  * @since         2.12.0
  */
 
-namespace Passbolt\MultiFactorAuthentication\Notification\Email;
+namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Notification\Email;
 
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Event\Event;
+use Cake\TestSuite\TestCase;
 use Passbolt\MultiFactorAuthentication\Controller\UserSettings\MfaUserSettingsDeleteController;
-use PHPUnit\Framework\TestCase;
+use Passbolt\MultiFactorAuthentication\Notification\Email\MfaUserSettingsResetEmailRedactor;
 
 class MfaUserSettingsResetEmailRedactorTest extends TestCase
 {
     /**
-     * @var MfaUserSettingsResetEmailRedactor
+     * @var \Passbolt\MultiFactorAuthentication\Notification\Email\MfaUserSettingsResetEmailRedactor
      */
     private $sut;
 
     public function setUp(): void
     {
         $this->sut = new MfaUserSettingsResetEmailRedactor();
+        $this->loadPlugins(['Passbolt/Locale']);
 
         parent::setUp();
     }
@@ -53,6 +55,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
     {
         $adminUser = UserFactory::make()->admin()->persist();
         $user = UserFactory::make()->user()->persist();
+        $user->set('locale', 'Foo');
         $uac = new UserAccessControl('admin', $adminUser->id, 'ada@passbolt.com');
         $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
         $event->setData([
@@ -77,6 +80,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $user = new User();
         $user->username = 'ada@passbolt.com';
         $user->id = $userId;
+        $user->locale = 'Foo';
         $uac = new UserAccessControl('admin', $userId, 'ada@passbolt.com');
         $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
         $event->setData([

@@ -45,6 +45,7 @@ class YubikeyVerifyGetController extends MfaVerifyController
         if (!$this->request->is('json')) {
             $this->set('providers', $this->mfaSettings->getEnabledProviders());
             $this->set('verifyForm', $verifyForm);
+            $this->set('theme', $this->User->theme());
             $this->viewBuilder()
                 ->setLayout('mfa_verify')
                 ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))

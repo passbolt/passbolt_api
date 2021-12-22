@@ -255,6 +255,14 @@ class HealthcheckCommand extends PassboltCommand
                 __('See. https://secure.php.net/manual/en/book.mbstring.php'),
             ]
         );
+//        $this->assert(
+//            $checks['environment']['allow_url_fopen'],
+//            __('The allow_url_fopen setting is activated in php.ini.'),
+//            __('You must activate the allow_url_fopen setting in php.ini to use Passbolt.'),
+//            [
+//                __('See. https://www.php.net/manual/en/filesystem.configuration.php'),
+//            ]
+//        );
     }
 
     /**
@@ -703,11 +711,12 @@ class HealthcheckCommand extends PassboltCommand
         $this->assert(
             $checks['jwt']['jwtWritable'],
             "The {$directory} directory is not writable.",
-            "The {$directory} directory is writable",
+            "The {$directory} directory should not be writable.",
             [
                 'You can try: ',
                 'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $directory,
-                'sudo chmod 444 ' . $directory,
+                'sudo chmod 550 ' . $directory,
+                'sudo chmod 440 $(find ' . $directory . ' -type f)',
             ]
         );
 

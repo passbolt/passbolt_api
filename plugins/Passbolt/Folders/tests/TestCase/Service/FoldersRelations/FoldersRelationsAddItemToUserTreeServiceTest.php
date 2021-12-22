@@ -548,6 +548,127 @@ class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $userAId, $userBId, $userCId];
     }
 
+    /**
+     * Ada is OWNER of folder A
+     * Ada is OWNER of resource R1
+     * Betty has OWNER on resource R1
+     * ---
+     * A (Ada: O)
+     * |-R1 (Ada: O, Betty: O)
+     */
+    public function insertFixture_FolderHavingChildrenResources1()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+        $resource1 = $this->addResource(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource1->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource1->id, 'user_id' => $userBId, 'folder_parent_id' => FoldersRelation::ROOT]);
+
+        return [$folderA, $resource1, $userAId, $userBId];
+    }
+
+    public function testAddItemToUserTreeSuccess_Folder_HavingChildrenResources1()
+    {
+        [$folderA, $resource1, $userAId, $userBId] = $this->insertFixture_FolderHavingChildrenResources1();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId);
+
+        // Folder A.
+        $this->assertItemIsInTrees($folderA->id, 2);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
+        // Resource 1
+        $this->assertItemIsInTrees($resource1->id, 2);
+        $this->assertFolderRelation($resource1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderA->id);
+        $this->assertFolderRelation($resource1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folderA->id);
+    }
+
+    /**
+     * Ada is OWNER of folder A
+     * Ada is OWNER of resource R1
+     * Betty has READ on resource R1
+     * Betty is OWNER of folder B
+     * ---
+     * A (Ada: O)
+     * |-R1 (Ada: O, Betty: R)
+     * B (Betty: O)
+     * |-R1 (Ada: O, Betty: R)
+     */
+    public function insertFixture_FolderHavingChildrenResources2()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userBId => Permission::OWNER]);
+        $resource1 = $this->addResource(['name' => 'R1'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource1->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource1->id, 'user_id' => $userBId, 'folder_parent_id' => $folderB->id]);
+
+        return [$folderA, $folderB, $resource1, $userAId, $userBId];
+    }
+
+    public function testAddItemToUserTreeSuccess_Folder_HavingChildrenResources2()
+    {
+        [$folderA, $folderB, $resource1, $userAId, $userBId] = $this->insertFixture_FolderHavingChildrenResources2();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId);
+
+        // Folder A.
+        $this->assertItemIsInTrees($folderA->id, 2);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
+        // Folder B.
+        $this->assertItemIsInTrees($folderB->id, 1);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
+        // Resource 1
+        $this->assertItemIsInTrees($resource1->id, 2);
+        $this->assertFolderRelation($resource1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderA->id);
+        $this->assertFolderRelation($resource1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folderA->id);
+    }
+
+    /**
+     * Ada is OWNER of folder A
+     * Betty is OWNER of resource R1
+     * Carol is OWNER of folder A
+     * Carol is OWNER of resource R1
+     * ---
+     * A (Ada: O, Carol: O)
+     * |- R1 (Betty: O, Carol: O)
+     */
+    public function insertFixture_FolderHavingChildrenResources4()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $userCId = UuidFactory::uuid('user.id.carol');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userCId => Permission::OWNER]);
+        $resource1 = $this->addResource(['name' => 'R1'], [$userBId => Permission::OWNER, $userCId => Permission::OWNER]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource1->id, 'user_id' => $userCId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource1->id, 'user_id' => $userBId, 'folder_parent_id' => FoldersRelation::ROOT]);
+
+        return [$folderA, $resource1, $userAId, $userBId, $userCId];
+    }
+
+    public function testAddItemToUserTreeSuccess_Folder_HavingChildrenResources4()
+    {
+        [$folderA, $resource1, $userAId, $userBId, $userCId] = $this->insertFixture_FolderHavingChildrenResources4();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId);
+
+        // Folder A.
+        $this->assertItemIsInTrees($folderA->id, 3);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, FoldersRelation::ROOT);
+        // Resource 1
+        $this->assertItemIsInTrees($resource1->id, 2);
+        $this->assertFolderRelation($resource1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folderA->id);
+        $this->assertFolderRelation($resource1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userCId, $folderA->id);
+    }
+
     /* FOLDER - FOLDER HAVING PARENT(S) AND CHILDREN */
 
     public function testAddItemToUserTreeSuccess_Folder_HavingParentsAndChildren1_CycleDetectedWhenReconstructingParent_ParentInOperatorTree()
