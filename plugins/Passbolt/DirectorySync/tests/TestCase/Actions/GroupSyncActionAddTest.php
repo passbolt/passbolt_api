@@ -70,11 +70,12 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case18a_Ok_Null_Null_OkCreatedBefore_Null()
     {
-        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
+        $name = 'Marketing';
+        $group = $this->Groups->find()->where(compact('name'))->first();
         $creationDate = $group->created;
         $dateAfterCreation = $creationDate->addDays(1);
 
-        $groupData = $this->mockDirectoryGroupData('marketing', ['created' => $dateAfterCreation, 'modified' => $dateAfterCreation]);
+        $groupData = $this->mockDirectoryGroupData($name, ['created' => $dateAfterCreation, 'modified' => $dateAfterCreation]);
         $reports = $this->action->execute();
         $this->assertReportNotEmpty($reports);
         $this->assertOrphanDirectoryEntryExists($groupData['id']);
@@ -99,14 +100,15 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case18b_Ok_Null_Null_OkCreatedBefore_Null()
     {
-        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
+        $name = 'Marketing';
+        $group = $this->Groups->find()->where(compact('name'))->first();
         $creationDate = $group->created;
         $dateBeforeCreation = $creationDate->subDays(1);
 
-        $groupData = $this->mockDirectoryGroupData('marketing', ['created' => $dateBeforeCreation, 'modified' => $dateBeforeCreation]);
+        $this->mockDirectoryGroupData($name, ['created' => $dateBeforeCreation, 'modified' => $dateBeforeCreation]);
         $reports = $this->action->execute();
         $this->assertReportNotEmpty($reports);
-        $this->assertDirectoryEntryExistsForGroup(['name' => 'marketing']);
+        $this->assertDirectoryEntryExistsForGroup(compact('name'));
         $this->assertOneDirectoryEntry();
         $expectedReport = [
             'action' => Alias::ACTION_CREATE,
@@ -128,8 +130,9 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case19a_Ok_Null_Null_Ok_Ignore()
     {
-        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
-        $groupData = $this->mockDirectoryGroupData('marketing');
+        $name = 'Marketing';
+        $group = $this->Groups->find()->where(compact('name'))->first();
+        $this->mockDirectoryGroupData($name);
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
         $reports = $this->action->execute();
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_IGNORE, 'type' => 'DirectoryIgnore'];
@@ -303,12 +306,13 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case22a_Ok_Error_Null_Ok_Null()
     {
-        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
+        $name = 'Marketing';
+        $group = $this->Groups->find()->where(compact('name'))->first();
         $creationDate = $group->created;
         $dateAfterCreation = $creationDate->addDays(1);
 
-        $groupData = $this->mockDirectoryGroupData('marketing', ['created' => $dateAfterCreation, 'modified' => $dateAfterCreation]);
-        $this->mockOrphanDirectoryEntryGroup('marketing');
+        $groupData = $this->mockDirectoryGroupData($name, ['created' => $dateAfterCreation, 'modified' => $dateAfterCreation]);
+        $this->mockOrphanDirectoryEntryGroup($name);
         $reports = $this->action->execute();
         $this->assertReportNotEmpty($reports);
         $expectedReport = [
@@ -319,7 +323,7 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
         ];
         $this->assertReport($reports[0], $expectedReport);
 
-        $this->assertGroupExist(null, ['name' => 'marketing', 'deleted' => false]);
+        $this->assertGroupExist(null, ['name' => $name, 'deleted' => false]);
         $this->assertOneDirectoryEntry();
         $this->assertOrphanDirectoryEntryExists(UuidFactory::uuid('ldap.group.id.marketing'));
         $this->assertDirectoryIgnoreEmpty();
@@ -335,12 +339,13 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case22b_Ok_Error_Null_Ok_Null()
     {
-        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
+        $name = 'Marketing';
+        $group = $this->Groups->find()->where(compact('name'))->first();
         $creationDate = $group->created;
         $dateBeforeCreation = $creationDate->subDays(1);
 
-        $groupData = $this->mockDirectoryGroupData('marketing', ['created' => $dateBeforeCreation, 'modified' => $dateBeforeCreation]);
-        $this->mockOrphanDirectoryEntryGroup('marketing');
+        $groupData = $this->mockDirectoryGroupData($name, ['created' => $dateBeforeCreation, 'modified' => $dateBeforeCreation]);
+        $this->mockOrphanDirectoryEntryGroup($name);
         $reports = $this->action->execute();
         $this->assertReportNotEmpty($reports);
         $expectedReport = [
@@ -350,9 +355,9 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
             'type' => Alias::MODEL_GROUPS,
         ];
         $this->assertReport($reports[0], $expectedReport);
-        $this->assertGroupExist(null, ['name' => 'marketing', 'deleted' => false]);
+        $this->assertGroupExist(null, ['name' => $name, 'deleted' => false]);
         $this->assertOneDirectoryEntry();
-        $this->assertDirectoryEntryExistsForGroup(['name' => 'marketing', 'deleted' => false]);
+        $this->assertDirectoryEntryExistsForGroup(['name' => $name, 'deleted' => false]);
         $this->assertDirectoryIgnoreEmpty();
     }
 
@@ -366,14 +371,15 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case23a_Ok_Error_Null_Ok_Ignore()
     {
-        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
+        $name = 'Marketing';
+        $group = $this->Groups->find()->where(compact('name'))->first();
 
-        $this->mockDirectoryGroupData('marketing');
-        $this->mockOrphanDirectoryEntryGroup('marketing');
+        $this->mockDirectoryGroupData($name);
+        $this->mockOrphanDirectoryEntryGroup($name);
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
 
         $reports = $this->action->execute();
-        $this->assertEquals(count($reports), 1);
+        $this->assertEquals(1, count($reports));
         $expectedReport = [
             'action' => Alias::ACTION_CREATE,
             'model' => Alias::MODEL_GROUPS,
@@ -582,7 +588,7 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
         $this->assertReportEmpty($reports);
         $this->assertDirectoryIgnoreExist(['id' => UuidFactory::uuid('group.id.marketing')]);
         $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
-        $this->assertDirectoryEntryExistsForGroup(['name' => 'marketing']);
+        $this->assertDirectoryEntryExistsForGroup(['name' => 'Marketing']);
     }
 
     /**
@@ -833,7 +839,8 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case30b_Ok_Error_Ignore_Ok_Ignore()
     {
-        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
+        $name = 'Marketing';
+        $group = $this->Groups->find()->where(compact('name'))->first();
         $groupData = $this->mockDirectoryGroupData('marketing');
         $this->mockDirectoryEntryGroup('marketing');
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
@@ -939,11 +946,11 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case35_Invalid_Null_Null_Ok_Ignore()
     {
-        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
-        $groupData = $this->mockDirectoryGroupData('marketing'); // is invalid coz already exists.
+        $group = $this->Groups->find()->where(['name' => 'Marketing'])->first();
+        $this->mockDirectoryGroupData('marketing'); // is invalid coz already exists.
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
 
-        $reports = $this->action->execute();
+        $this->action->execute();
 
         $this->assertDirectoryIgnoreNotEmpty();
     }
@@ -1010,8 +1017,6 @@ class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroup_Case38_Invalid_Error_Null_Ok_Null()
     {
-        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
-
         $groupName = str_repeat('group', 256);
         $groupData = $this->mockDirectoryGroupData('marketing', ['cn' => $groupName]);
         $this->saveMockDirectoryGroupData($groupData);

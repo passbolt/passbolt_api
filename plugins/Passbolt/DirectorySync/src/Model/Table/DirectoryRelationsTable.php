@@ -18,6 +18,8 @@ namespace Passbolt\DirectorySync\Model\Table;
 
 use App\Model\Entity\GroupsUser;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -116,18 +118,17 @@ class DirectoryRelationsTable extends Table
      */
     public function cleanupHardDeletedUserGroups(array $entryIds): int
     {
-        $conditions = [
-            'GroupUser.id IS NULL',
-        ];
-        if (!empty($entryIds)) {
-            $conditions['DirectoryRelations.parent_key NOT IN'] = $entryIds;
-        }
-
         $orphans = $this->find()
-            ->select(['DirectoryRelations.id', 'GroupUser.id'])
-            ->contain('GroupUser')
-            ->where($conditions)
-            ->all();
+            ->select(['DirectoryRelations.id'])
+            ->contain('GroupUser', function (Query $q) {
+                return $q->where(function (QueryExpression $exp) {
+                    return $exp->isNull('GroupUser.id');
+                });
+            });
+
+        if (!empty($entryIds)) {
+            $orphans->where(['DirectoryRelations.parent_key NOT IN' => $entryIds]);
+        }
 
         $records = Hash::extract($orphans->toArray(), '{n}.id');
         if (count($records) > 0) {

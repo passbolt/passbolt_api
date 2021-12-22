@@ -26,10 +26,10 @@ trait AssertGroupsTrait
             $where['id'] = $id;
         }
         $Groups = TableRegistry::getTableLocator()->get('Groups');
-        $results = $Groups->find()->where($where)->all()->toArray();
-        $this->assertEquals(count($results), 1);
+        $results = $Groups->find()->where($where);
+        $this->assertSame(1, $results->count());
 
-        return $results[0];
+        return $results->firstOrFail();
     }
 
     public function assertGroupNotExist(?string $id = null, ?array $where = [])
@@ -38,7 +38,7 @@ trait AssertGroupsTrait
             $where['id'] = $id;
         }
         $Groups = TableRegistry::getTableLocator()->get('Groups');
-        $results = $Groups->find()->where($where)->all()->toArray();
-        $this->assertEmpty($results);
+        $results = $Groups->find()->where($where);
+        $this->assertSame(0, $results->count());
     }
 }
