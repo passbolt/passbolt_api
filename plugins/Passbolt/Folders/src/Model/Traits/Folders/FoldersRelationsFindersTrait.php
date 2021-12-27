@@ -92,9 +92,7 @@ trait FoldersRelationsFindersTrait
     {
         return $this->find()
             ->leftJoinWith('FoldersParents')
-            ->where([
-                'FoldersRelations.folder_parent_id IS NOT NULL',
-                'FoldersParents.id IS NULL',
-            ]);
+            ->whereNull('FoldersParents.id')
+            ->whereNotNull('FoldersRelations.folder_parent_id');
     }
 }

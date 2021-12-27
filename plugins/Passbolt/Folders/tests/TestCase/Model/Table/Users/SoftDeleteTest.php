@@ -120,7 +120,7 @@ class SoftDeleteTest extends FoldersTestCase
         // Assert the user is soft deleted but the folder is not.
         $this->assertUserIsSoftDeleted($userAId);
         $this->assertFolder($folderA->id);
-        $this->assertFolderRelationNotExist($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId);
+        $this->assertFolderRelationNotExist($folderA->id, $userAId);
         $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
     }
 
@@ -147,7 +147,7 @@ class SoftDeleteTest extends FoldersTestCase
         // Assert the user is soft deleted but the folder is not.
         $this->assertUserIsSoftDeleted($userAId);
         $this->assertFolder($folderA->id);
-        $this->assertFolderRelationNotExist($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId);
+        $this->assertFolderRelationNotExist($folderA->id, $userAId);
         $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
     }
 

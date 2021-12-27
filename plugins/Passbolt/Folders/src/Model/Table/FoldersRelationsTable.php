@@ -282,10 +282,8 @@ class FoldersRelationsTable extends Table
         $query = $this->query()
             ->select(['id'])
             ->leftJoinWith($modelName)
-            ->where([
-                "$modelName.id IS NULL",
-                'FoldersRelations.foreign_model' => ucfirst(Inflector::singularize($modelName)),
-            ]);
+            ->whereNull($modelName . '.id')
+            ->where(['FoldersRelations.foreign_model' => ucfirst(Inflector::singularize($modelName)),]);
 
         return $this->cleanupHardDeleted($modelName, $dryRun, $query);
     }

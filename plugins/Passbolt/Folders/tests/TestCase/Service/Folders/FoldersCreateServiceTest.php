@@ -28,6 +28,7 @@ use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -53,6 +54,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class FoldersCreateServiceTest extends FoldersTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
     use EventDispatcherTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -60,7 +62,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-    GpgkeysFixture::class,
+        GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -162,14 +164,18 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
     public function testCreateFolder_CommonSuccess_NotifyUserAfterCreate()
     {
+        $this->loadPlugins(['Passbolt/Folders', 'Passbolt/EmailDigest']);
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
         $folderData = ['name' => 'A'];
         $this->service->create($uac, $folderData);
 
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('You have created a new folder');
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'You added the folder A',
+            'template' => 'Passbolt/Folders.LU/folder_create',
+        ]);
+        $this->assertEmailInBatchContains('You have created a new folder');
     }
 
     /* PERSONAL FOLDER */
