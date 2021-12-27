@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* [3.4.0-3] Mon Dec 27 2021 Gerold Mougenel <gerold@passbolt.com>
+- PB-12958 Fix RPM package, add https before fullbaseurl
+
 * [3.4.0] Tue Dec 07 2021 Gerold Mougenel <gerold@passbolt.com>
 - PB-9826 As a user I want to use passbolt natively on Edge
 - PB-8371 As LU I want to see the login/MFA/recover/register screens in dark mode
