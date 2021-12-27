@@ -11,5 +11,5 @@ DIR=$(dirname "$(readlink -f "$0")")
 if [[ "$DIGEST_ENABLED" = 0 ]]; then
     "$DIR"/cake EmailQueue.sender
 else
-    "$DIR"/cake Passbolt/EmailDigest.sender
+    "$DIR"/cake passbolt email_digest send
 fi
