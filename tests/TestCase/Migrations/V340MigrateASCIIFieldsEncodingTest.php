@@ -57,7 +57,7 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
                     continue;
                 }
                 $isSuspiciousType = in_array($colType, $this->getSuspiciousColumnTypes());
-                $isSuspiciousName = in_array($columnName, $this->getSuspiciousColumnNames());
+                $isSuspiciousName = in_array($columnName, $this->getSuspiciousAsciiColumnNames());
                 $isId = $columnName === 'id' || strpos($columnName, '_id') !== false;
 
                 if ($isId || $isSuspiciousType || $isSuspiciousName) {
@@ -108,11 +108,11 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
     }
 
     /**
-     * Column names that are probably UUIDs
+     * Column names that should probably Be ASCII encoded
      *
      * @return string[]
      */
-    public function getSuspiciousColumnNames(): array
+    public function getSuspiciousAsciiColumnNames(): array
     {
         return [
             'aco',
@@ -140,7 +140,7 @@ class V340MigrateASCIIFieldsEncodingTest extends TestCase
     public function isUuid(string $tableName, string $columnName): bool
     {
         // Some columns do not follow the general pattern and are not UUIDs
-        $exceptions = ['email_queue.id', 'gpgkeys.key_id', 'permissions_history.aro_foreign_key'];
+        $exceptions = ['email_queue.id', 'gpgkeys.key_id'];
 
         if (in_array("$tableName.$columnName", $exceptions)) {
             return false;
