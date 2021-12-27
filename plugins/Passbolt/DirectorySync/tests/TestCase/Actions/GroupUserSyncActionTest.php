@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 use App\Command\CommandBootstrap;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Event\EventManager;
 use Cake\I18n\FrozenTime;
@@ -37,6 +38,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     use AssertGroupsTrait;
     use AssertGroupUsersTrait;
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public function setUp(): void
     {
@@ -550,10 +552,12 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertDirectoryRelationEmpty();
 
         // Assert email notification
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('requested you to add members to a group');
-        $this->assertResponseContains('Frances Allen (Member)');
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'Admin requested you to add members to Accounting',
+            'template' => 'GM/group_user_request',
+        ]);
+        $this->assertEmailInBatchContains('Frances Allen (Member)');
     }
 
     /**
@@ -606,8 +610,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertDirectoryRelationEmpty();
 
         // No email notification should have been sent to the group manager.
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(500);
+        $this->assertEmailQueueIsEmpty();
     }
 
     /**

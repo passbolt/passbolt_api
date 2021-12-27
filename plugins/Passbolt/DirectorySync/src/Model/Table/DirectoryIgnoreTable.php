@@ -24,6 +24,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**
@@ -178,9 +179,13 @@ class DirectoryIgnoreTable extends Table
      * @param string $foreignModel foreign model
      * @param string $foreignKey foreign key
      * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
+     * @throws \Cake\Http\Exception\BadRequestException if the $foreignKey is not a valid UUID
      */
     public function createOrFail(string $foreignModel, string $foreignKey)
     {
+        if (!Validation::uuid($foreignKey)) {
+            throw new BadRequestException(__('The identifier should be a valid UUID.'));
+        }
         try {
             $entry = $this->get($foreignKey);
         } catch (RecordNotFoundException $exception) {

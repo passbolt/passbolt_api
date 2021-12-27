@@ -21,6 +21,7 @@ use App\Model\Entity\Resource;
 use App\Model\Table\AvatarsTable;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\Datasource\Paginator;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Query;
@@ -54,6 +55,7 @@ class ActionLogsFinder
         $query = $ActionLog->find();
         $query->group([
             'ActionLogs.id',
+            'Actions.name',
         ]);
 
         $query->contain(['Actions' => [
@@ -321,7 +323,7 @@ class ActionLogsFinder
                 'table' => $subQuery,
                 'alias' => 'resourceActionLogs',
                 'type' => 'INNER',
-                'conditions' => ['resourceActionLogs.ActionLogs__id = ActionLogs.id'],
+                'conditions' => ['resourceActionLogs.ActionLogs__id' => new IdentifierExpression('ActionLogs.id')],
             ],
         ]);
 
