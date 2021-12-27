@@ -21,6 +21,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 
@@ -97,8 +98,12 @@ class MfaVerifiedToken
             return false;
         }
 
-        /** @var \App\Model\Entity\AuthenticationToken $token */
-        $token = $auth->getByToken($tokenString);
+        try {
+            $token = $auth->getByToken($tokenString);
+        } catch (RecordNotFoundException $e) {
+            return false;
+        }
+
         $data = json_decode($token->data ?? '');
 
         // Check for issue when decoding data

@@ -96,15 +96,6 @@ class MfaSettingsTest extends MfaIntegrationTestCase
      * @group mfa
      * @group mfaSettings
      */
-    public function testMfaSettingsGetProvidersSuccess()
-    {
-        $this->assertTrue(is_array(MfaSettings::getProviders()));
-    }
-
-    /**
-     * @group mfa
-     * @group mfaSettings
-     */
     public function testMfaSettingsGetSuccess()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
