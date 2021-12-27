@@ -17,7 +17,8 @@ declare(strict_types=1);
 namespace App\Test\Lib\Model;
 
 use Cake\Core\Configure;
-use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
+use Cake\ORM\TableRegistry;
+use Cake\View\ViewBuilder;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
@@ -129,11 +130,25 @@ trait EmailQueueTrait
      */
     protected function assertEmailInBatchContains(string $string, int $i = 0, string $message = ''): void
     {
-        $previewer = new PreviewEmailBatchService();
-        if (!isset($previewer->previewNextEmailsBatch()[$i])) {
+        $EmailQueue = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
+        $email = $EmailQueue->find()->order('id')->offset($i)->first();
+        if (empty($email)) {
             $this->fail("The email queue does not have an email at index $i");
         }
-        $email = $previewer->previewNextEmailsBatch()[$i];
-        $this->assertStringContainsString($string, $email->getContent(), $message);
+
+        // Get template, template vars, subject and format
+        $format = $email->get('format');
+        $viewBuilder = new ViewBuilder();
+        $viewBuilder->setVar('title', $email->get('subject'));
+        $viewBuilder->setVar('body', $email->get('template_vars')['body']);
+
+        $viewBuilder
+            ->setLayout('default')
+            ->setLayoutPath("email/$format")
+            ->setTemplate($email->get('template'))
+            ->setTemplatePath("email/$format");
+
+        $renderedEmail = $viewBuilder->build()->render();
+        $this->assertStringContainsString($string, $renderedEmail, $message);
     }
 }
