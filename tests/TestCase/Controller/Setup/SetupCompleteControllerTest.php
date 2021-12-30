@@ -17,6 +17,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\GpgkeyFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\EmailQueueTrait;
@@ -30,9 +33,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     use AuthenticationTokenModelTrait;
     use EmailQueueTrait;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-    ];
     public $AuthenticationTokens;
 
     public function setUp(): void
@@ -52,8 +52,14 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     {
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         Configure::write('passbolt.plugins.log.enabled', true);
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+        $user = $t->user;
+        $url = '/setup/complete/' . $user->id . '.json';
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $data = [
             'authenticationtoken' => [
@@ -71,14 +77,20 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
         // Check that the locale in the payload was stored in the user's settings.
         $userLocale = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings')
-            ->getFirstPropertyOrFail(UuidFactory::uuid('user.id.ruth'), LocaleService::SETTING_PROPERTY)
+            ->getFirstPropertyOrFail($user->id, LocaleService::SETTING_PROPERTY)
             ->value;
         $this->assertSame('fr-FR', $userLocale);
         $this->assertEmailIsInQueue([
-            'email' => 'admin@passbolt.com',
+            'email' => $admin1->username,
             'template' => 'LU/user_setup_complete',
-            'subject' => 'Ruth just activated their account on passbolt',
+            'subject' => $user->profile->first_name . ' just activated their account on passbolt',
         ]);
+        $this->assertEmailIsInQueue([
+            'email' => $admin2->username,
+            'template' => 'LU/user_setup_complete',
+            'subject' => $user->profile->first_name . ' just activated their account on passbolt',
+        ]);
+        $this->assertEmailQueueCount(2);
         Configure::write('passbolt.plugins.log.enabled', $logEnabled);
     }
 
@@ -90,9 +102,18 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     public function testSetupCompleteErrorWithKeyBelongingToDeletedUser()
     {
         // Complete setup with sofia's key (deleted user)
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
-        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'sofia_public.key');
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+        $user = $t->user;
+        $deletedUser = UserFactory::make()
+            ->deleted()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey()->expired())
+            ->persist();
+        $url = '/setup/complete/' . $user->id . '.json';
+        $armoredKey = $deletedUser->gpgkey->armored_key;
         $data = [
             'authenticationtoken' => [
                 'token' => $t->token,
@@ -105,6 +126,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertError();
         $this->assertNotEmpty($this->_responseJsonBody);
         $this->assertStringContainsString('_isUnique', $this->_getBodyAsString());
+        $this->assertStringContainsString('expires', $this->_getBodyAsString());
     }
 
     /**
@@ -140,10 +162,21 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testSetupCompleteInvalidAuthenticationTokenError()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $url = '/setup/complete/' . $userId . '.json?api-version=v2';
-        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'expired');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'inactive');
+        $user = UserFactory::make()->inactive()->persist();
+        $url = '/setup/complete/' . $user->id . '.json?api-version=v2';
+        $tokenInactive = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->inactive()
+            ->userId($user->id)
+            ->persist()->token;
+
+        $tokenExpired = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->expired()
+            ->userId($user->id)
+            ->persist()->token;
+
         $fails = [
             'empty array' => [
                 'data' => [],
@@ -190,8 +223,13 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testSetupCompleteInvalidGpgkeyError()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
-        $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json?api-version=v2';
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+        $user = $t->user;
+        $url = '/users/validateAccount/' . $user->id . '.json?api-version=v2';
 
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
@@ -240,7 +278,8 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testSetupCompleteDeletedUserError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
+        $user = UserFactory::make()->active()->deleted()->persist();
+        $url = '/setup/complete/' . $user->id . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist, is already active or has been deleted.');
     }
@@ -252,7 +291,8 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testSetupCompleteAlreadyActiveUserError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
+        $user = UserFactory::make()->active()->persist();
+        $url = '/setup/complete/' . $user->id . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist, is already active or has been deleted.');
     }

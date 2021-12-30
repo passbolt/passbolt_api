@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
-use App\Controller\Setup\SetupCompleteController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Entity\User;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
@@ -38,9 +38,9 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
      * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key is not provided or not a valid OpenPGP key
      * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
      * @param string $userId uuid of the user
-     * @return void
+     * @return \App\Model\Entity\User
      */
-    public function complete(string $userId): void
+    public function complete(string $userId): User
     {
         // Check request sanity
         $user = $this->getAndAssertUser($userId);
@@ -70,10 +70,7 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
             throw new InternalErrorException('Could not save the user data.');
         }
 
-        $this->dispatchEvent(SetupCompleteController::COMPLETE_SUCCESS_EVENT_NAME, [
-            'user' => $user,
-            'data' => $this->request->getData(),
-        ]);
+        return $user;
     }
 
     /**
@@ -84,7 +81,7 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
      * @throws \Cake\Http\Exception\BadRequestException if the user was deleted, is already active or does not exist
      * @return \App\Model\Entity\User user entity
      */
-    protected function getAndAssertUser(string $userId)
+    protected function getAndAssertUser(string $userId): User
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
