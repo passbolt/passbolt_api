@@ -21,7 +21,6 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -30,18 +29,7 @@ use Passbolt\Locale\Service\LocaleService;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
-    use AuthenticationTokenModelTrait;
     use EmailQueueTrait;
-
-    public $AuthenticationTokens;
-
-    public function setUp(): void
-    {
-        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
-        parent::setUp();
-    }
 
     /**
      * @group AN

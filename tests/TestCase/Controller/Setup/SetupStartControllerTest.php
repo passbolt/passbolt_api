@@ -20,23 +20,11 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class SetupStartControllerTest extends AppIntegrationTestCase
 {
-    use AuthenticationTokenModelTrait;
-
-    public $AuthenticationTokens;
-
-    public function setUp(): void
-    {
-        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        parent::setUp();
-    }
-
     /**
      * @group AN
      * @group setup
@@ -168,7 +156,11 @@ class SetupStartControllerTest extends AppIntegrationTestCase
     public function testSetupStartJson_BadRequestError_WrongTokenType()
     {
         $userId = UserFactory::make()->inactive()->persist()->id;
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->userId($userId)
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->persist();
         $url = "/setup/install/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
@@ -225,7 +217,11 @@ class SetupStartControllerTest extends AppIntegrationTestCase
     public function testSetupStartSuccess()
     {
         $userId = UserFactory::make()->inactive()->persist()->id;
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
+        $t = AuthenticationTokenFactory::make()
+            ->userId($userId)
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
         $url = "/setup/install/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseOk();
