@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
-trait FactoryHelperTrait
+trait FactoryDeletedTrait
 {
     /**
      * @return $this

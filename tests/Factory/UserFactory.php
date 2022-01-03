@@ -34,7 +34,7 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
  */
 class UserFactory extends CakephpBaseFactory
 {
-    use FactoryHelperTrait;
+    use FactoryDeletedTrait;
 
     /**
      * Defines the Table Registry used to generate entities with
