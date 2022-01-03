@@ -25,8 +25,8 @@ use Passbolt\Folders\Model\Entity\FoldersRelation;
  * FoldersRelationFactory
  *
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation getEntity()
- * @method \Passbolt\Folders\Model\FoldersRelation[] getEntities()
- * @method \Passbolt\Folders\Model\FoldersRelation persist()
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] getEntities()
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation persist()
  */
 class FoldersRelationFactory extends CakephpBaseFactory
 {

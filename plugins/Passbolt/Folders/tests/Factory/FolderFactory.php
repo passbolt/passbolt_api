@@ -24,8 +24,8 @@ use Faker\Generator;
  * FolderFactory
  *
  * @method \Passbolt\Folders\Model\Entity\Folder getEntity()
- * @method \Passbolt\Folders\Model\Folder[] getEntities()
- * @method \Passbolt\Folders\Model\Folder persist()
+ * @method \Passbolt\Folders\Model\Entity\Folder[] getEntities()
+ * @method \Passbolt\Folders\Model\Entity\Folder persist()
  */
 class FolderFactory extends CakephpBaseFactory
 {
