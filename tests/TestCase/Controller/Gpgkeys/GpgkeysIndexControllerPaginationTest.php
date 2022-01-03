@@ -26,33 +26,9 @@ class GpgkeysIndexControllerPaginationTest extends AppIntegrationTestCase
 {
     use PaginationTestTrait;
 
-    /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->defaultSortField = 'Gpgkeys.name';
-    }
-
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        unset($this->defaultSortField);
-        unset($this->defaultSortDirection);
-    }
-
     public function dataProviderForSortingDirection(): array
     {
         return [
-            [],
             ['Gpgkeys.key_id', 'asc', 'key_id'],
             ['Gpgkeys.key_id', 'desc', 'key_id'],
         ];

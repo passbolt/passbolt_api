@@ -38,9 +38,6 @@ class GpgkeysIndexController extends AppController
         'sortableFields' => [
             'Gpgkeys.key_id',
         ],
-        'order' => [
-            'Gpgkeys.key_id' => 'asc', // Default sorted field
-        ],
     ];
 
     /**
