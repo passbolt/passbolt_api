@@ -24,7 +24,7 @@ use Cake\ORM\TableRegistry;
 class CommentsDeleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
         'app.Base/Secrets', 'app.Base/Comments',
     ];
 

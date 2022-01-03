@@ -23,6 +23,8 @@ trait DummyTranslationTestTrait
 {
     /**
      * Set some translations for testing purpose.
+     *
+     * @psalm-suppress InternalMethod
      */
     public function setDummyFrenchTranslator(): void
     {

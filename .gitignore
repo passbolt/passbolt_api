@@ -41,6 +41,12 @@ debian/passbolt-api-pro/
 debian/*debhelper*
 debian/*substvars*
 
+# RPM Package #
+###############
+/_passbolt-configure
+/cron.d
+/logrotate.d
+
 # CakePHP specific files #
 ##########################
 /config/app_local.php

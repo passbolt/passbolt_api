@@ -22,17 +22,15 @@ $user = $body['user'];
 $token = $body['token'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($user->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($user->username),
-        'first_name' => Purifier::clean($user->profile->first_name),
-        'last_name' => Purifier::clean($user->profile->last_name),
-        'datetime' => $user->created,
+        'user' => $user,
+        'datetime' => $user['created'],
         'text' => __('You just created your account on passbolt!')
     ])
 ]);
 
-$text = '<h3>' . __('Welcome {0}', Purifier::clean($user->profile->first_name)) . ',</h3><br/>';
+$text = '<h3>' . __('Welcome {0}', Purifier::clean($user['profile']['first_name'])) . ',</h3><br/>';
 $text .= __('You just opened an account on passbolt at {0}.',
     '<a href="' . Router::url('/',true) . '">' . Router::url('/',true) . '</a>'
 );

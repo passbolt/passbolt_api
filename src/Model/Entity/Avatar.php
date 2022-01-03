@@ -35,6 +35,15 @@ class Avatar extends Entity
     protected $_virtual = ['url'];
 
     /**
+     * The avatar data never needs to be served. it is stored in cache.
+     *
+     * @var string[]
+     */
+    protected $_hidden = [
+        'data',
+    ];
+
+    /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
      *
@@ -59,7 +68,10 @@ class Avatar extends Entity
         $avatarsPath = [];
         // Add path for each available size.
         foreach ($sizes as $size => $filters) {
-            $avatarsPath[$size] = AvatarHelper::getAvatarUrl($this, $size);
+            $avatarsPath[$size] = AvatarHelper::getAvatarUrl([
+                'id' => $this->id,
+                'data' => $this->data,
+            ], $size);
         }
 
         // Transform original model to add paths.

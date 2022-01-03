@@ -232,7 +232,7 @@ class AuthenticationTokensTable extends Table
      *
      * @param string $token uuid of the token to check
      * @param string $userId uuid of the user
-     * @param string $type token type
+     * @param string|null $type token type
      * @param string|int $expiry the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool true if it is valid
@@ -312,23 +312,22 @@ class AuthenticationTokensTable extends Table
     }
 
     /**
-     * Get a token entity using the token id
+     * Get a token entity using the token value
      * (e.g. get using token->token, not token->id )
      *
-     * @param string $tokenId uuid
+     * @param string $tokenValue uuid
+     * @return \App\Model\Entity\AuthenticationToken
      * @throws \InvalidArgumentException is the token is not a valid uuid
-     * @return \App\Model\Entity\AuthenticationToken|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException is the token is not found
      */
-    public function getByToken(string $tokenId): ?AuthenticationToken
+    public function getByToken(string $tokenValue): AuthenticationToken
     {
-        if (!Validation::uuid($tokenId)) {
+        if (!Validation::uuid($tokenValue)) {
             throw new \InvalidArgumentException(__('The token should be a valid UUID.'));
         }
 
-        /** @var \App\Model\Entity\AuthenticationToken|null $token */
-        $token = $this->find()
-            ->where(['token' => $tokenId, 'active' => true ])
-            ->first();
+        /** @var \App\Model\Entity\AuthenticationToken $token */
+        $token = $this->find()->where(['token' => $tokenValue, 'active' => true ])->firstOrFail();
 
         return $token;
     }

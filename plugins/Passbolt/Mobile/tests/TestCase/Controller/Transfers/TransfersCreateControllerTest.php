@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Mobile\Test\TestCase\Controller\Transfers;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use Cake\Utility\Security;
@@ -28,7 +29,7 @@ class TransfersCreateControllerTest extends AppIntegrationTestCase
     use TransfersModelTrait;
 
     public $fixtures = [
-        'app.Base/Users',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles',
     ];
 
     public function setUp(): void
@@ -71,10 +72,9 @@ class TransfersCreateControllerTest extends AppIntegrationTestCase
             'status' => Transfer::TRANSFER_STATUS_START,
             'hash' => Security::hash('test', 'sha512', true),
         ];
-        $this->authenticateAs('sofia');
+        $this->logInAs(UserFactory::make()->deleted()->persist());
         $this->postJson('/mobile/transfers.json', $data);
-        $this->assertError(400);
-        $this->assertTrue(isset($this->_responseJsonBody->user_id->user_is_soft_deleted));
+        $this->assertAuthenticationError();
     }
 
     public function testMobileTransfersCreateController_ErrorEmptyData()

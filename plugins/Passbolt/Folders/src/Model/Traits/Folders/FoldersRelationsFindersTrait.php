@@ -30,25 +30,13 @@ trait FoldersRelationsFindersTrait
      */
     public function filterQueryByIsNotPersonalFolder(Query $query)
     {
-        $subQuery = $this->find();
-        $foldersIdsNotPersonal = $subQuery
-            ->select([
-                'foreign_id',
-                'countee' => $subQuery->func()->count('foreign_id'),
-            ])
+        $foldersIdsNotPersonalQuery = $this->find()
+            ->select(['foreign_id'])
             ->where(['foreign_model' => FoldersRelation::FOREIGN_MODEL_FOLDER])
             ->group('foreign_id')
-            ->having('countee > 1')
-            ->extract('foreign_id')
-            ->toArray();
+            ->having('count(foreign_id) > 1');
 
-        if (!empty($foldersIdsNotPersonal)) {
-            $query->where(['foreign_id IN' => $foldersIdsNotPersonal]);
-        } else {
-            $query->where(['false']);
-        }
-
-        return $query;
+        return $query->where(['foreign_id IN' => $foldersIdsNotPersonalQuery]);
     }
 
     /**
@@ -93,18 +81,6 @@ trait FoldersRelationsFindersTrait
         return $query->where([
             'foreign_model' => $foreignModel,
         ]);
-    }
-
-    /**
-     * Returns a query that retrieves all the users having access to a given item.
-     *
-     * @param string $foreignId The target folder
-     * @return \Cake\ORM\Query
-     */
-    public function findUsersIdsHavingAccessToItem(string $foreignId)
-    {
-        return $this->findByForeignId($foreignId)
-            ->select('user_id');
     }
 
     /**

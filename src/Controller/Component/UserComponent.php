@@ -99,7 +99,14 @@ class UserComponent extends Component
     {
         try {
             // Get the user delivered by the authentication result.
-            $user = $this->Authentication->getResult()->getData() ?? [];
+            $data = $this->Authentication->getResult()->getData() ?? null;
+            if (!isset($data)) {
+                $user = [];
+            } elseif (!isset($data['user'])) {
+                $user = $data;
+            } else {
+                $user = $data['user'];
+            }
         } catch (Exception $e) {
             $user = [];
         } finally {
@@ -140,23 +147,20 @@ class UserComponent extends Component
     /**
      * Get the user theme
      *
-     * @return string
+     * @return string|null
      */
     public function theme()
     {
-        $defaultTheme = 'default';
         if (Configure::read('passbolt.plugins.accountSettings')) {
             /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
             $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
             $theme = $AccountSettings->getTheme($this->id());
-            if (!$theme) {
-                $theme = $defaultTheme;
+            if ($theme) {
+                return $theme;
             }
-
-            return $theme;
         }
 
-        return $defaultTheme;
+        return null;
     }
 
     /**

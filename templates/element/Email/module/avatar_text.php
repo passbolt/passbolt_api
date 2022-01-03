@@ -13,7 +13,9 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
-?><span style="font-weight:bold;"><?= Purifier::clean($first_name); ?> <?php Purifier::clean($last_name); ?>
-     (<a href="mailto:<?= Purifier::clean($username); ?>" style="color:#888;text-decoration: underline;"><?= Purifier::clean($username); ?></a>)</span><br>
+use Cake\I18n\FrozenTime;
+
+?><span style="font-weight:bold;"><?= Purifier::clean($user['username']); ?> <?php Purifier::clean($user['profile']['last_name']); ?>
+     (<a href="mailto:<?= Purifier::clean($user['username']); ?>" style="color:#888;text-decoration: underline;"><?= Purifier::clean($user['username']); ?></a>)</span><br>
 <span style=""><?= $text ?></span><br>
-<span style="color:#888888"><?= $datetime->nice(); ?></span><br>
+<span style="color:#888888"><?= FrozenTime::parse($datetime)->nice(); ?></span><br>

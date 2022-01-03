@@ -34,13 +34,9 @@ class Tarjan
     {
         $graphSize = count($graph);
         $cycles = [];
-        $marked = [];
+        $marked = array_fill(0, $graphSize, false);
         $markedStack = [];
         $pointStack = [];
-
-        for ($x = 0; $x < $graphSize; $x++) {
-            $marked[$x] = false;
-        }
 
         // Loop on all nodes of the graph to ensure that nodes that are not reachable from the first node are still
         // eventually traversed.

@@ -21,7 +21,7 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Utility\UserAccessControl;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
-use Passbolt\MultiFactorAuthentication\Event\ClearInvalidMfaCookieInResponse;
+use Passbolt\MultiFactorAuthentication\Event\ClearMfaCookieInResponse;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
@@ -37,30 +37,28 @@ class IsMfaAuthenticationRequiredService
      * @param \Cake\Http\ServerRequest $request request
      * @param \Passbolt\MultiFactorAuthentication\Utility\MfaSettings $mfaSettings MFA settings
      * @param \App\Utility\UserAccessControl $uac User Access Controller
-     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID service
+     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID identifier
      * @return bool
      */
     public function isMfaCheckRequired(
         ServerRequest $request,
         MfaSettings $mfaSettings,
         UserAccessControl $uac,
-        SessionIdentificationServiceInterface $sessionIdentificationService
+        ?SessionIdentificationServiceInterface $sessionIdentificationService = null
     ): bool {
         // Mfa not enabled for org or user
-        $providers = $mfaSettings->getEnabledProviders();
-        if (!count($providers)) {
+        if (!$mfaSettings->hasEnabledProviders()) {
             return false;
         }
 
         // Mfa cookie is set and a valid token
         $mfa = $request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         if (isset($mfa)) {
-            $sessionId = $sessionIdentificationService->getSessionId($request);
-            $isMfaCookieInvalid = !MfaVerifiedToken::check($uac, $mfa, $sessionId);
+            $isMfaCookieInvalid = !MfaVerifiedToken::check($uac, $mfa, $sessionIdentificationService, $request);
 
             // If the MFA Cookie is invalid, clear that cookie in the response
             if ($isMfaCookieInvalid) {
-                EventManager::instance()->on(new ClearInvalidMfaCookieInResponse());
+                EventManager::instance()->on(new ClearMfaCookieInResponse());
             }
 
             return $isMfaCookieInvalid;

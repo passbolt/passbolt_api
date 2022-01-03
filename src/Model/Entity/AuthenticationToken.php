@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Model\Entity;
 
+use App\Service\AuthenticationTokens\AuthenticationTokensSessionService;
 use App\Utility\AuthToken\AuthTokenExpiry;
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
@@ -106,12 +106,13 @@ class AuthenticationToken extends Entity
     }
 
     /**
-     * Reads the session ID in the token data
+     * Reads the session ID in the token data.
+     * The session ID is stored hashed.
      *
      * @see SessionIdentificationServiceInterface
      * @return string|null
      */
-    public function getSessionId(): ?string
+    public function getHashedSessionId(): ?string
     {
         $data = $this->getJsonDecodedData();
 
@@ -134,7 +135,7 @@ class AuthenticationToken extends Entity
      */
     public function hashAndSetSessionId(string $sessionId): void
     {
-        $hashedSessionId = (new DefaultPasswordHasher())->hash(hash('sha256', $sessionId));
+        $hashedSessionId = (new AuthenticationTokensSessionService())->hash($sessionId);
         $data = array_merge(
             $this->getJsonDecodedData(),
             [self::SESSION_ID_KEY => $hashedSessionId]
@@ -145,18 +146,15 @@ class AuthenticationToken extends Entity
 
     /**
      * Checks that the session ID provided
-     * matches the hashed session ID in data->session_id
+     * matches the hashed session ID in data->session_id.
      *
-     * @param string|null $sessionIdToCheck Session ID to check
+     * The session ID can be a string or another authentication token.
+     *
+     * @param \App\Model\Entity\AuthenticationToken|string|null $sessionIdentifier Session ID to check
      * @return bool
      */
-    public function checkSessionId(?string $sessionIdToCheck): bool
+    public function checkSessionId($sessionIdentifier): bool
     {
-        $tokenSessionId = $this->getSessionId();
-        if ($sessionIdToCheck === null || $tokenSessionId === null) {
-            return false;
-        }
-
-        return (new DefaultPasswordHasher())->check(hash('sha256', $sessionIdToCheck), $tokenSessionId);
+        return (new AuthenticationTokensSessionService())->checkSession($this, $sessionIdentifier);
     }
 }

@@ -16,10 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 
 class MfaVerifiedToken
@@ -76,11 +79,16 @@ class MfaVerifiedToken
      *
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param string $tokenString token
-     * @param string $sessionId Session ID
+     * @param \App\Authenticator\SessionIdentificationServiceInterface|null $sessionIdentificationService Session ID identifier, required unless logging in
+     * @param \Cake\Http\ServerRequest|null $request Server request, required only if $sessionIdentificationService is required
      * @return bool
      */
-    public static function check(UserAccessControl $uac, string $tokenString, string $sessionId): bool
-    {
+    public static function check(
+        UserAccessControl $uac,
+        string $tokenString,
+        ?SessionIdentificationServiceInterface $sessionIdentificationService = null,
+        ?ServerRequest $request = null
+    ): bool {
         // Baseline validity check
         /** @var \App\Model\Table\AuthenticationTokensTable $auth */
         $auth = TableRegistry::getTableLocator()->get('AuthenticationTokens');
@@ -90,8 +98,12 @@ class MfaVerifiedToken
             return false;
         }
 
-        /** @var \App\Model\Entity\AuthenticationToken $token */
-        $token = $auth->getByToken($tokenString);
+        try {
+            $token = $auth->getByToken($tokenString);
+        } catch (RecordNotFoundException $e) {
+            return false;
+        }
+
         $data = json_decode($token->data ?? '');
 
         // Check for issue when decoding data
@@ -108,8 +120,11 @@ class MfaVerifiedToken
             }
         }
 
-        // Check Session id
-        if ($token->checkSessionId($sessionId)) {
+        // Check Session ID
+        if (
+            isset($sessionIdentificationService) &&
+            $sessionIdentificationService->checkAuthenticationToken($request, $token)
+        ) {
             return true;
         }
 

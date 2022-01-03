@@ -1,0 +1,5 @@
+# docker build --build-arg VERSION=34 -t anatomicjc/fedora:34 .
+ARG VERSION=34
+FROM dokken/fedora-${VERSION}
+RUN dnf install systemd libxcrypt-compat -y \
+ && dnf clean all

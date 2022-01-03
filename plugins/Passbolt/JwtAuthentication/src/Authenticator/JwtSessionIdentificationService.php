@@ -16,12 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Authenticator;
 
-use App\Authenticator\SessionIdentificationServiceInterface;
-use Authentication\AuthenticationService;
+use App\Authenticator\AbstractSessionIdentificationService;
+use Cake\Http\ServerRequest;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
-use Psr\Http\Message\ServerRequestInterface;
 
-class JwtSessionIdentificationService implements SessionIdentificationServiceInterface
+class JwtSessionIdentificationService extends AbstractSessionIdentificationService
 {
     /**
      * @var string|null
@@ -43,8 +42,9 @@ class JwtSessionIdentificationService implements SessionIdentificationServiceInt
     /**
      * @inheritDoc
      */
-    public function getSessionId(ServerRequestInterface $request): ?string
+    public function getSessionIdentifier(ServerRequest $request): ?string
     {
+        // The access token generated is injected after logging in. This is considered as the session ID
         if (isset($this->accessToken)) {
             return $this->accessToken;
         }
@@ -52,20 +52,8 @@ class JwtSessionIdentificationService implements SessionIdentificationServiceInt
             return null;
         }
 
-        return $request->getHeaderLine(JwtAuthenticationService::JWT_HEADER);
-    }
+        $token = $request->getHeaderLine(JwtAuthenticationService::JWT_HEADER);
 
-    /**
-     * @param \Psr\Http\Message\ServerRequestInterface $request Request
-     * @return bool
-     */
-    protected function isAuthenticated(ServerRequestInterface $request): bool
-    {
-        $authService = $request->getAttribute('authentication');
-        if ($authService instanceof AuthenticationService) {
-            return $authService->getResult()->isValid();
-        }
-
-        return false;
+        return str_replace('Bearer ', '', $token);
     }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Factory;
 
 use App\Model\Entity\Role;
+use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -50,6 +51,8 @@ class RoleFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'name' => $faker->name(),
+                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];
         });
     }

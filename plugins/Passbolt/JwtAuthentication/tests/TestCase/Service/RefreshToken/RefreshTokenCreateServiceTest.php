@@ -21,6 +21,7 @@ use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Cake\Http\ServerRequest;
 use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
@@ -44,18 +45,17 @@ class RefreshTokenCreateServiceTest extends TestCase
         $userId = UserFactory::make()->persist()->id;
         $accessToken = 'Foo';
 
-        $token = (new RefreshTokenCreateService())->createToken($userId, $accessToken);
+        $token = (new RefreshTokenCreateService())->createToken(new ServerRequest(), $userId, $accessToken);
         $cookie = (new RefreshTokenCreateService())->createHttpOnlySecureCookie($token);
-        $cookieExpiry = $cookie->getExpiry();
+        /** @var FrozenTime $expiration */
+        $expiration = $cookie->getExpiry();
 
         $this->assertTrue($token->checkSessionId($accessToken));
         $this->assertTrue($cookie->isSecure());
         $this->assertTrue($cookie->isHttpOnly());
         $this->assertFalse($cookie->isExpired());
         // Allow a difference of five seconds second for CPU process
-        if (method_exists($cookie->getExpiry(), 'toUnixString')) {
-            $this->assertLessThanOrEqual(5, $cookie->getExpiry()->toUnixString() - $expectedExpiration);
-        }
+        $this->assertLessThanOrEqual(5, (int)$expiration->toUnixString() - (int)$expectedExpiration);
 
         // Assert that the create refresh token event is dispatched
         $this->assertEventFired(RefreshTokenCreateService::REFRESH_TOKEN_CREATED_EVENT);

@@ -114,7 +114,7 @@ class GpgAuthenticator extends SessionAuthenticator
      */
     private function authenticationSuccessResult(): ResultInterface
     {
-        return new Result($this->_user->toArray(), Result::SUCCESS, $this->headers);
+        return new Result(['user' => $this->_user->toArray()], Result::SUCCESS, $this->headers);
     }
 
     /**

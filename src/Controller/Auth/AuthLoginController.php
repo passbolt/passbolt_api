@@ -24,6 +24,7 @@ use Authentication\Authenticator\Result;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\NotFoundException;
 
 class AuthLoginController extends AppController
 {
@@ -48,6 +49,10 @@ class AuthLoginController extends AppController
      */
     public function loginGet()
     {
+        if ($this->request->is('json')) {
+            throw new NotFoundException(__('Page not found.'));
+        }
+
         // Do not allow logged in user to login again
         if ($this->User->role() !== Role::GUEST) {
             $this->redirect('/'); // user is already logged in
@@ -76,7 +81,8 @@ class AuthLoginController extends AppController
         // They are translated into actual http headers as part of GpgAuthHeadersMiddleware::process
         $result = $this->Authentication->getResult();
         if ($result->isValid()) {
-            $user = $result->getData();
+            $data = $result->getData();
+            $user = $data['user'];
             $uac = new UserAccessControl($user['role']['name'], $user['id']);
             UserAction::getInstance()->setUserAccessControl($uac);
             $this->success(__('You are successfully logged in.'), $user);

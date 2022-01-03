@@ -62,5 +62,6 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
         Configure::write('passbolt.plugins.directorySync.enabled', true);
         Configure::write('passbolt.plugins.directorySync.test', true);
         $this->enableDirectoryIntegration();
+        $this->loadPlugins(['Passbolt/Locale']);
     }
 }

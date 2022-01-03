@@ -79,7 +79,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
     /**
      * @Given a user has a valid access token and valid MFA token not remembered
      * @When the user logs in (which is not rational)
-     * @Then a different access token is generated
+     * @Then a new access token is generated
      * @And the previous MFA token is deactivated
      */
     public function testJwtLoginControllerTest_Login_With_Mfa_No_Remember_Me_And_With_Valid_Access_Token()
@@ -108,7 +108,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
         ]);
 
         $this->assertResponseOk('The authentication was a success.');
-        $this->assertEventFired(GpgJwtAuthenticator::MAKE_ARMORED_CHALLENGE_EVENT_NAME);
+        $this->assertEventFired(GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY);
 
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge));
         $this->assertSame(Router::url('/', true), $challenge->domain);
@@ -162,7 +162,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
         $mfaToken = MfaAuthenticationTokenFactory::find()->where(['token' => $mfaToken])->firstOrFail();
         $this->assertTrue($mfaToken->isActive());
         $this->assertFalse($mfaToken->isExpired());
-        $this->assertCookie($mfaToken->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieIsSecure($mfaToken->token, MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 
     /**

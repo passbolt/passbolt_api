@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Service;
 
 use Cake\Controller\Controller;
-use Cake\Core\Configure;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class ClearMfaCookieInResponseService
@@ -43,8 +42,7 @@ class ClearMfaCookieInResponseService
      */
     public function clearMfaCookie(): void
     {
-        $secure = Configure::read('passbolt.security.cookies.secure') || $this->controller->getRequest()->is('ssl');
-        $expiredMfaCookie = MfaVerifiedCookie::clearCookie($secure);
+        $expiredMfaCookie = MfaVerifiedCookie::clearCookie($this->controller->getRequest());
         $this->controller->setResponse($this->controller->getResponse()->withCookie($expiredMfaCookie));
     }
 }

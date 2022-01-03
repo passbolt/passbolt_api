@@ -320,8 +320,8 @@ class FoldersShareService
      */
     private function addFolderToGroupUsersTrees(UserAccessControl $uac, Folder $folder, string $groupId): void
     {
-        $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
-        foreach ($grousUsersIds as $groupUserId) {
+        $groupsUsersIds = $this->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
+        foreach ($groupsUsersIds as $groupUserId) {
             $this->addFolderToUserTree($uac, $folder, $groupUserId);
         }
     }
