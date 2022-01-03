@@ -23,6 +23,7 @@ use App\Test\Factory\UserFactory;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenCreateService;
@@ -38,6 +39,8 @@ class RefreshTokenRenewalServiceTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
+
         $this->loadModel('AuthenticationTokens');
         EventManager::instance()->setEventList(new EventList());
     }
@@ -46,7 +49,7 @@ class RefreshTokenRenewalServiceTest extends TestCase
     {
         $userId = UserFactory::make()->persist()->id;
         $newAccessToken = 'Bar';
-        $authToken = (new RefreshTokenCreateService())->createToken($userId, 'Foo');
+        $authToken = (new RefreshTokenCreateService())->createToken(new ServerRequest(), $userId, 'Foo');
 
         $tokenInTheRequest = $this->AuthenticationTokens->find()->firstOrFail();
 
@@ -56,8 +59,8 @@ class RefreshTokenRenewalServiceTest extends TestCase
             ->userId($userId)
             ->persist();
 
-        $service = new RefreshTokenRenewalService($userId, $authToken->token, $newAccessToken);
-        $newToken = $service->renewToken();
+        $service = new RefreshTokenRenewalService();
+        $newToken = $service->renewToken(new ServerRequest(), $authToken, $newAccessToken);
         $cookie = $service->createHttpOnlySecureCookie($newToken);
 
         $this->assertTrue($this->AuthenticationTokens->exists(['id' => $someUserTokenNotInvolvedInTheRenewal->id]));
@@ -76,16 +79,16 @@ class RefreshTokenRenewalServiceTest extends TestCase
     public function testRefreshTokenRenewalService_Renew_On_Consumed_Token()
     {
         $userId = UserFactory::make()->persist()->id;
-        $authToken = (new RefreshTokenCreateService())->createToken($userId, 'Foo');
+        $authToken = (new RefreshTokenCreateService())->createToken(new ServerRequest(), $userId, 'Foo');
 
-        $service = new RefreshTokenRenewalService($userId, $authToken->token, 'Bar');
+        $service = new RefreshTokenRenewalService();
         // This is O.K. to renew once
-        $service->renewToken();
+        $service->renewToken(new ServerRequest(), $authToken, 'Bar');
 
         // This is not O.K. to renew again, should throw an exception and should send an Email to both user and admin
         $this->expectException(ConsumedRefreshTokenAccessException::class);
         $this->expectExceptionMessage('The refresh token provided was already used.');
-        $service->renewToken();
+        $service->renewToken(new ServerRequest(), $authToken, '');
         $this->assertEventFired(ConsumedRefreshTokenAccessException::class);
     }
 }

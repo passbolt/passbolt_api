@@ -19,6 +19,7 @@ namespace App\Model\Table;
 use App\Model\Entity\Avatar;
 use App\Model\Traits\Cleanup\AvatarsCleanupTrait;
 use App\Service\Avatars\AvatarsCacheService;
+use App\Service\Avatars\AvatarsConfigurationService;
 use App\Utility\AvatarProcessing;
 use App\View\Helper\AvatarHelper;
 use Cake\Collection\CollectionInterface;
@@ -56,11 +57,9 @@ class AvatarsTable extends Table
 {
     use AvatarsCleanupTrait;
 
-    public const FORMAT_SMALL = 'small';
-    public const FORMAT_MEDIUM = 'medium';
     public const MAX_SIZE = '5MB';
-    public const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-    public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif'];
+    public const ALLOWED_MIME_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+    public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif'];
 
     /**
      * Initialize method
@@ -220,9 +219,11 @@ class AvatarsTable extends Table
         return [
             'Avatars' => function (Query $q) {
                 // Formatter for empty avatars.
-                return $q->formatResults(function (CollectionInterface $avatars) {
-                    return AvatarsTable::formatResults($avatars);
-                });
+                return $q
+                    ->select(['Avatars.id', 'Avatars.profile_id', 'Avatars.created', 'Avatars.modified'])
+                    ->formatResults(function (CollectionInterface $avatars) {
+                        return AvatarsTable::formatResults($avatars);
+                    });
             },
         ];
     }
@@ -263,7 +264,9 @@ class AvatarsTable extends Table
                 Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.height')
             );
             $avatar->set('data', $img);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+
             return false;
         }
 
@@ -290,10 +293,7 @@ class AvatarsTable extends Table
     }
 
     /**
-     * Set the configurations on initialize.
-     *
-     * This logic used to be loaded in bootstrap.php, which made
-     * the tests run on the default config, and not the test config.
+     * Set the default file system adapter and configurations on initialize.
      *
      * @return void
      */
@@ -303,39 +303,11 @@ class AvatarsTable extends Table
         // e.g. if storing the avatar on a cloud bucket.
         $this->setFilesystem(new LocalFilesystemAdapter(TMP . 'avatars'));
 
-        // File storage and images
-        Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public' . DS);
-        Configure::write('ImageStorage.publicPath', 'img' . DS . 'public' . DS);
-        Configure::write('FileStorage', [
-            'imageDefaults' => [
-                'Avatar' => [
-                    self::FORMAT_MEDIUM => 'img' . DS . 'avatar' . DS . 'user_medium.png',
-                    self::FORMAT_SMALL => 'img' . DS . 'avatar' . DS . 'user.png',
-                ],
-            ],
-            // Configure image versions on a per model base
-            'imageSizes' => [
-                'Avatar' => [
-                    self::FORMAT_MEDIUM => [
-                        'thumbnail' => [
-                            'mode' => 'outbound',
-                            'width' => 200,
-                            'height' => 200,
-                        ],
-                    ],
-                    self::FORMAT_SMALL => [
-                        'thumbnail' => [
-                            'mode' => 'outbound',
-                            'width' => 80,
-                            'height' => 80,
-                        ],
-                        'crop' => [
-                            'width' => 80,
-                            'height' => 80,
-                        ],
-                    ],
-                ],
-            ],
-        ]);
+        //  These configurations should be set in the Application::bootstrap() method.
+        // However, has a backup, we ensure that on AvatarTable's initialization these
+        // configurations are well set.
+        if (!Configure::check('FileStorage')) {
+            (new AvatarsConfigurationService())->loadConfiguration();
+        }
     }
 }

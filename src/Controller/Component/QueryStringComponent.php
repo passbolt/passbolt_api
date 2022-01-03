@@ -329,6 +329,23 @@ class QueryStringComponent extends Component
     }
 
     /**
+     * Check if the filter is a valid string
+     *
+     * @param mixed $value to check
+     * @param string $filtername for error message display
+     * @throw Exception if the filter is not valid
+     * @return bool true if the filter is valid
+     */
+    public static function validateFilterString($value, string $filtername)
+    {
+        if (empty($value) || !is_string($value)) {
+            throw new Exception(__('"{0}" is not a valid value for filter {1}.', $value, $filtername));
+        }
+
+        return true;
+    }
+
+    /**
      * Check if the filter is a valid boolean
      *
      * @param mixed $values to check
@@ -606,9 +623,9 @@ class QueryStringComponent extends Component
             return true;
         } elseif ((strtolower($str) === 'false' || $str === '0')) {
             return false;
-        } else {
-            return $str;
         }
+
+        return $str;
     }
 
     /**

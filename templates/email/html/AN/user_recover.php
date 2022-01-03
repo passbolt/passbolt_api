@@ -22,12 +22,10 @@ $user = $body['user'];
 $token = $body['token'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($user->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($user->username),
-        'first_name' => Purifier::clean($user->profile->first_name),
-        'last_name' => Purifier::clean($user->profile->last_name),
-        'datetime' => $user->created,
+        'user' => $user,
+        'datetime' => $user['created'],
         'text' => __('You have initiated an account recovery!')
     ])
 ]);

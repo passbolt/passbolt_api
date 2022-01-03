@@ -22,7 +22,7 @@ use App\Error\Exception\AdminsEmailNotificationExceptionTrait;
 use App\Error\Exception\UserEmailNotificationExceptionTrait;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
-use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenFetchUserService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAuthenticationService;
 
 /**
  * Abstract class for all JWT attack related exceptions.
@@ -31,9 +31,6 @@ abstract class AbstractJwtAttackException extends AbstractExceptionWithEmailEven
     UserEmailNotificationExceptionTrait,
     AdminsEmailNotificationExceptionTrait
 {
-    public const USER_EMAIL_SUBJECT = 'Authentication security alert!';
-    public const ADMIN_EMAIL_SUBJECT = 'Authentication security alert!';
-
     /**
      * @inheritDoc
      */
@@ -57,7 +54,7 @@ abstract class AbstractJwtAttackException extends AbstractExceptionWithEmailEven
         $token = $request->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
         if (!empty($token)) {
             try {
-                $userId = (new RefreshTokenFetchUserService($token))->getUserIdFromToken();
+                $userId = (new RefreshTokenAuthenticationService())->getUserIdFromToken($token);
             } catch (RefreshTokenNotFoundException $e) {
                 $userId = null;
             }
@@ -74,7 +71,7 @@ abstract class AbstractJwtAttackException extends AbstractExceptionWithEmailEven
      */
     public function getUserEmailTemplate(): string
     {
-        return 'JwtAuthentication.User/jwt_attack';
+        return 'Passbolt/JwtAuthentication.User/jwt_attack';
     }
 
     /**
@@ -82,7 +79,7 @@ abstract class AbstractJwtAttackException extends AbstractExceptionWithEmailEven
      */
     public function getAdminEmailTemplate(): string
     {
-        return 'JwtAuthentication.Admin/jwt_attack';
+        return 'Passbolt/JwtAuthentication.Admin/jwt_attack';
     }
 
     /**
@@ -90,7 +87,7 @@ abstract class AbstractJwtAttackException extends AbstractExceptionWithEmailEven
      */
     public function getUserEmailSubject(): string
     {
-        return self::USER_EMAIL_SUBJECT;
+        return __('Authentication security alert');
     }
 
     /**
@@ -98,6 +95,6 @@ abstract class AbstractJwtAttackException extends AbstractExceptionWithEmailEven
      */
     public function getAdminEmailSubject(): string
     {
-        return self::ADMIN_EMAIL_SUBJECT;
+        return $this->getUserEmailSubject();
     }
 }

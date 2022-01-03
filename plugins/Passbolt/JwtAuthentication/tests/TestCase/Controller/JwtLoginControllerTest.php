@@ -24,10 +24,11 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
-use Passbolt\JwtAuthentication\Error\Exception\AbstractJwtAttackException;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
 
@@ -53,6 +54,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->loadModel('Passbolt/Log.ActionLogs');
         $this->enableFeaturePlugin('Log');
         RoleFactory::make()->guest()->persist();
+        EventManager::instance()->setEventList(new EventList());
     }
 
     public function testJwtLoginControllerTest_Success()
@@ -67,11 +69,11 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
             'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
         ]);
 
-        $this->assertResponseSuccess('The authentication was a success.');
+        $this->assertResponseOk('The authentication was a success.');
         $this->assertEmailQueueCount(0);
+        $this->assertEventFired(GpgJwtAuthenticator::JWT_AUTHENTICATION_AFTER_IDENTIFY);
 
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge));
-
         $this->assertSame(Router::url('/', true), $challenge->domain);
         $this->assertSame(GpgJwtAuthenticator::PROTOCOL_VERSION, $challenge->version);
         $this->assertIsString($challenge->access_token);
@@ -110,9 +112,10 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertEmailQueueCount(1);
         $this->assertEmailIsInQueue([
             'email' => $user->username,
-            'subject' => AbstractJwtAttackException::USER_EMAIL_SUBJECT,
-            'template' => 'JwtAuthentication.User/jwt_attack',
+            'subject' => 'Authentication security alert',
+            'template' => 'Passbolt/JwtAuthentication.User/jwt_attack',
         ]);
+        $this->assertEmailInBatchContains('Verify token has been already used in the past.');
 
         // Assert login action log
         $this->assertOneActionLog();
@@ -186,7 +189,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
 
         $this->logInAs($user);
         $this->getJson('/auth/is-authenticated.json');
-        $this->assertResponseSuccess();
+        $this->assertResponseOk();
 
         $this->postJson('/auth/jwt/login.json', [
             'user_id' => $user->id,
@@ -198,9 +201,9 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
 
         $this->setJwtTokenInHeader($accessToken);
         $this->getJson('/auth/is-authenticated.json');
-        $this->assertResponseSuccess();
+        $this->assertResponseOk();
 
-        $this->assertResponseSuccess('The authentication was a success.');
+        $this->assertResponseOk('The authentication was a success.');
     }
 
     public function testSessionLoginWithJwtTokenInHeaderIsNotPermitted()

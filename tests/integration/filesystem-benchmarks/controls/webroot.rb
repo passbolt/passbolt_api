@@ -2,6 +2,14 @@ title 'Passbolt webroot files benchmark'
 
 source_dir = '/usr/share/php/passbolt/webroot'
 
+webserver_owner = 'www-data'
+webserver_group = 'www-data'
+
+if os.family == 'redhat'
+  webserver_owner = 'nginx'
+  webserver_group = 'nginx'
+end
+
 control 'passbolt-webroot-01' do                        # A unique ID for this control
   impact 1                                # The criticality, if this control fails.
   title 'webroot directory'             # A human-readable title
@@ -23,8 +31,8 @@ control 'passbolt-webroot-02' do                        # A unique ID for this c
       owner = 'root'
       group = 'root'
     if item.include? "public"
-      owner = 'www-data'
-      group = 'www-data'
+      owner = webserver_owner
+      group = webserver_group
     end
       its('owner') { should eq owner }
       its('group') { should eq group }
@@ -42,8 +50,8 @@ control 'passbolt-webroot-03' do                        # A unique ID for this c
       owner = 'root'
       group = 'root'
     if item.include? "public"
-      owner = 'www-data'
-      group = 'www-data'
+      owner = webserver_owner
+      group = webserver_group
     end
       its('owner') { should eq owner }
       its('group') { should eq group }

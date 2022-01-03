@@ -19,13 +19,16 @@ namespace App\Test\TestCase\Controller\Setup;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
     use AuthenticationTokenModelTrait;
+    use EmailQueueTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
@@ -47,6 +50,8 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testSetupCompleteSuccess()
     {
+        $logEnabled = Configure::read('passbolt.plugins.log.enabled');
+        Configure::write('passbolt.plugins.log.enabled', true);
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
@@ -69,6 +74,12 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             ->getFirstPropertyOrFail(UuidFactory::uuid('user.id.ruth'), LocaleService::SETTING_PROPERTY)
             ->value;
         $this->assertSame('fr-FR', $userLocale);
+        $this->assertEmailIsInQueue([
+            'email' => 'admin@passbolt.com',
+            'template' => 'LU/user_setup_complete',
+            'subject' => 'Ruth just activated their account on passbolt',
+        ]);
+        Configure::write('passbolt.plugins.log.enabled', $logEnabled);
     }
 
     /**

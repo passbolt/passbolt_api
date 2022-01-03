@@ -21,6 +21,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 
 class GetByTokenTest extends AppTestCase
@@ -57,8 +58,8 @@ class GetByTokenTest extends AppTestCase
     {
         $userId = UuidFactory::uuid('user.id.ruth');
         $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'inactive');
-        $t = $this->AuthenticationTokens->getByToken($tokenInactive);
-        $this->assertEmpty($t);
+        $this->expectException(RecordNotFoundException::class);
+        $this->AuthenticationTokens->getByToken($tokenInactive);
     }
 
     /**

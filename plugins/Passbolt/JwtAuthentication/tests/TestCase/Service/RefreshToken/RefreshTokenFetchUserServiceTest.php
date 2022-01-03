@@ -22,7 +22,7 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\TestSuite\TestCase;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
-use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenFetchUserService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAuthenticationService;
 
 /**
  * @covers \Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService
@@ -44,8 +44,8 @@ class RefreshTokenFetchUserServiceTest extends TestCase
             ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
             ->persist();
 
-        $service = (new RefreshTokenFetchUserService($refreshToken->token));
-        $this->assertSame($refreshToken->user_id, $service->getUserIdFromToken());
+        $service = (new RefreshTokenAuthenticationService());
+        $this->assertSame($refreshToken->user_id, $service->getUserIdFromToken($refreshToken->token));
     }
 
     /**
@@ -61,6 +61,6 @@ class RefreshTokenFetchUserServiceTest extends TestCase
         $this->expectException(RefreshTokenNotFoundException::class);
         $this->expectExceptionMessage('No active refresh token matching the request could be found.');
 
-        (new RefreshTokenFetchUserService($refreshToken->token))->getUserIdFromToken();
+        (new RefreshTokenAuthenticationService())->getUserIdFromToken($refreshToken->token);
     }
 }

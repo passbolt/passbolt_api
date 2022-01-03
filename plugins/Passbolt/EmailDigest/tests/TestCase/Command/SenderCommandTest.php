@@ -44,6 +44,7 @@ class SenderCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->setDummyFrenchTranslator();
+        $this->loadPlugins(['Passbolt/EmailDigest']);
     }
 
     /**
@@ -51,10 +52,10 @@ class SenderCommandTest extends TestCase
      */
     public function testSenderCommandHelp()
     {
-        $this->exec('passbolt sender -h');
+        $this->exec('passbolt email_digest send -h');
         $this->assertExitSuccess();
         $this->assertOutputContains('Sends a batch of queued emails as emails digests.');
-        $this->assertOutputContains('cake passbolt sender');
+        $this->assertOutputContains('cake passbolt email_digest send');
     }
 
     /**
@@ -65,7 +66,7 @@ class SenderCommandTest extends TestCase
         /** @var \Cake\Datasource\EntityInterface $email */
         $email = EmailQueueFactory::make()->persist();
 
-        $this->exec('passbolt sender');
+        $this->exec('passbolt email_digest send');
 
         $this->assertExitSuccess();
         $this->assertMailSentFrom($email->get('from_email'));
@@ -95,7 +96,7 @@ class SenderCommandTest extends TestCase
             ->setRecipient($frenchSpeakingUser->username)
             ->persist();
 
-        $this->exec('passbolt sender');
+        $this->exec('passbolt email_digest send');
         $this->assertExitSuccess();
 
         $this->assertMailContainsAt(0, $this->getDummyEnglishEmailSentence());

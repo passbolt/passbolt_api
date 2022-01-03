@@ -26,8 +26,10 @@ use Faker\Generator;
 /**
  * AuthenticationTokenFactory
  *
- * @method \App\Model\Entity\AuthenticationToken persist()
- * @method \App\Model\Entity\AuthenticationToken getEntity()
+ * @method \App\Model\Entity\AuthenticationToken|\App\Model\Entity\AuthenticationToken[] persist()
+ * @method \App\Model\Entity\AuthenticationToken[] getEntity()
+ * @method \App\Model\Entity\AuthenticationToken getEntities()
+ * @method static \App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array $options = [])
  */
 class AuthenticationTokenFactory extends CakephpBaseFactory
 {

@@ -49,7 +49,7 @@ class EmailPreview
      *
      * @return string
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -59,7 +59,7 @@ class EmailPreview
      *
      * @return string
      */
-    public function getHeaders()
+    public function getHeaders(): string
     {
         return $this->headers;
     }
