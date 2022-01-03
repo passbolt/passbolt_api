@@ -246,7 +246,7 @@ class LdapConfigurationForm extends Form
 
         $validator
             ->allowEmptyString('sync_users_delete')
-            ->boolean('sync_users_delete', __('The sync of deleted user setting should be a boolean.'));
+            ->boolean('sync_users_delete', __('The sync of deleted users setting should be a boolean.'));
 
         $validator
             ->allowEmptyString('sync_groups_create')
