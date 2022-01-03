@@ -25,6 +25,7 @@ use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
+use Passbolt\JwtAuthentication\Event\LogAuthenticationWithNonValidJwtAccessToken;
 use Passbolt\JwtAuthentication\Event\RemoveCsrfCookieOnJwt;
 use Passbolt\JwtAuthentication\Event\RemoveSessionCookiesOnJwt;
 use Passbolt\JwtAuthentication\Event\SetSessionIdentifierOnLogin;
@@ -70,6 +71,7 @@ class Plugin extends BasePlugin
     {
         $app->getEventManager()
             ->on(new JwtAuthenticationEmailRedactorPool())
+            ->on(new LogAuthenticationWithNonValidJwtAccessToken())
             ->on(new RemoveSessionCookiesOnJwt())
             ->on(new RemoveCsrfCookieOnJwt())
             ->on(new SetSessionIdentifierOnLogin());
