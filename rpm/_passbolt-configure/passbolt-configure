@@ -547,14 +547,18 @@ setup_firewall() {
   local zone=public
   local services=(http https)
   banner "Opening ports 80 and 443 on firewall"
+  
+  # Set firewall rules only if selinux is not permissive nor disabled.
+  if getenforce | grep -q "Enforcing"
+  then 
+    enable_service firewalld
+    
+    for i in "${services[@]}"; do
+      firewall-cmd --permanent --zone="$zone" --add-service="$i"
+    done
 
-  enable_service firewalld
-
-  for i in "${services[@]}"; do
-    firewall-cmd --permanent --zone="$zone" --add-service="$i"
-  done
-
-  enable_service firewalld
+    enable_service firewalld
+  fi
 }
 
 __install_db() {

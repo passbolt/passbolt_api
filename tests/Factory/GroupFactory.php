@@ -12,18 +12,25 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.0.0
+ * @since         3.5.0
  */
 namespace App\Test\Factory;
 
+use Cake\I18n\Time;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
- * GroupsUserFactory
+ * GroupFactory
+ *
+ * @method \App\Model\Entity\Group|\App\Model\Entity\Group[] persist()
+ * @method \App\Model\Entity\Group getEntity()
+ * @method \App\Model\Entity\Group[] getEntities()
  */
-class GroupsUserFactory extends CakephpBaseFactory
+class GroupFactory extends CakephpBaseFactory
 {
+    use FactoryDeletedTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -31,7 +38,7 @@ class GroupsUserFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'GroupsUsers';
+        return 'Groups';
     }
 
     /**
@@ -44,18 +51,12 @@ class GroupsUserFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                // set the model's default values
-                // For example:
-                // 'name' => $faker->lastName
+                'name' => $faker->word(),
+                'created' => Time::now()->subDay($faker->randomNumber(4)),
+                'modified' => Time::now()->subDay($faker->randomNumber(4)),
+                'created_by' => $faker->uuid(),
+                'modified_by' => $faker->uuid(),
             ];
         });
-    }
-
-    /**
-     * @return GroupsUserFactory
-     */
-    public function admin()
-    {
-        return $this->setField('is_admin', true);
     }
 }
