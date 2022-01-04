@@ -46,8 +46,17 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
     ];
 
     public $Groups;
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
     public $Users;
+    /**
+     * @var \Passbolt\DirectorySync\Model\Table\DirectoryEntriesTable
+     */
     public $DirectoryEntries;
+    /**
+     * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
+     */
     public $directoryOrgSettings;
 
     public function setUp(): void
