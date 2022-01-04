@@ -679,6 +679,19 @@ class HealthcheckCommand extends PassboltCommand
                 __('The public key can be used to verify a signature.'),
                 __('The public key cannot be used to verify a signature.')
             );
+            $gopengpgHelpMessage = ['Remove all empty new lines above the end block line.'];
+            $this->assert(
+                $checks['gpg']['isPublicServerKeyGopengpgCompatible'],
+                'The server public key format is Gopengpg compatible.',
+                'The server public key format is not Gopengpg compatible.',
+                $gopengpgHelpMessage
+            );
+            $this->assert(
+                $checks['gpg']['isPrivateServerKeyGopengpgCompatible'],
+                'The server private key format is Gopengpg compatible.',
+                'The server public key format is not Gopengpg compatible.',
+                $gopengpgHelpMessage
+            );
         }
     }
 
