@@ -12,24 +12,12 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.5.0
+ * @since         3.3.0
  */
-namespace Passbolt\WebInstaller\Test\Lib;
+namespace Passbolt\EmailNotificationSettings;
 
-use Cake\Datasource\ConnectionManager;
+use Cake\Core\BasePlugin;
 
-trait DatabaseTrait
+class Plugin extends BasePlugin
 {
-    /**
-     * Truncate the database tables.
-     */
-    public function truncateTables()
-    {
-        $connection = ConnectionManager::get('default');
-        $tables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
-        foreach ($tables as $table) {
-            $quotedTableName = $connection->getDriver()->quoteIdentifier($table);
-            $connection->query("DROP TABLE {$quotedTableName}");
-        }
-    }
 }

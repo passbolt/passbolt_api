@@ -62,9 +62,7 @@ trait TableCleanupTrait
             $query = $this->query()
                 ->select(['id'])
                 ->leftJoinWith($association)
-                ->where(function ($exp, $q) use ($association) {
-                    return $exp->isNull($this->getModelNameFromAssociation($association) . '.id');
-                });
+                ->whereNull($this->getModelNameFromAssociation($association) . '.id');
         }
         $records = Hash::extract($query->toArray(), '{n}.id');
         if ($dryRun) {
