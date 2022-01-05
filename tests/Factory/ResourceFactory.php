@@ -51,7 +51,7 @@ class ResourceFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'name' => $faker->text(64),
+                'name' => $faker->text(255),
                 'username' => $faker->email(),
                 'uri' => $faker->url(),
                 'created_by' => $faker->uuid(),
