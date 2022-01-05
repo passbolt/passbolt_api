@@ -102,8 +102,8 @@ class SaveTest extends AppTestCase
     public function testValidationName()
     {
         $testCases = [
-            'utf8Extended' => self::getUtf8ExtendedTestCases(64),
-            'maxLength' => self::getMaxLengthTestCases(64),
+            'utf8Extended' => self::getUtf8ExtendedTestCases(255),
+            'maxLength' => self::getMaxLengthTestCases(255),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
@@ -113,8 +113,8 @@ class SaveTest extends AppTestCase
     public function testValidationUsername()
     {
         $testCases = [
-            'utf8Extended' => self::getUtf8ExtendedTestCases(64),
-            'maxLength' => self::getMaxLengthTestCases(64),
+            'utf8Extended' => self::getUtf8ExtendedTestCases(255),
+            'maxLength' => self::getMaxLengthTestCases(255),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
         $this->assertFieldFormatValidation($this->Resources, 'username', $this->_getDummyResourceData(), self::getEntityDefaultOptions(), $testCases);

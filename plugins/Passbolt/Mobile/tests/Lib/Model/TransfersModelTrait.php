@@ -42,12 +42,12 @@ trait TransfersModelTrait
      * @return array
      */
     public function getDummyTransfer(
-        ?string $user = 'ada',
+        ?string $userId = null,
         ?string $status = Transfer::TRANSFER_STATUS_IN_PROGRESS,
         ?int $currentPage = 1,
         ?int $totalPages = 2
     ): array {
-        $userId = UuidFactory::uuid("user.id.$user");
+        $userId = $userId ?? UuidFactory::uuid('user.id.ada');
 
         return [
             'user_id' => $userId,

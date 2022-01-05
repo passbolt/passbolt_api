@@ -54,7 +54,14 @@ class TransfersViewController extends AppController
             'Users.Profiles' => AvatarsTable::addContainAvatar(),
         ];
 
-        $transfer = $this->Transfers->get($id, ['contain' => $contain]);
+        $transfer = $this->Transfers->find()
+            ->contain($contain)
+            ->where([
+                $this->Transfers->aliasField('id') => $id,
+                $this->Transfers->aliasField('user_id') => $this->User->id(),
+            ])
+            ->firstOrFail();
+
         $this->success(__('The operation was successful.'), $transfer);
     }
 }
