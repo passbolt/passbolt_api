@@ -55,6 +55,7 @@
         "ext-pdo": "*",
         "cakephp/cakephp": "4.2.9",
         "cakephp/migrations": "^3.0.0",
+	      "robmorgan/phinx":"^0.12.8",
         "cakephp/plugin-installer": "^1.3.0",
         "mobiledetect/mobiledetectlib": "^2.8.34",
         "ramsey/uuid": "^4.1.1",

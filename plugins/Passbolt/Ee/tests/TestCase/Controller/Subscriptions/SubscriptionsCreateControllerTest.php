@@ -49,7 +49,7 @@ class SubscriptionsCreateControllerTest extends SubscriptionControllerTestCase
      */
     public function testSubscriptionsCreateControllerError_NotAdmin()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->postJson('/ee/subscription/key.json');
         $this->assertForbiddenError('You are not allowed to access this location.');
     }
@@ -62,7 +62,7 @@ class SubscriptionsCreateControllerTest extends SubscriptionControllerTestCase
      */
     public function testSubscriptionsCreateControllerSuccess()
     {
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $data = $this->getValidSubscriptionKey();
         $this->postJson('/ee/subscription/key.json', compact('data'));
         $this->assertResponseSuccess();

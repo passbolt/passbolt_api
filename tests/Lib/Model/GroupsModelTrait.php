@@ -123,7 +123,7 @@ trait GroupsModelTrait
         $groupsUsers = $groupsUsersTable->find()->where(['group_id' => $id])->all();
         $this->assertEmpty($groupsUsers);
         // Permissions have been deleted
-        $permissions = $permissionsTable->find()->where(['aro_foreign_key' => '$id'])->all();
+        $permissions = $permissionsTable->find()->where(['aro_foreign_key' => $id])->all();
         $this->assertEmpty($permissions);
     }
 

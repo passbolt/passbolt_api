@@ -39,8 +39,12 @@ class V250ChangeMfaAccountSettingsDataFormat extends AbstractMigration
             ->where(['property' => 'mfa'])
             ->all();
 
+        if ($settings->count() === 0) {
+            return;
+        }
+
         foreach ($settings as $setting) {
-            $value = json_decode($setting->value, 1);
+            $value = json_decode($setting->value, true);
 
             $providers = [];
 

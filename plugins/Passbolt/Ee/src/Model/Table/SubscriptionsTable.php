@@ -140,7 +140,7 @@ class SubscriptionsTable extends OrganizationSettingsTable
     /**
      * @inheritDoc
      */
-    public function exists($conditions = ['1' => '1']): bool
+    public function exists($conditions = []): bool
     {
         return parent::exists($conditions);
     }

@@ -151,7 +151,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
         $this->deleteJson("/resources/{$resource->id}.json?api-version=v2", $data);
         $this->assertSuccess();
 
-        $this->assertFolderRelationNotExist($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userId);
+        $this->assertFolderRelationNotExist($resource->id, $userId);
     }
 
     public function insertFixture_AfterResourceSoftDeleted()

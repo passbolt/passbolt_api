@@ -18,6 +18,7 @@ namespace Passbolt\Ee\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 /**
  * Class SubscriptionsViewControllerTest
@@ -44,6 +45,7 @@ class SubscriptionControllerTestCase extends AppIntegrationTestCase
         parent::setUp();
         $this->setUpPathAndPublicSubscriptionKey();
         $this->Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
+        MfaSettings::clear();
     }
 
     /**

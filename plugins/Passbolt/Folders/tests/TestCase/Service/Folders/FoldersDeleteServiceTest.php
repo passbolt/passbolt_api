@@ -30,6 +30,7 @@ use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
@@ -58,6 +59,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class FoldersDeleteServiceTest extends FoldersTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
     use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -130,18 +132,25 @@ class FoldersDeleteServiceTest extends FoldersTestCase
 
     public function testFolderDelete_CommonSuccess2_NotifyUsersAfterDelete()
     {
+        $this->loadPlugins(['Passbolt/Folders', 'Passbolt/EmailDigest']);
         [$folderA, $folderB, $userAId, $userBId] = $this->insertSharedSuccess2Fixture();
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $this->service->delete($uac, $folderA->id);
 
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('deleted the folder');
-
-        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('deleted the folder');
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'Ada deleted the folder A',
+            'template' => 'Passbolt/Folders.LU/folder_delete',
+        ]);
+        $this->assertEmailIsInQueue([
+            'email' => 'betty@passbolt.com',
+            'subject' => 'Ada deleted the folder A',
+            'template' => 'Passbolt/Folders.LU/folder_delete',
+        ]);
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailInBatchContains('deleted the folder');
+        $this->assertEmailInBatchContains('deleted the folder', 1);
     }
 
     /* PERSONAL FOLDER */

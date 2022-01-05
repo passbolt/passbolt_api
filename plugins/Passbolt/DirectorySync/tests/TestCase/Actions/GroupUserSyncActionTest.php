@@ -653,7 +653,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertDirectoryRelationEmpty();
 
         // No email notification should have been sent to the group manager.
-        $this->assertEmailQueueCount(0);
+        $this->assertEmailQueueIsEmpty();
     }
 
     /**

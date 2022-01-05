@@ -31,6 +31,7 @@ use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\SecretsFixture;
 use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
@@ -57,6 +58,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class FoldersShareServiceTest extends FoldersTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
     use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -205,6 +207,7 @@ class FoldersShareServiceTest extends FoldersTestCase
 
     public function testShareFolderSuccess_NotifyUserAfterShare()
     {
+        $this->loadPlugins(['Passbolt/Folders', 'Passbolt/EmailDigest']);
         [$folderA, $userAId] = $this->insertFixture_ShareFolderSuccess_AddUser();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
@@ -214,13 +217,19 @@ class FoldersShareServiceTest extends FoldersTestCase
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userCId, 'type' => Permission::READ];
         $this->service->share($uac, $folderA->id, $data);
 
-        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('shared the folder');
-
-        $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('shared the folder');
+        $this->assertEmailIsInQueue([
+            'email' => 'betty@passbolt.com',
+            'subject' => 'Ada shared the folder A',
+            'template' => 'Passbolt/Folders.LU/folder_share',
+        ]);
+        $this->assertEmailIsInQueue([
+            'email' => 'carol@passbolt.com',
+            'subject' => 'Ada shared the folder A',
+            'template' => 'Passbolt/Folders.LU/folder_share',
+        ]);
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailInBatchContains('shared the folder');
+        $this->assertEmailInBatchContains('shared the folder', 1);
     }
 
     public function testShareFolderSuccess_AddGroup()
@@ -295,7 +304,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $folder = $this->service->share($uac, $folderA->id, $data);
 
         $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
-        $this->assertFolderRelationNotExist($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId);
+        $this->assertFolderRelationNotExist($folder->id, $userBId);
         $this->assertPermission($folder->id, $userAId, Permission::OWNER);
         $this->assertPermissionNotExist($folder->id, $userBId);
         $this->assertItemIsInTrees($folder->id, 1);
