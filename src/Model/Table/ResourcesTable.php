@@ -62,10 +62,9 @@ class ResourcesTable extends Table
     use ResourcesFindersTrait;
 
     public const DESCRIPTION_MAX_LENGTH = 10000;
-    public const NAME_MAX_LENGTH = 64;
-    public const PASSWORD_MAX_LENGTH = 4096;
+    public const NAME_MAX_LENGTH = 255;
     public const URI_MAX_LENGTH = 1024;
-    public const USERNAME_MAX_LENGTH = 64;
+    public const USERNAME_MAX_LENGTH = 255;
 
     /**
      * Initialize method
