@@ -23,7 +23,6 @@ use Passbolt\JwtAuthentication\Test\Factory\RefreshTokenAuthenticationTokenFacto
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
-use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
@@ -187,8 +186,6 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
     {
         // This route, with cookie set, should have CSRF protection
         $this->enableCsrfToken();
-
-        MfaOrganizationSettingFactory::make()->totp()->persist();
 
         $user = UserFactory::make()
             ->user()
