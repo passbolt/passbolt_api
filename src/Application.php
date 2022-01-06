@@ -227,6 +227,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         }
 
         $this->addPlugin('Passbolt/Ee', ['bootstrap' => true, 'routes' => true]);
+        $this->addFeaturePluginIfEnabled($this, 'JwtAuthentication');
 
         // Add tags plugin if not configured.
         if (!WebInstallerMiddleware::isConfigured()) {
@@ -247,7 +248,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
         $this->addFeaturePluginIfEnabled($this, 'Mobile');
-        $this->addFeaturePluginIfEnabled($this, 'JwtAuthentication');
         $this->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
 
         $mfaEnabled = Configure::read('passbolt.plugins.multiFactorAuthentication.enabled');
