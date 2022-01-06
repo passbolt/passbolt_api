@@ -18,10 +18,10 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Middleware;
 
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\JwtAuthentication\Test\Factory\RefreshTokenAuthenticationTokenFactory;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
-use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
@@ -189,11 +189,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
 
         $user = UserFactory::make()
             ->user()
-            ->with('AuthenticationTokens', [
-                RefreshTokenAuthenticationTokenFactory::make()->active()->getEntity(),
-                MfaAuthenticationTokenFactory::make()->active()->getEntity(),
-            ])
-            ->with('AccountSettings', MfaAccountSettingFactory::make()->totp())
+            ->with('AuthenticationTokens', RefreshTokenAuthenticationTokenFactory::make()->active())
             ->persist();
 
         $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
@@ -204,7 +200,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         );
 
         $oldRefreshToken = $user->authentication_tokens[0];
-        $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
+        $this->cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
 
         $this->postJson('/auth/jwt/refresh.json');
         $this->assertResponseOk();
