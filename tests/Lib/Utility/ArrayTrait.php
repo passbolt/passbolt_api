@@ -21,10 +21,10 @@ trait ArrayTrait
     /**
      * Asserts that an object has specified attributes.
      *
-     * @param string $attributesNames
-     * @param object $check
+     * @param string[] $attributesNames Attribute names
+     * @param array|\ArrayObject $check Array to check
      */
-    public function assertArrayHasAttributes($attributesNames, $check)
+    public function assertArrayHasAttributes(array $attributesNames, $check)
     {
         foreach ($attributesNames as $attributeName) {
             $this->assertTrue(
@@ -32,5 +32,19 @@ trait ArrayTrait
                 'The following attribute is missing in array: ' . $attributeName
             );
         }
+    }
+
+    /**
+     * Asserts that an object has exactly these attributes.
+     *
+     * @param string[] $attributesNames Attribute names
+     * @param array $check Array to check
+     */
+    public function assertArrayHasExactAttributes(array $attributesNames, array $check)
+    {
+        $attributes = array_keys($check);
+        sort($attributesNames);
+        sort($attributes);
+        $this->assertSame($attributesNames, $attributes);
     }
 }

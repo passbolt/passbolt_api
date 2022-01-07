@@ -91,11 +91,32 @@ class HealthchecksTest extends AppIntegrationTestCase
     {
         $check = Healthchecks::gpg();
         $attributes = [
-            'lib', 'gpgKey', 'gpgKeyNotDefault', 'gpgHome', 'gpgHomeWritable', 'gpgKeyPublic', 'gpgKeyPublicReadable',
-            'gpgKeyPrivate', 'gpgKeyPrivateReadable', 'gpgKeyPrivateFingerprint', 'gpgKeyPublicFingerprint',
-            'gpgKeyPublicEmail', 'gpgKeyPublicInKeyring', 'canEncrypt', 'canDecrypt',
+            'canDecrypt',
+            'canDecryptVerify',
+            'canEncrypt',
+            'canEncryptSign',
+            'canSign',
+            'canVerify',
+            'gpgHome',
+            'gpgHomeWritable',
+            'gpgKey',
+            'gpgKeyNotDefault',
+            'gpgKeyPrivate',
+            'gpgKeyPrivateBlock',
+            'gpgKeyPrivateFingerprint',
+            'gpgKeyPrivateReadable',
+            'gpgKeyPublic',
+            'gpgKeyPublicBlock',
+            'gpgKeyPublicEmail',
+            'gpgKeyPublicFingerprint',
+            'gpgKeyPublicInKeyring',
+            'gpgKeyPublicReadable',
+            'info',
+            'isPrivateServerKeyGopengpgCompatible',
+            'isPublicServerKeyGopengpgCompatible',
+            'lib',
         ];
-        $this->assertArrayHasAttributes($attributes, $check['gpg']);
+        $this->assertArrayHasExactAttributes($attributes, $check['gpg']);
     }
 
     public function testSsl()

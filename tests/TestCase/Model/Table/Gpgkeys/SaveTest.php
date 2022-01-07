@@ -166,7 +166,7 @@ class SaveTest extends AppTestCase
         foreach ($fails as $case => $value) {
             $this->assertFalse(
                 $this->Gpgkeys->isInFutureRule($value),
-                'Gpgkey expires date should not validate for case ' . $case
+                'Gpgkeys expires date should not validate for case ' . $case
             );
         }
 
@@ -178,7 +178,7 @@ class SaveTest extends AppTestCase
         foreach ($successes as $case => $value) {
             $this->assertTrue(
                 $this->Gpgkeys->isInFutureRule($value),
-                'Gpgkey expires date should validate for case ' . $case
+                'Gpgkeys expires date should validate for case ' . $case
             );
         }
     }
@@ -193,7 +193,7 @@ class SaveTest extends AppTestCase
         foreach ($fails as $case => $value) {
             $this->assertFalse(
                 $this->Gpgkeys->isInFuturePastRule($value),
-                'Gpgkey created date should not validate for case ' . $case
+                'Gpgkeys created date should not validate for case ' . $case
             );
         }
 
@@ -205,7 +205,7 @@ class SaveTest extends AppTestCase
         foreach ($successes as $case => $value) {
             $this->assertTrue(
                 $this->Gpgkeys->isInFuturePastRule($value),
-                'Gpgkey created date should validate for case ' . $case
+                'Gpgkeys created date should validate for case ' . $case
             );
         }
     }
