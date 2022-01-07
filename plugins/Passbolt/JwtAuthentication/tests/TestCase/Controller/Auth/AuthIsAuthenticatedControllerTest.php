@@ -17,10 +17,20 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Test\TestCase\Controller\Auth;
 
 use App\Test\Factory\UserFactory;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
+use Passbolt\JwtAuthentication\Event\LogAuthenticationWithNonValidJwtAccessToken;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 
 class AuthIsAuthenticatedControllerTest extends JwtAuthenticationIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        // enable event tracking
+        EventManager::instance()->setEventList(new EventList());
+    }
+
     public function testIsAuthenticatedWithJwt_Success()
     {
         $user = UserFactory::make()->user()->persist();
@@ -36,6 +46,12 @@ class AuthIsAuthenticatedControllerTest extends JwtAuthenticationIntegrationTest
         $this->createJwtTokenAndSetInHeader($user->id);
         $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseError();
+        $expectedLogMessage = "The access token provided for '/auth/is-authenticated.json' is not valid.";
+        $this->assertEventFiredWith(
+            LogAuthenticationWithNonValidJwtAccessToken::AUTHENTICATION_WITH_INVALID_ACCESS_TOKEN_EVENT,
+            'message',
+            $expectedLogMessage
+        );
     }
 
     public function testIsAuthenticatedWithJwt_ErrorWithDeletedUser()
@@ -44,5 +60,6 @@ class AuthIsAuthenticatedControllerTest extends JwtAuthenticationIntegrationTest
         $this->createJwtTokenAndSetInHeader($user->id);
         $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseError();
+        $this->assertEventFired(LogAuthenticationWithNonValidJwtAccessToken::AUTHENTICATION_WITH_INVALID_ACCESS_TOKEN_EVENT);
     }
 }

@@ -86,7 +86,7 @@ class JwtRequestDetectionService
     /**
      * @return bool
      */
-    public function isJwtServerKeyUsable()
+    public function isJwtServerKeyUsable(): bool
     {
         try {
             (new JwksGetService())->getPublicKey();
@@ -100,7 +100,7 @@ class JwtRequestDetectionService
     /**
      * @return bool
      */
-    public function isJWTAuthRoute()
+    public function isJWTAuthRoute(): bool
     {
         $params = $this->request->getAttribute('params', null);
         if (isset($params) && !$this->request->is('get')) {
@@ -131,15 +131,5 @@ class JwtRequestDetectionService
     public function isJwtRefreshTokenSetInCookie(): bool
     {
         return !empty($this->request->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE));
-    }
-
-    /**
-     * CSRF token is disabled (not necessary) anytime an access token is set in header.
-     *
-     * @return bool
-     */
-    public function skipCsrfProtectionForJwtRequests(): bool
-    {
-        return $this->isJwtAccessTokenSetInHeader();
     }
 }

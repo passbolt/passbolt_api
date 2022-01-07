@@ -102,13 +102,13 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
 
             return $this->successResult($verifyToken);
         } catch (\InvalidArgumentException $exception) {
-            return $this->errorResult($exception, Result::FAILURE_CREDENTIALS_MISSING);
+            return $this->errorResult($exception, ResultInterface::FAILURE_CREDENTIALS_MISSING);
         } catch (NotFoundException $exception) {
-            return $this->errorResult($exception, Result::FAILURE_IDENTITY_NOT_FOUND);
+            return $this->errorResult($exception, ResultInterface::FAILURE_IDENTITY_NOT_FOUND);
         } catch (BadRequestException $exception) {
-            return $this->errorResult($exception, Result::FAILURE_CREDENTIALS_INVALID);
+            return $this->errorResult($exception, ResultInterface::FAILURE_CREDENTIALS_INVALID);
         } catch (\Exception $exception) {
-            return $this->errorResult($exception, Result::FAILURE_OTHER);
+            return $this->errorResult($exception, ResultInterface::FAILURE_OTHER);
         }
     }
 
@@ -140,7 +140,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
         $armoredChallenge = $this->makeArmoredChallenge($verifyToken);
         $data = ['challenge' => $armoredChallenge, 'user' => $this->user];
 
-        return new Result($data, Result::SUCCESS);
+        return new Result($data, ResultInterface::SUCCESS);
     }
 
     /**

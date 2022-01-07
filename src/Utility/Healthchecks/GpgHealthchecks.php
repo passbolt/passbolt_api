@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Utility\Healthchecks;
 
+use App\Model\Entity\Gpgkey;
+use App\Model\Rule\Gpgkeys\GopengpgFormatRule;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
@@ -44,6 +46,7 @@ class GpgHealthchecks
         $checks = self::gpgCanDecrypt($checks);
         $checks = self::gpgCanDecryptVerify($checks);
         $checks = self::gpgCanVerify($checks);
+        $checks = self::gpgIsFormatGopengpgValid($checks);
 
         return $checks;
     }
@@ -435,6 +438,28 @@ class GpgHealthchecks
             } catch (Exception $e) {
             }
         }
+
+        return $checks;
+    }
+
+    /**
+     * Check if both server keys are Gopengpg readable.
+     * There should for example be no empty line before the end of
+     * the block.
+     *
+     * @param array|null $checks List of checks
+     * @return array
+     */
+    public static function gpgIsFormatGopengpgValid(?array $checks = []): array
+    {
+        // Gpg keys should have only one return line
+        $publicKey = new Gpgkey();
+        $publicKey->armored_key = file_get_contents(Configure::read('passbolt.gpg.serverKey.public'));
+        $privateKey = new Gpgkey();
+        $privateKey->armored_key = file_get_contents(Configure::read('passbolt.gpg.serverKey.private'));
+        $rule = new GopengpgFormatRule();
+        $checks['gpg']['isPublicServerKeyGopengpgCompatible'] = $rule($publicKey);
+        $checks['gpg']['isPrivateServerKeyGopengpgCompatible'] = $rule($privateKey);
 
         return $checks;
     }
