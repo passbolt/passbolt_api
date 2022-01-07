@@ -105,7 +105,7 @@ class MigratePostgresCommandTest extends TestCase
         $this->assertGreaterThanOrEqual(2, $diff);
 
         // Re-run the migrations to complete the schema again
-        $this->exec('passbolt migrate -q -d test');
+        $this->exec('migrations migrate -q -c test --no-lock');
         $this->assertSame($count, $this->countMigrations());
     }
 }
