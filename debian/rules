@@ -57,6 +57,7 @@ override_dh_fixperms: check_env
 	# www-data needs to write on /etc/passbolt for webinstaller
 	chmod 0770 $(PKG_ROOT)/etc/passbolt
 	chmod 0770 $(PKG_ROOT)/etc/passbolt/gpg
+	chmod 0770 $(PKG_ROOT)/etc/passbolt/jwt
 	chmod -R o-rwx $(PKG_ROOT)/etc/passbolt/*
   # Strict permissions for gnupg server keyring
 	chmod 0700 $(PKG_ROOT)/var/lib/passbolt/.gnupg/
