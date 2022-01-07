@@ -56,7 +56,7 @@ class GpgkeysIndexControllerPaginationTest extends AppIntegrationTestCase
         $page = 2;
         $expectedCurrent = 9;
 
-        $user = UserFactory::make()->user()->persist();
+        $user = UserFactory::make()->user()->with('Gpgkeys')->persist();
         GpgkeyFactory::make($numberOfGpgkeys)->patchData(['user_id' => $user->id])->persist();
         $this->logInAs($user);
 
