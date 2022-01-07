@@ -51,6 +51,7 @@ mkdir -p $RPM_BUILD_ROOT/usr/local/bin
 cp -r config $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/
 cp -r config/app.default.php $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/app.php
 rm -f $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/gpg/*
+rm -f $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/jwt/*
 cp -r cron.d/passbolt-server $RPM_BUILD_ROOT/%{_sysconfdir}/cron.d/passbolt-%{_passbolt_flavour}-server
 cp -r logrotate.d/passbolt-server $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d/passbolt-%{_passbolt_flavour}-server
 cp -r index.php $RPM_BUILD_ROOT/%{_datadir}/php/passbolt
@@ -116,12 +117,28 @@ chmod 0700 /var/lib/passbolt/.gnupg/
 #su - nginx -s /bin/bash -c "gpg --list-keys --home /var/lib/passbolt/.gnupg"
 mkdir -p /var/log/passbolt
 chown -R nginx:nginx /var/log/passbolt
+
+set_jwt_keys() {
+  jwt_dir='%{_sysconfdir}/passbolt/jwt'
+  jwt_key="$jwt_dir/jwt.key"
+  jwt_pem="$jwt_dir/jwt.pem"
+  if [[ ! -f $jwt_key || ! -f $jwt_pem ]]
+  then 
+    /usr/share/php/passbolt/bin/cake passbolt create_jwt_keys
+    chmod 640 "$jwt_key" && chown root:www-data "$jwt_key" 
+    chmod 640 "$jwt_pem" && chown root:www-data "$jwt_pem" 
+  fi 
+}
+
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/Scriptlets/
 if [ $1 -gt 1 ]
 then
     su -c '%{_datadir}/php/passbolt/bin/cake passbolt migrate' -s /bin/bash nginx >> /var/log/passbolt/upgrade.log
     su -c '%{_datadir}/php/passbolt/bin/cake cache clear_all' -s /bin/bash nginx >> /var/log/passbolt/upgrade.log
+    set_jwt_keys
 fi
+
+set_jwt_keys
 
 %changelog
 
