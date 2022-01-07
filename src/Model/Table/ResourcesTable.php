@@ -22,7 +22,7 @@ use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
-use Cake\Core\Configure;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -61,6 +61,7 @@ use Cake\Validation\Validator;
 class ResourcesTable extends Table
 {
     use ResourcesFindersTrait;
+    use FeaturePluginAwareTrait;
 
     public const DESCRIPTION_MAX_LENGTH = 10000;
     public const NAME_MAX_LENGTH = 255;
@@ -113,15 +114,15 @@ class ResourcesTable extends Table
 
         $this->belongsTo('ResourceTypes');
 
-        if (Configure::read('passbolt.plugins.tags.enabled')) {
+        if ($this->isFeaturePluginEnabled('Tags')) {
             $this->belongsToMany('Tags', [
                 'through' => 'Passbolt/Tags.ResourcesTags',
             ]);
         }
 
-        if (Configure::read('passbolt.plugins.folders.enabled')) {
-            $this->hasMany('FoldersRelations', [
-                'className' => 'FoldersRelations',
+        if ($this->isFeaturePluginEnabled('Folders')) {
+            $this->hasMany('Passbolt/Folders.FoldersRelations', [
+                'className' => 'Passbolt/Folders.FoldersRelations',
                 'foreignKey' => 'foreign_id',
                 'conditions' => [
                     'FoldersRelations.foreign_model' => 'Resource',

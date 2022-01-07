@@ -37,7 +37,7 @@ class ActionLogFactory extends CakephpBaseFactory
                 'action_id' => $faker->uuid(),
                 'context' => $faker->text(255),
                 'status' => 1,
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subMinute($faker->randomNumber(8)),
             ];
         });
     }
