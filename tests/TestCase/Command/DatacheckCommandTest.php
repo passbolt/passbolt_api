@@ -62,7 +62,6 @@ class DatacheckCommandTest extends TestCase
         UserFactory::make()
             ->with('Gpgkeys')
             ->withAvatar()
-            ->with('Groups')
             ->user()
             ->persist();
         ResourceFactory::make()->persist();
