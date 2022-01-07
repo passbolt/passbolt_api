@@ -22,8 +22,10 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 
 class HealthcheckCommand extends PassboltCommand
 {
@@ -727,9 +729,10 @@ class HealthcheckCommand extends PassboltCommand
             "The {$directory} directory should not be writable.",
             [
                 'You can try: ',
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $directory,
-                'sudo chmod 550 ' . $directory,
-                'sudo chmod 440 $(find ' . $directory . ' -type f)',
+                'sudo chown -Rf root:' . PROCESS_USER . ' ' . $directory,
+                'sudo chmod 750 ' . $directory,
+                'sudo chmod 640 ' . JwtTokenCreateService::JWT_SECRET_KEY_PATH,
+                'sudo chmod 640 ' . JwksGetService::PUBLIC_KEY_PATH,
             ]
         );
 
