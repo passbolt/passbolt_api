@@ -41,7 +41,7 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         Configure::write('EmailQueue.serialization_type', 'email_queue.serialize');
         FactoryTableRegistry::getTableLocator()->clear();
 
-        $users = UserFactory::make(2)->with('Profiles.Avatars', ['data' => 'Foo'])->persist();
+        $users = UserFactory::make(2)->with('Roles')->with('Profiles.Avatars', ['data' => 'Foo'])->persist();
         $resource = ResourceFactory::make()->persist()->toArray();
 
         $originalUnsentEmail = EmailQueueFactory::make()

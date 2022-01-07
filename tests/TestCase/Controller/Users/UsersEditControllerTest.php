@@ -122,7 +122,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditUsersSuccess()
     {
-        $user = UserFactory::make()->user()->persist();
+        $user = UserFactory::make()->user()->with('Profiles')->persist();
         $this->logInAs($user);
         $data = [
             'id' => $user->id,
@@ -155,8 +155,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditIgnoreNotAllowedFieldsSuccess()
     {
-        $user = UserFactory::make()->user()->persist();
-        $this->logInAs($user);
+        $user = $this->logInAsUser();
         $data = [
             'id' => $user->id,
             'username' => 'adaedited@passbolt.com',

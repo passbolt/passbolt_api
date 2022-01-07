@@ -51,11 +51,11 @@ class GroupFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'name' => $faker->word(),
-                'created' => Time::now()->subDay($faker->randomNumber(4)),
-                'modified' => Time::now()->subDay($faker->randomNumber(4)),
+                'name' => $faker->text(64),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
+                'created' => Time::now()->subDay($faker->randomNumber(4)),
+                'modified' => Time::now()->subDay($faker->randomNumber(4)),
             ];
         });
     }

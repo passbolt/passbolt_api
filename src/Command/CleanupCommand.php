@@ -38,12 +38,14 @@ class CleanupCommand extends PassboltCommand
             'Hard Deleted Users',
             'Soft Deleted Groups',
             'Hard Deleted Groups',
+            'Duplicated Groups Users',
         ],
         'Favorites' => [
             'Soft Deleted Users',
             'Hard Deleted Users',
             'Soft Deleted Resources',
             'Hard Deleted Resources',
+            'Duplicated Favorites',
         ],
         'Comments' => [
             'Soft Deleted Users',
@@ -58,6 +60,7 @@ class CleanupCommand extends PassboltCommand
             'Hard Deleted Groups',
             'Soft Deleted Resources',
             'Hard Deleted Resources',
+            'Duplicated Permissions',
         ],
         'Secrets' => [
             'Soft Deleted Users',
