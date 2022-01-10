@@ -567,16 +567,27 @@ trait UsersFindersTrait
     }
 
     /**
-     * Active and non deleted users only.
+     * Active and non deleted users.
+     *
+     * @param \Cake\ORM\Query $query Query to carve.
+     * @return \Cake\ORM\Query
+     */
+    public function findActiveNotDeleted(Query $query): Query
+    {
+        return $query->where([
+            $this->aliasField('active') => true,
+            $this->aliasField('deleted') => false,
+        ]);
+    }
+
+    /**
+     * Active and non deleted users only with role
      *
      * @param \Cake\ORM\Query $query Query to carve.
      * @return \Cake\ORM\Query
      */
     public function findActiveNotDeletedContainRole(Query $query): Query
     {
-        return $query->where([
-           $this->aliasField('active') => true,
-           $this->aliasField('deleted') => false,
-        ])->contain('Roles');
+        return $query->find('activeNotDeleted')->contain('Roles');
     }
 }

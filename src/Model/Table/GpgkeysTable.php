@@ -279,12 +279,25 @@ class GpgkeysTable extends Table
      */
     public function uidContainValidEmailRule(string $value, ?array $context = null): bool
     {
-        preg_match('/<(\S+@\S+)>$/', $value, $matches);
-        if (isset($matches[1])) {
-            return Validation::email($matches[1], Configure::read('passbolt.email.validate.mx'));
-        }
+        $match = $this->pregMatchEmail($value);
 
-        return false;
+        return Validation::email($match, Configure::read('passbolt.email.validate.mx'));
+    }
+
+    /**
+     * Extract email from a string
+     *
+     * @param string|null $value string to preg match
+     * @return string|null the email matched or null if no email was found.
+     */
+    public function pregMatchEmail(?string $value): ?string
+    {
+        if (!isset($value)) {
+            return null;
+        }
+        preg_match('/<(\S+@\S+)>$/', $value, $matches);
+
+        return $matches[1] ?? null;
     }
 
     /**
