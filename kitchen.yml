@@ -24,8 +24,6 @@ platforms:
   - name: debian-buster
     driver:
       image: debian:buster
-      ports:
-        - '127.0.0.1:8080:8080'
   - name: debian-bullseye
   - name: ubuntu-18.04
   - name: ubuntu-20.04
@@ -80,14 +78,10 @@ suites:
     run_list:
       - recipe[passbolt_package::passbolt_package_build]
       - recipe[passbolt_package::passbolt_install]
-    attributes:
-      parameters: '--no-install-recommends'
   - name: purge-benchmarks
     run_list:
       - recipe[passbolt_package::passbolt_package_build]
       - recipe[passbolt_package::passbolt_install_and_purge]
-    attributes:
-      parameters: '--no-install-recommends'
   - name: runtime-benchmarks
     run_list:
       - recipe[passbolt_package::passbolt_package_build]
