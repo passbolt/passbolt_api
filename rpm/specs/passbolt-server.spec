@@ -48,8 +48,8 @@ mkdir -p $RPM_BUILD_ROOT/%{_datadir}/php/passbolt/logs
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/passbolt/examples
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/doc/passbolt-%{_passbolt_flavour}-server
 mkdir -p $RPM_BUILD_ROOT/usr/local/bin
-mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/jwt
 cp -r config $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/
+mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/jwt
 cp -r config/app.default.php $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/app.php
 rm -f $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/gpg/*
 cp -r cron.d/passbolt-server $RPM_BUILD_ROOT/%{_sysconfdir}/cron.d/passbolt-%{_passbolt_flavour}-server
