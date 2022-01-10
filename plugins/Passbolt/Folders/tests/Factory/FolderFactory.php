@@ -16,19 +16,25 @@ declare(strict_types=1);
  */
 namespace Passbolt\Folders\Test\Factory;
 
+use App\Model\Table\PermissionsTable;
+use App\Test\Factory\FactoryDeletedTrait;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 
 /**
  * FolderFactory
  *
+ * @method \Passbolt\Folders\Model\Entity\Folder|\Passbolt\Folders\Model\Entity\Folder[] persist()
  * @method \Passbolt\Folders\Model\Entity\Folder getEntity()
  * @method \Passbolt\Folders\Model\Entity\Folder[] getEntities()
- * @method \Passbolt\Folders\Model\Entity\Folder persist()
  */
 class FolderFactory extends CakephpBaseFactory
 {
+    use FactoryDeletedTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -50,11 +56,45 @@ class FolderFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'name' => $faker->text(64),
-                'created_by' => $faker->uuid(),
-                'modified_by' => $faker->uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created_by' => $faker->uuid(),
+                'modified_by' => $faker->uuid(),
             ];
         });
+    }
+
+    /**
+     * Define the associated permissions to create for a given list of users.
+     *
+     * @param array $users Array of users to create the folder for
+     * @return FolderFactory
+     */
+    public function withPermissionsFor(array $users): FolderFactory
+    {
+        foreach ($users as $user) {
+            $permissionsMeta = ['aco' => PermissionsTable::FOLDER_ACO, 'aro' => PermissionsTable::USER_ARO, 'aro_foreign_key' => $user->id];
+            $this->with('Permissions', $permissionsMeta);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Define the associated folders relation to create for a given list of users.
+     *
+     * @param array $users Array of users to create the folder for
+     * @param Folder|null $folderParent The target folder parent
+     * @return FolderFactory
+     */
+    public function withFoldersRelationsFor(array $users, ?Folder $folderParent = null): FolderFactory
+    {
+        foreach ($users as $user) {
+            $folderParentId = !is_null($folderParent) ? $folderParent->id : FoldersRelation::ROOT;
+            $folderRelationMeta = ['foreign_model' => FoldersRelation::FOREIGN_MODEL_FOLDER, 'user_id' => $user->id, 'folder_parent_id' => $folderParentId];
+            $this->with('FoldersRelations', $folderRelationMeta);
+        }
+
+        return $this;
     }
 }

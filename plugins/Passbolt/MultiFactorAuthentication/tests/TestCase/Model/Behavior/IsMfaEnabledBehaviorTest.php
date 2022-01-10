@@ -64,6 +64,7 @@ class IsMfaEnabledBehaviorTest extends TestCase
     {
         RoleFactory::make()->guest()->persist();
         UserFactory::make()
+            ->user()
             ->with('AccountSettings', MfaAccountSettingFactory::make()->totp())
             ->persist();
         MfaOrganizationSettingFactory::make()->totp()->persist();
