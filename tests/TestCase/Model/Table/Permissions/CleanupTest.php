@@ -17,134 +17,202 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Permissions;
 
-use App\Model\Entity\Permission;
+use App\Model\Table\PermissionsTable;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\PermissionFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
+use Cake\I18n\Time;
 
 class CleanupTest extends AppTestCase
 {
     use CleanupTrait;
 
-    public $Users;
-    public $Groups;
-    public $Permissions;
-    public $Resources;
-    public $options;
-
-    public $fixtures = [
-        'app.Base/Groups', 'app.Base/Users', 'app.Alt0/GroupsUsers',
-        'app.Alt0/Permissions', 'app.Base/Resources',
-    ];
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-        $this->options = ['accessibleFields' => [
-            'aco' => true,
-            'aco_foreign_key' => true,
-            'aro' => true,
-            'aro_foreign_key' => true,
-            'type' => true,
-        ]];
-    }
-
-    public function tearDown(): void
-    {
-        unset($this->Users);
-        unset($this->Groups);
-        unset($this->Permissions);
-        unset($this->Resources);
-        parent::tearDown();
-    }
-
     public function testCleanupPermissionsSoftDeletedUsersSuccess()
     {
-        $originalCount = $this->Permissions->find()->count();
-        $perm = $this->Permissions->newEntity([
-            'aco' => 'Resource',
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.april'),
-            'aro' => 'User',
-            'aro_foreign_key' => UuidFactory::uuid('user.id.sofia'),
-            'type' => Permission::OWNER,
-        ], $this->options);
-        $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedUsers', $originalCount);
+        // The permission to cleanup.
+        PermissionFactory::make()
+            ->withAroUser(UserFactory::make()->deleted())
+            ->persist();
+
+        // Witness permissions to not cleanup.
+        $permissionWithUser = PermissionFactory::make()
+            ->withAroUser()
+            ->persist();
+        $permissionWithHardDeletedUser = PermissionFactory::make(['aro' => PermissionsTable::USER_ARO])->persist();
+
+        $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedUsers', 2);
+
+        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $this->assertCount(2, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithUser->id, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithHardDeletedUser->id, $permissionsIdsPostCleanup);
     }
 
     public function testCleanupPermissionsHardDeletedUsersSuccess()
     {
-        $originalCount = $this->Permissions->find()->count();
-        $perm = $this->Permissions->newEntity([
-            'aco' => 'Resource',
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.april'),
-            'aro' => 'User',
-            'aro_foreign_key' => UuidFactory::uuid('user.id.nope'),
-            'type' => Permission::OWNER,
-        ], $this->options);
-        $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions', 'cleanupHardDeletedUsers', $originalCount);
+        // The permission to cleanup.
+        PermissionFactory::make(['aro' => PermissionsTable::USER_ARO])->persist();
+
+        // Witness permissions to not cleanup.
+        $permissionWithUser = PermissionFactory::make()
+            ->withAroUser()
+            ->persist();
+        $permissionWithSoftDeletedUser = PermissionFactory::make()
+            ->withAroUser(UserFactory::make()->deleted())
+            ->persist();
+
+        $this->runCleanupChecks('Permissions', 'cleanupHardDeletedUsers', 2);
+
+        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $this->assertCount(2, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithUser->id, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithSoftDeletedUser->id, $permissionsIdsPostCleanup);
     }
 
     public function testCleanupPermissionsSoftDeletedGroupsSuccess()
     {
-        $originalCount = $this->Permissions->find()->count();
-        $perm = $this->Permissions->newEntity([
-            'aco' => 'Resource',
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.april'),
-            'aro' => 'Group',
-            'aro_foreign_key' => UuidFactory::uuid('group.id.deleted'),
-            'type' => Permission::OWNER,
-        ], $this->options);
-        $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedGroups', $originalCount);
+        // The permission to cleanup.
+        PermissionFactory::make()
+            ->withAroGroup(GroupFactory::make()->deleted())
+            ->persist();
+
+        // Witness permissions to not cleanup.
+        $permissionWithGroup = PermissionFactory::make()
+            ->withAroGroup()
+            ->persist();
+        $permissionWithHardDeletedGroup = PermissionFactory::make(['aro' => PermissionsTable::GROUP_ARO])->persist();
+
+        $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedGroups', 2);
+
+        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $this->assertCount(2, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithGroup->id, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithHardDeletedGroup->id, $permissionsIdsPostCleanup);
     }
 
     public function testCleanupPermissionsHardDeletedGroupsSuccess()
     {
-        $originalCount = $this->Permissions->find()->count();
-        $perm = $this->Permissions->newEntity([
-            'aco' => 'Resource',
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.april'),
-            'aro' => 'Group',
-            'aro_foreign_key' => UuidFactory::uuid('group.id.nope'),
-            'type' => Permission::OWNER,
-        ], $this->options);
-        $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions', 'cleanupHardDeletedGroups', $originalCount);
+        // The permission to cleanup.
+        PermissionFactory::make(['aro' => PermissionsTable::GROUP_ARO])->persist();
+
+        // Witness permissions to not cleanup.
+        $permissionWithGroup = PermissionFactory::make()
+            ->withAroGroup()
+            ->persist();
+        $permissionWithSoftDeletedGroup = PermissionFactory::make()
+            ->withAroGroup(GroupFactory::make()->deleted())
+            ->persist();
+
+        $this->runCleanupChecks('Permissions', 'cleanupHardDeletedGroups', 2);
+
+        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $this->assertCount(2, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithGroup->id, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithSoftDeletedGroup->id, $permissionsIdsPostCleanup);
     }
 
     public function testCleanupPermissionsSoftDeletedResourcesSuccess()
     {
-        $this->Permissions->deleteAll(['aco_foreign_key' => UuidFactory::uuid('resource.id.jquery')]);
-        $originalCount = $this->Permissions->find()->count();
-        $perm = $this->Permissions->newEntity([
-            'aco' => 'Resource',
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.jquery'),
-            'aro' => 'Group',
-            'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
-            'type' => Permission::OWNER,
-        ], $this->options);
-        $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedResources', $originalCount);
+        // The permission to cleanup.
+        PermissionFactory::make()
+            ->withAcoResource(ResourceFactory::make()->deleted())
+            ->persist();
+
+        // Witness permissions to not cleanup.
+        $permissionWithResource = PermissionFactory::make()
+            ->withAcoResource()
+            ->persist();
+        $permissionWithHardDeletedResource = PermissionFactory::make(['aco' => PermissionsTable::RESOURCE_ACO])->persist();
+
+        $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedResources', 2);
+
+        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $this->assertCount(2, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithResource->id, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithHardDeletedResource->id, $permissionsIdsPostCleanup);
     }
 
     public function testCleanupPermissionsHardDeletedResourcesSuccess()
     {
-        $originalCount = $this->Permissions->find()->count();
-        $perm = $this->Permissions->newEntity([
-            'aco' => 'Resource',
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.nope'),
-            'aro' => 'Group',
-            'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
-            'type' => Permission::OWNER,
-        ], $this->options);
-        $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions', 'cleanupHardDeletedResources', $originalCount);
+        // The permission to cleanup.
+        PermissionFactory::make(['aco' => PermissionsTable::RESOURCE_ACO])->persist();
+
+        // Witness permissions to not cleanup.
+        $permissionWithResource = PermissionFactory::make()
+            ->withAcoResource()
+            ->persist();
+        $permissionWithSoftDeletedResource = PermissionFactory::make()
+            ->withAcoResource(ResourceFactory::make()->deleted())
+            ->persist();
+
+        $this->runCleanupChecks('Permissions', 'cleanupHardDeletedResources', 2);
+
+        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $this->assertCount(2, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithResource->id, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithSoftDeletedResource->id, $permissionsIdsPostCleanup);
+    }
+
+    public function testCleanupPermissionsDuplicatedPermissions()
+    {
+        // Duplicated permissions to cleanup.
+        $duplicatedPermissionsForUser = PermissionFactory::make(['modified' => Time::now()])
+            ->typeOwner()
+            ->withAcoResource()
+            ->withAroUser()
+            ->persist();
+
+        // Duplicate permission to keep as it is the oldest.
+        $duplicatedPermissionForUserMeta = $duplicatedPermissionsForUser->extractOriginal(['aco', 'aco_foreign_key', 'aro', 'aro_foreign_key', 'type']);
+        $duplicatedPermissionToKeep = PermissionFactory::make($duplicatedPermissionForUserMeta)
+            ->patchData(['modified' => Time::now()->subDay()])->persist();
+
+        $duplicatedPermissionsForGroup = PermissionFactory::make()
+            ->typeRead()
+            ->withAcoResource()
+            ->withAroGroup()
+            ->persist();
+        $duplicatedPermissionForGroupMeta = $duplicatedPermissionsForGroup->extractOriginal(['aco', 'aco_foreign_key', 'aro', 'aro_foreign_key', 'type']);
+        PermissionFactory::make($duplicatedPermissionForGroupMeta)->persist();
+
+        // Witness permissions to not cleanup:
+        // - A permission including a resource involved in the cleanup
+        // - A permission including a user involved in the cleanup
+        // - A permission including a group involved in the cleanup
+        // - A user having permissions on 2 different resources.
+        // - A group having permissions on 2 different resources.
+        // - A resource having multiple permissions for different users and groups.
+        $permissionWithResourceInvolvedInCleanup = PermissionFactory::make($duplicatedPermissionForUserMeta)->patchData(['aro_foreign_key' => UuidFactory::uuid()])->persist();
+        $permissionWithUserInvolvedInCleanup = PermissionFactory::make($duplicatedPermissionForUserMeta)->patchData(['aco_foreign_key' => UuidFactory::uuid()])->persist();
+        $permissionWithGroupInvolvedInCleanup = PermissionFactory::make($duplicatedPermissionForGroupMeta)->patchData(['aco_foreign_key' => UuidFactory::uuid()])->persist();
+        $userHavingAccessToMultipleResources = UserFactory::make()->persist();
+        $userPermissionToKeep1 = PermissionFactory::make()->aroUser($userHavingAccessToMultipleResources)->typeOwner()->withAcoResource()->persist();
+        $userPermissionToKeep2 = PermissionFactory::make()->aroUser($userHavingAccessToMultipleResources)->typeOwner()->withAcoResource()->persist();
+        $groupHavingAccessToMultipleResources = GroupFactory::make()->persist();
+        $groupPermissionToKeep1 = PermissionFactory::make()->aroGroup($groupHavingAccessToMultipleResources)->typeOwner()->withAcoResource()->persist();
+        $groupPermissionToKeep2 = PermissionFactory::make()->aroGroup($groupHavingAccessToMultipleResources)->typeOwner()->withAcoResource()->persist();
+        $resourceHavingMultiplePermissions = ResourceFactory::make()->persist();
+        $resourcePermissionsToKeep = PermissionFactory::make(4)->acoResource($resourceHavingMultiplePermissions)->persist();
+
+        $this->runCleanupChecks('Permissions', 'cleanupDuplicatedPermissions', 13, ['cleanupCount' => 2]);
+
+        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $this->assertCount(13, $permissionsIdsPostCleanup);
+        $this->assertContains($duplicatedPermissionToKeep->id, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithResourceInvolvedInCleanup->id, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithUserInvolvedInCleanup->id, $permissionsIdsPostCleanup);
+        $this->assertContains($permissionWithGroupInvolvedInCleanup->id, $permissionsIdsPostCleanup);
+        $this->assertContains($userPermissionToKeep1->id, $permissionsIdsPostCleanup);
+        $this->assertContains($userPermissionToKeep2->id, $permissionsIdsPostCleanup);
+        $this->assertContains($groupPermissionToKeep1->id, $permissionsIdsPostCleanup);
+        $this->assertContains($groupPermissionToKeep2->id, $permissionsIdsPostCleanup);
+        $this->assertContains($resourcePermissionsToKeep[0]->id, $permissionsIdsPostCleanup);
+        $this->assertContains($resourcePermissionsToKeep[1]->id, $permissionsIdsPostCleanup);
+        $this->assertContains($resourcePermissionsToKeep[2]->id, $permissionsIdsPostCleanup);
+        $this->assertContains($resourcePermissionsToKeep[3]->id, $permissionsIdsPostCleanup);
     }
 }

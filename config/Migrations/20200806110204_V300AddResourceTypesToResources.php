@@ -25,12 +25,19 @@ class V300AddResourceTypesToResources extends AbstractMigration
      */
     public function up()
     {
-        $defaultType = $this->fetchAll("SELECT `id` FROM `resource_types` WHERE `slug`='password-string'");
+        $id = $this->getAdapter()->quoteColumnName('id');
+        $resourceTypeId = $this->getAdapter()->quoteColumnName('resource_type_id');
+        $slug = $this->getAdapter()->quoteColumnName('slug');
+        $resourceTypes = $this->getAdapter()->quoteTableName('resource_types');
+        $resources = $this->getAdapter()->quoteTableName('resources');
+
+        $defaultType = $this->fetchAll("SELECT $id FROM $resourceTypes WHERE $slug='password-string'");
+
         if (empty($defaultType) || !Validation::uuid($defaultType[0]['id'])) {
             return;
         }
 
-        $this->execute("UPDATE `resources` SET `resource_type_id`='{$defaultType[0]['id']}' WHERE `resource_type_id` IS NULL");
+        $this->execute("UPDATE $resources SET $resourceTypeId='{$defaultType[0]['id']}' WHERE $resourceTypeId IS NULL");
     }
 }
 // @codingStandardsIgnoreEnd

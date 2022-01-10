@@ -34,7 +34,7 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
  */
 class UserFactory extends CakephpBaseFactory
 {
-    use FactoryHelperTrait;
+    use FactoryDeletedTrait;
 
     /**
      * Defines the Table Registry used to generate entities with
@@ -57,6 +57,7 @@ class UserFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'username' => $faker->userName() . '@passbolt.com',
+                'role_id' => $faker->uuid(),
                 'active' => true,
                 'deleted' => false,
                 'created' => Time::now()->subDay($faker->randomNumber(4)),
@@ -64,11 +65,8 @@ class UserFactory extends CakephpBaseFactory
             ];
         });
 
-        $this
-            ->with('Roles')
-            ->with('Profiles')
-            ->with('Gpgkeys')
-            ->with('GroupsUsers');
+        $this->with('Profiles')
+            ->with('Roles');
     }
 
     /**

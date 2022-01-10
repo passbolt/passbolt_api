@@ -14,15 +14,10 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.3.0
  */
-namespace App\Test\Factory;
+namespace Passbolt\EmailNotificationSettings;
 
-trait FactoryHelperTrait
+use Cake\Core\BasePlugin;
+
+class Plugin extends BasePlugin
 {
-    /**
-     * @return $this
-     */
-    public function deleted()
-    {
-        return $this->patchData(['deleted' => true]);
-    }
 }

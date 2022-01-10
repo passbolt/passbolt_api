@@ -89,7 +89,7 @@ class TransfersUpdateServiceTest extends AppTestCase
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
         $transfer = $this->insertTransferFixture($this->getDummyTransfer(
-            'ada',
+            $userId,
             Transfer::TRANSFER_STATUS_START,
             1,
             2
@@ -130,7 +130,7 @@ class TransfersUpdateServiceTest extends AppTestCase
         $this->loadFixtures();
         $service = new TransfersUpdateService();
         $transfer = $service->Transfers->newEntity($this->getDummyTransfer(
-            'ada',
+            UuidFactory::uuid('user.id.ada'),
             Transfer::TRANSFER_STATUS_START,
             0,
             2
@@ -187,7 +187,7 @@ class TransfersUpdateServiceTest extends AppTestCase
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
         $transfer = $this->insertTransferFixture($this->getDummyTransfer(
-            'ada',
+            $userId,
             Transfer::TRANSFER_STATUS_START,
             1,
             2

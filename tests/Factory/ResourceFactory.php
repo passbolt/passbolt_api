@@ -31,6 +31,8 @@ use Faker\Generator;
  */
 class ResourceFactory extends CakephpBaseFactory
 {
+    use FactoryDeletedTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -51,7 +53,7 @@ class ResourceFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'name' => $faker->text(64),
+                'name' => $faker->text(255),
                 'username' => $faker->email(),
                 'uri' => $faker->url(),
                 'created_by' => $faker->uuid(),
@@ -60,6 +62,31 @@ class ResourceFactory extends CakephpBaseFactory
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];
         });
+    }
+
+    /**
+     * Define the associated permissions to create for a given list of users.
+     *
+     * @param array $users Array of users to create the folder for
+     * @return ResourceFactory
+     */
+    public function withPermissionsFor(array $users): ResourceFactory
+    {
+        foreach ($users as $user) {
+            $permissionsMeta = ['aco' => PermissionsTable::RESOURCE_ACO, 'aro' => PermissionsTable::USER_ARO, 'aro_foreign_key' => $user->id];
+            $this->with('Permissions', $permissionsMeta);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param UserFactory $factory
+     * @return ResourceFactory
+     */
+    public function withCreator(UserFactory $factory): self
+    {
+        return $this->with('Creator', $factory);
     }
 
     /**
