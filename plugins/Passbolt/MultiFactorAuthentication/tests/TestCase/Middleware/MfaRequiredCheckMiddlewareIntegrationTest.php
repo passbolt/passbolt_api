@@ -76,7 +76,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
      */
     public function testMfaRequiredCheckMiddlewareErrorNoVerifyCookie_JWT_Auth()
     {
-        $user = UserFactory::make()->persist();
+        $user = UserFactory::make()->user()->persist();
         $this->loadFixtureScenario(MfaTotpScenario::class, $user);
 
         // Authenticate with JWT access token
@@ -131,6 +131,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
     public function testMfaRequiredCheckMiddlewareError_ExpiredVerifyCookie()
     {
         $user = UserFactory::make()
+            ->user()
             ->withAuthenticationTokens(
                 MfaAuthenticationTokenFactory::make()->expired()
             )
@@ -188,6 +189,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->enableCsrfToken();
 
         $user = UserFactory::make()
+            ->with('Gpgkeys')
             ->user()
             ->with('AuthenticationTokens', RefreshTokenAuthenticationTokenFactory::make()->active())
             ->persist();

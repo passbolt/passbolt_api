@@ -46,8 +46,9 @@ if (PHP_SAPI === 'cli') {
             'Soft Deleted Resources',
             'Hard Deleted Folders',
             'Hard Deleted Folders Parents',
-            'Missing Folders Folders Relations',
+            'Missing Folders Folders Relations', // Ensure this cleanup is run before 'Missing Resources Folders Relations'
             'Missing Resources Folders Relations',
+            'Duplicated Folders Relations',
         ],
     ];
     CleanupCommand::addCleanups($cleanups);

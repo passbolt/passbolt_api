@@ -35,6 +35,11 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeS
 /**
  * FoldersRelations Model
  *
+ * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
+ * @property \Passbolt\Folders\Model\Table\FoldersTable&\Cake\ORM\Association\BelongsTo $Folders
+ * @property \Passbolt\Folders\Model\Table\FoldersTable&\Cake\ORM\Association\BelongsTo $FoldersParents
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \Passbolt\Folders\Model\Table\FoldersRelationsHistoryTable&\Cake\ORM\Association\BelongsTo $FoldersRelationsHistory
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEntity(array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] newEntities(array $data, array $options = [])
@@ -43,11 +48,6 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeS
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, ?callable $callback = null, $options = [])
- * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
- * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Folders
- * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $FoldersParents
- * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @property \Passbolt\Folders\Model\Table\FoldersRelationsHistoryTable&\Cake\ORM\Association\BelongsTo $FoldersRelationsHistory
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEmptyEntity()
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
@@ -94,11 +94,11 @@ class FoldersRelationsTable extends Table
         $this->belongsTo('Resources', [
             'foreignKey' => 'foreign_id',
         ]);
-        $this->belongsTo('Folders', [
+        $this->belongsTo('Passbolt/Folders.Folders', [
             'foreignKey' => 'foreign_id',
         ]);
-        $this->belongsTo('FoldersParents', [
-            'className' => 'Folders',
+        $this->belongsTo('Passbolt/Folders.FoldersParents', [
+            'className' => 'Passbolt/Folders.Folders',
             'foreignKey' => 'folder_parent_id',
         ]);
         $this->belongsTo('Users');
@@ -357,6 +357,19 @@ class FoldersRelationsTable extends Table
         }
 
         return $count;
+    }
+
+    /**
+     * Delete duplicated folders relations
+     *
+     * @param bool $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupDuplicatedFoldersRelations(?bool $dryRun = false): int
+    {
+        $keys = ['user_id', 'foreign_model', 'foreign_id', 'folder_parent_id'];
+
+        return $this->cleanupDuplicates($keys, $dryRun);
     }
 
     /**
