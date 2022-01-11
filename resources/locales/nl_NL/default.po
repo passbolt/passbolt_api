@@ -1,0 +1,2508 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"POT-Creation-Date: 2021-10-06 14:32+0000\n"
+"PO-Revision-Date: 2022-01-11 13:51\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Dutch\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"X-Crowdin-Project-ID: 2\n"
+"X-Crowdin-Language: nl\n"
+"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 212\n"
+"Language: nl_NL\n"
+
+msgid "You need to login to access this location."
+msgstr "Je moet inloggen om toegang tot deze locatie te krijgen."
+
+msgid "Decryption failed."
+msgstr "Ontsleutelen mislukt."
+
+msgid "Failed to create token."
+msgstr "Aanmaken van token mislukt."
+
+msgid "The user token result should be a valid UUID."
+msgstr "Het resultaat van het gebruikerstoken moet een geldige UUID zijn."
+
+msgid "The user token result could not be found "
+msgstr "Het resultaat van het gebruikerstoken kon niet worden gevonden "
+
+msgid "The OpenPGP server key defined in the config cannot be used to decrypt."
+msgstr "De OpenPGP-serversleutel zoals gedefinieerd in de configuratie kan niet worden gebruikt om te ontsleutelen."
+
+msgid "Could not import the user OpenPGP key."
+msgstr "De OpenPGP-sleutel van de gebruiker kon niet geïmporteerd worden."
+
+msgid "Invalid verify token format, "
+msgstr "Formaat verificatietoken is ongeldig, "
+
+msgid "sections are missing or using wrong delimiters."
+msgstr "secties ontbreken of gebruiken verkeerde scheidingstekens."
+
+msgid "the version numbers do not match."
+msgstr "de versienummers komen niet overeen."
+
+msgid "wrong version number."
+msgstr "verkeerd versienummer."
+
+msgid "it is not a UUID."
+msgstr "dit is geen UID."
+
+msgid "wrong token data length."
+msgstr "onjuiste lengte tokengegevens."
+
+msgid "There is no user associated with this key."
+msgstr "Er is geen gebruiker gekoppeld aan deze sleutel."
+
+msgid "Page not found."
+msgstr "Pagina niet gevonden."
+
+msgid "This is not a valid Ajax/Json request."
+msgstr "Dit is geen geldig Ajax/JSON-verzoek."
+
+msgid "You are successfully logged in."
+msgstr "Je bent met succes aangemeld."
+
+msgid "The OpenPGP public key information was not found in config."
+msgstr "De openbare OpenPGP-sleutelinformatie werd niet gevonden in de configuratie."
+
+msgid "The operation was successful."
+msgstr "De bewerking is geslaagd."
+
+msgid "The resource identifier should be a valid UUID."
+msgstr "De ID van het middel moet een geldige UUID zijn."
+
+msgid "Could not save the comment, please try again later."
+msgstr "De opmerking kon niet worden opgeslagen, probeer het later opnieuw."
+
+msgid "The comment was successfully added."
+msgstr "De opmerking is met succes toegevoegd."
+
+msgid "The resource does not exist."
+msgstr "Dit middel bestaat niet."
+
+msgid "Could not validate comment data."
+msgstr "De opmerkingsgegevens konden niet gevalideerd worden."
+
+msgid "The comment id is not valid."
+msgstr "De ID van de opmerking is niet geldig."
+
+msgid "The comment does not exist."
+msgstr "De opmerking bestaat niet."
+
+msgid "The comment was deleted."
+msgstr "De opmerking is verwijderd."
+
+msgid "Could not delete comment."
+msgstr "Opmerking kon niet verwijderd worden."
+
+msgid "The comment was successfully updated."
+msgstr "De opmerking is met succes bijgewerkt."
+
+msgid "You are not allowed to edit this comment."
+msgstr "Je kunt deze opmerking niet bewerken."
+
+msgid "Could not find comments for the requested model."
+msgstr "Geen opmerkingen voor het opgevraagde model gevonden."
+
+msgid "Invalid order. \"{0}\" is not in the list of allowed order."
+msgstr "Ongeldige volgorde. \"{0}\" staat niet op de lijst van toegestane volgorde."
+
+msgid "Invalid order. \"{0}\" is not a valid order."
+msgstr "Ongeldige volgorde. \"{0}\" is geen geldige volgorde."
+
+msgid "Invalid order. \"{0}\" is not a valid field."
+msgstr "Ongeldige volgorde. \"{0}\" is geen geldig veld."
+
+msgid "Invalid pagination."
+msgstr "Ongeldige paginering."
+
+msgid "Invalid query string. The filter parameter should be an array."
+msgstr "Ongeldige zoekreeks. De parameter van de filter moet een array zijn."
+
+msgid "Invalid query string. The contain parameter should be an array."
+msgstr "Ongeldige querystring. De filterparameter moet een array zijn."
+
+msgid "Invalid filter."
+msgstr "Ongeldig filter."
+
+msgid "Invalid order."
+msgstr "Ongeldige volgorde."
+
+msgid "Invalid contain."
+msgstr "Ongeldige bevat."
+
+msgid "No validation rule for filter {0}. Please create one."
+msgstr "Geen validatieregel voor filter {0}. Maak er een aan."
+
+msgid "Filter {0} is not valid."
+msgstr "Filter {0} is niet geldig."
+
+msgid "\"{0}\" is not a valid value for filter {1}."
+msgstr "\"{0}\" is geen geldige waarde voor filter {1}."
+
+msgid "\"{0}\" is not a valid search filter."
+msgstr "\"{0}\" is geen geldig zoekfilter."
+
+msgid "\"{0}\" is not a valid search filter. It is not a UTF8 string."
+msgstr "\"{0}\" is geen geldig zoekfilter. Het is geen UTF8-tekenreeks."
+
+msgid "It should be between 1 and 64 char in length."
+msgstr "Het aantal tekens moeten tussen de 1 en 64 zitten."
+
+msgid "\"{0}\" is not a valid user filter."
+msgstr "\"{0}\" is geen geldig gebruikersfilter."
+
+msgid "\"{0}\" is not a valid user id for filter {1}."
+msgstr "\"{0}\" is geen geldig gebruikers-ID voor filter {1}."
+
+msgid "\"{0}\" is not a valid group filter."
+msgstr "\"{0}\" is geen geldig groepsfilter."
+
+msgid "\"{0}\" is not a valid resource id for filter {1}."
+msgstr "\"{0}\" is geen geldig middel-ID voor filter {1}."
+
+msgid "\"{0}\" is not a valid group id for filter {1}."
+msgstr "\"{0}\" is geen geldige groeps-ID voor filter {1}."
+
+msgid "\"{0}\" is not a valid timestamp for filter {1}."
+msgstr "\"{0}\" is geen geldig tijdstempel voor filter {1}."
+
+msgid "\"{0}\" is not a valid datetime for filter {1}."
+msgstr "\"{0}\" is geen geldige datum-tijdweergave voor filter {1}."
+
+msgid "\"{0}\" is not a valid order."
+msgstr "\"{0}\" is geen geldige volgorde."
+
+msgid "\"{0}\" is not in the list of allowed order."
+msgstr "\"{0}\" staat niet op de lijst van toegestane volgorde."
+
+msgid "\"{0}\" is not a valid contain value."
+msgstr "\"{0}\" is geen geldige bevatte waarde."
+
+msgid "undefined user agent"
+msgstr "ongedefinieerde gebruikersagent"
+
+msgid "Access restricted to administrators."
+msgstr "Toegang beperkt tot beheerders."
+
+msgid "This feature is not supported by your version of passbolt."
+msgstr "Deze functie wordt niet ondersteund door jouw versie van Passbolt."
+
+msgid "The resource was marked as favorite."
+msgstr "Dit middel is als favoriet gemarkeerd."
+
+msgid "This record is already marked as favorite."
+msgstr "Deze inschrijving is reeds als favoriet gemarkeerd."
+
+msgid "Could not validate favorite data."
+msgstr "Kon favoriete gegevens niet valideren."
+
+msgid "The favorite id is not valid."
+msgstr "Het favoriete ID is niet geldig."
+
+msgid "The favorite does not exist."
+msgstr "Deze favoriet bestaat niet."
+
+msgid "The favorite was deleted."
+msgstr "De favoriet werd verwijderd."
+
+msgid "Could not delete favorite."
+msgstr "Kan de favoriet niet verwijderen."
+
+msgid "The OpenPGP key identifier should be a valid UUID."
+msgstr "De ID van de OpenPGP-sleutel moet een geldige UUID zijn."
+
+msgid "The OpenPGP key does not exist."
+msgstr "De OpenPGP-sleutel bestaat niet."
+
+msgid "The group has been added successfully."
+msgstr "De groep is met succes toegevoegd."
+
+msgid "The group can be deleted."
+msgstr "De groep kan worden verwijderd."
+
+msgid "The group was deleted successfully."
+msgstr "De groep is met succes verwijderd."
+
+msgid "You are not authorized to access that location."
+msgstr "Je hebt geen toegang tot deze locatie."
+
+msgid "The group identifier should be a valid UUID."
+msgstr "De groeps-ID moet een geldige UUID zijn."
+
+msgid "The group does not exist or has been already deleted."
+msgstr "De groep bestaat niet of is al verwijderd."
+
+msgid "The group cannot be deleted."
+msgstr "De groep kan niet worden verwijderd."
+
+msgid "The permissions identifiers must be valid UUID."
+msgstr "De ID's van de rechten moeten geldige UUID zijn."
+
+msgid "The group id is not valid."
+msgstr "De groeps-ID is niet geldig."
+
+msgid "The group does not exist."
+msgstr "De groep bestaat niet."
+
+msgid "All checks ran successfully!"
+msgstr "Alle controles zijn met succes uitgevoerd!"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "The identifier should be a valid UUID."
+msgstr "De ID moet een geldige UUID zijn."
+
+msgid "The resource type does not exist."
+msgstr "Dit type middel bestaat niet."
+
+msgid "The resource has been added successfully."
+msgstr "Het middel is met succes toegevoegd."
+
+msgid "The resource has been deleted successfully."
+msgstr "Het middel is met succes verwijderd."
+
+msgid "You do not have the permission to delete this resource."
+msgstr "Je bent niet gemachtigd om dit middel te verwijderen."
+
+msgid "Could not delete the resource."
+msgstr "Het middel kon niet worden verwijderd."
+
+msgid "The resource has been updated successfully."
+msgstr "Het middel is met succes bijgewerkt."
+
+msgid "The secret does not exist."
+msgstr "Het geheim bestaat niet."
+
+msgid "The key provided does not belong to given user."
+msgstr "De aangeboden sleutel behoort niet toe aan de opgegeven gebruiker."
+
+msgid "The recovery was completed successfully."
+msgstr "Het herstel is met succes afgerond."
+
+msgid "The user identifier should be a valid UUID."
+msgstr "De gebruikers-ID moet een geldig UUID zijn."
+
+msgid "The user does not exist, has not completed the setup or was deleted."
+msgstr "De gebruiker bestaat niet, heeft de installatie niet voltooid of is verwijderd."
+
+msgid "The user does not exist or is not active."
+msgstr "De gebruiker bestaat niet of is niet actief."
+
+msgid "The authentication token is not valid."
+msgstr "Het authenticatietoken is niet geldig."
+
+msgid "The token is expired."
+msgstr "Het token is verlopen."
+
+msgid "The OpenPGP key data is not valid."
+msgstr "De gegevens van de OpenPGP-sleutel zijn niet geldig."
+
+msgid "The setup was completed successfully."
+msgstr "De installatie is met succes afgerond."
+
+msgid "An authentication token should be provided."
+msgstr "Er moet een authenticatietoken worden verstrekt."
+
+msgid "The authentication token should be a valid UUID."
+msgstr "Het authenticatietoken moet een geldige UUID zijn."
+
+msgid "The authentication token is not valid or has expired."
+msgstr "Het authenticatietoken is niet geldig of verlopen."
+
+msgid "The user does not exist, is already active or has been deleted."
+msgstr "De gebruiker bestaat niet, is al actief of is verwijderd."
+
+msgid "An OpenPGP key must be provided."
+msgstr "Er moet een OpenPGP-sleutel worden verstrekt."
+
+msgid "A valid OpenPGP key must be provided."
+msgstr "Er moet een geldige OpenPGP-sleutel worden verstrekt."
+
+msgid "The token should be a valid UUID."
+msgstr "Het token moet een geldige UUID zijn."
+
+msgid "The user does not exist or is active."
+msgstr "De gebruiker bestaat niet of is actief."
+
+msgid "You are not authorized to share this resource."
+msgstr "Je bent niet bevoegd om dit middel te delen."
+
+msgid "Only administrators can add new users."
+msgstr "Alleen beheerders kunnen nieuwe gebruikers toevoegen."
+
+msgid "The user was successfully added. This user now need to complete the setup."
+msgstr "De gebruiker is met succes toegevoegd. Deze gebruiker moet nu de installatie voltooien."
+
+msgid "The user can be deleted."
+msgstr "De gebruiker kan verwijderd worden."
+
+msgid "The user has been deleted successfully."
+msgstr "De gebruiker is met succes verwijderd."
+
+msgid "You are not allowed to delete yourself."
+msgstr "Je bent niet bevoegd om jezelf te verwijderen."
+
+msgid "The user does not exist or has been already deleted."
+msgstr "De gebruiker bestaat niet of is al verwijderd."
+
+msgid "The user cannot be deleted."
+msgstr "De gebruiker kan niet worden verwijderd."
+
+msgid "The groups users identifiers must be valid UUID."
+msgstr "De ID's van de groepengebruikers moeten geldige UUID zijn."
+
+msgid "The user does not exist or has been deleted."
+msgstr "De gebruiker bestaat niet of is verwijderd."
+
+msgid "Could not validate user data."
+msgstr "Gebruikersgegevens konden niet worden gevalideerd."
+
+msgid "Could not find the user data after save. Maybe it has been deleted in the meantime."
+msgstr "De gebruikersgegevens konden niet worden gevonden na het opslaan. Misschien zijn ze in de tussentijd verwijderd."
+
+msgid "The user has been updated successfully."
+msgstr "De gebruiker is met succes bijgewerkt."
+
+msgid "Some user data should be provided."
+msgstr "Er moeten enige gebruikersgegevens worden verstrekt."
+
+msgid "Updating the OpenPGP key is not allowed."
+msgstr "Het bijwerken van de OpenPGP-sleutel is niet toegestaan."
+
+msgid "Updating the groups is not allowed."
+msgstr "Het bijwerken van de groepen is niet toegestaan."
+
+msgid "You are not authorized to edit the role."
+msgstr "Je bent niet bevoegd om de functie te bewerken."
+
+msgid "Only guest are allowed to recover an account. Please logout first."
+msgstr "Alleen gasten mogen een account herstellen. Log eerst uit."
+
+msgid "Recovery process started, check your email."
+msgstr "Het herstelproces is gestart, controleer uw e-mail."
+
+msgid "Please provide a valid email address."
+msgstr "Voer een geldig e-mailadres in."
+
+msgid "This user does not exist or has been deleted."
+msgstr "Deze gebruiker bestaat niet of is verwijderd."
+
+msgid "Please register and complete the setup first."
+msgstr "Registreer en voltooi eerst de installatie."
+
+msgid "Please contact your administrator."
+msgstr "Neem contact op met je beheerder."
+
+msgid "Registration is not opened to public. Please contact your administrator."
+msgstr "Registratie is niet openbaar. Neem contact op met je beheerder."
+
+msgid "Only guest are allowed to register."
+msgstr "Alleen gasten mogen zich registreren."
+
+msgid "The user identifier should be a valid UUID or \"me\"."
+msgstr "De gebruikers-ID moet een geldige UUID zijn."
+
+msgid "The user does not exist."
+msgstr "De gebruiker bestaat niet."
+
+msgid "The identifier should not be empty."
+msgstr "Het veld van de ID mag niet leeg zijn."
+
+msgid "A token is required."
+msgstr "Een token is vereist."
+
+msgid "The token should not be empty."
+msgstr "Het veld voor het token mag niet leeg zijn."
+
+msgid "The type should be one of the following: {0}."
+msgstr "Het type moet één van de volgende zijn: {0}."
+
+msgid "A type is required."
+msgstr "Een type is vereist."
+
+msgid "The type should not be empty."
+msgstr "Het veld van het type mag niet leeg zijn."
+
+msgid "A user identifier is required."
+msgstr "Een gebruikers-ID is vereist."
+
+msgid "The user identifier should not be empty."
+msgstr "Het veld van de gebruikers-ID mag niet leeg zijn."
+
+msgid "The active status should be a valid boolean."
+msgstr "De actieve status moet een geldige Boolean zijn."
+
+msgid "An active status is required"
+msgstr "Een actieve status is vereist"
+
+msgid "It is not possible to create an authentication token for this user."
+msgstr "Het is niet mogelijk om een authenticatietoken voor deze gebruiker aan te maken."
+
+msgid "A file is required."
+msgstr "Een bestand is vereist."
+
+msgid "The file should not be empty"
+msgstr "Het veld van het bestand mag niet leeg zijn"
+
+msgid "The file mime type should be one of the following: {0}."
+msgstr "Het MIME-type van het bestand moet één van de volgende zijn: {0}."
+
+msgid "The file extension should be one of the following: {0}."
+msgstr "De bestandsextensie moet een van de volgende zijn: {0}."
+
+msgid "The file is not valid, or exceeds max size of {0} bytes."
+msgstr "Het bestand is niet geldig of overschrijdt de maximale grootte van {0} bytes."
+
+msgid "Could not save the data in {0} format."
+msgstr "Kon de gegevens niet opslaan in {0} formaat."
+
+msgid "The parent comment identifier should be a valid UUID."
+msgstr "De ID van de bovenliggende opmerking moet een geldige UUID zijn."
+
+msgid "The commented object type should be one of the following: {0}."
+msgstr "Het becommentarieerde objecttype moet een van de volgende zijn: {0}."
+
+msgid "The commented object type is required."
+msgstr "Het becommentarieerde objecttype is vereist."
+
+msgid "The commented object type should not be empty."
+msgstr "Het becommentarieerde objecttype moet ingevuld worden."
+
+msgid "The commented object identifier should be a valid UUID."
+msgstr "Het becommentarieerde object-ID moet een geldige UUID zijn."
+
+msgid "The commented object identifier is required."
+msgstr "Het becommentarieerde object-ID is vereist."
+
+msgid "The commented object identifier should not be empty."
+msgstr "De becommentarieerde object-ID moet ingevuld worden."
+
+msgid "The content should be a valid UTF8 string."
+msgstr "De inhoud moet een geldige UTF8-tekenreeks zijn."
+
+msgid "A content is required"
+msgstr "Een inhoud is vereist"
+
+msgid "The content should not be empty"
+msgstr "De inhoud moet ingevuld worden"
+
+msgid "The content length should be between {0} and {1} characters."
+msgstr "De inhoud moet tussen {0} en {1} tekens bevatten."
+
+msgid "The identifier of the user who created the comment should be a valid UUID."
+msgstr "De ID van de gebruiker die de opmerking heeft gemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the comment is required."
+msgstr "De ID van de gebruiker die de opmerking heeft gemaakt, is vereist."
+
+msgid "The identifier of the user who created the comment should not be empty."
+msgstr "De ID van de gebruiker die de opmerking heeft gemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who modified the comment should be a valid UUID."
+msgstr "De ID van de gebruiker die de opmerking heeft gewijzigd, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who modified the comment required."
+msgstr "De ID van de gebruiker die de opmerking heeft gewijzigd, is vereist."
+
+msgid "The identifier of the user who modified the comment should not be empty."
+msgstr "De ID van de gebruiker die de opmerking heeft gewijzigd, moet ingevuld worden."
+
+msgid "Access denied."
+msgstr "Toegang geweigerd."
+
+msgid "The parent comment does not exist."
+msgstr "De bovenliggende opmerking bestaat niet."
+
+msgid "The user cannot update this comment."
+msgstr "De gebruiker kan deze opmerking niet bijwerken."
+
+msgid "The user cannot delete this comment."
+msgstr "De gebruiker kan deze opmerking niet verwijderen."
+
+msgid "The commented object type does not exist."
+msgstr "Het becommentarieerde objecttype bestaat niet."
+
+msgid "The favorite object type should be one of the following: {0}."
+msgstr "Het favoriete objecttype moet één van de volgende zijn: {0}."
+
+msgid "The favorite object type is required."
+msgstr "Het favoriete objecttype is vereist."
+
+msgid "The favorite object type should not be empty"
+msgstr "Het favoriete objecttype moet ingevuld worden"
+
+msgid "The favorite object identifier should be a valid UUID."
+msgstr "De favoriete object-ID moet een geldige UUID zijn."
+
+msgid "The favorite object identifier is required."
+msgstr "De favoriete object-ID is vereist."
+
+msgid "The favorite object identifier should not be empty."
+msgstr "De favoriete object-ID moet ingevuld worden."
+
+msgid "The resource is already marked as favorite."
+msgstr "Dit middel is al als favoriet gemarkeerd."
+
+msgid "The user cannot delete this favorite."
+msgstr "De gebruiker kan deze favoriet niet verwijderen."
+
+msgid "The armored key should be a valid ASCII string."
+msgstr "De gepantserde sleutel moet een geldige ASCII-tekenreeks zijn."
+
+msgid "An armored key is required."
+msgstr "Een gepantserde sleutel is vereist."
+
+msgid "The armored key should not be empty."
+msgstr "De gepantserde sleutel moet ingevuld worden."
+
+msgid "The armored key should be a valid ASCII-armored OpenPGP key."
+msgstr "De gepantserde sleutel moet een geldige ASCII-gepantserde OpenPGP-sleutel zijn."
+
+msgid "A length is required."
+msgstr "Een lengte is vereist."
+
+msgid "The identifier should be a valid BMP-UTF8 string."
+msgstr "De ID moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The key identifier should be a valid ASCII string."
+msgstr "De ID van de sleutel moet een geldige ASCII-tekenreeks zijn."
+
+msgid "A key identifier is required."
+msgstr "Een sleutel-ID is vereist."
+
+msgid "The key identifier should not be empty."
+msgstr "De sleutel-ID moet ingevuld worden."
+
+msgid "The key identifier should be a string of 8 hexadecimal characters."
+msgstr "De sleutel-ID moet een tekenreeks van 8 hexadecimale tekens zijn."
+
+msgid "The fingerprint should be a valid ASCII string."
+msgstr "De vingerafdruk moet een geldige ASCII-tekenreeks zijn."
+
+msgid "A fingerprint is required"
+msgstr "Een vingerafdruk is vereist"
+
+msgid "The fingerprint should not be empty"
+msgstr "De vingerafdruk moet ingevuld worden"
+
+msgid "The fingerprint should be a string of 40 hexadecimal characters."
+msgstr "De vingerafdruk moet een tekenreeks van 40 hexadecimale tekens zijn."
+
+msgid "The type should be a valid ASCII string."
+msgstr "Het type moet een geldige ASCII-tekenreeks zijn."
+
+msgid "A type is required"
+msgstr "Een type is vereist"
+
+msgid "The type should not be empty"
+msgstr "Het type moet ingevuld worden"
+
+msgid "The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH."
+msgstr "Het type moet een van de volgende zijn: RSA, DSA, ECC, ELGAMAL, ECDSA, DH."
+
+msgid "The expiry should be a valid date."
+msgstr "De vervaldatum moet een geldige datum zijn."
+
+msgid "The key should not already be expired."
+msgstr "De sleutel mag niet al verlopen zijn."
+
+msgid "The creation date should be a valid date."
+msgstr "De aanmaakdatum moet een geldige datum zijn."
+
+msgid "A creation date is required."
+msgstr "Een aanmaakdatum is vereist."
+
+msgid "The creation date should not be empty."
+msgstr "De aanmaakdatum moet ingevuld worden."
+
+msgid "The creation date should be set in the past."
+msgstr "De aanmaakdatum moet in het verleden liggen."
+
+msgid "The deleted status should be a valid boolean."
+msgstr "De verwijderde status moet een geldige Boolean zijn."
+
+msgid "A deleted status is required"
+msgstr "Een verwijderde status is vereist"
+
+msgid "A user identifier is required"
+msgstr "Een gebruikers-ID is vereist"
+
+msgid "The user identifier should not be empty"
+msgstr "De gebruikers-ID moet ingevuld worden"
+
+msgid "Could not parse the key info."
+msgstr "De sleutelinformatie kon niet worden geanalyseerd."
+
+msgid "The name should be a valid UTF8 string."
+msgstr "De naam moet een geldige UTF8-tekenreeks zijn."
+
+msgid "The name length should be maximum {0} characters."
+msgstr "De naam mag maximaal {0} tekens bevatten."
+
+msgid "A name is required."
+msgstr "Een naam is vereist."
+
+msgid "The name should not be empty."
+msgstr "De naam moet ingevuld worden."
+
+msgid "The identifier of the user who created the group should be a valid UUID."
+msgstr "De ID van de gebruiker die de groep heeft aangemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the group is required."
+msgstr "De ID van de gebruiker die de groep heeft aangemaakt, is vereist."
+
+msgid "The identifier of the user who created the group should not be empty."
+msgstr "De ID van de gebruiker die de groep heeft aangemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who modified the group should be a valid UUID."
+msgstr "De ID van de gebruiker die de groep heeft gewijzigd, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who modified the group is required."
+msgstr "De ID van de gebruiker die de groep heeft gewijzigd, is vereist."
+
+msgid "The identifier of the user who modified the group should not be empty."
+msgstr "De ID van de gebruiker die de groep heeft gewijzigd, moet ingevuld worden."
+
+msgid "The name is already used by another group."
+msgstr "Deze naam wordt al gebruikt door een andere groep."
+
+msgid "A group manager should be provided."
+msgstr "Er moet een groepsbeheerder worden aangegeven."
+
+msgid "The group should not be soft deleted."
+msgstr "De groep mag niet zacht verwijderd worden."
+
+msgid "The group should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "De groep mag niet de enige eigenaar zijn van gedeelde inhoud, draag de eigendom over aan andere gebruikers."
+
+msgid "Could not validate group data."
+msgstr "Groepsgegevens konden niet gevalideerd worden."
+
+msgid "Could not delete the group {0}, please try again later."
+msgstr "Groep {0} kon niet verwijderd worden, probeer het later opnieuw."
+
+msgid "A group identifier is required."
+msgstr "Een groeps-ID is vereist."
+
+msgid "The group identifier should not be empty."
+msgstr "De groeps-ID moet ingevuld worden."
+
+msgid "The group manager status should be a valid boolean."
+msgstr "De status van groepsbeheerder moet een geldige Boolean zijn."
+
+msgid "A group manager status is required."
+msgstr "Een groepsbeheerder-status is vereist."
+
+msgid "The group manager status should not be empty."
+msgstr "De groepsbeheerder-status moet ingevuld worden."
+
+msgid "The user is already member of this group."
+msgstr "De gebruiker is al lid van deze groep."
+
+msgid "The property length should be maximum {0} characters."
+msgstr "De eigenschap mag maximaal {0} tekens bevatten."
+
+msgid "A property is required."
+msgstr "Een eigenschap is vereist."
+
+msgid "The property should not be empty."
+msgstr "De eigenschap moet ingevuld worden."
+
+msgid "The property should be an alphabetical string and only point is accepted as special characters."
+msgstr "De eigenschap moet een alfabetische tekenreeks zijn en alleen een punt wordt geaccepteerd als speciaal teken."
+
+msgid "The property identifier should be a valid UUID."
+msgstr "De eigenschaps-ID moet een geldige UUID zijn."
+
+msgid "A property identifier is required."
+msgstr "Een eigenschaps-ID is vereist."
+
+msgid "The property identifier should not be empty."
+msgstr "De eigenschaps-ID moet ingevuld worden."
+
+msgid "The value should be a valid UTF8 string."
+msgstr "De waarde moet een geldige UTF8-tekenreeks zijn."
+
+msgid "The value length should be maximum {0} characters."
+msgstr "De waarde mag maximaal {0} tekens bevatten."
+
+msgid "A value is required."
+msgstr "Een waarde is vereist."
+
+msgid "The value should not be empty."
+msgstr "De waarde moet ingevuld worden."
+
+msgid "This property id is already in use."
+msgstr "Deze eigenschaps-ID is al in gebruik."
+
+msgid "Only admin can create or update organization settings."
+msgstr "Alleen beheerders kunnen organisatie-instellingen aanmaken of bijwerken."
+
+msgid "This is not a valid setting."
+msgstr "Dit is geen geldige instelling."
+
+msgid "The type of the access control object should be one of the following: {0}."
+msgstr "Het type toegangsbeheerobject moet een van de volgende zijn: {0}."
+
+msgid "The type of the access control object is required."
+msgstr "Het type toegangsbeheerobject is vereist."
+
+msgid "The type of the access control object should not be empty."
+msgstr "Het type toegangsbeheerobject moet ingevuld worden."
+
+msgid "The identifier of the access control object should be a valid UUID."
+msgstr "De ID van het toegangsbeheerobject moet een geldige UUID zijn."
+
+msgid "The identifier of the access control object is required."
+msgstr "De ID van het toegangsbeheerobject is vereist."
+
+msgid "The identifier of the access control object should not be empty."
+msgstr "De ID van het toegangsbeheerobject moet ingevuld worden."
+
+msgid "The access request object type should be one of the following: {0}."
+msgstr "Het type toegangsverzoekobject moet een van de volgende zijn: {0}."
+
+msgid "The type of the access request object is required."
+msgstr "Het type toegangsverzoekobject is vereist."
+
+msgid "The access request object type should not be empty."
+msgstr "Het type toegangsverzoekobject moet ingevuld worden."
+
+msgid "The identifier of the access request object should be a valid UUID."
+msgstr "De ID van het toegangsverzoekobject moet een geldige UUID zijn."
+
+msgid "The identifier of the access request object is required."
+msgstr "De ID van het toegangsverzoekobject is vereist."
+
+msgid "The identifier of the access request object should not be empty."
+msgstr "Het toegangsverzoekobject moet ingevuld worden."
+
+msgid "A permission already exists for the given access control object and access request object."
+msgstr "Er bestaat al een machtiging voor het betreffende toegangsbeheerobject en toegangsverzoekobject."
+
+msgid "The access control object does not exist."
+msgstr "Het toegangsbeheerobject bestaat niet."
+
+msgid "The access request object does not exist."
+msgstr "Het toegangsverzoekobject bestaat niet."
+
+msgid "A first name is required."
+msgstr "Een voornaam is vereist."
+
+msgid "The first name should not be empty."
+msgstr "De voornaam moet ingevuld worden."
+
+msgid "The first name should be a valid BMP-UTF8 string."
+msgstr "De voornaam moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The first name length should be maximum {0} characters."
+msgstr "De voornaam mag maximaal {0} tekens bevatten."
+
+msgid "A last name is required."
+msgstr "Een achternaam is vereist."
+
+msgid "The last name should not be empty."
+msgstr "De achternaam moet ingevuld worden."
+
+msgid "The last name should be a valid BMP-UTF8 string."
+msgstr "De achternaam moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The last name length should be maximum {0} characters."
+msgstr "De achternaam mag maximaal {0} tekens bevatten."
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "De naam moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr "De slug moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "A slug is required."
+msgstr "Een slug is vereist."
+
+msgid "The slug length should be maximum {0} characters."
+msgstr "De slug mag maximaal {0} tekens bevatten."
+
+msgid "The slug should not be empty"
+msgstr "De slug moet ingevuld worden"
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "De omschrijving moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The description length should be maximum {0} characters."
+msgstr "De omschrijving mag maximaal {0} tekens bevatten."
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr "De definitie moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "A definition is required."
+msgstr "Een definitie is vereist."
+
+msgid "The definition should not be empty."
+msgstr "De definitie moet ingevuld worden."
+
+msgid "The message should be valid JSON message."
+msgstr "Het bericht moet een geldig JSON-bericht zijn."
+
+msgid "A resource type already exists with this slug."
+msgstr "Er bestaat al een type middel met deze slug."
+
+msgid "A resource type already exists with this definition."
+msgstr "Er bestaat al een type middel met deze definitie."
+
+msgid "The username should be a valid UTF8 string."
+msgstr "De gebruikersnaam moet een geldige UTF8-tekenreeks zijn."
+
+msgid "The username length should be maximum {0} characters."
+msgstr "De gebruikersnaam mag maximaal {0} tekens bevatten."
+
+msgid "The uri should be a valid BMP-UTF8 string."
+msgstr "De URI moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The uri length should be maximum {0} characters."
+msgstr "De URI mag maximaal {0} tekens bevatten."
+
+msgid "The description should be a valid UTF8 string."
+msgstr "De omschrijving moet een geldige UTF8-tekenreeks zijn."
+
+msgid "The deleted status should not be empty"
+msgstr "De verwijderde status moet ingevuld worden"
+
+msgid "The identifier of the user who created the resource should be a valid UUID."
+msgstr "De ID van de gebruiker die het middel heeft aangemaakt, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who created the resource is required."
+msgstr "De ID van de gebruiker die de map heeft aangemaakt, is vereist."
+
+msgid "The identifier of the user who created the resource should not be empty."
+msgstr "De ID van de gebruiker die het middel heeft aangemaakt, moet ingevuld worden."
+
+msgid "The identifier of the user who last modified the resource should be a valid UUID."
+msgstr "De ID van de gebruiker die het middel het laatst heeft gewijzigd, moet een geldige UUID zijn."
+
+msgid "The identifier of the user who last modified the resource required."
+msgstr "De ID van de gebruiker die het middel het laatst heeft gewijzigd, is vereist."
+
+msgid "The identifier of the user who last modified the resource should not be empty."
+msgstr "De ID van de gebruiker die het middel het laatst heeft gewijzigd, moet ingevuld worden."
+
+msgid "The resource type identifier should be a valid UUID."
+msgstr "De ID van het type middel moet een geldige UUID zijn."
+
+msgid "A resource type identifier is required."
+msgstr "Een ID van het type middel is vereist."
+
+msgid "The permissions are required."
+msgstr "De machtigingen zijn vereist."
+
+msgid "The permissions should not be empty."
+msgstr "De machtigingen moeten ingevuld worden."
+
+msgid "The permissions should contain only the permission of the owner."
+msgstr "De rechten mogen alleen het recht van de eigenaar bevatten."
+
+msgid "The owner secret is required."
+msgstr "Het geheim van de eigenaar is vereist."
+
+msgid "The secrets should not be empty."
+msgstr "De geheimen moeten ingevuld worden."
+
+msgid "The secrets should contain only the secret of the owner."
+msgstr "De geheimen mogen alleen het geheim van de eigenaar bevatten."
+
+msgid "The permissions should contain the owner permission."
+msgstr "De rechten moeten het eigenaarsrecht bevatten."
+
+msgid "The secrets should contain the owner secret."
+msgstr "De geheimen moeten het eigenaarsgeheim bevatten."
+
+msgid "The secrets should contain the secrets of all the users having access to the resource."
+msgstr "De geheimen moeten de geheimen bevatten van alle gebruikers die toegang hebben tot het middel."
+
+msgid "The permissions should contain at least the owner permission."
+msgstr "De rechten moeten tenminste het recht van de eigenaar bevatten."
+
+msgid "The resource should not be already soft deleted."
+msgstr "Het middel mag niet al zacht verwijderd zijn."
+
+msgid "The user cannot delete this resource."
+msgstr "De gebruiker kan dit middel niet verwijderen."
+
+msgid "The name should be a valid ASCII string."
+msgstr "De naam moet een geldige ASCII-tekenreeks zijn."
+
+msgid "A role already exists for the given name."
+msgstr "Er is al een functie voor de opgegeven naam."
+
+msgid "The role name should be from the list of allowed role names."
+msgstr "De functienaam moet uit de lijst van toegestane functienamen komen."
+
+msgid "The resource identifier is required."
+msgstr "De ID van het middel is vereist."
+
+msgid "The resource identifier should not be empty."
+msgstr "De ID van het middel moet ingevuld worden."
+
+msgid "The message should be a valid ASCII string."
+msgstr "Het bericht moet een geldige ASCII-tekenreeks zijn."
+
+msgid "The message should be a valid ASCII-armored gpg message."
+msgstr "Het bericht moet een geldig ASCII-gepantserd GPG-bericht zijn."
+
+msgid "A message is required."
+msgstr "Een bericht is vereist."
+
+msgid "The message should not be empty."
+msgstr "Het bericht moet ingevuld worden."
+
+msgid "A secret already exists for the given user and resource."
+msgstr "Er bestaat al een geheim voor deze gebruiker en dit middel."
+
+msgid "The user identifier by should be a valid UUID."
+msgstr "De gebruikers-ID moet een geldige UUID zijn."
+
+msgid "A username is required."
+msgstr "Een gebruikersnaam is vereist."
+
+msgid "The username should be a valid email address."
+msgstr "De gebruikersnaam moet een geldig e-mailadres zijn."
+
+msgid "The role identifier should be a valid UUID."
+msgstr "De ID van de functie moet een geldige UUID zijn."
+
+msgid "A role identifier is required."
+msgstr "Een functie-ID is vereist."
+
+msgid "The profile should not be empty."
+msgstr "Het profiel moet ingevuld worden."
+
+msgid "The username should not be empty."
+msgstr "De gebruikersnaam moet ingevuld worden."
+
+msgid "The username length should be maximum 255 characters."
+msgstr "De gebruikersnaam mag maximaal 255 tekens bevatten."
+
+msgid "The username is already in use."
+msgstr "De gebruikersnaam is al in gebruik."
+
+msgid "The role identifier does not exist."
+msgstr "De functie-ID bestaat niet."
+
+msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "De gebruiker mag niet de enige eigenaar zijn van gedeelde inhoud, draag de eigendom over aan andere gebruikers."
+
+msgid "The user should not be sole group manager of group(s), transfer the management to other users."
+msgstr "De gebruiker mag niet de enige groepsbeheerder zijn van groep(en), draag het beheer over aan andere gebruikers."
+
+msgid "Could not delete the user {0}, please try again later."
+msgstr "Kan gebruiker {0} niet verwijderen, probeer het later nog eens."
+
+msgid "{0} just activated their account on passbolt"
+msgstr "{0} heeft zojuist diens account geactiveerd bij Passbolt"
+
+msgid "{0} commented on {1}"
+msgstr "{0} heeft gereageerd op {1}"
+
+msgid "{0} deleted the group {1}"
+msgstr "{0} heeft de groep {1} verwijderd"
+
+msgid "{0} updated the group {1}"
+msgstr "{0} heeft de groep {1} bijgewerkt"
+
+msgid "{0} added you to the group {1}"
+msgstr "{0} heeft je toegevoegd aan de groep {1}"
+
+msgid "{0} requested you to add members to {1}"
+msgstr "{0} heeft je verzocht leden toe te voegen aan {1}"
+
+msgid "{0} removed you from the group {1}"
+msgstr "{0} heeft je verwijderd uit de groep {1}"
+
+msgid "{0} updated your membership in the group {1}"
+msgstr "{0} heeft je lidmaatschap in de groep {1} bijgewerkt"
+
+msgid "Your account recovery, {0}!"
+msgstr "Herstel van je account, {0}!"
+
+msgid "You added the password {0}"
+msgstr "Je hebt het wachtwoord {0} toegevoegd"
+
+msgid "{0} deleted the password {1}"
+msgstr "{0} heeft het wachtwoord {1} verwijderd"
+
+msgid "{0} edited the password {1}"
+msgstr "{0} heeft het wachtwoord {1} bewerkt"
+
+msgid "{0} shared the password {1}"
+msgstr "{0} heeft het wachtwoord {1} gedeeld"
+
+msgid "{0} deleted user {1}"
+msgstr "{0} heeft gebruiker {1} verwijderd"
+
+msgid "Welcome to passbolt, {0}!"
+msgstr "Welkom bij Passbolt, {0}!"
+
+msgid "{0} updated your memberships in several groups"
+msgstr "{0} heeft jouw lidmaatschap in verschillende groepen bijgewerkt"
+
+msgid "Your membership in several groups changed in passbolt"
+msgstr "Je lidmaatschap in verschillende groepen is veranderd in Passbolt"
+
+msgid "{0} deleted several groups"
+msgstr "{0} heeft meerdere groepen verwijderd"
+
+msgid "Several groups were deleted in passbolt"
+msgstr "Verschillende groepen zijn verwijderd in Passbolt"
+
+msgid "{0} has made changes on several resources"
+msgstr "{0} heeft wijzigingen aangebracht in verschillende middelen"
+
+msgid "Multiple passwords have been changed in passbolt"
+msgstr "Meerdere wachtwoorden zijn gewijzigd in Passbolt"
+
+msgid "{0} shared several items with you"
+msgstr "{0} heeft verschillende onderdelen met je gedeeld"
+
+msgid "Multiple passwords have been shared with you in passbolt"
+msgstr "Er zijn meerdere wachtwoorden met je gedeeld in Passbolt"
+
+msgid "The purify subject setting should be a boolean."
+msgstr "De instelling voor het zuiveren van het onderwerp moet een Boolean zijn."
+
+msgid "The show comment setting should be a boolean."
+msgstr "De instelling voor het tonen van een omschrijving moet een Boolean zijn."
+
+msgid "The show description setting should be a boolean."
+msgstr "De instelling voor het tonen van een omschrijving moet een Boolean zijn."
+
+msgid "The show secret setting should be a boolean."
+msgstr "De instelling voor het tonen van het geheim moet een Boolean zijn."
+
+msgid "The show uri setting should be a boolean."
+msgstr "De instelling voor het tonen van een URI moet een Boolean zijn."
+
+msgid "The show username setting should be a boolean."
+msgstr "De instelling voor het tonen van een gebruikersnaam moet een Boolean zijn."
+
+msgid "The send on user setup completed setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra de gebruikersinstallatie is voltooid\" moet een Boolean zijn."
+
+msgid "The send on comment added setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een opmerking is toegevoegd\" moet een Boolean zijn."
+
+msgid "The send on group deleted setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een groep is verwijderd\" moet een Boolean zijn."
+
+msgid "The send on group user added setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een gebruiker aan een groep is toegevoegd\" moet een Boolean zijn."
+
+msgid "The send on group user deleted setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een gebruiker uit een groep is verwijderd\" moet een Boolean zijn."
+
+msgid "The send on group user updated setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een groepsgebruiker is bijgewerkt\" moet een Boolean zijn."
+
+msgid "The send on group manager updated setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een groepsbeheerder is bijgewerkt\" moet een Boolean zijn."
+
+msgid "The send on password created setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een wachtwoord is aangemaakt\" moet een Boolean zijn."
+
+msgid "The send on password shared setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een wachtwoord is gedeeld\" moet een Boolean zijn."
+
+msgid "The send on password updated setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een wachtwoord is bijgewerkt\" moet een Boolean zijn."
+
+msgid "The send on password deleted setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een wachtwoord is verwijderd\" moet een Boolean zijn."
+
+msgid "The send on user created setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een gebruiker is aangemaakt\" moet een Boolean zijn."
+
+msgid "The send on user recovered setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een gebruiker is hersteld\" moet een Boolean zijn."
+
+msgid "Validation failed for authenticationToken {0}. {1}"
+msgstr "Validatie van authenticatietoken {0} is mislukt. {1}"
+
+msgid "Validation success for authenticationToken {0}"
+msgstr "Validatie van authenticatietoken {0} is gelukt"
+
+msgid "Could not save the avatar in the {0} file."
+msgstr "De avatar kon niet worden opgeslagen in het {0} bestand."
+
+msgid "The avatar id is not valid."
+msgstr "De avatar-ID is niet geldig."
+
+msgid "Validation failed for comment {0}. {1}"
+msgstr "Validatie van opmerking {0} is mislukt. {1}"
+
+msgid "Validation success for comment {0}"
+msgstr "Validatie van opmerking {0} is geslaagd"
+
+msgid "Validation failed for favorite {0}. {1}"
+msgstr "Validatie van favoriet {0} is mislukt. {1}"
+
+msgid "Validation success for favorite {0}"
+msgstr "Validatie van favoriet {0} is gelukt"
+
+msgid "Validation success for key {0}"
+msgstr "Validatie van sleutel {0} is geslaagd"
+
+msgid "Validation failed for key {0}. {1}"
+msgstr "Validatie van sleutel {0} is mislukt. {1}"
+
+msgid "Encryption success for key {0}"
+msgstr "Versleuteling van sleutel {0} is geslaagd"
+
+msgid "Failed to encrypt with key {0}. {1}"
+msgstr "Versleutelen met sleutel {0} is mislukt. {1}"
+
+msgid "Validation failed for group {0}. {1}"
+msgstr "Validatie van groep {0} is mislukt. {1}"
+
+msgid "Validation success for group {0}"
+msgstr "Validatie van groep {0} is geslaagd"
+
+msgid "Could not validate group user data."
+msgstr "Gebruikersgegevens van de groep konden niet worden gevalideerd."
+
+msgid "The group user does not exist."
+msgstr "De groepsgebruiker bestaat niet."
+
+msgid "At least one group manager should be provided."
+msgstr "Er moet tenminste één groepsbeheerder worden aangegeven."
+
+msgid "Could not validate permission data."
+msgstr "De machtigingsgegevens konden niet gevalideerd worden."
+
+msgid "Validation failed for permission {0}. {1}"
+msgstr "Validatie van machtiging {0} is mislukt. {1}"
+
+msgid "Validation success for permission {0}"
+msgstr "Validatie van machtiging {0} is gelukt"
+
+msgid "Could not validate permissions data."
+msgstr "De machtigingsgegevens konden niet gevalideerd worden."
+
+msgid "Validation failed for profile {0}. {1}"
+msgstr "Validatie van profiel {0} is mislukt. {1}"
+
+msgid "Validation success for profile {0}"
+msgstr "Validatie van profiel {0} is geslaagd"
+
+msgid "Could not validate resource data."
+msgstr "De gegevens van het middel kunnen niet gevalideerd worden."
+
+msgid "An unexpected error occured, please contact an administrator."
+msgstr "Er is een onverwachte fout opgetreden. Neem contact op met een beheerder."
+
+msgid "The server returned the following error:"
+msgstr "De server geeft de volgende foutmelding:"
+
+msgid "Validation failed for resource {0}. {1}"
+msgstr "Validatie van middel {0} is mislukt. {1}"
+
+msgid "Validation success for resource {0}"
+msgstr "Validatie van middel {0} is geslaagd"
+
+msgid "You are not allowed to update this resource."
+msgstr "Je bent niet bevoegd om dit middel bij te werken."
+
+msgid "Additional resource types are not enabled on this server."
+msgstr "Overige middelentypes zijn niet ingeschakeld op deze server."
+
+msgid "There should be at least 4 roles"
+msgstr "Er moeten ten minste 4 functies zijn"
+
+msgid "Validation failed for role {0}. {1}"
+msgstr "Validatie van functie {0} is mislukt. {1}"
+
+msgid "Validation success for role {0}"
+msgstr "Validatie van functie {0} is geslaagd"
+
+msgid "Could not validate secret data."
+msgstr "Gegevens van het geheim konden niet worden gevalideerd."
+
+msgid "Validation failed for secret {0}. {1}"
+msgstr "Validatie van geheim {0} is mislukt. {1}"
+
+msgid "Validation success for secret {0}"
+msgstr "Validatie van geheim {0} is geslaagd"
+
+msgid "Could not validate secrets data."
+msgstr "Gegevens van de geheimen konden niet worden gevalideerd."
+
+msgid "The secrets of all the users having access to the resource are required."
+msgstr "De geheimen van alle gebruikers die toegang hebben tot het middel zijn vereist."
+
+msgid "Validation failed for user {0}. {1}"
+msgstr "Validatie is mislukt voor gebruiker {0}. {1}"
+
+msgid "Validation success for user {0}"
+msgstr "Validatie is geslaagd voor gebruiker {0}"
+
+msgid "Could not connect to github repository"
+msgstr "Kan geen verbinding maken met het GitHub-depot"
+
+msgid "Could not read tag information on github repository"
+msgstr "De labelinformatie op het GitHub-depot kon niet gelezen worden"
+
+msgid "The key {0} cannot be used to encrypt."
+msgstr "Sleutel {0} kan niet worden gebruikt om te versleutelen."
+
+msgid "The key {0} cannot be used to decrypt."
+msgstr "Sleutel {0} kan niet worden gebruikt om te ontsleutelen."
+
+msgid "Could not use key {0} for signing."
+msgstr "Sleutel {0} kon niet worden gebruikt voor ondertekening."
+
+msgid "Could not parse the OpenPGP public key."
+msgstr "De openbare OpenPGP-sleutel kan niet verwerkt worden."
+
+msgid "Invalid key. No OpenPGP public key package found."
+msgstr "Ongeldige sleutel. Geen openbaar OpenPGP-sleutelpakket gevonden."
+
+msgid "Invalid key. No user ID found."
+msgstr "Ongeldige sleutel. Geen gebruikers-ID gevonden."
+
+msgid "Could not import the OpenPGP key."
+msgstr "De OpenPGP-sleutel kon niet geïmporteerd worden."
+
+msgid "Could not use the key to sign and encrypt."
+msgstr "De sleutel kon niet worden gebruikt om te ondertekenen en te versleutelen."
+
+msgid "Could not use the key to encrypt."
+msgstr "De sleutel kon niet worden gebruikt om te versleutelen."
+
+msgid "Expected {0} and got {1}."
+msgstr "Verwachtte {0} en kreeg {1}."
+
+msgid "Decryption failed. Invalid signature."
+msgstr "Ontsleutelen mislukt. Ongeldige handtekening."
+
+msgid "The message cannot be verified."
+msgstr "Het bericht kan niet geverifieerd worden."
+
+msgid "Could not sign the text. "
+msgstr "De tekst kan niet ondertekend worden. "
+
+msgid "The OpenPGP server key defined in the config is not found in the file system."
+msgstr "De OpenPGP-serversleutel zoals gedefinieerd in de configuratie is niet gevonden in het bestandssysteem."
+
+msgid "The OpenPGP server key defined in the config cannot be opened."
+msgstr "De OpenPGP-serversleutel zoals gedefinieerd in de configuratie kan niet geopend worden."
+
+msgid "The OpenPGP server key defined on file is not a valid private key."
+msgstr "De OpenPGP-server sleutel zoals gedefinieerd in het bestand is geen geldige persoonlijke sleutel."
+
+msgid "There is an issue with the OpenPGP server key."
+msgstr "Er is een probleem met de OpenPGP-serversleutel."
+
+msgid "The fingerprint does not match the one associated with the key on file."
+msgstr "De vingerafdruk komt niet overeen met de degene die is gekoppeld aan de sleutel in het bestand."
+
+msgid "No OpenPGP marker found."
+msgstr "Geen OpenPGP-markering gevonden."
+
+msgid "This is not a valid OpenPGP armored marker."
+msgstr "Dit is geen geldige gepantserde OpenPGP-markering."
+
+msgid "The key {0} was not found in the keyring"
+msgstr "De sleutel {0} is niet gevonden in de sleutelhanger"
+
+msgid "A value for the theme should be provided."
+msgstr "Er moet een waarde voor het thema worden opgegeven."
+
+msgid "This is not a valid theme."
+msgstr "Dit is geen geldig thema."
+
+msgid "The setting type should be one of the following: {0}."
+msgstr "Het instellingstype moet één van de volgende zijn: {0}."
+
+msgid "A setting type is required."
+msgstr "Een instellingstype is vereist."
+
+msgid "The setting type should not be empty"
+msgstr "Het instellingstype moet ingevuld worden"
+
+msgid "The setting value should be a valid UTF8 string."
+msgstr "De instellingswaarde moet een geldige UTF8-tekenreeks zijn."
+
+msgid "The setting value length should be maximum {0} characters."
+msgstr "De waarde-instelling mag maximaal {0} tekens bevatten."
+
+msgid "A value setting is required."
+msgstr "Een waarde-instelling is vereist."
+
+msgid "The setting value should not be empty."
+msgstr "De waarde-instelling moet ingevuld worden."
+
+msgid "The parameter {0} is not set."
+msgstr "De parameter {0} is niet ingesteld."
+
+msgid "This theme is not supported."
+msgstr "Dit thema wordt niet ondersteund."
+
+msgid "You are not allowed to access this location."
+msgstr "U heeft geen toegang tot deze locatie."
+
+msgid "The notification settings for the organization were updated."
+msgstr "De notificatie-instellingen voor de organisatie zijn bijgewerkt."
+
+msgid "The challenge cannot be decrypted."
+msgstr "De uitdaging kan niet worden ontsleuteld."
+
+msgid "The challenge is invalid. Deserialization failed."
+msgstr "De uitdaging is ongeldig. Deserialisatie is mislukt."
+
+msgid "The challenge is invalid. Validation Failed."
+msgstr "De uitdaging is ongeldig. Validatie is mislukt."
+
+msgid "The config for the server private key fingerprint is not available or incomplete."
+msgstr "De configuratie van de vingerafdruk voor de privésleutel van de server is niet beschikbaar of onvolledig."
+
+msgid "The config for the server private key passphrase is invalid."
+msgstr "De configuratie van de wachtwoordzin voor de privésleutel van de server is ongeldig."
+
+msgid "The user id is missing or invalid."
+msgstr "De gebruikers-ID ontbreekt of is niet geldig."
+
+msgid "The user OpenPGP key does not exist, or is invalid, or has been deleted."
+msgstr "De OpenPGP-sleutel van de gebruiker bestaat niet, is ongeldig of is verwijderd."
+
+msgid "The user signature is invalid."
+msgstr "De gebruikershandtekening is ongeldig."
+
+msgid "The user challenge is missing or invalid."
+msgstr "De gebruikersuitdaging ontbreekt of is ongeldig."
+
+msgid "The version is invalid."
+msgstr "De versie is ongeldig."
+
+msgid "The domain is invalid."
+msgstr "Het domein is ongeldig."
+
+msgid "The domain is invalid. Expected: {0} and got {1}"
+msgstr "Het domein is ongeldig. Verwachtte {0} en kreeg {1}"
+
+msgid "The authentication was a success."
+msgstr "De authenticatie was een succes."
+
+msgid "The authentication failed."
+msgstr "De authenticatie is mislukt."
+
+msgid "The credentials are missing."
+msgstr "De aanmeldgegevens ontbreken."
+
+msgid "The user does not exist or is not active or has been deleted."
+msgstr "De gebruiker bestaat niet, is inactief of is verwijderd."
+
+msgid "The credentials are invalid."
+msgstr "De aanmeldgegevens zijn ongeldig."
+
+msgid "An internal error occurred."
+msgstr "Er is een interne fout opgetreden."
+
+msgid "The verify token is invalid."
+msgstr "Het verificatietoken is ongeldig."
+
+msgid "The route {0} is not permitted with JWT authentication."
+msgstr "De route {0} is niet toegestaan met JWT-authenticatie."
+
+msgid "The key pair for JWT Authentication is not complete. The following file could not be read: {0}."
+msgstr "Het sleutelpaar voor JWT-authenticatie is niet compleet. Het volgende bestand kon niet worden gelezen: {0}."
+
+msgid "The JWT public key could not be read or is not valid."
+msgstr "De openbare JWT-sleutel kon niet worden gelezen of is niet geldig."
+
+msgid "The JWT private key should be at least {0} bytes long."
+msgstr "De persoonlijke JWT-sleutel moet minstens {0} bytes lang zijn."
+
+msgid "The configuration {0} is not correctly set."
+msgstr "De configuratie van de/het {0} is niet juist ingesteld."
+
+msgid "No active refresh token matching the request could be found."
+msgstr "Er kon geen actief vernieuwingstoken worden gevonden die overeenkomt met het verzoek."
+
+msgid "The refresh token provided was already used."
+msgstr "Het opgegeven vernieuwingstoken is al gebruikt."
+
+msgid "Expired refresh token provided."
+msgstr "Het aangeboden vernieuwingstoken is verlopen."
+
+msgid "The refresh token should be a valid UUID."
+msgstr "Het vernieuwingstoken moet een geldige UUID zijn."
+
+msgid "This is not a valid user id."
+msgstr "Dit is geen geldig gebruikers-ID."
+
+msgid "Invalid verify token expiry."
+msgstr "Ongeldige vervaldatum verificatietoken."
+
+msgid "Attempt to access an expired verify token."
+msgstr "Poging om toegang te krijgen tot een verlopen verificatietoken."
+
+msgid "Invalid verify token format."
+msgstr "Formaat verificatietoken is ongeldig."
+
+msgid "Invalid user ID format."
+msgstr "Ongeldig formaat gebruikers-ID."
+
+msgid "Verify token has been already used in the past."
+msgstr "Dit verificatietoken is in het verleden al eens gebruikt."
+
+msgid "Security warning!"
+msgstr "Veiligheidswaarschuwing!"
+
+msgid "An unknown user with IP: {0} attempted to identify as {1}."
+msgstr "Een onbekende gebruiker met IP: {0} probeerde zich te identificeren als {1}."
+
+msgid "This is a potential security issue."
+msgstr "Dit is een potentieel veiligheidsprobleem."
+
+msgid "Please investigate!"
+msgstr "Zoek dit alstublieft uit!"
+
+msgid "An unknown user with IP: {0}  attempted to steal your login data."
+msgstr "Een onbekende gebruiker met IP: {0} probeerde uw inloggegevens te stelen."
+
+msgid "Please get in tough with one of your administrators."
+msgstr "Neem contact op met één van uw beheerders."
+
+msgid "This is not a valid locale."
+msgstr "Dit is geen geldige locatie."
+
+msgid "This is not a valid {0}."
+msgstr "Dit is geen geldig(e) {0}."
+
+msgid "The action log identifier should be a valid UUID."
+msgstr "De ID van het actielogboek moet een geldige UUID zijn."
+
+msgid "The action log identifier should not be empty."
+msgstr "De ID van het actielogboek moet ingevuld worden."
+
+msgid "The action identifier should be a valid UUID."
+msgstr "De actie-ID moet een geldige UUID zijn."
+
+msgid "An action identifier is required."
+msgstr "Een actie-ID is vereist."
+
+msgid "The context should be a valid ASCII string."
+msgstr "De context moet een geldige ASCII-tekenreeks zijn."
+
+msgid "The context length should be maximum {0} characters."
+msgstr "De context mag maximaal {0} tekens bevatten."
+
+msgid "A context is required."
+msgstr "Een context is vereist."
+
+msgid "The status should be a valid boolean."
+msgstr "De status moet een geldige Boolean zijn."
+
+msgid "A status is required."
+msgstr "Een status is vereist."
+
+msgid "Could not validate action log data."
+msgstr "De gegevens van het actielogboek konden niet gevalideerd worden."
+
+msgid "The identifier should be not be empty."
+msgstr "De ID moet ingevuld worden."
+
+msgid "Could not validate action data."
+msgstr "De actiegegevens konden niet worden gevalideerd."
+
+msgid "An action log identifier is required."
+msgstr "Een ID van het actielogboek is vereist."
+
+msgid "The object type should be a valid ASCII string."
+msgstr "Het objecttype moet een geldige ASCII-tekenreeks zijn."
+
+msgid "The object type length should be maximum {0} characters."
+msgstr "Het objecttype mag maximaal {0} tekens bevatten."
+
+msgid "A object type is required."
+msgstr "Een objecttype is vereist."
+
+msgid "The object type should not be empty."
+msgstr "Het objecttype moet ingevuld worden."
+
+msgid "The object identifier should be a valid UUID."
+msgstr "De ID van het object moet een geldige UUID zijn."
+
+msgid "The object identifier should not be empty."
+msgstr "De object-ID moet ingevuld worden."
+
+msgid "An object identifier is required."
+msgstr "Een object-ID is vereist."
+
+msgid "The operation type should be one of the following: {0}."
+msgstr "Het bewerkingstype moet één van de volgende zijn: {0}."
+
+msgid "An operation type is required."
+msgstr "Een bewerkingstype is vereist."
+
+msgid "The operation type should not be empty."
+msgstr "Het bewerkingstype moet ingevuld worden."
+
+msgid "Could not validate entity history data."
+msgstr "Historische gegevens van de entiteit konden niet worden gevalideerd."
+
+msgid "An identifier is required."
+msgstr "Een ID is vereist."
+
+msgid "The type must be one of the following: {0}."
+msgstr "Het type moet één van de volgende zijn: {0}."
+
+msgid "The type is required."
+msgstr "Het type is vereist."
+
+msgid "Could not validate permission history data."
+msgstr "Historische gegevens van de rechten konden niet worden gevalideerd."
+
+msgid "A resource identifier is required."
+msgstr "Een ID voor het middel is vereist."
+
+msgid "The secret identifier should be a valid UUID."
+msgstr "Het ID van het geheim moet een geldige UUID zijn."
+
+msgid "A secret identifier is required."
+msgstr "Een ID van het geheim is vereist."
+
+msgid "The secret identifier should not be empty."
+msgstr "De ID van het geheim moet ingevuld worden."
+
+msgid "Could not validate secret access data."
+msgstr "De toegangsgegevens van het geheim konden niet worden gevalideerd."
+
+msgid "Could not validate secret history data."
+msgstr "Historische gegevens van de geheim konden niet worden gevalideerd."
+
+msgid "Information about the transfer is required."
+msgstr "Informatie over de overdracht is vereist."
+
+msgid "The operation was successful"
+msgstr "De bewerking is geslaagd"
+
+msgid "The transfer id is not valid."
+msgstr "De overdrachts-ID is niet geldig."
+
+msgid "The authentication token should be a valid uuid."
+msgstr "Het authenticatietoken moet een geldige UUID zijn."
+
+msgid "The authentication token is invalid."
+msgstr "Het authenticatietoken is ongeldig."
+
+msgid "The transfer id should be a uuid."
+msgstr "Het overdrachts-ID moet een UUID zijn."
+
+msgid "The user id should be a uuid."
+msgstr "Het gebruikers-ID moet een UUID zijn."
+
+msgid "A user id is required"
+msgstr "Een gebruikers-ID is vereist"
+
+msgid "The hash should be an ascii string."
+msgstr "De hash moet een ASCII-tekenreeks zijn."
+
+msgid "The hash should be {0} characters in length."
+msgstr "De hash moet {0} tekens lang zijn."
+
+msgid "The data transfer hash is required."
+msgstr "De hash van de gegevensoverdracht is vereist."
+
+msgid "The current page should be a non negative integer."
+msgstr "De huidige pagina moet een positief geheel getal zijn."
+
+msgid "The current page number is required"
+msgstr "Het huidige paginanummer is vereist"
+
+msgid "The current page number should be equal or inferior to the total number of pages."
+msgstr "Het huidige paginanummer moet lager zijn dan of gelijk aan het totaal aantal pagina's."
+
+msgid "The current page cannot be greater than {0}"
+msgstr "De huidige pagina kan niet groter zijn dan {0}"
+
+msgid "The total number of pages should a non negative integer."
+msgstr "Het totaal aantal pagina's moet een positief geheel getal zijn."
+
+msgid "The total number of pages is required."
+msgstr "Het totaal aantal pagina's is vereist."
+
+msgid "The total number of pages should be greater than 0."
+msgstr "Het totaal aantal pagina's moet groter zijn dan 0."
+
+msgid "The total number of pages cannot be greater than {0}"
+msgstr "Het totaal aantal pagina's kan niet groter zijn dan {0}"
+
+msgid "The status should not be empty."
+msgstr "De status moet ingevuld worden."
+
+msgid "The status is required."
+msgstr "De status is vereist."
+
+msgid "The status must be one of the following: {0}."
+msgstr "De status moet een van de volgende zijn: {0}."
+
+msgid "The user must be active."
+msgstr "De gebruiker moet actief zijn."
+
+msgid "Could not validate the transfer data."
+msgstr "De overdrachtsgegevens konden niet worden gevalideerd."
+
+msgid "The transfer could not be created."
+msgstr "De overdracht kon niet worden gerealiseerd."
+
+msgid "Could not update the transfer data."
+msgstr "De overdrachtsgegevens konden niet worden bijgewerkt."
+
+msgid "The transfer could not be updated."
+msgstr "De overdracht kon niet worden bijgewerkt."
+
+msgid "This operation is not allowed."
+msgstr "Deze bewerking is niet toegestaan."
+
+msgid "Restarting a transfer is not allowed."
+msgstr "Herstarten van een overdracht is niet toegestaan."
+
+msgid "The operation is already over."
+msgstr "De bewerking is al voorbij."
+
+msgid "The current page does not match the total number of pages."
+msgstr "De huidige pagina komt niet overeen met het totaal aantal pagina's."
+
+msgid "This operation is not allowed for this user."
+msgstr "Deze bewerking is niet toegestaan voor deze gebruiker."
+
+msgid "The authentication token is missing."
+msgstr "Het authenticatietoken ontbreekt."
+
+msgid "The authentication token is not valid for this user."
+msgstr "Het authenticatietoken is niet geldig voor deze gebruiker."
+
+msgid "The authentication token type is invalid."
+msgstr "Het type authenticatietoken is ongeldig."
+
+msgid "The authentication token is not active."
+msgstr "Het authenticatietoken is niet actief."
+
+msgid "The authentication token is expired."
+msgstr "Het authenticatietoken is verlopen."
+
+msgid "The password generator value \"{0}\" is not valid."
+msgstr "De waarde \"{0}\" van de wachtwoord-generator is niet geldig."
+
+msgid "5 minutes"
+msgstr "5 minuten"
+
+msgid "15 minutes"
+msgstr "15 minuten"
+
+msgid "30 minutes"
+msgstr "30 minuten"
+
+msgid "1 hour"
+msgstr "1 uur"
+
+msgid "until I log out"
+msgstr "totdat ik uitlog"
+
+msgid "Only administrators can view reports."
+msgstr "Alleen beheerders kunnen verslagen bekijken."
+
+msgid "The requested report `{0}` does not exist."
+msgstr "Het opgevraagde verslag '{0}' bestaat niet."
+
+msgid "Description"
+msgstr "Omschrijving"
+
+msgid "Passbolt report"
+msgstr "Verslag Passbolt"
+
+msgid "Report name"
+msgstr "Naam verslag"
+
+msgid "Generated by"
+msgstr "Aangemaakt door"
+
+msgid "Creation date"
+msgstr "Aanmaakdatum"
+
+msgid "All users have completed the setup."
+msgstr "Alle gebruikers hebben de installatie voltooid."
+
+msgid "Name"
+msgstr "Naam"
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Created since"
+msgstr "Aangemaakt sinds"
+
+msgid "Setup completed"
+msgstr "Installatie voltooid"
+
+msgid "Role"
+msgstr "Functie"
+
+msgid "No"
+msgstr "Nee"
+
+msgid "The data entered are not correct"
+msgstr "De ingevoerde gegevens zijn niet juist"
+
+msgid "A connection could not be established with the credentials provided."
+msgstr "Er kon geen verbinding worden gemaakt met de verstrekte aanmeldgegevens."
+
+msgid "Please verify the settings."
+msgstr "Controleer de instellingen."
+
+msgid "passbolt test email"
+msgstr "Passbolt test-e-mail"
+
+msgid "Congratulations!"
+msgstr "Gefeliciteerd!"
+
+msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
+msgstr "Als je deze e-mail ontvangt, betekent dit dat de Passbolt SMTP-configuratie naar behoren werkt."
+
+msgid "The data entered are not correct: {0}"
+msgstr "De ingevoerde gegevens zijn niet juist: {0}"
+
+msgid "The session has expired. Please start the configuration again."
+msgstr "De sessie is verlopen. Start de configuratie opnieuw."
+
+msgid "System check"
+msgstr "Systeemcontrole"
+
+msgid "Subscription key"
+msgstr "Abonnementssleutel"
+
+msgid "Database"
+msgstr "Database"
+
+msgid "Server keys"
+msgstr "Serversleutels"
+
+msgid "Emails"
+msgstr "E-mails"
+
+msgid "Options"
+msgstr "Mogelijkheden"
+
+msgid "First user"
+msgstr "Eerste gebruiker"
+
+msgid "Installation"
+msgstr "Installatie"
+
+msgid "That's it!"
+msgstr "Dat is alles!"
+
+msgid "A host name is required."
+msgstr "Een hostnaam is vereist."
+
+msgid "The host name should not be empty."
+msgstr "De hostnaam moet ingevuld worden."
+
+msgid "The host name should be a valid BMP-UTF8 string."
+msgstr "De hostnaam moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "A port number is required."
+msgstr "Een poortnummer is vereist."
+
+msgid "The port number should be numeric."
+msgstr "Het poortnummer moet een getal zijn."
+
+msgid "The port number should be between {0} and {1}."
+msgstr "Het poortnummer moet tussen {0} en {1} liggen."
+
+msgid "The username should be a valid BMP-UTF8 string."
+msgstr "De gebruikersnaam moet een geldige BMP-UTF8 tekenreeks zijn."
+
+msgid "The password should not contain quotes."
+msgstr "Het wachtwoord mag geen aanhalingstekens bevatten."
+
+msgid "The password should be a valid BMP-UTF8 string."
+msgstr "Het wachtwoord moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "A database name is required."
+msgstr "Een naam voor de database is vereist."
+
+msgid "The database name should not be empty."
+msgstr "De naam van de database moet ingevuld worden."
+
+msgid "The database name should be a valid BMP-UTF8 string."
+msgstr "De naam van de database moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The database name should not contain dashes."
+msgstr "De naam van de database mag geen koppeltekens bevatten."
+
+msgid "A sender name is required."
+msgstr "De naam van een afzender is vereist."
+
+msgid "The sender name should not be empty."
+msgstr "De naam van de afzender moet ingevuld worden."
+
+msgid "The sender name should be a valid BMP-UTF8 string."
+msgstr "De naam van de afzender moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "A sender email is required."
+msgstr "Een e-mailadres van de afzender is vereist."
+
+msgid "The sender email should not be empty."
+msgstr "Het e-mailadres van de afzender moet ingevuld worden."
+
+msgid "The sender email should be a valid BMP-UTF8 string."
+msgstr "De e-mail van de afzender moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "The sender email should be a valid email address."
+msgstr "Het e-mailadres van de afzender moet een geldig e-mailadres zijn."
+
+msgid "A TLS setting is required."
+msgstr "Een TLS-instelling is vereist."
+
+msgid "The TLS setting should be a valid boolean."
+msgstr "De TLS-instelling moet een geldige Boolean zijn."
+
+msgid "A password is required."
+msgstr "Een wachtwoord is vereist."
+
+msgid "The test email should be a valid email address."
+msgstr "Het e-mailadres voor de test moet een geldig e-mailadres zijn."
+
+msgid "An OpenPGP public key is required."
+msgstr "Een openbare OpenPGP-sleutel is vereist."
+
+msgid "The OpenPGP public key should not be empty."
+msgstr "De openbare OpenPGP-sleutel moet ingevuld worden."
+
+msgid "The OpenPGP public key should be a valid ASCII string."
+msgstr "De openbare OpenPGP-sleutel moet een geldige ASCII-tekenreeks zijn."
+
+msgid "The key is not a valid OpenPGP public key."
+msgstr "Deze sleutel is geen geldige openbare OpenPGP-sleutel."
+
+msgid "The OpenPGP public key should not have an expiry date."
+msgstr "De openbare OpenPGP-sleutel mag geen vervaldatum hebben."
+
+msgid "The OpenPGP public key cannot be used to encrypt."
+msgstr "De openbare OpenPGP-sleutel kan niet worden gebruikt om te versleutelen."
+
+msgid "An OpenPGP private key is required."
+msgstr "Een persoonlijke OpenPGP-sleutel is vereist."
+
+msgid "The OpenPGP private key should not be empty."
+msgstr "De persoonlijke OpenPGP-sleutel moet ingevuld worden."
+
+msgid "The OpenPGP private key should be a valid ASCII string."
+msgstr "De persoonlijke OpenPGP-sleutel moet een geldige ASCII-tekenreeks zijn."
+
+msgid "The value is not a valid OpenPGP private key."
+msgstr "Deze waarde is geen geldige persoonlijke OpenPGP-sleutel."
+
+msgid "The OpenPGP private key should not have an expiry date."
+msgstr "De persoonlijke OpenPGP-sleutel mag geen vervaldatum hebben."
+
+msgid "The OpenPGP private key cannot be used to decrypt."
+msgstr "De persoonlijke OpenPGP-sleutel kan niet worden gebruikt om te ontsleutelen."
+
+msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
+msgstr "Houd er rekening mee dat Passbolt geen ondersteuning biedt voor een met een geheim beveiligde OpenPGP-sleutel."
+
+msgid "A fingerprint is required."
+msgstr "Een vingerafdruk is vereist."
+
+msgid "The fingerprint should not be empty."
+msgstr "De vingerafdruk moet ingevuld worden."
+
+msgid "The fingerprint should be a valid alphanumeric string."
+msgstr "De vingerafdruk moet een geldige alfanumerieke tekenreeks zijn."
+
+msgid "The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints."
+msgstr "De vingerafdruk komt niet overeen met de vingerafdruk van de openbare of persoonlijke OpenPGP-sleutel."
+
+msgid "A full base url is required."
+msgstr "Een volledige basis-URL is vereist."
+
+msgid "The full base url should not be empty"
+msgstr "De volledige basis-URL moet ingevuld worden."
+
+msgid "The full base url should be a valid BMP-UTF8 string."
+msgstr "De volledige basis-URL moet een geldige BMP-UTF8-tekenreeks zijn."
+
+msgid "A public registration setting is required."
+msgstr "Een openbare registratie-instelling is vereist."
+
+msgid "The public registration setting should be a valid boolean."
+msgstr "De openbare registratie-instelling moet een geldige Boolean zijn."
+
+msgid "A force ssl status is required."
+msgstr "Een geforceerde SSL-status is vereist."
+
+msgid "The force ssl setting should be a valid boolean."
+msgstr "De geforceerde SSL-instelling moet een geldige Boolean zijn."
+
+msgid "The database schema does not match the one expected"
+msgstr "Het databaseschema komt niet overeen met het verwachte schema"
+
+msgid "There was a problem creating the first user"
+msgstr "Er is een fout opgetreden bij het aanmaken van de eerste gebruiker"
+
+msgid "There was a problem creating the registration token"
+msgstr "Er is een fout opgetreden bij het aanmaken van het registratietoken"
+
+msgid "The passbolt config is writable."
+msgstr "De configuratie van Passbolt is beschrijfbaar."
+
+msgid "The passbolt config is not writable."
+msgstr "De configuratie van Passbolt is niet beschrijfbaar."
+
+msgid "Ensure the file "
+msgstr "Waarborg het bestand "
+
+msgid "you can try:"
+msgstr "je kunt proberen:"
+
+msgid "The server OpenPGP public key file is writable."
+msgstr "Het openbare OpenPGP-sleutelbestand van de server is beschrijfbaar."
+
+msgid "The server OpenPGP public key file is not writable."
+msgstr "Het openbare OpenPGP-sleutelbestand van de server is niet beschrijfbaar."
+
+msgid "The server OpenPGP private key file is writable."
+msgstr "Het persoonlijke OpenPGP-sleutelbestand van de server is beschrijfbaar."
+
+msgid "The server OpenPGP private key file is not writable."
+msgstr "Het persoonlijke OpenPGP-sleutelbestand van de server is niet beschrijfbaar."
+
+msgid "Create your user account!"
+msgstr "Maak je gebruikersaccount aan!"
+
+msgid "Admin user details"
+msgstr "Gebruikersgegevens van de beheerder"
+
+msgid "First name"
+msgstr "Voornaam"
+
+msgid "Last name"
+msgstr "Achternaam"
+
+msgid "mail@yourdomain.com"
+msgstr "mail@jouwdomein.com"
+
+msgid "Next"
+msgstr "Volgende"
+
+msgid "Enter your database details."
+msgstr "Voer de gegevens van je database in."
+
+msgid "Database configuration"
+msgstr "Configuratie van de database"
+
+msgid "An existing database has been detected on your server. The connection details are pre-filled below."
+msgstr "Er is een bestaande database gevonden op je server. De verbindingsgegevens zijn hieronder al ingevuld."
+
+msgid "You can keep it as it is (default), or replace it with the details of another database."
+msgstr "Je kunt het houden zoals het is (standaard), of vervangen door de gegevens van een andere database."
+
+msgid "Database connection url"
+msgstr "Verbindings-URL van de database"
+
+msgid "host name or ip address"
+msgstr "hostnaam of IP-adres"
+
+msgid "username"
+msgstr "gebruikersnaam"
+
+msgid "password"
+msgstr "wachtwoord"
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "database name"
+msgstr "naam van de database"
+
+msgid "Database name"
+msgstr "Naam van de database"
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Enter your SMTP server settings."
+msgstr "Voer uw SMTP-serverinstellingen in."
+
+msgid "Email configuration"
+msgstr "Configuratie e-mail"
+
+msgid "admin or company name"
+msgstr "beheerders- of bedrijfsnaam"
+
+msgid "Sender name"
+msgstr "Naam afzender"
+
+msgid "email@company.com"
+msgstr "e-mail@bedrijf.com"
+
+msgid "Sender email"
+msgstr "E-mail afzender"
+
+msgid "SMTP server configuration"
+msgstr "Configuratie SMTP-server"
+
+msgid "SMTP host"
+msgstr "SMTP-host"
+
+msgid "Use TLS?"
+msgstr "TLS gebruiken?"
+
+msgid "port"
+msgstr "poort"
+
+msgid "Port"
+msgstr "Poort"
+
+msgid "Passbolt is not configured."
+msgstr "Passbolt is niet geconfigureerd."
+
+msgid "Passbolt is not configured yet!"
+msgstr "Passbolt is nog niet geconfigureerd!"
+
+msgid "If you see this page, it means that passbolt is present on your server but not configured. Click on \"Get Started\" to launch the configuration wizard."
+msgstr "Als je deze pagina ziet, betekent dit dat Passbolt aanwezig is op je server maar niet is geconfigureerd. Klik op \"Aan de slag\" om de configuratie-wizard te starten."
+
+msgid "Get Started"
+msgstr "Aan de slag"
+
+msgid "Create a new server OpenPGP key or {0} an existing one."
+msgstr "Maak een nieuwe OpenPGP-serversleutel aan of {0} een bestaande."
+
+msgid "import"
+msgstr "importeren"
+
+msgid "Create a new OpenPGP key for your server"
+msgstr "Maak een nieuwe OpenPGP-sleutel aan voor jouw server"
+
+msgid "My company server name"
+msgstr "Mijn bedrijfsservernaam"
+
+msgid "Server Name"
+msgstr "Servernaam"
+
+msgid "admin@your-server.com"
+msgstr "admin@jouw-server.com"
+
+msgid "Server Email"
+msgstr "E-mailadres server"
+
+msgid "add a comment (optional)"
+msgstr "voeg een opmerking toe (optioneel)"
+
+msgid "Comment"
+msgstr "Opmerking"
+
+msgid "Import an existing key or {0} a new one."
+msgstr "Importeer een bestaande sleutel of {0} een nieuwe."
+
+msgid "create"
+msgstr "aanmaken"
+
+msgid "Copy paste the OpenPGP private key below"
+msgstr "Kopieer en plak de onderstaande persoonlijke OpenPGP-sleutel"
+
+msgid "Browse"
+msgstr "Bladeren"
+
+msgid "Or select a file from your computer"
+msgstr "Of selecteer een bestand van je computer"
+
+msgid "Some binary things are happening..."
+msgstr "Er vinden een aantal binaire zaken plaats..."
+
+msgid "Passbolt Pro activation."
+msgstr "Activering Passbolt Pro."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Kopieer en plak jouw abonnementssleutel voor Passbolt Pro hier"
+
+msgid "Choose your preferences."
+msgstr "Kies jouw voorkeuren."
+
+msgid "Full Base Url"
+msgstr "Volledige basis-URL"
+
+msgid "Full base url"
+msgstr "Volledige basis-URL"
+
+msgid "This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash."
+msgstr "Passbolt is toegangelijk met deze URL. Deze URL zal worden gebruikt als de Passbolt-URL niet automatisch kan worden geraden, zoals bij links in e-mails. Geen schuine streep aan het einde."
+
+msgid "Allow public registration?"
+msgstr "Openbare registratie toegestaan?"
+
+msgid "Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea."
+msgstr "Het toestaan van publieke registratie betekent dat elke bezoeker een account kan aanmaken op jouw Passbolt. Tenzij jouw Passbolt niet bereikbaar is voor de buitenwereld, is het meestal een slecht idee."
+
+msgid "Force SSL?"
+msgstr "SSL afdwingen?"
+
+msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
+msgstr "Het afdwingen van SSL betekent dat Passbolt geen verbindingen accepteert die afkomstig zijn van een onbeveiligd protocol. Als SSL wordt afgedwongen, moet je server geconfigureerd worden voor HTTPS. Het wordt sterk aanbevolen om dit te doen."
+
+msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgstr "Welkom bij Passbolt Pro! Laten we aan de slag gaan met de configuratie."
+
+msgid "Nice one! Your environment is ready for passbolt."
+msgstr "Mooi zo! Jouw omgeving is klaar voor Passbolt."
+
+msgid "Oops!! Passbolt cannot run yet on your server."
+msgstr "Oeps!! Passbolt kan nog niet worden uitgevoerd op jouw server."
+
+msgid "Environment is configured correctly."
+msgstr "De omgeving is correct geconfigureerd."
+
+msgid "URL rewriting is not properly configured on your server."
+msgstr "Het herschrijven van een URL is niet correct geconfigureerd op de server."
+
+msgid "GPG is configured correctly."
+msgstr "GPG is correct geconfigureerd."
+
+msgid "GPG Configuration"
+msgstr "GPG-configuratie"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "SSL access is enabled."
+msgstr "SSL-toegang is ingeschakeld."
+
+msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
+msgstr "SSL-toegang is niet ingeschakeld. Je kunt nog steeds doorgaan, maar het wordt sterk aanbevolen dat je je webserver configureert om HTTPS te gebruiken voordat je verdergaat."
+
+msgid "Start configuration"
+msgstr "Begin met de configuratie"
+
+msgid "The configuration is complete"
+msgstr "De configuratie is voltooid"
+
+msgid "Success!"
+msgstr "Gelukt!"
+
+msgid "You have completed successfully the configuration procedure, congrats!"
+msgstr "Je hebt de configuratieprocedure met succes afgerond, gefeliciteerd!"
+
+msgid "You will soon be redirected to passbolt to complete your account setup."
+msgstr "Je wordt op korte termijn doorgeleid naar Passbolt om jouw account te voltooien."
+
+msgid "You will soon be redirected to the login page."
+msgstr "Je wordt op korte termijn doorgeleid naar de inlogpagina."
+
+msgid "next"
+msgstr "volgende"
+
+msgid "Click here if you can't wait"
+msgstr "Klik hier als je niet kunt wachten"
+
+msgid "Errors details"
+msgstr "Details foutmeldingen"
+
+msgid "Installing"
+msgstr "Installeren"
+
+msgid "Existing installation?"
+msgstr "Bestaande installatie?"
+
+msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
+msgstr "Als je een bestaande Passbolt-database wilt gebruiken, zal het installatieprogramma ervoor zorgen dat er wordt bijgewerkt naar de huidige Passbolt-versie terwijl jouw gegevens bewaard worden."
+
+msgid "As a precaution, do not forget to backup your database before you continue."
+msgstr "Vergeet niet om uit voorzorg een back-up van de database te maken voordat je verder gaat."
+
+msgid "Help"
+msgstr "Help"
+
+msgid "Need help? You can find more information on how to install passbolt in the official online help."
+msgstr "Hulp nodig? Je kunt meer informatie vinden over het installeren van Passbolt in de officiële online hulp."
+
+msgid "What subscription key?"
+msgstr "Welke abonnementssleutel?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "De abonnementssleutel is een bestand dat naar je is verzonden toen je Passbolt Pro kocht. We hebben de abonnementssleutel nodig om de Pro-functies van Passbolt te activeren."
+
+msgid "Send test email"
+msgstr "Test e-mail verzenden"
+
+msgid "The test email has been sent successfully!"
+msgstr "De test e-mail werd met succes verstuurd!"
+
+msgid "Email could not be sent:"
+msgstr "De e-mail kon niet worden verzonden:"
+
+msgid "See trace"
+msgstr "Bekijk het spoor"
+
+msgid "Your email address"
+msgstr "Jouw e-mailadres"
+
+msgid "Why do I need a SMTP server?"
+msgstr "Waarom heb ik een SMTP-server nodig?"
+
+msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
+msgstr "Passbolt heeft een SMTP-server nodig om uitnodigingse-mails te versturen na het aanmaken van een account en om e-mailnotificaties te verzenden."
+
+msgid "The requested address was not found on this server."
+msgstr "Het opgevraagde adres is niet gevonden op deze server."
+
+msgid "Please double check the url."
+msgstr "Controleer de URL nogmaals."
+
+msgid "Maybe the page was deleted or moved."
+msgstr "Misschien is de pagina verwijderd of verplaatst."
+
+msgid "Health checks"
+msgstr "Gezondheidscontrole"
+
+msgid "Passbolt API Status"
+msgstr "Passbolt's API-status"
+
+msgid "SSL access is not enabled."
+msgstr "SSL-toegang is niet ingeschakeld."
+
+msgid "Group manager"
+msgstr "Groepsbeheerder"
+
+msgid "Member"
+msgstr "Lid"
+
+msgid "Updated roles"
+msgstr "Bijgewerkte functies"
+
+msgid "is now group manager"
+msgstr "is nu groepsbeheerder"
+
+msgid "is not anymore group manager"
+msgstr "is geen groepsbeheerder meer"
+
+msgid "Terms"
+msgstr "Voorwaarden"
+
+msgid "Privacy"
+msgstr "Privacy"
+
+msgid "Credits"
+msgstr "Bronvermeldingen"
+
+msgid "Versions"
+msgstr "Versies"
+
+msgid "home"
+msgstr "startpagina"
+
+msgid "login"
+msgstr "inloggen"
+
+msgid "register"
+msgstr "registreren"
+
+msgid "You have initiated an account recovery!"
+msgstr "Je hebt het herstel van de account geïnitieerd!"
+
+msgid "Welcome back!"
+msgstr "Welkom terug!"
+
+msgid "You just requested to recover your passbolt account on this device."
+msgstr "Je hebt zojuist gevraagd om je Passbolt account op dit apparaat te herstellen."
+
+msgid "Make sure you have a backup of your secret key handy."
+msgstr "Zorg ervoor dat je een back-up van je geheime sleutel bij de hand hebt."
+
+msgid "Click on the link below to proceed."
+msgstr "Klik op de link hieronder om verder te gaan."
+
+msgid "start recovery"
+msgstr "herstel starten"
+
+msgid "{0} just created an account for you on passbolt!"
+msgstr "{0} heeft zojuist een account voor je aangemaakt bij Passbolt!"
+
+msgid "Welcome {0}"
+msgstr "Welkom {0}"
+
+msgid "{0} just invited you to join passbolt at {1}"
+msgstr "{0} heeft je zojuist uitgenodigd om je aan te melden bij Passbolt op {1}"
+
+msgid "Passbolt is an open source password manager."
+msgstr "Passbolt is een open source wachtwoordbeheerder."
+
+msgid "It is designed to allow sharing credentials securely with your team!"
+msgstr "Het is ontworpen om het veilig delen van aanmeldingsgegevens met je team mogelijk te maken!"
+
+msgid "Let's take the next five minutes to get you started!"
+msgstr "Laten we de komende vijf minuten gebruiken om je op weg te helpen!"
+
+msgid "get started"
+msgstr "aan de slag"
+
+msgid "You just created your account on passbolt!"
+msgstr "Je hebt zojuist je account bij Passbolt aangemaakt!"
+
+msgid "You just opened an account on passbolt at {0}."
+msgstr "Je hebt zojuist een account geopend bij Passbolt op {0}."
+
+msgid "{0} requested you to add members to a group"
+msgstr "{0} heeft je gevraagd leden aan een groep toe te voegen"
+
+msgid "Group: {0}"
+msgstr "Groep: {0}"
+
+msgid "The following members should be added:"
+msgstr "De volgende leden moeten worden toegevoegd:"
+
+msgid "Edit group members"
+msgstr "Groepsleden bewerken"
+
+msgid "log in passbolt"
+msgstr "meld aan bij Passbolt"
+
+msgid "{0} deleted the user {1}"
+msgstr "{0} heeft gebruiker {1} verwijderd"
+
+msgid "The user {0} {1} ({2}) is now deleted from your organisation in passbolt."
+msgstr "Gebruiker {0} {1} ({2}) is nu in Passbolt verwijderd uit uw organisatie."
+
+msgid "This user was a member of the following group(s) you manage:"
+msgstr "Deze gebruiker was lid van de volgende groep(en) die je beheert:"
+
+msgid "view it in passbolt"
+msgstr "bekijk het in Passbolt"
+
+msgid "{0} deleted a group"
+msgstr "{0} heeft een groep verwijderd"
+
+msgid "{0} deleted the group \"{1}\" you were a member of."
+msgstr "{0} heeft de groep \"{1}\" verwijderd waarvan je lid was."
+
+msgid "All passwords that were shared only with this group were also deleted."
+msgstr "Alle wachtwoorden die alleen met deze groep werden gedeeld, zijn ook verwijderd."
+
+msgid "As member of the group you now have access to all the passwords that are shared with this group."
+msgstr "Als lid van de groep heb je nu toegang tot alle wachtwoorden die met deze groep worden gedeeld."
+
+msgid "And as group manager you are also authorized to edit the members of the group."
+msgstr "En als groepsbeheerder ben je ook gemachtigd om de leden van de groep te bewerken."
+
+msgid "You are no longer a member of this group."
+msgstr "Je bent geen lid meer van deze groep."
+
+msgid "You are no longer authorized to access the passwords shared with this group."
+msgstr "Je bent niet langer bevoegd om de met deze groep gedeelde wachtwoorden te gebruiken."
+
+msgid "Please contact {0} or another group manager if this is a mistake."
+msgstr "Neem contact op met {0} of een andere groepsbeheerder als dit een vergissing is."
+
+msgid "You are now a group manager of this group."
+msgstr "Je bent nu een groepsbeheerder van deze groep."
+
+msgid "As group manager you are now authorized to edit the members of this group."
+msgstr "Als groepsbeheerder ben je nu gemachtigd om de leden van deze groep te bewerken."
+
+msgid "As member of the group you still have access to all the passwords that are shared with this group."
+msgstr "Als lid van de groep heb je nog steeds toegang tot alle wachtwoorden die met deze groep worden gedeeld."
+
+msgid "You are no longer a group manager of this group."
+msgstr "Je bent niet langer een groepsbeheerder van deze groep."
+
+msgid "You are no longer authorized to edit the members of this group."
+msgstr "Je bent niet langer bevoegd om de leden van deze groep te bewerken."
+
+msgid "Edited your membership in several groups"
+msgstr "Je lidmaatschap in verschillende groepen is bewerkt"
+
+msgid "{0} group memberships were affected."
+msgstr "{0} groepslidmaatschappen zijn getroffen."
+
+msgid "It would be too much to list them here, but you can get more information on passbolt."
+msgstr "Het zou te veel zijn om ze hier op te noemen, maar je kunt meer informatie krijgen bij Passbolt."
+
+msgid "go to passbolt"
+msgstr "ga naar Passbolt"
+
+msgid "{0} deleted several group"
+msgstr "{0} heeft verschillende groepen verwijderd"
+
+msgid "{0} deleted {1} groups you were a member of."
+msgstr "{0} heeft {1} groep(en) verwijderd waar je lid van was."
+
+msgid "You have saved a new password"
+msgstr "Je hebt een nieuw wachtwoord opgeslagen"
+
+msgid "Name: {0}"
+msgstr "Naam: {0}"
+
+msgid "Username: {0}"
+msgstr "Gebruikersnaam: {0}"
+
+msgid "URL: {0}"
+msgstr "URL: {0}"
+
+msgid "Description: {0}"
+msgstr "Omschrijving: {0}"
+
+msgid "{0} shared a password with you"
+msgstr "{0} heeft een wachtwoord met je gedeeld"
+
+msgid "{0} updated the password {1}"
+msgstr "{0} heeft het wachtwoord {1} bewerkt"
+
+msgid "Edited multiple resources"
+msgstr "Meerdere middelen bewerkt"
+
+msgid "{0} resources were affected."
+msgstr "Er zijn {0} middelen getroffen."
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Het zou te veel zijn om ze hier op te noemen, maar je kunt ze nakijken bij Passbolt."
+
+msgid "view them in passbolt"
+msgstr "bekijk ze in Passbolt"
+
+msgid "{0} shared passwords with you"
+msgstr "{0} heeft wachtwoorden met je gedeeld"
+
+msgid "{0} resources were shared with you."
+msgstr "{0} middelen zijn met je gedeeld."
+
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} heeft zojuist diens account geactiveerd bij Passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "De gebruiker is nu actief op Passbolt en je kunt wachtwoorden met deze delen."
+
+msgid "This user was invited by you {0}."
+msgstr "Deze gebruiker is uitgenodigd door jou {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Deze gebruiker heeft zichzelf aangemeld, aangezien de openbare registratie is ingeschakeld."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Deze gebruiker is uitgenodigd door {0} {1}."
+
+msgid "view users"
+msgstr "bekijk gebruikers"
+
+msgid "The locale {0} is not valid or not supported."
+msgstr "De locatie {0} is niet geldig of wordt niet ondersteund."
+
+msgid "An Internal Error Has Occurred"
+msgstr "Er is een interne fout opgetreden"
+
