@@ -377,7 +377,10 @@ class HealthcheckCommand extends PassboltCommand
         $this->warning(
             $checks['ssl']['notSelfSigned'],
             __('Not using a self-signed certificate'),
-            __('Using a self-signed certificate')
+            __('Using a self-signed certificate'),
+            [
+                'Check https://help.passbolt.com/faq/hosting/troubleshoot-ssl',
+            ]
         );
         if (isset($checks['ssl']['info'])) {
             $this->help($checks['ssl']['info']);
