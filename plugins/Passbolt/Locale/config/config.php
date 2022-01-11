@@ -14,16 +14,28 @@ return [
                 ],
                 'options' => [
                     [
-                        'locale' => 'en-UK',
-                        'label' => 'English',
-                    ],
-                    [
                         'locale' => 'de-DE',
                         'label' => 'Deutsch',
                     ],
                     [
+                        'locale' => 'en-UK',
+                        'label' => 'English',
+                    ],
+                    [
                         'locale' => 'fr-FR',
                         'label' => 'Français',
+                    ],
+                    [
+                        'locale' => 'ja-JP',
+                        'label' => '日本語',
+                    ],
+                    [
+                        'locale' => 'nl-NL',
+                        'label' => 'Nederlands',
+                    ],
+                    [
+                        'locale' => 'pl-PL',
+                        'label' => 'Polski',
                     ],
                     [
                         'locale' => 'sv-SE',
