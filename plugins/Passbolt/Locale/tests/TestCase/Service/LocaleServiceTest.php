@@ -39,9 +39,12 @@ class LocaleServiceTest extends TestCase
     public function testGetSystemLocales(): void
     {
         $this->assertSame([
-            'en-UK',
             'de-DE',
+            'en-UK',
             'fr-FR',
+            'ja-JP',
+            'nl-NL',
+            'pl-PL',
             'sv-SE',
         ], LocaleService::getSystemLocales());
     }
