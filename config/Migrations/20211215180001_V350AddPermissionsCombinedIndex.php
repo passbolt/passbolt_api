@@ -16,10 +16,10 @@ class V350AddPermissionsCombinedIndex extends AbstractMigration
     {
         $this->table('permissions')
             ->addIndex([
-                'aco',
+                'aco_foreign_key',
                 'aro_foreign_key',
-                'type',
-                'aco_foreign_key'
+                'aco',
+                'type'
             ])
             ->save();
     }
