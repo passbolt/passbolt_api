@@ -248,7 +248,7 @@ info_message() {
 set_jwt_keys() {
   if [[ ! -f $JWT_KEY || ! -f $JWT_PEM ]]
   then 
-    /usr/share/php/passbolt/bin/cake passbolt create_jwt_keys
+    su -c '/usr/share/php/passbolt/bin/cake passbolt create_jwt_keys' -s /bin/bash www-data
     chmod 640 "$JWT_KEY" && chown root:www-data "$JWT_KEY" 
     chmod 640 "$JWT_PEM" && chown root:www-data "$JWT_PEM" 
   fi 
