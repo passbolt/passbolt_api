@@ -65,15 +65,17 @@ class ResourceFactory extends CakephpBaseFactory
     }
 
     /**
-     * Define the associated permissions to create for a given list of users.
+     * Define the associated permissions to create for a given list of aros (users or groups).
      *
-     * @param array $users Array of users to create the folder for
+     * @param array $aros Array of users or groups to create the resource for
+     * @param mixed $permissionsType (Optional) The permission type, default OWNER
      * @return ResourceFactory
      */
-    public function withPermissionsFor(array $users): ResourceFactory
+    public function withPermissionsFor(array $aros, $permissionsType = 15): ResourceFactory
     {
-        foreach ($users as $user) {
-            $permissionsMeta = ['aco' => PermissionsTable::RESOURCE_ACO, 'aro' => PermissionsTable::USER_ARO, 'aro_foreign_key' => $user->id];
+        foreach ($aros as $aro) {
+            $aroType = $aro instanceof User ? PermissionsTable::USER_ARO : PermissionsTable::GROUP_ARO;
+            $permissionsMeta = ['aco' => PermissionsTable::RESOURCE_ACO, 'aro' => $aroType, 'aro_foreign_key' => $aro->id, 'type' => $permissionsType];
             $this->with('Permissions', $permissionsMeta);
         }
 
