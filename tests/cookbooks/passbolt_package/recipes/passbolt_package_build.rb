@@ -75,13 +75,6 @@ elsif platform_family?('rhel')
       action :install
     end
 
-    execute 'RHEL: List' do
-      cwd     "#{node['dest_dir']}"
-      command "ls -las"
-      live_stream true
-      action :run
-    end  
-
     execute 'RHEL: Setup RPM devtree' do
       cwd     "#{node['dest_dir']}"
       command "rpmdev-setuptree"
