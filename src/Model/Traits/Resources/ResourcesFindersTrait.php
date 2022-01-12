@@ -107,10 +107,9 @@ trait ResourcesFindersTrait
             }
         }
 
-        // Filter on resources I have permission.
-        $query = $this->_filterQueryByPermissions($query, $userId);
-
-        // If contains the user permission.
+        // If contains the user permission, retrieve the highest permission the user has for each resource.
+        // In the meantime filter only the resources the user has access, the permissions table will be joined
+        // to the resources table with an INNER join, see the hasOne definition.
         if (isset($options['contain']['permission'])) {
             $query->contain('Permission', function (Query $q) use ($userId) {
                 $subQueryOptions = ['checkGroupsUsers' => true];
@@ -123,6 +122,9 @@ trait ResourcesFindersTrait
 
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
             });
+        } else {
+            // If not already filtered by the contains on Permission, then filter only the resources the user has access.
+            $query = $this->_filterQueryByPermissions($query, $userId);
         }
 
         // If contains Secrets.
