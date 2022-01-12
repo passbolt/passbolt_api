@@ -121,12 +121,13 @@ chown -R nginx:nginx /var/log/passbolt
 set_jwt_keys() {
   if [[ ! -f $jwt_key || ! -f $jwt_pem ]]
   then 
+    local web_user='nginx'
     local jwt_dir='%{_sysconfdir}/passbolt/jwt'
     local jwt_key="$jwt_dir/jwt.key"
     local jwt_pem="$jwt_dir/jwt.pem"
-    /usr/share/php/passbolt/bin/cake passbolt create_jwt_keys
-    chmod 640 "$jwt_key" && chown root:nginx "$jwt_key" 
-    chmod 640 "$jwt_pem" && chown root:nginx "$jwt_pem" 
+    su -c '/usr/share/php/passbolt/bin/cake passbolt create_jwt_keys' -s /bin/bash "$web_user"
+    chmod 640 "$jwt_key" && chown root:"$web_user" "$jwt_key" 
+    chmod 640 "$jwt_pem" && chown root:"$web_user" "$jwt_pem" 
   fi 
 }
 
