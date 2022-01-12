@@ -119,9 +119,6 @@ mkdir -p /var/log/passbolt
 chown -R nginx:nginx /var/log/passbolt
 
 set_jwt_keys() {
-  jwt_dir='%{_sysconfdir}/passbolt/jwt'
-  jwt_key="$jwt_dir/jwt.key"
-  jwt_pem="$jwt_dir/jwt.pem"
   if [[ ! -f $jwt_key || ! -f $jwt_pem ]]
   then 
     local web_user='nginx'
@@ -139,7 +136,6 @@ if [ $1 -gt 1 ]
 then
     su -c '%{_datadir}/php/passbolt/bin/cake passbolt migrate' -s /bin/bash nginx >> /var/log/passbolt/upgrade.log
     su -c '%{_datadir}/php/passbolt/bin/cake cache clear_all' -s /bin/bash nginx >> /var/log/passbolt/upgrade.log
-    set_jwt_keys
 fi
 
 set_jwt_keys
