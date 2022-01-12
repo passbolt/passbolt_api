@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Utility;
 
 use App\Utility\Healthchecks;
+use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Database\Connection;
 use Cake\Datasource\ConnectionManager;
@@ -26,14 +27,16 @@ class DatabaseConfiguration
     /**
      * Build a database configuration
      *
-     * @param array $data form data
+     * @param string[] $data form data
      * @return array
      */
-    public static function buildConfig($data)
+    public static function buildConfig(array $data): array
     {
         return [
             'className' => 'Cake\Database\Connection',
-            'driver' => $data['driver'],
+            // For the moment, we take the driver in the configuration file.
+            // Later we will offer the possibility to choose between MySQL and Postgres
+            'driver' => $data['driver'] ?? Configure::read('Datasources.default.driver'),
             'persistent' => false,
             'host' => $data['host'],
             'port' => $data['port'],
