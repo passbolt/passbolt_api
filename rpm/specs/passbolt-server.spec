@@ -110,6 +110,7 @@ chmod -R o-rw %{_sysconfdir}/passbolt/*
 # nginx needs to write on /etc/passbolt for webinstaller
 chmod 0770 %{_sysconfdir}/passbolt
 chmod 0770 %{_sysconfdir}/passbolt/gpg
+chmod 0770 %{_sysconfdir}/passbolt/jwt
 chmod -R o-rwx %{_sysconfdir}/passbolt/*
 # Strict permissions for gnupg server keyring
 chmod 0700 /var/lib/passbolt/.gnupg/
