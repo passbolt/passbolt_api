@@ -18,14 +18,14 @@ then
 fi
 
 cp rpm/specs/passbolt-server-selinux.spec ~/rpmbuild/SPECS/
-cd rpm/passbolt-server-selinux-${PKG_VERSION}
+cd rpm/passbolt-server-selinux
 make clean
 echo "make"
 make
 cd ..
 tar --create \
     --gzip \
-    --file ~/rpmbuild/SOURCES/passbolt-server-selinux-${PKG_VERSION}.tar.gz passbolt-server-selinux-${PKG_VERSION}
+    --file ~/rpmbuild/SOURCES/passbolt-server-selinux-${PKG_VERSION}.tar.gz passbolt-server-selinux
 cd -
 make clean
 rpmbuild -ba \

@@ -4,7 +4,7 @@ Release:        1%{?dist}
 Summary:        Passbolt
 BuildArch:      noarch
 
-  License:        AGPL v3 | https://opensource.org/licenses/AGPL-3.0
+License:        AGPL v3 | https://opensource.org/licenses/AGPL-3.0
 URL:            https://www.passbolt.com
 Source0:        %{name}-%{version}.tar.gz
 Patch0:         02_webpaths_setup.diff
