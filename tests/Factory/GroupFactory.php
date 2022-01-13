@@ -59,4 +59,20 @@ class GroupFactory extends CakephpBaseFactory
             ];
         });
     }
+
+    /**
+     * Define the associated groups users to create for a given list of users
+     *
+     * @param array $users Array of users or groups to create the resource for
+     * @return GroupFactory
+     */
+    public function withGroupsUsersFor(array $users): GroupFactory
+    {
+        foreach ($users as $user) {
+            $groupUserMeta = ['user_id' => $user->id];
+            $this->with('GroupsUsers', $groupUserMeta);
+        }
+
+        return $this;
+    }
 }
