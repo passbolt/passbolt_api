@@ -98,25 +98,21 @@ trait PermissionsFindersTrait
     public function findAllByAro(string $acoType, string $aroForeignKey, ?array $options = []): Query
     {
         $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
+        $aroForeignKeys = [$aroForeignKey];
 
-        $query = $this->find()
-            ->where(['aco' => $acoType]);
-
-        if (!$checkGroupsUsers) {
-            $query->where(['Permissions.aro_foreign_key' => $aroForeignKey]);
-        } else {
-            // Subquery retrieving the groups ids the given aro is member of.
-            $groupsIdsSubQuery = $this->Groups->GroupsUsers->findByUserId($aroForeignKey)->select('group_id');
-            // All the permissions defined for the given aro or the groups the aro is member of.
-            $query->where([
-                'OR' => [
-                    ['Permissions.aro_foreign_key' => $aroForeignKey],
-                    ['Permissions.aro_foreign_key IN' => $groupsIdsSubQuery],
-                ],
-            ]);
+        // Retrieve also the permissions for the groups a user is member of.
+        if ($checkGroupsUsers) {
+            // For performance reasons, the groups a user is member of are retrieved in a seprate query.
+            $groupsIds = $this->Groups->GroupsUsers->findByUserId($aroForeignKey)
+                ->disableHydration()->extract('group_id')->toArray();
+            $aroForeignKeys = array_merge($aroForeignKeys, $groupsIds);
         }
 
-        return $query;
+        return $this->find()
+            ->where([
+                'aco' => $acoType,
+                'Permissions.aro_foreign_key IN' => $aroForeignKeys,
+            ]);
     }
 
     /**
