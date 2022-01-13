@@ -43,7 +43,7 @@ class PaymentRequiredException extends HttpException implements ExceptionWithErr
         }
         $code = $code ?? 402;
         parent::__construct($message, $code, $previous);
-        $this->data = $data ?? '';
+        $this->data = $data;
     }
 
     /**
