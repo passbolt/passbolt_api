@@ -12,15 +12,15 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         3.5.0
  */
 namespace App\Utility\OpenPGP\Exceptions;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 
 /**
  * Exception raised when the user signature is invalid.
  */
-class InvalidSignatureException extends Exception
+class InvalidSignatureException extends CakeException
 {
 }
