@@ -259,9 +259,8 @@ class GpgJwtAuthenticatorTest extends TestCase
         $serverChallenge = $data['challenge'];
         $this->gpg->clearDecryptKeys();
         $this->gpg->setVerifyKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-        $this->gpg->verify($serverChallenge);
         $this->gpg->setDecryptKeyFromFingerprint($user['gpgkey']['fingerprint'], '');
-        $decryptedChallenge = $this->gpg->decrypt($serverChallenge);
+        $decryptedChallenge = $this->gpg->decrypt($serverChallenge, true);
 
         // Assert challenge content contains required info
         $this->assertNotEmpty($decryptedChallenge);
