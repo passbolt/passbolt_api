@@ -25,6 +25,7 @@ make
 cd ..
 tar --create \
     --gzip \
+    --transform="flags=r;s|passbolt-server-selinux|passbolt-server-selinux-${PKG_VERSION}|" \
     --file ~/rpmbuild/SOURCES/passbolt-server-selinux-${PKG_VERSION}.tar.gz passbolt-server-selinux
 cd -
 make clean
