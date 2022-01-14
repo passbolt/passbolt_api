@@ -136,3 +136,49 @@ control 'passbolt-config-09-2' do                        # A unique ID for this 
     end
   end
 end
+
+control 'passbolt-config-10-1' do                        # A unique ID for this control
+  impact 1                                # The criticality, if this control fails.
+  title 'jwt directory is installed'             # A human-readable title
+  desc 'jwt directory is present with correct permissions'
+  describe directory("#{config_dir}/jwt") do                  # The actual test
+    it { should exist }
+    its('owner') { should eq 'root' }
+    its('group') { should eq webserver_group }
+    its('mode') { should cmp '00770' }
+    it 'should be empty' do
+      expect(command("ls #{config_dir}/gpg | wc -l").stdout).to eq "0\n"
+    end
+  end
+end
+
+control 'passbolt-config-10-2' do                        # A unique ID for this control
+  impact 1                                # The criticality, if this control fails.
+  title 'jwt key file is installed'             # A human-readable title
+  desc 'jwt key file is present with correct permissions'
+  describe file("#{config_dir}/jwt/jwt.key") do                  # The actual test
+    it { should exist }
+    its('owner') { should eq 'root' }
+    its('group') { should eq webserver_group }
+    its('mode') { should cmp '00640' }
+    it 'should be empty' do
+      expect(command("ls #{config_dir}/gpg | wc -l").stdout).to eq "0\n"
+    end
+  end
+end
+
+control 'passbolt-config-10-3' do                        # A unique ID for this control
+  impact 1                                # The criticality, if this control fails.
+  title 'jwt pem file is installed'             # A human-readable title
+  desc 'jwt pem file is present with correct permissions'
+  describe file("#{config_dir}/jwt/jwt.pem") do                  # The actual test
+    it { should exist }
+    its('owner') { should eq 'root' }
+    its('group') { should eq webserver_group }
+    its('mode') { should cmp '00640' }
+    it 'should be empty' do
+      expect(command("ls #{config_dir}/gpg | wc -l").stdout).to eq "0\n"
+    end
+  end
+end
+
