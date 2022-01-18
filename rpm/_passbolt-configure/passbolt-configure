@@ -548,8 +548,8 @@ setup_firewall() {
   local services=(http https)
   banner "Opening ports 80 and 443 on firewall"
   
-  # Set firewall rules only if selinux is not permissive nor disabled.
-  if getenforce | grep -q "Enforcing"
+  # Set firewall rules only if firewalld is running
+  if firewall-cmd --state --quiet
   then 
     enable_service firewalld
     
