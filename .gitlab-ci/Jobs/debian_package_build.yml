@@ -84,7 +84,7 @@ debian-stable:
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/debian
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"' 
       when: on_success
 
 ubuntu-testing:
@@ -105,6 +105,6 @@ ubuntu-stable:
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"' 
       when: on_success
 
