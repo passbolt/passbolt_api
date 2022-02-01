@@ -23,7 +23,7 @@
   PKG_VERSION=$(jq -r '.version' package.json) \
   PASSBOLT_VERSION=$(jq -r '.version' package.json) \
   /bin/sh rpm/scripts/build-passbolt-server.sh
-  PKG_VERSION=0.2 /bin/sh rpm/scripts/build-passbolt-selinux.sh
+  PKG_VERSION=0.3 /bin/sh rpm/scripts/build-passbolt-selinux.sh
   cp ~/rpmbuild/RPMS/noarch/passbolt-* .
 
 .build-rpm:
