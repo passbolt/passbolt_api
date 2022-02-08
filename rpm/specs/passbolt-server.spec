@@ -142,7 +142,9 @@ fi
 set_jwt_keys
 
 %preun
-rm -rf '%{_sysconfdir}/passbolt/jwt'
-
+if [ $1 -eq 0 ]
+then
+  rm -rf '%{_sysconfdir}/passbolt/jwt'
+fi
 %changelog
 
