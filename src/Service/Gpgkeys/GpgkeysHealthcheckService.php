@@ -16,9 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Service\Gpgkeys;
 
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Gpgkey;
 use App\Model\Rule\Gpgkeys\GopengpgFormatRule;
 use App\Model\Table\GpgkeysTable;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
 use App\Utility\OpenPGP\OpenPGPBackend;
@@ -33,10 +35,10 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     public const CATEGORY = 'data';
     public const NAME = 'Gpgkeys';
     public const CHECK_CAN_ENCRYPT = 'Can encrypt';
-    public const CHECK_VALIDATES = 'Can validate';
+    public const CHECK_VALIDATES = 'Pass validation service checks';
+    public const CHECK_DATA_MATCHES = 'Entity data and armored key data matches';
     public const CHECK_IS_NOT_EXPIRED = 'Is not expired';
     public const CHECK_IS_KEY_FORMAT_VALID = 'Is armored key format valid';
-    public const CHECK_IS_EMAIL_UNIQUE = 'Is email unique';
 
     /**
      * @var \App\Model\Table\GpgkeysTable
@@ -54,11 +56,6 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     private $gopengpgFormatRule;
 
     /**
-     * @var array
-     */
-    private $emails = [];
-
-    /**
      * Service constructor.
      *
      * @param \App\Model\Table\GpgkeysTable|null $table gpgkeys table
@@ -74,9 +71,9 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
         $this->checks = [
             self::CHECK_CAN_ENCRYPT => $this->healthcheckFactory(self::CHECK_CAN_ENCRYPT, true),
             self::CHECK_VALIDATES => $this->healthcheckFactory(self::CHECK_VALIDATES, true),
+            self::CHECK_DATA_MATCHES => $this->healthcheckFactory(self::CHECK_DATA_MATCHES, true),
             self::CHECK_IS_NOT_EXPIRED => $this->healthcheckFactory(self::CHECK_IS_NOT_EXPIRED, true),
             self::CHECK_IS_KEY_FORMAT_VALID => $this->healthcheckFactory(self::CHECK_IS_KEY_FORMAT_VALID, true),
-            self::CHECK_IS_EMAIL_UNIQUE => $this->healthcheckFactory(self::CHECK_IS_EMAIL_UNIQUE, true),
         ];
     }
 
@@ -94,10 +91,10 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
 
         foreach ($gpgkeys as $gpgkey) {
             $this->canEncrypt($gpgkey);
-            $this->canValidate($gpgkey);
+            $this->isKeyMatchingEntity($gpgkey);
             $this->isKeyExpired($gpgkey);
             $this->isArmoredKeyFormatValid($gpgkey);
-            $this->isEmailUnique($gpgkey);
+            $this->canValidate($gpgkey);
         }
 
         return $this->getHealthchecks();
@@ -109,7 +106,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
      * @param \App\Model\Entity\Gpgkey $gpgkey gpg key
      * @return void
      */
-    private function canValidate(Gpgkey $gpgkey): void
+    private function isKeyMatchingEntity(Gpgkey $gpgkey): void
     {
         try {
             $copy = $this->table->buildEntityFromArmoredKey($gpgkey->armored_key, $gpgkey->user_id);
@@ -118,9 +115,31 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
             if (count(array_diff($copy->toArray(), $gpgkeyData))) {
                 new Exception('Parse data does not match data in database.');
             }
-            $this->checks[self::CHECK_VALIDATES]
+            $this->checks[self::CHECK_DATA_MATCHES]
                 ->addDetail(__('Validation success for key {0}', $gpgkey->fingerprint), Healthcheck::STATUS_SUCCESS);
         } catch (Exception $exception) {
+            $msg = __('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage());
+            $this->checks[self::CHECK_DATA_MATCHES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
+        }
+    }
+
+    /**
+     * Validates
+     *
+     * @param \App\Model\Entity\Gpgkey $gpgkey gpg key
+     * @return void
+     */
+    private function canValidate(Gpgkey $gpgkey): void
+    {
+        try {
+            PublicKeyValidationService::parseAndValidatePublicKey($gpgkey->armored_key);
+            $this->checks[self::CHECK_VALIDATES]
+                ->addDetail(__('Validation success for key {0}', $gpgkey->fingerprint), Healthcheck::STATUS_SUCCESS);
+        } catch (CustomValidationException $exception) {
+            $json = json_encode($exception->getErrors());
+            $msg = __('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $json);
+            $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
+        } catch (\Exception $exception) {
             $msg = __('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage());
             $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         }
@@ -175,10 +194,10 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     private function isKeyExpired(Gpgkey $gpgkey): void
     {
         if ($gpgkey->isExpired()) {
-            $msg = 'Key expired: {0}.' . $gpgkey->fingerprint;
+            $msg = __('Key expired: {0}.', $gpgkey->fingerprint);
             $this->checks[self::CHECK_IS_NOT_EXPIRED]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         } else {
-            $msg = 'Expiration date valid for key {0}' . $gpgkey->fingerprint;
+            $msg = __('Expiration date valid for key {0}.', $gpgkey->fingerprint);
             $this->checks[self::CHECK_IS_NOT_EXPIRED]->addDetail($msg, Healthcheck::STATUS_SUCCESS);
         }
     }
@@ -193,7 +212,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     private function isArmoredKeyFormatValid(Gpgkey $gpgkey): void
     {
         $isValid = ($this->gopengpgFormatRule)($gpgkey);
-        $email = $this->getEmailFromUid($gpgkey);
+        $email = PublicKeyValidationService::getEmailFromUid($gpgkey->uid);
 
         if ($isValid) {
             $msg = 'Armored key format valid for key ' . $gpgkey->fingerprint . ' ' . $email;
@@ -202,39 +221,5 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
             $msg = 'Armored key format not valid for key ' . $gpgkey->fingerprint . ' ' . $email;
             $this->checks[self::CHECK_IS_KEY_FORMAT_VALID]->addDetail($msg, Healthcheck::STATUS_ERROR);
         }
-    }
-
-    /**
-     * @param \App\Model\Entity\Gpgkey $gpgkey Gpgkey to assess
-     * @return void
-     */
-    private function isEmailUnique(Gpgkey $gpgkey): void
-    {
-        $isValid = true;
-        $email = $this->getEmailFromUid($gpgkey);
-        if ($email) {
-            if (in_array($email, $this->emails)) {
-                $isValid = false;
-            } else {
-                $this->emails[] = $email;
-            }
-        }
-
-        if ($isValid) {
-            $msg = 'Email valid for key ' . $gpgkey->fingerprint . ' ' . $email;
-            $this->checks[self::CHECK_IS_EMAIL_UNIQUE]->addDetail($msg, Healthcheck::STATUS_SUCCESS);
-        } else {
-            $msg = 'Email duplicate for key ' . $gpgkey->fingerprint . ' ' . $email;
-            $this->checks[self::CHECK_IS_EMAIL_UNIQUE]->addDetail($msg, Healthcheck::STATUS_ERROR);
-        }
-    }
-
-    /**
-     * @param \App\Model\Entity\Gpgkey $gpgkey Gpgkey to get the email from
-     * @return string|null
-     */
-    private function getEmailFromUid(Gpgkey $gpgkey): ?string
-    {
-        return $this->table->pregMatchEmail($gpgkey->uid);
     }
 }

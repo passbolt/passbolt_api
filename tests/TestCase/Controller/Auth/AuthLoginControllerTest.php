@@ -204,10 +204,10 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0' => true, // right
         ];
 
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
         foreach ($fix as $token => $expectSuccess) {
-            $msg = $this->gpg->encrypt($token);
+            $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
+            $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
+            $msg = $this->gpg->encryptSign($token);
             $this->postJson('/auth/verify.json', [
                 'data' => [
                     'gpg_auth' => [
