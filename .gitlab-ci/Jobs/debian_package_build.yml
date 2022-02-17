@@ -47,7 +47,7 @@ build-debian:
       apt-get update
       apt-get install -y git-buildpackage devscripts apt-utils debconf-utils fakeroot equivs cdbs
       make -f debian/rules debian/control
-      if [[ $CI_COMMIT_BRANCH =~ ^(develop|feature\/debian\_*) ]]; then
+      if [[ -z $NIGHTLY || $CI_COMMIT_BRANCH =~ ^(develop|feature\/debian\_*) ]]; then
         gbp dch --snapshot --snapshot-number=$(date +%s) --ignore-branch
       fi
       mk-build-deps -irt'apt-get --no-install-recommends -yV' debian/control
@@ -72,6 +72,7 @@ debian-testing:
     DISTRIBUTION: buster
     COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/debian
+    NIGHTLY: "true"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
@@ -83,7 +84,7 @@ debian-stable:
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/debian
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"' 
       when: on_success
 
 ubuntu-testing:
@@ -92,6 +93,7 @@ ubuntu-testing:
     DISTRIBUTION: focal
     COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
+    NIGHTLY: "true"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
@@ -103,6 +105,6 @@ ubuntu-stable:
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"' 
       when: on_success
 

@@ -143,12 +143,15 @@ interface OpenPGPBackendInterface
      *
      * Extract the information from the key and return them in an array:
      *  - fingerprint   : fingerprint of the key, string(40)
-     *  - bits          : size / number of bits (int)
-     *  - type          : algorithm used by the key (RSA, ELGAMAL, DSA, etc..)
+     *  - bits          : key size / curve length (int)
+     *  - type          : algorithm used by the key (RSA, ELGAMAL, DSA, EdDSA, etc..)
      *  - key_id        : key id, string(8)
      *  - key_created   : date of creation of the key, timestamp
      *  - uid           : user id of the key following gpg standard (usually name surname (comment) <email>), string
      *  - expires       : expiration date or empty if no expiration date, timestamp
+     *  - revoked       : if the key has been revoked
+     *  - user_ids      : array of name, email, comment
+     *  - sub_keys      : array of fingerprint, key_id
      *
      * Important note : this function is using OpenPgp-PHP library instead of php-gnupg to pre-validate the key.
      *

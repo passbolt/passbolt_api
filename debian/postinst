@@ -32,6 +32,9 @@ declare -A nginx_values
 PHP_MAJOR_MINOR="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[2-4]\).*:\1:')"
 PHP_VERSION="php${PHP_MAJOR_MINOR}"
 
+JWT_DIR="/etc/passbolt/jwt"
+JWT_KEY="$JWT_DIR/jwt.key"
+JWT_PEM="$JWT_DIR/jwt.pem"
 NGINX_CONF_EXAMPLE="/usr/share/passbolt/examples/nginx-passbolt.conf"
 NGINX_SSL_EXAMPLE="/usr/share/passbolt/examples/nginx-passbolt-ssl.conf"
 NGINX_CONF="/etc/nginx/sites-enabled/nginx-passbolt.conf"
@@ -241,6 +244,16 @@ info_message() {
   printf -- '\033[32m   Well done! Visit %s://%s to finish installation \033[0m\n\n' "$proto" "${nginx_values[domain]}"
   printf -- '\033[32m ===================================================================== \033[0m\n'
 }
+
+set_jwt_keys() {
+  if [[ ! -f $JWT_KEY || ! -f $JWT_PEM ]]
+  then 
+    su -c '/usr/share/php/passbolt/bin/cake passbolt create_jwt_keys' -s /bin/bash www-data
+    chmod 640 "$JWT_KEY" && chown root:www-data "$JWT_KEY" 
+    chmod 640 "$JWT_PEM" && chown root:www-data "$JWT_PEM" 
+  fi 
+}
+
 ###########################################
 # Script starts here
 ###########################################
@@ -256,6 +269,7 @@ case "$deb_action" in
       su -c '/usr/share/php/passbolt/bin/cake cache clear_all' -s /bin/bash www-data
       db_purge
       db_stop
+      set_jwt_keys 
       exit 0
     fi
 
@@ -273,6 +287,9 @@ case "$deb_action" in
 
     # nginx setup
     configure_nginx
+
+    set_jwt_keys 
+
     info_message
     db_stop
 esac

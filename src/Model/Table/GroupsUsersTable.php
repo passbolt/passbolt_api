@@ -53,6 +53,7 @@ use Cake\Validation\Validator;
  * @method \Cake\ORM\Query findByGroupId(string $groupId)
  * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
  * @method \Cake\ORM\Query findByGroupIdAndUserId(string $groupId, string $userId)
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class GroupsUsersTable extends Table
 {
@@ -422,5 +423,18 @@ class GroupsUsersTable extends Table
     public function cleanupHardDeletedGroups($dryRun = false)
     {
         return $this->cleanupHardDeleted('Groups', $dryRun);
+    }
+
+    /**
+     * Delete duplicated groups users
+     *
+     * @param bool $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupDuplicatedGroupsUsers(?bool $dryRun = false): int
+    {
+        $keys = ['group_id', 'user_id'];
+
+        return $this->cleanupDuplicates($keys, $dryRun);
     }
 }

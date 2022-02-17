@@ -548,13 +548,17 @@ setup_firewall() {
   local services=(http https)
   banner "Opening ports 80 and 443 on firewall"
   
-  enable_service firewalld
-  
-  for i in "${services[@]}"; do
-    firewall-cmd --permanent --zone="$zone" --add-service="$i"
-  done
+  # Set firewall rules only if firewalld is running
+  if firewall-cmd --state --quiet
+  then 
+    enable_service firewalld
+    
+    for i in "${services[@]}"; do
+      firewall-cmd --permanent --zone="$zone" --add-service="$i"
+    done
 
-  enable_service firewalld
+    enable_service firewalld
+  fi
 }
 
 __install_db() {
@@ -638,9 +642,14 @@ __nginx_config(){
   local source_template="$1"
   local nginx_config_file="$2"
   local _config_passbolt_host="$3"
+  local protocol='https'
+
+  if [[ "$(__config_get 'ssl_none')" ]]; then
+    protocol='http'
+  fi
 
   if [ -f /etc/passbolt/passbolt.php ]; then
-    sed -i "s#\(^.*'fullBaseUrl' => '\).*\(',.*$\)#\1$(__config_get "$_config_passbolt_host")\2#g" /etc/passbolt/passbolt.php
+    sed -i "s#\(^.*'fullBaseUrl' => '\).*\(',.*$\)#\1${protocol}://$(__config_get "$_config_passbolt_host")\2#g" /etc/passbolt/passbolt.php
   fi
   cp "$source_template" "$nginx_config_file"
   sed -i s:_SERVER_NAME_:"$(__config_get "$_config_passbolt_host")": "$nginx_config_file"

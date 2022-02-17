@@ -17,17 +17,27 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Groups;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\GroupsUserFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
+/**
+ * @property \App\Model\Table\ResourcesTable $Resources
+ */
 class GroupsUpdateControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
+    use EmailQueueTrait;
+
+    public $autoFixtures = false;
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
@@ -69,6 +79,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMUpdateMembersRoleSuccess()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userJId = UuidFactory::uuid('user.id.jean');
@@ -104,6 +116,58 @@ hcciUFw5
         $this->assertUserIsAdmin($groupId, $userNId);
     }
 
+    public function testGroupsUpdateAsGMUpdateMembersRoleSuccessWithFactories()
+    {
+        $group = GroupFactory::make()
+            ->with('GroupsUsers', GroupsUserFactory::make(2)->admin()->with('Users'))
+            ->with('GroupsUsers[2].Users')
+            ->persist();
+        $groupId = $group->id;
+
+        $user0 = $group->groups_users[0]->user;
+        $user1 = $group->groups_users[1]->user;
+        $user2 = $group->groups_users[2]->user;
+        $user3 = $group->groups_users[3]->user;
+
+        $newMember = UserFactory::make()->user()->persist();
+        $newGroupAdmin = UserFactory::make()->user()->persist();
+
+        // Build the request data.
+        $changes = [];
+
+        // Update memberships.
+        // Remove User 1 as admin
+        $changes[] = ['id' => $group->groups_users[1]->id, 'is_admin' => false];
+        // Make User 2 admin
+        $changes[] = ['id' => $group->groups_users[2]->id, 'is_admin' => true];
+        // Add a user to the group
+        $changes[] = ['user_id' => $newMember->id, 'is_admin' => false];
+        // Add a group admin to the group
+        $changes[] = ['user_id' => $newGroupAdmin->id, 'is_admin' => true];
+
+        // Update the group users.
+        $this->logInAs($user0);
+        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
+
+        $this->assertSuccess();
+
+        // User 1 should no longer be a group manager of the group
+        $this->assertUserIsNotAdmin($groupId, $user1->id);
+        $this->assertUserIsNotAdmin($groupId, $user3->id);
+        $this->assertUserIsNotAdmin($groupId, $newMember->id);
+
+        // User 2 should be a group manager of the group
+        $this->assertUserIsAdmin($groupId, $user2->id);
+        $this->assertUserIsAdmin($groupId, $user0->id);
+        $this->assertUserIsAdmin($groupId, $newGroupAdmin->id);
+
+        $this->assetEmailSubject($user1->username, "{$user0->profile->first_name} updated your membership in the group $group->name");
+        $this->assetEmailSubject($user2->username, "{$user0->profile->first_name} updated your membership in the group $group->name");
+        $this->assetEmailSubject($newMember->username, "{$user0->profile->first_name} added you to the group $group->name");
+        $this->assetEmailSubject($newGroupAdmin->username, "{$user0->profile->first_name} added you to the group $group->name");
+        $this->assertEmailQueueCount(4);
+    }
+
     /*
      * As a group manager I can add members to a group I manage
      *   - A member who has no previous access to the resources shared with the group
@@ -113,6 +177,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMAddMembersSuccess()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userAId = UuidFactory::uuid('user.id.ada');
@@ -181,6 +247,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMDeleteMembersSuccess()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userKId = UuidFactory::uuid('user.id.kathleen');
@@ -234,6 +302,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMUpdateGroupComplexScenarioSuccess()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userAId = UuidFactory::uuid('user.id.ada');
@@ -323,6 +393,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMCannotUpdateNameError()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
@@ -349,6 +421,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsADUpdateNameSuccess()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
@@ -374,6 +448,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsADUpdateMembersRoleSuccess()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userJId = UuidFactory::uuid('user.id.jean');
@@ -416,6 +492,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsADDeleteMembersSuccess()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userKId = UuidFactory::uuid('user.id.kathleen');
@@ -463,6 +541,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsADUpdateGroupComplexScenarioSuccess()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userJId = UuidFactory::uuid('user.id.jean');
@@ -511,6 +591,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsAdminCannotAddGroupUserError()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userCId = UuidFactory::uuid('user.id.carol');
@@ -532,6 +614,8 @@ hcciUFw5
 
     public function testGroupsUpdateLostAccessFavoritesDeleted()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $userLId = UuidFactory::uuid('user.id.lynne');
         $groupFId = UuidFactory::uuid('group.id.freelancer');
@@ -560,6 +644,8 @@ hcciUFw5
 
     public function testGroupsUpdateAsAdminCannotDeleteGroupUserError()
     {
+        $this->loadFixtures();
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userKId = UuidFactory::uuid('user.id.nancy');
@@ -580,7 +666,7 @@ hcciUFw5
 
     public function testGroupsUpdateErrorNotValidId()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $groupId = 'invalid-id';
         $this->putJson("/groups/$groupId.json");
         $this->assertError(400, 'The group id is not valid.');
@@ -588,7 +674,7 @@ hcciUFw5
 
     public function testGroupsUpdateErrorDoesNotExistGroup()
     {
-        $this->authenticateAs('admin');
+        $this->logInAsUser();
         $groupId = UuidFactory::uuid();
         $this->putJson("/groups/$groupId.json");
         $this->assertError(404, 'The group does not exist.');
@@ -596,34 +682,33 @@ hcciUFw5
 
     public function testGroupsUpdateErrorGroupIsSoftDeleted()
     {
-        $this->authenticateAs('admin');
-        $groupId = UuidFactory::uuid('group.id.deleted');
+        $this->logInAsAdmin();
+        $groupId = GroupFactory::make()->deleted()->persist()->id;
+
         $this->putJson("/groups/$groupId.json");
         $this->assertError(404, 'The group does not exist.');
     }
 
     public function testGroupsUpdateErrorAccessDenied()
     {
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->authenticateAs('ada');
+        $groupId = GroupFactory::make()->persist()->id;
+        $this->logInAsUser();
         $this->putJson("/groups/$groupId.json");
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
     public function testGroupsUpdateErrorNotAuthenticated()
     {
-        $groupId = UuidFactory::uuid('group.id.freelancer');
         $postData = [];
-        $this->putJson("/groups/$groupId.json", $postData);
+        $this->putJson('/groups/foo.json', $postData);
         $this->assertAuthenticationError();
     }
 
     public function testGroupsUpdateErrorCsrfToken()
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('admin');
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->put("/groups/$groupId.json");
+        $this->logInAsAdmin();
+        $this->put('/groups/foo.json');
         $this->assertResponseCode(403);
     }
 }

@@ -38,4 +38,18 @@ class Gpgkey extends Entity
     protected $_accessible = [
         'id' => false,
     ];
+
+    /**
+     * Returns true if expired is set and in the past.
+     *
+     * @return bool
+     */
+    public function isExpired(): bool
+    {
+        if (!isset($this->expires)) {
+            return false;
+        }
+
+        return $this->expires->isPast();
+    }
 }

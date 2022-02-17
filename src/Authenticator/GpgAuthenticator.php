@@ -18,7 +18,7 @@ namespace App\Authenticator;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
-use App\Model\Table\GpgkeysTable;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
@@ -301,7 +301,7 @@ class GpgAuthenticator extends SessionAuthenticator
         $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
 
         // Check if config contains fingerprint
-        if (!is_string($fingerprint) || !GpgkeysTable::isValidFingerprint($fingerprint)) {
+        if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
             throw new InternalErrorException('The GnuPG config for the server is not available or incomplete.');
         }
 
@@ -351,17 +351,15 @@ class GpgAuthenticator extends SessionAuthenticator
     private function _identifyUserWithFingerprint(): ?User
     {
         // First we check if we can get the user with the key fingerprint
-        if (!isset($this->_data['keyid'])) {
+        if (!isset($this->_data['keyid']) || !is_string($this->_data['keyid'])) {
             $this->_debug('No key id set.');
 
             return null;
         }
-        $fingerprint = strtoupper($this->_data['keyid']);
 
         // validate the fingerprint format
-        /** @var \App\Model\Table\GpgkeysTable $Gpgkeys */
-        $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
-        if (!is_string($fingerprint) || !$Gpgkeys->isValidFingerprintRule($fingerprint)) {
+        $fingerprint = strtoupper($this->_data['keyid']);
+        if (!PublicKeyValidationService::isValidFingerprint($fingerprint)) {
             $this->_debug('Invalid fingerprint.');
 
             return null;

@@ -32,7 +32,6 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
  * @property string $modified_by
- *
  * @property \App\Model\Entity\User|null $creator
  * @property \App\Model\Entity\User|null $modifier
  * @property \App\Model\Entity\Permission|null $permission
