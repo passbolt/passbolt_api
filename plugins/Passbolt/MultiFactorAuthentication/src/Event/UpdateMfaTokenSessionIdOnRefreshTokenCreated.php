@@ -16,14 +16,18 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Event;
 
+use App\Middleware\UacAwareMiddlewareTrait;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenCreateService;
 use Passbolt\MultiFactorAuthentication\Service\UpdateMfaTokenSessionIdService;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class UpdateMfaTokenSessionIdOnRefreshTokenCreated implements EventListenerInterface
 {
+    use UacAwareMiddlewareTrait;
+
     /**
      * @return array
      */
@@ -45,6 +49,14 @@ class UpdateMfaTokenSessionIdOnRefreshTokenCreated implements EventListenerInter
     {
         /** @var \Cake\Http\ServerRequest $request */
         $request = $event->getData(RefreshTokenCreateService::REQUEST_DATA_KEY);
+        $uac = $this->getUacInRequest($request);
+
+        // Do nothing if the user has MFA disabled.
+        $mfaSettings = MfaSettings::get($uac);
+        if (!$mfaSettings->hasEnabledProviders()) {
+            return;
+        }
+
         $mfaToken = $request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         if (is_string($mfaToken)) {
             $accessToken = $event->getData(RefreshTokenCreateService::ACCESS_TOKEN_DATA_KEY);

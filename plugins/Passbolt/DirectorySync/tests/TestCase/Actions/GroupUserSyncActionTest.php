@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 use App\Command\CommandBootstrap;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Event\EventManager;
 use Cake\I18n\FrozenTime;
@@ -37,6 +38,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     use AssertGroupsTrait;
     use AssertGroupUsersTrait;
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public function setUp(): void
     {
@@ -46,6 +48,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->setEmailNotificationSetting('send.group.user.add', true);
         EventManager::instance()->on(new CoreEmailRedactorPool());
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+        // Init CommandBootstrap to handle email notifications.
+        CommandBootstrap::init();
     }
 
     public function tearDown(): void
@@ -82,6 +86,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertNoReportsForModel($reports, Alias::MODEL_GROUPS_USERS);
         $this->assertGroupNotExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
         $this->assertDirectoryRelationEmpty();
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -100,6 +105,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => UuidFactory::uuid('user.id.edith')]);
         $this->assertDirectoryRelationNotExist($relation->id);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -127,6 +133,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertGroupNotExist(UuidFactory::uuid('group.id.freelancer'), ['deleted' => false]);
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
         $this->assertDirectoryRelationNotExist($relation->id);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -157,6 +164,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
         $this->assertGroupUserExist($relation->id);
         $this->assertDirectoryRelationExist($relation->id);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -185,8 +193,14 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
-        $groupUser = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
+        $groupUser = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->get('id')]);
         $this->assertDirectoryRelationNotExist($groupUser->id);
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'Admin added you to the group newgroup',
+            'template' => 'LU/group_user_add',
+        ]);
+        $this->assertEmailQueueCount(1);
     }
 
     /**
@@ -216,8 +230,14 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
-        $groupUser = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
+        $groupUser = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->get('id')]);
         $this->assertDirectoryRelationNotExist($groupUser->id);
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'Admin added you to the group newgroup',
+            'template' => 'LU/group_user_add',
+        ]);
+        $this->assertEmailQueueCount(1);
     }
 
     /**
@@ -239,6 +259,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertGroupExist(UuidFactory::uuid('group.id.freelancer'), ['deleted' => false]);
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.ada')]);
         $this->assertDirectoryRelationNotExist($relation->id);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -271,6 +292,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => UuidFactory::uuid('user.id.betty')]);
         $this->assertDirectoryRelationNotExist($relation->id);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -316,9 +338,15 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
-        $groupUserAda = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
+        $groupUserAda = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->get('id')]);
         $this->assertGroupUserNotExist(null, ['group_id' => $groupCreated->id, 'user_id' => UuidFactory::uuid('user.id.ruth')]);
         $this->assertDirectoryRelationEmpty();
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'Admin added you to the group newgroup',
+            'template' => 'LU/group_user_add',
+        ]);
+        $this->assertEmailQueueCount(1);
     }
 
     /**
@@ -381,9 +409,15 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
-        $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
+        $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->get('id')]);
         $this->assertGroupUserNotExist(null, ['group_id' => $groupCreated->id, 'user_id' => UuidFactory::uuid('user.id.ruth')]);
         $this->assertDirectoryRelationNotEmpty();
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'Admin added you to the group newgroup',
+            'template' => 'LU/group_user_add',
+        ]);
+        $this->assertEmailQueueCount(1);
     }
 
     /**
@@ -427,10 +461,16 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
-        $groupUserAda = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
+        $groupUserAda = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->get('id')]);
         $groupUserFrances = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => UuidFactory::uuid('user.id.frances')]);
         $this->assertDirectoryRelationNotExist($groupUserAda->id); // Directory relation should not be added for default user.
         $this->assertDirectoryRelationExist($groupUserFrances->id);
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'Admin added you to the group newgroup',
+            'template' => 'LU/group_user_add',
+        ]);
+        $this->assertEmailQueueCount(1);
     }
 
     /**
@@ -469,11 +509,12 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertReport($reports[0], $expectedUserGroupReport);
 
         // Group user for default admin should not exist.
-        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => $defaultGroupAdmin->id]);
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => $defaultGroupAdmin->get('id')]);
 
         // Frances should be in group users and directoryRelations.
         $groupUserFrances = $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
         $this->assertDirectoryRelationExist($groupUserFrances->id);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -502,6 +543,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertReportEmpty($reports);
         // Frances should be in group users and directoryRelations.
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -514,8 +556,9 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroupUser_Case11b_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords()
     {
-        // Init CommandBootstrap to handle email notifications.
-        CommandBootstrap::init();
+        // Since an email is sent in this test, it is necessary to load the EmailDigest plugin
+        // in order to set the email's encryption to JSON
+        $this->loadPlugins(['Passbolt/EmailDigest']);
 
         $defaultGroupAdmin = 'edith@passbolt.com';
         $this->setDefaultGroupAdminUser($defaultGroupAdmin);
@@ -543,17 +586,21 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertReport($reports[0], $expectedUserGroupReport);
 
         // Group user for default admin should not exist.
-        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => $defaultGroupAdmin->id]);
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => $defaultGroupAdmin->get('id')]);
 
         // Frances should be in group users and directoryRelations.
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
         $this->assertDirectoryRelationEmpty();
 
         // Assert email notification
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('requested you to add members to a group');
-        $this->assertResponseContains('Frances Allen (Member)');
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'Admin requested you to add members to Accounting',
+            'template' => 'GM/group_user_request',
+        ]);
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailInBatchContains('requested you to add members to a group');
+        $this->assertEmailInBatchContains('Frances Allen (Member)');
     }
 
     /**
@@ -599,15 +646,14 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertReport($reports[0], $expectedUserGroupReport);
 
         // Group user for default admin should not exist.
-        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => $defaultGroupAdmin->id]);
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => $defaultGroupAdmin->get('id')]);
 
         // Frances should not be in group users and directoryRelations.
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.ruth')]);
         $this->assertDirectoryRelationEmpty();
 
         // No email notification should have been sent to the group manager.
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(500);
+        $this->assertEmailQueueIsEmpty();
     }
 
     /**
@@ -653,6 +699,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         // groupUser should exist, but not directory relation since the sync shouldn't have happened.
         $groupUser = $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.grace')]);
         $this->assertDirectoryRelationNotExist($groupUser->id);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -699,6 +746,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         // groupUser should exist, but not directory relation since the sync shouldn't have happened.
         $groupUser = $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.nancy')]);
         $this->assertDirectoryRelationExist($groupUser->id);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -737,6 +785,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'parent_key' => UuidFactory::uuid('ldap.group.id.freelancer'),
             'child_key' => UuidFactory::uuid('ldap.user.id.ada'),
         ]);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -765,6 +814,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'parent_key' => UuidFactory::uuid('ldap.group.id.freelancer'),
             'child_key' => UuidFactory::uuid('ldap.user.id.frances'),
         ]);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -789,6 +839,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->mockDirectoryRelationGroupUser('freelancer', 'sofia');
         $reports = $this->action->execute();
         $this->assertEmpty($reports);
+        $this->assertEmailQueueCount(0);
     }
 
     /**
@@ -832,5 +883,6 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'type' => Alias::MODEL_GROUPS,
         ];
         $this->assertReport($reports[1], $expectedUserGroupReport);
+        $this->assertEmailQueueCount(0);
     }
 }

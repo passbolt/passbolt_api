@@ -173,7 +173,7 @@ trait MockDirectoryTrait
             'directory_created' => new FrozenTime($created),
             'directory_modified' => new FrozenTime($modified),
             'group' => [
-                'name' => strtolower($cn),
+                'name' => $cn,
                 'groups' => [],
                 'users' => $options['group_users'] ?? [],
             ],

@@ -114,12 +114,12 @@ class TagsTable extends Table
                     return $q->where([
                         'ResourcesTags.resource_id IN' => $resourcesId,
                         'OR' => [
-                            ['ResourcesTags.user_id =' => $userId],
-                            ['ResourcesTags.user_id IS NULL'],
+                            'ResourcesTags.user_id' => $userId,
+                            $q->newExpr()->isNull('ResourcesTags.user_id'),
                         ],
                     ]);
                 })
-                ->order('slug')
+                ->order($this->aliasField('slug'))
                 ->distinct();
         }
 

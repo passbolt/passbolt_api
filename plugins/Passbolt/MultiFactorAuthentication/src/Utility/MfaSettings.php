@@ -74,9 +74,10 @@ class MfaSettings
      * Get MfaSettings singleton
      *
      * @param \App\Utility\UserAccessControl $uac access control
-     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
+     * @return self
+     * @throws \Cake\Http\Exception\InternalErrorException if the UAC changed during the request (improbable)
      */
-    public static function get(UserAccessControl $uac)
+    public static function get(UserAccessControl $uac): MfaSettings
     {
         if (self::$instance !== null) {
             if (self::$instance->uac->getId() !== $uac->getId()) {
@@ -116,9 +117,9 @@ class MfaSettings
     /**
      * Get an array of all possible providers
      *
-     * @return array
+     * @return string[]
      */
-    public static function getProviders()
+    public static function getProviders(): array
     {
         return [
             self::PROVIDER_TOTP,
@@ -132,7 +133,7 @@ class MfaSettings
      *
      * @return array
      */
-    public function getProvidersStatuses()
+    public function getProvidersStatuses(): array
     {
         $result = $default = [];
         $providers = self::getProviders();
@@ -160,9 +161,9 @@ class MfaSettings
      * user = ['totp', 'duo']
      * result = ['totp']
      *
-     * @return array of provider names
+     * @return string[] of provider names
      */
-    public function getEnabledProviders()
+    public function getEnabledProviders(): array
     {
         $result = [];
         if ($this->accountSettings === null) {
@@ -189,11 +190,21 @@ class MfaSettings
      * @param string $provider provider name
      * @return bool
      */
-    public function isProviderEnabled(string $provider)
+    public function isProviderEnabled(string $provider): bool
     {
         $providers = $this->getEnabledProviders();
 
         return array_search($provider, $providers) !== false;
+    }
+
+    /**
+     * Return true if the user has at least one provider enabled, and this provider is enabled for the organization
+     *
+     * @return bool
+     */
+    public function hasEnabledProviders(): bool
+    {
+        return count($this->getEnabledProviders()) > 0;
     }
 
     /**
@@ -220,7 +231,7 @@ class MfaSettings
      *
      * @return \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings
      */
-    public function getOrganizationSettings()
+    public function getOrganizationSettings(): MfaOrgSettings
     {
         return $this->orgSettings;
     }
@@ -232,7 +243,7 @@ class MfaSettings
      * @param bool|null $json if json extension required
      * @return array
      */
-    public function getProvidersVerifyUrls(?bool $json = true)
+    public function getProvidersVerifyUrls(?bool $json = true): array
     {
         $providers = $this->getEnabledProviders();
         $data = [];
@@ -249,7 +260,7 @@ class MfaSettings
      * @param bool|null $json if json extension required
      * @return string
      */
-    public function getDefaultVerifyUrl(?bool $json = true)
+    public function getDefaultVerifyUrl(?bool $json = true): string
     {
         $providers = $this->getEnabledProviders();
 
@@ -263,7 +274,7 @@ class MfaSettings
      * @param bool|null $json if json extension required
      * @return string
      */
-    public function getProviderVerifyUrl(string $provider, ?bool $json = true)
+    public function getProviderVerifyUrl(string $provider, ?bool $json = true): string
     {
         if ($json) {
             $json = '.json';

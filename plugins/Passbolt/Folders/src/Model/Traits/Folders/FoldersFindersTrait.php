@@ -19,6 +19,7 @@ namespace Passbolt\Folders\Model\Traits\Folders;
 
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\PermissionsTable;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
@@ -72,8 +73,8 @@ trait FoldersFindersTrait
                 $subQueryOptions = ['checkGroupsUsers' => true];
                 $permissionIdSubQuery = $this->Permissions
                     ->findAllByAro(PermissionsTable::FOLDER_ACO, $userId, $subQueryOptions)
-                    ->where(['Permissions.aco_foreign_key = Folders.id'])
-                    ->order(['Permissions.type DESC'])
+                    ->where(['Permissions.aco_foreign_key' => new IdentifierExpression('Folders.id')])
+                    ->orderDesc('Permissions.type')
                     ->limit(1)
                     ->select(['Permissions.id']);
 
@@ -145,8 +146,6 @@ trait FoldersFindersTrait
         if (isset($options['contain']['permissions.group'])) {
             $query->contain('Permissions.Groups');
         }
-
-        $query->orderAsc('Folders.name');
 
         return $query;
     }

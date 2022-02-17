@@ -22,6 +22,7 @@ use Cake\Form\Schema;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
@@ -246,7 +247,7 @@ class LdapConfigurationForm extends Form
 
         $validator
             ->allowEmptyString('sync_users_delete')
-            ->boolean('sync_users_delete', __('The sync of deleted user setting should be a boolean.'));
+            ->boolean('sync_users_delete', __('The sync of deleted users setting should be a boolean.'));
 
         $validator
             ->allowEmptyString('sync_groups_create')
@@ -266,40 +267,39 @@ class LdapConfigurationForm extends Form
     /**
      * Check if an admin user exists.
      *
-     * @param string $value The user id
+     * @param string $userId The user id
      * @param array $context not in use
      * @return bool
      */
-    public function isValidAdmin(string $value, ?array $context = null)
+    public function isValidAdmin(string $userId, ?array $context = null): bool
     {
-        $User = TableRegistry::getTableLocator()->get('Users');
-        $exist = $User
-            ->find()
-            ->contain(['Roles'])
-            ->where(['Users.id' => $value, 'Users.active' => 1, 'Users.deleted' => 0, 'Roles.name' => Role::ADMIN])
-            ->count();
-        if ($exist) {
-            return true;
+        if (!Validation::uuid($userId)) {
+            return false;
         }
 
-        return false;
+        return TableRegistry::getTableLocator()->get('Users')
+            ->find()
+            ->contain(['Roles'])
+            ->where(['Users.id' => $userId, 'Users.active' => 1, 'Users.deleted' => 0, 'Roles.name' => Role::ADMIN])
+            ->count() > 0;
     }
 
     /**
      * Check if a user exists.
      *
-     * @param string $value user id
+     * @param string $userId user id
      * @return bool
      */
-    public function isValidUser(string $value)
+    public function isValidUser(string $userId): bool
     {
-        $User = TableRegistry::getTableLocator()->get('Users');
-        $exist = $User->find()->where(['Users.id' => $value, 'Users.active' => 1, 'Users.deleted' => 0])->count();
-        if ($exist) {
-            return true;
+        if (!Validation::uuid($userId)) {
+            return false;
         }
 
-        return false;
+        return TableRegistry::getTableLocator()->get('Users')
+            ->find()
+            ->where(['Users.id' => $userId, 'Users.active' => 1, 'Users.deleted' => 0])
+            ->count() > 0;
     }
 
     /**

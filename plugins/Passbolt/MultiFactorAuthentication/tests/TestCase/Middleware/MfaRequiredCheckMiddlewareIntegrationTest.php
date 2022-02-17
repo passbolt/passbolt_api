@@ -18,12 +18,11 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Middleware;
 
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\JwtAuthentication\Test\Factory\RefreshTokenAuthenticationTokenFactory;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
-use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
-use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
@@ -77,7 +76,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
      */
     public function testMfaRequiredCheckMiddlewareErrorNoVerifyCookie_JWT_Auth()
     {
-        $user = UserFactory::make()->persist();
+        $user = UserFactory::make()->user()->persist();
         $this->loadFixtureScenario(MfaTotpScenario::class, $user);
 
         // Authenticate with JWT access token
@@ -132,6 +131,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
     public function testMfaRequiredCheckMiddlewareError_ExpiredVerifyCookie()
     {
         $user = UserFactory::make()
+            ->user()
             ->withAuthenticationTokens(
                 MfaAuthenticationTokenFactory::make()->expired()
             )
@@ -162,7 +162,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->assertResponseSuccess();
     }
 
-    public function testMfaRefreshTokenCreatedListenerMiddleware_RefreshTokenSuccessful_Invalid_MFA_Token()
+    public function testMfaRefreshTokenCreatedListenerMiddleware_RefreshTokenSuccessful_Invalid_MFA_Token_Should_Redirect()
     {
         $user = UserFactory::make()
             ->user()
@@ -171,6 +171,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
                 MfaAuthenticationTokenFactory::make()->inactive()->getEntity(),
             ])
             ->persist();
+        $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
 
         $oldRefreshToken = $user->authentication_tokens[0];
         $mfaToken = $user->authentication_tokens[1];
@@ -178,8 +179,8 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
         $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $mfaToken->token);
 
-        $this->postJson('/auth/jwt/refresh.json');
-        $this->assertBadRequestError('The MFA token provided does not exist or is inactive.');
+        $this->post('/auth/jwt/refresh.json');
+        $this->assertRedirect('/mfa/verify/error.json');
     }
 
     public function testMfaRefreshTokenCreatedListenerMiddleware_RefreshTokenSuccessful_MFA_Required()
@@ -187,15 +188,10 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         // This route, with cookie set, should have CSRF protection
         $this->enableCsrfToken();
 
-        MfaOrganizationSettingFactory::make()->totp()->persist();
-
         $user = UserFactory::make()
+            ->with('Gpgkeys')
             ->user()
-            ->with('AuthenticationTokens', [
-                RefreshTokenAuthenticationTokenFactory::make()->active()->getEntity(),
-                MfaAuthenticationTokenFactory::make()->active()->getEntity(),
-            ])
-            ->with('AccountSettings', MfaAccountSettingFactory::make()->totp())
+            ->with('AuthenticationTokens', RefreshTokenAuthenticationTokenFactory::make()->active())
             ->persist();
 
         $this->loadFixtureScenario(MfaYubikeyScenario::class, $user);
@@ -206,7 +202,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
         );
 
         $oldRefreshToken = $user->authentication_tokens[0];
-        $this->cookie(RefreshTokenRenewalService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
+        $this->cookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE, $oldRefreshToken->token);
 
         $this->postJson('/auth/jwt/refresh.json');
         $this->assertResponseOk();

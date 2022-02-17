@@ -27,6 +27,7 @@ use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
@@ -52,6 +53,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 class FoldersUpdateServiceTest extends FoldersTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
     use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -59,7 +61,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-    GroupsFixture::class,
+        GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,
@@ -124,18 +126,23 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderSuccess_NotifyUserAfterUpdate()
     {
+        $this->loadPlugins(['Passbolt/Folders', 'Passbolt/EmailDigest']);
         [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->update($uac, $folderA->id, ['name' => 'new name']);
 
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('updated the folder');
-
-        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('updated the folder');
+        $this->assertEmailIsInQueue([
+            'email' => 'ada@passbolt.com',
+            'subject' => 'Ada edited the folder new name',
+            'template' => 'Passbolt/Folders.LU/folder_update',
+        ]);
+        $this->assertEmailIsInQueue([
+            'email' => 'betty@passbolt.com',
+        ]);
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailInBatchContains('updated the folder');
+        $this->assertEmailInBatchContains('updated the folder', 1);
     }
 
     public function testUpdateFolderError_ValidationError()

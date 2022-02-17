@@ -52,6 +52,6 @@ class SoftDeleteTest extends TagTestCase
 
         // Deleting Accounting or Cakephp should delete #charlie
         $this->expectException(RecordNotFoundException::class);
-        $this->Tags->get('tag.id.#charlie');
+        $this->Tags->get(UuidFactory::uuid('tag.id.#charlie'));
     }
 }
