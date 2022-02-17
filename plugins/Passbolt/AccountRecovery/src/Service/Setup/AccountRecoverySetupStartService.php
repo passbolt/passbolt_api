@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\Setup;
 
 use App\Service\Setup\SetupStartService;
-use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\GetAccountRecoveryOrganizationPolicyService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -32,7 +32,7 @@ class AccountRecoverySetupStartService extends SetupStartService
     public function getInfo(string $userId, string $token): array
     {
         $data = parent::getInfo($userId, $token);
-        $policy = (new GetAccountRecoveryOrganizationPolicyService())->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $data['account_recovery_organization_policy'] = $policy;
 
         return $data;

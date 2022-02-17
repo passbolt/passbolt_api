@@ -37,7 +37,7 @@ class SetupStartControllerTest extends AccountRecoveryIntegrationTestCase
      * @group setup
      * @group setupStart
      */
-    public function testSetupStartSuccess()
+    public function testAccountRecoverySetupStartSuccess()
     {
         $user = UserFactory::make()->inactive()->persist();
         $policy = AccountRecoveryOrganizationPolicyFactory::make()

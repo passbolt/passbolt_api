@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
+use Passbolt\AccountRecovery\ServiceProvider\AccountRecoveryOrganizationPolicyServiceProvider;
 use Passbolt\AccountRecovery\ServiceProvider\AccountRecoverySetupServiceProvider;
 
 class Plugin extends BasePlugin
@@ -37,5 +38,6 @@ class Plugin extends BasePlugin
     public function services(ContainerInterface $container): void
     {
         $container->addServiceProvider(new AccountRecoverySetupServiceProvider());
+        $container->addServiceProvider(new AccountRecoveryOrganizationPolicyServiceProvider());
     }
 }

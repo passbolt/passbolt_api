@@ -40,7 +40,7 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
- * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPublicKeysTable&\Cake\ORM\Association\HasOne $Avatars
+ * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPublicKeysTable&\Cake\ORM\Association\BelongsTo $AccountRecoveryOrganizationPublicKeys
  */
 class AccountRecoveryOrganizationPoliciesTable extends Table
 {
@@ -80,7 +80,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
 
         $validator
             ->requirePresence('policy', true, __('A policy is required.'))
-            ->notEmptyString('policy', __('The name should not be empty.'))
+            ->notEmptyString('policy', __('The policy name should not be empty.'))
             ->inList(
                 'policy',
                 AccountRecoveryOrganizationPolicy::SUPPORTED_POLICIES,
@@ -90,33 +90,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
                 )
             );
 
-        // Associated data
-//        $validator
-//            ->requirePresence('account_recovery_organization_public_key', 'create',
-//                __('An organization public key is required.'));
-
         return $validator;
-    }
-
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules): RulesChecker
-    {
-        $rules->addCreate(
-            [$this, 'isValidPublicKeyProvided'],
-            'account_recovery_organization_public_key_provided',
-            [
-                'errorField' => 'account_recovery_organization_public_key',
-                'message' => __('The organization policy should contain the organization public key.'),
-            ]
-        );
-
-        return $rules;
     }
 
     /**
@@ -137,77 +111,5 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
             ->first();
 
         return $policy->policy ?? AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED;
-    }
-
-    /**
-     * Validate that the public key is provided when 'enabling' the feature
-     *
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $entity The entity that will be created.
-     * @param array|null $options options
-     * @return bool
-     */
-    public function isAccountRecoveryOrganizationPublicKeyProvided(
-        AccountRecoveryOrganizationPolicy $entity,
-        ?array $options = []
-    ): bool {
-        // TODO: this method has been refactored to pass the cs-check but its implementation is not completed
-        $currentPolicy = $this->getCurrentPolicy();
-
-        $this->isOrganizationPublicKeyNeeded($currentPolicy, $entity->policy);
-
-        // Public key is not
-        if (!isset($entity->account_recovery_organization_public_key)) {
-            return false;
-        }
-    }
-
-    /**
-     * Is a revocation key needed to perform the change?
-     *
-     * @param string $currentPolicy current policy
-     * @param string $targetPolicy target policy
-     * @param bool $keyChange key change
-     * @return bool
-     */
-    public function isKeyRevocationNeededForChange(string $currentPolicy, string $targetPolicy, bool $keyChange): bool
-    {
-        // TODO: this method has been refactored to pass the cs-check but its implementation is not completed
-        // If there is no public key at the moment, there is no need for revocation
-        if ($currentPolicy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
-            return false;
-        }
-
-        // If there is no key change, also no need
-        if (!$keyChange) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string $currentPolicy current policy
-     * @param string $targetPolicy target polica
-     * @return bool
-     */
-    public function isKeyNeededForChange(string $currentPolicy, string $targetPolicy): bool
-    {
-        // TODO: this method has been refactored to pass the cs-check but its implementation is not completed
-        // No need to provide new key when setting policy to disabled
-        if ($targetPolicy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
-            return false;
-        }
-
-        // Policy is the same, this means this is a change of key
-        if ($targetPolicy === $currentPolicy) {
-            return true;
-        }
-
-        // Current policy is disabled, new policy needs a key
-        if ($currentPolicy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
-            return true;
-        }
-
-        return false;
     }
 }

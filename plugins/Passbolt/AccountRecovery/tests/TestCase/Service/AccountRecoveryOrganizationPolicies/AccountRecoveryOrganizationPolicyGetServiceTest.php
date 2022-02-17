@@ -19,18 +19,18 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Service\AccountRecoveryOrganiza
 
 use Cake\Validation\Validation;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
-use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\GetAccountRecoveryOrganizationPolicyService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
-class GetAccountRecoveryOrganizationPolicyServiceTest extends AccountRecoveryTestCase
+class AccountRecoveryOrganizationPolicyGetServiceTest extends AccountRecoveryTestCase
 {
     /**
      * Get a disabled policy is returned if there is no record found
      */
     public function testAccountRecoveryOrganizationPolicyGetService_EmptySuccess()
     {
-        $service = new GetAccountRecoveryOrganizationPolicyService();
+        $service = new AccountRecoveryOrganizationPolicyGetService();
         $policy = $service->get();
         $this->assertEquals(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED, $policy->policy);
         $this->assertEmpty($policy->id);
@@ -50,7 +50,7 @@ class GetAccountRecoveryOrganizationPolicyServiceTest extends AccountRecoveryTes
             ->withAccountRecoveryOrganizationPublicKey()
             ->persist();
 
-        $service = new GetAccountRecoveryOrganizationPolicyService();
+        $service = new AccountRecoveryOrganizationPolicyGetService();
         $policy = $service->get();
         $this->assertTrue(in_array($policy->policy, AccountRecoveryOrganizationPolicy::SUPPORTED_POLICIES));
         $this->assertTrue(Validation::uuid($policy->id));

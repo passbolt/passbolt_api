@@ -24,6 +24,14 @@ use Cake\Core\ContainerInterface;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoveryRecoverStartService;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupStartService;
 
+/**
+ * Class AccountRecoverySetupServiceProvider
+ *
+ * @package Passbolt\AccountRecovery\ServiceProvider
+ *
+ * This provider allows replacing the default recover and setup services
+ * with services that extends the baseline with account recovery specific data and process
+ */
 class AccountRecoverySetupServiceProvider extends SetupServiceProvider
 {
     /**

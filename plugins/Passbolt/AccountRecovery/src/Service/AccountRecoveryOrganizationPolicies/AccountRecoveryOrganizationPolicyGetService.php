@@ -25,11 +25,13 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicies
  */
-class GetAccountRecoveryOrganizationPolicyService
+class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrganizationPolicyGetServiceInterface
 {
     use ModelAwareTrait;
 
     /**
+     * Get the current account recovery policy or fallback on the default one (disabled)
+     *
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
      */
     public function get(): AccountRecoveryOrganizationPolicy
@@ -50,16 +52,30 @@ class GetAccountRecoveryOrganizationPolicyService
                 ->order(['AccountRecoveryOrganizationPolicies.created' => 'ASC'])
                 ->firstOrFail();
         } catch (RecordNotFoundException $exception) {
-            $policy = $this->AccountRecoveryOrganizationPolicies
-                ->newEntity([
-                    'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
-                ], [
-                    'accessibleFields' => [
-                        'policy' => true,
-                    ],
-                ]);
+            $policy = $this->getDefaultPolicy();
         }
 
         return $policy;
+    }
+
+    /**
+     * Get a disabled AccountRecoveryOrganizationPolicy entity
+     * with an empty key and no creation / modified date
+     * Used as a fallback when no policy is present
+     *
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
+     */
+    public function getDefaultPolicy(): AccountRecoveryOrganizationPolicy
+    {
+        return $this->AccountRecoveryOrganizationPolicies
+            ->newEntity([
+                'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
+                'account_recovery_organization_public_key_id' => null,
+            ], [
+                'accessibleFields' => [
+                    'policy' => true,
+                    'account_recovery_organization_public_key_id' => true,
+                ],
+            ]);
     }
 }

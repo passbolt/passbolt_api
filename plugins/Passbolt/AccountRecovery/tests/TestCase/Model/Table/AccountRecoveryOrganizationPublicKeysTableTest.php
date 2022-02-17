@@ -95,7 +95,6 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
     public function testAccountRecoveryOrganizationPublicKeysTable_ValidationArmoredKey()
     {
         $testCases = [
-            'ascii' => self::getAsciiTestCases(),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
@@ -114,7 +113,6 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
     public function testAccountRecoveryOrganizationPublicKeysTable_ValidationFingerprint()
     {
         $testCases = [
-            'ascii' => self::getAsciiTestCases(40),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];

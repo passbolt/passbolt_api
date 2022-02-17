@@ -76,4 +76,29 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
     {
         return $this->setField('policy', AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY);
     }
+
+    /**
+     * @return $this
+     */
+    public function disabled()
+    {
+        return $this->setField('policy', AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED)
+            ->setField('account_recovery_organization_public_key_id', null);
+    }
+
+    /**
+     * @return $this
+     */
+    public function optin()
+    {
+        return $this->setField('policy', AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_IN);
+    }
+
+    /**
+     * @return $this
+     */
+    public function optout()
+    {
+        return $this->setField('policy', AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT);
+    }
 }

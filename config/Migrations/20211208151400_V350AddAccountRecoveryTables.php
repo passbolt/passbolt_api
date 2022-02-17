@@ -34,7 +34,8 @@ class V350AddAccountRecoveryTables extends AbstractMigration
                 'collation' => 'ascii_general_ci'
             ])
             ->addColumn('account_recovery_organization_public_key_id', 'uuid', [
-                'null' => false,
+                'default' => null,
+                'null' => true,
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci'
             ])

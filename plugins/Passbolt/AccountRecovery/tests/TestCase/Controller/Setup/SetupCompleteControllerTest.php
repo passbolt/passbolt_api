@@ -36,7 +36,7 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteSuccess()
+    public function testAccountRecoverySetupCompleteSuccess()
     {
         $user = UserFactory::make()->inactive()->persist();
         $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);

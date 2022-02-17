@@ -12,16 +12,18 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.5.0
+ * @since         3.6.0
  */
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
-use App\Model\Table\GpgkeysTable;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Model\Rule\IsNotServerKeyFingerprintRule;
+use App\Model\Rule\IsNotUserKeyFingerprintRule;
+use App\Model\Traits\OpenPGP\PublicKeyValidatorTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\AccountRecovery\Model\Rule\IsNotAccountRecoveryOrganizationKeyFingerprintRule;
 
 /**
  * AccountRecoveryOrganizationPolicies Model
@@ -43,6 +45,8 @@ use Cake\Validation\Validator;
  */
 class AccountRecoveryOrganizationPublicKeysTable extends Table
 {
+    use PublicKeyValidatorTrait;
+
     /**
      * Initialize method
      *
@@ -75,50 +79,26 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
         $validator
             ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
             ->requirePresence('armored_key', 'create', __('An armored key is required.'))
-            ->notEmptyString('armored_key', __('The armored key should not be empty.'));
-//            ->add('armored_key', ['custom' => [
-//                'rule' => [$this, 'isParsableArmoredPublicKeyRule'],
-//                'message' => __('The armored key should be a valid ASCII-armored OpenPGP key.'),
-//            ]]);
+            ->notEmptyString('armored_key', __('The armored key should not be empty.'))
+            ->add('armored_key', ['invalidArmoredKey' => [
+                'rule' => [$this, 'isParsableArmoredPublicKeyRule'],
+                'message' => __('The armored key should be a valid ASCII-armored OpenPGP key.'),
+            ]]);
 
         $validator
             ->ascii('fingerprint', __('The fingerprint should be a valid ASCII string.'))
-            ->requirePresence('fingerprint', true, __('A fingerprint is required'))
-            ->notEmptyString('fingerprint', __('The fingerprint should not be empty'));
-//            ->add('fingerprint', ['custom' => [
-//                'rule' => [$this, 'isValidFingerprintRule'],
-//                'message' => __('The fingerprint should be a string of 40 hexadecimal characters.'),
-//            ]]);
+            ->requirePresence('fingerprint', 'create', __('A fingerprint is required'))
+            ->notEmptyString('fingerprint', __('The fingerprint should not be empty'))
+            ->add('fingerprint', ['invalidFingerprint' => [
+                'rule' => [$this, 'isValidFingerprintRule'],
+                'message' => __('The fingerprint should be a string of 40 hexadecimal characters.'),
+            ]]);
 
         $validator
             ->dateTime('deleted', ['ymd'], __('The "deleted" field should be a valid date.'))
             ->allowEmptyDateTime('deleted');
 
         return $validator;
-    }
-
-    /**
-     * Custom validation rule to validate fingerprint
-     *
-     * @param string $value fingerprint
-     * @param array|null $context not in use
-     * @return bool
-     */
-    public function isValidFingerprintRule(string $value, ?array $context = null): bool
-    {
-        return GpgkeysTable::isValidFingerprint($value);
-    }
-
-    /**
-     * Custom validation rule to validate key id
-     *
-     * @param string $value fingerprint
-     * @param array|null $context not in use
-     * @return bool
-     */
-    public function isParsableArmoredPublicKeyRule(string $value, ?array $context = null): bool
-    {
-        return OpenPGPBackendFactory::get()->isParsableArmoredPublicKey($value);
     }
 
     /**
@@ -130,6 +110,25 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
+        $rules->add(new IsNotServerKeyFingerprintRule(), 'isNotServerKeyFingerprintRule', [
+            'errorField' => 'fingerprint',
+            'message' => __('You cannot reuse the server keys.'),
+        ]);
+
+        $rules->add(new IsNotUserKeyFingerprintRule(), 'isNotUserKeyFingerprintRule', [
+            'errorField' => 'fingerprint',
+            'message' => __('You cannot reuse the user keys.'),
+        ]);
+
+        $rules->add(
+            new IsNotAccountRecoveryOrganizationKeyFingerprintRule(),
+            'isNotAccountRecoveryOrganizationPublicKeyFingerprintRule',
+            [
+            'errorField' => 'fingerprint',
+            'message' => __('You cannot reuse account recovery organization public keys.'),
+            ]
+        );
+
         return $rules;
     }
 }

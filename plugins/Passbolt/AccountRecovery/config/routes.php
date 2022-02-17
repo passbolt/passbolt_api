@@ -28,12 +28,15 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
         ])
         ->setMethods(['GET']);
 
-//    // Create or update an account organization policy
-//    // POST|PUT /account-recovery/organization-policies.json
-//    $routes->connect('/organization-policies', [
-//            'prefix' => '', 'controller' => '', 'action' => ''])
-//        ->setMethods(['POST', 'PUT']);
-//
+    // Create or update an account organization policy
+    // POST|PUT /account-recovery/organization-policies.json
+    $routes->connect('/organization-policies', [
+            'prefix' => 'AccountRecoveryOrganizationPolicies',
+            'controller' => 'AccountRecoveryOrganizationPoliciesSet',
+            'action' => 'createOrUpdate',
+        ])
+        ->setMethods(['POST', 'PUT']);
+
 //    // View the account recovery private key passwords (for the organization recovery key)
 //    // GET /account-recovery/private-key-passwords.json
 //    $routes->connect('/private-key-passwords', [

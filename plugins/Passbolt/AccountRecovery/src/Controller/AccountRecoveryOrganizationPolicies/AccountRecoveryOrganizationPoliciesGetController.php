@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Controller\AccountRecoveryOrganizationPolicies;
 
 use App\Controller\AppController;
-use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\GetAccountRecoveryOrganizationPolicyService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicy
@@ -30,7 +30,7 @@ class AccountRecoveryOrganizationPoliciesGetController extends AppController
      */
     public function get(): void
     {
-        $policy = (new GetAccountRecoveryOrganizationPolicyService())->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $this->success(__('The operation was successful.'), $policy);
     }
 }

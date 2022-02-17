@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Controller\AccountRecoveryOrganizationPolicies;
 
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
 class AccountRecoveryOrganizationPoliciesGetControllerTest extends AccountRecoveryIntegrationTestCase
@@ -32,12 +34,51 @@ class AccountRecoveryOrganizationPoliciesGetControllerTest extends AccountRecove
     }
 
     /**
-     * check accessing organization policies works for regular users
+     * check accessing organization policies works when enabled
      */
-    public function testAccountRecoveryOrganizationPoliciesGetController_Success()
+    public function testAccountRecoveryOrganizationPoliciesGetController_Success_Optin()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
+
+        $this->logInAsUser();
+        $this->getJson('/account-recovery/organization-policies.json');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_IN);
+        $this->assertNotEmpty($this->_responseJsonBody->account_recovery_organization_public_key);
+    }
+
+    /**
+     * check accessing organization policies works when disabled
+     */
+    public function testAccountRecoveryOrganizationPoliciesGetController_Success_Disabled()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->disabled()
+            ->persist();
+
+        $this->logInAsUser();
+        $this->getJson('/account-recovery/organization-policies.json');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED);
+        $this->assertEmpty($this->_responseJsonBody->account_recovery_organization_public_key_id);
+        $this->assertTrue(!isset($this->_responseJsonBody->account_recovery_organization_public_key));
+    }
+
+    /**
+     * check accessing organization policies works when no record present
+     */
+    public function testAccountRecoveryOrganizationPoliciesGetController_Success_DisabledNoRecord()
     {
         $this->logInAsUser();
         $this->getJson('/account-recovery/organization-policies.json');
         $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED);
+        $this->assertEmpty($this->_responseJsonBody->account_recovery_organization_public_key_id);
+        $this->assertTrue(!isset($this->_responseJsonBody->account_recovery_organization_public_key));
+        $this->assertTrue(!isset($this->_responseJsonBody->created));
+        $this->assertTrue(!isset($this->_responseJsonBody->modified));
     }
 }
