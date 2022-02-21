@@ -9,12 +9,15 @@ crontabs_dir = '/etc/cron.d'
 logrotate_dir = '/etc/logrotate.d'
 cron_script = '/usr/share/php/passbolt/bin/cron'
 
-webserver_owner = 'www-data'
-webserver_group = 'www-data'
+webserver_owner = 'nginx'
+webserver_group = 'nginx'
 
-if os.family == 'redhat'
-  webserver_owner = 'nginx'
-  webserver_group = 'nginx'
+if os.suse?
+  webserver_owner = 'wwwrun'
+  webserver_group = 'www'
+elsif os.debian?
+  webserver_owner = 'www-data'
+  webserver_group = 'www-data'
 end
 
 control 'passbolt-logs-01' do

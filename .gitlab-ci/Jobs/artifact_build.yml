@@ -19,7 +19,7 @@
         --form "variables[PASSBOLT_VERSION]=$PASSBOLT_VERSION" \
         "https://gitlab.com/api/v4/projects/$TRIGGER_PROJECT_ID/trigger/pipeline"
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"' 
       when: on_success
 
 

@@ -2,9 +2,18 @@
 
 set -eu
 
+if [ -f /usr/bin/zypper ]
+then
+  REPOPATH=/etc/zypp/repos.d
+  PKGNAME=zypper
+else
+  REPOPATH=/etc/yum.repos.d
+  PKGNAME=yum
+fi
+
 if [ ! -d ~/rpmbuild/RPMS ]
 then
-  yum install -y rpmdevtools
+  ${PKGNAME} install -y rpmdevtools
   rpmdev-setuptree
   mkdir ~/rpmbuild/RPMS/noarch
   cp passbolt-*.rpm ~/rpmbuild/RPMS/noarch
@@ -12,7 +21,7 @@ fi
 
 createrepo --update ~/rpmbuild/RPMS
 
-cat << EOF | tee /etc/yum.repos.d/local.repo
+cat << EOF | tee ${REPOPATH}/local.repo
 [local]
 name=Local Repository Demo
 baseurl=file:///root/rpmbuild/RPMS/

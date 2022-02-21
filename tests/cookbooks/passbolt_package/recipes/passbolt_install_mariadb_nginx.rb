@@ -19,17 +19,16 @@ if platform_family?('debian')
   if (node['platform'] == 'debian' && node['platform_version'] =='11')
     database_engine = 'mariadb'
   end
-  
+
   execute "Start mysql" do
     command "service #{database_engine} start"
     action  :run
   end
-elsif platform_family?('rhel')
-  package 'RHEL: Install epel-release repository' do
-    package_name ['epel-release']
-    action :install
-  end
+elsif platform_family?('rhel', 'suse')
   package 'RHEL: Install mariadb and nginx' do
+    if platform_family?('rhel', 'fedora')
+      flush_cache [ :before ]
+    end
     package_name ['curl', 'nginx', 'mariadb-server', 'createrepo', 'firewalld']
     action :install
   end
