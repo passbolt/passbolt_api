@@ -2,12 +2,15 @@ title 'Passbolt webroot files benchmark'
 
 source_dir = '/usr/share/php/passbolt/webroot'
 
-webserver_owner = 'www-data'
-webserver_group = 'www-data'
+webserver_owner = 'nginx'
+webserver_group = 'nginx'
 
-if os.family == 'redhat'
-  webserver_owner = 'nginx'
-  webserver_group = 'nginx'
+if os.suse?
+  webserver_owner = 'wwwrun'
+  webserver_group = 'www'
+elsif os.debian?
+  webserver_owner = 'www-data'
+  webserver_group = 'www-data'
 end
 
 control 'passbolt-webroot-01' do                        # A unique ID for this control

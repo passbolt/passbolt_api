@@ -9,19 +9,19 @@ if platform_family?('debian')
   apt_update
 
   execute "Install passbolt, expect to break, display output" do
-    command "VERBOSE=1 DEBIAN_FRONTEND=noninteractive apt-get install -y #{node['parameters']} /tmp/passbolt/passbolt*.deb"
+    command "VERBOSE=1 DEBIAN_FRONTEND=noninteractive apt-get install -y #{node['parameters']} /app/passbolt/passbolt*.deb"
     ignore_failure true
     action :run
   end
-elsif platform_family?('rhel')
+elsif platform_family?('rhel', 'fedora')
   package 'RHEL: Install dependencies' do
     package_name ['rpmdevtools', 'bc', 'createrepo', 'firewalld']
     action :install
   end
 
-  execute "Setup remirepo" do
+  execute "Setup PHP repository" do
     cwd     "#{node['dest_dir']}"
-    command  "/bin/sh rpm/scripts/setup-remirepo.sh"
+    command  "/bin/sh rpm/scripts/setup-php-#{node['platform_family']}.sh"
     action   :run
   end
 

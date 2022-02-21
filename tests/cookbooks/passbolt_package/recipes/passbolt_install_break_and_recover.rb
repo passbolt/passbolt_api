@@ -10,14 +10,16 @@ if platform_family?('debian')
     package_name ['debconf-utils', 'curl', 'nginx', 'default-mysql-server']
     action :install
   end
-elsif platform_family?('rhel')
-  package 'RHEL: Install epel-release repository' do
-    package_name ['epel-release']
-    action :install
-  end
+elsif platform_family?('rhel', 'suse', 'fedora')
   package 'RHEL: Install mariadb and nginx' do
+    if platform_family?('rhel', 'fedora')
+      flush_cache [ :before ]
+    end
     package_name ['curl', 'nginx', 'mariadb-server', 'createrepo', 'firewalld']
     action :install
+  end
+  service 'firewalld' do
+    action :restart
   end
 end
 
