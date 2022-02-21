@@ -11,19 +11,19 @@ if platform_family?('debian')
   # TODO: Change this command when the repo is available
 
   execute "Install passbolt" do
-    command  "DEBIAN_FRONTEND=noninteractive apt-get install -y openssl /tmp/passbolt/passbolt*.deb \
+    command  "DEBIAN_FRONTEND=noninteractive apt-get install -y openssl /app/passbolt/passbolt*.deb \
               && service php$(php -r 'echo PHP_VERSION;' | sed 's:\\(7\\.[2-4]\\).*:\\1:')-fpm start #{node.has_key?(:parameters) ? '' : '&& service nginx start'}"
     action   :run
   end
-elsif platform_family?('rhel')
-  package 'RHEL: Install dependencies' do
+elsif platform_family?('rhel', 'suse', 'fedora')
+  package 'RHEL/SUSE: Install dependencies' do
     package_name ['rpmdevtools', 'bc', 'createrepo', 'firewalld']
     action :install
   end
 
-  execute "Setup remirepo" do
+  execute "Setup PHP repository" do
     cwd     "#{node['dest_dir']}"
-    command  "/bin/sh rpm/scripts/setup-remirepo.sh"
+    command  "/bin/sh rpm/scripts/setup-php-#{node['platform_family']}.sh"
     action   :run
   end
 
@@ -34,8 +34,18 @@ elsif platform_family?('rhel')
   end
 
   package "Install Passbolt" do
-    flush_cache [ :before ]
+    if platform_family?('rhel', 'fedora')
+      flush_cache [ :before ]
+    end
     package_name "passbolt-#{node['passbolt_flavour']}-server"
+    action :install
+  end
+
+  package "Install firewalld" do
+    if platform_family?('rhel', 'fedora')
+      flush_cache [ :before ]
+    end
+    package_name "firewalld"
     action :install
   end
 
