@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Utility\OpenPGP\Backends;
 
+use App\Utility\OpenPGP\Exceptions\InvalidSignatureException;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
@@ -565,7 +566,8 @@ class Gnupg extends OpenPGPBackend
      *
      * @param string $text ASCII armored encrypted text to be decrypted.
      * @param bool $verifySignature should signature be verified
-     * @throws \Cake\Core\Exception\Exception if decryption fails
+     * @throws \Cake\Core\Exception\Exception if decryption failed
+     * @throws \Cake\Core\Exception\Exception if signature validation failed
      * @return string decrypted text
      */
     public function decrypt(string $text, bool $verifySignature = false): string
@@ -599,7 +601,7 @@ class Gnupg extends OpenPGPBackend
             if (empty($signatureInfo) || $signatureInfo[0]['fingerprint'] !== $fingerprint) {
                 $msg = __('Expected {0} and got {1}.', $fingerprint, $signatureInfo[0]['fingerprint']);
                 $msg = __('Decryption failed. Invalid signature.') . ' ' . $msg;
-                throw new Exception($msg);
+                throw new InvalidSignatureException($msg);
             }
         }
 

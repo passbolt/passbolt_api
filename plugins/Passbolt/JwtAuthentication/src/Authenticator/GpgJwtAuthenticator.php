@@ -20,6 +20,7 @@ use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\GpgkeysTable;
+use App\Utility\OpenPGP\Exceptions\InvalidSignatureException;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Authentication\Authenticator\AbstractAuthenticator;
 use Authentication\Authenticator\Result;
@@ -296,12 +297,12 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
         $armoredChallenge = $this->request->getData('challenge');
         $this->assertArmoredChallenge($armoredChallenge);
 
-        // Verify signature
-        $this->assertUserSignature($armoredChallenge);
-
-        // Decrypt
+        // Decrypt and verify signature
         try {
-            $clearTextChallenge = $this->gpg->decrypt($armoredChallenge);
+            $clearTextChallenge = $this->gpg->decrypt($armoredChallenge, true);
+        } catch (InvalidSignatureException $exception) {
+            Log::error($exception->getMessage());
+            throw new InvalidUserSignatureException(__('The user signature could not be verified.'));
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             throw new BadRequestException(__('The challenge cannot be decrypted.'));
@@ -396,20 +397,6 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
         ) {
             $msg = __('The user OpenPGP key does not exist, or is invalid, or has been deleted.');
             throw new BadRequestException($msg);
-        }
-    }
-
-    /**
-     * @param string $armoredChallenge challenge
-     * @throws \Exception if armored challenge is invalid
-     * @return void
-     */
-    public function assertUserSignature(string $armoredChallenge): void
-    {
-        try {
-            $this->gpg->verify($armoredChallenge);
-        } catch (\Exception $exception) {
-            throw new InvalidUserSignatureException(__('The user signature is invalid.'));
         }
     }
 

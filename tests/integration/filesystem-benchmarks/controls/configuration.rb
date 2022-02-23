@@ -6,12 +6,15 @@ title 'Passbolt filesystem configuration benchmarks'
 config_dir = '/etc/passbolt'
 gnupg_dir = '/var/lib/passbolt/.gnupg'
 
-webserver_owner = 'www-data'
-webserver_group = 'www-data'
+webserver_owner = 'nginx'
+webserver_group = 'nginx'
 
-if os.family == 'redhat'
-  webserver_owner = 'nginx'
-  webserver_group = 'nginx'
+if os.suse?
+  webserver_owner = 'wwwrun'
+  webserver_group = 'www'
+elsif os.debian?
+  webserver_owner = 'www-data'
+  webserver_group = 'www-data'
 end
 
 # you add controls here
