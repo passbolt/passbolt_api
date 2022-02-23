@@ -16,3 +16,8 @@ dnf install -y dnf-plugins-core
 dnf module reset php -y
 dnf module install php:remi-7.4 -y
 dnf config-manager --set-enabled remi
+
+# pcre2 package needs to be upgraded to last version
+# there is a bug with preg_match() if we keep the current one installed
+dnf clean all
+dnf upgrade -y pcre2
