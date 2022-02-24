@@ -9,7 +9,7 @@ stages:
   - unit-test
   - package-deps
   - package-build
-  - package-test
+  - package-tests
   - publish
   - publish-artifacts
 
