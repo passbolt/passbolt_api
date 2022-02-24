@@ -47,7 +47,7 @@ build-debian:
       apt-get update
       apt-get install -y git-buildpackage devscripts apt-utils debconf-utils fakeroot equivs cdbs
       make -f debian/rules debian/control
-      if [[ -z $NIGHTLY || $CI_COMMIT_BRANCH =~ ^(develop|feature\/debian\_*) ]]; then
+      if [[ ! -z $NIGHTLY || $CI_COMMIT_BRANCH =~ ^(develop|feature\/debian\_*) ]]; then
         gbp dch --snapshot --snapshot-number=$(date +%s) --ignore-branch
       fi
       mk-build-deps -irt'apt-get --no-install-recommends -yV' debian/control

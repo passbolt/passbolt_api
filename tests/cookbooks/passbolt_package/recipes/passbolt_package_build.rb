@@ -45,6 +45,19 @@ if platform_family?('suse') then
     command  "/bin/sh rpm/scripts/setup-php-#{node['platform_family']}.sh"
     action   :run
   end
+  execute "Setup PHP repository" do
+    cwd     "#{node['dest_dir']}"
+    command  "zypper refresh && zypper update -y"
+    action   :run
+  end
+  package 'SUSE: Install dependencies' do
+    package_name ['php7-cli', 'php7-zip', 'php7-json', 'wget', 'unzip']
+    action :install
+  end
+  package 'SUSE: Install composer' do
+    package_name ['php-composer']
+    action :install
+  end
 end
 
 if Dir.glob("#{node['dest_dir']}/vendor/*").empty? then
