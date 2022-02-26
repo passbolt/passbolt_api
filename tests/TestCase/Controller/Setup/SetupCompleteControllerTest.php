@@ -87,6 +87,40 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
+    public function testSetupCompleteEccSuccess()
+    {
+        $logEnabled = Configure::read('passbolt.plugins.log.enabled');
+        Configure::write('passbolt.plugins.log.enabled', true);
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
+        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'ecc_nistp521_public.key');
+        $data = [
+            'authenticationtoken' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+        ];
+        $this->postJson($url, $data);
+        $this->assertSuccess();
+
+        $userK = TableRegistry::getTableLocator()->get('Gpgkeys')
+            ->find()
+            ->where(['fingerprint' => 'AEE8E22ACFBF70527C1BD918F571FEB3B15105EE'])
+            ->firstOrFail();
+
+        $this->assertEquals('ECDSA', $userK->type);
+        $this->assertEquals('521', $userK->bits);
+
+        Configure::write('passbolt.plugins.log.enabled', $logEnabled);
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupCompleteErrorWithKeyBelongingToDeletedUser()
     {
         // Complete setup with sofia's key (deleted user)

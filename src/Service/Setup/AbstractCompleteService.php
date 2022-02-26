@@ -18,8 +18,6 @@ declare(strict_types=1);
 namespace App\Service\Setup;
 
 use App\Error\Exception\CustomValidationException;
-use App\Model\Entity\AuthenticationToken;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
@@ -64,24 +62,24 @@ abstract class AbstractCompleteService
      * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
      * @return \App\Model\Entity\AuthenticationToken
      */
-    protected function getAndAssertToken(string $userId, string $tokenType): AuthenticationToken
+    protected function getAndAssertToken(string $userId, string $tokenType)
     {
         $data = $this->request->getData();
         if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
             throw new BadRequestException(__('An authentication token should be provided.'));
         }
-        $tokenValue = $data['authenticationtoken']['token'];
-        if (!Validation::uuid($tokenValue)) {
+        $tokenId = $data['authenticationtoken']['token'];
+        if (!Validation::uuid($tokenId)) {
             throw new BadRequestException(__('The authentication token should be a valid UUID.'));
         }
-        if (!$this->AuthenticationTokens->isValid($tokenValue, $userId, $tokenType)) {
+        if (!$this->AuthenticationTokens->isValid($tokenId, $userId, $tokenType)) {
             throw new BadRequestException(__('The authentication token is not valid or has expired.'));
         }
-        try {
-            return $this->AuthenticationTokens->getByToken($tokenValue);
-        } catch (RecordNotFoundException $e) {
-            throw new BadRequestException(__('The authentication token does not exist or is inactive.'));
-        }
+
+        /** @var \App\Model\Entity\AuthenticationToken $token */
+        $token = $this->AuthenticationTokens->getByToken($tokenId);
+
+        return $token;
     }
 
     /**

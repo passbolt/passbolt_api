@@ -19,7 +19,7 @@ namespace Passbolt\JwtAuthentication\Authenticator;
 use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
-use App\Model\Table\GpgkeysTable;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\Exceptions\InvalidSignatureException;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Authentication\Authenticator\AbstractAuthenticator;
@@ -348,7 +348,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      */
     public function assertServerFingerprint($fingerprint): void
     {
-        if (!is_string($fingerprint) || !GpgkeysTable::isValidFingerprint($fingerprint)) {
+        if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
             $msg = __('The config for the server private key fingerprint is not available or incomplete.');
             throw new InternalErrorException($msg);
         }
@@ -392,7 +392,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
             !isset($userData->gpgkey->fingerprint) ||
             !isset($userData->gpgkey->armored_key) ||
             !is_string($userData->gpgkey->fingerprint) ||
-            !GpgkeysTable::isValidFingerprint($userData->gpgkey->fingerprint) ||
+            !PublicKeyValidationService::isValidFingerprint($userData->gpgkey->fingerprint) ||
             !is_string($userData->gpgkey->armored_key)
         ) {
             $msg = __('The user OpenPGP key does not exist, or is invalid, or has been deleted.');

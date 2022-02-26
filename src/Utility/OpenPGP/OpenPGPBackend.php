@@ -1,15 +1,37 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
 namespace App\Utility\OpenPGP;
 
+use App\Utility\OpenPGP\Traits\OpenPGPBackendArmoredParseTrait;
+use App\Utility\OpenPGP\Traits\OpenPGPBackendClearPropsTrait;
+use App\Utility\OpenPGP\Traits\OpenPGPBackendGetKeyInfoTrait;
+use App\Utility\OpenPGP\Traits\OpenPGPBackendGetMessageInfoTrait;
+use App\Utility\OpenPGP\Traits\OpenPGPCommonAssertsTrait;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Http\Exception\InternalErrorException;
 
 abstract class OpenPGPBackend implements OpenPGPBackendInterface
 {
+    use OpenPGPBackendArmoredParseTrait;
     use OpenPGPCommonAssertsTrait;
+    use OpenPGPBackendClearPropsTrait;
+    use OpenPGPBackendGetKeyInfoTrait;
+    use OpenPGPBackendGetMessageInfoTrait;
 
     /**
      * @var string|null fingerprint of the key set to decrypt
@@ -41,6 +63,15 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
         $this->_encryptKeyFingerprint = null;
         $this->_decryptKeyFingerprint = null;
         $this->_signKeyFingerprint = null;
+    }
+
+    /**
+     * @param string $fingerprint key fingerprint
+     * @return void
+     */
+    public function setVerifyKeyFromFingerprint(string $fingerprint): void
+    {
+        $this->_verifyKeyFingerprint = $fingerprint;
     }
 
     /**
@@ -83,81 +114,80 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
     }
 
     /**
-     * Get the gpg marker.
+     * Check if a message is valid.
      *
-     * @param string $armored ASCII armored gpg data
-     * @return mixed
-     * @throws \Cake\Core\Exception\Exception
+     * To do this, we try to unarmor the message. If the operation is successful, then we consider that
+     * the message is a valid one.
+     *
+     * @param string $armored ASCII armored message data
+     * @return bool true if valid, false otherwise
      */
-    protected function getGpgMarker(string $armored)
+    public function isValidMessage(string $armored): bool
     {
-        $isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $armored, $values);
-        if (!$isMarker || !isset($values[2])) {
-            throw new Exception(__('No OpenPGP marker found.'));
+        try {
+            $this->assertGpgMarker($armored, self::MESSAGE_MARKER);
+        } catch (Exception $e) {
+            return false;
         }
 
-        return $values[2];
+        $unarmored = $this->unarmor($armored, self::MESSAGE_MARKER);
+
+        return $unarmored !== false;
     }
 
     /**
-     * Removes all keys which were set for decryption before
+     * Return true if string is a valid fingerprint
      *
-     * @return void
+     * @param mixed $fingerprint user provided data
+     * @return bool
      */
-    public function clearDecryptKeys(): void
+    public static function isValidFingerprint($fingerprint = null): bool
     {
-        $this->_decryptKeyFingerprint = null;
+        if (!isset($fingerprint) || !is_string($fingerprint)) {
+            return false;
+        }
+
+        return preg_match('/^[A-F0-9]{40}$/', $fingerprint) === 1;
+    }
+
+    // ---------------------------
+    // MISC UTILITIES
+    // ---------------------------
+
+    /**
+     * @param string $fingerprint 40 char
+     * @return string long key id 16 char
+     * @throws \Exception
+     */
+    public static function fingerprintToKeyId(string $fingerprint)
+    {
+        if (strlen($fingerprint) !== 40) {
+            throw new \Exception('Invalid fingerprint.');
+        }
+
+        return substr($fingerprint, -16);
     }
 
     /**
-     * Removes all keys which were set for signing before
+     * Key with extra breakline after checksum and before the end block
+     * are known to cause compatibility issues with gopenpgp
      *
-     * @return void
+     * @param string $armoredKey armored key block
+     * @return bool
      */
-    public function clearSignKeys(): void
+    public static function hasExtraBreakLine(string $armoredKey): bool
     {
-        $this->_signKeyFingerprint = null;
-    }
+        $armoredKey = trim($armoredKey);
+        $array = explode("\n", $armoredKey);
+        $size = count($array);
+        if ($size < 2) {
+            return true;
+        }
+        // If the line before the last line is empty
+        if (empty($array[$size - 2])) {
+            return true;
+        }
 
-    /**
-     * Removes all keys which were set for encryption before
-     *
-     * @return void
-     */
-    public function clearEncryptKeys(): void
-    {
-        $this->_encryptKeyFingerprint = null;
-    }
-
-    /**
-     * Removes all keys which were set for verify before
-     *
-     * @return void
-     */
-    public function clearVerifyKeys(): void
-    {
-        $this->_verifyKeyFingerprint = null;
-    }
-
-    /**
-     * Removes all keys which were set before
-     *
-     * @return void
-     */
-    public function clearKeys(): void
-    {
-        $this->clearDecryptKeys();
-        $this->clearEncryptKeys();
-        $this->clearSignKeys();
-        $this->clearVerifyKeys();
-    }
-
-    /**
-     * @param string $fingerprint key fingerprint
-     * @return void
-     */
-    public function setVerifyKeyFromFingerprint(string $fingerprint): void
-    {
-        $this->_verifyKeyFingerprint = $fingerprint;
+        return false;
     }
 }
