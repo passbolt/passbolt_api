@@ -31,6 +31,8 @@ use Faker\Generator;
  */
 class ResourceFactory extends CakephpBaseFactory
 {
+    use FactoryDeletedTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -51,7 +53,7 @@ class ResourceFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'name' => $faker->text(64),
+                'name' => $faker->text(255),
                 'username' => $faker->email(),
                 'uri' => $faker->url(),
                 'created_by' => $faker->uuid(),
@@ -60,6 +62,33 @@ class ResourceFactory extends CakephpBaseFactory
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];
         });
+    }
+
+    /**
+     * Define the associated permissions to create for a given list of aros (users or groups).
+     *
+     * @param array $aros Array of users or groups to create the resource for
+     * @param mixed $permissionsType (Optional) The permission type, default OWNER
+     * @return ResourceFactory
+     */
+    public function withPermissionsFor(array $aros, $permissionsType = 15): ResourceFactory
+    {
+        foreach ($aros as $aro) {
+            $aroType = $aro instanceof User ? PermissionsTable::USER_ARO : PermissionsTable::GROUP_ARO;
+            $permissionsMeta = ['aco' => PermissionsTable::RESOURCE_ACO, 'aro' => $aroType, 'aro_foreign_key' => $aro->id, 'type' => $permissionsType];
+            $this->with('Permissions', $permissionsMeta);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param UserFactory $factory
+     * @return ResourceFactory
+     */
+    public function withCreator(UserFactory $factory): self
+    {
+        return $this->with('Creator', $factory);
     }
 
     /**

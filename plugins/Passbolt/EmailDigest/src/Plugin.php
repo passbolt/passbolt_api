@@ -16,9 +16,12 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest;
 
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
+use Passbolt\EmailDigest\Command\PreviewCommand;
+use Passbolt\EmailDigest\Command\SenderCommand;
 
 class Plugin extends BasePlugin
 {
@@ -42,5 +45,17 @@ class Plugin extends BasePlugin
     {
         // Set the EmailQueue Serialization type to json.
         Configure::write('EmailQueue.serialization_type', 'email_queue.json');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        // Alias commands
+        $commands->add('passbolt email_digest preview', PreviewCommand::class);
+        $commands->add('passbolt email_digest send', SenderCommand::class);
+
+        return $commands;
     }
 }

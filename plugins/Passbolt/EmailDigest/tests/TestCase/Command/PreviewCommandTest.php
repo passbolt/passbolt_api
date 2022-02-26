@@ -53,10 +53,10 @@ class PreviewCommandTest extends TestCase
      */
     public function testPreviewCommandHelp(): void
     {
-        $this->exec('passbolt preview -h');
+        $this->exec('passbolt email_digest preview -h');
         $this->assertExitSuccess();
         $this->assertOutputContains('Preview a batch of queued emails as emails digests.');
-        $this->assertOutputContains('cake passbolt preview');
+        $this->assertOutputContains('cake passbolt email_digest preview');
     }
 
     /**
@@ -72,7 +72,7 @@ class PreviewCommandTest extends TestCase
 
         /** @var \Cake\Datasource\EntityInterface $email */
         $email = EmailQueueFactory::make()->persist();
-        $this->exec('passbolt preview --body true');
+        $this->exec('passbolt email_digest preview --body true');
         $this->assertExitSuccess();
         $this->assertOutputContains('Sending email from: ' . $email->get('from_email'));
         $this->assertOutputContains('Sending email to: ' . $email->get('email'));
@@ -94,7 +94,7 @@ class PreviewCommandTest extends TestCase
         EmailQueueFactory::make()->listeningToBeforeSave()->persist();
         EmailQueueFactory::make()->listeningToBeforeSave()->setRecipient($frenchSpeakingUser->username)->persist();
 
-        $this->exec('passbolt preview --body true');
+        $this->exec('passbolt email_digest preview --body true');
 
         $this->assertExitSuccess();
 

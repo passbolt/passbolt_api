@@ -35,6 +35,7 @@ class EmailQueueFactory extends CakephpBaseFactory
     protected function setDefaultTemplate(): void
     {
         $this->configureEmailTemplateFixturePath();
+        $this->configureSerializationType();
 
         $this->setDefaultData(function (Generator $faker) {
             $email = $faker->email();
@@ -60,11 +61,24 @@ class EmailQueueFactory extends CakephpBaseFactory
         });
     }
 
-    public function configureEmailTemplateFixturePath()
+    /**
+     * Sets the path to test the email
+     */
+    public function configureEmailTemplateFixturePath(): void
     {
         $templatePaths = Configure::readOrFail('App.paths.templates');
         array_push($templatePaths, $this->getEmailDigestTestFixturePath());
         Configure::write('App.paths.templates', $templatePaths);
+    }
+
+    /**
+     * Sets the serialization type to json by default
+     */
+    public function configureSerializationType()
+    {
+        if (!Configure::check('EmailQueue.serialization_type')) {
+            Configure::write('EmailQueue.serialization_type', 'email_queue.json');
+        }
     }
 
     public function getEmailDigestTestFixturePath(): string

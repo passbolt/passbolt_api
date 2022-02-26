@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
+use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -44,10 +45,19 @@ class GroupsUserFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                // set the model's default values
-                // For example:
-                // 'name' => $faker->lastName
+                'group_id' => $faker->uuid(),
+                'user_id' => $faker->uuid(),
+                'is_admin' => false,
+                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];
         });
+    }
+
+    /**
+     * @return GroupsUserFactory
+     */
+    public function admin()
+    {
+        return $this->setField('is_admin', true);
     }
 }

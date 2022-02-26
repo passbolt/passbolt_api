@@ -180,4 +180,17 @@ class FavoritesTable extends Table
 
         return true;
     }
+
+    /**
+     * Delete duplicated favorites
+     *
+     * @param bool $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupDuplicatedFavorites(?bool $dryRun = false): int
+    {
+        $keys = ['user_id', 'foreign_key', 'foreign_model'];
+
+        return $this->cleanupDuplicates($keys, $dryRun);
+    }
 }

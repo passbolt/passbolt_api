@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Model\Traits\Cleanup;
 
+use Cake\Database\Expression\TupleComparison;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 
@@ -62,9 +63,7 @@ trait TableCleanupTrait
             $query = $this->query()
                 ->select(['id'])
                 ->leftJoinWith($association)
-                ->where(function ($exp, $q) use ($association) {
-                    return $exp->isNull($this->getModelNameFromAssociation($association) . '.id');
-                });
+                ->whereNull($this->getModelNameFromAssociation($association) . '.id');
         }
         $records = Hash::extract($query->toArray(), '{n}.id');
         if ($dryRun) {
@@ -72,6 +71,66 @@ trait TableCleanupTrait
         }
         if (count($records)) {
             return $this->deleteAll(['id IN' => $records]);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Delete duplicated entries for a given combined key.
+     * By instance a permission is supposed to be unique for a given "aco", "aco_foreign_key", "aro",
+     * "aro_foreign_key" and "type".
+     *
+     * @param array $combinedKey the columns name that together form a combined key.
+     * @param bool|null $dryRun false
+     * @param bool|null $deleteNewest (optional) Should the newest duplicate entries deleted? Default true.
+     * @return int Number of affected records
+     * @throws \Exception If the table to cleanup does not have an "id" column
+     * @throw Exception if the table doesn't have a column "id".
+     */
+    public function cleanupDuplicates(array $combinedKey = [], ?bool $dryRun = false, ?bool $deleteNewest = true): int
+    {
+        $tableColumns = $this->getSchema()->columns();
+        if (array_search('id', $tableColumns) === false) {
+            throw new \Exception('Cannot run cleanup duplicates operation on a table not having an "id" column.');
+        }
+
+        // Find the duplicated tuples.
+        $duplicatedTuplesQuery = $this->query()
+            ->select($combinedKey)
+            ->group($combinedKey)
+            ->having('count(*) > 1');
+
+        // Find all the rows corresponding to the identified duplicated tuples.
+        $duplicatedRowsQuery = $this->query()
+            ->select(array_merge(['id'], $combinedKey))
+            ->where(new TupleComparison($combinedKey, $duplicatedTuplesQuery, [], 'IN'))
+            ->order($combinedKey);
+
+        // If possible try to delete depending on the records age.
+        if (array_search('modified', $tableColumns) !== false) {
+            $duplicatedRowsQuery->order(['modified' => $deleteNewest ? 'ASC' : 'DESC']);
+        } elseif (array_search('created', $tableColumns) !== false) {
+            $duplicatedRowsQuery->order(['created' => $deleteNewest ? 'ASC' : 'DESC']);
+        }
+
+        $duplicatedRows = $duplicatedRowsQuery->disableHydration()->toArray();
+
+        $idsToRemove = [];
+        foreach ($duplicatedRows as $index => $row) {
+            foreach ($combinedKey as $key) {
+                if ($index === 0 || $duplicatedRows[(int)$index - 1][$key] !== $row[$key]) {
+                    continue 2;
+                }
+            }
+            $idsToRemove[] = $row['id'];
+        }
+
+        if ($dryRun) {
+            return count($idsToRemove);
+        }
+        if (!empty($idsToRemove)) {
+            return $this->deleteAll(['id IN' => $idsToRemove]);
         }
 
         return 0;

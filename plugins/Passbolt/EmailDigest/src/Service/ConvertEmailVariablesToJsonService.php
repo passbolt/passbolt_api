@@ -61,7 +61,7 @@ class ConvertEmailVariablesToJsonService
             ->newQuery()
             ->select(['id', 'template_vars'])
             ->from($EmailQueueTable->getTable())
-            ->where(['sent' => false])
+            ->where(['sent' => 0])
             ->execute()
             ->fetchAll('assoc');
     }

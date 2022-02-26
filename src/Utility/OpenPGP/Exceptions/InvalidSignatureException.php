@@ -12,17 +12,15 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         3.5.0
  */
-namespace App\Test\Factory;
+namespace App\Utility\OpenPGP\Exceptions;
 
-trait FactoryHelperTrait
+use Cake\Core\Exception\CakeException;
+
+/**
+ * Exception raised when the user signature is invalid.
+ */
+class InvalidSignatureException extends CakeException
 {
-    /**
-     * @return $this
-     */
-    public function deleted()
-    {
-        return $this->patchData(['deleted' => true]);
-    }
 }

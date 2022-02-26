@@ -112,7 +112,7 @@ class PermissionsTable extends Table
         ]);
 
         if (Configure::read('passbolt.plugins.folders.enabled')) {
-            $this->belongsTo('Folders', [
+            $this->belongsTo('Passbolt/Folders.Folders', [
                 'foreignKey' => 'aco_foreign_key',
             ]);
         }
@@ -458,5 +458,18 @@ class PermissionsTable extends Table
     public function cleanupSoftDeletedResources(bool $dryRun = false): int
     {
         return $this->cleanupSoftDeletedAco('Resources', $dryRun);
+    }
+
+    /**
+     * Delete duplicated permissions
+     *
+     * @param bool $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupDuplicatedPermissions(?bool $dryRun = false): int
+    {
+        $keys = ['aco', 'aco_foreign_key', 'aro', 'aro_foreign_key', 'type'];
+
+        return $this->cleanupDuplicates($keys, $dryRun);
     }
 }

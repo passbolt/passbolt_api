@@ -11,10 +11,10 @@
       --ciphertext-file -
   }
 
-.install-jq-rhel-8: &install-jq-rhel-8 
+.install-jq-rhel-8: &install-jq-rhel-8
   yum install -y jq ${DEPENDENCIES}
 
-.install-jq-rhel-7: &install-jq-rhel-7 
+.install-jq-rhel-7: &install-jq-rhel-7
   - yum install -y epel-release
   - yum install -y jq ${DEPENDENCIES}
 
@@ -23,12 +23,23 @@
   PKG_VERSION=$(jq -r '.version' package.json) \
   PASSBOLT_VERSION=$(jq -r '.version' package.json) \
   /bin/sh rpm/scripts/build-passbolt-server.sh
-  PKG_VERSION=0.1 /bin/sh rpm/scripts/build-passbolt-selinux.sh
   cp ~/rpmbuild/RPMS/noarch/passbolt-* .
 
 .build-rpm:
   extends: .rules
-  image: rockylinux/rockylinux:8
+  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-8:latest
+  stage: package-build
+  dependencies:
+    - composer
+  artifacts:
+    paths:
+      - '*.rpm'
+    expire_in: 1 week
+    when: on_success
+
+.build-zypper:
+  extends: .rules
+  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/opensuse-leap-15:latest
   stage: package-build
   dependencies:
     - composer
@@ -43,6 +54,7 @@ build-yum:
   variables:
     DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo firewalld"
   script:
+    - PKG_VERSION=0.3 /bin/sh rpm/scripts/build-passbolt-selinux.sh
     - *install-jq-rhel-8
     - *build-passbolt-rpm-package
 
@@ -52,8 +64,19 @@ build-yum-7:
   variables:
     DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo firewalld"
   script:
+    - PKG_VERSION=0.3 /bin/sh rpm/scripts/build-passbolt-selinux.sh
     - *install-jq-rhel-7
     - *build-passbolt-rpm-package
+
+build-suse:
+  extends: .build-zypper
+  variables:
+    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo firewalld"
+  script:
+    - zypper install -y rpmdevtools rpmlint rsync rpm-build bc jq
+    - *build-passbolt-rpm-package
+
+
 
 # gcloud sdk https://cloud.google.com/sdk/docs/downloads-versioned-archives
 .clone-repo-bucket: &clone-repo-bucket |
@@ -99,10 +122,10 @@ build-yum-7:
     REPO_PATH: "$PASSBOLT_FLAVOUR/rpm/$EL_VERSION"
     REPO: "$BUCKET_NAME/$REPO_PATH/$COMPONENT"
     PACKAGE_ARCH: "noarch"
-  before_script: 
+  before_script:
     - *clone-repo-bucket
     - *gpg-setup
-  script: 
+  script:
     - *publish-script
 
 publish-passbolt-yum-el8-testing:
@@ -131,7 +154,7 @@ publish-passbolt-yum-el8-stable:
   dependencies:
     - build-yum
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
 
 publish-passbolt-yum-el7-stable:
@@ -142,5 +165,5 @@ publish-passbolt-yum-el7-stable:
   dependencies:
     - build-yum-7
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
