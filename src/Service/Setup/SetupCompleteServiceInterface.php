@@ -17,13 +17,15 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
+use App\Model\Entity\User;
+
 interface SetupCompleteServiceInterface
 {
     /**
-     * Retrieves user and token information for the setup controllers
+     * Completes the setup for the provided user.
      *
      * @param string $userId User ID
-     * @return void
+     * @return \App\Model\Entity\User
      */
-    public function complete(string $userId): void;
+    public function complete(string $userId): User;
 }

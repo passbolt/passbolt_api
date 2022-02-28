@@ -23,7 +23,6 @@ use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
-use App\Middleware\ServerRequestInterfaceInjectionMiddleware;
 use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
@@ -51,6 +50,7 @@ use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
@@ -92,8 +92,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(SessionAuthPreventDeletedUsersMiddleware::class)
             ->insertAfter(SessionAuthPreventDeletedUsersMiddleware::class, new AuthenticationMiddleware($this))
             ->add(new GpgAuthHeadersMiddleware())
-            ->add($csrf)
-            ->insertAt(1000, ServerRequestInterfaceInjectionMiddleware::class); // Injects the server request at the end of the middleware queue
+            ->add($csrf);
 
         /*
          * Additional security headers
@@ -117,6 +116,18 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         }
 
         return $middlewareQueue;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function handle(
+        ServerRequestInterface $request
+    ): ResponseInterface {
+        // TODO: remove this line when migrating to CakePHP 4.4 (https://github.com/cakephp/cakephp/pull/16180)
+        $this->getContainer()->add(ServerRequest::class, $request);
+
+        return parent::handle($request);
     }
 
     /**

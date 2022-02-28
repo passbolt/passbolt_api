@@ -50,7 +50,7 @@ trait EmailQueueTrait
      */
     protected function assertEmailQueueCount(int $n)
     {
-        $this->assertSame($n, EmailQueueFactory::find()->count());
+        $this->assertSame($n, EmailQueueFactory::count());
     }
 
     /**

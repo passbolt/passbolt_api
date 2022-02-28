@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Factory;
 
 use Cake\Core\Configure;
+use Cake\I18n\Time;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -63,6 +64,29 @@ class GpgkeyFactory extends CakephpBaseFactory
         return $this->patchData([
             'armored_key' => file_get_contents(Configure::read('passbolt.gpg.serverKey.private')),
             'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'),
+        ]);
+    }
+
+    /**
+     * Set the expires field to the past
+     *
+     * @return $this
+     */
+    public function expired()
+    {
+        return $this->setField('expires', Time::yesterday());
+    }
+
+    /**
+     * Set the armored key and fingerprint to Sofia's one
+     *
+     * @return $this
+     */
+    public function withValidOpenPGPKey()
+    {
+        return $this->patchData([
+            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'sofia_public.key'),
+            'fingerprint' => '252B91CB28A96C6D67E8FC139020576F08D8B763',
         ]);
     }
 }

@@ -9,4 +9,4 @@
 PATH=/bin:/usr/local/bin:/usr/bin
 PASSBOLT_BASE_DIR=/usr/share/php/passbolt
 
-* * * * * nginx $PASSBOLT_BASE_DIR/bin/cron
+* * * * * root su -s /bin/bash @@NGINX_USER@@ $PASSBOLT_BASE_DIR/bin/cron

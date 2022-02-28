@@ -51,7 +51,12 @@ class SetupCompleteController extends AppController
      */
     public function complete(SetupCompleteServiceInterface $setupCompleteService, string $userId): void
     {
-        $setupCompleteService->complete($userId);
+        $user = $setupCompleteService->complete($userId);
+
+        $this->dispatchEvent(self::COMPLETE_SUCCESS_EVENT_NAME, [
+            'user' => $user,
+            'data' => $this->getRequest()->getData(),
+        ]);
 
         $this->success(__('The setup was completed successfully.'));
     }

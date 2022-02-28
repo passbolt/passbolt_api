@@ -132,13 +132,14 @@ trait UsersModelTrait
      */
     protected function createTestUser()
     {
-        $testUser = $this->Users->newEntity(self::getDummyUser(), static::getEntityDefaultOptions());
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
+        $testUser = $usersTable->newEntity(self::getDummyUser(), static::getEntityDefaultOptions());
 
         $errors = $testUser->getErrors();
         $this->assertEmpty($errors);
         $this->assertNotEmpty($testUser);
 
-        return $this->Users->save($testUser);
+        return $usersTable->save($testUser);
     }
 
     protected function getNonExistingRoleId()

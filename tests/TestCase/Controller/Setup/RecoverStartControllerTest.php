@@ -17,30 +17,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class RecoverStartControllerTest extends AppIntegrationTestCase
 {
-    use AuthenticationTokenModelTrait;
-
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-
-    ];
-    public $AuthenticationTokens;
-    private $Users;
-
-    public function setUp(): void
-    {
-        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
-        parent::setUp();
-    }
-
     /**
      * @group AN
      * @group recover
@@ -111,11 +95,12 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverStartJson_BadRequestError_UserInactive()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
-        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $userId = UserFactory::make()->inactive()->persist()->id;
+        $token = UuidFactory::uuid();
+        $url = "/setup/recover/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The user does not exist or is not active.');
     }
 
     /**
@@ -126,10 +111,11 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     public function testRecoverStartJson_BadRequestError_UserNotExist()
     {
         $userId = UuidFactory::uuid();
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.admin'), AuthenticationToken::TYPE_RECOVER);
-        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $token = UuidFactory::uuid();
+        $url = "/setup/recover/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The user does not exist or is not active.');
     }
 
     /**
@@ -139,14 +125,12 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverStart_BadRequestError_UserDeleted()
     {
-        $userId = UuidFactory::uuid('user.id.admin');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
-        $user = $this->Users->findById($userId)->first();
-        $user->deleted = 1;
-        $this->Users->save($user);
-        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $userId = UserFactory::make()->deleted()->persist()->id;
+        $token = UuidFactory::uuid();
+        $url = "/setup/recover/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The user does not exist or is not active.');
     }
 
     /**
@@ -156,11 +140,12 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverStart_BadRequestError_TokenDoesntExist()
     {
-        $userId = UuidFactory::uuid('user.id.admin');
+        $userId = UserFactory::make()->active()->persist()->id;
         $token = UuidFactory::uuid();
         $url = "/setup/recover/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The authentication token is not valid.');
     }
 
     /**
@@ -170,11 +155,16 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverStart_BadRequestError_WrongTokenType()
     {
-        $userId = UuidFactory::uuid('user.id.admin');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
+        $userId = UserFactory::make()->active()->persist()->id;
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type('Foo')
+            ->userId($userId)
+            ->persist();
         $url = "/setup/recover/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The authentication token is not valid.');
     }
 
     /**
@@ -184,13 +174,16 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverStart_BadRequestError_TokenAlreadyConsumed()
     {
-        $userId = UuidFactory::uuid('user.id.admin');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
-        $t->active = false;
-        $this->AuthenticationTokens->save($t);
+        $userId = UserFactory::make()->active()->persist()->id;
+        $t = AuthenticationTokenFactory::make()
+            ->inactive()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->userId($userId)
+            ->persist();
         $url = "/setup/recover/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The authentication token is not valid.');
     }
 
     /**
@@ -200,10 +193,13 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverStart_BadRequestError_TokenExpired()
     {
-        $userId = UuidFactory::uuid('user.id.admin');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
-        $t->created = '2020-01-01 00:00:00';
-        $this->AuthenticationTokens->save($t);
+        $userId = UserFactory::make()->active()->persist()->id;
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->expired()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->userId($userId)
+            ->persist();
         $url = "/setup/recover/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
@@ -220,8 +216,12 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverStartJson_Success()
     {
-        $userId = UuidFactory::uuid('user.id.admin');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
+        $userId = UserFactory::make()->active()->persist()->id;
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->userId($userId)
+            ->persist();
         $url = "/setup/recover/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseOk();
