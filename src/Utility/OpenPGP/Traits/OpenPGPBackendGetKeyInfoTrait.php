@@ -95,7 +95,7 @@ trait OpenPGPBackendGetKeyInfoTrait
 
             // Look for key revocation signature packet
             if (!$results['revoked'] && $packet instanceof \OpenPGP_SignaturePacket) {
-                if ($this->containsRevocationSignature($packet, $results['key_id'])) {
+                if (self::containsRevocationSignature($packet, $results['key_id'])) {
                     $results['revoked'] = true;
                 }
             }
@@ -211,7 +211,7 @@ trait OpenPGPBackendGetKeyInfoTrait
      * @param string $longKeyId 16 chars
      * @return bool
      */
-    public function containsRevocationSignature(\OpenPGP_SignaturePacket $packet, string $longKeyId): bool
+    public static function containsRevocationSignature(\OpenPGP_SignaturePacket $packet, string $longKeyId): bool
     {
         // https://datatracker.ietf.org/doc/html/draft-ietf-openpgp-rfc4880bis-10#section-5.2.1
         // 32 = 0x20 Key revocation signature.
