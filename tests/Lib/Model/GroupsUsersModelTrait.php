@@ -27,9 +27,9 @@ trait GroupsUsersModelTrait
      *
      * @param array|null $data The group user data
      * @param array|null $options The entity options
-     * @return Group
+     * @return GroupsUser
      */
-    public function addGroupUser(?array $data = [], ?array $options = []): Group
+    public function addGroupUser(?array $data = [], ?array $options = []): GroupsUser
     {
         $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $groupUser = self::getDummyGroupUserEntity($data, $options);

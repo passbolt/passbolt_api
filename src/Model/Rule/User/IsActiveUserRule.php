@@ -15,16 +15,15 @@ declare(strict_types=1);
  * @since         3.5.0
  */
 
-namespace App\Model\Rule;
+namespace App\Model\Rule\User;
 
-use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
+use Cake\ORM\TableRegistry;
 
-class IsNotServerKeyFingerprintRule
+class IsActiveUserRule
 {
     /**
-     * Check if an entity that has the fingerprint property set does not
-     * reuse the same fingerprint from the server
+     * Performs the check
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity to check
      * @param array $options Options passed to the check
@@ -32,18 +31,17 @@ class IsNotServerKeyFingerprintRule
      */
     public function __invoke(EntityInterface $entity, array $options): bool
     {
-        // If no entity fingerprint provided the rule will fail
-        $fingerprint = $entity->get('fingerprint');
-        if (!isset($fingerprint) || !is_string($fingerprint)) {
+        if (!$entity->has('user_id')) {
             return false;
         }
+        $UsersTable = TableRegistry::getTableLocator()->get('Users');
 
-        // If no server fingerprint provided the rule will fail
-        $fingerprintServer = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        if (!isset($fingerprintServer) || !is_string($fingerprintServer)) {
-            return false;
-        }
-
-        return !($fingerprintServer === $fingerprint);
+        return $UsersTable
+            ->find()
+            ->where([
+                $UsersTable->aliasField('id') => $entity->get('user_id'),
+                $UsersTable->aliasField('deleted') => false,
+                $UsersTable->aliasField('active') => true,
+            ])->count() > 0;
     }
 }

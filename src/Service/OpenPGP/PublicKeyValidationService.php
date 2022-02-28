@@ -96,7 +96,7 @@ class PublicKeyValidationService
      */
     public static function getStrictRules(): array
     {
-        return array_merge(self::getHistoricalRules(), [
+        return array_merge(self::getDefaultRules(), [
             self::IS_VALID_KEY_SIZE_STRICT_RULE,
         ]);
     }

@@ -89,10 +89,13 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testSetupCompleteEccSuccess()
     {
-        $logEnabled = Configure::read('passbolt.plugins.log.enabled');
-        Configure::write('passbolt.plugins.log.enabled', true);
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+        $user = $t->user;
+        $url = '/setup/complete/' . $user->id . '.json';
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'ecc_nistp521_public.key');
         $data = [
             'authenticationtoken' => [
@@ -100,6 +103,9 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             ],
             'gpgkey' => [
                 'armored_key' => $armoredKey,
+            ],
+            'user' => [
+                'locale' => 'fr_FR', // Putting on purpose an underscore, though convention is dashed.
             ],
         ];
         $this->postJson($url, $data);
@@ -112,8 +118,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
         $this->assertEquals('ECDSA', $userK->type);
         $this->assertEquals('521', $userK->bits);
-
-        Configure::write('passbolt.plugins.log.enabled', $logEnabled);
     }
 
     /**

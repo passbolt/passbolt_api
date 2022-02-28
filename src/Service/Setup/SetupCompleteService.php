@@ -42,6 +42,9 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
      */
     public function complete(string $userId): User
     {
+        // TODO Improvement: build the user entity with associations and perform a unique save
+        // to handle the rollbacking in case of errors.
+
         // Check request sanity
         $user = $this->getAndAssertUser($userId);
         $token = $this->getAndAssertToken($userId, AuthenticationToken::TYPE_REGISTER);
