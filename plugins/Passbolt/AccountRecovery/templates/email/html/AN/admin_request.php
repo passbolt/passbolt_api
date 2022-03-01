@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         3.6.0
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
@@ -21,18 +21,17 @@ if (PHP_SAPI === 'cli') {
 $user = $body['user'];
 $admin = $body['admin'];
 $created = $body['created'];
-
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $admin,
         'datetime' => $created,
-        'text' => __('{0} has initiated a recovery request', $user['profile']['first_name'])
+        'text' => __('{0} has initiated a recovery request', Purifier::clean($user['profile']['first_name']))
     ])
 ]);
 
 $text = '<h3>' . __('Recovery request') . '</h3><br/>';
-$text .= __('{0} has initiated an account recovery request', $user['profile']['first_name']);
+$text .= __('{0} has initiated an account recovery request', Purifier::clean($user['profile']['first_name']));
 $text .= ' ' . __('Since you are part of the recovery contacts, you are requested to help them.');
 echo $this->element('Email/module/text', [
     'text' => $text
