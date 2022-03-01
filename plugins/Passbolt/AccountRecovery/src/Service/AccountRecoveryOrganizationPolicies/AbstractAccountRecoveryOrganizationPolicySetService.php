@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.5.0
+ * @since         3.6.0
  */
 
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
@@ -29,8 +29,12 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 
 /**
- * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicies
- * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPublicKeysTable $AccountRecoveryOrganizationPublicKeys
+ * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicies // phpcs:ignore
+ * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPublicKeysTable $AccountRecoveryOrganizationPublicKeys // phpcs:ignore
+ * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable $AccountRecoveryPrivateKeyPasswords // phpcs:ignore
+ * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable $AccountRecoveryPrivateKeys
+ * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable $AccountRecoveryRequests
+ * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings
  */
 class AbstractAccountRecoveryOrganizationPolicySetService
 {
@@ -64,6 +68,10 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     {
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPrivateKey');
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPrivateKeyPasswords');
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationRequests');
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationUserSettings');
         $this->getService = $getService ?? new AccountRecoveryOrganizationPolicyGetService();
     }
 
@@ -100,21 +108,18 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     }
 
     /**
+     * Accessor for request data in a ServerRequest style
      * @param string|null $name Dot separated name of the value to read. Or null to read all data.
-     * @param mixed $default The default data.
      * @return mixed The value being read.
      */
-    protected function getData(?string $name = null, $default = null)
+    protected function getData(?string $name = null)
     {
         if ($name === null) {
             return $this->data;
         }
-        if (!is_array($this->data) && $name) {
-            return $default;
-        }
 
         /** @psalm-suppress PossiblyNullArgument */
-        return Hash::get($this->data, $name, $default);
+        return Hash::get($this->data, $name);
     }
 
     // METHODS USED TO UNDERSTAND USER REQUEST

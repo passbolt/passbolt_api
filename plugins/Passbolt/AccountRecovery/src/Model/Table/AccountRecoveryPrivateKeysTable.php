@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.5.0
+ * @since         3.6.0
  */
 
 namespace Passbolt\AccountRecovery\Model\Table;
@@ -20,11 +20,12 @@ namespace Passbolt\AccountRecovery\Model\Table;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\AccountRecovery\Model\Table\Traits\TableTruncateTrait;
 
 /**
  * AccountRecoveryPrivateKeys Model
  *
- * @property \Passbolt\AccountRecovery\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable&\Cake\ORM\Association\HasMany $AccountRecoveryPrivateKeyPasswords
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey newEmptyEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey newEntity(array $data, array $options = [])
@@ -43,6 +44,8 @@ use Cake\Validation\Validator;
  */
 class AccountRecoveryPrivateKeysTable extends Table
 {
+    use TableTruncateTrait;
+
     /**
      * Initialize method
      *

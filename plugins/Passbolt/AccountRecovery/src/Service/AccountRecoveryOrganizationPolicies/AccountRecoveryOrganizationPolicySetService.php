@@ -12,19 +12,17 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.5.0
+ * @since         3.6.0
  */
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
+use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 
-/**
- * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicies // phpcs:ignore
- */
 class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecoveryOrganizationPolicySetService implements AccountRecoveryOrganizationPolicySetServiceInterface // phpcs:ignore
 {
     /**
@@ -75,7 +73,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
 
             $publicKeyEntity = $this->assertNewPublicKey($uac);
 
-            return $this->enablePolicy($newPolicy, $publicKeyEntity);
+            return $this->enablePolicy($uac, $newPolicy, $publicKeyEntity);
         }
 
         // if enabled => disabled
@@ -125,11 +123,12 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
     /**
      * Save the new policy and trigger email notification
      *
+     * @param UserAccessControl $uac user access control
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy entity
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $key entity
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
      */
-    protected function enablePolicy(AccountRecoveryOrganizationPolicy $policy, AccountRecoveryOrganizationPublicKey $key): AccountRecoveryOrganizationPolicy // phpcs:ignore
+    protected function enablePolicy(UserAccessControl $uac, AccountRecoveryOrganizationPolicy $policy, AccountRecoveryOrganizationPublicKey $key): AccountRecoveryOrganizationPolicy // phpcs:ignore
     {
         // Validation has already been done at this point
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(function () use (&$policy, $key) {
@@ -158,22 +157,33 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
     }
 
     /**
+     * @param UserAccessControl $uac user access control
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $newPolicy entity
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $patchedKey entity
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity
      * @throws \Exception
      */
     public function disablePolicy(
+        UserAccessControl $uac,
         AccountRecoveryOrganizationPolicy $newPolicy,
         AccountRecoveryOrganizationPublicKey $patchedKey
     ): AccountRecoveryOrganizationPolicy {
         $oldPolicy = $this->getCurrentPolicyEntity();
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(
-            function () use ($oldPolicy, $newPolicy, $patchedKey) {
+            function () use ($oldPolicy, $newPolicy, $patchedKey, $uac) {
+                // Create new policy and delete old one
                 $this->AccountRecoveryOrganizationPolicies->delete($oldPolicy, ['atomic' => false]);
                 $this->AccountRecoveryOrganizationPolicies->save($newPolicy, ['atomic' => false]);
+
+                // Set previous key as deleted
                 $this->AccountRecoveryOrganizationPublicKeys->save($patchedKey, ['atomic' => false]);
-                // TODO Delete backups
+
+                // Truncate private key, passwords
+                $this->AccountRecoveryPrivateKeyPasswords->truncate();
+                $this->AccountRecoveryPrivateKeys->truncate();
+
+                // Cancel pending or non completed requests
+                $this->AccountRecoveryRequests->rejectAllNonCompleted($uac);
             }
         );
 

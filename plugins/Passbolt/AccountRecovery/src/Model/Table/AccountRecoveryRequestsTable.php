@@ -5,6 +5,7 @@ namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Model\Rule\User\IsActiveUserRule;
 use App\Model\Traits\OpenPGP\PublicKeyValidatorTrait;
+use App\Utility\UserAccessControl;
 use Cake\Event\EventInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -14,8 +15,8 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 /**
  * AccountRecoveryRequests Model
  *
- * @property \Passbolt\AccountRecovery\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @property \Passbolt\AccountRecovery\Model\Table\AuthenticationTokensTable&\Cake\ORM\Association\BelongsTo $AuthenticationTokens
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\AuthenticationTokensTable&\Cake\ORM\Association\BelongsTo $AuthenticationTokens
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest newEmptyEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] newEntities(array $data, array $options = [])
@@ -152,5 +153,26 @@ class AccountRecoveryRequestsTable extends Table
             'id !=' => $request->id,
             'user_id' => $request->user_id,
         ]);
+    }
+
+    /**
+     * @param UserAccessControl $userAccessControl
+     * @return void
+     */
+    public function rejectAllNonCompleted(UserAccessControl $userAccessControl): void
+    {
+        $this->query()
+            ->update()
+            ->set([
+                'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
+                'modified_by' => $userAccessControl->getId()
+            ])
+            ->where([
+                'status IN' => [
+                    AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED,
+                    AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING
+                ]
+            ])
+            ->execute();
     }
 }
