@@ -68,10 +68,10 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     {
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
-        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPrivateKey');
-        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPrivateKeyPasswords');
-        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationRequests');
-        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationUserSettings');
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryRequests');
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
         $this->getService = $getService ?? new AccountRecoveryOrganizationPolicyGetService();
     }
 
@@ -109,6 +109,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
 
     /**
      * Accessor for request data in a ServerRequest style
+     *
      * @param string|null $name Dot separated name of the value to read. Or null to read all data.
      * @return mixed The value being read.
      */
@@ -265,7 +266,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
         try {
             $data = $this->getData('account_recovery_organization_revoked_key');
             $entity = $this->newPublicKeyEntityOrFail($uac, $data);
-            $oldEntity = $this->assertKeyWithFingerprintExists($data['fingerprint']);
+            $oldEntity = $this->assertActiveKeyWithFingerprint($data['fingerprint']);
             $keyInfo = PublicKeyValidationService::parseAndValidatePublicKey(
                 $entity->armored_key,
                 PublicKeyValidationService::getRevokedKeyRules()
@@ -364,20 +365,20 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     }
 
     /**
-     * Assert an organization recovery public key exists for given fingerprint
+     * Assert an organization recovery public key exists and is not deleted for given fingerprint
      *
      * @param string $fingerprint user provided data
      * @throws \App\Error\Exception\CustomValidationException if the provided fingerprint does not match the one
      * from the currently active key
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey existing key
      */
-    private function assertKeyWithFingerprintExists(string $fingerprint): AccountRecoveryOrganizationPublicKey
+    private function assertActiveKeyWithFingerprint(string $fingerprint): AccountRecoveryOrganizationPublicKey
     {
         try {
             /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $key */
             $key = $this->AccountRecoveryOrganizationPublicKeys->find()->where([
                 'fingerprint' => $fingerprint,
-                'deleted IS NOT' => null,
+                'deleted IS' => null,
             ])->firstOrFail();
         } catch (RecordNotFoundException $exception) {
             throw new CustomValidationException(__('Could not validate policy data.'), [

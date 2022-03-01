@@ -31,6 +31,10 @@ use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyPasswordFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTestCase
@@ -612,15 +616,44 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     /**
      * Enabled => Disabled, previous policy set to disabled
      */
-    public function testAccountRecoveryOrganizationPolicySetService_Success_EnabledDisabled_NoPassword()
+    public function testAccountRecoveryOrganizationPolicySetService_Success_EnabledDisabled()
     {
         AccountRecoveryOrganizationPolicyFactory::make()
             ->optin()
-            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
-                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
-                'deleted' => Chronos::now()->subDays(1),
-            ]))
+            ->persist();
+
+        AccountRecoveryOrganizationPublicKeyFactory::make()
+            ->setField('id', UuidFactory::uuid('acr.org_public_key.id'))
+            ->setField('fingerprint', '67BFFCB7B74AF4C85E81AB26508850525CD78BAA')
+            ->setField('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'))
+            ->setField('deleted', null)
+            ->persist();
+
+        AccountRecoveryOrganizationPublicKeyFactory::make()
+            ->setField('id', UuidFactory::uuid('acr.org_public_key_old.id'))
+            ->setField('fingerprint', '2D7CF2B7FD9643DEBF63633CFC7F5D048541513F')
+            ->setField('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'old_revoked_public.key'))
+            ->setField('deleted', Chronos::now()->subDay())
+            ->persist();
+
+        AccountRecoveryPrivateKeyFactory::make()
+            ->setField('id', UuidFactory::uuid('acr.private_key.ada.id'))
+            ->setField('user_id', UuidFactory::uuid('user.id.ada'))
+            ->persist();
+
+        AccountRecoveryPrivateKeyPasswordFactory::make()
+            ->setField('private_key_id', UuidFactory::uuid('acr.private_key.ada.id'))
+            ->setField('recipient_foreign_key', UuidFactory::uuid('acr.org_public_key.id'))
+            ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
+            ->persist();
+
+        AccountRecoveryUserSettingFactory::make()
+            ->setField('status', 'approved')
+            ->setField('user_id', UuidFactory::uuid('user.id.ada'))
+            ->persist();
+
+        AccountRecoveryRequestFactory::make()
+            ->setField('user_id', UuidFactory::uuid('user.id.ada'))
             ->persist();
 
         $service = new AccountRecoveryOrganizationPolicySetService();
@@ -639,7 +672,21 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         $this->assertNotEmpty($policy->modified);
         $this->assertEquals($this->getUac()->getId(), $policy->created_by);
         $this->assertEquals($this->getUac()->getId(), $policy->modified_by);
-
         $this->assertEmpty($policy->account_recovery_organization_public_key);
+
+        // There should be two public keys in DB both deleted
+        $this->assertSame(2, AccountRecoveryOrganizationPublicKeyFactory::count());
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
+        $this->assertEquals(2, $table->find()->where(['deleted IS NOT' => null])->count());
+
+        // There should be one account recovery request as rejected
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryRequests');
+        $this->assertEquals(1, $table->find()->where(['status' => 'rejected'])->count());
+        $this->assertEquals(1, $table->find()->count());
+
+        // Private key and passwords table and user settings should be truncated
+        $this->assertSame(0, AccountRecoveryPrivateKeyFactory::count());
+        $this->assertSame(0, AccountRecoveryPrivateKeyPasswordFactory::count());
+        $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
     }
 }

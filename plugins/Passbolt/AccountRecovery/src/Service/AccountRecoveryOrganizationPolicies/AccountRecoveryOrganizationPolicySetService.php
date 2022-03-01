@@ -16,12 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
-use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 
 class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecoveryOrganizationPolicySetService implements AccountRecoveryOrganizationPolicySetServiceInterface // phpcs:ignore
 {
@@ -71,9 +69,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
                 throw new BadRequestException(__('Invalid request. Revoked key or passwords are not required.'));
             }
 
-            $publicKeyEntity = $this->assertNewPublicKey($uac);
-
-            return $this->enablePolicy($uac, $newPolicy, $publicKeyEntity);
+            return $this->enablePolicy($uac, $newPolicy);
         }
 
         // if enabled => disabled
@@ -82,11 +78,9 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
             if ($isNewKeyProvided || $isPrivateKeyPasswordsProvided) {
                 throw new BadRequestException(__('Invalid request. New key or passwords are not required.'));
             }
-            $patchedKey = $this->assertAndPatchRevokedKeyEntity($uac);
-            $newPolicy = $this->getNewDisabledEntity($uac);
 
             // save new disabled policy, disable previous key and delete backups if any
-            return $this->disablePolicy($newPolicy, $patchedKey);
+            return $this->disablePolicy($uac);
         }
 
 //        // else it's policy change like mandatory => opt-in
@@ -114,22 +108,20 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
 //        }
 //
 //        // save new key and disable previous key and backups if any
-//        return $this->updatePolicy($rotateKey, $rotatePasswords);
-
-        // + on save policy event
-            // trigger email
+//        return $this->updatePolicy($uac, $newPolicy, $rotateKey, $rotatePasswords);
     }
 
     /**
      * Save the new policy and trigger email notification
      *
-     * @param UserAccessControl $uac user access control
+     * @param \App\Utility\UserAccessControl $uac user access control
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy entity
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $key entity
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
      */
-    protected function enablePolicy(UserAccessControl $uac, AccountRecoveryOrganizationPolicy $policy, AccountRecoveryOrganizationPublicKey $key): AccountRecoveryOrganizationPolicy // phpcs:ignore
+    protected function enablePolicy(UserAccessControl $uac, AccountRecoveryOrganizationPolicy $policy): AccountRecoveryOrganizationPolicy // phpcs:ignore
     {
+        $key = $this->assertNewPublicKey($uac);
+
         // Validation has already been done at this point
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(function () use (&$policy, $key) {
             // Delete previous existing organization policy if any
@@ -150,6 +142,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         });
 
         // Trigger event for email notifications and co.
+        // TODO email notification and notification setting
         $event = new Event(self::AFTER_ENABLE_POLICY_EVENT, $this, $policy);
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 
@@ -157,18 +150,16 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
     }
 
     /**
-     * @param UserAccessControl $uac user access control
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $newPolicy entity
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $patchedKey entity
+     * @param \App\Utility\UserAccessControl $uac user access control
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity
      * @throws \Exception
      */
-    public function disablePolicy(
-        UserAccessControl $uac,
-        AccountRecoveryOrganizationPolicy $newPolicy,
-        AccountRecoveryOrganizationPublicKey $patchedKey
-    ): AccountRecoveryOrganizationPolicy {
+    public function disablePolicy(UserAccessControl $uac): AccountRecoveryOrganizationPolicy
+    {
         $oldPolicy = $this->getCurrentPolicyEntity();
+        $patchedKey = $this->assertAndPatchRevokedKeyEntity($uac);
+        $newPolicy = $this->getNewDisabledEntity($uac);
+
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(
             function () use ($oldPolicy, $newPolicy, $patchedKey, $uac) {
                 // Create new policy and delete old one
@@ -178,16 +169,19 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
                 // Set previous key as deleted
                 $this->AccountRecoveryOrganizationPublicKeys->save($patchedKey, ['atomic' => false]);
 
-                // Truncate private key, passwords
-                $this->AccountRecoveryPrivateKeyPasswords->truncate();
+                // Truncate private key, passwords and user settings
                 $this->AccountRecoveryPrivateKeys->truncate();
+                $this->AccountRecoveryPrivateKeyPasswords->truncate();
+                $this->AccountRecoveryUserSettings->truncate();
 
                 // Cancel pending or non completed requests
+                // TODO move to service to make sure notifications to users are sent
                 $this->AccountRecoveryRequests->rejectAllNonCompleted($uac);
             }
         );
 
         // Trigger event for email notifications and co.
+        // TODO email notification and notification setting
         $event = new Event(self::AFTER_DISABLE_POLICY_EVENT, $this, [$oldPolicy, $newPolicy]);
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 

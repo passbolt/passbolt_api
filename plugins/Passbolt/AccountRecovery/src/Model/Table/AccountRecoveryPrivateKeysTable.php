@@ -111,6 +111,8 @@ class AccountRecoveryPrivateKeysTable extends Table
     {
         $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
         $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
+        $rules->add($rules->existsIn('created_by', 'Users'));
+        $rules->add($rules->existsIn('modified_by', 'Users'));
 
         return $rules;
     }

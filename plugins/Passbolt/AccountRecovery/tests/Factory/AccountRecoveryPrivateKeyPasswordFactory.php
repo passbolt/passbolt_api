@@ -51,9 +51,9 @@ class AccountRecoveryPrivateKeyPasswordFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'recipient_foreign_key' => $faker->uuid(),
-                'recipient_foreign_model' => $faker->text(),
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'private_key_id' => $faker->uuid(),
-                'data' => $faker->text(),
+                'data' => FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password.msg',
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),

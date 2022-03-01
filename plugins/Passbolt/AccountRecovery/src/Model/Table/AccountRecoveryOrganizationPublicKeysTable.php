@@ -120,7 +120,7 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
             'message' => __('You cannot reuse the user keys.'),
         ]);
 
-        $rules->add(
+        $rules->addCreate(
             new IsNotAccountRecoveryOrganizationKeyFingerprintRule(),
             'isNotAccountRecoveryOrganizationPublicKeyFingerprintRule',
             [

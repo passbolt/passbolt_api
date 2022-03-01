@@ -6,6 +6,7 @@ namespace Passbolt\AccountRecovery\Model\Table;
 use App\Model\Rule\User\IsActiveUserRule;
 use App\Model\Traits\OpenPGP\PublicKeyValidatorTrait;
 use App\Utility\UserAccessControl;
+use Cake\Chronos\Chronos;
 use Cake\Event\EventInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -137,6 +138,8 @@ class AccountRecoveryRequestsTable extends Table
             'errorField' => 'user_id',
             'message' => __('The user does not exist or is not active or has been deleted.'),
         ]);
+        $rules->add($rules->existsIn('created_by', 'Users'));
+        $rules->add($rules->existsIn('modified_by', 'Users'));
 
         return $rules;
     }
@@ -156,7 +159,7 @@ class AccountRecoveryRequestsTable extends Table
     }
 
     /**
-     * @param UserAccessControl $userAccessControl
+     * @param \App\Utility\UserAccessControl $userAccessControl user
      * @return void
      */
     public function rejectAllNonCompleted(UserAccessControl $userAccessControl): void
@@ -165,13 +168,14 @@ class AccountRecoveryRequestsTable extends Table
             ->update()
             ->set([
                 'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
-                'modified_by' => $userAccessControl->getId()
+                'modified_by' => $userAccessControl->getId(),
+                'modified' => Chronos::now(),
             ])
             ->where([
                 'status IN' => [
                     AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED,
-                    AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING
-                ]
+                    AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING,
+                ],
             ])
             ->execute();
     }
