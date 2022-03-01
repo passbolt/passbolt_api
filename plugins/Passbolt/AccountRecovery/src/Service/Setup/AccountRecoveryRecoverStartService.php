@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\Setup;
 
 use App\Service\Setup\RecoverStartService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\GetAccountRecoveryUserSettingsService;
 
 class AccountRecoveryRecoverStartService extends RecoverStartService
 {
@@ -27,6 +28,11 @@ class AccountRecoveryRecoverStartService extends RecoverStartService
     public function getInfo(string $userId, string $token): array
     {
         $data = parent::getInfo($userId, $token);
+        $userSetting = (new GetAccountRecoveryUserSettingsService())->get($userId);
+        if ($userSetting) {
+            $data['account_recovery_user_setting']['status'] = $userSetting->status;
+        }
+        // TODO: Add account_recovery_organization_policy
 
         return $data;
     }

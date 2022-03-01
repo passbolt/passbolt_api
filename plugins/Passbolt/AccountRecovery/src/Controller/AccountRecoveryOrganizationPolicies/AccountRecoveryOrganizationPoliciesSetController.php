@@ -33,7 +33,9 @@ class AccountRecoveryOrganizationPoliciesSetController extends AppController
     public function createOrUpdate(): void
     {
         $this->assertRequestSanity();
-        $policy = (new AccountRecoveryOrganizationPolicySetService())->set($this->request->getData());
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        $uac = $this->User->getAccessControl();
+        $policy = $service->set($uac, $this->request->getData());
         $this->success(__('The operation was successful.'), $policy);
     }
 

@@ -18,41 +18,34 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
-use App\Test\Factory\UserFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
-class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
+class RecoverStartControllerTest extends AccountRecoveryIntegrationTestCase
 {
     /**
      * @group AN
      * @group setup
-     * @group setupComplete
+     * @group setupStart
      */
-    public function testAccountRecoverySetupCompleteSuccess()
+    public function testRecoverStartSuccess()
     {
-        $user = UserFactory::make()->inactive()->persist();
+        $status = 'Foo';
+        $setting = AccountRecoveryUserSettingFactory::make()
+            ->withUser()
+            ->setField('status', $status)
+            ->persist();
+        $user = $setting->user;
         $token = AuthenticationTokenFactory::make()
             ->active()
-            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
             ->persist();
 
-        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
-        $data = [
-            'authenticationtoken' => [
-                'token' => $token->token,
-            ],
-            'gpgkey' => [
-                'armored_key' => $armoredKey,
-            ],
-            'user' => [
-                'locale' => 'fr_FR', // Putting on purpose an underscore, though convention is dashed.
-            ],
-            'locale' => 'fr_FR',
-        ];
-        $this->postJson('/setup/complete/' . $user->id . '.json', $data);
-        $this->assertSuccess();
-
-        $this->markTestIncomplete('TODO: check account_recovery_user_setting in the response');
+        $url = "/setup/recover/start/{$user->id}/{$token->token}.json";
+        $this->getJson($url);
+        $this->assertResponseOk();
+        $this->assertObjectHasAttribute('user', $this->_responseJsonBody);
+        $this->assertSame(compact('status'), (array)$this->_responseJsonBody->account_recovery_user_setting);
     }
 }

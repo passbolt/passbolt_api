@@ -55,12 +55,11 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
 //            'prefix' => '', 'controller' => '', 'action' => ''])
 //        ->setMethods(['GET']);
 //
-//    // Create one account recovery request
-//    // POST /account-recovery/requests.json
-//    $routes->connect('/requests', [
-//        'prefix' => '', 'controller' => '', 'action' => ''])
-//        ->setMethods(['POST']);
-//
+    // Create one account recovery request
+    // POST /account-recovery/requests.json
+    $routes->connect('/requests', [
+        'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsPost', 'action' => 'post'])
+        ->setMethods(['POST']);
 //    // View one account recovery request details
 //    // GET /account-recovery/requests/:uuid.json
 //    $routes->connect('/requests/:id', [

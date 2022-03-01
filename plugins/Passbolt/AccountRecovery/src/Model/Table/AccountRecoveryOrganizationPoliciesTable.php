@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
@@ -61,7 +60,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
         $this->addBehavior('Timestamp');
         $this->belongsTo('AccountRecoveryOrganizationPublicKeys', [
             'className' => 'Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys',
-            'foreignKey' => 'account_recovery_organization_public_key_id',
+            'foreignKey' => 'public_key_id',
         ]);
     }
 

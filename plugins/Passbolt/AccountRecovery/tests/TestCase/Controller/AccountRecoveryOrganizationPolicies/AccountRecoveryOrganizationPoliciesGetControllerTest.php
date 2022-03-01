@@ -63,7 +63,7 @@ class AccountRecoveryOrganizationPoliciesGetControllerTest extends AccountRecove
         $this->getJson('/account-recovery/organization-policies.json');
         $this->assertSuccess();
         $this->assertEquals($this->_responseJsonBody->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED);
-        $this->assertEmpty($this->_responseJsonBody->account_recovery_organization_public_key_id);
+        $this->assertEmpty($this->_responseJsonBody->public_key_id);
         $this->assertTrue(!isset($this->_responseJsonBody->account_recovery_organization_public_key));
     }
 
@@ -76,7 +76,7 @@ class AccountRecoveryOrganizationPoliciesGetControllerTest extends AccountRecove
         $this->getJson('/account-recovery/organization-policies.json');
         $this->assertSuccess();
         $this->assertEquals($this->_responseJsonBody->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED);
-        $this->assertEmpty($this->_responseJsonBody->account_recovery_organization_public_key_id);
+        $this->assertEmpty($this->_responseJsonBody->public_key_id);
         $this->assertTrue(!isset($this->_responseJsonBody->account_recovery_organization_public_key));
         $this->assertTrue(!isset($this->_responseJsonBody->created));
         $this->assertTrue(!isset($this->_responseJsonBody->modified));

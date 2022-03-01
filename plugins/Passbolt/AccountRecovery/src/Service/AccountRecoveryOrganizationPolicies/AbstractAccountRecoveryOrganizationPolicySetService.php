@@ -301,7 +301,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param array $data public key data
      * @throws \App\Error\Exception\ValidationException if entity validation fails
-     * @return \Cake\Datasource\EntityInterface|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey
      */
     private function newPublicKeyEntityOrFail(UserAccessControl $uac, array $data): AccountRecoveryOrganizationPublicKey
     {

@@ -19,6 +19,9 @@ namespace Passbolt\AccountRecovery;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
+use Cake\ORM\TableRegistry;
+use Passbolt\AccountRecovery\Event\ContainAccountRecoveryUserSettings;
+use Passbolt\AccountRecovery\Notification\AccountRecoveryEmailRedactorPool;
 use Passbolt\AccountRecovery\ServiceProvider\AccountRecoveryOrganizationPolicyServiceProvider;
 use Passbolt\AccountRecovery\ServiceProvider\AccountRecoverySetupServiceProvider;
 
@@ -30,6 +33,8 @@ class Plugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
+        $this->registerListeners($app);
+        $this->addAssociations();
     }
 
     /**
@@ -39,5 +44,28 @@ class Plugin extends BasePlugin
     {
         $container->addServiceProvider(new AccountRecoverySetupServiceProvider());
         $container->addServiceProvider(new AccountRecoveryOrganizationPolicyServiceProvider());
+    }
+
+    /**
+     * Register Account Recovery related listeners.
+     *
+     * @param \Cake\Core\PluginApplicationInterface $app App
+     * @return void
+     */
+    public function registerListeners(PluginApplicationInterface $app): void
+    {
+        $app->getEventManager()
+            ->on(new AccountRecoveryEmailRedactorPool())
+            ->on(new ContainAccountRecoveryUserSettings());
+    }
+
+    /**
+     * Defines additional associations related to the plugin
+     *
+     * @return void
+     */
+    public function addAssociations(): void
+    {
+        TableRegistry::getTableLocator()->get('Users')->hasOne('AccountRecoveryUserSettings');
     }
 }

@@ -55,7 +55,7 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
                 'modified_by' => UuidFactory::uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'account_recovery_organization_public_key_id' => UuidFactory::uuid(),
+                'public_key_id' => UuidFactory::uuid(),
             ];
         });
     }
@@ -83,7 +83,7 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
     public function disabled()
     {
         return $this->setField('policy', AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED)
-            ->setField('account_recovery_organization_public_key_id', null);
+            ->setField('public_key_id', null);
     }
 
     /**

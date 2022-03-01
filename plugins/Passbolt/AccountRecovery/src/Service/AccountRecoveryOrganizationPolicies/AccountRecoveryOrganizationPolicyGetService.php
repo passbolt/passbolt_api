@@ -70,11 +70,11 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
         return $this->AccountRecoveryOrganizationPolicies
             ->newEntity([
                 'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
-                'account_recovery_organization_public_key_id' => null,
+                'public_key_id' => null,
             ], [
                 'accessibleFields' => [
                     'policy' => true,
-                    'account_recovery_organization_public_key_id' => true,
+                    'public_key_id' => true,
                 ],
             ]);
     }

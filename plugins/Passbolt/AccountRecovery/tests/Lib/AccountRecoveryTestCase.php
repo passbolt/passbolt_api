@@ -44,4 +44,24 @@ class AccountRecoveryTestCase extends AppTestCase
             $this->disableFeaturePlugin('AccountRecovery');
         }
     }
+
+    /**
+     * Get a dummy valid public key
+     *
+     * @return string
+     */
+    protected function getDummyPublicKey(): string
+    {
+        return file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
+    }
+
+    /**
+     * Get a dummy valid private key
+     *
+     * @return string
+     */
+    protected function getDummyPrivateKey(): string
+    {
+        return file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key');
+    }
 }

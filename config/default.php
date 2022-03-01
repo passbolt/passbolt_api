@@ -211,6 +211,9 @@ return [
             'jwtAuthentication' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'accountRecovery' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_ACCOUNT_RECOVERY_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
         ],
 
         // Is public registration allowed.

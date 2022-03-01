@@ -40,8 +40,8 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
     /**
      * Set - create new policy and delete the old one
      *
-     * @param array $uac user provided data
-     * @param \App\Utility\UserAccessControl $data user access control
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param array $data user provided data
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
      */
     public function set(UserAccessControl $uac, array $data): AccountRecoveryOrganizationPolicy

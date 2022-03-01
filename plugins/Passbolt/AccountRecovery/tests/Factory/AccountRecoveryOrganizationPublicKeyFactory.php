@@ -23,6 +23,9 @@ use Faker\Generator;
 
 /**
  * AccountRecoveryOrganizationPublicKeyFactory
+ *
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey persist()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey getEntity()
  */
 class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
 {
