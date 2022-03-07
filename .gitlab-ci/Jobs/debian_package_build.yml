@@ -1,5 +1,5 @@
 services:
-  - docker:19.03.0-dind
+  - registry.gitlab.com/passbolt/passbolt-ci-docker-images/dind:latest
 
 .rules:
   rules:
@@ -22,7 +22,7 @@ services:
 composer:
   extends: .dependencies
   variables:
-    PACKAGE_MANAGER_IMAGE: "composer:latest"
+    PACKAGE_MANAGER_IMAGE: "registry.gitlab.com/passbolt/passbolt-ci-docker-images/composer:latest"
     PACKAGE_MANAGER_PATH: vendor/
   script:
     - |
@@ -30,7 +30,7 @@ composer:
 
 build-debian:
   extends: .rules
-  image: debian:stable-slim
+  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/debian-bullseye-11-slim:latest
   stage: package-build
   dependencies:
     - composer
@@ -84,7 +84,7 @@ debian-stable:
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/debian
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"' 
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
 
 ubuntu-testing:
@@ -105,6 +105,5 @@ ubuntu-stable:
     COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"' 
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
-
