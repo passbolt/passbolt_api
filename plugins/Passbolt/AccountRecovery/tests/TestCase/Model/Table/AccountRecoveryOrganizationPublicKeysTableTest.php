@@ -124,4 +124,24 @@ class AccountRecoveryOrganizationPublicKeysTableTest extends AccountRecoveryTest
             $testCases
         );
     }
+
+    /**
+     * Check org key fingerprint field validation rules with not 40 character long fingerprint
+     */
+    public function testAccountRecoveryOrganizationPublicKeysTable_InvalidFingerprint()
+    {
+        $entity = AccountRecoveryOrganizationPublicKeyFactory::make()
+            ->setField('fingerprint', 'A not 40 character long string')
+            ->getEntity();
+
+        $entity = $this->AccountRecoveryOrganizationPublicKeys->newEntity($entity->toArray());
+        $this->AccountRecoveryOrganizationPublicKeys->save($entity);
+
+        $this->assertSame(
+            'The fingerprint should be a string of 40 hexadecimal characters.',
+            $entity->getError('fingerprint')['invalidFingerprint']
+        );
+        $this->assertTrue($entity->hasErrors());
+        $this->assertSame(0, AccountRecoveryOrganizationPublicKeyFactory::count());
+    }
 }
