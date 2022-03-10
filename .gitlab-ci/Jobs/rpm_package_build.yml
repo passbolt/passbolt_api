@@ -149,7 +149,7 @@ publish-passbolt-yum-el7-testing:
     COMPONENT: "testing"
   needs:
     - job: centos-7-runtime
-    - job: build-yum
+    - job: build-yum-7
       artifacts: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
@@ -192,7 +192,7 @@ publish-passbolt-yum-el7-stable:
     COMPONENT: "stable"
   needs:
     - job: centos-7-runtime
-    - job: build-yum
+    - job: build-yum-7
       artifacts: true
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
