@@ -53,8 +53,8 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
                 'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
                 'created_by' => UuidFactory::uuid(),
                 'modified_by' => UuidFactory::uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDay($faker->randomNumber(1)),
+                'modified' => Chronos::now()->subDay($faker->randomNumber(1)),
                 'public_key_id' => UuidFactory::uuid(),
             ];
         });

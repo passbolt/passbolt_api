@@ -16,7 +16,7 @@
 use Migrations\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
 
-class V350AddAccountRecoveryTables extends AbstractMigration
+class V360AddAccountRecoveryTables extends AbstractMigration
 {
     /**
      * Up
@@ -55,6 +55,11 @@ class V350AddAccountRecoveryTables extends AbstractMigration
                 'default' => null,
                 'limit' => null,
                 'null' => false,
+            ])
+            ->addColumn('deleted', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
             ])
             ->addColumn('created_by', 'uuid', [
                 'null' => false,

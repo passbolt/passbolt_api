@@ -26,6 +26,7 @@ use Cake\ORM\Entity;
  * @property string $policy
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \Cake\I18n\FrozenTime|null $deleted
  * @property string $created_by
  * @property string $modified_by
  * @property string $public_key_id
@@ -46,6 +47,7 @@ class AccountRecoveryOrganizationPolicy extends Entity
         'policy' => false,
         'created' => false,
         'modified' => false,
+        'deleted' => false,
         'created_by' => false,
         'modified_by' => false,
 

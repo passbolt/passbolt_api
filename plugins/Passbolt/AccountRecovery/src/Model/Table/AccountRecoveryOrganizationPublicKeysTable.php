@@ -17,13 +17,17 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Rule\IsNotServerKeyFingerprintRule;
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
+use App\Utility\UserAccessControl;
+use Cake\Chronos\Chronos;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 use Passbolt\AccountRecovery\Model\Rule\IsNotAccountRecoveryOrganizationKeyFingerprintRule;
 
 /**
@@ -123,5 +127,62 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
         );
 
         return $rules;
+    }
+
+    /**
+     * Build and validate a public key entity from user provided data
+     *
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param array $data public key data
+     * @throws \App\Error\Exception\ValidationException if entity validation fails
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey
+     */
+    public function buildAndValidateEntity(UserAccessControl $uac, array $data): AccountRecoveryOrganizationPublicKey
+    {
+        $data['created_by'] = $uac->getId();
+        $data['modified_by'] = $uac->getId();
+
+        // TODO before marshal or validation should uppercase fingerprint
+        if (isset($data['fingerprint']) && is_string($data['fingerprint'])) {
+            $data['fingerprint'] = strtoupper(trim($data['fingerprint']));
+        }
+
+        $publicKey = $this->newEntity($data, [
+            'accessibleFields' => [
+                'fingerprint' => true,
+                'armored_key' => true,
+                'created_by' => true,
+                'modified_by' => true,
+            ],
+        ]);
+
+        if ($publicKey->getErrors()) {
+            throw new ValidationException(__('Could not validate public key data.'), $publicKey, $this);
+        }
+
+        return $publicKey;
+    }
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $oldEntity old public key to be patched
+     * @param string $revokedArmored OpenPGP armored key block to replace old non-revoked public key blocked
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey
+     */
+    public function patchAndValidateEntityForRevocation(
+        UserAccessControl $uac,
+        AccountRecoveryOrganizationPublicKey $oldEntity,
+        string $revokedArmored
+    ): AccountRecoveryOrganizationPublicKey {
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $patchedEntity */
+        $patchedEntity = $this->patchEntity($oldEntity, [
+            'modified_by' => $uac->getId(),
+            'armored_key' => $revokedArmored,
+            'deleted' => Chronos::now(),
+        ], [
+            'fields' => ['deleted', 'modified_by', 'armored_key'],
+        ]);
+
+        return $patchedEntity;
     }
 }

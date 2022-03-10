@@ -111,18 +111,19 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
      */
     public function testAccountRecoveryOrganizationPoliciesTable_GetCurrentPolicy_Disabled()
     {
-        $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
+        $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicyName();
         $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED, $disabledPolicy);
 
-        AccountRecoveryOrganizationPolicyFactory::make()->mandatory()->persist();
-        $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
+        AccountRecoveryOrganizationPolicyFactory::make()->disabled()->persist();
+        $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicyName();
         $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED, $disabledPolicy);
 
+        // Mandatory policy with deleted key
         AccountRecoveryOrganizationPolicyFactory::make()
             ->withAccountRecoveryOrganizationPublicKey(AccountRecoveryOrganizationPublicKeyFactory::make()->deleted())
             ->mandatory()
             ->persist();
-        $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
+        $disabledPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicyName();
         $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED, $disabledPolicy);
     }
 
@@ -138,7 +139,7 @@ class AccountRecoveryOrganizationPoliciesTableTest extends AccountRecoveryTestCa
             ->mandatory()
             ->persist();
 
-        $mandatoryPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicy();
+        $mandatoryPolicy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicyName();
         $this->assertSame(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY, $mandatoryPolicy);
     }
 }

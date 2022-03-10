@@ -28,6 +28,7 @@ use Cake\Chronos\Chronos;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
@@ -570,11 +571,6 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     {
         AccountRecoveryOrganizationPolicyFactory::make()
             ->disabled()
-            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
-                'fingerprint' => '2D7CF2B7FD9643DEBF63633CFC7F5D048541513F',
-                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'old_revoked_public.key'),
-                'deleted' => Chronos::now()->subDays(1),
-            ]))
             ->persist();
 
         $service = new AccountRecoveryOrganizationPolicySetService();
@@ -604,19 +600,163 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         // Check data integrity
         $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
-        $foundPolicies = $table->find()->all();
+        $this->assertEquals(1, $table->find()->where(['deleted IS' => null])->count());
+        $this->assertEquals(1, $table->find()->where(['deleted IS NOT' => null])->count());
+
         $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
-        $foundKeys = $table->find()->all();
-        $this->assertEquals(1, count($foundPolicies));
-        $this->assertEquals(2, count($foundKeys));
+        $this->assertEquals(1, $table->find()->all()->count());
     }
 
     // ENABLED => DISABLED
     // SUCCESS SCENARIOS
+
     /**
      * Enabled => Disabled, previous policy set to disabled
      */
     public function testAccountRecoveryOrganizationPolicySetService_Success_EnabledDisabled()
+    {
+        $this->startScenarioOptinWithBackupsAndRequests();
+
+        $data = [
+            'policy' => 'disabled',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+            ],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        $policy = $service->set($this->getUac(), $data);
+
+        $this->assertNotEmpty($policy);
+        $this->assertEquals('disabled', $policy->policy);
+        $this->assertNotEmpty($policy->created);
+        $this->assertNotEmpty($policy->modified);
+        $this->assertEquals($this->getUac()->getId(), $policy->created_by);
+        $this->assertEquals($this->getUac()->getId(), $policy->modified_by);
+        $this->assertEmpty($policy->account_recovery_organization_public_key);
+
+        // There should be two policies and one deleted
+        $this->assertSame(2, AccountRecoveryOrganizationPolicyFactory::count());
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
+        $this->assertEquals(1, $table->find()->where(['deleted IS NOT' => null])->count());
+
+        // There should be two public keys in DB both deleted
+        $this->assertSame(2, AccountRecoveryOrganizationPublicKeyFactory::count());
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
+        $this->assertEquals(2, $table->find()->where(['deleted IS NOT' => null])->count());
+
+        // There should be one account recovery request as rejected
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryRequests');
+        $this->assertEquals(1, $table->find()->where(['status' => 'rejected'])->count());
+        $this->assertEquals(1, $table->find()->count());
+
+        // Private key and passwords table and user settings should be truncated
+        $this->assertSame(0, AccountRecoveryPrivateKeyFactory::count());
+        $this->assertSame(0, AccountRecoveryPrivateKeyPasswordFactory::count());
+        $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
+    }
+
+    // ENABLED => ENABLED
+    // SIMPLE SCENARIOS
+
+    public function testAccountRecoveryOrganizationPolicySetService_Success_UpdateSimple()
+    {
+        $this->startScenarioOptinNoBackups();
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        $policy = $service->set($this->getUac(), [
+            'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY,
+        ]);
+        $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY);
+
+        sleep(1); // needed to avoid creation time to get mixed up because they become equal
+
+        $policy = $service->set($this->getUac(), [
+            'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT,
+        ]);
+        $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT);
+
+        // There should be 3 policies, one not deleted
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
+        $this->assertEquals(3, $table->find()->count());
+        $this->assertEquals(1, $table->find()->where(['deleted IS' => null])->count());
+
+        // There should be one public key
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
+        $this->assertEquals(1, $table->find()->count());
+        $this->assertEquals(1, $table->find()->where(['deleted IS' => null])->count());
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateSimple_InvalidPolicy()
+    {
+        $this->startScenarioOptinNoBackups();
+        try {
+            $service = new AccountRecoveryOrganizationPolicySetService();
+            $service->set($this->getUac(), ['policy' => 'invalid']);
+            $this->fail();
+        } catch (ValidationException $exception) {
+            $this->assertTrue(true);
+        }
+    }
+
+    // SIMPLE ROTATION SCENARIOS
+
+    public function testAccountRecoveryOrganizationPolicySetService_Success_UpdateWithKeyRotationSimple()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithKeyRotationSimple_RevokedKeyMissing()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithKeyRotationSimple_NewKeyMissing()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithKeyRotationSimple_KeyMissing()
+    {
+        $this->markTestIncomplete();
+    }
+
+    // FULL ROTATION SCENARIOS
+
+    public function testAccountRecoveryOrganizationPolicySetService_Success_UpdateWithFullRotation()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsMissing()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsFormatInvalid()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_RecipientMissing()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_RecipientInvalid()
+    {
+        $this->markTestIncomplete();
+    }
+
+    // SCENARIOS
+
+    /**
+     * Setup needed fixtures to have a basic scenario with
+     *
+     * @throws \Exception
+     */
+    private function startScenarioOptinWithBackupsAndRequests()
     {
         AccountRecoveryOrganizationPolicyFactory::make()
             ->optin()
@@ -636,6 +776,16 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ->setField('deleted', Chronos::now()->subDay())
             ->persist();
 
+        AccountRecoveryUserSettingFactory::make()
+            ->setField('status', 'approved')
+            ->setField('user_id', UuidFactory::uuid('user.id.ada'))
+            ->persist();
+
+        AccountRecoveryUserSettingFactory::make()
+            ->setField('status', 'rejected')
+            ->setField('user_id', UuidFactory::uuid('user.id.betty'))
+            ->persist();
+
         AccountRecoveryPrivateKeyFactory::make()
             ->setField('id', UuidFactory::uuid('acr.private_key.ada.id'))
             ->setField('user_id', UuidFactory::uuid('user.id.ada'))
@@ -647,46 +797,33 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
             ->persist();
 
-        AccountRecoveryUserSettingFactory::make()
-            ->setField('status', 'approved')
-            ->setField('user_id', UuidFactory::uuid('user.id.ada'))
+        AccountRecoveryPrivateKeyPasswordFactory::make()
+            ->setField('private_key_id', UuidFactory::uuid('acr.private_key.ada.id'))
+            ->setField('recipient_foreign_key', UuidFactory::uuid('acr.org_public_key.id'))
+            ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
             ->persist();
 
         AccountRecoveryRequestFactory::make()
             ->setField('user_id', UuidFactory::uuid('user.id.ada'))
             ->persist();
+    }
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
-        $data = [
-            'policy' => 'disabled',
-            'account_recovery_organization_revoked_key' => [
-                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
-            ],
-        ];
+    /**
+     * Setup needed fixtures to have a basic scenario with no passwords
+     *
+     * @throws \Exception
+     */
+    private function startScenarioOptinNoBackups()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->persist();
 
-        $policy = $service->set($this->getUac(), $data);
-        $this->assertNotEmpty($policy);
-        $this->assertEquals('disabled', $policy->policy);
-        $this->assertNotEmpty($policy->created);
-        $this->assertNotEmpty($policy->modified);
-        $this->assertEquals($this->getUac()->getId(), $policy->created_by);
-        $this->assertEquals($this->getUac()->getId(), $policy->modified_by);
-        $this->assertEmpty($policy->account_recovery_organization_public_key);
-
-        // There should be two public keys in DB both deleted
-        $this->assertSame(2, AccountRecoveryOrganizationPublicKeyFactory::count());
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
-        $this->assertEquals(2, $table->find()->where(['deleted IS NOT' => null])->count());
-
-        // There should be one account recovery request as rejected
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryRequests');
-        $this->assertEquals(1, $table->find()->where(['status' => 'rejected'])->count());
-        $this->assertEquals(1, $table->find()->count());
-
-        // Private key and passwords table and user settings should be truncated
-        $this->assertSame(0, AccountRecoveryPrivateKeyFactory::count());
-        $this->assertSame(0, AccountRecoveryPrivateKeyPasswordFactory::count());
-        $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
+        AccountRecoveryOrganizationPublicKeyFactory::make()
+            ->setField('id', UuidFactory::uuid('acr.org_public_key.id'))
+            ->setField('fingerprint', '67BFFCB7B74AF4C85E81AB26508850525CD78BAA')
+            ->setField('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'))
+            ->setField('deleted', null)
+            ->persist();
     }
 }

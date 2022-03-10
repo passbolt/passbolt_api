@@ -17,6 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use App\Error\Exception\ValidationException;
+use App\Utility\UserAccessControl;
+use Cake\Chronos\Chronos;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -93,22 +97,214 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     }
 
     /**
-     * Get the current policy
+     * Get the current policy name
      *
      * @return string
      */
-    public function getCurrentPolicy(): string
+    public function getCurrentPolicyName(): string
+    {
+        try {
+            $policy = $this->getCurrentPolicyOrFail();
+        } catch (RecordNotFoundException $exception) {
+            return AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED;
+        }
+
+        return $policy->policy;
+    }
+
+    /**
+     * Get currently active policy if any
+     *
+     * @throws \Cake\Http\Exception\NotFoundException if no active policy found
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy current policy
+     */
+    public function getCurrentPolicyOrFail(): AccountRecoveryOrganizationPolicy
     {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
         $policy = $this->find()
-            ->innerJoinWith('AccountRecoveryOrganizationPublicKeys', function (Query $q) {
-                return $q->where(function ($exp) {
-                    return $exp->isNull('AccountRecoveryOrganizationPublicKeys.deleted');
-                });
+            ->select()
+            ->contain('AccountRecoveryOrganizationPublicKeys', function (Query $q) {
+                return $q->select([
+                    'AccountRecoveryOrganizationPublicKeys.id',
+                    'AccountRecoveryOrganizationPublicKeys.armored_key',
+                ]);
+            })
+            ->where(function ($exp) {
+                // Must not be deleted
+                return $exp->isNull('AccountRecoveryOrganizationPolicies.deleted');
+            })
+            ->where(function ($exp) {
+                // Must have a non deleted public key
+                return $exp->isNull('AccountRecoveryOrganizationPublicKeys.deleted');
             })
             ->order(['AccountRecoveryOrganizationPolicies.created' => 'DESC'])
-            ->first();
+            ->firstOrFail();
 
-        return $policy->policy ?? AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED;
+        return $policy;
+    }
+
+    /**
+     * Mark the old policy as deleted if any and save the new one
+     *
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $newPolicy policy that replaces it
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
+     * @throws \Exception Will re-throw any exception raised in $callback after rolling back the transaction.
+     */
+    public function replace(
+        UserAccessControl $uac,
+        AccountRecoveryOrganizationPolicy $newPolicy
+    ): AccountRecoveryOrganizationPolicy {
+        $this->getConnection()->transactional(function () use (&$newPolicy, $uac) {
+            $saveOptions = ['atomic' => false];
+             $this->softDeleteCurrentPolicy($uac, $saveOptions);
+            $newPolicy = $this->createOrFail($uac, $newPolicy, $saveOptions);
+        });
+
+        return $newPolicy;
+    }
+
+    /**
+     * Soft delete current policy if any
+     *
+     * @param \App\Utility\UserAccessControl $uac user access controlt
+     * @param array|null $saveOptions options such as validate, checkRules, etc.
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy|null the soft deleted org policy
+     */
+    protected function softDeleteCurrentPolicy(UserAccessControl $uac, ?array $saveOptions = null)
+    {
+        try {
+            $oldPolicy = $this->getCurrentPolicyOrFail();
+        } catch (RecordNotFoundException $exception) {
+            // No current policy to delete, do nothing
+            return null;
+        }
+
+        $oldPolicy = $this->patchForSoftDelete($uac, $oldPolicy);
+
+        return $this->saveOrFail($oldPolicy, $saveOptions);
+    }
+
+    /**
+     * Create an org policy entry or die trying
+     * Allow saving associated public key if any
+     *
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $newPolicy entity
+     * @param array|null $saveOptions options such as validate, checkRules, etc.
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
+     */
+    public function createOrFail(
+        UserAccessControl $uac,
+        AccountRecoveryOrganizationPolicy $newPolicy,
+        ?array $saveOptions = null
+    ): AccountRecoveryOrganizationPolicy {
+        if (isset($newPolicy->account_recovery_organization_public_key)) {
+            $saveOptions['associated'] = [
+                'AccountRecoveryOrganizationPublicKeys' => [
+                    'validate' => $saveOptions['validate'] ?? true,
+                    'checkRules' => $saveOptions['checkRules'] ?? true,
+                ],
+            ];
+        }
+
+        return $this->saveOrFail($newPolicy, $saveOptions);
+    }
+
+    /**
+     * Patch an org policy entity in order to mark it as soft deleted
+     *
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy entity to soft delete
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity ready to be saved
+     */
+    protected function patchForSoftDelete(
+        UserAccessControl $uac,
+        AccountRecoveryOrganizationPolicy $policy
+    ): AccountRecoveryOrganizationPolicy {
+        return $this->patchEntity($policy, [
+            'policy' => $policy->policy,
+            'modified_by' => $uac->getId(),
+            'deleted' => Chronos::now(),
+        ], [
+            'accessibleFields' => [
+                'modified_by' => true,
+                'deleted' => true,
+            ],
+        ]);
+    }
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
+     * @param string $policy user provided data
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity ready to be saved
+     */
+    public function buildAndValidateEntity(UserAccessControl $uac, string $policy): AccountRecoveryOrganizationPolicy
+    {
+        $newPolicy = $this->newEntity([
+                'policy' => $policy,
+                'created_by' => $uac->getId(),
+                'modified_by' => $uac->getId(),
+            ], ['accessibleFields' => [
+                'policy' => true,
+                'created' => true,
+                'modified' => true,
+                'created_by' => true,
+                'modified_by' => true,
+            ]]);
+
+        if ($newPolicy->getErrors()) {
+            $em = __('Could not validate policy data.');
+            throw new ValidationException($em, $newPolicy, $this);
+        }
+
+        return $newPolicy;
+    }
+
+    /**
+     * Return a new org policy entity that is set to disabled
+     *
+     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity ready to be saved
+     */
+    public function newEntityForDisable(UserAccessControl $uac): AccountRecoveryOrganizationPolicy
+    {
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
+        $policy = $this->newEntity([
+                'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
+                'created_by' => $uac->getId(),
+                'modified_by' => $uac->getId(),
+            ], [
+                'accessibleFields' => [
+                    'policy' => true,
+                    'created_by' => true,
+                    'modified_by' => true,
+                ],
+            ]);
+
+        return $policy;
+    }
+
+    /**
+     * Get a disabled AccountRecoveryOrganizationPolicy entity
+     * with an empty key and no creation / modified date
+     * Used as a fallback when no policy is present
+     *
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
+     */
+    public function newEntityForDefaultFallback()
+    {
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
+        $policy = $this->newEntity([
+                'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
+                'public_key_id' => null,
+            ], [
+                'accessibleFields' => [
+                    'policy' => true,
+                    'public_key_id' => true,
+                ],
+            ]);
+
+        return $policy;
     }
 }
