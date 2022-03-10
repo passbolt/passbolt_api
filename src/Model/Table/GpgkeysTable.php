@@ -18,7 +18,12 @@ namespace App\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Gpgkey;
-use App\Model\Traits\OpenPGP\PublicKeyValidatorTrait;
+use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
+use App\Model\Validation\DateTime\IsCreationDateInFuturePastValidationRule;
+use App\Model\Validation\DateTime\IsDateInFutureValidationRule;
+use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
+use App\Model\Validation\GpgkeyType\IsValidGpgkeyTypeValidationRule;
+use App\Model\Validation\KeyId\IsValidKeyIdValidationRule;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Core\Exception\Exception;
 use Cake\I18n\FrozenTime;
@@ -49,8 +54,6 @@ use Cake\Validation\Validator;
  */
 class GpgkeysTable extends Table
 {
-    use PublicKeyValidatorTrait;
-
     /**
      * Initialize method
      *
@@ -89,19 +92,13 @@ class GpgkeysTable extends Table
             ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
             ->requirePresence('armored_key', 'create', __('An armored key is required.'))
             ->notEmptyString('armored_key', __('The armored key should not be empty.'))
-            ->add('armored_key', ['custom' => [
-                'rule' => [$this, 'isParsableArmoredPublicKeyRule'],
-                'message' => __('The armored key should be a valid ASCII-armored OpenPGP key.'),
-            ]]);
+            ->add('armored_key', 'custom', new IsParsableArmoredKeyValidationRule());
 
         $validator
             ->ascii('fingerprint', __('The fingerprint should be a valid ASCII string.'))
             ->requirePresence('fingerprint', 'create', __('A fingerprint is required'))
             ->notEmptyString('fingerprint', __('The fingerprint should not be empty'))
-            ->add('fingerprint', ['custom' => [
-                'rule' => [$this, 'isValidFingerprintRule'],
-                'message' => __('The fingerprint should be a string of 40 hexadecimal characters.'),
-            ]]);
+            ->add('fingerprint', 'custom', new IsValidFingerprintValidationRule());
 
         $validator
             ->integer('bits', 'The length should be a valid integer.')
@@ -115,36 +112,24 @@ class GpgkeysTable extends Table
             ->ascii('key_id', __('The key identifier should be a valid ASCII string.'))
             ->requirePresence('key_id', 'create', __('A key identifier is required.'))
             ->notEmptyString('key_id', __('The key identifier should not be empty.'))
-            ->add('key_id', ['custom' => [
-                'rule' => [$this, 'isValidKeyIdRule'],
-                'message' => __('The key identifier should be a string of 8 hexadecimal characters.'),
-            ]]);
+            ->add('key_id', 'custom', new IsValidKeyIdValidationRule());
 
         $validator
             ->ascii('type', __('The type should be a valid ASCII string.'))
             ->requirePresence('type', 'create', __('A type is required'))
             ->notEmptyString('type', __('The type should not be empty'))
-            ->add('type', ['custom' => [
-                'rule' => [$this, 'isValidKeyTypeRule'],
-                'message' => __('The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.'),
-            ]]);
+            ->add('type', 'custom', new IsValidGpgkeyTypeValidationRule());
 
         $validator
             ->dateTime('expires', ['ymd'], __('The expiry should be a valid date.'))
             ->allowEmptyDateTime('expires')
-            ->add('expires', ['custom' => [
-                'rule' => [$this, 'isInFutureRule'],
-                'message' => __('The key should not already be expired.'),
-            ]]);
+            ->add('expires', 'custom', new IsDateInFutureValidationRule());
 
         $validator
             ->dateTime('key_created', ['ymd'], __('The creation date should be a valid date.'))
             ->requirePresence('key_created', 'create', __('A creation date is required.'))
             ->notEmptyDateTime('key_created', __('The creation date should not be empty.'))
-            ->add('key_created', ['custom' => [
-                'rule' => [$this, 'isInFuturePastRule'],
-                'message' => __('The creation date should be set in the past.'),
-            ]]);
+            ->add('key_created', 'custom', new IsCreationDateInFuturePastValidationRule());
 
         $validator
             ->boolean('deleted', __('The deleted status should be a valid boolean.'))

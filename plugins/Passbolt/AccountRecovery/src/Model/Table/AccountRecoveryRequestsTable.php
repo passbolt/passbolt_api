@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Model\Rule\User\IsActiveUserRule;
-use App\Model\Traits\OpenPGP\PublicKeyValidatorTrait;
+use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
+use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
 use Cake\Event\EventInterface;
@@ -35,8 +36,6 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
  */
 class AccountRecoveryRequestsTable extends Table
 {
-    use PublicKeyValidatorTrait;
-
     /**
      * Initialize method
      *
@@ -97,19 +96,13 @@ class AccountRecoveryRequestsTable extends Table
             ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
             ->requirePresence('armored_key', 'create', __('An armored key is required.'))
             ->notEmptyString('armored_key', __('The armored key should not be empty.'))
-            ->add('armored_key', ['invalidArmoredKey' => [
-                'rule' => [$this, 'isParsableArmoredPublicKeyRule'],
-                'message' => __('The armored key should be a valid ASCII-armored OpenPGP key.'),
-            ]]);
+            ->add('armored_key', 'invalidArmoredKey', new IsParsableArmoredKeyValidationRule());
 
         $validator
             ->ascii('fingerprint', __('The fingerprint should be a valid ASCII string.'))
             ->requirePresence('fingerprint', 'create', __('A fingerprint is required'))
             ->notEmptyString('fingerprint', __('The fingerprint should not be empty'))
-            ->add('fingerprint', ['invalidFingerprint' => [
-                'rule' => [$this, 'isValidFingerprintRule'],
-                'message' => __('The fingerprint should be a string of 40 hexadecimal characters.'),
-            ]]);
+            ->add('fingerprint', 'invalidFingerprint', new IsValidFingerprintValidationRule());
 
         $validator
             ->uuid('created_by')
