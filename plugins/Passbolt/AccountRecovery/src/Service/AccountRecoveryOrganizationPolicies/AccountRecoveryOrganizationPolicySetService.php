@@ -20,6 +20,7 @@ use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 
 class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecoveryOrganizationPolicySetService implements AccountRecoveryOrganizationPolicySetServiceInterface // phpcs:ignore
 {
@@ -45,7 +46,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $this->setData($data);
 
         // assert policy is provided as it should in any case
-        $newPolicy = $this->assertOrganizationPolicy($uac);
+        $newPolicy = $this->buildAndValidatePolicyEntityFromData($uac);
 
         // Check request composition to understand user goal
         $isPolicyChange = $this->isPolicyChange();
@@ -58,7 +59,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
             throw new BadRequestException(__('Invalid request. No policy change.'));
         }
 
-        // if disabled => new
+        // if disabled => enabled
         if ($this->isEnabling()) {
             // if public key is not provided
             if (!$isNewKeyProvided) {
@@ -83,32 +84,70 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
             return $this->disablePolicy($uac);
         }
 
-//        // else it's policy change like mandatory => opt-in
-//        // and/or a possible key rotation
-//        if (($isNewKeyProvided && !$isRevokedKeyProvided) || (!$isNewKeyProvided && $isRevokedKeyProvided)) {
-//            throw new BadRequestException(__('Invalid request. Keys are required for this change.'));
-//        }
-//
-//        // if key provided or revocation provided
-//        // assert old and new key
-//        $rotateKey = false;
-//        if ($isNewKeyProvided && $isRevokedKeyProvided) {
-//            $this->assertPublicKey();
-//            $this->assertRevokedKey();
-//            $rotateKey = true;
-//        }
-//
-//        // If some existing backups are present
-//        // assert new backups are provided
-//        $rotatePasswords = false;
-//        if ($this->backupsExists()) {
-//            // assert passwords backups format and numbers
-//            $this->assertPasswordsBackups();
-//            $rotatePasswords = true;
-//        }
-//
-//        // save new key and disable previous key and backups if any
-//        return $this->updatePolicy($uac, $newPolicy, $rotateKey, $rotatePasswords);
+        // if enabled => enabled
+        // e.g it's policy change like mandatory => opt-in
+        // and/or a possible key rotation
+        if (($isNewKeyProvided && !$isRevokedKeyProvided) || (!$isNewKeyProvided && $isRevokedKeyProvided)) {
+            throw new BadRequestException(__('Invalid request. Keys are required for this change.'));
+        }
+
+        // if key provided or revocation provided
+        $newKey = null;
+        $oldKey = null;
+        $passwords = null;
+        if ($isNewKeyProvided && $isRevokedKeyProvided) {
+            // assert old and new key$newKey
+            $newKey = $this->buildPublicKeyEntityFromDataOrFail($uac);
+            $oldKey = $this->buildRevokedKeyEntityFromDataOrFail($uac);
+
+            // If some existing backups are present
+            // assert new backups are provided
+            if ($this->backupsExists()) {
+                if (!$isPrivateKeyPasswordsProvided) {
+                    throw new BadRequestException(__('Invalid request. Passwords are required for this change.'));
+                }
+                // assert passwords backups format and numbers
+                $passwords = $this->buildPasswordEntitiesFromDataOrFail();
+            }
+        }
+
+        // save new key and disable previous key and backups if any
+        return $this->updatePolicy($uac, $newPolicy, $oldKey, $newKey, $passwords);
+    }
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac user acccess control
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $newPolicy new policy
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey|null $oldKey if key rotation
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey|null $newKey if key rotation
+     * @param iterable|null $passwords if key rotation and backups exist
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
+     */
+    public function updatePolicy(
+        UserAccessControl $uac,
+        AccountRecoveryOrganizationPolicy $newPolicy,
+        ?AccountRecoveryOrganizationPublicKey $oldKey = null,
+        ?AccountRecoveryOrganizationPublicKey $newKey = null,
+        ?iterable $passwords = null
+    ): AccountRecoveryOrganizationPolicy {
+        $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(
+            function () use (&$newPolicy, $oldKey, $newKey, $passwords, $uac) {
+                $saveOptions = ['atomic' => false];
+                $newPolicy = $this->AccountRecoveryOrganizationPolicies->replace($uac, $newPolicy);
+
+                if (isset($newKey)) {
+                    $this->AccountRecoveryOrganizationPublicKeys->saveOrFail($newKey, $saveOptions);
+                    $this->AccountRecoveryOrganizationPublicKeys->saveOrFail($oldKey, $saveOptions);
+                }
+
+                if (isset($passwords)) {
+                    $this->AccountRecoveryPrivateKeyPasswords->truncate();
+                    $this->AccountRecoveryPrivateKeyPasswords->saveManyOrFail($passwords, $saveOptions);
+                }
+            }
+        );
+
+        return $newPolicy;
     }
 
     /**
@@ -117,29 +156,13 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy entity
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
+     * @throws \Exception If policy could not be saved
      */
     protected function enablePolicy(UserAccessControl $uac, AccountRecoveryOrganizationPolicy $policy): AccountRecoveryOrganizationPolicy // phpcs:ignore
     {
-        $key = $this->assertNewPublicKey($uac);
-
-        // Validation has already been done at this point
-        $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(function () use (&$policy, $key) {
-            // Delete previous existing organization policy if any
-            $current = $this->getCurrentPolicyEntity();
-            if (isset($current->id)) {
-                $this->AccountRecoveryOrganizationPolicies->delete($current);
-            }
-
-            // Create a new one
-            $policy->account_recovery_organization_public_key = $key;
-            $this->AccountRecoveryOrganizationPolicies->save($policy, [
-                'validate' => false,
-                'checkRules' => false,
-                'associated' => [
-                    'AccountRecoveryOrganizationPublicKeys' => ['validate' => false, 'checkRules' => false],
-                ],
-            ]);
-        });
+        $key = $this->buildPublicKeyEntityFromDataOrFail($uac);
+        $policy->account_recovery_organization_public_key = $key;
+        $policy = $this->AccountRecoveryOrganizationPolicies->replace($uac, $policy);
 
         // Trigger event for email notifications and co.
         // TODO email notification and notification setting
@@ -152,22 +175,21 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
     /**
      * @param \App\Utility\UserAccessControl $uac user access control
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity
-     * @throws \Exception
+     * @throws \Exception Will re-throw any exception raised in $callback after rolling back the transaction.
      */
     public function disablePolicy(UserAccessControl $uac): AccountRecoveryOrganizationPolicy
     {
         $oldPolicy = $this->getCurrentPolicyEntity();
-        $patchedKey = $this->assertAndPatchRevokedKeyEntity($uac);
-        $newPolicy = $this->getNewDisabledEntity($uac);
+        $newPolicy = $this->AccountRecoveryOrganizationPolicies->newEntityForDisable($uac);
+        $oldKey = $this->buildRevokedKeyEntityFromDataOrFail($uac);
 
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(
-            function () use ($oldPolicy, $newPolicy, $patchedKey, $uac) {
+            function () use ($newPolicy, $oldKey, $uac) {
                 // Create new policy and delete old one
-                $this->AccountRecoveryOrganizationPolicies->delete($oldPolicy, ['atomic' => false]);
-                $this->AccountRecoveryOrganizationPolicies->save($newPolicy, ['atomic' => false]);
+                $this->AccountRecoveryOrganizationPolicies->replace($uac, $newPolicy);
 
                 // Set previous key as deleted
-                $this->AccountRecoveryOrganizationPublicKeys->save($patchedKey, ['atomic' => false]);
+                $this->AccountRecoveryOrganizationPublicKeys->saveOrFail($oldKey, ['atomic' => false]);
 
                 // Truncate private key, passwords and user settings
                 $this->AccountRecoveryPrivateKeys->truncate();

@@ -17,10 +17,12 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Service\AccountRecoveryOrganizationPolicies;
 
+use Cake\Chronos\Chronos;
 use Cake\Validation\Validation;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 class AccountRecoveryOrganizationPolicyGetServiceTest extends AccountRecoveryTestCase
@@ -58,5 +60,80 @@ class AccountRecoveryOrganizationPolicyGetServiceTest extends AccountRecoveryTes
         $this->assertTrue(Validation::datetime($policy->modified));
         $this->assertTrue(Validation::uuid($policy->created_by));
         $this->assertTrue(Validation::uuid($policy->modified_by));
+    }
+
+    /**
+     * Get a disabled policy is returned if there is a disabled policy set
+     */
+    public function testAccountRecoveryOrganizationPolicyGetService_Disabled()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->disabled()
+            ->persist();
+
+        $service = new AccountRecoveryOrganizationPolicyGetService();
+        $policy = $service->get();
+        $this->assertNotEmpty($policy->id);
+    }
+
+    /**
+     * Do not get fallback policy if policy is valid
+     */
+    public function testAccountRecoveryOrganizationPolicyGetService_MandatorySuccess()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $service = new AccountRecoveryOrganizationPolicyGetService();
+        $policy = $service->get();
+        $this->assertTrue(Validation::uuid($policy->id));
+        $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY);
+    }
+
+    /**
+     * Get fallback policy if policy is soft deleted
+     */
+    public function testAccountRecoveryOrganizationPolicyGetService_SoftDeletedFallback()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->setField('deleted', Chronos::now()->subDays(1))
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+                'deleted' => Chronos::now()->subDays(1),
+            ]))
+            ->persist();
+
+        $service = new AccountRecoveryOrganizationPolicyGetService();
+        $policy = $service->get();
+        $this->assertEmpty($policy->id);
+        $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED);
+    }
+
+    /**
+     * Get fallback policy if policy has a soft deleted key
+     */
+    public function testAccountRecoveryOrganizationPolicyGetService_SoftDeletedKeyFallback()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+                'deleted' => Chronos::now()->subDays(1),
+            ]))
+            ->persist();
+
+        $service = new AccountRecoveryOrganizationPolicyGetService();
+        $policy = $service->get();
+        $this->assertEmpty($policy->id);
+        $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED);
     }
 }

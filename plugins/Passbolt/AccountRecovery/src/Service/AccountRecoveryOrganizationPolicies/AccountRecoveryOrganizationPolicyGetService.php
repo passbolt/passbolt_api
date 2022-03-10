@@ -19,7 +19,6 @@ namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
-use Cake\ORM\Query;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 
 /**
@@ -30,52 +29,26 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
     use ModelAwareTrait;
 
     /**
+     * AccountRecoveryOrganizationPolicyGetService constructor.
+     */
+    public function __construct()
+    {
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
+    }
+
+    /**
      * Get the current account recovery policy or fallback on the default one (disabled)
      *
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
      */
     public function get(): AccountRecoveryOrganizationPolicy
     {
-        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
-
         try {
-            /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
-            $policy = $this->AccountRecoveryOrganizationPolicies
-                ->find()
-                ->select()
-                ->contain('AccountRecoveryOrganizationPublicKeys', function (Query $q) {
-                    return $q->select([
-                        'AccountRecoveryOrganizationPublicKeys.id',
-                        'AccountRecoveryOrganizationPublicKeys.armored_key',
-                    ]);
-                })
-                ->order(['AccountRecoveryOrganizationPolicies.created' => 'ASC'])
-                ->firstOrFail();
+            $policy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicyOrFail();
         } catch (RecordNotFoundException $exception) {
-            $policy = $this->getDefaultPolicy();
+            $policy = $this->AccountRecoveryOrganizationPolicies->newEntityForDefaultFallback();
         }
 
         return $policy;
-    }
-
-    /**
-     * Get a disabled AccountRecoveryOrganizationPolicy entity
-     * with an empty key and no creation / modified date
-     * Used as a fallback when no policy is present
-     *
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
-     */
-    public function getDefaultPolicy(): AccountRecoveryOrganizationPolicy
-    {
-        return $this->AccountRecoveryOrganizationPolicies
-            ->newEntity([
-                'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
-                'public_key_id' => null,
-            ], [
-                'accessibleFields' => [
-                    'policy' => true,
-                    'public_key_id' => true,
-                ],
-            ]);
     }
 }

@@ -21,7 +21,6 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
-use Cake\Chronos\Chronos;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Utility\Hash;
@@ -93,7 +92,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     /**
      * @return string current policy name
      */
-    protected function getCurrentPolicy(): string
+    protected function getCurrentPolicyName(): string
     {
         return $this->getCurrentPolicyEntity()->policy;
     }
@@ -130,7 +129,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      */
     public function isPolicyChange(): bool
     {
-        return $this->getCurrentPolicy() != $this->getData('policy');
+        return $this->getCurrentPolicyName() != $this->getData('policy');
     }
 
     /**
@@ -138,7 +137,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      */
     public function isEnabling(): bool
     {
-        $currentlyDisabled = $this->getCurrentPolicy() === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED; // phpcs:ignore
+        $currentlyDisabled = $this->getCurrentPolicyName() === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED; // phpcs:ignore
         $goingToEnable = $this->getData('policy') !== AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED; // phpcs:ignore
 
         return $currentlyDisabled && $goingToEnable;
@@ -149,7 +148,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      */
     public function isDisabling(): bool
     {
-        $currentlyEnabled = $this->getCurrentPolicy() !== AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED; // phpcs:ignore
+        $currentlyEnabled = $this->getCurrentPolicyName() !== AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED; // phpcs:ignore
         $goingToDisabled = $this->getData('policy') === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED; // phpcs:ignore
 
         return $currentlyEnabled && $goingToDisabled;
@@ -196,28 +195,14 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
      */
-    protected function assertOrganizationPolicy(UserAccessControl $uac): AccountRecoveryOrganizationPolicy
+    protected function buildAndValidatePolicyEntityFromData(UserAccessControl $uac): AccountRecoveryOrganizationPolicy
     {
-        $policyData = $this->getData('policy');
-        $newPolicy = $this->AccountRecoveryOrganizationPolicies
-            ->newEntity([
-                'policy' => $policyData,
-                'created_by' => $uac->getId(),
-                'modified_by' => $uac->getId(),
-            ], ['accessibleFields' => [
-                'policy' => true,
-                'created' => true,
-                'modified' => true,
-                'created_by' => true,
-                'modified_by' => true,
-            ]]);
-
-        if ($newPolicy->getErrors()) {
-            $em = __('Could not validate policy data.');
-            throw new ValidationException($em, $newPolicy, $this->AccountRecoveryOrganizationPolicies);
+        $policy = $this->getData('policy');
+        if (!isset($policy) || !is_string($policy)) {
+            $policy = '';
         }
 
-        return $newPolicy;
+        return $this->AccountRecoveryOrganizationPolicies->buildAndValidateEntity($uac, $policy);
     }
 
     /**
@@ -226,11 +211,11 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      * @param \App\Utility\UserAccessControl $uac user access control
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey
      */
-    public function assertNewPublicKey(UserAccessControl $uac): AccountRecoveryOrganizationPublicKey
+    public function buildPublicKeyEntityFromDataOrFail(UserAccessControl $uac): AccountRecoveryOrganizationPublicKey
     {
         try {
             $data = $this->getData('account_recovery_organization_public_key');
-            $entity = $this->newPublicKeyEntityOrFail($uac, $data);
+            $entity = $this->AccountRecoveryOrganizationPublicKeys->buildAndValidateEntity($uac, $data);
             $rules = PublicKeyValidationService::getStrictRules();
             $keyInfo = PublicKeyValidationService::parseAndValidatePublicKey($entity->armored_key, $rules);
             $this->assertSameFingerprint($keyInfo['fingerprint'], $entity->fingerprint);
@@ -261,12 +246,12 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      * @throws \App\Error\Exception\CustomValidationException if any of the check on fingerprint or armored key data fails
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey currently in use key patched with new revoked armored_key
      */
-    public function assertAndPatchRevokedKeyEntity(UserAccessControl $uac): AccountRecoveryOrganizationPublicKey
+    public function buildRevokedKeyEntityFromDataOrFail(UserAccessControl $uac): AccountRecoveryOrganizationPublicKey
     {
         try {
             $data = $this->getData('account_recovery_organization_revoked_key');
-            $entity = $this->newPublicKeyEntityOrFail($uac, $data);
-            $oldEntity = $this->assertActiveKeyWithFingerprint($data['fingerprint']);
+            $entity = $this->AccountRecoveryOrganizationPublicKeys->buildAndValidateEntity($uac, $data);
+            $oldEntity = $this->findActiveKeyByFingerprintOrFail($data['fingerprint']);
             $keyInfo = PublicKeyValidationService::parseAndValidatePublicKey(
                 $entity->armored_key,
                 PublicKeyValidationService::getRevokedKeyRules()
@@ -287,13 +272,8 @@ class AbstractAccountRecoveryOrganizationPolicySetService
         }
 
         // Patch old key with new revoked value
-        $patchedEntity = $this->AccountRecoveryOrganizationPublicKeys->patchEntity($oldEntity, [
-            'modified_by' => $uac->getId(),
-            'armored_key' => $data['armored_key'],
-            'deleted' => Chronos::now(),
-        ], [
-            'fields' => ['deleted', 'modified_by', 'armored_key'],
-        ]);
+        $patchedEntity = $this->AccountRecoveryOrganizationPublicKeys
+            ->patchAndValidateEntityForRevocation($uac, $oldEntity, $data['armored_key']);
         if ($patchedEntity->getErrors()) {
             throw new CustomValidationException(__('Could not validate key revocation.'), [
                 'account_recovery_organization_revoked_key' => $patchedEntity->getErrors(),
@@ -301,33 +281,6 @@ class AbstractAccountRecoveryOrganizationPolicySetService
         }
 
         return $patchedEntity;
-    }
-
-    /**
-     * @param \App\Utility\UserAccessControl $uac user access control
-     * @param array $data public key data
-     * @throws \App\Error\Exception\ValidationException if entity validation fails
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey
-     */
-    private function newPublicKeyEntityOrFail(UserAccessControl $uac, array $data): AccountRecoveryOrganizationPublicKey
-    {
-        // Entity validation
-        $data['created_by'] = $uac->getId();
-        $data['modified_by'] = $uac->getId();
-        $table = $this->AccountRecoveryOrganizationPublicKeys;
-        $publicKey = $table->newEntity($data, [
-            'accessibleFields' => [
-                'fingerprint' => true,
-                'armored_key' => true,
-                'created_by' => true,
-                'modified_by' => true,
-            ],
-        ]);
-        if ($publicKey->getErrors()) {
-            throw new ValidationException(__('Could not validate public key data.'), $publicKey, $table);
-        }
-
-        return $publicKey;
     }
 
     /**
@@ -372,7 +325,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      * from the currently active key
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey existing key
      */
-    private function assertActiveKeyWithFingerprint(string $fingerprint): AccountRecoveryOrganizationPublicKey
+    private function findActiveKeyByFingerprintOrFail(string $fingerprint): AccountRecoveryOrganizationPublicKey
     {
         try {
             /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $key */
@@ -392,24 +345,35 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     }
 
     /**
-     * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity
+     * @return bool
      */
-    public function getNewDisabledEntity(UserAccessControl $uac): AccountRecoveryOrganizationPolicy
+    public function backupsExists(): bool
     {
-        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
-        $policy = $this->AccountRecoveryOrganizationPolicies->newEntity([
-            'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
-            'created_by' => $uac->getId(),
-            'modified_by' => $uac->getId(),
-        ], [
-            'accessibleFields' => [
-                'policy' => true,
-                'created_by' => true,
-                'modified_by' => true,
-            ],
+        return $this->AccountRecoveryPrivateKeyPasswords->find()->count() > 0;
+    }
+
+    /**
+     * @return iterable array of AccountRecoveryPrivateKeyPasswords
+     */
+    public function buildPasswordEntitiesFromDataOrFail(): iterable
+    {
+        $passwordsData = $this->getData('account_recovery_private_key_passwords');
+        $passwordEntities = $this->AccountRecoveryPrivateKeyPasswords->newEntities($passwordsData, [
+           'accessibleFields',
         ]);
 
-        return $policy;
+        $errors = [];
+        foreach ($passwordEntities as $i => $entity) {
+            if ($entity->getErrors()) {
+                $errors[$i] = $entity->getErrors();
+            }
+        }
+        if (count($errors)) {
+            throw new CustomValidationException(__('Could not validate password data.'), [
+                'account_recovery_private_key_passwords' => $errors,
+            ]);
+        }
+
+        return $passwordEntities;
     }
 }
