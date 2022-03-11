@@ -90,12 +90,12 @@ class V360AddAccountRecoveryTables extends AbstractMigration
                 'encoding' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
             ])
-            ->addColumn('fingerprint', 'string', [
+            ->addColumn('fingerprint', 'char', [
                 'default' => null,
                 'limit' => 40,
                 'null' => false,
-                'encoding' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci'
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addColumn('created', 'datetime', [
                 'default' => null,
@@ -220,8 +220,9 @@ class V360AddAccountRecoveryTables extends AbstractMigration
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci'
             ])
-            ->addColumn('recipient_foreign_key', 'uuid', [
+            ->addColumn('recipient_fingerprint', 'char', [
                 'null' => false,
+                'limit' => 40,
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci'
             ])
@@ -261,7 +262,7 @@ class V360AddAccountRecoveryTables extends AbstractMigration
                 'collation' => 'ascii_general_ci'
             ])
             ->addIndex('id', ['unique' => true])
-            ->addIndex('recipient_foreign_key', ['unique' => false])
+            ->addIndex('recipient_fingerprint', ['unique' => false])
             ->create();
 
         $this->table('account_recovery_requests', [
@@ -287,6 +288,8 @@ class V360AddAccountRecoveryTables extends AbstractMigration
                 'default' => null,
                 'limit' => 40,
                 'null' => true,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci'
             ])
             ->addColumn('authentication_token_id', 'uuid', [
                 'null' => false,

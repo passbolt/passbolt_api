@@ -351,29 +351,4 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     {
         return $this->AccountRecoveryPrivateKeyPasswords->find()->count() > 0;
     }
-
-    /**
-     * @return iterable array of AccountRecoveryPrivateKeyPasswords
-     */
-    public function buildPasswordEntitiesFromDataOrFail(): iterable
-    {
-        $passwordsData = $this->getData('account_recovery_private_key_passwords');
-        $passwordEntities = $this->AccountRecoveryPrivateKeyPasswords->newEntities($passwordsData, [
-           'accessibleFields',
-        ]);
-
-        $errors = [];
-        foreach ($passwordEntities as $i => $entity) {
-            if ($entity->getErrors()) {
-                $errors[$i] = $entity->getErrors();
-            }
-        }
-        if (count($errors)) {
-            throw new CustomValidationException(__('Could not validate password data.'), [
-                'account_recovery_private_key_passwords' => $errors,
-            ]);
-        }
-
-        return $passwordEntities;
-    }
 }

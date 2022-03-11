@@ -126,7 +126,12 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
             ->contain('AccountRecoveryOrganizationPublicKeys', function (Query $q) {
                 return $q->select([
                     'AccountRecoveryOrganizationPublicKeys.id',
+                    'AccountRecoveryOrganizationPublicKeys.fingerprint',
                     'AccountRecoveryOrganizationPublicKeys.armored_key',
+                    'AccountRecoveryOrganizationPublicKeys.created',
+                    'AccountRecoveryOrganizationPublicKeys.modified',
+                    'AccountRecoveryOrganizationPublicKeys.created_by',
+                    'AccountRecoveryOrganizationPublicKeys.modified_by',
                 ]);
             })
             ->where(function ($exp) {

@@ -50,6 +50,7 @@ class SetupStartControllerTest extends AccountRecoveryIntegrationTestCase
         $this->assertSame($policy->policy, $this->_responseJsonBody->account_recovery_organization_policy->policy);
         $this->assertSame($policy->public_key_id, $this->_responseJsonBody->account_recovery_organization_policy->public_key_id);
         $this->assertSame($policy->account_recovery_organization_public_key->armored_key, $this->_responseJsonBody->account_recovery_organization_policy->account_recovery_organization_public_key->armored_key);
-        $this->assertSame(['id', 'armored_key'], array_keys((array)$this->_responseJsonBody->account_recovery_organization_policy->account_recovery_organization_public_key));
+        $this->assertSame($policy->account_recovery_organization_public_key->fingerprint, $this->_responseJsonBody->account_recovery_organization_policy->account_recovery_organization_public_key->fingerprint);
+        $this->assertSame($policy->account_recovery_organization_public_key->id, $this->_responseJsonBody->account_recovery_organization_policy->account_recovery_organization_public_key->id);
     }
 }

@@ -16,9 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
+use App\Error\Exception\CustomValidationException;
+use App\Service\OpenPGP\MessageRecipientValidationService;
+use App\Service\OpenPGP\MessageValidationService;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Utility\Hash;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 
@@ -55,8 +60,14 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $isPrivateKeyPasswordsProvided = $this->isPrivateKeyPasswordsProvided();
 
         // if policy has not changed and (new key not provided or revoked key not provided)
-        if (!$isPolicyChange && (!$isNewKeyProvided || !$isRevokedKeyProvided)) {
+        if (!$isPolicyChange && !$isNewKeyProvided && !$isRevokedKeyProvided) {
             throw new BadRequestException(__('Invalid request. No policy change.'));
+        }
+        if (!$isPolicyChange && $isNewKeyProvided && !$isRevokedKeyProvided) {
+            throw new BadRequestException(__('Invalid request. Revoked key is required for key rotation.'));
+        }
+        if (!$isPolicyChange && !$isNewKeyProvided && $isRevokedKeyProvided) {
+            throw new BadRequestException(__('Invalid request. New key is required for key rotation.'));
         }
 
         // if disabled => enabled
@@ -107,7 +118,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
                     throw new BadRequestException(__('Invalid request. Passwords are required for this change.'));
                 }
                 // assert passwords backups format and numbers
-                $passwords = $this->buildPasswordEntitiesFromDataOrFail();
+                $passwords = $this->buildPasswordEntitiesFromDataOrFail($uac, $newKey);
             }
         }
 
@@ -133,21 +144,23 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(
             function () use (&$newPolicy, $oldKey, $newKey, $passwords, $uac) {
                 $saveOptions = ['atomic' => false];
-                $newPolicy = $this->AccountRecoveryOrganizationPolicies->replace($uac, $newPolicy);
 
                 if (isset($newKey)) {
-                    $this->AccountRecoveryOrganizationPublicKeys->saveOrFail($newKey, $saveOptions);
+                    $newPolicy->account_recovery_organization_public_key = $newKey;
                     $this->AccountRecoveryOrganizationPublicKeys->saveOrFail($oldKey, $saveOptions);
                 }
 
+                $newPolicy = $this->AccountRecoveryOrganizationPolicies->replace($uac, $newPolicy);
+
                 if (isset($passwords)) {
+                    $this->assertPasswordsCount();
                     $this->AccountRecoveryPrivateKeyPasswords->truncate();
                     $this->AccountRecoveryPrivateKeyPasswords->saveManyOrFail($passwords, $saveOptions);
                 }
             }
         );
 
-        return $newPolicy;
+        return $this->getCurrentPolicyEntity(false);
     }
 
     /**
@@ -169,7 +182,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $event = new Event(self::AFTER_ENABLE_POLICY_EVENT, $this, $policy);
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 
-        return $policy;
+        return $this->getCurrentPolicyEntity(false);
     }
 
     /**
@@ -208,5 +221,84 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 
         return $this->getCurrentPolicyEntity(false);
+    }
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $publicKey entity
+     * @return iterable array of AccountRecoveryPrivateKeyPasswords
+     */
+    public function buildPasswordEntitiesFromDataOrFail(
+        UserAccessControl $uac,
+        AccountRecoveryOrganizationPublicKey $publicKey
+    ): iterable {
+        $passwordsData = $this->getData('account_recovery_private_key_passwords');
+        $passwordEntities = $this->AccountRecoveryPrivateKeyPasswords->buildAndValidateEntities($uac, $passwordsData);
+
+        // Check that each message is addressed to the right recipient
+        // e.g. that the sub key id is found in the sub packets
+        $errors = [];
+        $keyInfo = PublicKeyValidationService::getPublicKeyInfo($publicKey->armored_key);
+        $rules = MessageValidationService::getAsymmetricMessageRules();
+        foreach ($passwordEntities as $i => $entity) {
+            try {
+                $msgInfo = MessageValidationService::parseAndValidateMessage($entity->data, $rules);
+            } catch (CustomValidationException $exception) {
+                $errors[$i] = $exception->getErrors();
+                continue;
+            }
+            if (!MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo)) {
+                $errors[$i]['wrongRecipient'] = __('The message is not encrypted for the right recipient.');
+            }
+        }
+        if (count($errors)) {
+            throw new CustomValidationException(__('Could not validate password data.'), [
+                'account_recovery_private_key_passwords' => $errors,
+            ]);
+        }
+
+        return $passwordEntities;
+    }
+
+    /**
+     * Ensure the correct number of passwords are provided by the end user data
+     *
+     * Should be done in the same transaction than the save for data integrity purpose
+     * This assume the account_recovery_private_key_passwords is therefore validated
+     * It uses the original data for array operation speed versus working with entities
+     *
+     * @CustomValidationException if some of the private key passwords are missing
+     * @return void
+     */
+    private function assertPasswordsCount()
+    {
+        $passwordsData = $this->getData('account_recovery_private_key_passwords');
+
+        // Check there is the correct number of passwords
+        // TODO move as table rule
+        $actual = count($passwordsData);
+        $expected = $this->AccountRecoveryPrivateKeyPasswords->find()->count();
+        if ($actual !== $expected) {
+            $msg = __('An invalid number of passwords sent. Expected {0} and got {1}.', $actual, $expected);
+            throw new CustomValidationException(__('Could not validate password data.'), [
+                'account_recovery_private_key_passwords' => [
+                    'invalidPasswordCount' => $msg,
+                ],
+            ]);
+        }
+
+        // Check there is the correct private key id for the passwords
+        // TODO move as table rule
+        $missing = $this->AccountRecoveryPrivateKeys->find()
+            ->select('id')
+            ->where(['id NOT IN' => Hash::extract($passwordsData, '{n}.private_key_id')])
+            ->all();
+        if (count($missing)) {
+            throw new CustomValidationException(__('Could not validate password data.'), [
+                'account_recovery_private_key_passwords' => [
+                    'missingPasswordForPrivateKeyIds' => Hash::extract($missing->toArray(), '{n}.id'),
+                ],
+            ]);
+        }
     }
 }

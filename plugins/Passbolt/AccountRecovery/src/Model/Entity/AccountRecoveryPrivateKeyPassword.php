@@ -23,7 +23,7 @@ use Cake\ORM\Entity;
  * AccountRecoveryPrivateKeyPassword Entity
  *
  * @property string $id
- * @property string $recipient_foreign_key
+ * @property string $recipient_fingerprint
  * @property string $recipient_foreign_model
  * @property string $private_key_id
  * @property string $data
@@ -46,16 +46,21 @@ class AccountRecoveryPrivateKeyPassword extends Entity
      * @var array
      */
     protected $_accessible = [
-        'recipient_foreign_key' => true,
-        'recipient_foreign_model' => true,
-        'private_key_id' => true,
-        'data' => true,
-        'created' => true,
-        'modified' => true,
-        'created_by' => true,
-        'modified_by' => true,
-        'account_recovery_private_key' => true,
+        'recipient_fingerprint' => false,
+        'recipient_foreign_model' => false,
+        'private_key_id' => false,
+        'data' => false,
+        'created' => false,
+        'modified' => false,
+        'created_by' => false,
+        'modified_by' => false,
+        'account_recovery_private_key' => false,
     ];
 
-    public const ORGANIZATION_KEY = 'AccountRecoveryOrganizationKey';
+    public const RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY = 'AccountRecoveryOrganizationKey';
+    //public const RECIPIENT_FOREIGN_MODEL_RECOVERY_CONTACT = 'AccountRecoveryContact';
+    public const ALLOWED_RECIPIENT_FOREIGN_MODELS = [
+        self::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
+        //self::RECIPIENT_FOREIGN_MODEL_RECOVERY_CONTACT
+    ];
 }

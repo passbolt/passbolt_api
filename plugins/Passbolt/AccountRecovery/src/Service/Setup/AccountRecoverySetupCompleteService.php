@@ -121,6 +121,26 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
             'account_recovery_private_key_passwords' => $privateKeyPasswords,
             'created_by' => $userId,
             'modified_by' => $userId,
+        ], [
+            'accessibleFields' => [
+                'user_id' => true,
+                'data' => true,
+                'account_recovery_private_key_passwords' => true,
+                'created_by' => true,
+                'modified_by' => true,
+            ],
+            'associated' => [
+                'AccountRecoveryPrivateKeyPasswords' => [
+                    'accessibleFields' => [
+                        'recipient_fingerprint' => true,
+                        'recipient_foreign_model' => true,
+                        'private_key_id' => true,
+                        'data' => true,
+                        'created_by' => true,
+                        'modified_by' => true,
+                    ],
+                ],
+            ],
         ]);
 
         if ($privateKey->hasErrors()) {

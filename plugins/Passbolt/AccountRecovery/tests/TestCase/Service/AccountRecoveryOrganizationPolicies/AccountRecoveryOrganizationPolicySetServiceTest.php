@@ -22,6 +22,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
@@ -29,6 +30,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
+use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
@@ -704,49 +706,397 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
     public function testAccountRecoveryOrganizationPolicySetService_Success_UpdateWithKeyRotationSimple()
     {
-        $this->markTestIncomplete();
+        $this->startScenarioOptinNoBackups();
+
+        $data = [
+            'policy' => 'opt-in',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => '23C6 C30E 2413 24C9 0A44  A719 A86A 7EA3 7397 97F5',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key'),
+            ],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $policy = $service->set($this->getUac(), $data);
+        } catch (ValidationException | CustomValidationException $exception) {
+            $this->fail();
+        }
+
+        $this->assertEquals(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_IN, $policy->policy);
+        $this->assertEquals('23C6C30E241324C90A44A719A86A7EA3739797F5', $policy->account_recovery_organization_public_key->fingerprint);
     }
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithKeyRotationSimple_RevokedKeyMissing()
     {
-        $this->markTestIncomplete();
+        $this->startScenarioOptinNoBackups();
+
+        $data = [
+            'policy' => 'opt-in',
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => '23C6C30E241324C90A44A719A86A7EA3739797F5',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key'),
+            ],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (BadRequestException $exception) {
+            $this->assertTextContains('Revoked key is required', $exception->getMessage());
+        }
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithKeyRotationSimple_RevokedKeyNotRevoked()
+    {
+        $this->startScenarioOptinNoBackups();
+
+        $data = [
+            'policy' => 'opt-in',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => '23C6C30E241324C90A44A719A86A7EA3739797F5',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key'),
+            ],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $this->assertTextContains('Could not validate key revocation.', $exception->getMessage());
+            $e = $exception->getErrors();
+            $this->assertTrue(isset($e['account_recovery_organization_revoked_key']['armored_key']['isRevokedRule']));
+        }
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithKeyRotationSimple_NewKeyReused()
+    {
+        $this->startScenarioOptinNoBackups();
+
+        $data = [
+            'policy' => 'opt-in',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+                'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
+            ],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertTextContains('Could not validate policy data.', $exception->getMessage());
+            $this->assertTrue(isset($e['account_recovery_organization_public_key']['fingerprint']['isNotUserKeyFingerprintRule']));
+        }
     }
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithKeyRotationSimple_NewKeyMissing()
     {
-        $this->markTestIncomplete();
-    }
+        $this->startScenarioOptinNoBackups();
 
-    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithKeyRotationSimple_KeyMissing()
-    {
-        $this->markTestIncomplete();
+        $data = [
+            'policy' => 'opt-in',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+            ],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (BadRequestException $exception) {
+            $this->assertTextContains('New key is required', $exception->getMessage());
+        }
     }
 
     // FULL ROTATION SCENARIOS
 
     public function testAccountRecoveryOrganizationPolicySetService_Success_UpdateWithFullRotation()
     {
-        $this->markTestIncomplete();
+        $this->startScenarioOptinWithBackupsAndRequests();
+
+        $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
+
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->importKeyIntoKeyring($newKeyArmored);
+        $gpg->setEncryptKeyFromFingerprint($newKeyFingerprint);
+
+        $data = [
+            'policy' => 'opt-out',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => '23C6 C30E 2413 24C9 0A44  A719 A86A 7EA3 7397 97F5',
+                'armored_key' => $newKeyArmored,
+            ],
+            'account_recovery_private_key_passwords' => [[
+                'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
+                'recipient_fingerprint' => $newKeyFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $gpg->encrypt('cofveve'),
+            ]],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $policy = $service->set($this->getUac(), $data);
+        } catch (CustomValidationException $exception) {
+            $this->fail(json_encode($exception->getErrors()));
+        }
+
+        $this->assertEquals('opt-out', $policy->policy);
+        $this->assertEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsMissing()
     {
-        $this->markTestIncomplete();
+        $this->startScenarioOptinWithBackupsAndRequests();
+
+        $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
+
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->importKeyIntoKeyring($newKeyArmored);
+        $gpg->setEncryptKeyFromFingerprint($newKeyFingerprint);
+
+        $data = [
+            'policy' => 'opt-out',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => '23C6 C30E 2413 24C9 0A44  A719 A86A 7EA3 7397 97F5',
+                'armored_key' => $newKeyArmored,
+            ],
+            'account_recovery_private_key_passwords' => [[
+                'private_key_id' => UuidFactory::uuid('acr.private_key.betty.id'), // betty not needed, ada missing
+                'recipient_fingerprint' => $newKeyFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $gpg->encrypt('cofveve'),
+            ]],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertTrue(isset($e['account_recovery_private_key_passwords']['missingPasswordForPrivateKeyIds'][0]));
+            $missingId = $e['account_recovery_private_key_passwords']['missingPasswordForPrivateKeyIds'][0];
+            $this->assertEquals(UuidFactory::uuid('acr.private_key.ada.id'), $missingId);
+        }
+
+        // Check the policy has not changed
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $this->assertEquals('opt-in', $policy->policy);
+        $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
 
-    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsFormatInvalid()
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsFormatInvalid_NotParsable()
     {
-        $this->markTestIncomplete();
+        $this->startScenarioOptinWithBackupsAndRequests();
+
+        $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
+
+        $data = [
+            'policy' => 'opt-out',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => '23C6 C30E 2413 24C9 0A44  A719 A86A 7EA3 7397 97F5',
+                'armored_key' => $newKeyArmored,
+            ],
+            'account_recovery_private_key_passwords' => [[
+                'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
+                'recipient_fingerprint' => $newKeyFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => 'not a gpg message',
+            ]],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $policy = $service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertTrue(isset($e['account_recovery_private_key_passwords'][0]['data']['isValidOpenPGPMessage']));
+        }
+
+        // Check the policy has not changed
+        // Check the policy has not changed
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $this->assertEquals('opt-in', $policy->policy);
+        $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
 
-    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_RecipientMissing()
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsFormatInvalid_Symetric()
     {
-        $this->markTestIncomplete();
+        $this->startScenarioOptinWithBackupsAndRequests();
+
+        $oldKeyRevokedArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key');
+        $oldKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $oldKeyFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
+
+        $data = [
+            'policy' => 'opt-out',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => $oldKeyFingerprint,
+                'armored_key' => $oldKeyRevokedArmored,
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => $newKeyFingerprint,
+                'armored_key' => $newKeyArmored,
+            ],
+            'account_recovery_private_key_passwords' => [[
+                'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
+                'recipient_fingerprint' => $newKeyFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password.msg') ,
+            ]],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertTrue(isset($e['account_recovery_private_key_passwords'][0]['data']['hasAsymmetricPacketRule']));
+        }
+
+        // Check the policy has not changed
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $this->assertEquals('opt-in', $policy->policy);
+        $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_RecipientInvalid()
     {
-        $this->markTestIncomplete();
+        $this->startScenarioOptinWithBackupsAndRequests();
+
+        $oldKeyRevokedArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key');
+        $oldKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $oldKeyFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
+
+        // Use old key instead of new one
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->importKeyIntoKeyring($oldKeyArmored);
+        $gpg->setEncryptKeyFromFingerprint($oldKeyFingerprint);
+
+        $data = [
+            'policy' => 'opt-out',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => $oldKeyFingerprint,
+                'armored_key' => $oldKeyRevokedArmored,
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => $newKeyFingerprint,
+                'armored_key' => $newKeyArmored,
+            ],
+            'account_recovery_private_key_passwords' => [[
+                'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
+                'recipient_fingerprint' => $newKeyFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $gpg->encrypt('cofveve'),
+            ]],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertTrue(isset($e['account_recovery_private_key_passwords'][0]['wrongRecipient']));
+        }
+
+        // Check the policy has not changed
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $this->assertEquals('opt-in', $policy->policy);
+        $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_RecipientTooMany()
+    {
+        $this->startScenarioOptinWithBackupsAndRequests();
+
+        $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
+
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->importKeyIntoKeyring($newKeyArmored);
+        $gpg->setEncryptKeyFromFingerprint($newKeyFingerprint);
+        $data = $gpg->encrypt('cofveve');
+
+        $data = [
+            'policy' => 'opt-out',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => '23C6 C30E 2413 24C9 0A44  A719 A86A 7EA3 7397 97F5',
+                'armored_key' => $newKeyArmored,
+            ],
+            'account_recovery_private_key_passwords' => [[
+                'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
+                'recipient_fingerprint' => $newKeyFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $data,
+            ],[
+                'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
+                'recipient_fingerprint' => $newKeyFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $data,
+            ]],
+        ];
+
+        $service = new AccountRecoveryOrganizationPolicySetService();
+        try {
+            $service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertTrue(isset($e['account_recovery_private_key_passwords']['invalidPasswordCount']));
+        }
+
+        // Check the policy has not changed
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $this->assertEquals('opt-in', $policy->policy);
+        $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
 
     // SCENARIOS
@@ -758,15 +1108,22 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
      */
     private function startScenarioOptinWithBackupsAndRequests()
     {
-        AccountRecoveryOrganizationPolicyFactory::make()
-            ->optin()
+        UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->patchData([
+                'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+                'armored_key' => file_get_contents(FIXTURES . 'Gpgkeys' . DS . 'ada_public.key'),
+            ]))
             ->persist();
 
-        AccountRecoveryOrganizationPublicKeyFactory::make()
-            ->setField('id', UuidFactory::uuid('acr.org_public_key.id'))
-            ->setField('fingerprint', '67BFFCB7B74AF4C85E81AB26508850525CD78BAA')
-            ->setField('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'))
-            ->setField('deleted', null)
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'id' => UuidFactory::uuid('acr.org_public_key.id'),
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
+                'deleted' => null,
+            ]))
             ->persist();
 
         AccountRecoveryOrganizationPublicKeyFactory::make()
@@ -793,13 +1150,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         AccountRecoveryPrivateKeyPasswordFactory::make()
             ->setField('private_key_id', UuidFactory::uuid('acr.private_key.ada.id'))
-            ->setField('recipient_foreign_key', UuidFactory::uuid('acr.org_public_key.id'))
-            ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
-            ->persist();
-
-        AccountRecoveryPrivateKeyPasswordFactory::make()
-            ->setField('private_key_id', UuidFactory::uuid('acr.private_key.ada.id'))
-            ->setField('recipient_foreign_key', UuidFactory::uuid('acr.org_public_key.id'))
+            ->setField('recipient_fingerprint', '03F60E958F4CB29723ACDF761353B5B15D9B054F')
             ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
             ->persist();
 
@@ -815,15 +1166,22 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
      */
     private function startScenarioOptinNoBackups()
     {
-        AccountRecoveryOrganizationPolicyFactory::make()
-            ->optin()
+        UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->patchData([
+                'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+                'armored_key' => file_get_contents(FIXTURES . 'Gpgkeys' . DS . 'ada_public.key'),
+            ]))
             ->persist();
 
-        AccountRecoveryOrganizationPublicKeyFactory::make()
-            ->setField('id', UuidFactory::uuid('acr.org_public_key.id'))
-            ->setField('fingerprint', '67BFFCB7B74AF4C85E81AB26508850525CD78BAA')
-            ->setField('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'))
-            ->setField('deleted', null)
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'id' => UuidFactory::uuid('acr.org_public_key.id'),
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
+                'deleted' => null,
+            ]))
             ->persist();
     }
 }

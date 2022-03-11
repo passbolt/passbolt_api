@@ -22,12 +22,13 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
-use App\Utility\UuidFactory;
 use Cake\Http\ServerRequest;
+use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupCompleteService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyPasswordFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
@@ -103,7 +104,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_private_key.data', $this->getDummyPrivateKey())
             ->withData('account_recovery_private_key_passwords', [[
-                'recipient_foreign_key' => UuidFactory::uuid(),
+                'recipient_fingerprint' => $this->serverKeyId,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $this->gpg->encrypt('Foo'),
             ]]);
@@ -112,6 +113,16 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
 
         $this->assertSame(1, AccountRecoveryPrivateKeyFactory::count());
         $this->assertSame(1, AccountRecoveryPrivateKeyPasswordFactory::count());
+        $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
+
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
+        $q = $table->find()->contain(['Users'])->all()->first();
+        $this->assertTrue($q->user->active);
+        $this->assertTrue(isset($q->created));
+        $this->assertTrue(isset($q->modified));
+        $this->assertEquals('approved', $q->status);
+        $this->assertEquals($user->id, $q->created_by);
+        $this->assertEquals($user->id, $q->modified_by);
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_Left_To_Implement()

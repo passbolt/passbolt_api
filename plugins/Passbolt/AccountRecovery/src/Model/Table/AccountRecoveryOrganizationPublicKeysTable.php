@@ -144,9 +144,8 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
 
         // TODO before marshal or validation should uppercase fingerprint
         if (isset($data['fingerprint']) && is_string($data['fingerprint'])) {
-            $data['fingerprint'] = strtoupper(trim($data['fingerprint']));
+            $data['fingerprint'] = strtoupper(str_replace(' ', '', $data['fingerprint']));
         }
-
         $publicKey = $this->newEntity($data, [
             'accessibleFields' => [
                 'fingerprint' => true,

@@ -16,9 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use App\Error\Exception\CustomValidationException;
+use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
+use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
+use App\Utility\UserAccessControl;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Model\Table\Traits\TableTruncateTrait;
 
 /**
@@ -81,20 +86,25 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
             ->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->uuid('recipient_foreign_key')
-            ->requirePresence('recipient_foreign_key', 'create')
-            ->notEmptyString('recipient_foreign_key');
+            ->ascii('recipient_fingerprint', __('The fingerprint should be a valid ASCII string.'))
+            ->requirePresence('recipient_fingerprint', 'create', __('A fingerprint is required'))
+            ->notEmptyString('recipient_fingerprint', __('The fingerprint should not be empty'))
+            ->add('recipient_fingerprint', 'invalidFingerprint', new IsValidFingerprintValidationRule());
 
         $validator
             ->scalar('recipient_foreign_model')
-            ->maxLength('recipient_foreign_model', 128)
             ->requirePresence('recipient_foreign_model', 'create')
-            ->notEmptyString('recipient_foreign_model');
+            ->notEmptyString('recipient_foreign_model')
+            ->inList('recipient_foreign_model', AccountRecoveryPrivateKeyPassword::ALLOWED_RECIPIENT_FOREIGN_MODELS, __(
+                'The recipient_foreign_model must be one of the following: {0}.',
+                implode(', ', AccountRecoveryPrivateKeyPassword::ALLOWED_RECIPIENT_FOREIGN_MODELS)
+            ));
 
         $validator
             ->scalar('data')
             ->requirePresence('data', 'create')
-            ->notEmptyString('data');
+            ->notEmptyString('data')
+            ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator
             ->uuid('created_by')
@@ -125,5 +135,45 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
         );
 
         return $rules;
+    }
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param array $passwords user provided data
+     * @throws \App\Error\Exception\CustomValidationException if data doesn't validate
+     * @return iterable array of entities
+     */
+    public function buildAndValidateEntities(UserAccessControl $uac, array $passwords): iterable
+    {
+        foreach ($passwords as $i => $entity) {
+            $passwords[$i]['created_by'] = $uac->getId();
+            $passwords[$i]['modified_by'] = $uac->getId();
+        }
+
+        $passwordEntities = $this->newEntities($passwords, [
+            'accessibleFields' => [
+                'recipient_fingerprint' => true,
+                'recipient_foreign_model' => true,
+                'private_key_id' => true,
+                'data' => true,
+                'created_by' => true,
+                'modified_by' => true,
+            ],
+        ]);
+
+        $errors = [];
+        foreach ($passwordEntities as $i => $entity) {
+            if ($entity->getErrors()) {
+                $errors[$i] = $entity->getErrors();
+            }
+        }
+
+        if (count($errors)) {
+            throw new CustomValidationException(__('Could not validate password data.'), [
+                'account_recovery_private_key_passwords' => $errors,
+            ]);
+        }
+
+        return $passwordEntities;
     }
 }
