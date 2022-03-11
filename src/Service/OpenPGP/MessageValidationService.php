@@ -165,4 +165,19 @@ class MessageValidationService
     {
         return OpenPGPBackendFactory::get()->hasExtraBreakLine($armoredKey);
     }
+
+    /**
+     * Custom validation rule to check if armored message block is parsable
+     *
+     * @param string|null $armoredMsg user provided data
+     * @return bool
+     */
+    public static function isParsableArmoredMessage(?string $armoredMsg = null): bool
+    {
+        if (!isset($armoredMsg)) {
+            return false;
+        }
+
+        return OpenPGPBackendFactory::get()->isValidMessage($armoredMsg);
+    }
 }
