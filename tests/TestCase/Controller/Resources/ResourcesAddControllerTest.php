@@ -253,7 +253,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
                 'data' => $this->getDummyResourcesPostData(['secrets' => []]),
             ]],
             ['secret is invalid', [
-                'errorField' => 'secrets.0.data.isValidGpgMessage',
+                'errorField' => 'secrets.0.data.isValidOpenPGPMessage',
                 'data' => $this->getDummyResourcesPostData(['secrets' => [
                     0 => ['data' => 'Invalid secret'],
                 ]]),

@@ -270,7 +270,7 @@ URIWI7R+VCewqviRfmezc4M=
             $this->service->updateSecrets($uac, $resource1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
-            $this->assertUpdateSecretsValidationException($e, '0.data.isValidGpgMessage');
+            $this->assertUpdateSecretsValidationException($e, '0.data.isValidOpenPGPMessage');
         }
     }
 
