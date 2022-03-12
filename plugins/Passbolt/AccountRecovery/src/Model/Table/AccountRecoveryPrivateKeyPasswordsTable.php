@@ -20,6 +20,8 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
+use ArrayObject;
+use Cake\Event\EventInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -135,6 +137,22 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
         );
 
         return $rules;
+    }
+
+    /**
+     * Format recipient fingerprint data to remove spaces and set it to uppercase
+     *
+     * @param \Cake\Event\EventInterface $event event
+     * @param \ArrayObject $data user provided data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options)
+    {
+        if (isset($data['recipient_fingerprint']) && is_string($data['recipient_fingerprint'])) {
+            $f = strtoupper(str_replace(' ', '', $data['recipient_fingerprint']));
+            $data['recipient_fingerprint'] = $f;
+        }
     }
 
     /**

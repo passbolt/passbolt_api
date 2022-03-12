@@ -251,12 +251,12 @@ class AbstractAccountRecoveryOrganizationPolicySetService
         try {
             $data = $this->getData('account_recovery_organization_revoked_key');
             $entity = $this->AccountRecoveryOrganizationPublicKeys->buildAndValidateEntity($uac, $data);
-            $oldEntity = $this->findActiveKeyByFingerprintOrFail($data['fingerprint']);
+            $oldEntity = $this->findActiveKeyByFingerprintOrFail($entity->fingerprint);
             $keyInfo = PublicKeyValidationService::parseAndValidatePublicKey(
                 $entity->armored_key,
                 PublicKeyValidationService::getRevokedKeyRules()
             );
-            $this->assertSameFingerprint($keyInfo['fingerprint'], $data['fingerprint']);
+            $this->assertSameFingerprint($keyInfo['fingerprint'], $entity->fingerprint);
         } catch (ValidationException | CustomValidationException $exception) {
             throw new CustomValidationException(__('Could not validate key revocation.'), [
                 'account_recovery_organization_revoked_key' => $exception->getErrors(),

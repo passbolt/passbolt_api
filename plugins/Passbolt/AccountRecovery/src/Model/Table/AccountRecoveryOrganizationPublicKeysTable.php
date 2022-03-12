@@ -23,7 +23,9 @@ use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
+use ArrayObject;
 use Cake\Chronos\Chronos;
+use Cake\Event\EventInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -142,10 +144,6 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
         $data['created_by'] = $uac->getId();
         $data['modified_by'] = $uac->getId();
 
-        // TODO before marshal or validation should uppercase fingerprint
-        if (isset($data['fingerprint']) && is_string($data['fingerprint'])) {
-            $data['fingerprint'] = strtoupper(str_replace(' ', '', $data['fingerprint']));
-        }
         $publicKey = $this->newEntity($data, [
             'accessibleFields' => [
                 'fingerprint' => true,
@@ -160,6 +158,21 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
         }
 
         return $publicKey;
+    }
+
+    /**
+     * Format fingerprint data to remove spaces and set it to uppercase
+     *
+     * @param \Cake\Event\EventInterface $event event
+     * @param \ArrayObject $data user provided data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options)
+    {
+        if (isset($data['fingerprint']) && is_string($data['fingerprint'])) {
+            $data['fingerprint'] = strtoupper(str_replace(' ', '', $data['fingerprint']));
+        }
     }
 
     /**

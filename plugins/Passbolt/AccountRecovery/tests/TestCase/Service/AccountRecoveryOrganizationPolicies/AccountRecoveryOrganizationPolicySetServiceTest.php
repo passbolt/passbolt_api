@@ -834,7 +834,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         $this->startScenarioOptinWithBackupsAndRequests();
 
         $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
-        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
+        $newKeyFingerprint = '23c6 c30e 2413 24c9 0a44  a719 a86a 7ea3 7397 97f5';
 
         $gpg = OpenPGPBackendFactory::get();
         $gpg->importKeyIntoKeyring($newKeyArmored);
@@ -843,11 +843,11 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         $data = [
             'policy' => 'opt-out',
             'account_recovery_organization_revoked_key' => [
-                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'fingerprint' => '67BF FCB7 B74A F4C8 5E81  AB26 5088 5052 5CD7 8BAA',
                 'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             ],
             'account_recovery_organization_public_key' => [
-                'fingerprint' => '23C6 C30E 2413 24C9 0A44  A719 A86A 7EA3 7397 97F5',
+                'fingerprint' => $newKeyFingerprint,
                 'armored_key' => $newKeyArmored,
             ],
             'account_recovery_private_key_passwords' => [[
@@ -866,7 +866,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
 
         $this->assertEquals('opt-out', $policy->policy);
-        $this->assertEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
+        $this->assertEquals('23C6C30E241324C90A44A719A86A7EA3739797F5', $policy->account_recovery_organization_public_key->fingerprint);
     }
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsMissing()
@@ -887,7 +887,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
                 'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             ],
             'account_recovery_organization_public_key' => [
-                'fingerprint' => '23C6 C30E 2413 24C9 0A44  A719 A86A 7EA3 7397 97F5',
+                'fingerprint' => $newKeyFingerprint,
                 'armored_key' => $newKeyArmored,
             ],
             'account_recovery_private_key_passwords' => [[
