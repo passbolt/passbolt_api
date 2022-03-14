@@ -82,8 +82,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmptyString('id', null, 'create')
-            ->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->ascii('recipient_fingerprint', __('The fingerprint should be a valid ASCII string.'))

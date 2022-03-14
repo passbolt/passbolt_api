@@ -79,8 +79,7 @@ class AccountRecoveryPrivateKeysTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmptyString('id', null, 'create')
-            ->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('data')

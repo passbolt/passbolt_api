@@ -30,6 +30,9 @@ class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCas
 {
     use FormatValidationTrait;
 
+    /**
+     * @var AccountRecoveryPrivateKeyPasswordsTable
+     */
     protected $AccountRecoveryPrivateKeyPasswords;
 
     /**
@@ -72,7 +75,6 @@ class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCas
      */
     public function testAccountRecoveryPrivateKeyPasswordsTable_ValidationId()
     {
-        $this->markTestSkipped(); // TODO postgresql compatibility issue?
         $testCases = [
             'uuid' => self::getUuidTestCases(),
         ];
