@@ -46,7 +46,7 @@ abstract class PassboltValidationRule extends ValidationRule
      */
     public function __construct(array $validator = [])
     {
-        $validator['rule'] = function ($value, $context, $validator) {
+        $validator['rule'] = function ($value, $context) {
             $msg = $validator['message'] ?? $this->getErrorMessage($value, $context);
 
             return $this->rule($value, $context) ? true : $msg;
