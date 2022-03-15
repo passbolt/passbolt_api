@@ -18,6 +18,9 @@ declare(strict_types=1);
 namespace App\Service\Setup;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Entity\AuthenticationToken;
+use App\Model\Entity\Gpgkey;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
@@ -62,7 +65,7 @@ abstract class AbstractCompleteService
      * @throws \Cake\Http\Exception\BadRequestException if the authentication token is expired or invalid
      * @return \App\Model\Entity\AuthenticationToken
      */
-    protected function getAndAssertToken(string $userId, string $tokenType)
+    protected function getAndAssertToken(string $userId, string $tokenType): AuthenticationToken
     {
         $data = $this->request->getData();
         if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
@@ -76,10 +79,7 @@ abstract class AbstractCompleteService
             throw new BadRequestException(__('The authentication token is not valid or has expired.'));
         }
 
-        /** @var \App\Model\Entity\AuthenticationToken $token */
-        $token = $this->AuthenticationTokens->getByToken($tokenId);
-
-        return $token;
+        return $this->AuthenticationTokens->getByToken($tokenId);
     }
 
     /**
@@ -89,7 +89,7 @@ abstract class AbstractCompleteService
      * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
      * @return \App\Model\Entity\Gpgkey entity
      */
-    protected function getAndAssertGpgkey(string $userId)
+    protected function getAndAssertGpgkey(string $userId): Gpgkey
     {
         $data = $this->request->getData();
         $armoredKey = $data['gpgkey']['armored_key'];
@@ -98,15 +98,13 @@ abstract class AbstractCompleteService
             throw new BadRequestException(__('An OpenPGP key must be provided.'));
         }
 
-        if (!$this->Gpgkeys->isParsableArmoredPublicKey($armoredKey)) {
+        if (!PublicKeyValidationService::isParsableArmoredPublicKey($armoredKey)) {
             throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
         }
         try {
-            $gpgkey = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+            return $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
         } catch (CustomValidationException $e) {
             throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
         }
-
-        return $gpgkey;
     }
 }

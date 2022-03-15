@@ -25,7 +25,6 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable;
-use Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings
@@ -45,7 +44,7 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     public function __construct(ServerRequest $request)
     {
         parent::__construct($request);
-        $this->loadModel(AccountRecoveryUserSettingsTable::class);
+        $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
         $this->loadModel(AccountRecoveryPrivateKeysTable::class);
         $this->loadModel(AccountRecoveryPrivateKeyPasswordsTable::class);
     }
@@ -55,18 +54,62 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
      */
     public function complete(string $userId): User
     {
-        $userSetting = $this->validateAccountRecoveryUserSetting($userId);
-        if ($userSetting->isApproved()) {
-            $privateKey = $this->validateAccountRecoveryPrivateKey($userId);
-        }
-
         // TODO: add account recovery data to the user entity
 
         $user = parent::complete($userId);
 
-        $this->saveAccountRecoveryUserSetting($userSetting);
-        if (isset($privateKey)) {
-            $this->saveAccountRecoveryPrivateKey($privateKey);
+//        $this->saveAccountRecoveryUserSetting($userSetting);
+//        if (isset($privateKey)) {
+//            $this->saveAccountRecoveryPrivateKey($privateKey);
+//        }
+
+        return $user;
+    }
+
+    /**
+     * Decorates the user entity with account recovery related data
+     *
+     * @param string $userId User ID
+     * @return \App\Model\Entity\User
+     */
+    protected function buildUserEntity(string $userId): User
+    {
+        $user = parent::buildUserEntity($userId);
+
+        $userSetting = $this->validateAccountRecoveryUserSetting($userId);
+        $user->set('account_recovery_user_setting', $userSetting);
+
+        if ($userSetting->isApproved()) {
+            $user->set('account_recovery_private_key', $this->validateAccountRecoveryPrivateKey($userId));
+        }
+
+        return $user;
+    }
+
+    /**
+     * Adds post-save validation on account recovery related data, in case the saving failed.
+     *
+     * @param \App\Model\Entity\User $user User entity
+     * @return \App\Model\Entity\User
+     */
+    protected function saveUserEntity(User $user): User
+    {
+        $user = parent::saveUserEntity($user);
+
+        if ($user->get('account_recovery_user_setting')->hasErrors()) {
+            throw new ValidationException(
+                'Could not save the account recovery setting.',
+                $user->get('account_recovery_user_setting'),
+                $this->AccountRecoveryUserSettings
+            );
+        }
+
+        if ($user->has('account_recovery_private_key') && $user->get('account_recovery_private_key')->hasErrors()) {
+            throw new ValidationException(
+                'Could not save the account recovery private key.',
+                $user->get('account_recovery_private_key'),
+                $this->AccountRecoveryPrivateKeys
+            );
         }
 
         return $user;
@@ -108,8 +151,9 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
      */
     protected function validateAccountRecoveryPrivateKey(string $userId): AccountRecoveryPrivateKey
     {
-        $data = $this->request->getData('account_recovery_private_key.data');
-        $privateKeyPasswords = $this->request->getData('account_recovery_private_key_passwords');
+        $data = $this->request->getData('account_recovery_user_setting.account_recovery_private_key.data');
+        $privateKeyPasswords = $this->request
+            ->getData('account_recovery_user_setting.account_recovery_private_key_passwords');
         foreach ($privateKeyPasswords as $i => $pkp) {
             $privateKeyPasswords[$i]['created_by'] = $userId;
             $privateKeyPasswords[$i]['modified_by'] = $userId;
