@@ -344,7 +344,7 @@ class V360AddAccountRecoveryTables extends AbstractMigration
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci'
             ])
-            ->addColumn('recipient_foreign_model', 'string', [
+            ->addColumn('responder_foreign_model', 'string', [
                 'limit' => 128,
                 'null' => false,
             ])
