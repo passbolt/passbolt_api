@@ -25,6 +25,7 @@ use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
+use Passbolt\AccountRecovery\Plugin;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupCompleteService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyPasswordFactory;
@@ -34,6 +35,13 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
 {
     use GpgAdaSetupTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        (new Plugin())->addAssociations();
+    }
 
     /**
      * The user setting status should be valid
@@ -102,8 +110,8 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('authenticationtoken.token', $token->token)
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
-            ->withData('account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $this->serverKeyId,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $this->gpg->encrypt('Foo'),
@@ -111,6 +119,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
 
         (new AccountRecoverySetupCompleteService($request))->complete($user->id);
 
+        $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
         $this->assertSame(1, AccountRecoveryPrivateKeyFactory::count());
         $this->assertSame(1, AccountRecoveryPrivateKeyPasswordFactory::count());
         $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
