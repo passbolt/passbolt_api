@@ -25,7 +25,8 @@ interface SetupCompleteServiceInterface
      * Completes the setup for the provided user.
      *
      * @param string $userId User ID
+     * @param array|null $saveOptions options
      * @return \App\Model\Entity\User
      */
-    public function complete(string $userId): User;
+    public function complete(string $userId, ?array $saveOptions = []): User;
 }

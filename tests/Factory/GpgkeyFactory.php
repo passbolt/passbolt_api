@@ -85,8 +85,8 @@ class GpgkeyFactory extends CakephpBaseFactory
     public function withValidOpenPGPKey()
     {
         return $this->patchData([
-            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'sofia_public.key'),
-            'fingerprint' => '252B91CB28A96C6D67E8FC139020576F08D8B763',
+            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
+            'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
         ]);
     }
 }

@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Model\Table;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Gpgkey;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
@@ -241,8 +242,12 @@ class GpgkeysTable extends Table
         }
         try {
             $info = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
-        } catch (Exception $e) {
-            throw new ValidationException(__('Could not parse the key info.'));
+        } catch (\Exception $e) {
+            throw new CustomValidationException(__('A valid OpenPGP key must be provided.'), [
+                'armored_key' => [
+                    'isParsable' => __('The OpenPGP armored key could not be parsed.'),
+                ],
+            ]);
         }
 
         $data = [
@@ -257,12 +262,29 @@ class GpgkeysTable extends Table
             'key_created' => new FrozenTime($info['key_created']),
             'expires' => null,
         ];
+
         if (!empty($info['expires'])) {
             $data['expires'] = new FrozenTime($info['expires']);
         }
-        $gpgkey = $this->newEntity($data, ['accessibleFields' => ['*' => true]]);
 
-        return $gpgkey;
+        $gpgKey = $this->newEntity($data, ['accessibleFields' => [
+            'user_id' => true,
+            'fingerprint' => true,
+            'bits' => true,
+            'type' => true,
+            'key_id' => true,
+            'uid' => true,
+            'armored_key' => true,
+            'key_created' => true,
+            'deleted' => true,
+            'expires' => true,
+        ]]);
+
+        if ($gpgKey->getErrors()) {
+            throw new ValidationException(__('The OpenPGP armored key could not be parsed.'), $gpgKey, $this);
+        }
+
+        return $gpgKey;
     }
 
     /**

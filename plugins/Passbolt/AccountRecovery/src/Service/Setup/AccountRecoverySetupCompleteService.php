@@ -50,23 +50,6 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     }
 
     /**
-     * @inheritDoc
-     */
-    public function complete(string $userId): User
-    {
-        // TODO: add account recovery data to the user entity
-
-        $user = parent::complete($userId);
-
-//        $this->saveAccountRecoveryUserSetting($userSetting);
-//        if (isset($privateKey)) {
-//            $this->saveAccountRecoveryPrivateKey($privateKey);
-//        }
-
-        return $user;
-    }
-
-    /**
      * Decorates the user entity with account recovery related data
      *
      * @param string $userId User ID
@@ -90,11 +73,12 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
      * Adds post-save validation on account recovery related data, in case the saving failed.
      *
      * @param \App\Model\Entity\User $user User entity
+     * @param array|null $saveOptions options
      * @return \App\Model\Entity\User
      */
-    protected function saveUserEntity(User $user): User
+    protected function saveUserEntity(User $user, ?array $saveOptions = []): User
     {
-        $user = parent::saveUserEntity($user);
+        $user = parent::saveUserEntity($user, $saveOptions);
 
         if ($user->get('account_recovery_user_setting')->hasErrors()) {
             throw new ValidationException(
@@ -196,25 +180,5 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
         }
 
         return $privateKey;
-    }
-
-    /**
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting $userSetting User setting
-     * @return void
-     * @throws \Cake\ORM\Exception\PersistenceFailedException
-     */
-    protected function saveAccountRecoveryUserSetting(AccountRecoveryUserSetting $userSetting): void
-    {
-        $this->AccountRecoveryUserSettings->saveOrFail($userSetting);
-    }
-
-    /**
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey $privateKey Private key
-     * @return void
-     * @throws \Cake\ORM\Exception\PersistenceFailedException
-     */
-    protected function saveAccountRecoveryPrivateKey(AccountRecoveryPrivateKey $privateKey): void
-    {
-        $this->AccountRecoveryPrivateKeys->saveOrFail($privateKey);
     }
 }
