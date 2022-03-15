@@ -42,34 +42,59 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
      */
     public function complete(string $userId): User
     {
-        // TODO Improvement: build the user entity with associations and perform a unique save
-        // to handle the rollbacking in case of errors.
+        $user = $this->buildUserEntity($userId);
 
+        return $this->saveUserEntity($user);
+    }
+
+    /**
+     * Build the user entity to be saved.
+     * This method can be extended if additional associations are needed.
+     *
+     * @param string $userId User ID
+     * @return \App\Model\Entity\User
+     */
+    protected function buildUserEntity(string $userId): User
+    {
         // Check request sanity
         $user = $this->getAndAssertUser($userId);
         $token = $this->getAndAssertToken($userId, AuthenticationToken::TYPE_REGISTER);
         $gpgkey = $this->getAndAssertGpgkey($userId);
 
+        $user->active = true;
+        $token->active = false;
+        $user->authentication_tokens = [$token];
+        $user->gpgkey = $gpgkey;
+
         // Check business rules before saving
-        $this->Gpgkeys->checkRules($gpgkey);
+        $this->Gpgkeys->checkRules($user->gpgkey);
         if ($gpgkey->getErrors()) {
-            throw new ValidationException(__('The OpenPGP key data is not valid.'), $gpgkey, $this->Gpgkeys);
+            throw new ValidationException(__('The OpenPGP key data is not valid.'), $user->gpgkey, $this->Gpgkeys);
         }
 
-        // Deactivate the authentication token
-        $token->active = false;
-        if (!$this->AuthenticationTokens->save($token, ['checkRules' => false])) {
+        return $user;
+    }
+
+    /**
+     * Saves and performs some checks on the user and its association
+     *
+     * @param \App\Model\Entity\User $user User to save
+     * @return \App\Model\Entity\User
+     * @throws \Cake\Http\Exception\InternalErrorException
+     */
+    protected function saveUserEntity(User $user): User
+    {
+        $this->Users->save($user);
+
+        if ($user->authentication_tokens[0]->hasErrors()) {
             throw new InternalErrorException('Could not update the authentication token data.');
         }
 
-        // Save user GPG key, rules were already checked
-        if (!$this->Gpgkeys->save($gpgkey, ['checkRules' => false])) {
+        if ($user->gpgkey->hasErrors()) {
             throw new InternalErrorException('Could not save the OpenPGP key data.');
         }
 
-        // Update the user
-        $user->active = true;
-        if (!$this->Users->save($user, ['checkRules' => false])) {
+        if ($user->hasErrors()) {
             throw new InternalErrorException('Could not save the user data.');
         }
 

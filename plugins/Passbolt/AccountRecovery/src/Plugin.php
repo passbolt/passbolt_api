@@ -66,6 +66,8 @@ class Plugin extends BasePlugin
      */
     public function addAssociations(): void
     {
-        TableRegistry::getTableLocator()->get('Users')->hasOne('AccountRecoveryUserSettings');
+        $UsersTable = TableRegistry::getTableLocator()->get('Users');
+        $UsersTable->hasOne('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
+        $UsersTable->hasOne('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
     }
 }
