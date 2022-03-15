@@ -18,13 +18,19 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\Setup;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Service\Setup\SetupCompleteService;
+use App\Utility\UserAccessControl;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
+use Cake\Utility\Hash;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable;
+use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings
@@ -39,6 +45,16 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     public $AccountRecoveryUserSettings;
 
     /**
+     * @var AccountRecoveryOrganizationPolicy entity
+     */
+    public $policy;
+
+    /**
+     * @var array user provided data
+     */
+    public $data;
+
+    /**
      * @param \Cake\Http\ServerRequest $request Server request
      */
     public function __construct(ServerRequest $request)
@@ -47,17 +63,24 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
         $this->loadModel(AccountRecoveryPrivateKeysTable::class);
         $this->loadModel(AccountRecoveryPrivateKeyPasswordsTable::class);
+
+        $service = new AccountRecoveryOrganizationPolicyGetService();
+        $this->policy = $service->get();
     }
 
     /**
-     * Decorates the user entity with account recovery related data
+     * Setup completion
+     * Save the user gpg public key and set the account to active
      *
-     * @param string $userId User ID
+     * @throws \Cake\Http\Exception\BadRequestException invalid request
+     * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
+     * @param string $userId uuid of the user
+     * @param array|null $saveOptions options
      * @return \App\Model\Entity\User
      */
-    protected function buildUserEntity(string $userId): User
+    public function complete(string $userId, ?array $saveOptions = []): User
     {
-        $user = parent::buildUserEntity($userId);
+        $user = $this->buildUserEntity($userId);
 
         $userSetting = $this->validateAccountRecoveryUserSetting($userId);
         $user->set('account_recovery_user_setting', $userSetting);
@@ -66,7 +89,57 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
             $user->set('account_recovery_private_key', $this->validateAccountRecoveryPrivateKey($userId));
         }
 
-        return $user;
+        return $this->saveUserEntity($user, $saveOptions);
+    }
+
+    /**
+     * Assert that there is not too much or not enough data
+     * Mandatory: both private key and password must be provided
+     * Disabled: none of them must be provided
+     *
+     * @throws BadRequestException if data is missing or too much data is sent
+     */
+    protected function assertRequestSanity(): void
+    {
+        if ($this->policy->policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
+            if (!$this->isPrivateKeyProvided() || $this->arePasswordsProvided()) {
+                throw new BadRequestException(__('Account recovery is disabled. Too much data.'));
+            }
+        } elseif ($this->policy->policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY) {
+            if (!($this->isPrivateKeyProvided() && $this->arePasswordsProvided())) {
+                throw new BadRequestException(__('Account recovery is mandatory. Please provide the mandatory data.'));
+            }
+        }
+    }
+
+    /**
+     * @return bool true if the account_recovery_organization_public_key data is set
+     */
+    protected function isAccountRecoveryUserSettingProvided(): bool
+    {
+        $publicKey = $this->request->getData('account_recovery_user_setting');
+
+        return isset($publicKey) && is_array($publicKey);
+    }
+
+    /**
+     * @return bool true if the account_recovery_organization_public_key data is set
+     */
+    protected function isPrivateKeyProvided(): bool
+    {
+        $publicKey = $this->request->getData('account_recovery_user_setting.account_recovery_private_key');
+
+        return isset($publicKey) && is_array($publicKey);
+    }
+
+    /**
+     * @return bool true if the account_recovery_organization_public_key data is set
+     */
+    protected function arePasswordsProvided(): bool
+    {
+        $publicKey = $this->request->getData('account_recovery_user_setting.account_recovery_private_key_passwords');
+
+        return isset($publicKey) && is_array($publicKey);
     }
 
     /**
@@ -135,50 +208,19 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
      */
     protected function validateAccountRecoveryPrivateKey(string $userId): AccountRecoveryPrivateKey
     {
-        $data = $this->request->getData('account_recovery_user_setting.account_recovery_private_key.data');
+        $data = $this->request
+            ->getData('account_recovery_user_setting.account_recovery_private_key');
         $privateKeyPasswords = $this->request
             ->getData('account_recovery_user_setting.account_recovery_private_key_passwords');
-        foreach ($privateKeyPasswords as $i => $pkp) {
-            $privateKeyPasswords[$i]['created_by'] = $userId;
-            $privateKeyPasswords[$i]['modified_by'] = $userId;
+
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $privateKeyEntity = $this->AccountRecoveryPrivateKeys->buildAndValidateEntity($uac, $data, $privateKeyPasswords);
+
+        if (!$this->AccountRecoveryPrivateKeys->checkRules($privateKeyEntity)) {
+            $msg = __('Could not validate public key data.');
+            throw new ValidationException($msg, $privateKeyEntity, $this->AccountRecoveryPrivateKeys);
         }
 
-        $privateKey = $this->AccountRecoveryPrivateKeys->newEntity([
-            'user_id' => $userId,
-            'data' => $data,
-            'account_recovery_private_key_passwords' => $privateKeyPasswords,
-            'created_by' => $userId,
-            'modified_by' => $userId,
-        ], [
-            'accessibleFields' => [
-                'user_id' => true,
-                'data' => true,
-                'account_recovery_private_key_passwords' => true,
-                'created_by' => true,
-                'modified_by' => true,
-            ],
-            'associated' => [
-                'AccountRecoveryPrivateKeyPasswords' => [
-                    'accessibleFields' => [
-                        'recipient_fingerprint' => true,
-                        'recipient_foreign_model' => true,
-                        'private_key_id' => true,
-                        'data' => true,
-                        'created_by' => true,
-                        'modified_by' => true,
-                    ],
-                ],
-            ],
-        ]);
-
-        if ($privateKey->hasErrors()) {
-            throw new ValidationException(
-                __('The account recovery private key is not valid.'),
-                $privateKey,
-                $this->AccountRecoveryPrivateKeys
-            );
-        }
-
-        return $privateKey;
+        return $privateKeyEntity;
     }
 }

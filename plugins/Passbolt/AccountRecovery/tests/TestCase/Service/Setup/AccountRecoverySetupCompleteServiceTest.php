@@ -134,12 +134,43 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         $this->assertEquals($user->id, $q->modified_by);
     }
 
-    public function testAccountRecoverySetupCompleteService_Errors_Left_To_Implement()
+    public function testAccountRecoverySetupCompleteService_Errors_OrgPolicyDisabled()
     {
         $this->markTestIncomplete('Key is sent but account recovery is not setup (unlikely but still)');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_MandatoryKeyMissing()
+    {
         $this->markTestIncomplete('key is not sent but account recovery is mandatory');
-        $this->markTestIncomplete('key backup is sent but is invalid');
-        $this->markTestIncomplete('key backup is sent but is not encrypted for ORK');
-        $this->markTestIncomplete('key backup is sent but is not encrypted for all recovery contacts');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_PassswordMissing()
+    {
+        $this->markTestIncomplete('key is not sent but password is missing');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPassword_NotOpenPGP()
+    {
+        $this->markTestIncomplete('Not openpgp message');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPassword_NotAsymmetricBlock()
+    {
+        $this->markTestIncomplete('Not openpgp symmetric message');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_NotOpenPGP()
+    {
+        $this->markTestIncomplete('Not openpgp message');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_NotAsymetricMessage()
+    {
+        $this->markTestIncomplete('Not openpgpg asymmetric message');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_WrongRecipient()
+    {
+        $this->markTestIncomplete('Recipient is not ORK');
     }
 }
