@@ -36,7 +36,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteSuccess()
+    public function testSetupComplete_Success()
     {
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         Configure::write('passbolt.plugins.log.enabled', true);
@@ -63,6 +63,17 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->postJson($url, $data);
         $this->assertSuccess();
 
+        // Check key is saved
+        $key = TableRegistry::getTableLocator()->get('Gpgkeys')
+            ->find()->select()->where(['user_id' => $user->id])->first();
+        $this->assertEquals($armoredKey, $key->armored_key);
+        $this->assertEquals('7A795A51A4ABEC4A79AA64BBD5A3CA6EFA858DEE', $key->fingerprint);
+
+        // Check auth token is disabled
+        $token = TableRegistry::getTableLocator()->get('AuthenticationTokens')
+            ->find()->select()->where(['token' => $t->token])->first();
+        $this->assertEquals(false, $token->active);
+
         // Check that the locale in the payload was stored in the user's settings.
         $userLocale = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings')
             ->getFirstPropertyOrFail($user->id, LocaleService::SETTING_PROPERTY)
@@ -87,7 +98,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteEccSuccess()
+    public function testSetupComplete_SuccessEcc()
     {
         $t = AuthenticationTokenFactory::make()
             ->active()
@@ -125,7 +136,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteErrorWithKeyBelongingToDeletedUser()
+    public function testSetupComplete_ErrorWithExpiredKey()
     {
         // Complete setup with sofia's key (deleted user)
         $t = AuthenticationTokenFactory::make()
@@ -133,11 +144,42 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             ->type(AuthenticationToken::TYPE_REGISTER)
             ->with('Users', UserFactory::make()->inactive())
             ->persist();
+
+        $url = '/setup/complete/' . $t->user->id . '.json';
+        $data = [
+            'authenticationtoken' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_expired_public.key'),
+            ],
+        ];
+        $this->postJson($url, $data);
+        $this->assertError();
+        $this->assertNotEmpty($this->_responseJsonBody);
+        $this->assertStringContainsString('expired', $this->_getBodyAsString());
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
+    public function testSetupComplete_ErrorWithKeyBelongingToDeletedUser()
+    {
+        // Complete setup with sofia's key (deleted user)
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+
         $user = $t->user;
         $deletedUser = UserFactory::make()
             ->deleted()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey()->expired())
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
             ->persist();
+
         $url = '/setup/complete/' . $user->id . '.json';
         $armoredKey = $deletedUser->gpgkey->armored_key;
         $data = [
@@ -152,7 +194,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertError();
         $this->assertNotEmpty($this->_responseJsonBody);
         $this->assertStringContainsString('_isUnique', $this->_getBodyAsString());
-        $this->assertStringContainsString('expires', $this->_getBodyAsString());
     }
 
     /**
@@ -160,7 +201,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteInvalidUserIdError()
+    public function testSetupComplete_InvalidUserIdError()
     {
         $url = '/setup/complete/nope.json';
         $data = [];
@@ -173,7 +214,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteInvalidUserTokenError()
+    public function testSetupComplete_InvalidUserTokenError()
     {
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.nope') . '.json';
         $data = [];
@@ -186,7 +227,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteInvalidAuthenticationTokenError()
+    public function testSetupComplete_InvalidAuthenticationTokenError()
     {
         $user = UserFactory::make()->inactive()->persist();
         $url = '/setup/complete/' . $user->id . '.json?api-version=v2';
@@ -247,7 +288,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteInvalidGpgkeyError()
+    public function testSetupComplete_InvalidGpgkeyError()
     {
         $t = AuthenticationTokenFactory::make()
             ->active()
@@ -287,14 +328,14 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-            'authenticationtoken' => [
-                'token' => $t->token,
-            ],
-            'gpgkey' => $case['data'],
+                'authenticationtoken' => [
+                    'token' => $t->token,
+                ],
+                'gpgkey' => $case['data'],
             ];
+            $this->postJson($url, $data);
+            $this->assertError(400, $case['message'], 'Issue with case: ' . $caseName);
         }
-        $this->postJson($url, $data);
-        $this->assertError(400, $case['message'], 'Issue with case: ' . $caseName);
     }
 
     /**
@@ -302,7 +343,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteDeletedUserError()
+    public function testSetupComplete_DeletedUserError()
     {
         $user = UserFactory::make()->active()->deleted()->persist();
         $url = '/setup/complete/' . $user->id . '.json';
@@ -315,7 +356,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupCompleteAlreadyActiveUserError()
+    public function testSetupComplete_AlreadyActiveUserError()
     {
         $user = UserFactory::make()->active()->persist();
         $url = '/setup/complete/' . $user->id . '.json';

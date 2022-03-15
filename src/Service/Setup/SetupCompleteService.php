@@ -20,6 +20,7 @@ namespace App\Service\Setup;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
@@ -38,13 +39,14 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
      * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key is not provided or not a valid OpenPGP key
      * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
      * @param string $userId uuid of the user
+     * @param array|null $saveOptions options
      * @return \App\Model\Entity\User
      */
-    public function complete(string $userId): User
+    public function complete(string $userId, ?array $saveOptions = []): User
     {
         $user = $this->buildUserEntity($userId);
 
-        return $this->saveUserEntity($user);
+        return $this->saveUserEntity($user, $saveOptions);
     }
 
     /**
@@ -61,16 +63,22 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
         $token = $this->getAndAssertToken($userId, AuthenticationToken::TYPE_REGISTER);
         $gpgkey = $this->getAndAssertGpgkey($userId);
 
+        // New with 3.6 - Check armored key content
+        // The key must not be expired or revoked, or have multiple key blocks, etc.
+        // TODO w4.0 - Move to getAndAssertGpgkey
+        //  Will break compat on recover for non compliant keys
+        PublicKeyValidationService::parseAndValidatePublicKey($gpgkey->armored_key);
+
+        // Check business rules before saving
+        $this->Gpgkeys->checkRules($gpgkey);
+        if ($gpgkey->getErrors()) {
+            throw new ValidationException(__('The OpenPGP key data is not valid.'), $gpgkey, $this->Gpgkeys);
+        }
+
         $user->active = true;
         $token->active = false;
         $user->authentication_tokens = [$token];
         $user->gpgkey = $gpgkey;
-
-        // Check business rules before saving
-        $this->Gpgkeys->checkRules($user->gpgkey);
-        if ($gpgkey->getErrors()) {
-            throw new ValidationException(__('The OpenPGP key data is not valid.'), $user->gpgkey, $this->Gpgkeys);
-        }
 
         return $user;
     }
@@ -79,12 +87,13 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
      * Saves and performs some checks on the user and its association
      *
      * @param \App\Model\Entity\User $user User to save
+     * @param array|null $saveOptions options
      * @return \App\Model\Entity\User
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    protected function saveUserEntity(User $user): User
+    protected function saveUserEntity(User $user, ?array $saveOptions = []): User
     {
-        $this->Users->save($user);
+        $this->Users->save($user, $saveOptions);
 
         if ($user->authentication_tokens[0]->hasErrors()) {
             throw new InternalErrorException('Could not update the authentication token data.');

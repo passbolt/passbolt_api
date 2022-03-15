@@ -129,12 +129,10 @@ class PublicKeyValidationService
 
         // Parsing check is mandatory and always done first
         // We don't even try the other rules if this one fails
-        try {
-            self::isParsableArmoredPublicKey($armoredKey);
-        } catch (\Exception $exception) {
-            throw new CustomValidationException(__('The public key could not be parsed.'), [
+        if (!self::isParsableArmoredPublicKey($armoredKey)) {
+            throw new CustomValidationException(__('A valid OpenPGP key must be provided..'), [
                 'armored_key' => [
-                    self::IS_PARSABLE_ARMORED_KEY_RULE => $exception->getMessage(),
+                    self::IS_PARSABLE_ARMORED_KEY_RULE => __('The public key could not be parsed.'),
                 ],
             ]);
         }
