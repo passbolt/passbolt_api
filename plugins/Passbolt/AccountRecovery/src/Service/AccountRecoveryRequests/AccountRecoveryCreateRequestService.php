@@ -75,6 +75,7 @@ class AccountRecoveryCreateRequestService
 
         try {
             $this->AccountRecoveryRequests->saveOrFail($request);
+            // TODO deactivate existing token
         } catch (PersistenceFailedException $e) {
             throw new BadRequestException($e->getMessage());
         }

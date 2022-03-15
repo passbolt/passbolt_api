@@ -32,8 +32,7 @@ class AccountRecoveryRecoverStartService extends RecoverStartService
         if ($userSetting) {
             $data['account_recovery_user_setting']['status'] = $userSetting->status;
         }
-        // TODO: Add account_recovery_organization_policy
-
+        // TODO PB-13714: Add account_recovery_organization_policy
         return $data;
     }
 }

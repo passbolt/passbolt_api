@@ -212,6 +212,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
                 // Cancel pending or non completed requests
                 // TODO move to service to make sure notifications to users are sent
                 $this->AccountRecoveryRequests->rejectAllNonCompleted($uac);
+                // TODO delete all non completed response data
             }
         );
 

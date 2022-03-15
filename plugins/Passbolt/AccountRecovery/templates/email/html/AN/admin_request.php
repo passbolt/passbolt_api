@@ -26,13 +26,14 @@ echo $this->element('Email/module/avatar',[
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $admin,
         'datetime' => $created,
-        'text' => __('{0} has initiated a recovery request', Purifier::clean($user['profile']['first_name']))
+        'text' => __('{0} has initiated an account recovery request', Purifier::clean($user['profile']['first_name']))
     ])
 ]);
 
 $text = '<h3>' . __('Recovery request') . '</h3><br/>';
 $text .= __('{0} has initiated an account recovery request', Purifier::clean($user['profile']['first_name']));
-$text .= ' ' . __('Since you are part of the recovery contacts, you are requested to help them.');
+$text .= ' ' . __('Since you are an administrator, you are requested to help them.');
+$text .= ' ' . __('You will need your organization recovery key to continue.');
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);

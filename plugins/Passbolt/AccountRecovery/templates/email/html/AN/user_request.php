@@ -31,6 +31,8 @@ echo $this->element('Email/module/avatar',[
 
 $text = '<h3>' . __('Recovery Request') . '</h3><br/>';
 $text .= __('You just requested an account recovery.');
+$text .= __('Your administrator have been informed and will follow up with you.');
+$text .= __('If you did not make this request please inform your administrator.');
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
