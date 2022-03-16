@@ -216,9 +216,10 @@ class AbstractAccountRecoveryOrganizationPolicySetService
         try {
             $data = $this->getData('account_recovery_organization_public_key');
             $entity = $this->AccountRecoveryOrganizationPublicKeys->buildAndValidateEntity($uac, $data);
-            $rules = PublicKeyValidationService::getStrictRules();
-            $keyInfo = PublicKeyValidationService::parseAndValidatePublicKey($entity->armored_key, $rules);
-            $this->assertSameFingerprint($keyInfo['fingerprint'], $entity->fingerprint);
+            PublicKeyValidationService::parseAndValidatePublicKey(
+                $entity->armored_key,
+                PublicKeyValidationService::getStrictRules()
+            );
             $this->assertPublicKeyModelRules($entity);
         } catch (ValidationException | CustomValidationException $exception) {
             throw new CustomValidationException(__('Could not validate policy data.'), [
@@ -252,11 +253,10 @@ class AbstractAccountRecoveryOrganizationPolicySetService
             $data = $this->getData('account_recovery_organization_revoked_key');
             $entity = $this->AccountRecoveryOrganizationPublicKeys->buildAndValidateEntity($uac, $data);
             $oldEntity = $this->findActiveKeyByFingerprintOrFail($entity->fingerprint);
-            $keyInfo = PublicKeyValidationService::parseAndValidatePublicKey(
+            PublicKeyValidationService::parseAndValidatePublicKey(
                 $entity->armored_key,
                 PublicKeyValidationService::getRevokedKeyRules()
             );
-            $this->assertSameFingerprint($keyInfo['fingerprint'], $entity->fingerprint);
         } catch (ValidationException | CustomValidationException $exception) {
             throw new CustomValidationException(__('Could not validate key revocation.'), [
                 'account_recovery_organization_revoked_key' => $exception->getErrors(),
@@ -295,25 +295,6 @@ class AbstractAccountRecoveryOrganizationPolicySetService
         $table = $this->AccountRecoveryOrganizationPublicKeys;
         if (!$table->checkRules($publicKey) && $publicKey->getErrors()) {
             throw new ValidationException(__('Could not validate public key data.'), $publicKey, $table);
-        }
-    }
-
-    /**
-     * Assert that the provided fingerprint in data is matching the one in the key info
-     *
-     * @param string $f1 fingerprint
-     * @param string $f2 fingerprint
-     * @throws \App\Error\Exception\CustomValidationException if the fingerprint don't match
-     * @return void
-     */
-    private function assertSameFingerprint(string $f1, string $f2): void
-    {
-        if ($f1 !== $f2) {
-            throw new CustomValidationException(__('Could not validate policy data.'), [
-                'fingerprint' => [
-                    'isMatchingKeyFingerprintRule' => __('The fingerprint does not match the one of the armored key.'),
-                ],
-            ]);
         }
     }
 

@@ -25,7 +25,7 @@ class IsValidGpgkeyTypeValidationRule extends PassboltValidationRule
     /**
      * @inheritDoc
      */
-    public function getErrorMessage($value, $context): string
+    public function defaultErrorMessage($value, $context): string
     {
         return __('The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.');
     }

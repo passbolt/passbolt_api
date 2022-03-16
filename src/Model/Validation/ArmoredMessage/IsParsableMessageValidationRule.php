@@ -25,7 +25,7 @@ class IsParsableMessageValidationRule extends PassboltValidationRule
     /**
      * @inheritDoc
      */
-    public function getErrorMessage($value, $context): string
+    public function defaultErrorMessage($value, $context): string
     {
         return __('The message should be a valid ASCII-armored OpenPGP message.');
     }

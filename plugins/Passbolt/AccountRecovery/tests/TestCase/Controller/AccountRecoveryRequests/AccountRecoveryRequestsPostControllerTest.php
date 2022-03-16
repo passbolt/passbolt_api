@@ -24,6 +24,7 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\AccountRecovery\Controller\AccountRecoveryRequests\AccountRecoveryRequestsPostController;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
 class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrationTestCase
@@ -44,6 +45,7 @@ class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrati
         $user = UserFactory::make()->user()->withAvatar()->persist();
         $nAdmins = 3;
         $admins = UserFactory::make($nAdmins)->admin()->persist();
+        $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
 
         $token = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_RECOVER)
@@ -56,8 +58,8 @@ class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrati
                 'token' => $token->token,
             ],
             'user_id' => $user->id,
-            'fingerprint' => 'EB85BB5FA33A75E15E944E63F231550C4F47E38E',
-            'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
+            'fingerprint' => $data->fingerprint,
+            'armored_key' => $data->armored_key,
         ];
 
         $this->postJson('/account-recovery/requests.json', $payload);

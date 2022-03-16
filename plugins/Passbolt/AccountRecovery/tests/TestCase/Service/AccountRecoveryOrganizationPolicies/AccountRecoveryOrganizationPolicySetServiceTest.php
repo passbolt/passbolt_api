@@ -292,13 +292,14 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => '2D7CF2B7FD9643DEBF63633CF',
-                    'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----',
+                    'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
                 ],
             ]);
             $this->fail();
         } catch (CustomValidationException $exception) {
             $e = $exception->getErrors();
-            $this->assertNotEmpty($e['account_recovery_organization_public_key']['fingerprint']['invalidFingerprint']);
+            $this->assertSame('The fingerprint should be a string of 40 hexadecimal characters.', $e['account_recovery_organization_public_key']['fingerprint']['invalidFingerprint']);
+            $this->assertSame('The fingerprint does not match the one of the armored key.', $e['account_recovery_organization_public_key']['fingerprint']['isMatchingKeyFingerprintRule']);
         }
     }
 
@@ -329,7 +330,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             $this->fail();
         } catch (CustomValidationException $exception) {
             $e = $exception->getErrors();
-            $this->assertNotEmpty($e['account_recovery_organization_public_key']['armored_key']['invalidArmoredKey']);
+            $this->assertSame('Invalid key. No user ID found.', $e['account_recovery_organization_public_key']['fingerprint']['isMatchingKeyFingerprintRule']);
         }
     }
 

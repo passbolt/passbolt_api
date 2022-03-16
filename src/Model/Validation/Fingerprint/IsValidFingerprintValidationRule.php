@@ -25,7 +25,7 @@ class IsValidFingerprintValidationRule extends PassboltValidationRule
     /**
      * @inheritDoc
      */
-    public function getErrorMessage($value, $context): string
+    public function defaultErrorMessage($value, $context): string
     {
         return __('The fingerprint should be a string of 40 hexadecimal characters.');
     }

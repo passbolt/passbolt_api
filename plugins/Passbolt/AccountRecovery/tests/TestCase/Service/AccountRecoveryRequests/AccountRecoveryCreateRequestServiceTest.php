@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Service\AccountRecoveryRequests;
 
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
@@ -55,6 +56,7 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
     public function testAccountRecoveryRequestsService_Successful()
     {
         $token = $this->authenticationTokenFactory->persist();
+        $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
         $user = $token->user;
 
         // Add random recovery requests for this user
@@ -63,8 +65,8 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
         $serverRequest = (new ServerRequest())
             ->withData('user_id', $user->id)
             ->withData('authentication_token.token', $token->token)
-            ->withData('fingerprint', 'EB85BB5FA33A75E15E944E63F231550C4F47E38E')
-            ->withData('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'));
+            ->withData('fingerprint', $data->fingerprint)
+            ->withData('armored_key', $data->armored_key);
 
         $result = (new AccountRecoveryCreateRequestService($serverRequest))->create();
         $this->assertInstanceOf(AccountRecoveryRequest::class, $result);
@@ -73,10 +75,40 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
         // Assert that all the other requests are deactivated
         $this->assertSame(1, AccountRecoveryRequestFactory::count());
         $this->assertSame($token->id, AccountRecoveryRequestFactory::find()->first()->get('authentication_token_id'));
+
+        $this->assertTokenIsUniqueAndInactive($token->id);
+    }
+
+    /**
+     * The user UUID should be set
+     * If not, the token should remain active
+     */
+    public function testAccountRecoveryRequestsService_UnsetUserID()
+    {
+        $token = $this->authenticationTokenFactory->persist();
+
+        $serverRequest = (new ServerRequest());
+
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'The user identifier should be a valid UUID.');
+    }
+
+    /**
+     * The user UUID should be valid
+     * If not, the token should remain active
+     */
+    public function testAccountRecoveryRequestsService_InvalidUserID()
+    {
+        $token = $this->authenticationTokenFactory->persist();
+
+        $serverRequest = (new ServerRequest())
+            ->withData('user_id', 'aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
+
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'The user identifier should be a valid UUID.');
     }
 
     /**
      * The user should be activated
+     * If not, the token gets deactivated
      */
     public function testAccountRecoveryRequestsService_InactiveUser()
     {
@@ -84,16 +116,15 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
             ->with('Users', UserFactory::make()->user()->inactive())
             ->persist();
         $user = $token->user;
+        $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
 
         $serverRequest = (new ServerRequest())
             ->withData('user_id', $user->id)
             ->withData('authentication_token.token', $token->token)
-            ->withData('fingerprint', 'EB85BB5FA33A75E15E944E63F231550C4F47E38E')
-            ->withData('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'));
+            ->withData('fingerprint', $data->fingerprint)
+            ->withData('armored_key', $data->armored_key);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The user does not exist or is not active or has been deleted.');
-        (new AccountRecoveryCreateRequestService($serverRequest))->create();
+        $this->assertExceptionThrownAndTokenInactive($serverRequest, $token->id, 'The user does not exist or is not active or has been deleted.');
     }
 
     /**
@@ -105,16 +136,15 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
             ->with('Users', UserFactory::make()->user()->deleted())
             ->persist();
         $user = $token->user;
+        $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
 
         $serverRequest = (new ServerRequest())
             ->withData('user_id', $user->id)
             ->withData('authentication_token.token', $token->token)
-            ->withData('fingerprint', 'EB85BB5FA33A75E15E944E63F231550C4F47E38E')
-            ->withData('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'));
+            ->withData('fingerprint', $data->fingerprint)
+            ->withData('armored_key', $data->armored_key);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The user does not exist or is not active or has been deleted.');
-        (new AccountRecoveryCreateRequestService($serverRequest))->create();
+        $this->assertExceptionThrownAndTokenInactive($serverRequest, $token->id, 'The user does not exist or is not active or has been deleted.');
     }
 
     /**
@@ -126,16 +156,15 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
             ->with('Users', UserFactory::make()->user()->active())
             ->persist();
         $user = UserFactory::make()->persist();
+        $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
 
         $serverRequest = (new ServerRequest())
             ->withData('user_id', $user->id)
             ->withData('authentication_token.token', $token->token)
-            ->withData('fingerprint', 'EB85BB5FA33A75E15E944E63F231550C4F47E38E')
-            ->withData('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'));
+            ->withData('fingerprint', $data->fingerprint)
+            ->withData('armored_key', $data->armored_key);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The authentication token is not valid or has expired.');
-        (new AccountRecoveryCreateRequestService($serverRequest))->create();
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'The authentication token is not valid or has expired.');
     }
 
     /**
@@ -145,16 +174,15 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
     {
         $token = $this->authenticationTokenFactory->inactive()->persist();
         $user = $token->user;
+        $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
 
         $serverRequest = (new ServerRequest())
             ->withData('user_id', $user->id)
             ->withData('authentication_token.token', $token->token)
-            ->withData('fingerprint', 'EB85BB5FA33A75E15E944E63F231550C4F47E38E')
-            ->withData('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'));
+            ->withData('fingerprint', $data->fingerprint)
+            ->withData('armored_key', $data->armored_key);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The authentication token is not valid or has expired.');
-        (new AccountRecoveryCreateRequestService($serverRequest))->create();
+        $this->assertExceptionThrownAndTokenInactive($serverRequest, $token->id, 'The authentication token is not valid or has expired.');
     }
 
     public function testAccountRecoveryRequestsService_InvalidArmorKey()
@@ -170,9 +198,7 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
             ->withData('fingerprint', '2D7CF2B7FD9643DEBF63633CFC7F5D048541513F')
             ->withData('armored_key', 'Foo');
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The armored key should be a valid ASCII-armored OpenPGP key.');
-        (new AccountRecoveryCreateRequestService($serverRequest))->create();
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'A valid OpenPGP key must be provided.');
     }
 
     public function testAccountRecoveryRequestsService_InvalidFingerPrint()
@@ -181,15 +207,168 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
             ->with('Users', UserFactory::make()->user()->active())
             ->persist();
         $user = $token->user;
+        $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
 
         $serverRequest = (new ServerRequest())
             ->withData('user_id', $user->id)
             ->withData('authentication_token.token', $token->token)
             ->withData('fingerprint', 'Foo')
-            ->withData('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'));
+            ->withData('armored_key', $data->armored_key);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The fingerprint should be a string of 40 hexadecimal characters.');
-        (new AccountRecoveryCreateRequestService($serverRequest))->create();
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'The fingerprint should be a string of 40 hexadecimal characters.');
+    }
+
+    public function testAccountRecoveryRequestsService_FingerPrintIsUsedByAnotherUser()
+    {
+        $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
+        $fingerprint = $data->fingerprint;
+        UserFactory::make()->with('Gpgkeys', compact('fingerprint'))->persist();
+
+        $token = $this->authenticationTokenFactory
+            ->with('Users', UserFactory::make()->user()->active())
+            ->persist();
+        $user = $token->user;
+
+        $serverRequest = (new ServerRequest())
+            ->withData('user_id', $user->id)
+            ->withData('authentication_token.token', $token->token)
+            ->withData('fingerprint', $fingerprint)
+            ->withData('armored_key', $data->armored_key);
+
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'You cannot reuse the user keys.');
+    }
+
+    /**
+     * Armored key is revoked
+     */
+    public function testAccountRecoveryRequestsService_ArmoredKeyIsRevoked()
+    {
+        $token = $this->authenticationTokenFactory->persist();
+        $user = $token->user;
+        $data = AccountRecoveryRequestFactory::make()->revokedKey()->getEntity();
+
+        $serverRequest = (new ServerRequest())
+            ->withData('user_id', $user->id)
+            ->withData('authentication_token.token', $token->token)
+            ->withData('fingerprint', $data->fingerprint)
+            ->withData('armored_key', $data->armored_key);
+
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'The public key could not be validated.');
+    }
+
+    /**
+     * Armored key is expired
+     */
+    public function testAccountRecoveryRequestsService_ArmoredKeyIsExpired()
+    {
+        $token = $this->authenticationTokenFactory->persist();
+        $user = $token->user;
+        $data = AccountRecoveryRequestFactory::make()->expiredKey()->getEntity();
+
+        $serverRequest = (new ServerRequest())
+            ->withData('user_id', $user->id)
+            ->withData('authentication_token.token', $token->token)
+            ->withData('fingerprint', $data->fingerprint)
+            ->withData('armored_key', $data->armored_key);
+
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'The public key could not be validated.');
+    }
+
+    /**
+     * @Given the fingerprint of the armored key does not match the fingerkey provided
+     * @When creating the request
+     * @Then an error should be triggered
+     */
+    public function testAccountRecoveryRequestsService_ArmoredKeyFingerprintMismatch()
+    {
+        $token = $this->authenticationTokenFactory->persist();
+        $user = $token->user;
+        $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
+
+        $serverRequest = (new ServerRequest())
+            ->withData('user_id', $user->id)
+            ->withData('authentication_token.token', $token->token)
+            ->withData('fingerprint', 'EB85BB5FA33A75E15E944E63F231550C4F47E38F')
+            ->withData('armored_key', $data->armored_key);
+
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'The fingerprint does not match the one of the armored key.');
+    }
+
+    /**
+     * @Given the armored key is not strong enough
+     * @When creating the request
+     * @Then an error should be triggered
+     */
+    public function testAccountRecoveryRequestsService_ArmoredKeyNotStrongEnough()
+    {
+        $token = $this->authenticationTokenFactory->persist();
+        $user = $token->user;
+        $data = AccountRecoveryRequestFactory::make()->rsa2048Key()->getEntity();
+
+        $serverRequest = (new ServerRequest())
+            ->withData('user_id', $user->id)
+            ->withData('authentication_token.token', $token->token)
+            ->withData('fingerprint', $data->fingerprint)
+            ->withData('armored_key', $data->armored_key);
+
+        $this->assertExceptionThrownAndTokenActive($serverRequest, $token->id, 'The public key could not be validated.');
+    }
+
+    ############ Helping methods #####################
+
+    /**
+     * Asserts that a token is inactive, and that no other tokens were created
+     *
+     * @param string $tokenId Token ID
+     * @return void
+     */
+    protected function assertTokenIsUniqueAndInactive(string $tokenId): void
+    {
+        $this->assertFalse(AuthenticationTokenFactory::get($tokenId)->isActive());
+        $this->assertSame(1, AuthenticationTokenFactory::count());
+    }
+
+    /**
+     * Asserts that a token is active, and that no other tokens were created
+     *
+     * @param string $tokenId Token ID
+     * @return void
+     */
+    protected function assertTokenIsUniqueAndActive(string $tokenId): void
+    {
+        $this->assertTrue(AuthenticationTokenFactory::get($tokenId)->isActive());
+        $this->assertSame(1, AuthenticationTokenFactory::count());
+    }
+
+    protected function assertExceptionThrownAndTokenActive(ServerRequest $request, string $tokenId, string $errorMessage): void
+    {
+        $this->expectExceptionMessage($errorMessage);
+        try {
+            (new AccountRecoveryCreateRequestService($request))->create();
+            $this->fail();
+        } catch (CustomValidationException | BadRequestException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            $this->fail();
+        } finally {
+            $this->assertTokenIsUniqueAndActive($tokenId);
+            $this->assertSame(0, AccountRecoveryRequestFactory::count());
+        }
+    }
+
+    protected function assertExceptionThrownAndTokenInactive(ServerRequest $request, string $tokenId, string $errorMessage): void
+    {
+        $this->expectExceptionMessage($errorMessage);
+        try {
+            (new AccountRecoveryCreateRequestService($request))->create();
+            $this->fail();
+        } catch (CustomValidationException | BadRequestException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            $this->fail();
+        } finally {
+            $this->assertTokenIsUniqueAndInactive($tokenId);
+            $this->assertSame(0, AccountRecoveryRequestFactory::count());
+        }
     }
 }

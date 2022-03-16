@@ -25,7 +25,7 @@ class IsParsableArmoredKeyValidationRule extends PassboltValidationRule
     /**
      * @inheritDoc
      */
-    public function getErrorMessage($value, $context): string
+    public function defaultErrorMessage($value, $context): string
     {
         return __('The armored key should be a valid ASCII-armored OpenPGP key.');
     }

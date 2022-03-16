@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Test\Factory;
 
+use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
@@ -32,6 +33,8 @@ use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
  */
 class AccountRecoveryRequestFactory extends CakephpBaseFactory
 {
+    use ArmoredKeyFactoryTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *

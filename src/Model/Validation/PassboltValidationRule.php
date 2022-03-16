@@ -37,7 +37,18 @@ abstract class PassboltValidationRule extends ValidationRule
      * @param mixed $context Context
      * @return string
      */
-    abstract public function getErrorMessage($value, $context): string;
+    abstract public function defaultErrorMessage($value, $context): string;
+
+    /**
+     * Set the error message
+     *
+     * @param string $msg Message to be displayed
+     * @return void
+     */
+    public function setErrorMessage(string $msg): void
+    {
+        $this->_message = $msg;
+    }
 
     /**
      * Construct
@@ -46,10 +57,11 @@ abstract class PassboltValidationRule extends ValidationRule
      */
     public function __construct(array $validator = [])
     {
-        $validator['rule'] = function ($value, $context) use ($validator) {
-            $msg = $validator['message'] ?? $this->getErrorMessage($value, $context);
+        $validator['rule'] = function ($value, $context) {
+            $result = $this->rule($value, $context);
+            $msg = $this->_message ?? $this->defaultErrorMessage($value, $context);
 
-            return $this->rule($value, $context) ? true : $msg;
+            return $result ? true : $msg;
         };
 
         parent::__construct($validator);

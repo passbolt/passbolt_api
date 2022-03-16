@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\User\IsActiveUserRule;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
+use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
@@ -80,11 +82,6 @@ class AccountRecoveryRequestsTable extends Table
             ->allowEmptyString('armored_key');
 
         $validator
-            ->scalar('fingerprint')
-            ->maxLength('fingerprint', 40)
-            ->allowEmptyString('fingerprint');
-
-        $validator
             ->scalar('status')
             ->inList('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_STATUSES)
             ->maxLength('status', 36)
@@ -101,7 +98,8 @@ class AccountRecoveryRequestsTable extends Table
             ->ascii('fingerprint', __('The fingerprint should be a valid ASCII string.'))
             ->requirePresence('fingerprint', 'create', __('A fingerprint is required'))
             ->notEmptyString('fingerprint', __('The fingerprint should not be empty'))
-            ->add('fingerprint', 'invalidFingerprint', new IsValidFingerprintValidationRule());
+            ->add('fingerprint', 'invalidFingerprint', new IsValidFingerprintValidationRule())
+            ->add('fingerprint', 'isMatchingKeyFingerprintRule', new IsMatchingKeyFingerprintValidationRule());
 
         $validator
             ->uuid('created_by')
@@ -132,6 +130,10 @@ class AccountRecoveryRequestsTable extends Table
         ]);
         $rules->add($rules->existsIn('created_by', 'Users'));
         $rules->add($rules->existsIn('modified_by', 'Users'));
+        $rules->add(new IsNotUserKeyFingerprintRule(), 'isNotUserKeyFingerprintRule', [
+            'errorField' => 'fingerprint',
+            'message' => __('You cannot reuse the user keys.'),
+        ]);
 
         return $rules;
     }

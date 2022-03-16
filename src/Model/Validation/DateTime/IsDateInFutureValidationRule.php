@@ -30,7 +30,7 @@ class IsDateInFutureValidationRule extends PassboltValidationRule
     /**
      * @inheritDoc
      */
-    public function getErrorMessage($value, $context): string
+    public function defaultErrorMessage($value, $context): string
     {
         return __('The key should not already be expired.');
     }

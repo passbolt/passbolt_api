@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Test\Factory;
 
+use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
@@ -24,11 +25,14 @@ use Faker\Generator;
 /**
  * AccountRecoveryOrganizationPublicKeyFactory
  *
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey persist()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[] persist()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey getEntity()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[] getEntities()
  */
 class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
 {
+    use ArmoredKeyFactoryTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -49,8 +53,6 @@ class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
-                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
                 'created_by' => UuidFactory::uuid(),
                 'modified_by' => UuidFactory::uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
@@ -58,6 +60,8 @@ class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
                 'deleted' => null,
             ];
         });
+
+        $this->rsa4096Key();
     }
 
     /**
@@ -66,35 +70,5 @@ class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
     public function deleted()
     {
         return $this->setField('deleted', Chronos::now());
-    }
-
-    /**
-     * @return $this
-     */
-    public function expiredKey()
-    {
-        return $this
-            ->setField('fingerprint', 'BD92B8DE3FCF8DD5D60A4DF91E5E3B142396F2C7')
-            ->setField('armored_key', file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_expired_public.key'));
-    }
-
-    /**
-     * @return $this
-     */
-    public function revokedKey()
-    {
-        return $this
-            ->setField('fingerprint', '67BFFCB7B74AF4C85E81AB26508850525CD78BAA')
-            ->setField('armored_key', file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'));
-    }
-
-    /**
-     * @return $this
-     */
-    public function rsa2048Key()
-    {
-        return $this
-            ->setField('fingerprint', '26FD986838F4F9AB318FF56AE5DFCEE142949B78')
-            ->setField('armored_key', file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public.key'));
     }
 }
