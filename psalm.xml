@@ -21,7 +21,8 @@
             <directory name="plugins/Passbolt/JwtAuthentication/templates" />
             <directory name="plugins/Passbolt/EmailDigest/tests/Fixture/templates/" />
             <directory name="plugins/Passbolt/MultiFactorAuthentication/templates/" />
-            <directory name="plugins/Passbolt/Folders/templates//" />
+            <directory name="plugins/Passbolt/Folders/templates/" />
+            <directory name="plugins/Passbolt/AccountRecovery/templates/" />
         </ignoreFiles>
     </projectFiles>
 </psalm>

@@ -25,8 +25,9 @@ use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable;
 /**
  * AccountRecoveryPrivateKeyFactory
  *
- * @method AccountRecoveryPrivateKey persist()
- * @method AccountRecoveryPrivateKey getEntity()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey[] persist()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey getEntity()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey[] getEntities()
  */
 class AccountRecoveryPrivateKeyFactory extends CakephpBaseFactory
 {

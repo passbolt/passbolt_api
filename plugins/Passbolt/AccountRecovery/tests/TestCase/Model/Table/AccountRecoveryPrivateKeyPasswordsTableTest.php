@@ -31,7 +31,7 @@ class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCas
     use FormatValidationTrait;
 
     /**
-     * @var AccountRecoveryPrivateKeyPasswordsTable
+     * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable
      */
     protected $AccountRecoveryPrivateKeyPasswords;
 
@@ -149,9 +149,9 @@ class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCas
                     '-----BEGIN PGP MESSAGE-----' => false,
                     '-----BEGIN PGP PUBLIC KEY BLOCK-----' => false,
                     '-----BEGIN PGP PRIVATE KEY BLOCK-----' => false,
-                    file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public.key') => false,
-                    file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg') => true,
-                    file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password.msg') => true,
+                    (string)file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public.key') => false,
+                    (string)file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg') => true,
+                    (string)file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password.msg') => true,
                 ],
             ],
         ];
