@@ -25,8 +25,9 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 /**
  * AccountRecoveryOrganizationPolicyFactory
  *
- * @method AccountRecoveryOrganizationPolicy persist()
- * @method AccountRecoveryOrganizationPolicy getEntity()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[] persist()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy getEntity()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[] getEntities()()
  */
 class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
 {

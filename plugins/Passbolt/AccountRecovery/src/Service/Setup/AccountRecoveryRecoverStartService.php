@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\Setup;
 
 use App\Service\Setup\RecoverStartService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\GetAccountRecoveryUserSettingsService;
 
 class AccountRecoveryRecoverStartService extends RecoverStartService
@@ -32,7 +33,16 @@ class AccountRecoveryRecoverStartService extends RecoverStartService
         if ($userSetting) {
             $data['account_recovery_user_setting']['status'] = $userSetting->status;
         }
-        // TODO PB-13714: Add account_recovery_organization_policy
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $policy->unset('deleted');
+        if ($policy->has('account_recovery_organization_public_key')) {
+            $policy->set('account_recovery_organization_public_key', [
+                'id' => $policy->account_recovery_organization_public_key->id,
+                'armored_key' => $policy->account_recovery_organization_public_key->armored_key,
+            ]);
+        }
+        $data['account_recovery_organization_policy'] = $policy->toArray();
+
         return $data;
     }
 }
