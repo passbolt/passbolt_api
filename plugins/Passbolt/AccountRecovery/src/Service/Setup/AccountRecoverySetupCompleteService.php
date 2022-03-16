@@ -79,6 +79,7 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
      */
     public function complete(string $userId, ?array $saveOptions = []): User
     {
+        $this->assertRequestSanity();
         $user = $this->buildUserEntity($userId);
 
         $userSetting = $this->validateAccountRecoveryUserSetting($userId);
@@ -104,7 +105,7 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
         $policy = $this->policy->policy;
         if ($policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
             if (!$this->isPrivateKeyProvided() || $this->arePasswordsProvided()) {
-                throw new BadRequestException(__('Account recovery is disabled. Too much data.'));
+                throw new BadRequestException(__('Account recovery is disabled. Key backup is not supported.'));
             }
         } elseif ($policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY) {
             if (!($this->isPrivateKeyProvided() && $this->arePasswordsProvided())) {

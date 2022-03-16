@@ -22,11 +22,16 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Core\Configure;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 use Passbolt\AccountRecovery\Plugin;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupCompleteService;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyPasswordFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
@@ -44,18 +49,42 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
     }
 
     /**
+     * Utility function to speed up encryption step in test cases
+     *
+     * @param $fingerprint
+     * @param $key
+     * @return string
+     */
+    private function encrypt(string $fingerprint, string $key): string
+    {
+        // Build the data
+        if (Configure::read('passbolt.gpg.putenv')) {
+            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+        }
+        $this->gpg = OpenPGPBackendFactory::get();
+        $this->gpg->clearKeys();
+        $this->gpg->importKeyIntoKeyring($key);
+        $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
+        return $this->gpg->encrypt('Foo');
+    }
+
+    /**
      * The user setting status should be valid
      *
      * @see AccountRecoveryUserSettingsTable::validationDefault()
      */
     public function testAccountRecoverySetupCompleteService_InvalidStatus()
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
+
         $token = AuthenticationTokenFactory::make()
             ->with('Users', UserFactory::make()->user()->inactive())
             ->type(AuthenticationToken::TYPE_REGISTER)
             ->active()
             ->persist();
-        $user = $token->user;
 
         $request = (new ServerRequest())
             ->withData('authenticationtoken.token', $token->token)
@@ -64,28 +93,31 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('The status should be one of the following: rejected, approved.');
-        (new AccountRecoverySetupCompleteService($request))->complete($user->id);
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
     }
 
     /**
      * If the user setting rejects the account recovery, no private key is saved
      */
-    public function testAccountRecoverySetupCompleteService_Rejected()
+    public function testAccountRecoverySetupCompleteService_Success_OptinRejected()
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
+
         $token = AuthenticationTokenFactory::make()
             ->with('Users', UserFactory::make()->user()->inactive())
             ->type(AuthenticationToken::TYPE_REGISTER)
             ->active()
             ->persist();
-        $user = $token->user;
 
         $request = (new ServerRequest())
             ->withData('authenticationtoken.token', $token->token)
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
-            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED)
-            ->withData('account_recovery_private_key.data', 'Foo');
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED);
 
-        (new AccountRecoverySetupCompleteService($request))->complete($user->id);
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
 
         $this->assertSame(0, AccountRecoveryPrivateKeyFactory::count());
         $this->assertSame(0, AccountRecoveryPrivateKeyPasswordFactory::count());
@@ -94,17 +126,25 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
     /**
      * If the user setting rejects the account recovery, no private key is saved
      */
-    public function testAccountRecoverySetupCompleteService_Success()
+    public function testAccountRecoverySetupCompleteService_Success_OptinApproved()
     {
-        $this->gpgSetup();
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
 
         $token = AuthenticationTokenFactory::make()
             ->with('Users', UserFactory::make()->user()->inactive())
             ->type(AuthenticationToken::TYPE_REGISTER)
             ->active()
             ->persist();
-        $user = $token->user;
 
         $request = (new ServerRequest())
             ->withData('authenticationtoken.token', $token->token)
@@ -112,12 +152,12 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
             ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
-                'recipient_fingerprint' => $this->serverKeyId,
+                'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
-                'data' => $this->gpg->encrypt('Foo'),
+                'data' => $this->encrypt($orkFingerprint, $orkArmored),
             ]]);
 
-        (new AccountRecoverySetupCompleteService($request))->complete($user->id);
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
 
         $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
         $this->assertSame(1, AccountRecoveryPrivateKeyFactory::count());
@@ -130,13 +170,46 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         $this->assertTrue(isset($q->created));
         $this->assertTrue(isset($q->modified));
         $this->assertEquals('approved', $q->status);
-        $this->assertEquals($user->id, $q->created_by);
-        $this->assertEquals($user->id, $q->modified_by);
+        $this->assertEquals($token->user->id, $q->created_by);
+        $this->assertEquals($token->user->id, $q->modified_by);
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_OrgPolicyDisabled()
     {
-        $this->markTestIncomplete('Key is sent but account recovery is not setup (unlikely but still)');
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->disabled()
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $this->serverKeyId,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => 'nope',
+            ]]);
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Account recovery is disabled.');
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_OptinRejectedWithData()
+    {
+        $this->markTestIncomplete('rejected even though some data is given');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_MandatoryStatusRejected()
+    {
+        $this->markTestIncomplete('rejected even though its mandatory');
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_MandatoryKeyMissing()
