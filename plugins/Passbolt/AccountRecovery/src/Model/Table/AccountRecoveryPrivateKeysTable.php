@@ -119,8 +119,17 @@ class AccountRecoveryPrivateKeysTable extends Table
         return $rules;
     }
 
-    public function buildAndValidateEntity(UserAccessControl $uac, array $privateKey, array $privateKeyPasswords): AccountRecoveryPrivateKey
-    {
+    /**
+     * @param \App\Utility\UserAccessControl $uac UAC
+     * @param array $privateKey Private key
+     * @param array $privateKeyPasswords Private key passwords
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey
+     */
+    public function buildAndValidateEntity(
+        UserAccessControl $uac,
+        array $privateKey,
+        array $privateKeyPasswords
+    ): AccountRecoveryPrivateKey {
         $userId = $uac->getId();
         foreach ($privateKeyPasswords as $i => $pkp) {
             $privateKeyPasswords[$i]['created_by'] = $userId;

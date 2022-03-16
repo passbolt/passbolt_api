@@ -24,7 +24,6 @@ use App\Service\Setup\SetupCompleteService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
-use Cake\Utility\Hash;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
@@ -45,7 +44,7 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     public $AccountRecoveryUserSettings;
 
     /**
-     * @var AccountRecoveryOrganizationPolicy entity
+     * @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity
      */
     public $policy;
 
@@ -97,17 +96,21 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
      * Mandatory: both private key and password must be provided
      * Disabled: none of them must be provided
      *
-     * @throws BadRequestException if data is missing or too much data is sent
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if data is missing or too much data is sent
      */
     protected function assertRequestSanity(): void
     {
-        if ($this->policy->policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
+        $policy = $this->policy->policy;
+        if ($policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
             if (!$this->isPrivateKeyProvided() || $this->arePasswordsProvided()) {
                 throw new BadRequestException(__('Account recovery is disabled. Too much data.'));
             }
-        } elseif ($this->policy->policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY) {
+        } elseif ($policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY) {
             if (!($this->isPrivateKeyProvided() && $this->arePasswordsProvided())) {
-                throw new BadRequestException(__('Account recovery is mandatory. Please provide the mandatory data.'));
+                throw new BadRequestException(
+                    __('Account recovery is mandatory. Please provide the mandatory data.')
+                );
             }
         }
     }
@@ -137,7 +140,8 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
      */
     protected function arePasswordsProvided(): bool
     {
-        $publicKey = $this->request->getData('account_recovery_user_setting.account_recovery_private_key_passwords');
+        $publicKey = $this->request
+            ->getData('account_recovery_user_setting.account_recovery_private_key_passwords');
 
         return isset($publicKey) && is_array($publicKey);
     }
@@ -213,8 +217,11 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
         $privateKeyPasswords = $this->request
             ->getData('account_recovery_user_setting.account_recovery_private_key_passwords');
 
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $privateKeyEntity = $this->AccountRecoveryPrivateKeys->buildAndValidateEntity($uac, $data, $privateKeyPasswords);
+        $privateKeyEntity = $this->AccountRecoveryPrivateKeys->buildAndValidateEntity(
+            new UserAccessControl(Role::USER, $userId),
+            $data,
+            $privateKeyPasswords
+        );
 
         if (!$this->AccountRecoveryPrivateKeys->checkRules($privateKeyEntity)) {
             $msg = __('Could not validate public key data.');
