@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Test\Factory;
 
 use App\Utility\UuidFactory;
-use Cake\Chronos\Chronos;
+use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
@@ -54,8 +54,8 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
                 'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
                 'created_by' => UuidFactory::uuid(),
                 'modified_by' => UuidFactory::uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(1)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(1)),
+                'created' => FrozenDate::now()->subDay($faker->randomNumber(1)),
+                'modified' => FrozenDate::now()->subDay($faker->randomNumber(1)),
                 'public_key_id' => UuidFactory::uuid(),
             ];
         });
