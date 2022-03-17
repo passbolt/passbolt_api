@@ -18,6 +18,7 @@ namespace App\Test\Factory;
 
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
 use Cake\I18n\Time;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;

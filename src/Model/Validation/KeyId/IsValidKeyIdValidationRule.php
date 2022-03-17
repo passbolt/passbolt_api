@@ -25,7 +25,7 @@ class IsValidKeyIdValidationRule extends PassboltValidationRule
     /**
      * @inheritDoc
      */
-    public function getErrorMessage($value, $context): string
+    public function defaultErrorMessage($value, $context): string
     {
         return __('The key identifier should be a string of 8 hexadecimal characters.');
     }

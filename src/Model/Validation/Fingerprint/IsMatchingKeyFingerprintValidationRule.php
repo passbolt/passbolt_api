@@ -15,28 +15,20 @@ declare(strict_types=1);
  * @since         3.6.0
  */
 
-namespace App\Model\Validation\DateTime;
+namespace App\Model\Validation\Fingerprint;
 
 use App\Model\Validation\PassboltValidationRule;
-use Cake\Chronos\ChronosInterface;
-use Cake\I18n\Time;
+use App\Service\OpenPGP\PublicKeyValidationService;
+use Cake\Core\Exception\Exception;
 
-/**
- * Check if a key date is set in the past... tomorrow!
- *
- * In a ideal world we should check if a key date is set in the past from 'now'
- * where now is the time of reference of the server. But in practice we
- * allow a next day margin because users had the issue of having keys generated
- * by systems that were ahead of server time. Refs. PASSBOLT-1505.
- */
-class IsCreationDateInFuturePastValidationRule extends PassboltValidationRule
+class IsMatchingKeyFingerprintValidationRule extends PassboltValidationRule
 {
     /**
      * @inheritDoc
      */
     public function defaultErrorMessage($value, $context): string
     {
-        return __('The creation date should be set in the past.');
+        return __('The fingerprint does not match the one of the armored key.');
     }
 
     /**
@@ -44,11 +36,19 @@ class IsCreationDateInFuturePastValidationRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
-        if (!($value instanceof ChronosInterface)) {
+        $armoredKey = $context['data']['armored_key'] ?? null;
+        if (empty($armoredKey) || empty($value)) {
             return false;
         }
-        $nowWithMargin = Time::now()->modify('+12 hours');
 
-        return $value->lt($nowWithMargin);
+        try {
+            $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
+        } catch (Exception $e) {
+            $this->setErrorMessage($e->getMessage());
+
+            return false;
+        }
+
+        return $keyInfo['fingerprint'] === $value;
     }
 }
