@@ -50,7 +50,7 @@ class RecoverStartControllerTest extends AccountRecoveryIntegrationTestCase
         $this->getJson($url);
         $this->assertResponseOk();
         $this->assertObjectHasAttribute('user', $this->_responseJsonBody);
-        $this->assertSame(compact('status'), (array)$this->_responseJsonBody->account_recovery_user_setting);
+        $this->assertSame(compact('status'), (array)$this->_responseJsonBody->user->account_recovery_user_setting);
 
         $this->assertEquals([
             'id' => $policy->id,

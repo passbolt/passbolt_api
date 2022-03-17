@@ -31,7 +31,9 @@ class AccountRecoveryRecoverStartService extends RecoverStartService
         $data = parent::getInfo($userId, $token);
         $userSetting = (new GetAccountRecoveryUserSettingsService())->get($userId);
         if ($userSetting) {
-            $data['account_recovery_user_setting']['status'] = $userSetting->status;
+            /** @var \App\Model\Entity\User $user */
+            $user = $data['user'];
+            $user->set('account_recovery_user_setting', ['status' => $userSetting->status]);
         }
         $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $policy->unset('deleted');
