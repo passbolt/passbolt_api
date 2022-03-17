@@ -51,7 +51,7 @@ class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
         $info = (new AccountRecoveryRecoverStartService())->getInfo($user->id, $token->token);
 
         $this->assertNotNull($info['user']);
-        $this->assertSame(compact('status'), $info['account_recovery_user_setting']);
+        $this->assertSame(compact('status'), $info['user']['account_recovery_user_setting']);
 
         $this->assertEquals([
             'id' => $policy->id,
@@ -89,7 +89,7 @@ class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
         $info = (new AccountRecoveryRecoverStartService())->getInfo($user->id, $token->token);
 
         $this->assertNotNull($info['user']);
-        $this->assertSame(compact('status'), $info['account_recovery_user_setting']);
+        $this->assertSame(compact('status'), $info['user']['account_recovery_user_setting']);
 
         $this->assertEquals([
             'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
