@@ -18,6 +18,7 @@ namespace App\Test\Factory;
 
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\Traits\FactoryDeletedTrait;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;

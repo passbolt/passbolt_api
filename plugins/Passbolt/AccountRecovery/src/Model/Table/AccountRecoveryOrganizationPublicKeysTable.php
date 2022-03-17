@@ -21,6 +21,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Rule\IsNotServerKeyFingerprintRule;
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
+use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
 use ArrayObject;
@@ -91,7 +92,8 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
             ->ascii('fingerprint', __('The fingerprint should be a valid ASCII string.'))
             ->requirePresence('fingerprint', 'create', __('A fingerprint is required'))
             ->notEmptyString('fingerprint', __('The fingerprint should not be empty'))
-            ->add('fingerprint', 'invalidFingerprint', new IsValidFingerprintValidationRule());
+            ->add('fingerprint', 'invalidFingerprint', new IsValidFingerprintValidationRule())
+            ->add('fingerprint', 'isMatchingKeyFingerprintRule', new IsMatchingKeyFingerprintValidationRule());
 
         $validator
             ->dateTime('deleted', ['ymd'], __('The "deleted" field should be a valid date.'))

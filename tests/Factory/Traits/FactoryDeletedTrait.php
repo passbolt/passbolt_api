@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.3.0
  */
-namespace App\Test\Factory;
+namespace App\Test\Factory\Traits;
 
 trait FactoryDeletedTrait
 {

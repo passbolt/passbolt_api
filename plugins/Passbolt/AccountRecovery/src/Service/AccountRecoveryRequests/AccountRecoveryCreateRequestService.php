@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryRequests;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
@@ -54,6 +55,9 @@ class AccountRecoveryCreateRequestService
     public function create(): AccountRecoveryRequest
     {
         $userId = $this->serverRequest->getData('user_id');
+        if (!Validation::uuid($userId)) {
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
+        }
 
         $tokenInPayload = $this->serverRequest->getData('authentication_token.token');
         $token = $this->getAndAssertToken($userId, AuthenticationToken::TYPE_RECOVER);
@@ -73,10 +77,17 @@ class AccountRecoveryCreateRequestService
             'modified_by' => $userId,
         ]);
 
+        PublicKeyValidationService::parseAndValidatePublicKey(
+            $this->serverRequest->getData('armored_key'),
+            PublicKeyValidationService::getStrictRules()
+        );
         try {
             $this->AccountRecoveryRequests->saveOrFail($request);
-            // TODO deactivate existing token
+            $this->AuthenticationTokens->setInactive($tokenInPayload);
         } catch (PersistenceFailedException $e) {
+            if ($e->getEntity()->getError('user_id')) {
+                $this->AuthenticationTokens->setInactive($tokenInPayload);
+            }
             throw new BadRequestException($e->getMessage());
         }
 

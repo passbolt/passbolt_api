@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\Factory;
 
 use App\Model\Table\PermissionsTable;
-use App\Test\Factory\FactoryDeletedTrait;
+use App\Test\Factory\Traits\FactoryDeletedTrait;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;

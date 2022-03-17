@@ -12,26 +12,16 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         3.6.0
  */
 
 namespace Passbolt\AccountRecovery\Notification;
 
 use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
-    /**
-     * Return true if the redactor pool is enabled
-     *
-     * @return bool
-     */
-    private function isAccountRecoveryRedactorEnabled(): bool
-    {
-        // TODO: Complete this logic with settings when implemented.
-        return true;
-    }
-
     /**
      * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
      */
@@ -39,10 +29,26 @@ class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPo
     {
         $redactors = [];
 
-        if ($this->isAccountRecoveryRedactorEnabled()) {
-            $redactors[] = new AccountRecoveryRequestCreatedEmailRedactor();
+        if ($this->isRedactorEnabled('send.accountRecovery.request.user')) {
+            $redactors[] = new AccountRecoveryRequestCreatedUserEmailRedactor();
+        }
+
+        if ($this->isRedactorEnabled('send.accountRecovery.request.admin')) {
+            $redactors[] = new AccountRecoveryRequestCreatedAdminEmailRedactor();
         }
 
         return $redactors;
+    }
+
+    /**
+     * Return true if the redactor is enabled
+     *
+     * @param string $notificationSettingPath Notification Settings path with dot notation
+     * @return mixed
+     */
+    private function isRedactorEnabled(string $notificationSettingPath)
+    {
+//        dd($notificationSettingPath, EmailNotificationSettings::get($notificationSettingPath));
+        return EmailNotificationSettings::get($notificationSettingPath);
     }
 }

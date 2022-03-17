@@ -130,7 +130,7 @@ class PublicKeyValidationService
         // Parsing check is mandatory and always done first
         // We don't even try the other rules if this one fails
         if (!self::isParsableArmoredPublicKey($armoredKey)) {
-            throw new CustomValidationException(__('A valid OpenPGP key must be provided..'), [
+            throw new CustomValidationException(__('A valid OpenPGP key must be provided.'), [
                 'armored_key' => [
                     self::IS_PARSABLE_ARMORED_KEY_RULE => __('The public key could not be parsed.'),
                 ],
@@ -141,7 +141,7 @@ class PublicKeyValidationService
         // As one may want to see what's inside the key info for debugging purpose
         $keyInfo = self::getPublicKeyInfo($armoredKey);
         $validationErrors = [];
-        foreach ($rules as $i => $ruleName) {
+        foreach ($rules as $ruleName) {
             switch ($ruleName) {
                 case self::IS_VALID_ALGORITHM_RULE:
                     if (!self::isValidAlgorithm($keyInfo['type'])) {
@@ -334,6 +334,7 @@ class PublicKeyValidationService
      *
      * @param string $armoredKey user provided data
      * @return array see OpenPGPBackendInterface::getKeyInfo
+     * @throws \Cake\Core\Exception\Exception if the armored key cannot be parsed
      */
     public static function getPublicKeyInfo(string $armoredKey): array
     {
