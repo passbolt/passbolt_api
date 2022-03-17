@@ -28,6 +28,7 @@ use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
@@ -42,6 +43,22 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTestCase
 {
+    public $service;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->service = new AccountRecoveryOrganizationPolicySetService(new ServerRequest());
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->service);
+    }
+
     /**
      * Return valid user access control for the service
      *
@@ -61,11 +78,10 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
     public function testAccountRecoveryOrganizationPolicySetService_PolicyValidation_Error_Empty()
     {
         $cases = [[], ['policy' => null], ['policy' => '']];
-        $service = new AccountRecoveryOrganizationPolicySetService();
 
         foreach ($cases as $case) {
             try {
-                $service->set($this->getUac(), $case);
+                $this->service->set($this->getUac(), $case);
                 $this->fail();
             } catch (ValidationException $exception) {
                 $e = $exception->getErrors();
@@ -80,10 +96,10 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
     public function testAccountRecoveryOrganizationPolicySetService_PolicyValidation_Error_Inlist()
     {
         $cases = [['policy' => 'nope'], ['policy' => 'disabled️🔥']];
-        $service = new AccountRecoveryOrganizationPolicySetService();
+
         foreach ($cases as $case) {
             try {
-                $service->set($this->getUac(), $case);
+                $this->service->set($this->getUac(), $case);
                 $this->fail();
             } catch (ValidationException $exception) {
                 $e = $exception->getErrors();
@@ -99,9 +115,8 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
      */
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyBadRequest_NoChange0()
     {
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), ['policy' => 'disabled']);
+            $this->service->set($this->getUac(), ['policy' => 'disabled']);
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains('No policy change', $exception->getMessage());
@@ -118,9 +133,8 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
             ->withAccountRecoveryOrganizationPublicKey()
             ->persist();
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), ['policy' => 'disabled']);
+            $this->service->set($this->getUac(), ['policy' => 'disabled']);
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains('No policy change', $exception->getMessage());
@@ -137,9 +151,8 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
             ->withAccountRecoveryOrganizationPublicKey()
             ->persist();
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), ['policy' => 'opt-in']);
+            $this->service->set($this->getUac(), ['policy' => 'opt-in']);
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains('No policy change', $exception->getMessage());
@@ -156,9 +169,8 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
             ->withAccountRecoveryOrganizationPublicKey()
             ->persist();
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), ['policy' => 'opt-out']);
+            $this->service->set($this->getUac(), ['policy' => 'opt-out']);
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains('No policy change', $exception->getMessage());
@@ -175,9 +187,8 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
             ->withAccountRecoveryOrganizationPublicKey()
             ->persist();
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), ['policy' => 'mandatory']);
+            $this->service->set($this->getUac(), ['policy' => 'mandatory']);
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains('No policy change', $exception->getMessage());
@@ -199,10 +210,10 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
             'policy' => 'opt-in',
             'account_recovery_organization_public_key' => '🔥',
         ]];
-        $service = new AccountRecoveryOrganizationPolicySetService();
+
         foreach ($cases as $case) {
             try {
-                $service->set($this->getUac(), $case);
+                $this->service->set($this->getUac(), $case);
                 $this->fail();
             } catch (BadRequestException $exception) {
                 $this->assertTextContains('Invalid request', $exception->getMessage());
@@ -218,8 +229,7 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyValidation_Error_Required()
     {
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [],
             ]);
@@ -249,10 +259,10 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
                 'armored_key' => '',
             ],
         ]];
-        $service = new AccountRecoveryOrganizationPolicySetService();
+
         foreach ($cases as $case) {
             try {
-                $service->set($this->getUac(), $case);
+                $this->service->set($this->getUac(), $case);
                 $this->fail();
             } catch (CustomValidationException $exception) {
                 $e = $exception->getErrors();
@@ -268,8 +278,7 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyValidation_Error_Required2()
     {
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [],
             ]);
@@ -287,8 +296,7 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyValidation_Error_Invalid()
     {
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => '2D7CF2B7FD9643DEBF63633CF',
@@ -309,8 +317,7 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyValidation_Error_Unparsable()
     {
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => '2D7CF2B7FD9643DEBF63633CFC7F5D048541513F',
@@ -340,8 +347,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyValidation_Error_NoFingerprintMatch()
     {
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => '2D7CF2B7FD9643DEBF63633CFC7F5D048541513F',
@@ -361,8 +367,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyValidation_Error_RevokedKey()
     {
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
@@ -382,8 +387,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
      */
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyValidation_Success_RevokedSigKey()
     {
-        $service = new AccountRecoveryOrganizationPolicySetService();
-        $service->set($this->getUac(), [
+        $this->service->set($this->getUac(), [
             'policy' => 'opt-in',
             'account_recovery_organization_public_key' => [
                 'fingerprint' => '170B1EF744092F6EBB0CDD517D1699F049F3E21B',
@@ -399,8 +403,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyValidation_Error_WeakKey()
     {
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => '26FD986838F4F9AB318FF56AE5DFCEE142949B78',
@@ -420,8 +423,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     public function testAccountRecoveryOrganizationPolicySetService_PublicKeyValidation_Error_ExpiredKey()
     {
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => 'BD92B8DE3FCF8DD5D60A4DF91E5E3B142396F2C7',
@@ -448,8 +450,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         Configure::write('passbolt.gpg.serverKey.armored_key', FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
 
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
@@ -480,8 +481,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ->persist();
 
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
@@ -510,8 +510,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ->persist();
 
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), [
+            $this->service->set($this->getUac(), [
                 'policy' => 'opt-in',
                 'account_recovery_organization_public_key' => [
                     'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
@@ -533,7 +532,6 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
      */
     public function testAccountRecoveryOrganizationPolicySetService_Success_DisabledEnabled()
     {
-        $service = new AccountRecoveryOrganizationPolicySetService();
         $data = [
             'policy' => 'opt-in',
             'account_recovery_organization_public_key' => [
@@ -541,7 +539,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
                 'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
             ],
         ];
-        $policy = $service->set($this->getUac(), $data);
+        $policy = $this->service->set($this->getUac(), $data);
 
         $this->assertNotEmpty($policy->policy);
         $this->assertNotEmpty($policy->created);
@@ -576,7 +574,6 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ->disabled()
             ->persist();
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         $data = [
             'policy' => 'mandatory',
             'account_recovery_organization_public_key' => [
@@ -584,7 +581,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
                 'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
             ],
         ];
-        $policy = $service->set($this->getUac(), $data);
+        $policy = $this->service->set($this->getUac(), $data);
 
         $this->assertEquals('mandatory', $policy->policy);
         $this->assertNotEmpty($policy->created);
@@ -628,8 +625,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
-        $policy = $service->set($this->getUac(), $data);
+        $policy = $this->service->set($this->getUac(), $data);
 
         $this->assertNotEmpty($policy);
         $this->assertEquals('disabled', $policy->policy);
@@ -667,15 +663,14 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     {
         $this->startScenarioOptinNoBackups();
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
-        $policy = $service->set($this->getUac(), [
+        $policy = $this->service->set($this->getUac(), [
             'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY,
         ]);
         $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY);
 
         sleep(1); // needed to avoid creation time to get mixed up because they become equal
 
-        $policy = $service->set($this->getUac(), [
+        $policy = $this->service->set($this->getUac(), [
             'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT,
         ]);
         $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT);
@@ -695,8 +690,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     {
         $this->startScenarioOptinNoBackups();
         try {
-            $service = new AccountRecoveryOrganizationPolicySetService();
-            $service->set($this->getUac(), ['policy' => 'invalid']);
+            $this->service->set($this->getUac(), ['policy' => 'invalid']);
             $this->fail();
         } catch (ValidationException $exception) {
             $this->assertTrue(true);
@@ -721,9 +715,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $policy = $service->set($this->getUac(), $data);
+            $policy = $this->service->set($this->getUac(), $data);
         } catch (ValidationException | CustomValidationException $exception) {
             $this->fail();
         }
@@ -744,9 +737,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), $data);
+            $this->service->set($this->getUac(), $data);
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains('Revoked key is required', $exception->getMessage());
@@ -769,9 +761,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), $data);
+            $this->service->set($this->getUac(), $data);
             $this->fail();
         } catch (CustomValidationException $exception) {
             $this->assertTextContains('Could not validate key revocation.', $exception->getMessage());
@@ -796,9 +787,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), $data);
+            $this->service->set($this->getUac(), $data);
             $this->fail();
         } catch (CustomValidationException $exception) {
             $e = $exception->getErrors();
@@ -819,9 +809,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), $data);
+            $this->service->set($this->getUac(), $data);
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains('New key is required', $exception->getMessage());
@@ -859,9 +848,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ]],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $policy = $service->set($this->getUac(), $data);
+            $policy = $this->service->set($this->getUac(), $data);
         } catch (CustomValidationException $exception) {
             $this->fail(json_encode($exception->getErrors()));
         }
@@ -899,9 +887,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ]],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), $data);
+            $this->service->set($this->getUac(), $data);
             $this->fail();
         } catch (CustomValidationException $exception) {
             $e = $exception->getErrors();
@@ -911,7 +898,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
 
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
@@ -941,9 +928,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ]],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $policy = $service->set($this->getUac(), $data);
+            $policy = $this->service->set($this->getUac(), $data);
             $this->fail();
         } catch (CustomValidationException $exception) {
             $e = $exception->getErrors();
@@ -952,7 +938,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         // Check the policy has not changed
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
@@ -986,9 +972,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ]],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), $data);
+            $this->service->set($this->getUac(), $data);
             $this->fail();
         } catch (CustomValidationException $exception) {
             $e = $exception->getErrors();
@@ -996,7 +981,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
 
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
@@ -1035,9 +1020,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ]],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), $data);
+            $this->service->set($this->getUac(), $data);
             $this->fail();
         } catch (CustomValidationException $exception) {
             $e = $exception->getErrors();
@@ -1045,7 +1029,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
 
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
@@ -1085,9 +1069,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ]],
         ];
 
-        $service = new AccountRecoveryOrganizationPolicySetService();
         try {
-            $service->set($this->getUac(), $data);
+            $this->service->set($this->getUac(), $data);
             $this->fail();
         } catch (CustomValidationException $exception) {
             $e = $exception->getErrors();
@@ -1095,7 +1078,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
 
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }

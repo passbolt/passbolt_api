@@ -20,7 +20,7 @@ namespace Passbolt\AccountRecovery\Controller\AccountRecoveryOrganizationPolicie
 use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetServiceInterface; // phpcs:ignore
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicy
@@ -28,12 +28,12 @@ use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\Account
 class AccountRecoveryOrganizationPoliciesSetController extends AppController
 {
     /**
+     * @param \Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetServiceInterface $service Service
      * @return void
      */
-    public function createOrUpdate(): void
+    public function createOrUpdate(AccountRecoveryOrganizationPolicySetServiceInterface $service): void
     {
         $this->assertRequestSanity();
-        $service = new AccountRecoveryOrganizationPolicySetService();
         $uac = $this->User->getAccessControl();
         $policy = $service->set($uac, $this->request->getData());
         $this->success(__('The operation was successful.'), $policy);

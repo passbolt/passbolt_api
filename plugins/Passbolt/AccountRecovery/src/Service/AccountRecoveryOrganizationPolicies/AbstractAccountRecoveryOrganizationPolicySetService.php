@@ -23,6 +23,7 @@ use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
@@ -61,9 +62,9 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     /**
      * AbstractCompleteService constructor
      *
-     * @param \Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetServiceInterface|null $getService bring your own
+     * @param \Cake\Http\ServerRequest $request Server Request
      */
-    public function __construct(?AccountRecoveryOrganizationPolicyGetServiceInterface $getService = null)
+    public function __construct(ServerRequest $request)
     {
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
@@ -71,7 +72,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryRequests');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
-        $this->getService = $getService ?? new AccountRecoveryOrganizationPolicyGetService();
+        $this->getService = new AccountRecoveryOrganizationPolicyGetService($request);
     }
 
     // METHODS USED TO GET/SET USER REQUEST DATA

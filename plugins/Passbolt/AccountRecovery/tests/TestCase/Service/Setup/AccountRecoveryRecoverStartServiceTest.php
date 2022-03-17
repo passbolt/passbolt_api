@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Service\Setup;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
+use Cake\Http\ServerRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoveryRecoverStartService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
@@ -27,6 +28,22 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
 {
+    public $service;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->service = (new AccountRecoveryRecoverStartService(new ServerRequest()));
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->service);
+    }
+
     /**
      * Ensure that the account_recovery_organization_policy field is well added to the info if
      * the policy exists
@@ -48,7 +65,7 @@ class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
             ->withAccountRecoveryOrganizationPublicKey()
             ->persist();
 
-        $info = (new AccountRecoveryRecoverStartService())->getInfo($user->id, $token->token);
+        $info = $this->service->getInfo($user->id, $token->token);
 
         $this->assertNotNull($info['user']);
         $this->assertSame(compact('status'), $info['user']['account_recovery_user_setting']);
@@ -86,7 +103,7 @@ class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
             ->userId($user->id)
             ->persist();
 
-        $info = (new AccountRecoveryRecoverStartService())->getInfo($user->id, $token->token);
+        $info = $this->service->getInfo($user->id, $token->token);
 
         $this->assertNotNull($info['user']);
         $this->assertSame(compact('status'), $info['user']['account_recovery_user_setting']);

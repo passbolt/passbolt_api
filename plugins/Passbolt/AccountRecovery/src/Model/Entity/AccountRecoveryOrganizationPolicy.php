@@ -30,6 +30,7 @@ use Cake\ORM\Entity;
  * @property string $created_by
  * @property string $modified_by
  * @property string $public_key_id
+ * @property \App\Model\Entity\User $creator
  *
  * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $account_recovery_organization_public_key
  */

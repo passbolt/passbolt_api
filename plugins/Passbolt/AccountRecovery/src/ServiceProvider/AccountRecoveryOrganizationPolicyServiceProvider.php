@@ -19,11 +19,11 @@ namespace Passbolt\AccountRecovery\ServiceProvider;
 
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
+use Cake\Http\ServerRequest;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetServiceInterface;  //phpcs:ignore
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetServiceInterface; //phpcs:ignore
-use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class AccountRecoverySetServiceProvider
@@ -51,13 +51,13 @@ class AccountRecoveryOrganizationPolicyServiceProvider extends ServiceProvider
                 AccountRecoveryOrganizationPolicySetServiceInterface::class,
                 AccountRecoveryOrganizationPolicySetService::class
             )
-            ->addArgument(ServerRequestInterface::class);
+            ->addArgument(ServerRequest::class);
 
         $container
             ->add(
                 AccountRecoveryOrganizationPolicyGetServiceInterface::class,
                 AccountRecoveryOrganizationPolicyGetService::class
             )
-            ->addArgument(ServerRequestInterface::class);
+            ->addArgument(ServerRequest::class);
     }
 }
