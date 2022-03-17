@@ -53,17 +53,18 @@ abstract class PassboltValidationRule extends ValidationRule
     /**
      * Construct
      *
+     * @psalm-suppress RedundantPropertyInitializationCheck
      * @param array $validator Validation parameters
      */
     public function __construct(array $validator = [])
     {
-        $validator['rule'] = function ($value, $context) {
+        parent::__construct($validator);
+
+        $this->_rule = function ($value, $context) {
             $result = $this->rule($value, $context);
             $msg = $this->_message ?? $this->defaultErrorMessage($value, $context);
 
             return $result ? true : $msg;
         };
-
-        parent::__construct($validator);
     }
 }
