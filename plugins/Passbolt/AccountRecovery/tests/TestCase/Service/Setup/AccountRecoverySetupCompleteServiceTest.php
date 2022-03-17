@@ -65,6 +65,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         $this->gpg->clearKeys();
         $this->gpg->importKeyIntoKeyring($key);
         $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
+
         return $this->gpg->encrypt('Foo');
     }
 
