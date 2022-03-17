@@ -350,7 +350,7 @@ class V360AddAccountRecoveryTables extends AbstractMigration
             ])
             ->addColumn('data', 'text', [
                 'limit' => null,
-                'null' => false,
+                'null' => true,
             ])
             ->addColumn('status', 'string', [
                 'default' => null,
