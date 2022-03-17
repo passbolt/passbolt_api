@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Notification;
 
 use App\Model\Entity\User;
-use App\Model\Table\AvatarsTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -33,13 +32,12 @@ use Passbolt\Locale\Service\LocaleService;
 /**
  * @property \App\Model\Table\UsersTable $Users
  */
-class AccountRecoveryRequestCreatedEmailRedactor implements SubscribedEmailRedactorInterface
+class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use ModelAwareTrait;
     use SubscribedEmailRedactorTrait;
 
     public const USER_TEMPLATE = 'Passbolt/AccountRecovery.AN/user_request';
-    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.AN/admin_request';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
@@ -69,14 +67,6 @@ class AccountRecoveryRequestCreatedEmailRedactor implements SubscribedEmailRedac
 
         $emailCollection->addEmail($this->makeUserEmail($user, $request));
 
-        $admins = $this->Users->findAdmins()
-            ->contain([
-                'Profiles' => AvatarsTable::addContainAvatar(),
-            ]);
-        foreach ($admins as $admin) {
-            $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $request));
-        }
-
         return $emailCollection;
     }
 
@@ -98,26 +88,5 @@ class AccountRecoveryRequestCreatedEmailRedactor implements SubscribedEmailRedac
         $data = ['body' => ['user' => $user, 'created' => $request->created,], 'title' => $subject,];
 
         return new Email($user->username, $subject, $data, self::USER_TEMPLATE);
-    }
-
-    /**
-     * @param \App\Model\Entity\User $admin Admin receiving the mail
-     * @param \App\Model\Entity\User $user User sending the request
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request Account recovery request initiated by the user
-     * @return \App\Notification\Email\Email
-     */
-    private function makeAdminEmail(User $admin, User $user, AccountRecoveryRequest $request): Email
-    {
-        $locale = (new GetUserLocaleService())->getLocale($user->username);
-        $subject = (new LocaleService())->translateString(
-            $locale,
-            function () use ($user) {
-                return __('{0} has initiated a recovery request', $user->profile->first_name);
-            }
-        );
-
-        $data = ['body' => ['user' => $user, 'admin' => $admin, 'created' => $request->created,], 'title' => $subject,];
-
-        return new Email($admin->username, $subject, $data, self::ADMIN_TEMPLATE);
     }
 }

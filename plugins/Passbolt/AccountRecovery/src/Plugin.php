@@ -22,6 +22,7 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Event\ContainAccountRecoveryUserSettings;
 use Passbolt\AccountRecovery\Notification\AccountRecoveryEmailRedactorPool;
+use Passbolt\AccountRecovery\Notification\AccountRecoveryNotificationSettingsDefinition;
 use Passbolt\AccountRecovery\ServiceProvider\AccountRecoveryOrganizationPolicyServiceProvider;
 use Passbolt\AccountRecovery\ServiceProvider\AccountRecoverySetupServiceProvider;
 
@@ -56,6 +57,7 @@ class Plugin extends BasePlugin
     {
         $app->getEventManager()
             ->on(new AccountRecoveryEmailRedactorPool())
+            ->on(new AccountRecoveryNotificationSettingsDefinition())
             ->on(new ContainAccountRecoveryUserSettings());
     }
 

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Notification;
 
 use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
@@ -28,9 +29,26 @@ class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPo
     {
         $redactors = [];
 
-        // TODO: Complete this logic with settings when implemented.
-        $redactors[] = new AccountRecoveryRequestCreatedEmailRedactor();
+        if ($this->isRedactorEnabled('send.accountRecovery.request.user')) {
+            $redactors[] = new AccountRecoveryRequestCreatedUserEmailRedactor();
+        }
+
+        if ($this->isRedactorEnabled('send.accountRecovery.request.admin')) {
+            $redactors[] = new AccountRecoveryRequestCreatedAdminEmailRedactor();
+        }
 
         return $redactors;
+    }
+
+    /**
+     * Return true if the redactor is enabled
+     *
+     * @param string $notificationSettingPath Notification Settings path with dot notation
+     * @return mixed
+     */
+    private function isRedactorEnabled(string $notificationSettingPath)
+    {
+//        dd($notificationSettingPath, EmailNotificationSettings::get($notificationSettingPath));
+        return EmailNotificationSettings::get($notificationSettingPath);
     }
 }
