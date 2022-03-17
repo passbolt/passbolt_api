@@ -142,6 +142,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
         $testResourceId = UuidFactory::uuid('resource.id.bower');
         $shouldSend = EmailNotificationSettings::get('send.comment.add');
         $oldEmailQueueLength = $expectedEmailQueueLength = $this->emailQueue->find()->count();
+        EmailNotificationSettings::flushCache();
         $this->_addTestComment($testResourceId);
         $resourceSubscribers = $this->_getResourceSubscribers($testResourceId)->count();
 
