@@ -175,6 +175,58 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         $this->assertEquals($token->user->id, $q->modified_by);
     }
 
+
+    /**
+     * If the user setting rejects the account recovery, no private key is saved
+     */
+    public function testAccountRecoverySetupCompleteService_Success_MandatoryApproved()
+    {
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $orkFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $this->encrypt($orkFingerprint, $orkArmored),
+            ]]);
+
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+
+        $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
+        $this->assertSame(1, AccountRecoveryPrivateKeyFactory::count());
+        $this->assertSame(1, AccountRecoveryPrivateKeyPasswordFactory::count());
+        $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
+
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
+        $q = $table->find()->contain(['Users'])->all()->first();
+        $this->assertTrue($q->user->active);
+        $this->assertTrue(isset($q->created));
+        $this->assertTrue(isset($q->modified));
+        $this->assertEquals('approved', $q->status);
+        $this->assertEquals($token->user->id, $q->created_by);
+        $this->assertEquals($token->user->id, $q->modified_by);
+    }
+
     public function testAccountRecoverySetupCompleteService_Errors_OrgPolicyDisabled()
     {
         AccountRecoveryOrganizationPolicyFactory::make()
@@ -205,22 +257,124 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoverySetupCompleteService_Errors_OptinRejectedWithData()
     {
-        $this->markTestIncomplete('rejected even though some data is given');
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $this->serverKeyId,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => 'nope',
+            ]]);
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Invalid request');
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_MandatoryStatusRejected()
     {
-        $this->markTestIncomplete('rejected even though its mandatory');
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $this->serverKeyId,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => 'nope',
+            ]]);
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Invalid request');
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_MandatoryKeyMissing()
     {
-        $this->markTestIncomplete('key is not sent but account recovery is mandatory');
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey());
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Account recovery is mandatory');
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_PassswordMissing()
     {
-        $this->markTestIncomplete('key is not sent but password is missing');
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey());
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Invalid request');
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidStatus_Missing()
+    {
+        $this->markTestIncomplete('Not status');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidStatus_NotInList()
+    {
+        $this->markTestIncomplete('Status not in list');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidKey_NotOpenPGP()
+    {
+        $this->markTestIncomplete('Not openpgp message');
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidKey_NotSymmetricBlock()
+    {
+        $this->markTestIncomplete('Not openpgp symmetric message');
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_InvalidPassword_NotOpenPGP()

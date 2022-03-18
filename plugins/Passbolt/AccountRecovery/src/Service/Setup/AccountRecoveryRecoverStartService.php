@@ -35,7 +35,7 @@ class AccountRecoveryRecoverStartService extends RecoverStartService
             $user = $data['user'];
             $user->set('account_recovery_user_setting', ['status' => $userSetting->status]);
         }
-        $policy = (new AccountRecoveryOrganizationPolicyGetService($this->request))->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $policy->unset('deleted');
         if ($policy->has('account_recovery_organization_public_key')) {
             $policy->set('account_recovery_organization_public_key', [

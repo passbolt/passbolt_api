@@ -68,4 +68,20 @@ class AccountRecoveryOrganizationPolicy extends Entity
         self::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY,
         self::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED,
     ];
+
+    /**
+     * @return bool true if policy is disabled
+     */
+    public function isDisabled(): bool
+    {
+        return $this->policy === self::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED;
+    }
+
+    /**
+     * @return bool true if policy is set to mandatory
+     */
+    public function isMandatory(): bool
+    {
+        return $this->policy === self::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY;
+    }
 }

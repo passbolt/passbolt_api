@@ -85,11 +85,31 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
         $userSetting = $this->validateAccountRecoveryUserSetting($userId);
         $user->set('account_recovery_user_setting', $userSetting);
 
+        $this->assertRules($userSetting);
+
         if ($userSetting->isApproved()) {
             $user->set('account_recovery_private_key', $this->validateAccountRecoveryPrivateKey($userId));
         }
 
         return $this->saveUserEntity($user, $saveOptions);
+    }
+
+    /**
+     * Check that the user selected setting makes sense as per select org policy
+     *
+     * @param AccountRecoveryUserSetting $setting
+     */
+    protected function assertRules(AccountRecoveryUserSetting $setting): void
+    {
+        if ($this->policy->isMandatory() && !$setting->isApproved()) {
+            throw new BadRequestException(__('Invalid request. You cannot opt-out.'));
+        }
+        if (!$setting->isApproved() && ($this->isPrivateKeyProvided() || $this->arePasswordsProvided())) {
+            throw new BadRequestException(__('Invalid request. You cannot both opt-out and provide backup.'));
+        }
+        if ($setting->isApproved() && (!$this->isPrivateKeyProvided() || !$this->arePasswordsProvided())) {
+            throw new BadRequestException(__('Invalid request. Private key or password are missing.'));
+        }
     }
 
     /**
@@ -102,12 +122,11 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
      */
     protected function assertRequestSanity(): void
     {
-        $policy = $this->policy->policy;
-        if ($policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED) {
+        if ($this->policy->isDisabled()) {
             if (!$this->isPrivateKeyProvided() || $this->arePasswordsProvided()) {
                 throw new BadRequestException(__('Account recovery is disabled. Key backup is not supported.'));
             }
-        } elseif ($policy === AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY) {
+        } elseif ($this->policy->isMandatory()) {
             if (!($this->isPrivateKeyProvided() && $this->arePasswordsProvided())) {
                 throw new BadRequestException(
                     __('Account recovery is mandatory. Please provide the mandatory data.')

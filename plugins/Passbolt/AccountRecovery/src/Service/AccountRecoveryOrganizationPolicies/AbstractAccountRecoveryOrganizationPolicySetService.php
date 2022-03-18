@@ -72,7 +72,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryRequests');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
-        $this->getService = new AccountRecoveryOrganizationPolicyGetService($request);
+        $this->getService = new AccountRecoveryOrganizationPolicyGetService();
     }
 
     // METHODS USED TO GET/SET USER REQUEST DATA
