@@ -97,6 +97,16 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
                 )
             );
 
+        $validator
+            ->uuid('created_by')
+            ->requirePresence('created_by', 'create')
+            ->notEmptyString('created_by');
+
+        $validator
+            ->uuid('modified_by')
+            ->requirePresence('modified_by')
+            ->notEmptyString('modified_by');
+
         return $validator;
     }
 

@@ -92,7 +92,16 @@ class AccountRecoveryUserSettingsTableTest extends TestCase
     public function testAccountRecoveryUserSettingsTable_BuildRules_User_Id_Does_Not_Exist_In_UsersTable(): void
     {
         $data = AccountRecoveryUserSettingFactory::make()->getEntity()->toArray();
-        $entity = $this->AccountRecoveryUserSettings->newEntity($data);
+        $entity = $this->AccountRecoveryUserSettings->newEntity($data, [
+            'accessibleFields' => [
+                'status' => true,
+                'user_id' => true,
+                'created_by' => true,
+                'modified_by' => true,
+                'created' => true,
+                'modified' => true,
+            ],
+        ]);
         $this->AccountRecoveryUserSettings->save($entity);
         $this->assertSame(
             ['_existsIn' => 'This value does not exist'],
@@ -123,7 +132,16 @@ class AccountRecoveryUserSettingsTableTest extends TestCase
             ])
             ->getEntity()->toArray();
 
-        $entity = $this->AccountRecoveryUserSettings->newEntity($data);
+        $entity = $this->AccountRecoveryUserSettings->newEntity($data, [
+            'accessibleFields' => [
+                'status' => true,
+                'user_id' => true,
+                'created_by' => true,
+                'modified_by' => true,
+                'created' => true,
+                'modified' => true,
+            ],
+        ]);
         $this->AccountRecoveryUserSettings->save($entity);
         $this->assertFalse($entity->hasErrors());
         $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
@@ -143,7 +161,16 @@ class AccountRecoveryUserSettingsTableTest extends TestCase
             ])
             ->getEntity()->toArray();
 
-        $entity = $this->AccountRecoveryUserSettings->newEntity($data);
+        $entity = $this->AccountRecoveryUserSettings->newEntity($data, [
+            'accessibleFields' => [
+                'status' => true,
+                'user_id' => true,
+                'created_by' => true,
+                'modified_by' => true,
+                'created' => true,
+                'modified' => true,
+            ],
+        ]);
         $this->AccountRecoveryUserSettings->save($entity);
         $this->assertSame(
             ['_isUnique' => 'This user already has an account recovery setting'],

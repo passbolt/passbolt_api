@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Service\Setup;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -24,7 +25,6 @@ use App\Service\Setup\SetupCompleteService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
@@ -54,6 +54,11 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     public $data;
 
     /**
+     * @var \App\Utility\UserAccessControl $uac current user
+     */
+    public $uac;
+
+    /**
      * @param \Cake\Http\ServerRequest|null $request Server request
      */
     public function __construct(?ServerRequest $request = null)
@@ -80,9 +85,11 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     public function complete(string $userId, ?array $saveOptions = []): User
     {
         $this->assertRequestSanity();
-        $user = $this->buildUserEntity($userId);
+        $user = $this->buildUserEntity($userId); // checks token and user
+        $this->uac = new UserAccessControl($user->role->name, $user->id);
 
-        $userSetting = $this->validateAccountRecoveryUserSetting($userId);
+        // Validate additional settings
+        $userSetting = $this->validateAccountRecoveryUserSetting();
         $user->set('account_recovery_user_setting', $userSetting);
 
         $this->assertRules($userSetting);
@@ -97,18 +104,45 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     /**
      * Check that the user selected setting makes sense as per select org policy
      *
-     * @param AccountRecoveryUserSetting $setting
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting $setting entity
+     * @throws \Cake\Http\Exception\BadRequestException if user rejects and policy is mandatory
+     * @return void
      */
     protected function assertRules(AccountRecoveryUserSetting $setting): void
     {
         if ($this->policy->isMandatory() && !$setting->isApproved()) {
-            throw new BadRequestException(__('Invalid request. You cannot opt-out.'));
+            throw new CustomValidationException(__('Invalid request. You cannot opt-out.'), [
+                'account_recovery_user_setting' => [
+                    'status' => [
+                        'isMandatoryRule' => __('The status must be set to approved.'),
+                    ],
+                ],
+            ]);
         }
+
         if (!$setting->isApproved() && ($this->isPrivateKeyProvided() || $this->arePasswordsProvided())) {
-            throw new BadRequestException(__('Invalid request. You cannot both opt-out and provide backup.'));
+            throw new CustomValidationException(__('Invalid request. You cannot both opt-out and provide backup.'), [
+                'account_recovery_user_setting' => [
+                    'status' => [
+                        'isMatchingData' => __('The status must be set to approved.'),
+                    ],
+                ],
+            ]);
         }
+
         if ($setting->isApproved() && (!$this->isPrivateKeyProvided() || !$this->arePasswordsProvided())) {
-            throw new BadRequestException(__('Invalid request. Private key or password are missing.'));
+            $e = [];
+            if (!$this->isPrivateKeyProvided()) {
+                $e['account_recovery_user_setting']['account_recovery_private_key'] = [
+                    '_required' => __('The private key backup must be provided.'),
+                ];
+            }
+            if (!$this->arePasswordsProvided()) {
+                $e['account_recovery_user_setting']['account_recovery_private_key_passwords'] = [
+                    '_required' => __('The private key backup must be provided.'),
+                ];
+            }
+            throw new CustomValidationException(__('Invalid request. Private key or password are missing.'), $e);
         }
     }
 
@@ -197,33 +231,19 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     }
 
     /**
-     * @param string $userId User ID
+     * @throws \App\Error\Exception\CustomValidationException if the settings does not validate
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting
      */
-    protected function validateAccountRecoveryUserSetting(string $userId): AccountRecoveryUserSetting
+    protected function validateAccountRecoveryUserSetting(): AccountRecoveryUserSetting
     {
-        $status = $this->request->getData('account_recovery_user_setting.status');
-        $setting = $this->AccountRecoveryUserSettings->newEntity([
-            'status' => $status,
-            'user_id' => $userId,
-            'created_by' => $userId,
-            'modified_by' => $userId,
-        ]);
-
-        if ($setting->hasErrors()) {
-            if ($setting->getError('status')['inList'] ?? false) {
-                $msg = $setting->getError('status')['inList'];
-            } else {
-                $msg = __('The account recovery user setting is not valid.');
-            }
-            throw new ValidationException(
-                $msg,
-                $setting,
-                $this->AccountRecoveryUserSettings
-            );
+        $status = $this->request->getData('account_recovery_user_setting.status') ?? '';
+        try {
+            return $this->AccountRecoveryUserSettings->buildAndValidateEntity($this->uac, $status);
+        } catch (ValidationException $exception) {
+            throw new CustomValidationException($exception->getMessage(), [
+                'account_recovery_user_setting' => $exception->getErrors(),
+            ]);
         }
-
-        return $setting;
     }
 
     /**
@@ -233,19 +253,32 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     protected function validateAccountRecoveryPrivateKey(string $userId): AccountRecoveryPrivateKey
     {
         $data = $this->request
-            ->getData('account_recovery_user_setting.account_recovery_private_key');
+            ->getData('account_recovery_user_setting.account_recovery_private_key') ?? [];
         $privateKeyPasswords = $this->request
-            ->getData('account_recovery_user_setting.account_recovery_private_key_passwords');
+            ->getData('account_recovery_user_setting.account_recovery_private_key_passwords') ?? [];
 
-        $privateKeyEntity = $this->AccountRecoveryPrivateKeys->buildAndValidateEntity(
-            new UserAccessControl(Role::USER, $userId),
-            $data,
-            $privateKeyPasswords
-        );
+        try {
+            $privateKeyEntity = $this->AccountRecoveryPrivateKeys->buildAndValidateEntity(
+                new UserAccessControl(Role::USER, $userId),
+                $data,
+                $privateKeyPasswords
+            );
+        } catch (ValidationException $exception) {
+            $msg = __('Could not validate private key data.');
+            throw new CustomValidationException($msg, [
+                'account_recovery_user_setting' => [
+                    'account_recovery_private_key' => $exception->getErrors(),
+                ],
+            ]);
+        }
 
         if (!$this->AccountRecoveryPrivateKeys->checkRules($privateKeyEntity)) {
-            $msg = __('Could not validate public key data.');
-            throw new ValidationException($msg, $privateKeyEntity, $this->AccountRecoveryPrivateKeys);
+            $msg = __('Could not validate private key data.');
+            throw new CustomValidationException($msg, [
+                'account_recovery_user_setting' => [
+                    'account_recovery_private_key' => $privateKeyEntity->getErrors(),
+                ],
+            ]);
         }
 
         return $privateKeyEntity;

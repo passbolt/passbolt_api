@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Service\Setup;
 
-use App\Error\Exception\ValidationException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
@@ -67,34 +67,6 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
 
         return $this->gpg->encrypt('Foo');
-    }
-
-    /**
-     * The user setting status should be valid
-     *
-     * @see AccountRecoveryUserSettingsTable::validationDefault()
-     */
-    public function testAccountRecoverySetupCompleteService_InvalidStatus()
-    {
-        AccountRecoveryOrganizationPolicyFactory::make()
-            ->optin()
-            ->withAccountRecoveryOrganizationPublicKey()
-            ->persist();
-
-        $token = AuthenticationTokenFactory::make()
-            ->with('Users', UserFactory::make()->user()->inactive())
-            ->type(AuthenticationToken::TYPE_REGISTER)
-            ->active()
-            ->persist();
-
-        $request = (new ServerRequest())
-            ->withData('authenticationtoken.token', $token->token)
-            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
-            ->withData('account_recovery_user_setting.status', 'Foo');
-
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('The status should be one of the following: rejected, approved.');
-        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
     }
 
     /**
@@ -174,7 +146,6 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         $this->assertEquals($token->user->id, $q->created_by);
         $this->assertEquals($token->user->id, $q->modified_by);
     }
-
 
     /**
      * If the user setting rejects the account recovery, no private key is saved
@@ -278,7 +249,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
                 'data' => 'nope',
             ]]);
 
-        $this->expectException(BadRequestException::class);
+        $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('Invalid request');
         (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
     }
@@ -306,7 +277,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
                 'data' => 'nope',
             ]]);
 
-        $this->expectException(BadRequestException::class);
+        $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('Invalid request');
         (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
     }
@@ -334,7 +305,30 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
     }
 
-    public function testAccountRecoverySetupCompleteService_Errors_PassswordMissing()
+    public function testAccountRecoverySetupCompleteService_Errors_MandatoryAcceptedPassswordMissing()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey());
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Account recovery is mandatory.');
+        (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_OptinAcceptedPassswordMissing()
     {
         AccountRecoveryOrganizationPolicyFactory::make()
             ->optin()
@@ -352,24 +346,112 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey());
 
-        $this->expectException(BadRequestException::class);
+        $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('Invalid request');
         (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
     }
 
-    public function testAccountRecoverySetupCompleteService_Errors_InvalidStatus_Missing()
-    {
-        $this->markTestIncomplete('Not status');
-    }
-
+    /**
+     * The user setting status should be valid
+     *
+     * @see AccountRecoveryUserSettingsTable::validationDefault()
+     */
     public function testAccountRecoverySetupCompleteService_Errors_InvalidStatus_NotInList()
     {
-        $this->markTestIncomplete('Status not in list');
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', 'Foo');
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $errors = $exception->getErrors();
+            $this->assertNotEmpty($errors['account_recovery_user_setting']['status']['inList']);
+        }
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidStatus_Missing()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $this->serverKeyId,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => 'nope',
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $errors = $exception->getErrors();
+            $this->assertNotEmpty($errors['account_recovery_user_setting']['status']['_empty']);
+        }
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_InvalidKey_NotOpenPGP()
     {
-        $this->markTestIncomplete('Not openpgp message');
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', 'not openpgp key')
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $orkFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $this->encrypt($orkFingerprint, $orkArmored),
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key']['data']['isValidOpenPGPMessage']);
+        }
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_InvalidKey_NotSymmetricBlock()

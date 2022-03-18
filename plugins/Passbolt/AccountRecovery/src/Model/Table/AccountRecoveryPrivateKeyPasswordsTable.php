@@ -114,7 +114,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
 
         $validator
             ->uuid('modified_by')
-            ->requirePresence('modified_by', 'create')
+            ->requirePresence('modified_by')
             ->notEmptyString('modified_by');
 
         return $validator;

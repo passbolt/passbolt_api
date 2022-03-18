@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -87,7 +88,8 @@ class AccountRecoveryPrivateKeysTable extends Table
         $validator
             ->scalar('data')
             ->requirePresence('data', 'create')
-            ->notEmptyString('data');
+            ->notEmptyString('data')
+            ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator
             ->uuid('created_by')
@@ -96,7 +98,7 @@ class AccountRecoveryPrivateKeysTable extends Table
 
         $validator
             ->uuid('modified_by')
-            ->requirePresence('modified_by', 'create')
+            ->requirePresence('modified_by')
             ->notEmptyString('modified_by');
 
         return $validator;
