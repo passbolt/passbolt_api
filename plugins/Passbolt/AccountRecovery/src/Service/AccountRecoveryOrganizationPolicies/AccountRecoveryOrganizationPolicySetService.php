@@ -30,16 +30,6 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecoveryOrganizationPolicySetService implements AccountRecoveryOrganizationPolicySetServiceInterface // phpcs:ignore
 {
     /**
-     * AbstractCompleteService constructor
-     *
-     * @param \Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetServiceInterface|null $getService bring your own getter
-     */
-    public function __construct(?AccountRecoveryOrganizationPolicyGetServiceInterface $getService = null)
-    {
-        parent::__construct($getService);
-    }
-
-    /**
      * Set - create new policy and delete the old one
      *
      * @param \App\Utility\UserAccessControl $uac user access control

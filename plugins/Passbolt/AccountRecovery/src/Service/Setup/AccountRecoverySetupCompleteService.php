@@ -54,9 +54,9 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     public $data;
 
     /**
-     * @param \Cake\Http\ServerRequest $request Server request
+     * @param \Cake\Http\ServerRequest|null $request Server request
      */
-    public function __construct(ServerRequest $request)
+    public function __construct(?ServerRequest $request = null)
     {
         parent::__construct($request);
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
