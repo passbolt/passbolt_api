@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Model;
 
+use App\Notification\Email\EmailSubscriptionDispatcher;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Cake\View\ViewBuilder;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
@@ -124,14 +124,17 @@ trait EmailQueueTrait
      * Asserts that a string is found in an email of the email queue.
      *
      * @param string $string String to search for
-     * @param int $i Email position in the queue (start with 0), default 0
+     * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
      * @param string $message Error message
      * @throws \Exception If the test fails.
      */
-    protected function assertEmailInBatchContains(string $string, int $i = 0, string $message = ''): void
+    protected function assertEmailInBatchContains(string $string, $i = 0, string $message = ''): void
     {
-        $EmailQueue = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
-        $email = $EmailQueue->find()->order('id')->offset($i)->first();
+        if (is_int($i)) {
+            $email = EmailQueueFactory::find()->order('id')->offset($i)->first();
+        } else {
+            $email = EmailQueueFactory::find()->where(['email' => $i])->first();
+        }
         if (empty($email)) {
             $this->fail("The email queue does not have an email at index $i");
         }
@@ -150,5 +153,30 @@ trait EmailQueueTrait
 
         $renderedEmail = $viewBuilder->build()->render();
         $this->assertStringContainsString($string, $renderedEmail, $message);
+    }
+
+    /**
+     * Helper to collect all the emails redactor. This is called in Application.php
+     * When testing emails in a test service, you may call this after all plugins have been loaded.
+     *
+     * In addition, we load the plugins that are required for the emails to work properly
+     *
+     * @param array $plugins Plugins to load. Needed to load email redactor pools
+     * @return void
+     */
+    protected function initEmailForServiceTest(array $plugins = []): void
+    {
+        $this->loadPlugins(array_merge($plugins, ['Passbolt/Locale', 'Passbolt/EmailDigest',]));
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+    }
+
+    /**
+     * Deletes all emails in the queue.
+     *
+     * @return void
+     */
+    protected function deleteEmailQueue(): void
+    {
+        EmailQueueFactory::find()->delete()->execute();
     }
 }
