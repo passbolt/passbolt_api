@@ -22,6 +22,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\ServerRequest;
 use Cake\Validation\Validation;
 
 /**
@@ -34,13 +35,21 @@ abstract class AbstractStartService
     use ModelAwareTrait;
 
     /**
-     * AbstractStartService constructor
+     * @var \Cake\Http\ServerRequest
      */
-    public function __construct()
+    protected $request;
+
+    /**
+     * AbstractStartService constructor
+     *
+     * @param \Cake\Http\ServerRequest $request Server Request
+     */
+    public function __construct(ServerRequest $request)
     {
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('UserAgents');
         $this->loadModel('Users');
+        $this->request = $request;
     }
 
     /**
