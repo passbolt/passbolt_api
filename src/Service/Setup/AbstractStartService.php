@@ -42,14 +42,14 @@ abstract class AbstractStartService
     /**
      * AbstractStartService constructor
      *
-     * @param \Cake\Http\ServerRequest $request Server Request
+     * @param \Cake\Http\ServerRequest|null $request Server Request
      */
-    public function __construct(ServerRequest $request)
+    public function __construct(?ServerRequest $request = null)
     {
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('UserAgents');
         $this->loadModel('Users');
-        $this->request = $request;
+        $this->request = $request ?? new ServerRequest();
     }
 
     /**
