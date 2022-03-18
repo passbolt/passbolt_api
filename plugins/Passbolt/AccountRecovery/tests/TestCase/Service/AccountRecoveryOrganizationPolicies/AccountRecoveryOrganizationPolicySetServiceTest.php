@@ -22,6 +22,8 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\EmailQueueTrait;
+use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -29,7 +31,6 @@ use Cake\Chronos\Chronos;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
-use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetService;
@@ -43,6 +44,12 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTestCase
 {
+    use EmailQueueTrait;
+    use UserAccessControlTrait;
+
+    /**
+     * @var AccountRecoveryOrganizationPolicySetService
+     */
     public $service;
 
     public function setUp(): void
@@ -50,6 +57,7 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
         parent::setUp();
 
         $this->service = new AccountRecoveryOrganizationPolicySetService(new ServerRequest());
+        $this->initEmailForServiceTest(['Passbolt/AccountRecovery']);
     }
 
     public function tearDown(): void
@@ -522,6 +530,8 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             $e = $exception->getErrors();
             $this->assertNotEmpty($e['account_recovery_organization_public_key']['fingerprint']['isNotAccountRecoveryOrganizationPublicKeyFingerprintRule']);
         }
+
+        $this->assertEmailQueueIsEmpty();
     }
 
     // DISABLED => ENABLED
@@ -532,37 +542,49 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
      */
     public function testAccountRecoveryOrganizationPolicySetService_Success_DisabledEnabled()
     {
+        $admins = UserFactory::make(3)->active()->admin()->persist();
+        $user = $admins[0];
+        $uac = $this->makeUac($user);
+        $keyData = AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()->getEntity();
+        $policyValue = 'opt-in';
         $data = [
-            'policy' => 'opt-in',
+            'policy' => $policyValue,
             'account_recovery_organization_public_key' => [
-                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
+                'fingerprint' => $keyData->fingerprint,
+                'armored_key' => $keyData->armored_key,
             ],
         ];
-        $policy = $this->service->set($this->getUac(), $data);
+        $policy = $this->service->set($uac, $data);
 
         $this->assertNotEmpty($policy->policy);
         $this->assertNotEmpty($policy->created);
         $this->assertNotEmpty($policy->modified);
-        $this->assertEquals($this->getUac()->getId(), $policy->created_by);
-        $this->assertEquals($this->getUac()->getId(), $policy->modified_by);
+        $this->assertEquals($uac->getId(), $policy->created_by);
+        $this->assertEquals($uac->getId(), $policy->modified_by);
 
         $this->assertNotEmpty($policy->account_recovery_organization_public_key);
         $this->assertEquals($data['account_recovery_organization_public_key']['fingerprint'], $policy->account_recovery_organization_public_key->fingerprint);
         $this->assertEquals($data['account_recovery_organization_public_key']['armored_key'], $policy->account_recovery_organization_public_key->armored_key);
-        $this->assertEquals($this->getUac()->getId(), $policy->account_recovery_organization_public_key->created_by);
-        $this->assertEquals($this->getUac()->getId(), $policy->account_recovery_organization_public_key->modified_by);
+        $this->assertEquals($uac->getId(), $policy->account_recovery_organization_public_key->created_by);
+        $this->assertEquals($uac->getId(), $policy->account_recovery_organization_public_key->modified_by);
         $this->assertNotEmpty($policy->account_recovery_organization_public_key->created);
         $this->assertNotEmpty($policy->account_recovery_organization_public_key->modified);
         $this->assertNull($policy->account_recovery_organization_public_key->deleted);
 
         // Check data integrity
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
-        $foundPolicies = $table->find()->all();
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
-        $foundKeys = $table->find()->all();
-        $this->assertEquals(1, count($foundPolicies));
-        $this->assertEquals(1, count($foundKeys));
+        $this->assertEquals(1, AccountRecoveryOrganizationPolicyFactory::count());
+        $this->assertEquals(1, AccountRecoveryOrganizationPublicKeyFactory::count());
+
+        // Check emails
+        $this->assertEmailQueueCount(count($admins));
+        foreach ($admins as $admin) {
+            if ($admin->id === $user->id) {
+                $this->assertEmailInBatchContains("You have set the account recovery organization policy to $policyValue.", $admin->username);
+            } else {
+                $this->assertEmailInBatchContains($user->profile->first_name . " has set the account recovery organization policy to $policyValue.", $admin->username);
+            }
+            $this->assertEmailInBatchContains("The fingerprint of the organization public key is $keyData->fingerprint.", $admin->username);
+        }
     }
 
     /**
@@ -574,37 +596,52 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ->disabled()
             ->persist();
 
+        $admins = UserFactory::make(3)->active()->admin()->persist();
+        $user = $admins[0];
+        $uac = $this->makeUac($user);
+        $keyData = AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()->getEntity();
+        $policyValue = 'mandatory';
+
         $data = [
-            'policy' => 'mandatory',
+            'policy' => $policyValue,
             'account_recovery_organization_public_key' => [
-                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
+                'fingerprint' => $keyData->fingerprint,
+                'armored_key' => $keyData->armored_key,
             ],
         ];
-        $policy = $this->service->set($this->getUac(), $data);
+        $policy = $this->service->set($uac, $data);
 
         $this->assertEquals('mandatory', $policy->policy);
         $this->assertNotEmpty($policy->created);
         $this->assertNotEmpty($policy->modified);
-        $this->assertEquals($this->getUac()->getId(), $policy->created_by);
-        $this->assertEquals($this->getUac()->getId(), $policy->modified_by);
+        $this->assertEquals($uac->getId(), $policy->modified_by);
 
         $this->assertNotEmpty($policy->account_recovery_organization_public_key);
         $this->assertEquals($data['account_recovery_organization_public_key']['fingerprint'], $policy->account_recovery_organization_public_key->fingerprint);
         $this->assertEquals($data['account_recovery_organization_public_key']['armored_key'], $policy->account_recovery_organization_public_key->armored_key);
-        $this->assertEquals($this->getUac()->getId(), $policy->account_recovery_organization_public_key->created_by);
-        $this->assertEquals($this->getUac()->getId(), $policy->account_recovery_organization_public_key->modified_by);
+        $this->assertEquals($uac->getId(), $policy->account_recovery_organization_public_key->created_by);
+        $this->assertEquals($uac->getId(), $policy->account_recovery_organization_public_key->modified_by);
         $this->assertNotEmpty($policy->account_recovery_organization_public_key->created);
         $this->assertNotEmpty($policy->account_recovery_organization_public_key->modified);
         $this->assertNull($policy->account_recovery_organization_public_key->deleted);
 
         // Check data integrity
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
-        $this->assertEquals(1, $table->find()->where(['deleted IS' => null])->count());
-        $this->assertEquals(1, $table->find()->where(['deleted IS NOT' => null])->count());
+        $this->assertEquals(1, AccountRecoveryOrganizationPolicyFactory::find()->where(['deleted IS' => null])->count());
+        $this->assertEquals(1, AccountRecoveryOrganizationPolicyFactory::find()->where(['deleted IS NOT' => null])->count());
 
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
-        $this->assertEquals(1, $table->find()->all()->count());
+        $this->assertEquals(1, AccountRecoveryOrganizationPublicKeyFactory::count());
+
+        // Check emails
+        $this->assertEmailQueueCount(count($admins));
+        foreach ($admins as $admin) {
+            if ($admin->id === $user->id) {
+                $this->assertEmailInBatchContains("You have set the account recovery organization policy to $policyValue.", $admin->username);
+            } else {
+                $this->assertEmailInBatchContains($user->profile->first_name . " has set the account recovery organization policy to $policyValue.", $admin->username);
+            }
+            $this->assertEmailInBatchContains("The fingerprint of the organization public key is $keyData->fingerprint.", $admin->username);
+            $this->assertEmailInBatchContains('Account Recovery Enabled', $admin->username);
+        }
     }
 
     // ENABLED => DISABLED
@@ -617,43 +654,57 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     {
         $this->startScenarioOptinWithBackupsAndRequests();
 
+        $admins = UserFactory::make(3)->active()->admin()->persist();
+        $user = $admins[0];
+        $uac = $this->makeUac($user);
+        $keyData = AccountRecoveryOrganizationPublicKeyFactory::make()->revokedKey()->getEntity();
+        $policyValue = 'disabled';
+
         $data = [
-            'policy' => 'disabled',
+            'policy' => $policyValue,
             'account_recovery_organization_revoked_key' => [
-                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+                'fingerprint' => $keyData->fingerprint,
+                'armored_key' => $keyData->armored_key,
             ],
         ];
 
-        $policy = $this->service->set($this->getUac(), $data);
+        $policy = $this->service->set($uac, $data);
 
         $this->assertNotEmpty($policy);
         $this->assertEquals('disabled', $policy->policy);
         $this->assertNotEmpty($policy->created);
         $this->assertNotEmpty($policy->modified);
-        $this->assertEquals($this->getUac()->getId(), $policy->created_by);
-        $this->assertEquals($this->getUac()->getId(), $policy->modified_by);
+        $this->assertEquals($uac->getId(), $policy->created_by);
+        $this->assertEquals($uac->getId(), $policy->modified_by);
         $this->assertEmpty($policy->account_recovery_organization_public_key);
 
         // There should be two policies and one deleted
         $this->assertSame(2, AccountRecoveryOrganizationPolicyFactory::count());
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
-        $this->assertEquals(1, $table->find()->where(['deleted IS NOT' => null])->count());
+        $this->assertEquals(1, AccountRecoveryOrganizationPolicyFactory::find()->where(['deleted IS NOT' => null])->count());
 
         // There should be two public keys in DB both deleted
         $this->assertSame(2, AccountRecoveryOrganizationPublicKeyFactory::count());
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
-        $this->assertEquals(2, $table->find()->where(['deleted IS NOT' => null])->count());
+        $this->assertEquals(2, AccountRecoveryOrganizationPublicKeyFactory::find()->where(['deleted IS NOT' => null])->count());
 
         // There should be one account recovery request as rejected
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryRequests');
-        $this->assertEquals(1, $table->find()->where(['status' => 'rejected'])->count());
-        $this->assertEquals(1, $table->find()->count());
+        $this->assertEquals(1, AccountRecoveryRequestFactory::find()->where(['status' => 'rejected'])->count());
+        $this->assertEquals(1, AccountRecoveryRequestFactory::find()->count());
 
         // Private key and passwords table and user settings should be truncated
         $this->assertSame(0, AccountRecoveryPrivateKeyFactory::count());
         $this->assertSame(0, AccountRecoveryPrivateKeyPasswordFactory::count());
         $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
+
+        // Check emails
+        $this->assertEmailQueueCount(count($admins));
+        foreach ($admins as $admin) {
+            if ($admin->id === $user->id) {
+                $this->assertEmailInBatchContains('You have disabled the account recovery.', $admin->username);
+            } else {
+                $this->assertEmailInBatchContains($user->profile->first_name . ' has disabled the account recovery.', $admin->username);
+            }
+            $this->assertEmailInBatchContains('Account Recovery Disabled', $admin->username);
+        }
     }
 
     // ENABLED => ENABLED
@@ -663,27 +714,43 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     {
         $this->startScenarioOptinNoBackups();
 
-        $policy = $this->service->set($this->getUac(), [
+        $admins = UserFactory::make(3)->active()->admin()->persist();
+        $user = $admins[0];
+        $uac = $this->makeUac($user);
+        $policyValue = AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT;
+
+        $policy = $this->service->set($uac, [
             'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY,
         ]);
         $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY);
 
         sleep(1); // needed to avoid creation time to get mixed up because they become equal
+        $this->assertEmailQueueCount(count($admins));
+        $this->deleteEmailQueue(); // We focus here on the coming emails, generated by the update
 
-        $policy = $this->service->set($this->getUac(), [
-            'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT,
+        $policy = $this->service->set($uac, [
+            'policy' => $policyValue,
         ]);
         $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT);
 
         // There should be 3 policies, one not deleted
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
-        $this->assertEquals(3, $table->find()->count());
-        $this->assertEquals(1, $table->find()->where(['deleted IS' => null])->count());
+        $this->assertEquals(3, AccountRecoveryOrganizationPolicyFactory::count());
+        $this->assertEquals(1, AccountRecoveryOrganizationPolicyFactory::find()->where(['deleted IS' => null])->count());
 
         // There should be one public key
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
-        $this->assertEquals(1, $table->find()->count());
-        $this->assertEquals(1, $table->find()->where(['deleted IS' => null])->count());
+        $this->assertEquals(1, AccountRecoveryOrganizationPublicKeyFactory::count());
+        $this->assertEquals(1, AccountRecoveryOrganizationPublicKeyFactory::find()->where(['deleted IS' => null])->count());
+
+        // Check emails
+        $this->assertEmailQueueCount(count($admins));
+        foreach ($admins as $admin) {
+            if ($admin->id === $user->id) {
+                $this->assertEmailInBatchContains("You have updated the account recovery organization policy to $policyValue.", $admin->username);
+            } else {
+                $this->assertEmailInBatchContains($user->profile->first_name . " has updated the account recovery organization policy to $policyValue.", $admin->username);
+            }
+            $this->assertEmailInBatchContains('Account Recovery Updated', $admin->username);
+        }
     }
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateSimple_InvalidPolicy()

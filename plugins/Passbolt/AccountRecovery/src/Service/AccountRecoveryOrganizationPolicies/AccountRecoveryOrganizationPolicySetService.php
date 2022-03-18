@@ -150,6 +150,9 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
             }
         );
 
+        $event = new Event(self::AFTER_UPDATE_POLICY_EVENT, $this, ['uac' => $uac, 'policy' => $newPolicy]);
+        $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
+
         return $this->getCurrentPolicyEntity(false);
     }
 
@@ -169,7 +172,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
 
         // Trigger event for email notifications and co.
         // TODO email notification and notification setting
-        $event = new Event(self::AFTER_ENABLE_POLICY_EVENT, $this, $policy);
+        $event = new Event(self::AFTER_ENABLE_POLICY_EVENT, $this, compact('policy', 'uac'));
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 
         return $this->getCurrentPolicyEntity(false);
@@ -208,7 +211,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
 
         // Trigger event for email notifications and co.
         // TODO email notification and notification setting
-        $event = new Event(self::AFTER_DISABLE_POLICY_EVENT, $this, [$oldPolicy, $newPolicy]);
+        $event = new Event(self::AFTER_DISABLE_POLICY_EVENT, $this, ['uac' => $uac, 'policy' => $newPolicy]);
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 
         return $this->getCurrentPolicyEntity(false);

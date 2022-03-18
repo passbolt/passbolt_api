@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.6.0
  */
 
-namespace Passbolt\AccountRecovery\Notification;
+namespace Passbolt\AccountRecovery\Notification\Request;
 
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;

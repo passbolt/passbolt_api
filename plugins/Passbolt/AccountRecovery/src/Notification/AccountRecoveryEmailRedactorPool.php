@@ -18,6 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Notification;
 
 use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
+use Passbolt\AccountRecovery\Notification\OrganizationPolicies\AccountRecoveryOrganizationPolicyDisableEmailRedactor;
+use Passbolt\AccountRecovery\Notification\OrganizationPolicies\AccountRecoveryOrganizationPolicyEnableEmailRedactor;
+use Passbolt\AccountRecovery\Notification\OrganizationPolicies\AccountRecoveryOrganizationPolicyUpdateEmailRedactor;
+use Passbolt\AccountRecovery\Notification\Request\AccountRecoveryRequestCreatedAdminEmailRedactor;
+use Passbolt\AccountRecovery\Notification\Request\AccountRecoveryRequestCreatedUserEmailRedactor;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
@@ -37,6 +42,12 @@ class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPo
             $redactors[] = new AccountRecoveryRequestCreatedAdminEmailRedactor();
         }
 
+        if ($this->isRedactorEnabled('send.accountRecovery.policy.update')) {
+            $redactors[] = new AccountRecoveryOrganizationPolicyEnableEmailRedactor();
+            $redactors[] = new AccountRecoveryOrganizationPolicyDisableEmailRedactor();
+            $redactors[] = new AccountRecoveryOrganizationPolicyUpdateEmailRedactor();
+        }
+
         return $redactors;
     }
 
@@ -48,7 +59,6 @@ class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPo
      */
     private function isRedactorEnabled(string $notificationSettingPath)
     {
-//        dd($notificationSettingPath, EmailNotificationSettings::get($notificationSettingPath));
         return EmailNotificationSettings::get($notificationSettingPath);
     }
 }
