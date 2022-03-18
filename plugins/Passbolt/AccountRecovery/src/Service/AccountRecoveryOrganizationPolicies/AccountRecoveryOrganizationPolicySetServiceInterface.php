@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
 use App\Utility\UserAccessControl;
+use Cake\Http\ServerRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 
 interface AccountRecoveryOrganizationPolicySetServiceInterface
@@ -25,9 +26,9 @@ interface AccountRecoveryOrganizationPolicySetServiceInterface
     /**
      * AccountRecoveryOrganizationPolicySetServiceInterface constructor.
      *
-     * @param \Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetServiceInterface|null $getService bring your own getter // phpcs:ignore
+     * @param \Cake\Http\ServerRequest|null $request Server Request
      */
-    public function __construct(?AccountRecoveryOrganizationPolicyGetServiceInterface $getService = null);
+    public function __construct(?ServerRequest $request = null);
 
     /**
      * @param \App\Utility\UserAccessControl $uac user access control

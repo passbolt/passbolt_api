@@ -17,8 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
+use App\Model\Table\AvatarsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Http\ServerRequest;
+use Cake\ORM\Query;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 
 /**
@@ -29,11 +32,19 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
     use ModelAwareTrait;
 
     /**
-     * AccountRecoveryOrganizationPolicyGetService constructor.
+     * @var \Cake\Http\ServerRequest
      */
-    public function __construct()
+    protected $request;
+
+    /**
+     * AccountRecoveryOrganizationPolicyGetService constructor.
+     *
+     * @param \Cake\Http\ServerRequest|null $serverRequest Server request
+     */
+    public function __construct(?ServerRequest $serverRequest = null)
     {
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
+        $this->request = $serverRequest ?? new ServerRequest();
     }
 
     /**
@@ -43,12 +54,29 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
      */
     public function get(): AccountRecoveryOrganizationPolicy
     {
+        $query = $this->AccountRecoveryOrganizationPolicies->find();
+        $this->containCreator($query);
+
         try {
-            $policy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicyOrFail();
+            $policy = $this->AccountRecoveryOrganizationPolicies->getCurrentPolicyOrFail($query);
         } catch (RecordNotFoundException $exception) {
             $policy = $this->AccountRecoveryOrganizationPolicies->newEntityForDefaultFallback();
         }
 
         return $policy;
+    }
+
+    /**
+     * Join the creator to the query if contained in the request
+     *
+     * @param \Cake\ORM\Query $query Query to decorate
+     * @return void
+     */
+    public function containCreator(Query $query): void
+    {
+        $contain = $this->request->getQuery('contain');
+        if (is_array($contain) && $contain['creator'] ?? false) {
+            $query->contain(['Creator.Profiles' => AvatarsTable::addContainAvatar()]);
+        }
     }
 }

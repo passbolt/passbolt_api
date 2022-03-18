@@ -66,6 +66,10 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
             'className' => 'Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys',
             'foreignKey' => 'public_key_id',
         ]);
+        $this->belongsTo('Creator', [
+            'className' => 'Users',
+            'foreignKey' => 'created_by',
+        ]);
     }
 
     /**
@@ -104,7 +108,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     public function getCurrentPolicyName(): string
     {
         try {
-            $policy = $this->getCurrentPolicyOrFail();
+            $policy = $this->getCurrentPolicyOrFail($this->find());
         } catch (RecordNotFoundException $exception) {
             return AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_DISABLED;
         }
@@ -115,13 +119,14 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     /**
      * Get currently active policy if any
      *
-     * @throws \Cake\Http\Exception\NotFoundException if no active policy found
+     * @param \Cake\ORM\Query $query Query passed with potential contains
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy current policy
+     * @throws \Cake\Http\Exception\NotFoundException if no active policy found
      */
-    public function getCurrentPolicyOrFail(): AccountRecoveryOrganizationPolicy
+    public function getCurrentPolicyOrFail(Query $query): AccountRecoveryOrganizationPolicy
     {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
-        $policy = $this->find()
+        $policy = $query
             ->select()
             ->contain('AccountRecoveryOrganizationPublicKeys', function (Query $q) {
                 return $q->select([
@@ -179,7 +184,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     protected function softDeleteCurrentPolicy(UserAccessControl $uac, ?array $saveOptions = null)
     {
         try {
-            $oldPolicy = $this->getCurrentPolicyOrFail();
+            $oldPolicy = $this->getCurrentPolicyOrFail($this->find());
         } catch (RecordNotFoundException $exception) {
             // No current policy to delete, do nothing
             return null;
