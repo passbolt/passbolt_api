@@ -61,10 +61,8 @@ class AbstractAccountRecoveryOrganizationPolicySetService
 
     /**
      * AbstractCompleteService constructor
-     *
-     * @param \Cake\Http\ServerRequest|null $request Server Request
      */
-    public function __construct(?ServerRequest $request = null)
+    public function __construct()
     {
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
@@ -156,7 +154,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     }
 
     /**
-     * @return bool true if the account_recovery_organization_public_key data is set
+     * @return bool if the account_recovery_organization_public_key data is set return true
      */
     public function isPublicKeyProvided(): bool
     {
@@ -166,7 +164,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     }
 
     /**
-     * @return bool true if the account_recovery_organization_revoked_key data is set
+     * @return bool if the account_recovery_organization_revoked_key data is set return true
      */
     public function isRevokedKeyProvided(): bool
     {
@@ -176,7 +174,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     }
 
     /**
-     * @return bool true if the account_recovery_private_key_passwords data is set
+     * @return bool if the account_recovery_private_key_passwords data is set return true
      */
     public function isPrivateKeyPasswordsProvided(): bool
     {

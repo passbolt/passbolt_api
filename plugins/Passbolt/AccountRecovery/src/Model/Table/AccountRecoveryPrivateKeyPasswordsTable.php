@@ -130,6 +130,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
+
         $rules->add(
             $rules->existsIn(['private_key_id'], 'AccountRecoveryPrivateKeys'),
             ['errorField' => 'private_key_id']

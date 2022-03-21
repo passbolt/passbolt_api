@@ -614,7 +614,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
      */
     public function testAccountRecoveryOrganizationPolicySetService_Success_EnabledDisabled()
     {
-        $this->startScenarioOptinWithBackupsAndRequests();
+        $this->startScenarioOptinWithBackupAndRequest();
 
         $data = [
             'policy' => 'disabled',
@@ -820,7 +820,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
     public function testAccountRecoveryOrganizationPolicySetService_Success_UpdateWithFullRotation()
     {
-        $this->startScenarioOptinWithBackupsAndRequests();
+        $this->startScenarioOptinWithBackupAndRequest();
 
         $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
         $newKeyFingerprint = '23c6 c30e 2413 24c9 0a44  a719 a86a 7ea3 7397 97f5';
@@ -857,9 +857,17 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         $this->assertEquals('23C6C30E241324C90A44A719A86A7EA3739797F5', $policy->account_recovery_organization_public_key->fingerprint);
     }
 
-    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsMissing()
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsPrivateKeyNotFound()
     {
-        $this->startScenarioOptinWithBackupsAndRequests();
+        $this->startScenarioOptinWithBackupAndRequest();
+
+        UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->patchData([
+                'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+                'armored_key' => file_get_contents(FIXTURES . 'Gpgkeys' . DS . 'ada_public.key'),
+            ]))
+            ->persist();
 
         $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
         $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
@@ -879,10 +887,67 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
                 'armored_key' => $newKeyArmored,
             ],
             'account_recovery_private_key_passwords' => [[
-                'private_key_id' => UuidFactory::uuid('acr.private_key.betty.id'), // betty not needed, ada missing
+                'private_key_id' => UuidFactory::uuid('acr.private_key.betty.id'), // betty not exist
                 'recipient_fingerprint' => $newKeyFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $gpg->encrypt('cofveve'),
+            ]],
+        ];
+
+        try {
+            $this->service->set($this->getUac(), $data);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertTrue(isset($e['account_recovery_private_key_passwords'][0]['private_key_id']['_existsIn']));
+        }
+
+        // Check the policy has not changed
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        $this->assertEquals('opt-in', $policy->policy);
+        $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsMissing()
+    {
+        $this->startScenarioOptinWith2Backups();
+
+        UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->patchData([
+                'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+                'armored_key' => file_get_contents(FIXTURES . 'Gpgkeys' . DS . 'ada_public.key'),
+            ]))
+            ->persist();
+
+        $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
+
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->importKeyIntoKeyring($newKeyArmored);
+        $gpg->setEncryptKeyFromFingerprint($newKeyFingerprint);
+        $msg = $gpg->encrypt('cofveve');
+
+        $data = [
+            'policy' => 'opt-out',
+            'account_recovery_organization_revoked_key' => [
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
+            ],
+            'account_recovery_organization_public_key' => [
+                'fingerprint' => $newKeyFingerprint,
+                'armored_key' => $newKeyArmored,
+            ],
+            'account_recovery_private_key_passwords' => [[
+                'private_key_id' => UuidFactory::uuid('acr.private_key.betty.id'), // ada missing
+                'recipient_fingerprint' => $newKeyFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $msg,
+            ],[
+                'private_key_id' => UuidFactory::uuid('acr.private_key.betty.id'), // betty doubled
+                'recipient_fingerprint' => $newKeyFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $msg,
             ]],
         ];
 
@@ -904,7 +969,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsFormatInvalid_NotParsable()
     {
-        $this->startScenarioOptinWithBackupsAndRequests();
+        $this->startScenarioOptinWithBackupAndRequest();
 
         $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
         $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
@@ -944,7 +1009,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsFormatInvalid_Symetric()
     {
-        $this->startScenarioOptinWithBackupsAndRequests();
+        $this->startScenarioOptinWithBackupAndRequest();
 
         $oldKeyRevokedArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key');
         $oldKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
@@ -987,7 +1052,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_RecipientInvalid()
     {
-        $this->startScenarioOptinWithBackupsAndRequests();
+        $this->startScenarioOptinWithBackupAndRequest();
 
         $oldKeyRevokedArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key');
         $oldKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
@@ -1024,7 +1089,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             $this->fail();
         } catch (CustomValidationException $exception) {
             $e = $exception->getErrors();
-            $this->assertTrue(isset($e['account_recovery_private_key_passwords'][0]['wrongRecipient']));
+            $this->assertTrue(isset($e['account_recovery_private_key_passwords'][0]['data']['wrongRecipient']));
         }
 
         // Check the policy has not changed
@@ -1035,7 +1100,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_RecipientTooMany()
     {
-        $this->startScenarioOptinWithBackupsAndRequests();
+        $this->startScenarioOptinWithBackupAndRequest();
 
         $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
         $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
@@ -1089,7 +1154,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
      *
      * @throws \Exception
      */
-    private function startScenarioOptinWithBackupsAndRequests()
+    private function startScenarioOptinWithBackupAndRequest()
     {
         UserFactory::make()
             ->user()
@@ -1139,6 +1204,71 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         AccountRecoveryRequestFactory::make()
             ->setField('user_id', UuidFactory::uuid('user.id.ada'))
+            ->persist();
+    }
+
+    /**
+     * Setup needed fixtures to have a basic scenario with
+     *
+     * @throws \Exception
+     */
+    private function startScenarioOptinWith2Backups()
+    {
+        UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->patchData([
+                'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+                'armored_key' => file_get_contents(FIXTURES . 'Gpgkeys' . DS . 'ada_public.key'),
+            ]))
+            ->persist();
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'id' => UuidFactory::uuid('acr.org_public_key.id'),
+                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        AccountRecoveryOrganizationPublicKeyFactory::make()
+            ->setField('id', UuidFactory::uuid('acr.org_public_key_old.id'))
+            ->setField('fingerprint', '2D7CF2B7FD9643DEBF63633CFC7F5D048541513F')
+            ->setField('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'old_revoked_public.key'))
+            ->setField('deleted', Chronos::now()->subDay())
+            ->persist();
+
+        AccountRecoveryUserSettingFactory::make()
+            ->setField('status', 'approved')
+            ->setField('user_id', UuidFactory::uuid('user.id.ada'))
+            ->persist();
+
+        AccountRecoveryUserSettingFactory::make()
+            ->setField('status', 'approved')
+            ->setField('user_id', UuidFactory::uuid('user.id.betty'))
+            ->persist();
+
+        AccountRecoveryPrivateKeyFactory::make()
+            ->setField('id', UuidFactory::uuid('acr.private_key.ada.id'))
+            ->setField('user_id', UuidFactory::uuid('user.id.ada'))
+            ->persist();
+
+        AccountRecoveryPrivateKeyFactory::make()
+            ->setField('id', UuidFactory::uuid('acr.private_key.betty.id'))
+            ->setField('user_id', UuidFactory::uuid('user.id.betty'))
+            ->persist();
+
+        AccountRecoveryPrivateKeyPasswordFactory::make()
+            ->setField('private_key_id', UuidFactory::uuid('acr.private_key.ada.id'))
+            ->setField('recipient_fingerprint', '03F60E958F4CB29723ACDF761353B5B15D9B054F')
+            ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
+            ->persist();
+
+        AccountRecoveryPrivateKeyPasswordFactory::make()
+            ->setField('private_key_id', UuidFactory::uuid('acr.private_key.betty.id'))
+            ->setField('recipient_fingerprint', '03F60E958F4CB29723ACDF761353B5B15D9B054F')
+            ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
             ->persist();
     }
 

@@ -456,31 +456,362 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoverySetupCompleteService_Errors_InvalidKey_NotSymmetricBlock()
     {
-        $this->markTestIncomplete('Not openpgp symmetric message');
-    }
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
 
-    public function testAccountRecoverySetupCompleteService_Errors_InvalidPassword_NotOpenPGP()
-    {
-        $this->markTestIncomplete('Not openpgp message');
-    }
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
 
-    public function testAccountRecoverySetupCompleteService_Errors_InvalidPassword_NotAsymmetricBlock()
-    {
-        $this->markTestIncomplete('Not openpgp symmetric message');
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $gpgData = $this->encrypt($orkFingerprint, $orkArmored);
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $gpgData)
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $orkFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $gpgData,
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key']['data']['hasSymmetricPacketRule']);
+        }
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_NotOpenPGP()
     {
-        $this->markTestIncomplete('Not openpgp message');
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $orkFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => 'not openpgp data',
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key_passwords'][0]['data']['isValidOpenPGPMessage']);
+        }
     }
 
-    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_NotAsymetricMessage()
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_NotAsymmetricBlock()
     {
-        $this->markTestIncomplete('Not openpgpg asymmetric message');
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $orkFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $this->getDummyPrivateKey(),
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key_passwords'][0]['data']['hasAsymmetricPacketRule']);
+        }
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_EmptyData()
+    {
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $orkFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key_passwords'][0]['data']['_required']);
+        }
     }
 
     public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_WrongRecipient()
     {
-        $this->markTestIncomplete('Recipient is not ORK');
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        $otherKey = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
+        $otherFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $orkFingerprint,
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $this->encrypt($otherFingerprint, $otherKey),
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key_passwords'][0]['data']['wrongRecipient']);
+        }
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_MissingFingerprint()
+    {
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $this->encrypt($orkFingerprint, $orkArmored),
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key_passwords'][0]['recipient_fingerprint']['_required']);
+        }
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_WrongFingerprint()
+    {
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAB',
+                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'data' => $this->encrypt($orkFingerprint, $orkArmored),
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key_passwords'][0]['recipient_fingerprint']['wrongRecipient']);
+        }
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_MissingModel()
+    {
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $orkFingerprint,
+                'data' => $this->encrypt($orkFingerprint, $orkArmored),
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key_passwords'][0]['recipient_foreign_model']['_required']);
+        }
+    }
+
+    public function testAccountRecoverySetupCompleteService_Errors_InvalidPasswords_WrongModel()
+    {
+        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
+                'fingerprint' => $orkFingerprint,
+                'armored_key' => $orkArmored,
+                'deleted' => null,
+            ]))
+            ->persist();
+
+        $token = AuthenticationTokenFactory::make()
+            ->with('Users', UserFactory::make()->user()->inactive())
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
+
+        $request = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
+            ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
+            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+                'recipient_fingerprint' => $orkFingerprint,
+                'recipient_foreign_model' => 'SomethingElse',
+                'data' => $this->encrypt($orkFingerprint, $orkArmored),
+            ]]);
+
+        try {
+            (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['account_recovery_user_setting']['account_recovery_private_key_passwords'][0]['recipient_foreign_model']['inList']);
+        }
     }
 }

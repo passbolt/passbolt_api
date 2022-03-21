@@ -25,10 +25,8 @@ interface AccountRecoveryOrganizationPolicySetServiceInterface
 {
     /**
      * AccountRecoveryOrganizationPolicySetServiceInterface constructor.
-     *
-     * @param \Cake\Http\ServerRequest|null $request Server Request
      */
-    public function __construct(?ServerRequest $request = null);
+    public function __construct();
 
     /**
      * @param \App\Utility\UserAccessControl $uac user access control

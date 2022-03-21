@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
-use App\Error\Exception\ValidationException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\ORM\RulesChecker;
@@ -124,24 +124,14 @@ class AccountRecoveryPrivateKeysTable extends Table
     /**
      * @param \App\Utility\UserAccessControl $uac UAC
      * @param array $privateKey Private key
-     * @param array $privateKeyPasswords Private key passwords
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey
      */
-    public function buildAndValidateEntity(
-        UserAccessControl $uac,
-        array $privateKey,
-        array $privateKeyPasswords
-    ): AccountRecoveryPrivateKey {
+    public function buildAndValidateEntity(UserAccessControl $uac, array $privateKey): AccountRecoveryPrivateKey
+    {
         $userId = $uac->getId();
-        foreach ($privateKeyPasswords as $i => $pkp) {
-            $privateKeyPasswords[$i]['created_by'] = $userId;
-            $privateKeyPasswords[$i]['modified_by'] = $userId;
-        }
-
         $privateKeyEntity = $this->newEntity([
             'user_id' => $userId,
             'data' => $privateKey['data'] ?? [],
-            'account_recovery_private_key_passwords' => $privateKeyPasswords,
             'created_by' => $userId,
             'modified_by' => $userId,
         ], [
@@ -152,23 +142,11 @@ class AccountRecoveryPrivateKeysTable extends Table
                 'created_by' => true,
                 'modified_by' => true,
             ],
-            'associated' => [
-                'AccountRecoveryPrivateKeyPasswords' => [
-                    'accessibleFields' => [
-                        'recipient_fingerprint' => true,
-                        'recipient_foreign_model' => true,
-                        'private_key_id' => true,
-                        'data' => true,
-                        'created_by' => true,
-                        'modified_by' => true,
-                    ],
-                ],
-            ],
         ]);
 
         if ($privateKeyEntity->hasErrors()) {
             $msg = __('The account recovery private key is not valid.');
-            throw new ValidationException($msg, $privateKeyEntity, $this);
+            throw new CustomValidationException($msg, $privateKeyEntity->getErrors());
         }
 
         return $privateKeyEntity;
