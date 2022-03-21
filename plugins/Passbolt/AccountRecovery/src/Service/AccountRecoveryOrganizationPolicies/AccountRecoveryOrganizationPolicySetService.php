@@ -110,6 +110,9 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
                 // assert passwords backups format and numbers
                 $passwords = $this->buildPasswordEntitiesFromDataOrFail($uac, $newKey);
             }
+        } else {
+            // If key is not changing reuse the old one
+            $newPolicy->public_key_id = $this->getCurrentPolicyEntity()->public_key_id;
         }
 
         // save new key and disable previous key and backups if any

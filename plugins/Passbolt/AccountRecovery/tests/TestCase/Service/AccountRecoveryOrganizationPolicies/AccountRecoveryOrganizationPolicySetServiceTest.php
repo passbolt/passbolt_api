@@ -674,6 +674,10 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         ]);
         $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT);
 
+        // Public key should remain the same
+        $this->assertNotEmpty($policy->public_key_id);
+        $this->assertEquals(UuidFactory::uuid('acr.org_public_key.id'), $policy->public_key_id);
+
         // There should be 3 policies, one not deleted
         $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
         $this->assertEquals(3, $table->find()->count());
