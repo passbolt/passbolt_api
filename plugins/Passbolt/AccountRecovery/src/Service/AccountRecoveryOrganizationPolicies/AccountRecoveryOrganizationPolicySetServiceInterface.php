@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
 use App\Utility\UserAccessControl;
-use Cake\Http\ServerRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 
 interface AccountRecoveryOrganizationPolicySetServiceInterface
