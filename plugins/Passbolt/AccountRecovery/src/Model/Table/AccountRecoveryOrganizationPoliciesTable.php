@@ -177,7 +177,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     ): AccountRecoveryOrganizationPolicy {
         $this->getConnection()->transactional(function () use (&$newPolicy, $uac) {
             $saveOptions = ['atomic' => false];
-             $this->softDeleteCurrentPolicy($uac, $saveOptions);
+            $this->softDeleteCurrentPolicy($uac, $saveOptions);
             $newPolicy = $this->createOrFail($uac, $newPolicy, $saveOptions);
         });
 

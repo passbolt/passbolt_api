@@ -726,6 +726,11 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         $this->assertEquals(AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_IN, $policy->policy);
         $this->assertEquals('23C6C30E241324C90A44A719A86A7EA3739797F5', $policy->account_recovery_organization_public_key->fingerprint);
+
+        // There should be 2 policies, one not deleted
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
+        $this->assertEquals(2, $table->find()->count());
+        $this->assertEquals(1, $table->find()->where(['deleted IS' => null])->count());
     }
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithKeyRotationSimple_RevokedKeyMissing()
@@ -859,6 +864,11 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         $this->assertEquals('opt-out', $policy->policy);
         $this->assertEquals('23C6C30E241324C90A44A719A86A7EA3739797F5', $policy->account_recovery_organization_public_key->fingerprint);
+
+        // There should be 2 policies, one not deleted
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
+        $this->assertEquals(2, $table->find()->count());
+        $this->assertEquals(1, $table->find()->where(['deleted IS' => null])->count());
     }
 
     public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateWithFullRotation_PasswordsPrivateKeyNotFound()
