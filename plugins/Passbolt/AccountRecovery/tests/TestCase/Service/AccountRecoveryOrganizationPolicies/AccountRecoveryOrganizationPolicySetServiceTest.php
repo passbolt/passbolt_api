@@ -22,6 +22,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -42,6 +43,8 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTestCase
 {
+    use EmailQueueTrait;
+
     public $service;
 
     public function setUp(): void
@@ -49,6 +52,7 @@ class AccountRecoveryOrganizationPolicySetServiceTest extends AccountRecoveryTes
         parent::setUp();
 
         $this->service = new AccountRecoveryOrganizationPolicySetService();
+        $this->initEmailForServiceTest(['Passbolt/AccountRecovery']);
     }
 
     public function tearDown(): void
@@ -533,6 +537,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
      */
     public function testAccountRecoveryOrganizationPolicySetService_Success_DisabledEnabled()
     {
+        /** @var \App\Model\Entity\User[] $admins */
         $admins = UserFactory::make(3)->active()->admin()->persist();
         $user = $admins[0];
         $uac = $this->makeUac($user);
@@ -587,6 +592,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ->disabled()
             ->persist();
 
+        /** @var \App\Model\Entity\User[] $admins */
         $admins = UserFactory::make(3)->active()->admin()->persist();
         $user = $admins[0];
         $uac = $this->makeUac($user);
@@ -645,6 +651,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     {
         $this->startScenarioOptinWithBackupAndRequest();
 
+        /** @var \App\Model\Entity\User[] $admins */
         $admins = UserFactory::make(3)->active()->admin()->persist();
         $user = $admins[0];
         $uac = $this->makeUac($user);
@@ -705,6 +712,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     {
         $this->startScenarioOptinNoBackups();
 
+        /** @var \App\Model\Entity\User $admins */
         $admins = UserFactory::make(3)->active()->admin()->persist();
         $user = $admins[0];
         $uac = $this->makeUac($user);
