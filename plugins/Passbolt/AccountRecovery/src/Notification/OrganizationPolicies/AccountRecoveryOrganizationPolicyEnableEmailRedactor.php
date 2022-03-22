@@ -22,11 +22,11 @@ use App\Notification\Email\Email;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Utility\Purifier;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
-use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AbstractAccountRecoveryOrganizationPolicySetService; // @ignore
+use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AbstractAccountRecoveryOrganizationPolicySetService; // phpcs:ignore
 use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
-class AccountRecoveryOrganizationPolicyEnableEmailRedactor extends AbstractAccountRecoveryOrganizationPolicyEmailRedactor implements SubscribedEmailRedactorInterface
+class AccountRecoveryOrganizationPolicyEnableEmailRedactor extends AbstractAccountRecoveryOrganizationPolicyEmailRedactor implements SubscribedEmailRedactorInterface // phpcs:ignore
 {
     public const EMAIL_TEMPLATE = 'Passbolt/AccountRecovery.OrganizationPolicies/enable';
 

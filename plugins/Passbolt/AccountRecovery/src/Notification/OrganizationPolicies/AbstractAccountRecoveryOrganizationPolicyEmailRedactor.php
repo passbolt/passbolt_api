@@ -41,7 +41,11 @@ abstract class AbstractAccountRecoveryOrganizationPolicyEmailRedactor implements
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy Account recovery request initiated by the user
      * @return \App\Notification\Email\Email
      */
-    abstract protected function makeAdminEmail(User $admin, User $user, AccountRecoveryOrganizationPolicy $policy): Email;
+    abstract protected function makeAdminEmail(
+        User $admin,
+        User $user,
+        AccountRecoveryOrganizationPolicy $policy
+    ): Email;
 
     /**
      * @param \Cake\Event\Event $event User delete event
