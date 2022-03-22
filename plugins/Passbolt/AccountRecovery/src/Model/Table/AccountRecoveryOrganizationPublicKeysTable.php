@@ -99,6 +99,16 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
             ->dateTime('deleted', ['ymd'], __('The "deleted" field should be a valid date.'))
             ->allowEmptyDateTime('deleted');
 
+        $validator
+            ->uuid('created_by')
+            ->requirePresence('created_by', 'create')
+            ->notEmptyString('created_by');
+
+        $validator
+            ->uuid('modified_by')
+            ->requirePresence('modified_by')
+            ->notEmptyString('modified_by');
+
         return $validator;
     }
 

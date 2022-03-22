@@ -17,15 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
 use App\Error\Exception\CustomValidationException;
-use App\Service\OpenPGP\MessageRecipientValidationService;
-use App\Service\OpenPGP\MessageValidationService;
-use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
+use Passbolt\AccountRecovery\Service\AccountRecoveryPrivateKeyPasswords\AccountRecoveryPrivateKeyPasswordsValidationService; // phpcs:ignore
 
 class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecoveryOrganizationPolicySetService implements AccountRecoveryOrganizationPolicySetServiceInterface // phpcs:ignore
 {
@@ -56,6 +54,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         if (!$isPolicyChange && $isNewKeyProvided && !$isRevokedKeyProvided) {
             throw new BadRequestException(__('Invalid request. Revoked key is required for key rotation.'));
         }
+        /** @psalm-suppress RedundantCondition */
         if (!$isPolicyChange && !$isNewKeyProvided && $isRevokedKeyProvided) {
             throw new BadRequestException(__('Invalid request. New key is required for key rotation.'));
         }
@@ -96,6 +95,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $newKey = null;
         $oldKey = null;
         $passwords = null;
+        /** @psalm-suppress RedundantCondition */
         if ($isNewKeyProvided && $isRevokedKeyProvided) {
             // assert old and new key$newKey
             $newKey = $this->buildPublicKeyEntityFromDataOrFail($uac);
@@ -110,6 +110,9 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
                 // assert passwords backups format and numbers
                 $passwords = $this->buildPasswordEntitiesFromDataOrFail($uac, $newKey);
             }
+        } else {
+            // If key is not changing reuse the old one
+            $newPolicy->public_key_id = $this->getCurrentPolicyEntity()->public_key_id;
         }
 
         // save new key and disable previous key and backups if any
@@ -226,32 +229,11 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         UserAccessControl $uac,
         AccountRecoveryOrganizationPublicKey $publicKey
     ): iterable {
-        $passwordsData = $this->getData('account_recovery_private_key_passwords');
-        $passwordEntities = $this->AccountRecoveryPrivateKeyPasswords->buildAndValidateEntities($uac, $passwordsData);
+        $passwordsData = $this->getData('account_recovery_private_key_passwords') ?? [];
+        $service = new AccountRecoveryPrivateKeyPasswordsValidationService();
 
-        // Check that each message is addressed to the right recipient
-        // e.g. that the sub key id is found in the sub packets
-        $errors = [];
-        $keyInfo = PublicKeyValidationService::getPublicKeyInfo($publicKey->armored_key);
-        $rules = MessageValidationService::getAsymmetricMessageRules();
-        foreach ($passwordEntities as $i => $entity) {
-            try {
-                $msgInfo = MessageValidationService::parseAndValidateMessage($entity->data, $rules);
-            } catch (CustomValidationException $exception) {
-                $errors[$i] = $exception->getErrors();
-                continue;
-            }
-            if (!MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo)) {
-                $errors[$i]['wrongRecipient'] = __('The message is not encrypted for the right recipient.');
-            }
-        }
-        if (count($errors)) {
-            throw new CustomValidationException(__('Could not validate password data.'), [
-                'account_recovery_private_key_passwords' => $errors,
-            ]);
-        }
-
-        return $passwordEntities;
+        // validate without business rules since new key is not saved yet
+        return $service->buildPasswordEntitiesFromDataOrFail($uac, $passwordsData, $publicKey->armored_key);
     }
 
     /**

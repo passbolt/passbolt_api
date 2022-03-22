@@ -19,7 +19,6 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Service\Setup;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
-use Cake\Http\ServerRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoveryRecoverStartService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
@@ -34,7 +33,7 @@ class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
     {
         parent::setUp();
 
-        $this->service = (new AccountRecoveryRecoverStartService(new ServerRequest()));
+        $this->service = (new AccountRecoveryRecoverStartService());
     }
 
     public function tearDown(): void

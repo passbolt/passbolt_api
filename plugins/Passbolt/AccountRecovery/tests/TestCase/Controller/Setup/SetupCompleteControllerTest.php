@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Controller\Setup;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
+use App\Utility\UuidFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
 class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
@@ -28,7 +29,7 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testAccountRecoverySetupCompleteSuccess()
+    public function testAccountRecoverySetupComplete_Success()
     {
         $user = UserFactory::make()->inactive()->persist();
         $token = AuthenticationTokenFactory::make()
@@ -52,7 +53,66 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
         ];
         $this->postJson('/setup/complete/' . $user->id . '.json', $data);
         $this->assertSuccess();
+    }
 
-        $this->markTestIncomplete('TODO: check account_recovery_user_setting in the response');
+    public function testAccountRecoverySetupComplete_Error_InvalidToken()
+    {
+        $user = UserFactory::make()->inactive()->persist();
+
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
+        $data = [
+            'authenticationtoken' => [
+                'token' => UuidFactory::uuid(),
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+        ];
+        $this->postJson('/setup/complete/' . $user->id . '.json', $data);
+        $this->assertError();
+    }
+
+    public function testAccountRecoverySetupComplete_Error_InvalidKey()
+    {
+        $user = UserFactory::make()->inactive()->persist();
+        $token = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->userId($user->id)
+            ->persist();
+
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'sofia_public.key');
+        $data = [
+            'authenticationtoken' => [
+                'token' => $token->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+        ];
+        $this->postJson('/setup/complete/' . $user->id . '.json', $data);
+        $this->assertError(400);
+    }
+
+    public function testAccountRecoverySetupComplete_Error_InvalidUser()
+    {
+        $user = UserFactory::make()->active()->persist();
+        $token = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->userId($user->id)
+            ->persist();
+
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
+        $data = [
+            'authenticationtoken' => [
+                'token' => $token->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+        ];
+        $this->postJson('/setup/complete/' . $user->id . '.json', $data);
+        $this->assertError(400, 'The user does not exist, is already active or has been deleted.');
     }
 }

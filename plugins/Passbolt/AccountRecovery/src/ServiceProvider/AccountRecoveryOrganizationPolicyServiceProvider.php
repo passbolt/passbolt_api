@@ -50,8 +50,7 @@ class AccountRecoveryOrganizationPolicyServiceProvider extends ServiceProvider
             ->add(
                 AccountRecoveryOrganizationPolicySetServiceInterface::class,
                 AccountRecoveryOrganizationPolicySetService::class
-            )
-            ->addArgument(ServerRequest::class);
+            );
 
         $container
             ->add(

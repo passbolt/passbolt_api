@@ -114,7 +114,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
 
         $validator
             ->uuid('modified_by')
-            ->requirePresence('modified_by', 'create')
+            ->requirePresence('modified_by')
             ->notEmptyString('modified_by');
 
         return $validator;
@@ -130,6 +130,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
+
         $rules->add(
             $rules->existsIn(['private_key_id'], 'AccountRecoveryPrivateKeys'),
             ['errorField' => 'private_key_id']

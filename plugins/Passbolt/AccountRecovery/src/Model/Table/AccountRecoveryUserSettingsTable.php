@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use App\Error\Exception\ValidationException;
+use App\Utility\UserAccessControl;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -87,6 +89,7 @@ class AccountRecoveryUserSettingsTable extends Table
             ->notEmptyString('id', __('The identifier should not be empty.'), 'update');
 
         $validator
+            ->notEmptyString('status')
             ->requirePresence('status', true, __('A status is required.'))
             ->inList(
                 'status',
@@ -96,6 +99,16 @@ class AccountRecoveryUserSettingsTable extends Table
                     implode(', ', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_STATUSES)
                 )
             );
+
+        $validator
+            ->uuid('created_by')
+            ->requirePresence('created_by', 'create')
+            ->notEmptyString('created_by');
+
+        $validator
+            ->uuid('modified_by')
+            ->requirePresence('modified_by')
+            ->notEmptyString('modified_by');
 
         return $validator;
     }
@@ -115,5 +128,41 @@ class AccountRecoveryUserSettingsTable extends Table
         $rules->add($rules->existsIn('modified_by', 'Users'));
 
         return $rules;
+    }
+
+    /**
+     * Build and validate a user setting entity
+     *
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param string $status user provided
+     * @throws \App\Error\Exception\ValidationException if the entity data does not validate
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting
+     */
+    public function buildAndValidateEntity(UserAccessControl $uac, string $status): AccountRecoveryUserSetting
+    {
+        $setting = $this->newEntity([
+            'status' => $status,
+            'user_id' => $uac->getId(),
+            'created_by' => $uac->getId(),
+            'modified_by' => $uac->getId(),
+        ], [
+            'accessibleFields' => [
+                'status' => true,
+                'user_id' => true,
+                'created_by' => true,
+                'modified_by' => true,
+            ],
+        ]);
+
+        if ($setting->hasErrors()) {
+            if ($setting->getError('status')['inList'] ?? false) {
+                $msg = $setting->getError('status')['inList'];
+            } else {
+                $msg = __('The account recovery user setting is not valid.');
+            }
+            throw new ValidationException($msg, $setting, $this);
+        }
+
+        return $setting;
     }
 }

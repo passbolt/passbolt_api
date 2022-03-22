@@ -62,6 +62,6 @@ class AccountRecoveryTestCase extends AppTestCase
      */
     protected function getDummyPrivateKey(): string
     {
-        return file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key');
+        return file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg');
     }
 }

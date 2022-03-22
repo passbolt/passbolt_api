@@ -25,9 +25,9 @@ interface SetupStartServiceInterface
     /**
      * SetupStartServiceInterface constructor.
      *
-     * @param \Cake\Http\ServerRequest $request Server Request
+     * @param \Cake\Http\ServerRequest|null $request Server Request
      */
-    public function __construct(ServerRequest $request);
+    public function __construct(?ServerRequest $request = null);
 
     /**
      * Retrieves user and token information for the setup controllers

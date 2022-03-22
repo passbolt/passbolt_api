@@ -44,12 +44,12 @@ class AccountRecoveryUserSetting extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'status' => true,
+        'user_id' => false,
+        'status' => false,
         'created' => false,
         'modified' => false,
-        'created_by' => true,
-        'modified_by' => true,
+        'created_by' => false,
+        'modified_by' => false,
         'user' => false,
     ];
 

@@ -18,17 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
 use App\Utility\UserAccessControl;
-use Cake\Http\ServerRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 
 interface AccountRecoveryOrganizationPolicySetServiceInterface
 {
     /**
      * AccountRecoveryOrganizationPolicySetServiceInterface constructor.
-     *
-     * @param \Cake\Http\ServerRequest $request Server Request
      */
-    public function __construct(ServerRequest $request);
+    public function __construct();
 
     /**
      * @param \App\Utility\UserAccessControl $uac user access control

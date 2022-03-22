@@ -39,12 +39,12 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
     /**
      * AccountRecoveryOrganizationPolicyGetService constructor.
      *
-     * @param \Cake\Http\ServerRequest $serverRequest Server request
+     * @param \Cake\Http\ServerRequest|null $serverRequest Server request
      */
-    public function __construct(ServerRequest $serverRequest)
+    public function __construct(?ServerRequest $serverRequest = null)
     {
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
-        $this->request = $serverRequest;
+        $this->request = $serverRequest ?? new ServerRequest();
     }
 
     /**

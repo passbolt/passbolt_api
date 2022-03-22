@@ -35,7 +35,7 @@ class AccountRecoveryOrganizationPolicyGetServiceTest extends AccountRecoveryTes
     {
         parent::setUp();
 
-        $this->service = new AccountRecoveryOrganizationPolicyGetService(new ServerRequest());
+        $this->service = new AccountRecoveryOrganizationPolicyGetService();
     }
 
     public function tearDown(): void

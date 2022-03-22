@@ -23,7 +23,6 @@ use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
-use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
@@ -61,10 +60,8 @@ class AbstractAccountRecoveryOrganizationPolicySetService
 
     /**
      * AbstractCompleteService constructor
-     *
-     * @param \Cake\Http\ServerRequest $request Server Request
      */
-    public function __construct(ServerRequest $request)
+    public function __construct()
     {
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
@@ -72,7 +69,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryRequests');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
-        $this->getService = new AccountRecoveryOrganizationPolicyGetService($request);
+        $this->getService = new AccountRecoveryOrganizationPolicyGetService();
     }
 
     // METHODS USED TO GET/SET USER REQUEST DATA
@@ -155,7 +152,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     }
 
     /**
-     * @return bool true if the account_recovery_organization_public_key data is set
+     * @return bool if the account_recovery_organization_public_key data is set return true
      */
     public function isPublicKeyProvided(): bool
     {
@@ -165,7 +162,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     }
 
     /**
-     * @return bool true if the account_recovery_organization_revoked_key data is set
+     * @return bool if the account_recovery_organization_revoked_key data is set return true
      */
     public function isRevokedKeyProvided(): bool
     {
@@ -175,7 +172,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     }
 
     /**
-     * @return bool true if the account_recovery_private_key_passwords data is set
+     * @return bool if the account_recovery_private_key_passwords data is set return true
      */
     public function isPrivateKeyPasswordsProvided(): bool
     {
