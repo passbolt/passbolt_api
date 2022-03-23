@@ -83,10 +83,7 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
             $query
                 ->contain(['Creator.Profiles' => AvatarsTable::addContainAvatar()])
                 ->contain('Creator.Gpgkeys', function (Query $q) {
-                    return $q->select([
-                        'Gpgkeys.fingerprint',
-                        'Gpgkeys.armored_key',
-                    ]);
+                    return $q->select();
                 });
         }
     }
