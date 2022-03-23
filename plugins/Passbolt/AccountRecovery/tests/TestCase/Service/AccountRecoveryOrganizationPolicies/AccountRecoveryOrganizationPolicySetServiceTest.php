@@ -30,6 +30,7 @@ use Cake\Chronos\Chronos;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
+use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetService;
@@ -1043,7 +1044,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
 
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
@@ -1083,7 +1084,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         // Check the policy has not changed
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
@@ -1126,7 +1127,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
 
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
@@ -1174,7 +1175,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
 
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
@@ -1223,7 +1224,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
 
         // Check the policy has not changed
-        $policy = (new AccountRecoveryOrganizationPolicyGetService(new ServerRequest()))->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $this->assertEquals('opt-in', $policy->policy);
         $this->assertNotEquals($newKeyFingerprint, $policy->account_recovery_organization_public_key->fingerprint);
     }
