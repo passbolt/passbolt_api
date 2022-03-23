@@ -40,6 +40,16 @@ class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrati
     /**
      * Successful test case
      */
+    public function testAccountRecoveryRequestsPostController_ErrorNotGuest()
+    {
+        $this->logInAsUser();
+        $this->postJson('/account-recovery/requests.json', []);
+        $this->assertError(403);
+    }
+
+    /**
+     * Successful test case
+     */
     public function testAccountRecoveryRequestsPostController_Success()
     {
         $user = UserFactory::make()->user()->withAvatar()->persist();

@@ -16,25 +16,22 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Test\Factory;
 
-use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
 
 /**
- * AccountRecoveryRequestFactory
+ * AccountRecoveryResponseFactory
  *
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] persist()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest getEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] getEntities()
  */
-class AccountRecoveryRequestFactory extends CakephpBaseFactory
+class AccountRecoveryResponseFactory extends CakephpBaseFactory
 {
-    use ArmoredKeyFactoryTrait;
-
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -57,11 +54,10 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
             $date = Chronos::now()->subDay($faker->randomNumber(5));
 
             return [
-                'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING,
-                'user_id' => $faker->uuid(),
-                'authentication_token_id' => $faker->uuid(),
-                'armored_key' => $faker->text(),
-                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'status' => AccountRecoveryResponse::STATUS_APPROVED,
+                'responder_foreign_model' => AccountRecoveryResponse::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
+                'responder_foreign_key' => $faker->uuid(),
+                'data' => $faker->text(),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
                 'created' => $date,
@@ -71,21 +67,8 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ?string $userId User ID
-     * @return AccountRecoveryRequestFactory
-     */
-    public function withUser(?string $userId)
-    {
-        if (!isset($userId)) {
-            $userId = UserFactory::make()->persist();
-        }
-
-        return $this->setField('user_id', $userId);
-    }
-
-    /**
      * @param UserFactory|null $factory User Factory
-     * @return AccountRecoveryRequestFactory
+     * @return AccountRecoveryResponseFactory
      */
     public function createdBy(?UserFactory $factory = null)
     {
@@ -94,7 +77,7 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
 
     /**
      * @param UserFactory|null $factory User Factory
-     * @return AccountRecoveryRequestFactory
+     * @return AccountRecoveryResponseFactory
      */
     public function modifiedBy(?UserFactory $factory = null)
     {
@@ -104,9 +87,9 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
-    public function pending()
+    public function rejected()
     {
-        return $this->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING);
+        return $this->setField('status', AccountRecoveryResponse::STATUS_REJECTED);
     }
 
     /**
@@ -114,6 +97,6 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
      */
     public function approved()
     {
-        return $this->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED);
+        return $this->setField('status', AccountRecoveryResponse::STATUS_APPROVED);
     }
 }

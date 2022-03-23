@@ -18,8 +18,10 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use Cake\Event\Event;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\ForbiddenException;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryCreateRequestService;
 
 /**
@@ -48,6 +50,10 @@ class AccountRecoveryRequestsPostController extends AppController
      */
     public function post(): void
     {
+        if ($this->User->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('Only guest are allowed to create an account recovery request.'));
+        }
+
         $request = (new AccountRecoveryCreateRequestService($this->getRequest()))->create();
 
         $event = new Event(static::REQUEST_CREATED_EVENT_NAME, $request);
