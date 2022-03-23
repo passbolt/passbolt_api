@@ -69,7 +69,7 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
         $this->loadModel(AccountRecoveryPrivateKeysTable::class);
         $this->loadModel(AccountRecoveryPrivateKeyPasswordsTable::class);
 
-        $service = new AccountRecoveryOrganizationPolicyGetService($this->request);
+        $service = new AccountRecoveryOrganizationPolicyGetService();
         $this->policy = $service->get();
     }
 

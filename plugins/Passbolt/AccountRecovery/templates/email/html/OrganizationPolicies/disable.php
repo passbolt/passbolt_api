@@ -12,6 +12,8 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.6.0
  */
+
+use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
@@ -31,7 +33,7 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = '<h3>' . __('Account Recovery Disabled') . '</h3><br/>';
-$text .= $subject;
+$text .= Purifier::clean($subject);
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);

@@ -712,7 +712,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
     {
         $this->startScenarioOptinNoBackups();
 
-        /** @var \App\Model\Entity\User $admins */
+        /** @var \App\Model\Entity\User[] $admins */
         $admins = UserFactory::make(3)->active()->admin()->persist();
         $user = $admins[0];
         $uac = $this->makeUac($user);

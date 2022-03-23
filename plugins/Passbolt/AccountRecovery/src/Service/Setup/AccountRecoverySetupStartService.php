@@ -32,7 +32,7 @@ class AccountRecoverySetupStartService extends SetupStartService
     public function getInfo(string $userId, string $token): array
     {
         $data = parent::getInfo($userId, $token);
-        $policy = (new AccountRecoveryOrganizationPolicyGetService($this->request))->get();
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
         $data['account_recovery_organization_policy'] = $policy;
 
         return $data;

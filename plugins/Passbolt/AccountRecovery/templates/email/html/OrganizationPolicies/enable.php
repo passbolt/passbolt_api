@@ -12,6 +12,8 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.6.0
  */
+
+use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
@@ -31,8 +33,8 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = '<h3>' . __('Account Recovery Enabled') . '</h3><br/>';
-$text .= $subject;
-$text .= ' ' . __('The fingerprint of the organization public key is {0}.', $fingerprint);
+$text .= Purifier::clean($subject);
+$text .= ' ' . __('The fingerprint of the organization public key is {0}.', Purifier::clean($fingerprint));
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
