@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Test\Factory;
 
+use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
@@ -79,6 +81,22 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
         }
 
         return $this->setField('user_id', $userId);
+    }
+
+    /**
+     * @param ?string $tokenId Token ID
+     * @return AccountRecoveryRequestFactory
+     */
+    public function withToken(?string $tokenId)
+    {
+        if (!isset($tokenId)) {
+            $tokenId = AuthenticationTokenFactory::make()
+                ->type(AuthenticationToken::TYPE_RECOVER)
+                ->active()
+                ->persist();
+        }
+
+        return $this->setField('authentication_token_id', $tokenId);
     }
 
     /**
