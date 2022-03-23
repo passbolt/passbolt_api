@@ -29,7 +29,6 @@ use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
