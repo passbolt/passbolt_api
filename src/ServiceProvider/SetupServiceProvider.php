@@ -43,8 +43,10 @@ class SetupServiceProvider extends ServiceProvider
      */
     public function services(ContainerInterface $container): void
     {
-        $container->add(RecoverStartServiceInterface::class, RecoverStartService::class);
-        $container->add(SetupStartServiceInterface::class, SetupStartService::class);
+        $container->add(RecoverStartServiceInterface::class, RecoverStartService::class)
+            ->addArgument(ServerRequest::class);
+        $container->add(SetupStartServiceInterface::class, SetupStartService::class)
+            ->addArgument(ServerRequest::class);
         $container
             ->add(SetupCompleteServiceInterface::class, SetupCompleteService::class)
             ->addArgument(ServerRequest::class);

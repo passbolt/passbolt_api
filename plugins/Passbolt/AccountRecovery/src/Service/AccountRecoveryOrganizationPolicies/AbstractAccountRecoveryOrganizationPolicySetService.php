@@ -46,7 +46,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     /**
      * @var array $data user provider data
      */
-    protected $data;
+    protected $data = [];
 
     /**
      * @var \Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetServiceInterface $getService
@@ -116,7 +116,6 @@ class AbstractAccountRecoveryOrganizationPolicySetService
             return $this->data;
         }
 
-        /** @psalm-suppress PossiblyNullArgument */
         return Hash::get($this->data, $name);
     }
 
