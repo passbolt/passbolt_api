@@ -76,10 +76,10 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
     public function containCreator(Query $query): void
     {
         $contain = $this->request->getQuery('contain');
-        if (is_array($contain) && isset($contain['creator'])) {
+        if (is_array($contain) && isset($contain['creator']) && $contain['creator']) {
             $query->contain(['Creator.Profiles' => AvatarsTable::addContainAvatar()]);
         }
-        if (is_array($contain) && isset($contain['creator.gpgkey'])) {
+        if (is_array($contain) && isset($contain['creator.gpgkey']) && $contain['creator.gpgkey']) {
             $query
                 ->contain(['Creator.Profiles' => AvatarsTable::addContainAvatar()])
                 ->contain('Creator.Gpgkeys', function (Query $q) {

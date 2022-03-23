@@ -50,7 +50,7 @@ class AccountRecoveryRequestsViewController extends AppController
         if (!$this->User->isAdmin()) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
-        if (Validation::uuid($id)) {
+        if (!Validation::uuid($id)) {
             throw new BadRequestException(__('Please provide a valid request id.'));
         }
 

@@ -21,11 +21,13 @@ use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\User\IsActiveUserRule;
 use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
+use Cake\Collection\CollectionInterface;
 use Cake\Core\Exception\Exception;
 use Cake\Event\EventInterface;
 use Cake\ORM\Query;
@@ -92,14 +94,8 @@ class AccountRecoveryRequestsTable extends Table
         ]);
 
         $this->hasOne('Creator', [
-            'className' => 'Users',
+            'className' => UsersTable::class,
             'bindingKey' => 'created_by',
-            'foreignKey' => 'id',
-        ]);
-
-        $this->hasOne('Modifier', [
-            'className' => 'Users',
-            'bindingKey' => 'modified_by',
             'foreignKey' => 'id',
         ]);
     }
@@ -230,7 +226,7 @@ class AccountRecoveryRequestsTable extends Table
             'created',
             'modified',
             // 'armored_key', // not needed everywhere
-            //'authentication_token_id', // not wanted
+            // 'authentication_token_id', // not wanted
         ];
 
         // Contain options
@@ -290,7 +286,34 @@ class AccountRecoveryRequestsTable extends Table
         // Contain creator
         $containCreator = $contain['creator'] ?? false;
         if ($containCreator) {
-            $query->contain(['Creator.Profiles' => AvatarsTable::addContainAvatar()]);
+            $associations['Creator'] = function (Query $q) {
+                return $q->select([
+                    'id',
+                    'username',
+                    'active',
+                    'deleted',
+                    'role_id',
+                    'created',
+                    'modified',
+                ]);
+            };
+            $associations['Creator.Profiles'] = function (Query $q) {
+                return $q->select([
+                    'id',
+                    'user_id',
+                    'first_name',
+                    'last_name',
+                    'created',
+                    'modified',
+                ]);
+            };
+            $associations['Creator.Profiles.Avatars'] = function (Query $q) {
+                // Formatter for empty avatars.
+                return $q->select(['id', 'profile_id', 'created', 'modified'])
+                    ->formatResults(function (CollectionInterface $avatars) {
+                        return AvatarsTable::formatResults($avatars);
+                    });
+            };
         }
 
         // Build the query
@@ -324,7 +347,7 @@ class AccountRecoveryRequestsTable extends Table
         // Same rule than index apply
         // with a specific id requested
         $query = $this->findIndex($options);
-        $query->where(['id' => $options['id']]);
+        $query->where([$this->aliasField('id') => $options['id']]);
 
         return $query;
     }
