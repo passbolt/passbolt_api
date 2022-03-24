@@ -67,6 +67,7 @@ class AccountRecoveryPrivateKeysTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users');
+
         $this->hasMany('AccountRecoveryPrivateKeyPasswords', [
             'className' => AccountRecoveryPrivateKeyPasswordsTable::class,
             'foreignKey' => 'private_key_id',
@@ -84,6 +85,11 @@ class AccountRecoveryPrivateKeysTable extends Table
         $validator
             ->uuid('id')
             ->allowEmptyString('id', null, 'create');
+
+        $validator
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
             ->scalar('data')

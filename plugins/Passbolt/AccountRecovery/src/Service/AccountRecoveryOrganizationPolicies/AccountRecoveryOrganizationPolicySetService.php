@@ -113,7 +113,21 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
             $newPolicy->account_recovery_organization_public_key = $newKey;
         } else {
             // If key is not changing reuse the old one
-            $newPolicy->public_key_id = $this->getCurrentPolicyEntity()->public_key_id;
+            if (!isset($newPolicy->public_key_id)) {
+                throw new CustomValidationException(__('Could not validate public key data.'), [
+                    'public_key_id' => [
+                        '_required' => __('An organization public key is required.'),
+                    ],
+                ]);
+            } else {
+                if ($newPolicy->public_key_id !== $this->getCurrentPolicyEntity()->public_key_id) {
+                    throw new CustomValidationException(__('Could not validate public key data.'), [
+                        'public_key_id' => [
+                            'notCurrentPublicKeyId' => __('The public_key_id must match current policy public_key_id.'),
+                        ],
+                    ]);
+                }
+            }
         }
 
         // save new key and disable previous key and backups if any
@@ -154,6 +168,9 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
             }
         );
 
+        $event = new Event(self::AFTER_UPDATE_POLICY_EVENT, $this, ['uac' => $uac, 'policy' => $newPolicy]);
+        $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
+
         return $this->getCurrentPolicyEntity(false);
     }
 
@@ -173,7 +190,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
 
         // Trigger event for email notifications and co.
         // TODO email notification and notification setting
-        $event = new Event(self::AFTER_ENABLE_POLICY_EVENT, $this, $policy);
+        $event = new Event(self::AFTER_ENABLE_POLICY_EVENT, $this, compact('policy', 'uac'));
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 
         return $this->getCurrentPolicyEntity(false);
@@ -212,7 +229,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
 
         // Trigger event for email notifications and co.
         // TODO email notification and notification setting
-        $event = new Event(self::AFTER_DISABLE_POLICY_EVENT, $this, [$oldPolicy, $newPolicy]);
+        $event = new Event(self::AFTER_DISABLE_POLICY_EVENT, $this, ['uac' => $uac, 'policy' => $newPolicy]);
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 
         return $this->getCurrentPolicyEntity(false);

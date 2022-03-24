@@ -27,10 +27,12 @@ class AccountRecoveryNotificationSettingsDefinition implements EmailNotification
 
     public const REQUEST_CREATE_ADMIN = 'send_accountRecovery_request_admin';
     public const REQUEST_CREATE_USER = 'send_accountRecovery_request_user';
+    public const POLICY_UPDATE = 'send_accountRecovery_policy_update';
 
     public const FIELDS = [
         self::REQUEST_CREATE_ADMIN,
         self::REQUEST_CREATE_USER,
+        self::POLICY_UPDATE,
     ];
 
     /**

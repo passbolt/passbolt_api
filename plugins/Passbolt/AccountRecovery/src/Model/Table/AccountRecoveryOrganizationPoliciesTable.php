@@ -22,6 +22,7 @@ use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Query;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
@@ -108,6 +109,20 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
             ->notEmptyString('modified_by');
 
         return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules): RulesChecker
+    {
+        $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
+
+        return $rules;
     }
 
     /**
@@ -257,22 +272,33 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     /**
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $policy user provided data
+     * @param string|null $publicKeyId user provided data
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity ready to be saved
      */
-    public function buildAndValidateEntity(UserAccessControl $uac, string $policy): AccountRecoveryOrganizationPolicy
-    {
-        $newPolicy = $this->newEntity([
-                'policy' => $policy,
-                'created_by' => $uac->getId(),
-                'modified_by' => $uac->getId(),
-            ], ['accessibleFields' => [
-                'policy' => true,
-                'created' => true,
-                'modified' => true,
-                'created_by' => true,
-                'modified_by' => true,
-            ]]);
+    public function buildAndValidateEntity(
+        UserAccessControl $uac,
+        string $policy,
+        ?string $publicKeyId = null
+    ): AccountRecoveryOrganizationPolicy {
+        $data = [
+            'policy' => $policy,
+            'created_by' => $uac->getId(),
+            'modified_by' => $uac->getId(),
+        ];
+        $accessibleFields = [
+            'policy' => true,
+            'created' => true,
+            'modified' => true,
+            'created_by' => true,
+            'modified_by' => true,
+        ];
 
+        if (isset($publicKeyId)) {
+            $data['public_key_id'] = $publicKeyId;
+            $accessibleFields['public_key_id'] = true;
+        }
+
+        $newPolicy = $this->newEntity($data, ['accessibleFields' => $accessibleFields]);
         if ($newPolicy->getErrors()) {
             $em = __('Could not validate policy data.');
             throw new ValidationException($em, $newPolicy, $this);

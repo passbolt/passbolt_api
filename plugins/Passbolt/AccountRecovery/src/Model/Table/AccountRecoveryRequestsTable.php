@@ -1,16 +1,36 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.6.0
+ */
+
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\User\IsActiveUserRule;
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
+use Cake\Collection\CollectionInterface;
+use Cake\Core\Exception\Exception;
 use Cake\Event\EventInterface;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -54,14 +74,29 @@ class AccountRecoveryRequestsTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-            'className' => 'Passbolt/AccountRecovery.Users',
-        ]);
+        $this->belongsTo('Users');
+
         $this->belongsTo('AuthenticationTokens', [
             'foreignKey' => 'authentication_token_id',
             'joinType' => 'INNER',
-            'className' => 'Passbolt/AccountRecovery.AuthenticationTokens',
+            'className' => AuthenticationTokensTable::class,
+        ]);
+
+        $this->hasMany('AccountRecoveryResponses', [
+            'className' => AccountRecoveryResponsesTable::class,
+            'foreignKey' => 'account_recovery_requests_id',
+        ]);
+
+        $this->hasOne('AccountRecoveryPrivateKeys', [
+            'className' => AccountRecoveryPrivateKeysTable::class,
+            'bindingKey' => 'user_id',
+            'foreignKey' => 'user_id',
+        ]);
+
+        $this->hasOne('Creator', [
+            'className' => UsersTable::class,
+            'bindingKey' => 'created_by',
+            'foreignKey' => 'id',
         ]);
     }
 
@@ -76,10 +111,6 @@ class AccountRecoveryRequestsTable extends Table
         $validator
             ->uuid('id')
             ->allowEmptyString('id', null, 'create');
-
-        $validator
-            ->scalar('armored_key')
-            ->allowEmptyString('armored_key');
 
         $validator
             ->scalar('status')
@@ -172,5 +203,152 @@ class AccountRecoveryRequestsTable extends Table
                 ],
             ])
             ->execute();
+    }
+
+    /**
+     * Build the query that fetches all requests
+     *
+     * @param array $options options
+     * @throws \Cake\Core\Exception\Exception if no role is specified
+     * @return \Cake\ORM\Query
+     */
+    public function findIndex(array $options): Query
+    {
+        $query = $this->query();
+
+        $fields = [
+            'id',
+            'status',
+            'user_id',
+            'fingerprint',
+            'created_by',
+            'modified_by',
+            'created',
+            'modified',
+            // 'armored_key', // not needed everywhere
+            // 'authentication_token_id', // not wanted
+        ];
+
+        // Contain options
+        $contain = $options['contain'] ?? [];
+
+        // Contain armored key
+        $containArmored = $contain['armored_key'] ?? false;
+        if ($containArmored) {
+            $fields[] = 'armored_key';
+        }
+
+        // Contain passwords
+        $containPasswords = $contain['account_recovery_private_key_passwords'] ?? false;
+        $associations = [];
+        if ($containPasswords) {
+            $associations['AccountRecoveryPrivateKeys'] = function (Query $q) {
+                return $q->select([
+                    'id',
+                    'user_id',
+                    'created',
+                    'modified',
+                    'created_by',
+                    'modified_by',
+                    // data // not wanted - for the end user only
+                ]);
+            };
+            $associations['AccountRecoveryPrivateKeys.AccountRecoveryPrivateKeyPasswords'] = function (Query $q) {
+                return $q->select([
+                    'id',
+                    'private_key_id',
+                    'recipient_foreign_model',
+                    'recipient_fingerprint',
+                    'data',
+                    'created',
+                    'modified',
+                    'created_by',
+                    'modified_by',
+                ]);
+            };
+        }
+
+        // Contain responses
+        $containResponses = $contain['account_recovery_request_responses'] ?? false;
+        if ($containResponses) {
+            $associations['AccountRecoveryResponses'] = function (Query $q) {
+                return $q->select([
+                    'id',
+                    'account_recovery_requests_id',
+                    'created',
+                    'modified',
+                    'created_by',
+                    'modified_by',
+                ]);
+            };
+        }
+
+        // Contain creator
+        $containCreator = $contain['creator'] ?? false;
+        if ($containCreator) {
+            $associations['Creator'] = function (Query $q) {
+                return $q->select([
+                    'id',
+                    'username',
+                    'active',
+                    'deleted',
+                    'role_id',
+                    'created',
+                    'modified',
+                ]);
+            };
+            $associations['Creator.Profiles'] = function (Query $q) {
+                return $q->select([
+                    'id',
+                    'user_id',
+                    'first_name',
+                    'last_name',
+                    'created',
+                    'modified',
+                ]);
+            };
+            $associations['Creator.Profiles.Avatars'] = function (Query $q) {
+                // Formatter for empty avatars.
+                return $q->select(['id', 'profile_id', 'created', 'modified'])
+                    ->formatResults(function (CollectionInterface $avatars) {
+                        return AvatarsTable::formatResults($avatars);
+                    });
+            };
+        }
+
+        // Build the query
+        $query->select($fields);
+        if (count($associations)) {
+            $query->contain($associations);
+        }
+
+        // Filter on users
+        if (isset($options['filter']['has-users'])) {
+            $query->where(['user_id IN' => $options['filter']['has-users']]);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Build the query that fetches one request
+     *
+     * @param array $options options
+     * @throws \Cake\Core\Exception\Exception if no id is specified
+     * @return \Cake\ORM\Query
+     */
+    public function findView(array $options): Query
+    {
+        // Options must contain an id
+        if (!isset($options['id'])) {
+            throw new Exception('An ID must be provided.');
+        }
+
+        // Same rule than index apply
+        // with a specific id requested
+        $query = $this->findIndex($options);
+        $query->where([$this->aliasField('id') => $options['id']]);
+
+        return $query;
     }
 }

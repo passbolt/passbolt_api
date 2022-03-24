@@ -206,4 +206,34 @@ class AccountRecoveryOrganizationPolicyGetServiceTest extends AccountRecoveryTes
         $this->assertSame($creator->profile->first_name, $policy->creator->profile->first_name);
         $this->assertSame($creator->profile->avatar->url, $policy->creator->profile->avatar->url);
     }
+
+    /**
+     * Contain the creator and gpgkey if in the query
+     */
+    public function testAccountRecoveryOrganizationPolicyGetService_ContainCreatorAndGpgkey()
+    {
+        $creator = AccountRecoveryOrganizationPolicyFactory::make()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->with('Creator', UserFactory::make()->with('Gpgkeys')->withAvatar())
+            ->persist()
+            ->creator;
+
+        $service = new AccountRecoveryOrganizationPolicyGetService(new ServerRequest([
+            'url' => '/account-recovery/organization-policies.json?contain[creator.gpgkey]=1',
+        ]));
+        $policy = $service->get();
+        $this->assertTrue(in_array($policy->policy, AccountRecoveryOrganizationPolicy::SUPPORTED_POLICIES));
+        $this->assertTrue(Validation::uuid($policy->id));
+        $this->assertTrue(Validation::datetime($policy->created));
+        $this->assertTrue(Validation::datetime($policy->modified));
+        $this->assertTrue(Validation::uuid($policy->created_by));
+        $this->assertTrue(Validation::uuid($policy->modified_by));
+
+        $this->assertSame($creator->username, $policy->creator->username);
+        $this->assertFalse($creator->deleted);
+        $this->assertSame($creator->profile->first_name, $policy->creator->profile->first_name);
+        $this->assertSame($creator->profile->avatar->url, $policy->creator->profile->avatar->url);
+        $this->assertSame($creator->gpgkey->fingerprint, $policy->creator->gpgkey->fingerprint);
+        $this->assertSame($creator->gpgkey->armored_key, $policy->creator->gpgkey->armored_key);
+    }
 }

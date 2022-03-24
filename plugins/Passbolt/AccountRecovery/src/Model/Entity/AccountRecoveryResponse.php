@@ -1,20 +1,6 @@
 <?php
 declare(strict_types=1);
 
-/**
- * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SA (https://www.passbolt.com)
- *
- * Licensed under GNU Affero General Public License version 3 of the or any later version.
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
- * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
- * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.6.0
- */
-
 namespace Passbolt\AccountRecovery\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -27,7 +13,7 @@ use Cake\ORM\Entity;
  * @property string $responder_foreign_key
  * @property string $responder_foreign_model
  * @property string|null $data
- * @property string|null $status
+ * @property string $status
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
@@ -45,6 +31,29 @@ class AccountRecoveryResponse extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => false,
+        'responder_foreign_key' => false,
+        'responder_foreign_model' => false,
+        'data' => false,
+        'status' => false,
+        'created' => false,
+        'modified' => false,
+        'created_by' => false,
+        'modified_by' => false,
+        'account_recovery_requests_id' => false,
+    ];
+
+    public const STATUS_REJECTED = 'rejected';
+    public const STATUS_APPROVED = 'approved';
+
+    public const RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY = 'AccountRecoveryOrganizationKey';
+    //public const RESPONDER_FOREIGN_MODEL_RECOVERY_CONTACT = 'AccountRecoveryContact';
+    public const ALLOWED_RESPONDER_FOREIGN_MODELS = [
+        self::RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY,
+        //self::RESPONDER_FOREIGN_MODEL_RECOVERY_CONTACT
+    ];
+
+    public const STATUSES = [
+        self::STATUS_REJECTED,
+        self::STATUS_APPROVED,
     ];
 }

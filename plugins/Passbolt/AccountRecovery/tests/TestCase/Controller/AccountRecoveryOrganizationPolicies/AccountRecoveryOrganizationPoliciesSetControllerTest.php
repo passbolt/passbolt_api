@@ -41,4 +41,9 @@ class AccountRecoveryOrganizationPoliciesSetControllerTest extends AccountRecove
         $this->assertResponseCode(403);
         $this->assertResponseError('You are not allowed to access this location.');
     }
+
+    public function testAccountRecoveryOrganizationPoliciesSetController_Success()
+    {
+        $this->markTestIncomplete();
+    }
 }

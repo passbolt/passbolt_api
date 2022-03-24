@@ -121,6 +121,8 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
+        $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
+
         $rules->add(new IsNotServerKeyFingerprintRule(), 'isNotServerKeyFingerprintRule', [
             'errorField' => 'fingerprint',
             'message' => __('You cannot reuse the server keys.'),

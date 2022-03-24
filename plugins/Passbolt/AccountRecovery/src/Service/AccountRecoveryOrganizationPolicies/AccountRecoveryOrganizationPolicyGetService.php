@@ -68,6 +68,7 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
 
     /**
      * Join the creator to the query if contained in the request
+     * The Gpgkey of the creator may also be contained.
      *
      * @param \Cake\ORM\Query $query Query to decorate
      * @return void
@@ -75,8 +76,15 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
     public function containCreator(Query $query): void
     {
         $contain = $this->request->getQuery('contain');
-        if (is_array($contain) && $contain['creator'] ?? false) {
+        if (is_array($contain) && isset($contain['creator']) && $contain['creator']) {
             $query->contain(['Creator.Profiles' => AvatarsTable::addContainAvatar()]);
+        }
+        if (is_array($contain) && isset($contain['creator.gpgkey']) && $contain['creator.gpgkey']) {
+            $query
+                ->contain(['Creator.Profiles' => AvatarsTable::addContainAvatar()])
+                ->contain('Creator.Gpgkeys', function (Query $q) {
+                    return $q->select();
+                });
         }
     }
 }

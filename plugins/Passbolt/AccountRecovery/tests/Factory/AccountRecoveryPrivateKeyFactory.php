@@ -51,6 +51,7 @@ class AccountRecoveryPrivateKeyFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
+                'id' => $faker->uuid(),
                 'user_id' => $faker->uuid(),
                 'data' => FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg',
                 'created_by' => $faker->uuid(),
