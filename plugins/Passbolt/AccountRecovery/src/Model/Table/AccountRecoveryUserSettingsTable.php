@@ -122,6 +122,7 @@ class AccountRecoveryUserSettingsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
+        $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
         $rules->add($rules->existsIn('user_id', 'Users'));
         $rules->add($rules->isUnique(['user_id'], __('This user already has an account recovery setting')));
         $rules->add($rules->existsIn('created_by', 'Users'));

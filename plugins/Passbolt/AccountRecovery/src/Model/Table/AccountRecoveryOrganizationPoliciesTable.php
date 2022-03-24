@@ -22,6 +22,7 @@ use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Query;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
@@ -108,6 +109,20 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
             ->notEmptyString('modified_by');
 
         return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules): RulesChecker
+    {
+        $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
+
+        return $rules;
     }
 
     /**
