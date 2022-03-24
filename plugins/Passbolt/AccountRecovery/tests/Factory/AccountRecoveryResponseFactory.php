@@ -55,7 +55,7 @@ class AccountRecoveryResponseFactory extends CakephpBaseFactory
 
             return [
                 'status' => AccountRecoveryResponse::STATUS_APPROVED,
-                'responder_foreign_model' => AccountRecoveryResponse::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
+                'responder_foreign_model' => AccountRecoveryResponse::RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'responder_foreign_key' => $faker->uuid(),
                 'data' => $faker->text(),
                 'created_by' => $faker->uuid(),

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use App\Model\Table\UsersTable;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\Query;
@@ -62,9 +63,15 @@ class AccountRecoveryResponsesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasOne('responder', [
+        $this->hasOne('Responder', [
             'className' => AccountRecoveryOrganizationPublicKey::class,
             'foreignKey' => 'foreign_key',
+        ]);
+
+        $this->hasOne('Creator', [
+            'className' => UsersTable::class,
+            'bindingKey' => 'created_by',
+            'foreignKey' => 'id',
         ]);
     }
 
@@ -88,17 +95,17 @@ class AccountRecoveryResponsesTable extends Table
             ->maxLength('status', 36);
 
         $validator
-            ->uuid('recipient_foreign_key')
-            ->requirePresence('recipient_foreign_key', 'create')
-            ->notEmptyString('recipient_foreign_key');
+            ->uuid('responder_foreign_key')
+            ->requirePresence('responder_foreign_key', 'create')
+            ->notEmptyString('responder_foreign_key');
 
         $validator
-            ->scalar('recipient_foreign_model')
-            ->requirePresence('recipient_foreign_model', 'create')
-            ->notEmptyString('recipient_foreign_model')
-            ->inList('recipient_foreign_model', AccountRecoveryResponse::ALLOWED_RECIPIENT_FOREIGN_MODELS, __(
-                'The recipient_foreign_model must be one of the following: {0}.',
-                implode(', ', AccountRecoveryResponse::ALLOWED_RECIPIENT_FOREIGN_MODELS)
+            ->scalar('responder_foreign_model')
+            ->requirePresence('responder_foreign_model', 'create')
+            ->notEmptyString('responder_foreign_model')
+            ->inList('responder_foreign_model', AccountRecoveryResponse::ALLOWED_RESPONDER_FOREIGN_MODELS, __(
+                'The responder_foreign_model must be one of the following: {0}.',
+                implode(', ', AccountRecoveryResponse::ALLOWED_RESPONDER_FOREIGN_MODELS)
             ));
 
         $validator

@@ -56,13 +56,11 @@ class AccountRecoveryRequestsViewController extends AppController
 
         // Whitelisted filters and contain parameters
         $options = $this->QueryString->get([
-            'filter' => ['has-users'],
             'contain' => [
                 'armored_key', 'account_recovery_private_key_passwords',
                 'account_recovery_request_responses',
                 'creator',
             ],
-            'order' => ['created', 'modified'],
         ]);
 
         $options['id'] = $id;

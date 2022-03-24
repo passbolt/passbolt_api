@@ -45,11 +45,11 @@ class AccountRecoveryResponse extends Entity
     public const STATUS_REJECTED = 'rejected';
     public const STATUS_APPROVED = 'approved';
 
-    public const RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY = 'AccountRecoveryOrganizationKey';
-    //public const RECIPIENT_FOREIGN_MODEL_RECOVERY_CONTACT = 'AccountRecoveryContact';
-    public const ALLOWED_RECIPIENT_FOREIGN_MODELS = [
-        self::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
-        //self::RECIPIENT_FOREIGN_MODEL_RECOVERY_CONTACT
+    public const RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY = 'AccountRecoveryOrganizationKey';
+    //public const RESPONDER_FOREIGN_MODEL_RECOVERY_CONTACT = 'AccountRecoveryContact';
+    public const ALLOWED_RESPONDER_FOREIGN_MODELS = [
+        self::RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY,
+        //self::RESPONDER_FOREIGN_MODEL_RECOVERY_CONTACT
     ];
 
     public const STATUSES = [
