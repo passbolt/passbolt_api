@@ -720,7 +720,9 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         $policy = $this->service->set($uac, [
             'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY,
+            'public_key_id' => UuidFactory::uuid('acr.org_public_key.id'),
         ]);
+
         $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY);
 
         sleep(1); // needed to avoid creation time to get mixed up because they become equal
@@ -729,6 +731,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
 
         $policy = $this->service->set($uac, [
             'policy' => $policyValue,
+            'public_key_id' => UuidFactory::uuid('acr.org_public_key.id'),
         ]);
         $this->assertEquals($policy->policy, AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_OPT_OUT);
 
@@ -764,6 +767,47 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             $this->fail();
         } catch (ValidationException $exception) {
             $this->assertTrue(true);
+        }
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateSimple_MissingPublicKeyId()
+    {
+        $this->startScenarioOptinNoBackups();
+
+        /** @var \App\Model\Entity\User[] $admins */
+        $admins = UserFactory::make(3)->active()->admin()->persist();
+        $user = $admins[0];
+        $uac = $this->makeUac($user);
+
+        try {
+            $this->service->set($uac, [
+                'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY,
+                'public_key_id' => UuidFactory::uuid(),
+            ]);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['public_key_id']['notCurrentPublicKeyId']);
+        }
+    }
+
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateSimple_WrongPublicKeyId()
+    {
+        $this->startScenarioOptinNoBackups();
+
+        /** @var \App\Model\Entity\User[] $admins */
+        $admins = UserFactory::make(3)->active()->admin()->persist();
+        $user = $admins[0];
+        $uac = $this->makeUac($user);
+
+        try {
+            $this->service->set($uac, [
+                'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY,
+            ]);
+            $this->fail();
+        } catch (CustomValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['public_key_id']['_required']);
         }
     }
 

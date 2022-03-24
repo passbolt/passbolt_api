@@ -113,7 +113,21 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
             $newPolicy->account_recovery_organization_public_key = $newKey;
         } else {
             // If key is not changing reuse the old one
-            $newPolicy->public_key_id = $this->getCurrentPolicyEntity()->public_key_id;
+            if (!isset($newPolicy->public_key_id)) {
+                throw new CustomValidationException(__('Could not validate public key data.'), [
+                    'public_key_id' => [
+                        '_required' => __('An organization public key is required.'),
+                    ],
+                ]);
+            } else {
+                if ($newPolicy->public_key_id !== $this->getCurrentPolicyEntity()->public_key_id) {
+                    throw new CustomValidationException(__('Could not validate public key data.'), [
+                        'public_key_id' => [
+                            'notCurrentPublicKeyId' => __('The public_key_id must match current policy public_key_id.'),
+                        ],
+                    ]);
+                }
+            }
         }
 
         // save new key and disable previous key and backups if any

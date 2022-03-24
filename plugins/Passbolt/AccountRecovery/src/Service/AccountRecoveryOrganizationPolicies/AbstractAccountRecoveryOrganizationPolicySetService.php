@@ -199,7 +199,9 @@ class AbstractAccountRecoveryOrganizationPolicySetService
             $policy = '';
         }
 
-        return $this->AccountRecoveryOrganizationPolicies->buildAndValidateEntity($uac, $policy);
+        $publicKeyId = $this->getData('public_key_id');
+
+        return $this->AccountRecoveryOrganizationPolicies->buildAndValidateEntity($uac, $policy, $publicKeyId);
     }
 
     /**

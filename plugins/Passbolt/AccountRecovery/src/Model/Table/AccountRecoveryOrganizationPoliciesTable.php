@@ -259,20 +259,27 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
      * @param string $policy user provided data
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity ready to be saved
      */
-    public function buildAndValidateEntity(UserAccessControl $uac, string $policy): AccountRecoveryOrganizationPolicy
+    public function buildAndValidateEntity(UserAccessControl $uac, string $policy, ?string $publicKeyId = null): AccountRecoveryOrganizationPolicy
     {
-        $newPolicy = $this->newEntity([
-                'policy' => $policy,
-                'created_by' => $uac->getId(),
-                'modified_by' => $uac->getId(),
-            ], ['accessibleFields' => [
-                'policy' => true,
-                'created' => true,
-                'modified' => true,
-                'created_by' => true,
-                'modified_by' => true,
-            ]]);
+        $data = [
+            'policy' => $policy,
+            'created_by' => $uac->getId(),
+            'modified_by' => $uac->getId(),
+        ];
+        $accessibleFields = [
+            'policy' => true,
+            'created' => true,
+            'modified' => true,
+            'created_by' => true,
+            'modified_by' => true,
+        ];
 
+        if (isset($publicKeyId)) {
+            $data['public_key_id'] = $publicKeyId;
+            $accessibleFields['public_key_id'] = true;
+        }
+
+        $newPolicy = $this->newEntity($data, ['accessibleFields' => $accessibleFields]);
         if ($newPolicy->getErrors()) {
             $em = __('Could not validate policy data.');
             throw new ValidationException($em, $newPolicy, $this);
