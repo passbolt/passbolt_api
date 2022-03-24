@@ -257,10 +257,14 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
     /**
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $policy user provided data
+     * @param string|null $publicKeyId user provided data
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy entity ready to be saved
      */
-    public function buildAndValidateEntity(UserAccessControl $uac, string $policy, ?string $publicKeyId = null): AccountRecoveryOrganizationPolicy
-    {
+    public function buildAndValidateEntity(
+        UserAccessControl $uac,
+        string $policy,
+        ?string $publicKeyId = null
+    ): AccountRecoveryOrganizationPolicy {
         $data = [
             'policy' => $policy,
             'created_by' => $uac->getId(),
