@@ -20,6 +20,7 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Service\Setup;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
@@ -27,6 +28,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 use Passbolt\AccountRecovery\Plugin;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupCompleteService;
@@ -122,6 +124,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         $request = (new ServerRequest())
             ->withData('authenticationtoken.token', $token->token)
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
+            ->withData('account_recovery_user_setting.user_id', $token->user->id)
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
             ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
@@ -132,7 +135,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
 
         (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
 
-        $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
+        $this->assertTrue(GpgkeyFactory::count() === 1);
         $this->assertSame(1, AccountRecoveryPrivateKeyFactory::count());
         $this->assertSame(1, AccountRecoveryPrivateKeyPasswordFactory::count());
         $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
