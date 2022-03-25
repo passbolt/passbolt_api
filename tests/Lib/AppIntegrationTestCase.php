@@ -77,6 +77,7 @@ abstract class AppIntegrationTestCase extends TestCase
         Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
         Configure::write('passbolt.plugins.folders.enabled', false);
+        $this->disableFeaturePlugin('AccountRecovery');
         Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
         OpenPGPBackendFactory::reset();
         UserAction::destroy();
