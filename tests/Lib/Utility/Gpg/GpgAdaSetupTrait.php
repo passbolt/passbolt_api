@@ -51,4 +51,25 @@ trait GpgAdaSetupTrait
         // Import the key of ada.
         $this->adaKeyId = $this->gpg->importKeyIntoKeyring(file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'));
     }
+
+    /**
+     * Utility function to speed up encryption step in test cases
+     *
+     * @param $fingerprint
+     * @param $key
+     * @return string
+     */
+    private function encrypt(string $fingerprint, string $key): string
+    {
+        // Build the data
+        if (Configure::read('passbolt.gpg.putenv')) {
+            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+        }
+        $this->gpg = OpenPGPBackendFactory::get();
+        $this->gpg->clearKeys();
+        $this->gpg->importKeyIntoKeyring($key);
+        $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
+
+        return $this->gpg->encrypt('Foo');
+    }
 }
