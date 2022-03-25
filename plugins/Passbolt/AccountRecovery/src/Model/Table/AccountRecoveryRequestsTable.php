@@ -84,7 +84,7 @@ class AccountRecoveryRequestsTable extends Table
 
         $this->hasMany('AccountRecoveryResponses', [
             'className' => AccountRecoveryResponsesTable::class,
-            'foreignKey' => 'account_recovery_requests_id',
+            'foreignKey' => 'account_recovery_request_id',
         ]);
 
         $this->hasOne('AccountRecoveryPrivateKeys', [
@@ -159,8 +159,8 @@ class AccountRecoveryRequestsTable extends Table
             'errorField' => 'user_id',
             'message' => __('The user does not exist or is not active or has been deleted.'),
         ]);
-        $rules->add($rules->existsIn('created_by', 'Users'));
-        $rules->add($rules->existsIn('modified_by', 'Users'));
+//        $rules->add($rules->existsIn('created_by', 'Users'));
+//        $rules->add($rules->existsIn('modified_by', 'Users'));
         $rules->add(new IsNotUserKeyFingerprintRule(), 'isNotUserKeyFingerprintRule', [
             'errorField' => 'fingerprint',
             'message' => __('You cannot reuse the user keys.'),
@@ -274,7 +274,7 @@ class AccountRecoveryRequestsTable extends Table
             $associations['AccountRecoveryResponses'] = function (Query $q) {
                 return $q->select([
                     'id',
-                    'account_recovery_requests_id',
+                    'account_recovery_request_id',
                     'created',
                     'modified',
                     'created_by',

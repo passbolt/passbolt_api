@@ -99,6 +99,10 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
             );
 
         $validator
+            ->uuid('public_key_id')
+            ->allowEmptyString('public_key_id');
+
+        $validator
             ->uuid('created_by')
             ->requirePresence('created_by', 'create')
             ->notEmptyString('created_by');
