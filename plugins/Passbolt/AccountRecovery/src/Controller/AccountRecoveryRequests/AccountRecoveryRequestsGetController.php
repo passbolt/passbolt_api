@@ -26,6 +26,8 @@ use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryGetR
  */
 class AccountRecoveryRequestsGetController extends AppController
 {
+    public const ACCOUNT_RECOVERY_GET_BAD_REQUEST = 'account_recovery_get_bad_request';
+
     /**
      * @inheritDoc
      */
@@ -49,7 +51,8 @@ class AccountRecoveryRequestsGetController extends AppController
     public function getJson(?string $requestId, ?string $userId, ?string $tokenId): void
     {
         $service = new AccountRecoveryGetRequestService(
-            compact('requestId', 'userId', 'tokenId')
+            compact('requestId', 'userId', 'tokenId'),
+            $this->getRequest()->clientIp()
         );
         $data = $service->getData();
 

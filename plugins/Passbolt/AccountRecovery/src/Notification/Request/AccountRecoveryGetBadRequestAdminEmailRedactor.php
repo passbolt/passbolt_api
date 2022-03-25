@@ -26,20 +26,20 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\Purifier;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
-use Passbolt\AccountRecovery\Controller\AccountRecoveryRequests\AccountRecoveryRequestsPostController;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
+use Cake\I18n\FrozenTime;
+use Passbolt\AccountRecovery\Controller\AccountRecoveryRequests\AccountRecoveryRequestsGetController;
 use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
  */
-class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmailRedactorInterface
+class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use ModelAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.AN/admin_request';
+    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.AN/bad_request';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
@@ -49,7 +49,7 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
     public function getSubscribedEvents(): array
     {
         return [
-            AccountRecoveryRequestsPostController::REQUEST_CREATED_EVENT_NAME,
+            AccountRecoveryRequestsGetController::ACCOUNT_RECOVERY_GET_BAD_REQUEST,
         ];
     }
 
@@ -61,18 +61,20 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
     {
         $emailCollection = new EmailCollection();
         $this->loadModel('Users');
-        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request */
-        $request = $event->getSubject();
+
+        $userId = $event->getData('userId');
+        $requestId = $event->getData('requestId');
+        $clientIp = $event->getData('clientIp');
 
         /** @var \App\Model\Entity\User $user */
-        $user = $this->Users->findFirstForEmail($request->user_id);
+        $user = $this->Users->findFirstForEmail($userId);
 
         $admins = $this->Users->findAdmins()
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ]);
         foreach ($admins as $admin) {
-            $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $request));
+            $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $requestId, $clientIp));
         }
 
         return $emailCollection;
@@ -81,20 +83,36 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
     /**
      * @param \App\Model\Entity\User $admin Admin receiving the mail
      * @param \App\Model\Entity\User $user User sending the request
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request Account recovery request initiated by the user
+     * @param string $requestId Bad request ID requested
+     * @param string $clientIp Client IP
      * @return \App\Notification\Email\Email
      */
-    private function makeAdminEmail(User $admin, User $user, AccountRecoveryRequest $request): Email
-    {
+    private function makeAdminEmail(
+        User $admin,
+        User $user,
+        string $requestId,
+        string $clientIp
+    ): Email {
         $locale = (new GetUserLocaleService())->getLocale($user->username);
         $subject = (new LocaleService())->translateString(
             $locale,
-            function () use ($user) {
-                return __('{0} has initiated a recovery request', Purifier::clean($user->profile->first_name));
+            function () use ($clientIp, $user) {
+                return __(
+                    'Suspicious account recovery request issued from IP {0} for {1}',
+                    $clientIp,
+                    Purifier::clean($user->profile->first_name)
+                );
             }
         );
 
-        $data = ['body' => ['user' => $user, 'admin' => $admin, 'created' => $request->created,], 'title' => $subject,];
+        $data = ['body' => [
+            'user' => $user,
+            'admin' => $admin,
+            'clientIp' => $clientIp,
+            'requestId' => $requestId,
+            'created' => FrozenTime::now(),
+            'subject' => $subject,
+        ], 'title' => $subject,];
 
         return new Email($admin->username, $subject, $data, self::ADMIN_TEMPLATE);
     }

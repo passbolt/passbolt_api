@@ -17,13 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Controller\AccountRecoveryRequests;
 
-use App\Model\Entity\AuthenticationToken;
-use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
-use Cake\Event\EventList;
-use Cake\Event\EventManager;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
@@ -31,50 +27,53 @@ class AccountRecoveryRequestsGetControllerTest extends AccountRecoveryIntegratio
 {
     use EmailQueueTrait;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        EventManager::instance()->setEventList(new EventList());
-    }
-
     /**
      * Successful test case
      */
     public function testAccountRecoveryRequestsPostController_Success()
     {
-        $user = UserFactory::make()->user()->withAvatar()->persist();
-
-        $token = AuthenticationTokenFactory::make()
-            ->type(AuthenticationToken::TYPE_RECOVER)
-            ->userId($user->id)
-            ->active()
-            ->persist();
-
+        $user = UserFactory::make()->active()->persist();
         $request = AccountRecoveryRequestFactory::make()
-            ->withUser($user->id)
-            ->withToken($token->id)
+            ->withUserAndToken($user->id)
+            ->pending()
             ->persist();
 
-        $this->getJson("/account-recovery/requests/$request->id/$user->id/$token->id.json");
+        $this->getJson(
+            "/account-recovery/requests/$request->id/$request->user_id/$request->authentication_token_id.json"
+        );
         $this->assertResponseOk();
     }
 
     /**
-     * Successful test case
+     * @Given a correct user ID and token ID was provided
+     * @When a wrong request ID is provided
+     * @Then a potential security issue will be notified to admins
      */
     public function testAccountRecoveryRequestsPostController_Bad_Request_ID()
     {
-        $user = UserFactory::make()->user()->withAvatar()->persist();
-
-        $token = AuthenticationTokenFactory::make()
-            ->type(AuthenticationToken::TYPE_RECOVER)
-            ->userId($user->id)
-            ->active()
+        $clientIp = 'Foo';
+        $this->configRequest(['environment' => ['REMOTE_ADDR' => $clientIp]]);
+        $user = UserFactory::make()->active()->persist();
+        $nAdmins = 3;
+        $admins = UserFactory::make($nAdmins)->active()->admin()->persist();
+        $request = AccountRecoveryRequestFactory::make()
+            ->withUserAndToken($user->id)
+            ->pending()
             ->persist();
 
+        $token = $request->authentication_token;
         $requestId = UuidFactory::uuid();
 
         $this->getJson("/account-recovery/requests/$requestId/$user->id/$token->id.json");
         $this->assertResponseError('The request could not be found.');
+
+        $this->assertEmailQueueCount($nAdmins);
+        foreach ($admins as $admin) {
+            $this->assertEmailInBatchContains(
+                "An account recovery request was attempted from a user with client IP $clientIp for {$user->profile->first_name}.",
+                $admin->username
+            );
+            $this->assertEmailInBatchContains('The request could not be found in the database.', $admin->username);
+        }
     }
 }

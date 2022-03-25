@@ -136,6 +136,7 @@ return [
                     'request' => [
                         'user' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_REQUEST_USER', true), FILTER_VALIDATE_BOOLEAN),
                         'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_REQUEST_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                        'guessing' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_REQUEST_GUESSING', true), FILTER_VALIDATE_BOOLEAN),
                     ],
                     'policy' => [
                         'update' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_POLICY_UPDATE', true), FILTER_VALIDATE_BOOLEAN),

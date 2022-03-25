@@ -19,9 +19,7 @@ namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\User\IsActiveUserRule;
-use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\AvatarsTable;
-use App\Model\Table\UsersTable;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
@@ -79,22 +77,22 @@ class AccountRecoveryRequestsTable extends Table
         $this->belongsTo('AuthenticationTokens', [
             'foreignKey' => 'authentication_token_id',
             'joinType' => 'INNER',
-            'className' => AuthenticationTokensTable::class,
+            'className' => 'AuthenticationTokens',
         ]);
 
         $this->hasMany('AccountRecoveryResponses', [
-            'className' => AccountRecoveryResponsesTable::class,
+            'className' => 'Passbolt/AccountRecovery.AccountRecoveryResponses',
             'foreignKey' => 'account_recovery_requests_id',
         ]);
 
         $this->hasOne('AccountRecoveryPrivateKeys', [
-            'className' => AccountRecoveryPrivateKeysTable::class,
+            'className' => 'Passbolt/AccountRecovery.AccountRecoveryPrivateKeys',
             'bindingKey' => 'user_id',
             'foreignKey' => 'user_id',
         ]);
 
         $this->hasOne('Creator', [
-            'className' => UsersTable::class,
+            'className' => 'Users',
             'bindingKey' => 'created_by',
             'foreignKey' => 'id',
         ]);

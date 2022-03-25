@@ -22,7 +22,7 @@ $user = $body['user'];
 $admin = $body['admin'];
 $created = $body['created'];
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
+    'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $admin,
         'datetime' => $created,

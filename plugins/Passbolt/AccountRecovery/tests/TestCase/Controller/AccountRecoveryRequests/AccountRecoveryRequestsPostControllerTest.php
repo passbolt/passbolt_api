@@ -80,10 +80,11 @@ class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrati
         $this->assertEmailQueueCount($nAdmins + 1);
 
         $this->assertEmailInBatchContains('You just requested an account recovery');
-        $i = 0;
         foreach ($admins as $admin) {
-            $i++;
-            $this->assertEmailInBatchContains($user->profile->first_name . ' has initiated an account recovery request', $i);
+            $this->assertEmailInBatchContains(
+                $user->profile->first_name . ' has initiated an account recovery request',
+                $admin->username
+            );
         }
     }
 }

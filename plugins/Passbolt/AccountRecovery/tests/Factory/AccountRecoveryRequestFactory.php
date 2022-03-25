@@ -56,7 +56,7 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
-            $date = Chronos::now()->subDay($faker->randomNumber(5));
+            $date = Chronos::today()->subDay($faker->randomNumber(5));
 
             return [
                 'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING,
@@ -102,6 +102,28 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
     }
 
     /**
+     * @param string $userId
+     * @return AccountRecoveryRequestFactory
+     */
+    public function withUserAndToken(string $userId)
+    {
+        AccountRecoveryUserSettingFactory::make()
+            ->setField('user_id', $userId)
+            ->approved()
+            ->persist();
+
+        return $this
+            ->withUser($userId)
+            ->with(
+                'AuthenticationTokens',
+                AuthenticationTokenFactory::make()
+                    ->type(AuthenticationToken::TYPE_RECOVER)
+                    ->active()
+                    ->userId($userId)
+            );
+    }
+
+    /**
      * @param UserFactory|null $factory User Factory
      * @return AccountRecoveryRequestFactory
      */
@@ -133,5 +155,21 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
     public function approved()
     {
         return $this->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED);
+    }
+
+    /**
+     * @return $this
+     */
+    public function rejected()
+    {
+        return $this->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED);
+    }
+
+    /**
+     * @return $this
+     */
+    public function completed()
+    {
+        return $this->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_COMPLETED);
     }
 }

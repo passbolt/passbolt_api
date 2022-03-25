@@ -35,6 +35,8 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\AuthenticationToken $authentication_token
+ * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey $account_recovery_private_key
+ * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse[] $account_recovery_responses
  */
 class AccountRecoveryRequest extends Entity
 {
@@ -79,5 +81,13 @@ class AccountRecoveryRequest extends Entity
     public function isApproved(): bool
     {
         return $this->status === self::ACCOUNT_RECOVERY_REQUEST_APPROVED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->status === self::ACCOUNT_RECOVERY_REQUEST_COMPLETED;
     }
 }

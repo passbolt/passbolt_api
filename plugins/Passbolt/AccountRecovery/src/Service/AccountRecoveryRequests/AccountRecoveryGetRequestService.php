@@ -19,8 +19,11 @@ namespace Passbolt\AccountRecovery\Service\AccountRecoveryRequests;
 
 use App\Model\Entity\AuthenticationToken;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
+use Passbolt\AccountRecovery\Controller\AccountRecoveryRequests\AccountRecoveryRequestsGetController;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -49,15 +52,22 @@ class AccountRecoveryGetRequestService
     protected $token;
 
     /**
-     * @param array $params Query parameters
+     * @var string
      */
-    public function __construct(array $params)
+    protected $clientIp;
+
+    /**
+     * @param array $params Query parameters
+     * @param string $clientIp To report potential attacks
+     */
+    public function __construct(array $params, string $clientIp)
     {
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('Users');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryRequests');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryResponses');
+        $this->clientIp = $clientIp;
         $this->setUser($params['userId'] ?? null);
         $this->setToken($params['tokenId'] ?? null);
         $this->setRequest($params['requestId'] ?? null);
@@ -111,12 +121,19 @@ class AccountRecoveryGetRequestService
 
         /** @var \App\Model\Entity\User $user */
         $user = $this->Users->find()
+            ->contain('AccountRecoveryUserSettings')
             ->where([
                 'Users.id' => $userId,
                 'Users.deleted' => false, // forbid deleted users to start setup
                 'Users.active' => true, // forbid users that have not completed the setup to recover
             ])
             ->firstOrFail();
+
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting|null $setting */
+        $setting = $user->get('account_recovery_user_setting');
+        if (is_null($setting) || !$setting->isApproved()) {
+            throw new BadRequestException(__('The user has not approved the account recovery feature.'));
+        }
 
         $this->user = $user;
     }
@@ -158,7 +175,7 @@ class AccountRecoveryGetRequestService
             throw new BadRequestException(__('The request identifier should be a valid UUID.'));
         }
 
-        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request */
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest|null $request */
         $request = $this->AccountRecoveryRequests->find()
             ->where([
                 'id' => $requestId,
@@ -168,9 +185,19 @@ class AccountRecoveryGetRequestService
             ->first();
 
         if (is_null($request)) {
-            // TODO: send alert email to admins
+            EventManager::instance()->dispatch(new Event(
+                AccountRecoveryRequestsGetController::ACCOUNT_RECOVERY_GET_BAD_REQUEST,
+                $this,
+                [
+                    'userId' => $this->user->id,
+                    'requestId' => $requestId,
+                    'clientIp' => $this->clientIp,
+                ]
+            ));
 
             throw new BadRequestException(__('The request could not be found.'));
+        } elseif ($request->isCompleted()) {
+            throw new BadRequestException(__('The request was already completed.'));
         }
 
         $this->request = $request;

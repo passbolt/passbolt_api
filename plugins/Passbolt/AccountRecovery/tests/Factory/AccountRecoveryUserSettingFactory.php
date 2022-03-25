@@ -96,4 +96,12 @@ class AccountRecoveryUserSettingFactory extends CakephpBaseFactory
     {
         return $this->setField('status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED);
     }
+
+    /**
+     * @return $this
+     */
+    public function rejected()
+    {
+        return $this->setField('status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED);
+    }
 }

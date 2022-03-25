@@ -79,7 +79,6 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
             'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsGet', 'action' => 'getJson'])
         ->setPass(['requestId', 'userId', 'tokenId'])
         ->setMethods(['GET']);
-//
 //    // POST /account-recovery/responses.json
 //    $routes->connect('/responses', [
 //            'prefix' => '', 'controller' => '', 'action' => ''])
