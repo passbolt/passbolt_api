@@ -29,7 +29,9 @@ class AccountRecoveryIntegrationTestCase extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->pluginEnabled = $this->isFeaturePluginEnabled('AccountRecovery');
-        $this->enableFeaturePlugin('AccountRecovery');
+        if (!$this->pluginEnabled) {
+            $this->enableFeaturePlugin('AccountRecovery');
+        }
     }
 
     public function tearDown(): void

@@ -23,8 +23,6 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
@@ -47,27 +45,6 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         parent::setUp();
 
         (new Plugin())->addAssociations();
-    }
-
-    /**
-     * Utility function to speed up encryption step in test cases
-     *
-     * @param $fingerprint
-     * @param $key
-     * @return string
-     */
-    private function encrypt(string $fingerprint, string $key): string
-    {
-        // Build the data
-        if (Configure::read('passbolt.gpg.putenv')) {
-            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
-        }
-        $this->gpg = OpenPGPBackendFactory::get();
-        $this->gpg->clearKeys();
-        $this->gpg->importKeyIntoKeyring($key);
-        $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
-
-        return $this->gpg->encrypt('Foo');
     }
 
     /**
@@ -98,21 +75,20 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
     }
 
     /**
-     * If the user setting rejects the account recovery, no private key is saved
+     * If the user setting accepts the account recovery, the private key is saved
      */
     public function testAccountRecoverySetupCompleteService_Success_OptinApproved()
     {
-        $orkArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
-        $orkFingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
-
-        AccountRecoveryOrganizationPolicyFactory::make()
+        $policy = AccountRecoveryOrganizationPolicyFactory::make()
             ->optin()
-            ->with('AccountRecoveryOrganizationPublicKeys', AccountRecoveryOrganizationPublicKeyFactory::make()->patchData([
-                'fingerprint' => $orkFingerprint,
-                'armored_key' => $orkArmored,
-                'deleted' => null,
-            ]))
+            ->with(
+                'AccountRecoveryOrganizationPublicKeys',
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+            )
             ->persist();
+
+        $orkArmored = $policy->account_recovery_organization_public_key->armored_key;
+        $orkFingerprint = $policy->account_recovery_organization_public_key->fingerprint;
 
         $token = AuthenticationTokenFactory::make()
             ->with('Users', UserFactory::make()->user()->inactive())
