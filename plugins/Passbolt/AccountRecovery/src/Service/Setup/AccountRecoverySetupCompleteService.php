@@ -90,16 +90,16 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
         $this->uac = new UserAccessControl($user->role->name, $user->id);
 
         // Validate additional settings
-        $userSetting = $this->validateAccountRecoveryUserSetting();
-        $user->set('account_recovery_user_setting', $userSetting);
-
-        $this->assertRules($userSetting);
-
-        if ($userSetting->isApproved()) {
-            $key = $this->validateAccountRecoveryPrivateKey();
-            $passwords = $this->buildPasswordEntitiesFromDataOrFail();
-            $key->set('account_recovery_private_key_passwords', $passwords);
-            $user->set('account_recovery_private_key', $key);
+        if ($this->isAccountRecoveryUserSettingProvided()) {
+            $userSetting = $this->validateAccountRecoveryUserSetting();
+            $user->set('account_recovery_user_setting', $userSetting);
+            $this->assertRules($userSetting);
+            if ($userSetting->isApproved()) {
+                $key = $this->validateAccountRecoveryPrivateKey();
+                $passwords = $this->buildPasswordEntitiesFromDataOrFail();
+                $key->set('account_recovery_private_key_passwords', $passwords);
+                $user->set('account_recovery_private_key', $key);
+            }
         }
 
         return $this->saveUserEntity($user, $saveOptions);
@@ -161,11 +161,11 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     protected function assertRequestSanity(): void
     {
         if ($this->policy->isDisabled()) {
-            if (!$this->isPrivateKeyProvided() || $this->arePasswordsProvided()) {
+            if ($this->isAccountRecoveryUserSettingProvided()) {
                 throw new BadRequestException(__('Account recovery is disabled. Key backup is not supported.'));
             }
         } elseif ($this->policy->isMandatory()) {
-            if (!($this->isPrivateKeyProvided() && $this->arePasswordsProvided())) {
+            if (!$this->isPrivateKeyProvided() || !$this->arePasswordsProvided()) {
                 throw new BadRequestException(
                     __('Account recovery is mandatory. Please provide the mandatory data.')
                 );
@@ -215,22 +215,23 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     {
         $user = parent::saveUserEntity($user, $saveOptions);
 
-        if ($user->get('account_recovery_user_setting')->hasErrors()) {
-            throw new ValidationException(
-                'Could not save the account recovery setting.',
-                $user->get('account_recovery_user_setting'),
-                $this->AccountRecoveryUserSettings
-            );
-        }
+        if ($this->isAccountRecoveryUserSettingProvided()) {
+            if ($user->get('account_recovery_user_setting')->hasErrors()) {
+                throw new ValidationException(
+                    'Could not save the account recovery setting.',
+                    $user->get('account_recovery_user_setting'),
+                    $this->AccountRecoveryUserSettings
+                );
+            }
 
-        if ($user->has('account_recovery_private_key') && $user->get('account_recovery_private_key')->hasErrors()) {
-            throw new ValidationException(
-                'Could not save the account recovery private key.',
-                $user->get('account_recovery_private_key'),
-                $this->AccountRecoveryPrivateKeys
-            );
+            if ($user->has('account_recovery_private_key') && $user->get('account_recovery_private_key')->hasErrors()) {
+                throw new ValidationException(
+                    'Could not save the account recovery private key.',
+                    $user->get('account_recovery_private_key'),
+                    $this->AccountRecoveryPrivateKeys
+                );
+            }
         }
-
         return $user;
     }
 
