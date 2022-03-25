@@ -270,7 +270,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $actual = count($passwordsData);
         $expected = $this->AccountRecoveryPrivateKeyPasswords->find()->count();
         if ($actual !== $expected) {
-            $msg = __('An invalid number of passwords sent. Expected {0} and got {1}.', $actual, $expected);
+            $msg = __('An invalid number of passwords sent. Expected {0} and got {1}.', $expected, $actual);
             throw new CustomValidationException(__('Could not validate password data.'), [
                 'account_recovery_private_key_passwords' => [
                     'invalidPasswordCount' => $msg,
