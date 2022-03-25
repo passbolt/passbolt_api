@@ -232,6 +232,7 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
                 );
             }
         }
+
         return $user;
     }
 
