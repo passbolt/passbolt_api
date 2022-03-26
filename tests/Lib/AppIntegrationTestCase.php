@@ -44,6 +44,7 @@ use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class AppIntegrationTestCase extends TestCase
 {
@@ -77,10 +78,12 @@ abstract class AppIntegrationTestCase extends TestCase
         Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
         Configure::write('passbolt.plugins.folders.enabled', false);
+        $this->disableFeaturePlugin('AccountRecovery');
         Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
         OpenPGPBackendFactory::reset();
         UserAction::destroy();
         DigestsPool::clearInstance();
+        EmailNotificationSettings::flushCache();
     }
 
     /**

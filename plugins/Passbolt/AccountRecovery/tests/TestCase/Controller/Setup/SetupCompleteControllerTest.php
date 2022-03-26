@@ -19,11 +19,17 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Controller\Setup;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\UuidFactory;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
 class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
 {
+    use GpgAdaSetupTrait;
+
     /**
      * @group AN
      * @group setup
@@ -38,6 +44,17 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             ->userId($user->id)
             ->persist();
 
+        $policy = AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with(
+                'AccountRecoveryOrganizationPublicKeys',
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+            )
+            ->persist();
+
+        $orkArmored = $policy->account_recovery_organization_public_key->armored_key;
+        $orkFingerprint = $policy->account_recovery_organization_public_key->fingerprint;
+
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $data = [
             'authenticationtoken' => [
@@ -50,6 +67,16 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
                 'locale' => 'fr_FR', // Putting on purpose an underscore, though convention is dashed.
             ],
             'locale' => 'fr_FR',
+            'account_recovery_user_setting' => [
+                'user_id' => $user->id,
+                'status' => AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED,
+                'account_recovery_private_key' => ['data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg')],
+                'account_recovery_private_key_passwords' => [[
+                    'recipient_fingerprint' => $orkFingerprint,
+                    'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                    'data' => $this->encrypt($orkFingerprint, $orkArmored),
+                ]],
+            ],
         ];
         $this->postJson('/setup/complete/' . $user->id . '.json', $data);
         $this->assertSuccess();
@@ -102,6 +129,16 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             ->type(AuthenticationToken::TYPE_REGISTER)
             ->userId($user->id)
             ->persist();
+        $policy = AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with(
+                'AccountRecoveryOrganizationPublicKeys',
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+            )
+            ->persist();
+
+        $orkArmored = $policy->account_recovery_organization_public_key->armored_key;
+        $orkFingerprint = $policy->account_recovery_organization_public_key->fingerprint;
 
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $data = [
@@ -110,6 +147,16 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             ],
             'gpgkey' => [
                 'armored_key' => $armoredKey,
+            ],
+            'account_recovery_user_setting' => [
+                'user_id' => $user->id,
+                'status' => AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED,
+                'account_recovery_private_key' => ['data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg')],
+                'account_recovery_private_key_passwords' => [[
+                    'recipient_fingerprint' => $orkFingerprint,
+                    'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                    'data' => $this->encrypt($orkFingerprint, $orkArmored),
+                ]],
             ],
         ];
         $this->postJson('/setup/complete/' . $user->id . '.json', $data);
