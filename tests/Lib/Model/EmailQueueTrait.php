@@ -130,6 +130,28 @@ trait EmailQueueTrait
      */
     protected function assertEmailInBatchContains(string $string, $i = 0, string $message = ''): void
     {
+        $this->assertStringContainsString($string, $this->renderEmail($i), $message);
+    }
+
+    /**
+     * Asserts that a string is not found in an email of the email queue.
+     *
+     * @param string $string String to search for
+     * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
+     * @param string $message Error message
+     * @throws \Exception If the test fails.
+     */
+    protected function assertEmailInBatchNotContains(string $string, $i = 0, string $message = ''): void
+    {
+        $this->assertStringNotContainsString($string, $this->renderEmail($i), $message);
+    }
+
+    /**
+     * @param int|string $i Email position in batch or recipient
+     * @return string
+     */
+    protected function renderEmail($i = 0): string
+    {
         if (is_int($i)) {
             $email = EmailQueueFactory::find()->order('id')->offset($i)->first();
         } else {
@@ -145,14 +167,13 @@ trait EmailQueueTrait
         $viewBuilder->setVar('title', $email->get('subject'));
         $viewBuilder->setVar('body', $email->get('template_vars')['body']);
 
-        $viewBuilder
+        return $viewBuilder
             ->setLayout('default')
             ->setLayoutPath("email/$format")
             ->setTemplate($email->get('template'))
-            ->setTemplatePath("email/$format");
-
-        $renderedEmail = $viewBuilder->build()->render();
-        $this->assertStringContainsString($string, $renderedEmail, $message);
+            ->setTemplatePath("email/$format")
+            ->build()
+            ->render();
     }
 
     /**

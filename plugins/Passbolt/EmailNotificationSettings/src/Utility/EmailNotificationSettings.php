@@ -229,12 +229,15 @@ class EmailNotificationSettings
      *
      * @param array $configs The new config to save
      * @param \App\Utility\UserAccessControl $accessControl accessControl to use to save the configs
+     * @param bool $force Force saving even if the key is invalid/not yet registered (useful for testing purposes)
      * @return void
      */
-    public static function save(array $configs, UserAccessControl $accessControl)
+    public static function save(array $configs, UserAccessControl $accessControl, bool $force = false)
     {
         // strip all non notification keys
-        $configs = EmailNotificationSettingsForm::stripInvalidKeys($configs);
+        if ($force === false) {
+            $configs = EmailNotificationSettingsForm::stripInvalidKeys($configs);
+        }
 
         $configs = Hash::expand($configs);
 

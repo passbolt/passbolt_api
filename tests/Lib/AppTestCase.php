@@ -29,8 +29,11 @@ use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Test\Lib\Utility\UserAccessControlTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class AppTestCase extends TestCase
 {
@@ -38,6 +41,7 @@ abstract class AppTestCase extends TestCase
     use CommentsModelTrait;
     use EntityTrait;
     use FavoritesModelTrait;
+    use FeaturePluginAwareTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
     use ObjectTrait;
@@ -60,7 +64,10 @@ abstract class AppTestCase extends TestCase
         Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
         Configure::write('passbolt.plugins.folders.enabled', false);
+        $this->disableFeaturePlugin('AccountRecovery');
         $this->loadRoutes();
+        DigestsPool::clearInstance();
+        EmailNotificationSettings::flushCache();
     }
 
     /**
