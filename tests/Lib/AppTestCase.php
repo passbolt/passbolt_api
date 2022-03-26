@@ -29,6 +29,8 @@ use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use Cake\TestSuite\TestCase;
+use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class AppTestCase extends TestCase
 {
@@ -53,6 +55,8 @@ abstract class AppTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        DigestsPool::clearInstance();
+        EmailNotificationSettings::flushCache();
     }
 
     /**
