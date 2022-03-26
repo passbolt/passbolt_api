@@ -23,6 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Passbolt\AccountRecovery\Plugin;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryGetRequestService;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
@@ -35,8 +36,28 @@ class AccountRecoveryGetRequestServiceTest extends AccountRecoveryTestCase
         (new Plugin())->addAssociations();
     }
 
+    public function testAccountRecoveryGetRequestService_OrgPolicyNotActivated()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()->disabled()->persist();
+
+        $this->expectExceptionMessage('Account recovery is disabled.');
+        $this->getService(null, null, null);
+    }
+
+    public function testAccountRecoveryGetRequestService_OrgPolicyHasNoPublicKey()
+    {
+        AccountRecoveryOrganizationPolicyFactory::make()->mandatory()->persist();
+
+        $this->expectExceptionMessage('The account recovery organization public key is not set.');
+        $this->getService(null, null, null);
+    }
+
     public function testAccountRecoveryGetRequestService_PendingStatus_Success()
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
         $user = UserFactory::make()->active()->persist();
         $request = AccountRecoveryRequestFactory::make()
             ->withUserAndToken($user->id)
@@ -58,6 +79,10 @@ class AccountRecoveryGetRequestServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryGetRequestService_RejectedStatus_Success()
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
         $user = UserFactory::make()->active()->persist();
         $request = AccountRecoveryRequestFactory::make()
             ->withUserAndToken($user->id)
@@ -79,6 +104,10 @@ class AccountRecoveryGetRequestServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryGetRequestService_ApprovedStatus_Success()
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
         $user = UserFactory::make()->active()->persist();
         $request = AccountRecoveryRequestFactory::make()
             ->withUserAndToken($user->id)
@@ -118,6 +147,11 @@ class AccountRecoveryGetRequestServiceTest extends AccountRecoveryTestCase
      */
     public function testAccountRecoveryGetRequestService_InvalidUuIds($userId, $msg)
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
+
         if ($userId instanceof UserFactory) {
             $userId = $userId->persist()->id;
         }
@@ -127,6 +161,11 @@ class AccountRecoveryGetRequestServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryGetRequestService_ARNotActivated()
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
+
         $userId = AccountRecoveryUserSettingFactory::make()
             ->withUser(UserFactory::make()->active())
             ->rejected()
@@ -156,6 +195,10 @@ class AccountRecoveryGetRequestServiceTest extends AccountRecoveryTestCase
      */
     public function testAccountRecoveryGetRequestService_TokenNotValid(AuthenticationTokenFactory $tokenFactory, $msg)
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
         $userId = AccountRecoveryUserSettingFactory::make()
             ->withUser(UserFactory::make()->active())
             ->approved()
@@ -170,6 +213,10 @@ class AccountRecoveryGetRequestServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryGetRequestService_RequestCompleted()
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
         $user = UserFactory::make()->active()->persist();
         $request = AccountRecoveryRequestFactory::make()
             ->withUserAndToken($user->id)

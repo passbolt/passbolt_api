@@ -20,18 +20,23 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Controller\AccountRecoveryReque
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
-class AccountRecoveryRequestsGetControllerTest extends AccountRecoveryIntegrationTestCase
+class AccountRecoveryRequestsGetJsonControllerTest extends AccountRecoveryIntegrationTestCase
 {
     use EmailQueueTrait;
 
     /**
      * Successful test case
      */
-    public function testAccountRecoveryRequestsPostController_Success()
+    public function testAccountRecoveryRequestsGetController_Success()
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
         $user = UserFactory::make()->active()->persist();
         $request = AccountRecoveryRequestFactory::make()
             ->withUserAndToken($user->id)
@@ -49,10 +54,14 @@ class AccountRecoveryRequestsGetControllerTest extends AccountRecoveryIntegratio
      * @When a wrong request ID is provided
      * @Then a potential security issue will be notified to admins
      */
-    public function testAccountRecoveryRequestsPostController_Bad_Request_ID()
+    public function testAccountRecoveryRequestsGetController_Bad_Request_ID()
     {
         $clientIp = 'Foo';
         $this->configRequest(['environment' => ['REMOTE_ADDR' => $clientIp]]);
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->mandatory()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
         $user = UserFactory::make()->active()->persist();
         $nAdmins = 3;
         $admins = UserFactory::make($nAdmins)->active()->admin()->persist();

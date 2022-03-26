@@ -24,6 +24,7 @@ use Cake\Event\EventManager;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
 use Passbolt\AccountRecovery\Controller\AccountRecoveryRequests\AccountRecoveryRequestsGetController;
+use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -59,6 +60,8 @@ class AccountRecoveryGetRequestService
     /**
      * @param array $params Query parameters
      * @param string $clientIp To report potential attacks
+     * @throws \Cake\Http\Exception\BadRequestException
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function __construct(array $params, string $clientIp)
     {
@@ -68,6 +71,7 @@ class AccountRecoveryGetRequestService
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryResponses');
         $this->clientIp = $clientIp;
+        $this->validateOrgPolicy();
         $this->setUser($params['userId'] ?? null);
         $this->setToken($params['tokenId'] ?? null);
         $this->setRequest($params['requestId'] ?? null);
@@ -112,6 +116,8 @@ class AccountRecoveryGetRequestService
     /**
      * @param string|null $userId User ID
      * @return void
+     * @throws \Cake\Http\Exception\BadRequestException
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     protected function setUser(?string $userId): void
     {
@@ -141,6 +147,8 @@ class AccountRecoveryGetRequestService
     /**
      * @param string|null $tokenId Recover token ID
      * @return void
+     * @throws \Cake\Http\Exception\BadRequestException
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     protected function setToken(?string $tokenId): void
     {
@@ -168,6 +176,7 @@ class AccountRecoveryGetRequestService
     /**
      * @param string|null $requestId Request ID
      * @return void
+     * @throws \Cake\Http\Exception\BadRequestException
      */
     protected function setRequest(?string $requestId): void
     {
@@ -201,5 +210,20 @@ class AccountRecoveryGetRequestService
         }
 
         $this->request = $request;
+    }
+
+    /**
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the feature is not enabled
+     * @throws \Cake\Http\Exception\BadRequestException if the public key is empty
+     */
+    protected function validateOrgPolicy()
+    {
+        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
+        if ($policy->isDisabled()) {
+            throw new BadRequestException(__('Account recovery is disabled.'));
+        } elseif (is_null($policy->account_recovery_organization_public_key)) {
+            throw new BadRequestException(__('The account recovery organization public key is not set.'));
+        }
     }
 }

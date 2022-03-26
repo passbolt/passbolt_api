@@ -71,12 +71,14 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
         'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsPost', 'action' => 'post'])
         ->setMethods(['POST']);
 
-//    // Landing page for account request request completion (sent by email)
-//    // GET /account-recovery/requests/:userId/:tokenId
+    // Landing page for account request request completion (sent by email)
+    // GET /account-recovery/requests/:userId/:tokenId
+    // Is handled by the same route as below.
+
     // View one account recovery request details (non logged in user)
     // GET /account-recovery/requests/:userId/:tokenId.json
     $routes->connect('/requests/:requestId/:userId/:tokenId', [
-            'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsGet', 'action' => 'getJson'])
+            'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsGet', 'action' => 'get'])
         ->setPass(['requestId', 'userId', 'tokenId'])
         ->setMethods(['GET']);
 //    // POST /account-recovery/responses.json

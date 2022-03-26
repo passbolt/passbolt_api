@@ -32,7 +32,7 @@ use Cake\ORM\Entity;
  * @property string $public_key_id
  * @property \App\Model\Entity\User $creator
  *
- * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey $account_recovery_organization_public_key
+ * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey|null $account_recovery_organization_public_key
  */
 class AccountRecoveryOrganizationPolicy extends Entity
 {

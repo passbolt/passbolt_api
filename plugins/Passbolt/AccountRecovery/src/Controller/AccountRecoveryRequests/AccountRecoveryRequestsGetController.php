@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryGetRequestService;
 
@@ -33,7 +34,7 @@ class AccountRecoveryRequestsGetController extends AppController
      */
     public function beforeFilter(EventInterface $event)
     {
-        $this->Authentication->allowUnauthenticated(['getJson']);
+        $this->Authentication->allowUnauthenticated(['get']);
 
         return parent::beforeFilter($event);
     }
@@ -48,7 +49,7 @@ class AccountRecoveryRequestsGetController extends AppController
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the data provided is not valid
      */
-    public function getJson(?string $requestId, ?string $userId, ?string $tokenId): void
+    public function get(?string $requestId, ?string $userId, ?string $tokenId): void
     {
         $service = new AccountRecoveryGetRequestService(
             compact('requestId', 'userId', 'tokenId'),
@@ -56,6 +57,31 @@ class AccountRecoveryRequestsGetController extends AppController
         );
         $data = $service->getData();
 
+        if ($this->getRequest()->is('json')) {
+            $this->renderJson($data);
+        } else {
+            $this->renderHtml();
+        }
+    }
+
+    /**
+     * @param array $data Data to render
+     * @return void
+     */
+    protected function renderJson(array $data): void
+    {
         $this->success(__('The operation was successful.'), $data);
+    }
+
+    /**
+     * @return void
+     */
+    protected function renderHtml(): void
+    {
+        $this->viewBuilder()
+            ->setVar('title', Configure::read('passbolt.meta.description'))
+            ->setLayout('default')
+            ->setTemplatePath('Auth')
+            ->setTemplate('triage');
     }
 }
