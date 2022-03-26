@@ -22,12 +22,11 @@ use App\Test\Factory\UserFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
-class UsersViewControllerTest extends AccountRecoveryIntegrationTestCase
+class UsersViewContainAccountRecoveryUserSettingsControllerTest extends AccountRecoveryIntegrationTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
-
         RoleFactory::make()->guest()->persist();
     }
 

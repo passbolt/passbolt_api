@@ -21,6 +21,8 @@ use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Event\ContainAccountRecoveryUserSettings;
+use Passbolt\AccountRecovery\Event\ContainPendingAccountRecoveryUserSetting;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Notification\AccountRecoveryEmailRedactorPool;
 use Passbolt\AccountRecovery\Notification\AccountRecoveryNotificationSettingsDefinition;
 use Passbolt\AccountRecovery\ServiceProvider\AccountRecoveryOrganizationPolicyServiceProvider;
@@ -35,7 +37,7 @@ class Plugin extends BasePlugin
     {
         parent::bootstrap($app);
         $this->registerListeners($app);
-        $this->addAssociations();
+        $this->addAssociationsToUsersTable();
     }
 
     /**
@@ -58,7 +60,8 @@ class Plugin extends BasePlugin
         $app->getEventManager()
             ->on(new AccountRecoveryEmailRedactorPool())
             ->on(new AccountRecoveryNotificationSettingsDefinition())
-            ->on(new ContainAccountRecoveryUserSettings());
+            ->on(new ContainAccountRecoveryUserSettings())
+            ->on(new ContainPendingAccountRecoveryUserSetting());
     }
 
     /**
@@ -66,10 +69,17 @@ class Plugin extends BasePlugin
      *
      * @return void
      */
-    public function addAssociations(): void
+    public function addAssociationsToUsersTable(): void
     {
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
         $UsersTable->hasOne('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
         $UsersTable->hasOne('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
+        $UsersTable->hasOne('PendingAccountRecoveryRequests', [
+            'className' => 'Passbolt/AccountRecovery.AccountRecoveryRequests',
+            'foreignKey' => 'user_id',
+            'conditions' => [
+                'PendingAccountRecoveryRequests.status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING,
+            ],
+        ]);
     }
 }

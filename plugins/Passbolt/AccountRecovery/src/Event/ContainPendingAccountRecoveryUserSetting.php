@@ -16,15 +16,18 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Event;
 
-use App\Controller\Users\UsersViewController;
+use App\Controller\Users\UsersIndexController;
+use App\Middleware\UacAwareMiddlewareTrait;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\UsersTable;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Query;
 
-class ContainAccountRecoveryUserSettings implements EventListenerInterface
+class ContainPendingAccountRecoveryUserSetting implements EventListenerInterface
 {
+    use UacAwareMiddlewareTrait;
+
     /**
      * @var bool
      */
@@ -37,7 +40,7 @@ class ContainAccountRecoveryUserSettings implements EventListenerInterface
     {
         return [
             'Controller.initialize' => 'setIsContained',
-            TableFindIndexBefore::EVENT_NAME => 'containUserSettings',
+            TableFindIndexBefore::EVENT_NAME => 'containPendingAccountRecoveryUserSetting',
         ];
     }
 
@@ -51,19 +54,22 @@ class ContainAccountRecoveryUserSettings implements EventListenerInterface
     {
         $isContained = false;
         $controller = $event->getSubject();
-        if ($controller instanceof UsersViewController) {
-            $isContained = (bool)$controller->getRequest()->getQuery('contain.account_recovery_user_setting');
+        if ($controller instanceof UsersIndexController) {
+            $isAdmin = $this->getUacInRequest($controller->getRequest())->isAdmin();
+            $isContained = $isAdmin && (bool)$controller
+                ->getRequest()
+                ->getQuery('contain.pending_account_recovery_user_setting');
         }
         $this->isContained = $isContained;
     }
 
     /**
-     * If the user setting is contained in the request, contain it in the query
+     * If the user pending request is contained in the request, contain it in the query
      *
      * @param \App\Model\Event\TableFindIndexBefore $event Event
      * @return void
      */
-    public function containUserSettings(TableFindIndexBefore $event): void
+    public function containPendingAccountRecoveryUserSetting(TableFindIndexBefore $event): void
     {
         if (!$this->isContained) {
             return;
@@ -76,8 +82,11 @@ class ContainAccountRecoveryUserSettings implements EventListenerInterface
             return;
         }
 
-        $event->getQuery()->contain('AccountRecoveryUserSettings', function (Query $q) {
-            return $q->select('status');
+        $event->getQuery()->contain('PendingAccountRecoveryRequests', function (Query $q) {
+            return $q->select([
+                'PendingAccountRecoveryRequests.id',
+                'PendingAccountRecoveryRequests.status',
+            ]);
         });
     }
 }

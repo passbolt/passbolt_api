@@ -33,7 +33,7 @@ class AccountRecoveryGetRequestServiceTest extends AccountRecoveryTestCase
     public function setUp(): void
     {
         parent::setUp();
-        (new Plugin())->addAssociations();
+        (new Plugin())->addAssociationsToUsersTable();
     }
 
     public function testAccountRecoveryGetRequestService_OrgPolicyNotActivated()
