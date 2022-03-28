@@ -59,22 +59,34 @@ class AccountRecoveryRequest extends Entity
         self::ACCOUNT_RECOVERY_REQUEST_COMPLETED,
     ];
 
-    public function isPending()
+    /**
+     * @return bool if request status is pending returns true
+     */
+    public function isPending(): bool
     {
         return $this->status === self::ACCOUNT_RECOVERY_REQUEST_PENDING;
     }
 
-    public function isApproved()
+    /**
+     * @return bool if request status is approved returns true
+     */
+    public function isApproved(): bool
     {
         return $this->status === self::ACCOUNT_RECOVERY_REQUEST_APPROVED;
     }
 
-    public function isCompleted()
+    /**
+     * @return bool if request status is completed returns true
+     */
+    public function isCompleted(): bool
     {
         return $this->status === self::ACCOUNT_RECOVERY_REQUEST_COMPLETED;
     }
 
-    public function isRejected()
+    /**
+     * @return bool if request status is rejected returns true
+     */
+    public function isRejected(): bool
     {
         return $this->status === self::ACCOUNT_RECOVERY_REQUEST_REJECTED;
     }

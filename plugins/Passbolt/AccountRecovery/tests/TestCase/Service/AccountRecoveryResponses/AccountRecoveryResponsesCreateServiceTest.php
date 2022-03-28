@@ -43,6 +43,11 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 {
+    /**
+     * @var OpenPGPBackend $gpg helper
+     */
+    protected $gpg;
+
     public function testAccountRecoveryResponsesCreateService_Success_Approved()
     {
         [$request, $policy] = $this->startSuccessScenario();

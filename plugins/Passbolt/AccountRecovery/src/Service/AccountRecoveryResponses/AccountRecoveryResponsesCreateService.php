@@ -37,9 +37,9 @@ use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\Account
  */
 class AccountRecoveryResponsesCreateService
 {
-    public const RESPONSE_CREATED_EVENT_NAME = 'Service.AccountRecoveryResponsesCreate.afterCreate';
-
     use ModelAwareTrait;
+
+    public const RESPONSE_CREATED_EVENT_NAME = 'Service.AccountRecoveryResponsesCreate.afterCreate';
 
     /**
      * @var array $data user provider data
@@ -106,10 +106,11 @@ class AccountRecoveryResponsesCreateService
         ]]);
 
         // Update original request with updated status
-        $this->AccountRecoveryRequests->getConnection()->transactional(function () use ($requestEntity, &$responseEntity) {
-            $this->AccountRecoveryRequests->saveOrFail($requestEntity);
-            $responseEntity = $this->AccountRecoveryResponses->saveOrFail($responseEntity);
-        });
+        $this->AccountRecoveryRequests->getConnection()
+            ->transactional(function () use ($requestEntity, &$responseEntity) {
+                $this->AccountRecoveryRequests->saveOrFail($requestEntity);
+                $responseEntity = $this->AccountRecoveryResponses->saveOrFail($responseEntity);
+            });
 
 //        if ($newEntity->getErrors()) {
 //            $msg = __('The account recovery request response is invalid.');
@@ -125,6 +126,7 @@ class AccountRecoveryResponsesCreateService
 
     /**
      * @throws \Cake\Http\Exception\BadRequestException if organization policy is disabled
+     * @return void
      */
     public function assertPolicyIsEnabled(): void
     {
@@ -138,6 +140,7 @@ class AccountRecoveryResponsesCreateService
 
     /**
      * @throws \App\Error\Exception\CustomValidationException if the request id is not set, not valid, not found, is not pending
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest
      */
     public function assertAndGetAssociatedRequest(): AccountRecoveryRequest
     {
