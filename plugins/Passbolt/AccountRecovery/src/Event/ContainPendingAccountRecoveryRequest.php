@@ -24,7 +24,7 @@ use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Query;
 
-class ContainPendingAccountRecoveryUserSetting implements EventListenerInterface
+class ContainPendingAccountRecoveryRequest implements EventListenerInterface
 {
     use UacAwareMiddlewareTrait;
 
@@ -40,7 +40,7 @@ class ContainPendingAccountRecoveryUserSetting implements EventListenerInterface
     {
         return [
             'Controller.initialize' => 'setIsContained',
-            TableFindIndexBefore::EVENT_NAME => 'containPendingAccountRecoveryUserSetting',
+            TableFindIndexBefore::EVENT_NAME => 'containPendingAccountRecoveryRequest',
         ];
     }
 
@@ -58,7 +58,7 @@ class ContainPendingAccountRecoveryUserSetting implements EventListenerInterface
             $isAdmin = $this->getUacInRequest($controller->getRequest())->isAdmin();
             $isContained = $isAdmin && (bool)$controller
                 ->getRequest()
-                ->getQuery('contain.pending_account_recovery_user_setting');
+                ->getQuery('contain.pending_account_recovery_request');
         }
         $this->isContained = $isContained;
     }
@@ -69,7 +69,7 @@ class ContainPendingAccountRecoveryUserSetting implements EventListenerInterface
      * @param \App\Model\Event\TableFindIndexBefore $event Event
      * @return void
      */
-    public function containPendingAccountRecoveryUserSetting(TableFindIndexBefore $event): void
+    public function containPendingAccountRecoveryRequest(TableFindIndexBefore $event): void
     {
         if (!$this->isContained) {
             return;
