@@ -44,7 +44,7 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 {
     /**
-     * @var OpenPGPBackend $gpg helper
+     * @var \App\Utility\OpenPGP\OpenPGPBackend $gpg
      */
     protected $gpg;
 
