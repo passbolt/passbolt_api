@@ -106,7 +106,7 @@ class AccountRecoveryGetRequestService
             /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $request */
             $responses = $this->AccountRecoveryResponses->find()
                 ->select(['responder_foreign_model', 'data'])
-                ->where(['account_recovery_requests_id' => $this->request->id]);
+                ->where(['account_recovery_request_id' => $this->request->id]);
             $data['account_recovery_responses'] = $responses->toArray();
         }
 
