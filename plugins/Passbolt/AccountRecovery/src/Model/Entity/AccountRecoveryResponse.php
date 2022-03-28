@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * AccountRecoveryResponse Entity
  *
  * @property string $id
- * @property string $account_recovery_requests_id
+ * @property string $account_recovery_request_id
  * @property string $responder_foreign_key
  * @property string $responder_foreign_model
  * @property string|null $data
@@ -39,7 +39,7 @@ class AccountRecoveryResponse extends Entity
         'modified' => false,
         'created_by' => false,
         'modified_by' => false,
-        'account_recovery_requests_id' => false,
+        'account_recovery_request_id' => false,
     ];
 
     public const STATUS_REJECTED = 'rejected';

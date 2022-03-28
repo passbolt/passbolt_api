@@ -19,7 +19,9 @@ namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\User\IsActiveUserRule;
+use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
@@ -77,22 +79,22 @@ class AccountRecoveryRequestsTable extends Table
         $this->belongsTo('AuthenticationTokens', [
             'foreignKey' => 'authentication_token_id',
             'joinType' => 'INNER',
-            'className' => 'AuthenticationTokens',
+            'className' => AuthenticationTokensTable::class,
         ]);
 
         $this->hasMany('AccountRecoveryResponses', [
-            'className' => 'Passbolt/AccountRecovery.AccountRecoveryResponses',
-            'foreignKey' => 'account_recovery_requests_id',
+            'className' => AccountRecoveryResponsesTable::class,
+            'foreignKey' => 'account_recovery_request_id',
         ]);
 
         $this->hasOne('AccountRecoveryPrivateKeys', [
-            'className' => 'Passbolt/AccountRecovery.AccountRecoveryPrivateKeys',
+            'className' => AccountRecoveryPrivateKeysTable::class,
             'bindingKey' => 'user_id',
             'foreignKey' => 'user_id',
         ]);
 
         $this->hasOne('Creator', [
-            'className' => 'Users',
+            'className' => UsersTable::class,
             'bindingKey' => 'created_by',
             'foreignKey' => 'id',
         ]);
@@ -157,8 +159,6 @@ class AccountRecoveryRequestsTable extends Table
             'errorField' => 'user_id',
             'message' => __('The user does not exist or is not active or has been deleted.'),
         ]);
-        $rules->add($rules->existsIn('created_by', 'Users'));
-        $rules->add($rules->existsIn('modified_by', 'Users'));
         $rules->add(new IsNotUserKeyFingerprintRule(), 'isNotUserKeyFingerprintRule', [
             'errorField' => 'fingerprint',
             'message' => __('You cannot reuse the user keys.'),
@@ -272,7 +272,7 @@ class AccountRecoveryRequestsTable extends Table
             $associations['AccountRecoveryResponses'] = function (Query $q) {
                 return $q->select([
                     'id',
-                    'account_recovery_requests_id',
+                    'account_recovery_request_id',
                     'created',
                     'modified',
                     'created_by',

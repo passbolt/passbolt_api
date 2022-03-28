@@ -15,36 +15,20 @@ declare(strict_types=1);
  * @since         3.6.0
  */
 
-namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
+namespace Passbolt\AccountRecovery\Controller\AccountRecoveryResponses;
 
 use App\Controller\AppController;
-use App\Model\Entity\Role;
-use Cake\Event\Event;
-use Cake\Event\EventInterface;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryCreateRequestService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryResponses\AccountRecoveryResponsesCreateService;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicy
  */
-class AccountRecoveryRequestsPostController extends AppController
+class AccountRecoveryResponsesCreateController extends AppController
 {
-    // TODO move event to service
-    // TODO fix event name consistency
-    public const REQUEST_CREATED_EVENT_NAME = 'account_recovery_request_created';
-
     /**
-     * @inheritDoc
-     */
-    public function beforeFilter(EventInterface $event)
-    {
-        $this->Authentication->allowUnauthenticated(['post']);
-
-        return parent::beforeFilter($event);
-    }
-
-    /**
-     * Creates an account recovery request
+     * Creates an account recovery response
      * Sends an email to the requesting user and the admins on success
      *
      * @return void
@@ -52,16 +36,17 @@ class AccountRecoveryRequestsPostController extends AppController
      */
     public function post(): void
     {
-        if ($this->User->role() !== Role::GUEST) {
+        if (!$this->User->isAdmin()) {
             throw new ForbiddenException(__('Only guest are allowed to create an account recovery request.'));
         }
 
-        // TODO pass $uac and data instead of request
-        $request = (new AccountRecoveryCreateRequestService($this->getRequest()))->create();
+        $data = $this->getRequest()->getData();
+        if (!isset($data) || !is_array($data) || empty($data)) {
+            throw new BadRequestException(__('Invalid request. Please provide the required data.'));
+        }
 
-        $event = new Event(static::REQUEST_CREATED_EVENT_NAME, $request);
-        $this->getEventManager()->dispatch($event);
+        $response = (new AccountRecoveryResponsesCreateService())->create($this->User->getAccessControl(), $data);
 
-        $this->success(__('The operation was successful.'));
+        $this->success(__('The operation was successful.'), $response);
     }
 }

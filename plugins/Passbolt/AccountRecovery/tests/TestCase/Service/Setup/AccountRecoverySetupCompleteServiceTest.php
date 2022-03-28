@@ -110,7 +110,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
 
         (new AccountRecoverySetupCompleteService($request))->complete($token->user->id);
 
-        $this->assertTrue(GpgkeyFactory::count() === 1);
+        $this->assertSame(1, GpgkeyFactory::count());
         $this->assertSame(1, AccountRecoveryPrivateKeyFactory::count());
         $this->assertSame(1, AccountRecoveryPrivateKeyPasswordFactory::count());
         $this->assertSame(1, AccountRecoveryUserSettingFactory::count());

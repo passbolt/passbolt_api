@@ -80,6 +80,14 @@ class AccountRecoveryCreateRequestServiceTest extends AccountRecoveryTestCase
     }
 
     /**
+     * The request creation should trigger an error if policy is set to disabled
+     */
+    public function testAccountRecoveryRequestsService_ErrorPolicyDisabled()
+    {
+        $this->markTestIncomplete();
+    }
+
+    /**
      * The user UUID should be set
      * If not, the token should remain active
      */

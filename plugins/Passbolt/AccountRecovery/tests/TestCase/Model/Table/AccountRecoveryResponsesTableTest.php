@@ -64,7 +64,7 @@ class AccountRecoveryResponsesTableTest extends AccountRecoveryTestCase
     }
 
     /**
-     * Check account_recovery_requests_id field validation rules
+     * Check account_recovery_request_id field validation rules
      */
     public function testAccountRecoveryResponsesTable_Validation_RequestId()
     {

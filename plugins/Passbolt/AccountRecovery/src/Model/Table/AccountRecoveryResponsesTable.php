@@ -95,9 +95,8 @@ class AccountRecoveryResponsesTable extends Table
             ->maxLength('status', 36);
 
         $validator
-            ->uuid('responder_foreign_key')
-            ->requirePresence('responder_foreign_key', 'create')
-            ->notEmptyString('responder_foreign_key');
+            ->notEmptyString('responder_foreign_key')
+            ->uuid('responder_foreign_key');
 
         $validator
             ->scalar('responder_foreign_model')
@@ -109,8 +108,6 @@ class AccountRecoveryResponsesTable extends Table
             ));
 
         $validator
-            ->scalar('data')
-            ->requirePresence('data', 'create')
             ->notEmptyString('data')
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
@@ -137,11 +134,9 @@ class AccountRecoveryResponsesTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
-        $rules->add($rules->existsIn('created_by', 'Users'));
-        $rules->add($rules->existsIn('modified_by', 'Users'));
 
         // TODO contextual switch based on responder_foreign_model
-        $rules->add($rules->existsIn('foreign_key', 'AccountRecoveryOrganizationPublicKeys'));
+        //$rules->add($rules->existsIn('foreign_key', 'AccountRecoveryOrganizationPublicKeys'));
 
         return $rules;
     }
@@ -165,7 +160,7 @@ class AccountRecoveryResponsesTable extends Table
             'modified',
             'created_by',
             'modified_by',
-            'account_recovery_requests_id',
+            'account_recovery_request_id',
             // 'data' // not available by default
         ];
 
