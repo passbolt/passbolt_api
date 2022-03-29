@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Core\Exception\Exception;
