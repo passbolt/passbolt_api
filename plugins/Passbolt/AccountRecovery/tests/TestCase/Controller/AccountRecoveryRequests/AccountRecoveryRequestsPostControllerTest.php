@@ -23,8 +23,10 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
-use Passbolt\AccountRecovery\Controller\AccountRecoveryRequests\AccountRecoveryRequestsPostController;
+use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
 class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrationTestCase
@@ -52,10 +54,20 @@ class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrati
      */
     public function testAccountRecoveryRequestsPostController_Success()
     {
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->withAccountRecoveryOrganizationPublicKey()
+            ->persist();
+
         $user = UserFactory::make()->user()->withAvatar()->persist();
         $nAdmins = 3;
         $admins = UserFactory::make($nAdmins)->admin()->persist();
         $data = AccountRecoveryRequestFactory::make()->rsa4096Key()->getEntity();
+
+        AccountRecoveryUserSettingFactory::make()
+            ->setField('user_id', $user->id)
+            ->approved()
+            ->persist();
 
         $token = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_RECOVER)
@@ -75,7 +87,7 @@ class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrati
         $this->postJson('/account-recovery/requests.json', $payload);
         $this->assertResponseOk();
 
-        $this->assertEventFired(AccountRecoveryRequestsPostController::REQUEST_CREATED_EVENT_NAME);
+        $this->assertEventFired(AccountRecoveryRequestCreateService::REQUEST_CREATED_EVENT_NAME);
 
         $this->assertEmailQueueCount($nAdmins + 1);
 

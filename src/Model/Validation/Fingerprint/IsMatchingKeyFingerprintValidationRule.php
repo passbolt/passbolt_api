@@ -40,7 +40,9 @@ class IsMatchingKeyFingerprintValidationRule extends PassboltValidationRule
         if (empty($armoredKey) || empty($value)) {
             return false;
         }
-
+        if (!is_string($armoredKey) || !is_string($value)) {
+            return false;
+        }
         try {
             $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
         } catch (Exception $e) {

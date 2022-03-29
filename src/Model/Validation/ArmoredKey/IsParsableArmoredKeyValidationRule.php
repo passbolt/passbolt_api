@@ -35,6 +35,10 @@ class IsParsableArmoredKeyValidationRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
+        if (!is_string($value)) {
+            return false;
+        }
+
         return PublicKeyValidationService::isParsableArmoredPublicKey($value);
     }
 }

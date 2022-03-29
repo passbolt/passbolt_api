@@ -19,20 +19,16 @@ namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
-use Cake\Event\Event;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryCreateRequestService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicy
  */
 class AccountRecoveryRequestsPostController extends AppController
 {
-    // TODO move event to service
-    // TODO fix event name consistency
-    public const REQUEST_CREATED_EVENT_NAME = 'account_recovery_request_created';
-
     /**
      * @inheritDoc
      */
@@ -56,12 +52,13 @@ class AccountRecoveryRequestsPostController extends AppController
             throw new ForbiddenException(__('Only guest are allowed to create an account recovery request.'));
         }
 
-        // TODO pass $uac and data instead of request
-        $request = (new AccountRecoveryCreateRequestService($this->getRequest()))->create();
+        $data = $this->getRequest()->getData();
+        if (!isset($data) || !is_array($data) || empty($data)) {
+            throw new BadRequestException(__('Invalid request. Please provide the required data.'));
+        }
 
-        $event = new Event(static::REQUEST_CREATED_EVENT_NAME, $request);
-        $this->getEventManager()->dispatch($event);
+        $request = (new AccountRecoveryRequestCreateService())->create($data);
 
-        $this->success(__('The operation was successful.'));
+        $this->success(__('The operation was successful.'), $request);
     }
 }

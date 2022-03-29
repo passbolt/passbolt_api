@@ -17,8 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Table\UsersTable;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
+use App\Utility\UserAccessControl;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -196,5 +198,38 @@ class AccountRecoveryResponsesTable extends Table
         $query->where(['id' => $options['id']]);
 
         return $query;
+    }
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param array $data user provided data
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse
+     */
+    public function buildAndValidateEntity(UserAccessControl $uac, array $data): AccountRecoveryResponse
+    {
+        $data = array_merge($data, [
+            'created_by' => $uac->getId(),
+            'modified_by' => $uac->getId(),
+        ]);
+
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $responseEntity */
+        $responseEntity = $this->newEntity($data, [
+            'accessibleFields' => [
+                'account_recovery_request_id' => true,
+                'responder_foreign_key' => true,
+                'responder_foreign_model' => true,
+                'data' => true,
+                'status' => true,
+                'created_by' => true,
+                'modified_by' => true,
+            ],
+        ]);
+
+        if ($responseEntity->getErrors()) {
+            $msg = __('The account recovery request response is invalid.');
+            throw new ValidationException($msg, $responseEntity, $this);
+        }
+
+        return $responseEntity;
     }
 }

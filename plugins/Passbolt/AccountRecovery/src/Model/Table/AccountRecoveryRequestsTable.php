@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\User\IsActiveUserRule;
 use App\Model\Table\AuthenticationTokensTable;
@@ -30,11 +31,13 @@ use Cake\Chronos\Chronos;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Exception\Exception;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
 
 /**
  * AccountRecoveryRequests Model
@@ -348,5 +351,90 @@ class AccountRecoveryRequestsTable extends Table
         $query->where([$this->aliasField('id') => $options['id']]);
 
         return $query;
+    }
+
+    /**
+     * Build and validate an entity from user provided data
+     *
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param string $tokenId token id
+     * @param array $data user provided data
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest entity
+     */
+    public function buildAndValidateEntity(UserAccessControl $uac, string $tokenId, array $data): AccountRecoveryRequest
+    {
+        $requestEntity = $this->newEntity([
+            'authentication_token_id' => $tokenId,
+            'user_id' => $uac->getId(),
+            'armored_key' => $data['armored_key'] ?? '',
+            'fingerprint' => $data['fingerprint'] ?? '',
+            'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_COMPLETED,
+            'created_by' => $uac->getId(),
+            'modified_by' => $uac->getId(),
+        ], [
+            'accessibleFields' => [
+                'authentication_token_id' => true,
+                'user_id' => true,
+                'armored_key' => true,
+                'fingerprint' => true,
+                'status' => true,
+                'created_by' => true,
+                'modified_by' => true,
+            ],
+        ]);
+
+        if ($requestEntity->getErrors()) {
+            throw new ValidationException(__('The request is invalid.'), $requestEntity, $this);
+        }
+
+        return $requestEntity;
+    }
+
+    /**
+     * Patch a request from a response
+     *
+     * @param \App\Utility\UserAccessControl $uac user access control
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $requestEntity request
+     * @param string $responseStatus data
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest
+     */
+    public function updateStatusAndValidateEntity(
+        UserAccessControl $uac,
+        AccountRecoveryRequest $requestEntity,
+        string $responseStatus
+    ): AccountRecoveryRequest {
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $requestEntity */
+        $requestEntity = $this->patchEntity($requestEntity, [
+            'status' => $this->getRequestStatusFromResponse($responseStatus),
+            'modified_by' => $uac->getId(),
+        ], ['accessibleFields' => [
+            'status' => true,
+            'modified_by' => true,
+        ]]);
+
+        if ($requestEntity->getErrors()) {
+            $msg = __('The account request is invalid.');
+            throw new ValidationException($msg, $requestEntity, $this);
+        }
+
+        return $requestEntity;
+    }
+
+    /**
+     * Return new request status based on response status
+     *
+     * @param string $status response status
+     * @return string mapped request status
+     */
+    protected function getRequestStatusFromResponse(string $status): string
+    {
+        if ($status === AccountRecoveryResponse::STATUS_REJECTED) {
+            return AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED;
+        }
+        if ($status === AccountRecoveryResponse::STATUS_APPROVED) {
+            return AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED;
+        }
+
+        throw new BadRequestException(__('Invalid response status. Not supported.'));
     }
 }

@@ -18,9 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryResponses;
 
 use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
+use App\Service\OpenPGP\MessageRecipientValidationService;
+use App\Service\OpenPGP\MessageValidationService;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -76,50 +81,19 @@ class AccountRecoveryResponsesCreateService
         $this->assertPolicyIsEnabled();
         $requestEntity = $this->assertAndGetAssociatedRequest();
 
-        $data = array_merge($data, [
-            'created_by' => $uac->getId(),
-            'modified_by' => $uac->getId(),
-        ]);
-        $responseEntity = $this->AccountRecoveryResponses->newEntity($data, [
-            'accessibleFields' => [
-                'account_recovery_request_id' => true,
-                'responder_foreign_key' => true,
-                'responder_foreign_model' => true,
-                'data' => true,
-                'status' => true,
-                'created_by' => true,
-                'modified_by' => true,
-            ],
-        ]);
-
-        if ($responseEntity->getErrors()) {
-            $msg = __('The account recovery request response is invalid.');
-            throw new CustomValidationException($msg, $responseEntity->getErrors());
-        }
-
-        $requestEntity = $this->AccountRecoveryRequests->patchEntity($requestEntity, [
-            'status' => $responseEntity->status,
-            'modified_by' => $uac->getId(),
-        ], ['accessibleFields' => [
-            'status' => true,
-            'modified_by' => true,
-        ]]);
+        $responseEntity = $this->buildAndValidateResponse($requestEntity);
+        $requestEntity = $this->patchAndValidateRequest($requestEntity, $responseEntity);
 
         // Update original request with updated status
         $this->AccountRecoveryRequests->getConnection()
-            ->transactional(function () use ($requestEntity, &$responseEntity) {
-                $this->AccountRecoveryRequests->saveOrFail($requestEntity);
-                $responseEntity = $this->AccountRecoveryResponses->saveOrFail($responseEntity);
+            ->transactional(function () use (&$requestEntity, &$responseEntity) {
+                $requestEntity = $this->AccountRecoveryRequests->saveOrFail($requestEntity, ['checkRules' => false]);
+                $responseEntity = $this->AccountRecoveryResponses->saveOrFail($responseEntity, ['checkRules' => false]);
             });
 
-//        if ($newEntity->getErrors()) {
-//            $msg = __('The account recovery request response is invalid.');
-//            throw new CustomValidationException($msg ,$newEntity->getErrors());
-//        }
-//
-//        // All good, dispatch event for emails
-//        $event = new Event(static::RESPONSE_CREATED_EVENT_NAME, $responseEntity);
-//        $this->AccountRecoveryResponses->getEventManager()->dispatch($event);
+        // All good, dispatch event for emails
+        $event = new Event(static::RESPONSE_CREATED_EVENT_NAME, $responseEntity);
+        $this->AccountRecoveryResponses->getEventManager()->dispatch($event);
 
         return $responseEntity;
     }
@@ -182,6 +156,86 @@ class AccountRecoveryResponsesCreateService
         }
 
         return $request;
+    }
+
+    /**
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $requestEntity entity
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse entity
+     */
+    protected function buildAndValidateResponse(AccountRecoveryRequest $requestEntity): AccountRecoveryResponse
+    {
+        $msg = __('The account recovery request response is invalid.');
+
+        // Validate response and updated request
+        $responseEntity = $this->AccountRecoveryResponses
+            ->buildAndValidateEntity($this->uac, $this->getData() ?? []);
+
+        if (isset($responseEntity->data) && $responseEntity->isRejected()) {
+            throw new CustomValidationException($msg, [
+                'data' => [
+                    'notRequiredRule' => __('The account recovery response data is not required.'),
+                ],
+            ]);
+        }
+        if (!isset($responseEntity->data) && $responseEntity->isApproved()) {
+            throw new CustomValidationException($msg, [
+                'data' => [
+                    'required' => __('The account recovery response data is required.'),
+                ],
+            ]);
+        }
+
+        // Parse response data if any
+        // Check for asymetric package with right temp sub key id as recipient
+        if (isset($responseEntity->data)) {
+            try {
+                $rules = MessageValidationService::getAsymmetricMessageRules();
+                $msgInfo = MessageValidationService::parseAndValidateMessage($responseEntity->data, $rules);
+            } catch (CustomValidationException $exception) {
+                throw new CustomValidationException($msg, [
+                    'data' => [
+                        'hasAsymmetricPacketRule' => __('The message must contain an asymmetric packet.'),
+                    ],
+                ]);
+            }
+            $keyInfo = PublicKeyValidationService::getPublicKeyInfo($requestEntity->armored_key);
+            if (!MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo)) {
+                throw new CustomValidationException($msg, [
+                    'data' => [
+                        'wrongRecipient' => __('The message is not encrypted for the right recipient.'),
+                    ],
+                ]);
+            }
+        }
+
+        $this->AccountRecoveryResponses->checkRules($responseEntity);
+        if ($responseEntity->getErrors()) {
+            throw new ValidationException($msg, $responseEntity, $this->AccountRecoveryResponses);
+        }
+
+        return $responseEntity;
+    }
+
+    /**
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $requestEntity request entity
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $responseEntity response entity
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest
+     */
+    protected function patchAndValidateRequest(
+        AccountRecoveryRequest $requestEntity,
+        AccountRecoveryResponse $responseEntity
+    ): AccountRecoveryRequest {
+        $msg = __('The account recovery request is invalid.');
+        $requestEntity = $this->AccountRecoveryRequests
+            ->updateStatusAndValidateEntity($this->uac, $requestEntity, $responseEntity->status);
+
+        // Check for build rules issues
+        $this->AccountRecoveryRequests->checkRules($requestEntity);
+        if ($requestEntity->getErrors()) {
+            throw new ValidationException($msg, $requestEntity, $this->AccountRecoveryRequests);
+        }
+
+        return $requestEntity;
     }
 
     /**

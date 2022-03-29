@@ -68,4 +68,12 @@ class AccountRecoveryUserSetting extends Entity
     {
         return $this->status === self::ACCOUNT_RECOVERY_USER_SETTING_APPROVED;
     }
+
+    /**
+     * @return bool
+     */
+    public function isRejected(): bool
+    {
+        return $this->status === self::ACCOUNT_RECOVERY_USER_SETTING_REJECTED;
+    }
 }

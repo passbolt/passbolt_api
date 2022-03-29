@@ -50,7 +50,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryResponsesCreateService_Success_Approved()
     {
-        [$request, $policy] = $this->startSuccessScenario();
+        [$request, $policy] = $this->startScenario();
         $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
         $data = [
@@ -92,7 +92,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryResponsesCreateService_SuccessRejected()
     {
-        [$request, $policy] = $this->startSuccessScenario();
+        [$request, $policy] = $this->startScenario();
         $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
         $data = [
             'account_recovery_request_id' => $request->id,
@@ -162,27 +162,134 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryResponsesCreateService_Error_RequestId_NotSet()
     {
-        $this->markTestSkipped();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            //'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['account_recovery_request_id']['_required']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_RequestId_NotUuid()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => 'nope',
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['account_recovery_request_id']['uuid']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_RequestId_NotFound()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => UuidFactory::uuid(),
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['account_recovery_request_id']['exists']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_RequestId_Completed()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario(AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_COMPLETED);
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['account_recovery_request_id']['isRequestPendingRule']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_RequestId_Rejected()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario(AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED);
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['account_recovery_request_id']['isRequestPendingRule']));
+        }
+    }
+
+    public function testAccountRecoveryResponsesCreateService_Error_RequestId_Approved()
+    {
+        [$request, $policy] = $this->startScenario(AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED);
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['account_recovery_request_id']['isRequestPendingRule']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_RequestId_PendingResponseAlreadyProvided()
@@ -194,71 +301,277 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryResponsesCreateService_Error_Status_NotSet()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            //'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['status']['_required']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_Status_NotString()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => ['something' => 'else'],
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['status']['scalar']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_Status_NotInList()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => 'nope',
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['status']['inList']));
+        }
     }
 
     // Errors of foreign model name
 
     public function testAccountRecoveryResponsesCreateService_Error_ForeignModel_NotSet()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            //'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['responder_foreign_model']['_required']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_ForeignModel_NotString()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => ['AccountRecoveryOrganizationKey'],
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['responder_foreign_model']['scalar']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_ForeignModel_NotInList()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'nope',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['responder_foreign_model']['inList']));
+        }
     }
 
     // Errors of data field
 
     public function testAccountRecoveryResponsesCreateService_Error_Data_RejectedSet()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_REJECTED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['data']['notRequiredRule']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_Data_ApprovedNotSet()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        //$password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            //'data' => $password,
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['data']['required']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_Data_NotString()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => [$password],
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['data']['isValidOpenPGPMessage']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_Data_NotParsable()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => 'not parsable',
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['data']['isValidOpenPGPMessage']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_Data_NotAsymetric()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg'),
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['data']['hasAsymmetricPacketRule']));
+        }
     }
 
     public function testAccountRecoveryResponsesCreateService_Error_Data_WrongRecipient()
     {
-        $this->markTestIncomplete();
+        [$request, $policy] = $this->startScenario();
+        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => 'AccountRecoveryOrganizationKey',
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg'),
+        ];
+
+        try {
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            $this->fail();
+        } catch (CustomValidationException | ValidationException $exception) {
+            $error = $exception->getErrors();
+            $this->assertTrue(isset($error['data']['wrongRecipient']));
+        }
     }
 
     // Scenario help
 
-    protected function startSuccessScenario(): array
+    /**
+     * @param string|null $status
+     * @return array
+     * @throws \Exception
+     */
+    protected function startScenario(?string $status = AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING): array
     {
         UserFactory::make()
             ->setField('id', UuidFactory::uuid('user.id.ada'))
@@ -296,6 +609,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
             ->persist();
 
         $request = AccountRecoveryRequestFactory::make()
+            ->setField('status', $status)
             ->setField('user_id', UuidFactory::uuid('user.id.ada'))
             ->setField('fingerprint', '23C6C30E241324C90A44A719A86A7EA3739797F5')
             ->setField('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key'))

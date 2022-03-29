@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
-use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\ORM\RulesChecker;
@@ -135,6 +135,8 @@ class AccountRecoveryPrivateKeysTable extends Table
     public function buildAndValidateEntity(UserAccessControl $uac, array $privateKey): AccountRecoveryPrivateKey
     {
         $userId = $uac->getId();
+
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey $privateKeyEntity */
         $privateKeyEntity = $this->newEntity([
             'user_id' => $userId,
             'data' => $privateKey['data'] ?? [],
@@ -152,7 +154,7 @@ class AccountRecoveryPrivateKeysTable extends Table
 
         if ($privateKeyEntity->hasErrors()) {
             $msg = __('The account recovery private key is not valid.');
-            throw new CustomValidationException($msg, $privateKeyEntity->getErrors());
+            throw new ValidationException($msg, $privateKeyEntity, $this);
         }
 
         return $privateKeyEntity;
