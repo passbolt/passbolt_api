@@ -35,6 +35,10 @@ class IsValidFingerprintValidationRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
+        if (!is_string($value)) {
+            return false;
+        }
+
         return PublicKeyValidationService::isValidFingerprint($value);
     }
 }

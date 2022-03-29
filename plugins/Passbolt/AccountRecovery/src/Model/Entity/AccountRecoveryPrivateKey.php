@@ -30,7 +30,7 @@ use Cake\ORM\Entity;
  * @property string $created_by
  * @property string $modified_by
  *
- * @property \Passbolt\AccountRecovery\Model\Entity\User $user
+ * @property \App\Model\Entity\User $user
  * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] $account_recovery_private_key_passwords
  */
 class AccountRecoveryPrivateKey extends Entity
@@ -45,13 +45,15 @@ class AccountRecoveryPrivateKey extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'data' => true,
-        'created' => true,
-        'modified' => true,
-        'created_by' => true,
-        'modified_by' => true,
-        'user' => true,
-        'account_recovery_private_key_passwords' => true,
+        'user_id' => false,
+        'data' => false,
+        'created' => false,
+        'modified' => false,
+        'created_by' => false,
+        'modified_by' => false,
+        'user' => false,
+
+        // associations
+        'account_recovery_private_key_passwords' => false,
     ];
 }

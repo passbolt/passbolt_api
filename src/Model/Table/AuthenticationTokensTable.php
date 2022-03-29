@@ -246,7 +246,7 @@ class AuthenticationTokensTable extends Table
 
         // Does token exist?
         $where = ['token' => $token, 'user_id' => $userId, 'active' => true];
-        if ($type) {
+        if (isset($type)) {
             $where['type'] = $type;
         }
 

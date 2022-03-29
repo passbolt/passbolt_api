@@ -15,32 +15,20 @@ declare(strict_types=1);
  * @since         3.6.0
  */
 
-namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
+namespace Passbolt\AccountRecovery\Controller\AccountRecoveryResponses;
 
 use App\Controller\AppController;
-use App\Model\Entity\Role;
-use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
-use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryResponses\AccountRecoveryResponsesCreateService;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicy
  */
-class AccountRecoveryRequestsPostController extends AppController
+class AccountRecoveryResponsesCreateController extends AppController
 {
     /**
-     * @inheritDoc
-     */
-    public function beforeFilter(EventInterface $event)
-    {
-        $this->Authentication->allowUnauthenticated(['post']);
-
-        return parent::beforeFilter($event);
-    }
-
-    /**
-     * Creates an account recovery request
+     * Creates an account recovery response
      * Sends an email to the requesting user and the admins on success
      *
      * @return void
@@ -48,7 +36,7 @@ class AccountRecoveryRequestsPostController extends AppController
      */
     public function post(): void
     {
-        if ($this->User->role() !== Role::GUEST) {
+        if (!$this->User->isAdmin()) {
             throw new ForbiddenException(__('Only guest are allowed to create an account recovery request.'));
         }
 
@@ -57,8 +45,8 @@ class AccountRecoveryRequestsPostController extends AppController
             throw new BadRequestException(__('Invalid request. Please provide the required data.'));
         }
 
-        $request = (new AccountRecoveryRequestCreateService())->create($data);
+        $response = (new AccountRecoveryResponsesCreateService())->create($this->User->getAccessControl(), $data);
 
-        $this->success(__('The operation was successful.'), $request);
+        $this->success(__('The operation was successful.'), $response);
     }
 }

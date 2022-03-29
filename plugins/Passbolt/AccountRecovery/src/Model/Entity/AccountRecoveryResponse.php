@@ -56,4 +56,20 @@ class AccountRecoveryResponse extends Entity
         self::STATUS_REJECTED,
         self::STATUS_APPROVED,
     ];
+
+    /**
+     * @return bool if response status is approved returns true
+     */
+    public function isApproved(): bool
+    {
+        return $this->status === self::STATUS_APPROVED;
+    }
+
+    /**
+     * @return bool if response status is rejected returns true
+     */
+    public function isRejected(): bool
+    {
+        return $this->status === self::STATUS_REJECTED;
+    }
 }

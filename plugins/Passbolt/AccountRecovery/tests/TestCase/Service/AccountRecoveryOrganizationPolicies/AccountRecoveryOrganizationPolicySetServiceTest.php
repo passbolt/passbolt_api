@@ -811,6 +811,27 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         }
     }
 
+    public function testAccountRecoveryOrganizationPolicySetService_Error_UpdateSimple_PublicKeyIdNotUuid()
+    {
+        $this->startScenarioOptinNoBackups();
+
+        /** @var \App\Model\Entity\User[] $admins */
+        $admins = UserFactory::make(3)->active()->admin()->persist();
+        $user = $admins[0];
+        $uac = $this->makeUac($user);
+
+        try {
+            $this->service->set($uac, [
+                'policy' => AccountRecoveryOrganizationPolicy::ACCOUNT_RECOVERY_ORGANIZATION_POLICY_MANDATORY,
+                'public_key_id' => 'nope',
+            ]);
+            $this->fail();
+        } catch (ValidationException $exception) {
+            $e = $exception->getErrors();
+            $this->assertNotEmpty($e['public_key_id']['uuid']);
+        }
+    }
+
     // SIMPLE ROTATION SCENARIOS
 
     public function testAccountRecoveryOrganizationPolicySetService_Success_UpdateWithKeyRotationSimple()

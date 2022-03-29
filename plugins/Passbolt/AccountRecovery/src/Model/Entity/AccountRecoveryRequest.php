@@ -50,7 +50,19 @@ class AccountRecoveryRequest extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => false,
+        'user_id' => false,
+        'armored_key' => false,
+        'fingerprint' => false,
+        'authentication_token_id' => false,
+        'status' => false,
+        'created' => false,
+        'modified' => false,
+        'created_by' => false,
+        'modified_by' => false,
+
+        // Associations
+        'user' => false,
+        'authentication_token' => false,
     ];
 
     public const ACCOUNT_RECOVERY_REQUEST_PENDING = 'pending';
@@ -66,7 +78,15 @@ class AccountRecoveryRequest extends Entity
     ];
 
     /**
-     * @return bool
+     * @return bool if request status is pending returns true
+     */
+    public function isPending(): bool
+    {
+        return $this->status === self::ACCOUNT_RECOVERY_REQUEST_PENDING;
+    }
+
+    /**
+     * @return bool if request status is approved returns true
      */
     public function isApproved(): bool
     {
@@ -74,10 +94,18 @@ class AccountRecoveryRequest extends Entity
     }
 
     /**
-     * @return bool
+     * @return bool if request status is completed returns true
      */
     public function isCompleted(): bool
     {
         return $this->status === self::ACCOUNT_RECOVERY_REQUEST_COMPLETED;
+    }
+
+    /**
+     * @return bool if request status is rejected returns true
+     */
+    public function isRejected(): bool
+    {
+        return $this->status === self::ACCOUNT_RECOVERY_REQUEST_REJECTED;
     }
 }

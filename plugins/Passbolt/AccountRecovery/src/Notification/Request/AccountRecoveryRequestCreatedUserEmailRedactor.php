@@ -24,8 +24,8 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
-use Passbolt\AccountRecovery\Controller\AccountRecoveryRequests\AccountRecoveryRequestsPostController;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
+use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
 use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
@@ -47,7 +47,7 @@ class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailR
     public function getSubscribedEvents(): array
     {
         return [
-            AccountRecoveryRequestsPostController::REQUEST_CREATED_EVENT_NAME,
+            AccountRecoveryRequestCreateService::REQUEST_CREATED_EVENT_NAME,
         ];
     }
 

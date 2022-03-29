@@ -24,7 +24,9 @@ use App\Utility\UuidFactory;
 use Passbolt\AccountRecovery\Plugin;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryGetRequestService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryResponseFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
@@ -111,8 +113,8 @@ class AccountRecoveryGetRequestServiceTest extends AccountRecoveryTestCase
         $user = UserFactory::make()->active()->persist();
         $request = AccountRecoveryRequestFactory::make()
             ->withUserAndToken($user->id)
-            ->with('AccountRecoveryPrivateKeys')
-            ->with('AccountRecoveryResponses')
+            ->with('AccountRecoveryPrivateKeys', AccountRecoveryPrivateKeyFactory::make())
+            ->with('AccountRecoveryResponses', AccountRecoveryResponseFactory::make())
             ->approved()
             ->persist();
 
