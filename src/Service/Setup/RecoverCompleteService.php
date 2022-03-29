@@ -18,10 +18,10 @@ declare(strict_types=1);
 namespace App\Service\Setup;
 
 use App\Controller\Setup\RecoverCompleteController;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
 class RecoverCompleteService extends AbstractCompleteService implements RecoverCompleteServiceInterface
@@ -44,9 +44,34 @@ class RecoverCompleteService extends AbstractCompleteService implements RecoverC
      */
     public function complete(string $userId): void
     {
+        $user = $this->validateData($userId);
+        $token = $this->buildAuthenticationTokenEntity($userId);
+
+        if (!$this->AuthenticationTokens->save($token)) {
+            throw new ValidationException(
+                __('Could not update the authentication token data.'),
+                $token,
+                $this->AuthenticationTokens
+            );
+        }
+
+        $this->dispatchEvent(RecoverCompleteController::COMPLETE_SUCCESS_EVENT_NAME, [
+            'user' => $user,
+            'data' => $this->request->getData(),
+        ]);
+    }
+
+    /**
+     * Validate the user and the gpgkey
+     *
+     * @param string $userId User ID
+     * @return \App\Model\Entity\User
+     * @throws \Cake\Http\Exception\BadRequestException if the data provided is not valid
+     */
+    protected function validateData(string $userId): User
+    {
         // Check request sanity
         $user = $this->getAndAssertUser($userId);
-        $token = $this->getAndAssertToken($userId, AuthenticationToken::TYPE_RECOVER);
         $gpgkey = $this->getAndAssertGpgkey($userId);
 
         // Check that the "new" gpg key match the old one
@@ -55,16 +80,22 @@ class RecoverCompleteService extends AbstractCompleteService implements RecoverC
             throw new BadRequestException(__('The key provided does not belong to given user.'));
         }
 
+        return $user;
+    }
+
+    /**
+     * Method to be extended if saving additional settings
+     *
+     * @param string $userId User ID
+     * @return \App\Model\Entity\AuthenticationToken
+     */
+    protected function buildAuthenticationTokenEntity(string $userId): AuthenticationToken
+    {
+        $token = $this->getAndAssertToken($userId, AuthenticationToken::TYPE_RECOVER);
         // Deactivate the authentication token
         $token->active = false;
-        if (!$this->AuthenticationTokens->save($token, ['checkRules' => false])) {
-            throw new InternalErrorException('Could not update the authentication token data.');
-        }
 
-        $this->dispatchEvent(RecoverCompleteController::COMPLETE_SUCCESS_EVENT_NAME, [
-            'user' => $user,
-            'data' => $this->request->getData(),
-        ]);
+        return $token;
     }
 
     /**
