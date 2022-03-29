@@ -21,14 +21,14 @@ use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
-use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryResponsesTable;
 
 /**
  * AccountRecoveryResponseFactory
  *
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] persist()
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest getEntity()
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] getEntities()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse[] persist()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse getEntity()
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse[] getEntities()
  */
 class AccountRecoveryResponseFactory extends CakephpBaseFactory
 {
@@ -39,7 +39,7 @@ class AccountRecoveryResponseFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return AccountRecoveryRequestsTable::class;
+        return AccountRecoveryResponsesTable::class;
     }
 
     /**
@@ -54,6 +54,7 @@ class AccountRecoveryResponseFactory extends CakephpBaseFactory
             $date = Chronos::now()->subDay($faker->randomNumber(5));
 
             return [
+                'account_recovery_request_id' => $faker->uuid(),
                 'status' => AccountRecoveryResponse::STATUS_APPROVED,
                 'responder_foreign_model' => AccountRecoveryResponse::RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'responder_foreign_key' => $faker->uuid(),

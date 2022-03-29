@@ -50,17 +50,7 @@ class AccountRecoveryRequest extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'armored_key' => true,
-        'fingerprint' => true,
-        'authentication_token_id' => true,
-        'status' => true,
-        'created' => true,
-        'modified' => true,
-        'created_by' => true,
-        'modified_by' => true,
-        'user' => true,
-        'authentication_token' => true,
+        '*' => false,
     ];
 
     public const ACCOUNT_RECOVERY_REQUEST_PENDING = 'pending';

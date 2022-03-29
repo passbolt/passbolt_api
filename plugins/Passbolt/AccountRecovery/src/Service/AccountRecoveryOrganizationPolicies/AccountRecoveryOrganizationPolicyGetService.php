@@ -20,6 +20,7 @@ namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 use App\Model\Table\AvatarsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Query;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
@@ -67,13 +68,31 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
     }
 
     /**
+     * Throw an exception if the organization policy is disabled or
+     * if the public key is empty
+     *
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the feature is not enabled
+     * @throws \Cake\Http\Exception\BadRequestException if the public key is empty
+     */
+    public function validateOrgPolicy()
+    {
+        $policy = $this->get();
+        if ($policy->isDisabled()) {
+            throw new BadRequestException(__('Account recovery is disabled.'));
+        } elseif (is_null($policy->account_recovery_organization_public_key)) {
+            throw new BadRequestException(__('The account recovery organization public key is not set.'));
+        }
+    }
+
+    /**
      * Join the creator to the query if contained in the request
      * The Gpgkey of the creator may also be contained.
      *
      * @param \Cake\ORM\Query $query Query to decorate
      * @return void
      */
-    public function containCreator(Query $query): void
+    protected function containCreator(Query $query): void
     {
         $contain = $this->request->getQuery('contain');
         if (is_array($contain) && isset($contain['creator']) && $contain['creator']) {

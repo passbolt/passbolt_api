@@ -82,7 +82,7 @@ class AccountRecoveryRequestsTable extends Table
 
         $this->hasMany('AccountRecoveryResponses', [
             'className' => 'Passbolt/AccountRecovery.AccountRecoveryResponses',
-            'foreignKey' => 'account_recovery_requests_id',
+            'foreignKey' => 'account_recovery_request_id',
         ]);
 
         $this->hasOne('AccountRecoveryPrivateKeys', [
@@ -272,7 +272,7 @@ class AccountRecoveryRequestsTable extends Table
             $associations['AccountRecoveryResponses'] = function (Query $q) {
                 return $q->select([
                     'id',
-                    'account_recovery_requests_id',
+                    'account_recovery_request_id',
                     'created',
                     'modified',
                     'created_by',

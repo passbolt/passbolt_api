@@ -75,7 +75,15 @@ class AccountRecoveryCreateRequestService
             'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_COMPLETED,
             'created_by' => $userId,
             'modified_by' => $userId,
-        ]);
+        ], ['accessibleFields' => [
+            'user_id' => true,
+            'armored_key' => true,
+            'fingerprint' => true,
+            'authentication_token_id' => true,
+            'status' => true,
+            'created_by' => true,
+            'modified_by' => true,
+        ]]);
 
         PublicKeyValidationService::parseAndValidatePublicKey(
             $this->serverRequest->getData('armored_key'),

@@ -71,7 +71,7 @@ class AccountRecoveryGetRequestService
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryResponses');
         $this->clientIp = $clientIp;
-        $this->validateOrgPolicy();
+        (new AccountRecoveryOrganizationPolicyGetService())->validateOrgPolicy();
         $this->setUser($params['userId'] ?? null);
         $this->setToken($params['tokenId'] ?? null);
         $this->setRequest($params['requestId'] ?? null);
@@ -106,7 +106,7 @@ class AccountRecoveryGetRequestService
             /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $request */
             $responses = $this->AccountRecoveryResponses->find()
                 ->select(['responder_foreign_model', 'data'])
-                ->where(['account_recovery_requests_id' => $this->request->id]);
+                ->where(['account_recovery_request_id' => $this->request->id]);
             $data['account_recovery_responses'] = $responses->toArray();
         }
 
@@ -210,20 +210,5 @@ class AccountRecoveryGetRequestService
         }
 
         $this->request = $request;
-    }
-
-    /**
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException if the feature is not enabled
-     * @throws \Cake\Http\Exception\BadRequestException if the public key is empty
-     */
-    protected function validateOrgPolicy()
-    {
-        $policy = (new AccountRecoveryOrganizationPolicyGetService())->get();
-        if ($policy->isDisabled()) {
-            throw new BadRequestException(__('Account recovery is disabled.'));
-        } elseif (is_null($policy->account_recovery_organization_public_key)) {
-            throw new BadRequestException(__('The account recovery organization public key is not set.'));
-        }
     }
 }

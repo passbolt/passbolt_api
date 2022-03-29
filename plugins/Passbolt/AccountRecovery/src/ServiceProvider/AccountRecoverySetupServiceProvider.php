@@ -17,11 +17,13 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\ServiceProvider;
 
+use App\Service\Setup\RecoverCompleteServiceInterface;
 use App\Service\Setup\RecoverStartServiceInterface;
 use App\Service\Setup\SetupCompleteServiceInterface;
 use App\Service\Setup\SetupStartServiceInterface;
 use App\ServiceProvider\SetupServiceProvider;
 use Cake\Core\ContainerInterface;
+use Passbolt\AccountRecovery\Service\Setup\AccountRecoveryRecoverCompleteService;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoveryRecoverStartService;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupCompleteService;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupStartService;
@@ -44,6 +46,9 @@ class AccountRecoverySetupServiceProvider extends SetupServiceProvider
         $container
             ->extend(RecoverStartServiceInterface::class)
             ->setConcrete(AccountRecoveryRecoverStartService::class);
+        $container
+            ->extend(RecoverCompleteServiceInterface::class)
+            ->setConcrete(AccountRecoveryRecoverCompleteService::class);
         $container
             ->extend(SetupStartServiceInterface::class)
             ->setConcrete(AccountRecoverySetupStartService::class);

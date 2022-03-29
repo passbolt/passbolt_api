@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Table;
 
-use App\Model\Table\UsersTable;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\Query;
@@ -68,10 +67,17 @@ class AccountRecoveryResponsesTable extends Table
             'foreignKey' => 'foreign_key',
         ]);
 
-        $this->hasOne('Creator', [
-            'className' => UsersTable::class,
-            'bindingKey' => 'created_by',
-            'foreignKey' => 'id',
+        $this->belongsTo('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys', [
+           'foreignKey' => 'responder_foreign_key',
+        ]);
+
+        $this->belongsTo('Creator', [
+            'className' => 'Users',
+            'foreignKey' => 'created_by',
+        ]);
+        $this->belongsTo('Modifier', [
+            'className' => 'Users',
+            'foreignKey' => 'modified_by',
         ]);
     }
 
@@ -137,11 +143,11 @@ class AccountRecoveryResponsesTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
-        $rules->add($rules->existsIn('created_by', 'Users'));
-        $rules->add($rules->existsIn('modified_by', 'Users'));
+        $rules->add($rules->existsIn('created_by', 'Creator'));
+        $rules->add($rules->existsIn('modified_by', 'Modifier'));
 
         // TODO contextual switch based on responder_foreign_model
-        $rules->add($rules->existsIn('foreign_key', 'AccountRecoveryOrganizationPublicKeys'));
+        $rules->add($rules->existsIn('responder_foreign_key', 'AccountRecoveryOrganizationPublicKeys'));
 
         return $rules;
     }
@@ -165,7 +171,7 @@ class AccountRecoveryResponsesTable extends Table
             'modified',
             'created_by',
             'modified_by',
-            'account_recovery_requests_id',
+            'account_recovery_request_id',
             // 'data' // not available by default
         ];
 

@@ -32,6 +32,7 @@ use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] persist()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest getEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] getEntities()
+ * @method static \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest get($primaryKey, $options = [])
  */
 class AccountRecoveryRequestFactory extends CakephpBaseFactory
 {
@@ -63,7 +64,7 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
                 'user_id' => $faker->uuid(),
                 'authentication_token_id' => $faker->uuid(),
                 'armored_key' => $faker->text(),
-                'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                'fingerprint' => $faker->shuffleString('5E81AB26508850525CD78BAB67BFFCB7B74AF4C8'),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
                 'created' => $date,
