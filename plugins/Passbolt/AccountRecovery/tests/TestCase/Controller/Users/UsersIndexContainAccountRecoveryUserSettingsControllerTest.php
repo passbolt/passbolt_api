@@ -34,11 +34,12 @@ class UsersIndexContainAccountRecoveryUserSettingsControllerTest extends Account
     {
         $status = 'Foo';
         $nUsers = 5;
-        $setting = AccountRecoveryUserSettingFactory::make($nUsers)
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting[] $settings */
+        $settings = AccountRecoveryUserSettingFactory::make($nUsers)
             ->withUser(UserFactory::make()->user()->active())
             ->setField('status', $status)
             ->persist();
-        $user = $setting[0]->user;
+        $user = $settings[0]->user;
 
         $this->logInAs($user);
         $this->getJson('/users.json?contain[account_recovery_user_setting]=1&contain[foo]=1');
