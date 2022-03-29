@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Service\AccountRecoveryResponse
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
+use App\Middleware\UacAwareMiddlewareTrait;
 use App\Model\Entity\Role;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
@@ -43,6 +44,8 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 {
+    use UacAwareMiddlewareTrait;
+
     /**
      * @var \App\Utility\OpenPGP\OpenPGPBackend $gpg
      */
@@ -51,7 +54,8 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
     public function testAccountRecoveryResponsesCreateService_Success_Approved()
     {
         [$request, $policy] = $this->startScenario();
-        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $admin = UserFactory::make()->admin()->active()->persist();
+        $uac = $this->makeUac($admin);
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
         $data = [
             'account_recovery_request_id' => $request->id,
@@ -64,7 +68,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
         try {
             $results = (new AccountRecoveryResponsesCreateService())->create($uac, $data);
         } catch (ValidationException | CustomValidationException $exception) {
-            $this->fail();
+            $this->fail($exception->getMessage());
         }
 
         // Check results
@@ -93,7 +97,8 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
     public function testAccountRecoveryResponsesCreateService_SuccessRejected()
     {
         [$request, $policy] = $this->startScenario();
-        $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $admin = UserFactory::make()->admin()->active()->persist();
+        $uac = $this->makeUac($admin);
         $data = [
             'account_recovery_request_id' => $request->id,
             'status' => AccountRecoveryResponse::STATUS_REJECTED,
