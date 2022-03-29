@@ -16,7 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Event;
 
+use App\Controller\Users\UsersIndexController;
 use App\Controller\Users\UsersViewController;
+use App\Middleware\UacAwareMiddlewareTrait;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\UsersTable;
 use Cake\Event\EventInterface;
@@ -25,6 +27,8 @@ use Cake\ORM\Query;
 
 class ContainAccountRecoveryUserSettings implements EventListenerInterface
 {
+    use UacAwareMiddlewareTrait;
+
     /**
      * @var bool
      */
@@ -49,12 +53,20 @@ class ContainAccountRecoveryUserSettings implements EventListenerInterface
      */
     public function setIsContained(EventInterface $event): void
     {
-        $isContained = false;
         $controller = $event->getSubject();
+        $isContainedInQuery = (bool)$controller->getRequest()->getQuery('contain.account_recovery_user_setting');
+        $uac = $this->getUacInRequest($controller->getRequest());
         if ($controller instanceof UsersViewController) {
-            $isContained = (bool)$controller->getRequest()->getQuery('contain.account_recovery_user_setting');
+            // On the view controller, only the logged-in user can access the contained data.
+            $userId = $controller->getRequest()->getParam('id');
+            $isMe = $userId === 'me' || $userId === $uac->getId();
+            $this->isContained = $isContainedInQuery && $isMe;
+        } elseif ($controller instanceof UsersIndexController) {
+            // On the index controller, only admins can access the contained data
+            $this->isContained = $isContainedInQuery && $uac->isAdmin();
+        } else {
+            $this->isContained = false;
         }
-        $this->isContained = $isContained;
     }
 
     /**

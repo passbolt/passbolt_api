@@ -46,4 +46,21 @@ class UsersViewContainAccountRecoveryUserSettingsControllerTest extends AccountR
 
         $this->assertSame(compact('status'), (array)$this->_responseJsonBody->account_recovery_user_setting);
     }
+
+    public function testUsersViewControllerGetSuccess_ContainAccountRecoveryUserSetting_Fails_If_Not_LoggedIn_User()
+    {
+        $status = 'Foo';
+        $setting = AccountRecoveryUserSettingFactory::make()
+            ->withUser(UserFactory::make()->user())
+            ->setField('status', $status)
+            ->persist();
+        $user = $setting->user;
+
+        $this->logInAsUser();
+
+        $this->getJson('/users/' . $user->id . '.json?contain[account_recovery_user_setting]=1&contain[foo]=1');
+        $this->assertSuccess();
+
+        $this->assertNull($this->_responseJsonBody->account_recovery_user_setting ?? null);
+    }
 }
