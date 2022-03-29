@@ -43,11 +43,11 @@ abstract class AbstractCompleteService
     /**
      * AbstractCompleteService constructor
      *
-     * @param \Cake\Http\ServerRequest $request Server request
+     * @param \Cake\Http\ServerRequest|null $request Server request
      */
-    public function __construct(ServerRequest $request)
+    public function __construct(?ServerRequest $request = null)
     {
-        $this->request = $request;
+        $this->request = $request ?? new ServerRequest();
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('Gpgkeys');
         $this->loadModel('Users');
