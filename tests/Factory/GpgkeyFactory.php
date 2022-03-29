@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
+use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use Cake\Core\Configure;
 use Cake\I18n\Time;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
@@ -23,9 +24,15 @@ use Faker\Generator;
 
 /**
  * GpgkeyFactory
+
+ * @method \App\Model\Entity\Gpgkey|\App\Model\Entity\Gpgkey[] persist()
+ * @method \App\Model\Entity\Gpgkey getEntity()
+ * @method \App\Model\Entity\Gpgkey[] getEntities()
  */
 class GpgkeyFactory extends CakephpBaseFactory
 {
+    use ArmoredKeyFactoryTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *
