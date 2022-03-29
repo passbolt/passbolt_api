@@ -23,7 +23,7 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
-class UsersIndexContainPendingAccountRecoveryUserSettingControllerTest extends AccountRecoveryIntegrationTestCase
+class UsersIndexContainPendingAccountRecoveryRequestControllerTest extends AccountRecoveryIntegrationTestCase
 {
     public function setUp(): void
     {
@@ -31,7 +31,7 @@ class UsersIndexContainPendingAccountRecoveryUserSettingControllerTest extends A
         RoleFactory::make()->guest()->persist();
     }
 
-    public function testUsersIndexGetSuccess_ContainPendingAccountRecoveryUserSetting()
+    public function testUsersIndexGetSuccess_ContainPendingAccountRecoveryRequest()
     {
         [$userWithPending, $userWithCompleted] = UserFactory::make(2)
             ->active()
@@ -51,7 +51,7 @@ class UsersIndexContainPendingAccountRecoveryUserSettingControllerTest extends A
 
         ### Login as non admin
         $this->logInAsUser();
-        $this->getJson('/users.json?contain[pending_account_recovery_user_setting]=1');
+        $this->getJson('/users.json?contain[pending_account_recovery_request]=1');
         $this->assertResponseOk();
         $this->assertCount(3, $this->_responseJsonBody);
         foreach ($this->_responseJsonBody as $user) {
@@ -60,7 +60,7 @@ class UsersIndexContainPendingAccountRecoveryUserSettingControllerTest extends A
 
         ### Login as admin
         $this->logInAsAdmin();
-        $this->getJson('/users.json?contain[pending_account_recovery_user_setting]=1');
+        $this->getJson('/users.json?contain[pending_account_recovery_request]=1');
         $this->assertResponseOk();
         $this->assertCount(4, $this->_responseJsonBody);
 
