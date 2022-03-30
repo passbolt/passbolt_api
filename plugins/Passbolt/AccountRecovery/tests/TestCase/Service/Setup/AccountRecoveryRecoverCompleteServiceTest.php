@@ -120,12 +120,12 @@ class AccountRecoveryRecoverCompleteServiceTest extends AccountRecoveryTestCase
         $this->assertFalse(AuthenticationTokenFactory::get($token->id)->isActive());
     }
 
-    public function testAccountRecoveryRecoverCompleteService_ARDisabled()
+    public function testAccountRecoveryRecoverCompleteService_ARDisabled_Non_Valid_UserId()
     {
         $serverRequest = (new ServerRequest());
 
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('Account recovery is disabled.');
+        $this->expectExceptionMessage('The user identifier should be a valid UUID.');
 
         $service = (new AccountRecoveryRecoverCompleteService($serverRequest));
         $service->complete('Foo');
