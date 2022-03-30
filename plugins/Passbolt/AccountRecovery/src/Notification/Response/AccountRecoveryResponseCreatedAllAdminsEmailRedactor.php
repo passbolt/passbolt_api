@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.6.0
  */
 
-namespace Passbolt\AccountRecovery\Notification\Request;
+namespace Passbolt\AccountRecovery\Notification\Response;
 
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
@@ -24,22 +24,25 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\Purifier;
+use App\Utility\UserAccessControl;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
-use Cake\I18n\FrozenTime;
-use Passbolt\AccountRecovery\Controller\AccountRecoveryRequests\AccountRecoveryRequestsGetController;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
+use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryResponses\AccountRecoveryResponsesCreateService;
 use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
  */
-class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailRedactorInterface
+class AccountRecoveryResponseCreatedAllAdminsEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use ModelAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.Requests/bad_request';
+    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.Responses/created_all_admins';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
@@ -49,7 +52,8 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
     public function getSubscribedEvents(): array
     {
         return [
-            AccountRecoveryRequestsGetController::ACCOUNT_RECOVERY_GET_BAD_REQUEST,
+            AccountRecoveryResponsesCreateService::RESPONSE_APPROVED_EVENT_NAME,
+            AccountRecoveryResponsesCreateService::RESPONSE_REJECTED_EVENT_NAME,
         ];
     }
 
@@ -61,57 +65,63 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
     {
         $emailCollection = new EmailCollection();
         $this->loadModel('Users');
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $response */
+        $response = $event->getSubject();
 
-        $userId = $event->getData('userId');
-        $requestId = $event->getData('requestId');
-        $clientIp = $event->getData('clientIp');
-
-        /** @var \App\Model\Entity\User $user */
-        $user = $this->Users->findFirstForEmail($userId);
-
+        /** @var \App\Model\Entity\User $actingAdmin */
+        $actingAdmin = $this->Users->find()
+            ->where(['Users.id' => $response->modified_by])
+            ->contain('Profiles')
+            ->firstOrFail();
+        
         $admins = $this->Users->findAdmins()
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ]);
+        
+        /** @var User $user */
+        $user = $this->Users->find()
+            ->where(['Users.id' => $response->account_recovery_request->user_id])
+            ->contain('Profiles')
+            ->firstOrFail();
+
         foreach ($admins as $admin) {
             $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $requestId, $clientIp));
         }
+        
+        /** @var User $user */
+        $user = $this->Users->find()
+            ->where(['Users.id' => $response->account_recovery_request->user_id])
+            ->contain('Profiles')
+            ->firstOrFail();
+
+        $emailCollection->addEmail($this->makeUserEmail($user, $admin, $response));
 
         return $emailCollection;
     }
 
     /**
-     * @param \App\Model\Entity\User $admin Admin receiving the mail
-     * @param \App\Model\Entity\User $user User sending the request
-     * @param string $requestId Bad request ID requested
-     * @param string $clientIp Client IP
+     * @param \App\Model\Entity\User $user User concerned
+     * @param User $admin Admin approving the request
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $response Account recovery response
      * @return \App\Notification\Email\Email
      */
-    private function makeAdminEmail(
-        User $admin,
-        User $user,
-        string $requestId,
-        string $clientIp
-    ): Email {
+    private function makeAdminEmail(User $user, User $admin, AccountRecoveryResponse $response): Email
+    {
+        $status = $response->isApproved() ? __('Approved') : __('Rejected');
         $locale = (new GetUserLocaleService())->getLocale($admin->username);
         $subject = (new LocaleService())->translateString(
             $locale,
-            function () use ($clientIp, $user) {
-                return __(
-                    'Suspicious account recovery request issued from IP {0} for {1}',
-                    $clientIp,
-                    Purifier::clean($user->profile->first_name)
-                );
+            function () use ($status) {
+                return __('Account recovery response set to {0}.', $status);
             }
         );
 
         $data = ['body' => [
             'user' => $user,
             'admin' => $admin,
-            'clientIp' => $clientIp,
-            'requestId' => $requestId,
-            'created' => FrozenTime::now(),
-            'subject' => $subject,
+            'created' => $response->modified,
+            'status' => $status,
         ], 'title' => $subject,];
 
         return new Email($admin->username, $subject, $data, self::ADMIN_TEMPLATE);

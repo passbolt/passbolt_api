@@ -30,7 +30,7 @@ class RecoverCompleteControllerTest extends AccountRecoveryIntegrationTestCase
     use EmailQueueTrait;
 
     /**
-     * @group AN
+     * @group Requests
      * @group recover
      * @group recoverComplete
      */

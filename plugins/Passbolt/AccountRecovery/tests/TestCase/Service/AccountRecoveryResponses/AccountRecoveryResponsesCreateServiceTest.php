@@ -23,13 +23,11 @@ use App\Middleware\UacAwareMiddlewareTrait;
 use App\Model\Entity\Role;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
-use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
-use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
 use Passbolt\AccountRecovery\Service\AccountRecoveryResponses\AccountRecoveryResponsesCreateService;
@@ -45,11 +43,7 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 {
     use UacAwareMiddlewareTrait;
-
-    /**
-     * @var \App\Utility\OpenPGP\OpenPGPBackend $gpg
-     */
-    protected $gpg;
+    use GpgAdaSetupTrait;
 
     public function testAccountRecoveryResponsesCreateService_Success_Approved()
     {
@@ -88,8 +82,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
         // Check request is updated
         $this->assertEquals(1, AccountRecoveryRequestFactory::count());
 
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryRequests');
-        $r = $table->find()->all()->toArray();
+        $r = AccountRecoveryRequestFactory::find()->toArray();
         $this->assertEquals($r[0]['status'], AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED);
         $this->assertEquals($r[0]['modified_by'], $uac->getId());
     }
@@ -129,8 +122,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
         // Check request is updated
         $this->assertEquals(1, AccountRecoveryRequestFactory::count());
 
-        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryRequests');
-        $r = $table->find()->all()->toArray();
+        $r = AccountRecoveryRequestFactory::find()->toArray();
         $this->assertEquals($r[0]['status'], AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED);
         $this->assertEquals($r[0]['modified_by'], $uac->getId());
     }
@@ -621,26 +613,5 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
             ->persist();
 
         return [$request, $policy];
-    }
-
-    /**
-     * Utility function to speed up encryption step in test cases
-     *
-     * @param string $fingerprint fingerprint
-     * @param string $key armored key block
-     * @return string
-     */
-    private function encrypt(string $fingerprint, string $key): string
-    {
-        // Build the data
-        if (Configure::read('passbolt.gpg.putenv')) {
-            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
-        }
-        $this->gpg = OpenPGPBackendFactory::get();
-        $this->gpg->clearKeys();
-        $this->gpg->importKeyIntoKeyring($key);
-        $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
-
-        return $this->gpg->encrypt('Foo');
     }
 }

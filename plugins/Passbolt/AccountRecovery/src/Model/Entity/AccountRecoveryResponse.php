@@ -18,6 +18,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
  * @property string $modified_by
+ * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $account_recovery_request
  */
 class AccountRecoveryResponse extends Entity
 {
@@ -40,6 +41,8 @@ class AccountRecoveryResponse extends Entity
         'created_by' => false,
         'modified_by' => false,
         'account_recovery_request_id' => false,
+
+        'account_recovery_request' => false,
     ];
 
     public const STATUS_REJECTED = 'rejected';

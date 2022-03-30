@@ -24,6 +24,8 @@ use Passbolt\AccountRecovery\Notification\OrganizationPolicies\AccountRecoveryOr
 use Passbolt\AccountRecovery\Notification\Request\AccountRecoveryGetBadRequestAdminEmailRedactor;
 use Passbolt\AccountRecovery\Notification\Request\AccountRecoveryRequestCreatedAdminEmailRedactor;
 use Passbolt\AccountRecovery\Notification\Request\AccountRecoveryRequestCreatedUserEmailRedactor;
+use Passbolt\AccountRecovery\Notification\Response\AccountRecoveryResponseApprovedUserEmailRedactor;
+use Passbolt\AccountRecovery\Notification\Response\AccountRecoveryResponseRejectedUserEmailRedactor;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
@@ -41,6 +43,14 @@ class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPo
 
         if ($this->isRedactorEnabled('send.accountRecovery.request.admin')) {
             $redactors[] = new AccountRecoveryRequestCreatedAdminEmailRedactor();
+        }
+
+        if ($this->isRedactorEnabled('send.accountRecovery.response.user.approved')) {
+            $redactors[] = new AccountRecoveryResponseApprovedUserEmailRedactor();
+        }
+
+        if ($this->isRedactorEnabled('send.accountRecovery.response.user.rejected')) {
+            $redactors[] = new AccountRecoveryResponseRejectedUserEmailRedactor();
         }
 
         if ($this->isRedactorEnabled('send.accountRecovery.request.guessing')) {
