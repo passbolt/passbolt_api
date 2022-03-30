@@ -25,7 +25,7 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 class RecoverStartControllerTest extends AccountRecoveryIntegrationTestCase
 {
     /**
-     * @group AN
+     * @group Requests
      * @group setup
      * @group setupStart
      */

@@ -39,7 +39,7 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
     use ModelAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.AN/admin_request';
+    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.Requests/admin_request';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
@@ -86,7 +86,7 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
      */
     private function makeAdminEmail(User $admin, User $user, AccountRecoveryRequest $request): Email
     {
-        $locale = (new GetUserLocaleService())->getLocale($user->username);
+        $locale = (new GetUserLocaleService())->getLocale($admin->username);
         $subject = (new LocaleService())->translateString(
             $locale,
             function () use ($user) {
@@ -94,7 +94,12 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
             }
         );
 
-        $data = ['body' => ['user' => $user, 'admin' => $admin, 'created' => $request->created,], 'title' => $subject,];
+        $data = ['body' => [
+            'user' => $user,
+            'admin' => $admin,
+            'created' => $request->created,
+            'requestId' => $request->id,
+        ], 'title' => $subject,];
 
         return new Email($admin->username, $subject, $data, self::ADMIN_TEMPLATE);
     }

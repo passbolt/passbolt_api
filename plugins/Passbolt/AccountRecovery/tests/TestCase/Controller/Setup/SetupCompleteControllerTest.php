@@ -31,7 +31,7 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
     use GpgAdaSetupTrait;
 
     /**
-     * @group AN
+     * @group Requests
      * @group setup
      * @group setupComplete
      */

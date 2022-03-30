@@ -51,10 +51,30 @@ trait ArmoredKeyFactoryTrait
     /**
      * @return $this
      */
+    public function rsa4096Key_2()
+    {
+        return $this
+            ->setField('fingerprint', '23C6C30E241324C90A44A719A86A7EA3739797F5')
+            ->setField('armored_key', file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key'));
+    }
+
+    /**
+     * @return $this
+     */
     public function rsa2048Key()
     {
         return $this
             ->setField('fingerprint', '26FD986838F4F9AB318FF56AE5DFCEE142949B78')
             ->setField('armored_key', file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public.key'));
+    }
+
+    /**
+     * @return $this
+     */
+    public function adaPublicKey()
+    {
+        return $this
+            ->setField('fingerprint', '03F60E958F4CB29723ACDF761353B5B15D9B054F')
+            ->setField('armored_key', file_get_contents(FIXTURES . 'Gpgkeys' . DS . 'ada_public.key'));
     }
 }

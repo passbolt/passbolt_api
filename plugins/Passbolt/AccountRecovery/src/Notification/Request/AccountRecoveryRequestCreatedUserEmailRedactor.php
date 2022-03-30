@@ -37,7 +37,7 @@ class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailR
     use ModelAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const USER_TEMPLATE = 'Passbolt/AccountRecovery.AN/user_request';
+    public const USER_TEMPLATE = 'Passbolt/AccountRecovery.Requests/user_request';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
