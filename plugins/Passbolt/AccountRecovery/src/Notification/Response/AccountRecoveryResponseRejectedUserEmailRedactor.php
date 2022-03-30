@@ -94,7 +94,7 @@ class AccountRecoveryResponseRejectedUserEmailRedactor implements SubscribedEmai
         $data = ['body' => [
             'user' => $user,
             'admin' => $admin,
-            'created' => $response->modified
+            'created' => $response->modified,
         ], 'title' => $subject,];
 
         return new Email($user->username, $subject, $data, self::USER_TEMPLATE);

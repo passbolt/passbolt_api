@@ -37,9 +37,9 @@ class AccountRecoveryRequestsViewController extends AppController
     }
 
     /**
-     * List the details of one account recovery requests
+     * List the details of one account recovery request
      *
-     * @param string $id uuid
+     * @param string $id uuid of the request
      * @throws \Cake\Http\Exception\ForbiddenException if the user is not an admin
      * @throws \Cake\Http\Exception\NotFoundException if request id could not be found
      * @throws \Cake\Http\Exception\BadRequestException if the id is not a uuid

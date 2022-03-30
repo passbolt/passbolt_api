@@ -366,7 +366,7 @@ class AccountRecoveryRequestsTable extends Table
             'user_id' => $uac->getId(),
             'armored_key' => $data['armored_key'] ?? '',
             'fingerprint' => $data['fingerprint'] ?? '',
-            'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_COMPLETED,
+            'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING,
             'created_by' => $uac->getId(),
             'modified_by' => $uac->getId(),
         ], [

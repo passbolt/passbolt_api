@@ -21,6 +21,7 @@ if (PHP_SAPI === 'cli') {
 $user = $body['user'];
 $admin = $body['admin'];
 $created = $body['created'];
+$requestId = $body['requestId'];
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
@@ -39,6 +40,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/account-recovery/requests/' . $user['id'], true),
+    'url' => Router::url('/account-recovery/requests/' . $requestId, true),
     'text' => __('Review the recovery request')
 ]);
