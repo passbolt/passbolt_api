@@ -68,8 +68,7 @@ class AccountRecoveryPrivateKeysTable extends Table
 
         $this->belongsTo('Users');
 
-        $this->hasMany('AccountRecoveryPrivateKeyPasswords', [
-            'className' => AccountRecoveryPrivateKeyPasswordsTable::class,
+        $this->hasMany('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords', [
             'foreignKey' => 'private_key_id',
         ]);
     }

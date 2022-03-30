@@ -39,7 +39,7 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = '<h3>' . $title . '</h3><br/>';
-$text .= __('You have set the status of the request initiated by {0}({1}) to {2}.', $userFirstName, $userEmail, $status);
+$text .= __('You have set the status of the account recovery request initiated by {0}({1}) to {2}.', $userFirstName, $userEmail, $status);
 
 echo $this->element('Email/module/text', [
     'text' => $text

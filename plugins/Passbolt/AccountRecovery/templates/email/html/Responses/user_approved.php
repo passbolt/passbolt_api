@@ -47,6 +47,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/account-recovery/requests/' . $request['id'] . '/' . $request['user_id'] . '/' . $request['authentication_token_id'], true),
+    'url' => Router::url('/account-recovery/continue/' . $request['user_id'] . '/' . $request['authentication_token_id'], true),
     'text' => __('Complete account recovery')
 ]);

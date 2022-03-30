@@ -22,13 +22,9 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use App\Utility\Purifier;
-use App\Utility\UserAccessControl;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
-use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryResponses\AccountRecoveryResponsesCreateService;
 use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
@@ -69,7 +65,7 @@ class AccountRecoveryResponseCreatedAdminEmailRedactor implements SubscribedEmai
 
         /** @var \App\Model\Entity\User $admin */
         $admin = $this->Users->findFirstForEmail($response->modified_by);
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = $this->Users->find()
             ->where(['Users.id' => $response->account_recovery_request->user_id])
             ->contain('Profiles')
@@ -82,7 +78,7 @@ class AccountRecoveryResponseCreatedAdminEmailRedactor implements SubscribedEmai
 
     /**
      * @param \App\Model\Entity\User $user User concerned
-     * @param User $admin Admin approving the request
+     * @param \App\Model\Entity\User $admin Admin approving the request
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $response Account recovery response
      * @return \App\Notification\Email\Email
      */

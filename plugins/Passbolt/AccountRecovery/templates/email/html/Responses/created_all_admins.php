@@ -21,10 +21,13 @@ if (PHP_SAPI === 'cli') {
 }
 $user = $body['user'];
 $admin = $body['admin'];
+$actingAdmin = $body['actingAdmin'];
 $created = $body['created'];
 $status = $body['status'];
 $userFirstName = Purifier::clean($user['profile']['username']);
 $userEmail = Purifier::clean($user['username']);
+$actingAdminFirstName = Purifier::clean($actingAdmin['profile']['username']);
+$actingAdminEmail = Purifier::clean($actingAdmin['username']);
 
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
@@ -32,14 +35,23 @@ echo $this->element('Email/module/avatar',[
         'user' => $admin,
         'datetime' => $created,
         'text' => __(
-            'You have updated a recovery request to {0}.',
+            '{0}({1}) has updated a recovery request to {2}.',
+            Purifier::clean($actingAdmin['profile']['first_name']),
+            Purifier::clean($actingAdmin['username']),
             $status
         )
     ])
 ]);
 
 $text = '<h3>' . $title . '</h3><br/>';
-$text .= __('You have set the status of the request initiated by {0}({1}) to {2}.', $userFirstName, $userEmail, $status);
+$text .= __(
+    '{0}({1}) has set the status of the request initiated by {0}({1}) to {2}.',
+    $actingAdminFirstName,
+    $actingAdminEmail,
+    $userFirstName,
+    $userEmail,
+    $status
+);
 
 echo $this->element('Email/module/text', [
     'text' => $text

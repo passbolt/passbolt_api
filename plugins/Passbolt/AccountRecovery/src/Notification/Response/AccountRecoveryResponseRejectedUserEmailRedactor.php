@@ -24,7 +24,6 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
 use Passbolt\AccountRecovery\Service\AccountRecoveryResponses\AccountRecoveryResponsesCreateService;
 use Passbolt\Locale\Service\GetUserLocaleService;
@@ -92,7 +91,11 @@ class AccountRecoveryResponseRejectedUserEmailRedactor implements SubscribedEmai
             }
         );
 
-        $data = ['body' => ['user' => $user, 'admin' => $admin, 'created' => $response->modified], 'title' => $subject,];
+        $data = ['body' => [
+            'user' => $user,
+            'admin' => $admin,
+            'created' => $response->modified
+        ], 'title' => $subject,];
 
         return new Email($user->username, $subject, $data, self::USER_TEMPLATE);
     }

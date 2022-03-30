@@ -24,12 +24,9 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\Purifier;
-use App\Utility\UserAccessControl;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
-use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryResponses\AccountRecoveryResponsesCreateService;
 use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
@@ -42,7 +39,7 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactor implements Subscribed
     use ModelAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.Responses/created_all_admins';
+    public const ALL_ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.Responses/created_all_admins';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
@@ -73,57 +70,62 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactor implements Subscribed
             ->where(['Users.id' => $response->modified_by])
             ->contain('Profiles')
             ->firstOrFail();
-        
+
         $admins = $this->Users->findAdmins()
+            ->where(['Users.id <>' => $actingAdmin->id])
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ]);
-        
-        /** @var User $user */
+
+        /** @var \App\Model\Entity\User $user */
         $user = $this->Users->find()
             ->where(['Users.id' => $response->account_recovery_request->user_id])
             ->contain('Profiles')
             ->firstOrFail();
 
         foreach ($admins as $admin) {
-            $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $requestId, $clientIp));
+            $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $actingAdmin, $response));
         }
-        
-        /** @var User $user */
-        $user = $this->Users->find()
-            ->where(['Users.id' => $response->account_recovery_request->user_id])
-            ->contain('Profiles')
-            ->firstOrFail();
-
-        $emailCollection->addEmail($this->makeUserEmail($user, $admin, $response));
 
         return $emailCollection;
     }
 
     /**
      * @param \App\Model\Entity\User $user User concerned
-     * @param User $admin Admin approving the request
+     * @param \App\Model\Entity\User $recipient Admin being notified
+     * @param \App\Model\Entity\User $actingAdmin Admin approving the request
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $response Account recovery response
      * @return \App\Notification\Email\Email
      */
-    private function makeAdminEmail(User $user, User $admin, AccountRecoveryResponse $response): Email
-    {
+    private function makeAdminEmail(
+        User $user,
+        User $recipient,
+        User $actingAdmin,
+        AccountRecoveryResponse $response
+    ): Email {
         $status = $response->isApproved() ? __('Approved') : __('Rejected');
-        $locale = (new GetUserLocaleService())->getLocale($admin->username);
+        $locale = (new GetUserLocaleService())->getLocale($recipient->username);
         $subject = (new LocaleService())->translateString(
             $locale,
-            function () use ($status) {
-                return __('Account recovery response set to {0}.', $status);
+            function () use ($status, $actingAdmin) {
+                $firstName = $actingAdmin->profile->first_name;
+
+                return __(
+                    'Account recovery response set to {0} by {1}.',
+                    $status,
+                    Purifier::clean($firstName)
+                );
             }
         );
 
         $data = ['body' => [
             'user' => $user,
-            'admin' => $admin,
+            'admin' => $recipient,
+            'actingAdmin' => $actingAdmin,
             'created' => $response->modified,
             'status' => $status,
         ], 'title' => $subject,];
 
-        return new Email($admin->username, $subject, $data, self::ADMIN_TEMPLATE);
+        return new Email($recipient->username, $subject, $data, self::ALL_ADMIN_TEMPLATE);
     }
 }
