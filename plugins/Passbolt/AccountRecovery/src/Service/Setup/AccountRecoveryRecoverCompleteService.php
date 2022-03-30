@@ -31,32 +31,30 @@ class AccountRecoveryRecoverCompleteService extends RecoverCompleteService
     /**
      * @inheritDoc
      */
-    public function complete(string $userId): void
-    {
-        (new AccountRecoveryOrganizationPolicyGetService())->validateOrgPolicy();
-        parent::complete($userId);
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function buildAuthenticationTokenEntity(string $userId): AuthenticationToken
     {
         $token = parent::buildAuthenticationTokenEntity($userId);
-        $this->validateAccountRecoveryRequestId($token);
+        $requestId = $this->request->getData('account_recovery_request_id');
+        if (isset($requestId)) {
+            $this->validateAccountRecoveryRequestId($token, $requestId);
+        }
 
         return $token;
     }
 
     /**
      * @param \App\Model\Entity\AuthenticationToken $token Token being updated
+     * @param string $requestId The request ID
      * @return \App\Model\Entity\AuthenticationToken
      * @throws \Cake\Datasource\Exception\RecordNotFoundException if the request was not found
      * @throws \Cake\Http\Exception\BadRequestException if the request is not in "approved" status
      */
-    protected function validateAccountRecoveryRequestId(AuthenticationToken $token): AuthenticationToken
-    {
-        $requestId = $this->request->getData('account_recovery_request_id');
+    protected function validateAccountRecoveryRequestId(
+        AuthenticationToken $token,
+        string $requestId
+    ): AuthenticationToken {
+        (new AccountRecoveryOrganizationPolicyGetService())->validateOrgPolicy();
+
         if (!Validation::uuid($requestId)) {
             throw new BadRequestException(__('The account recovery request identifier should be a valid UUID.'));
         }

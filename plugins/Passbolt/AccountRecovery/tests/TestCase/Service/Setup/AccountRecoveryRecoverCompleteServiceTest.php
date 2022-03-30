@@ -89,6 +89,37 @@ class AccountRecoveryRecoverCompleteServiceTest extends AccountRecoveryTestCase
         }
     }
 
+    /**
+     * @Given account recovery is enabled
+     * @And the policy is not activated
+     * @And not account_request_id is in the payload
+     * @When performing a recovery
+     * @Then no exception should be thrown
+     */
+    public function testAccountRecoveryRecoverCompleteService_Success_No_AR()
+    {
+        $user = UserFactory::make()
+            ->active()
+            ->withAuthenticationTokens(AuthenticationTokenFactory::make()
+                ->type(AuthenticationToken::TYPE_RECOVER)
+                ->active())
+            ->with('Gpgkeys', GpgkeyFactory::make()->rsa4096Key())
+            ->persist();
+        $token = $user->authentication_tokens[0];
+        $gpgkey = $user->gpgkey;
+
+        $serverRequest = (new ServerRequest())
+            ->withData('authenticationtoken.token', $token->token)
+            ->withData('gpgkey.armored_key', $gpgkey->armored_key);
+
+        $service = (new AccountRecoveryRecoverCompleteService($serverRequest));
+        $service->complete($user->id);
+
+        // Check that token is now inactive
+        $this->assertSame(1, AuthenticationTokenFactory::count());
+        $this->assertFalse(AuthenticationTokenFactory::get($token->id)->isActive());
+    }
+
     public function testAccountRecoveryRecoverCompleteService_ARDisabled()
     {
         $serverRequest = (new ServerRequest());
