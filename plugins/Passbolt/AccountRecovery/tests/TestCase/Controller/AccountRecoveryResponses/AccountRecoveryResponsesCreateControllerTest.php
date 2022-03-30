@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Controller\AccountRecoveryResponses;
 
+use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
@@ -67,26 +68,99 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
     }
 
     /**
-     * Successful test case
+     * Successful test case with response approved
      */
     public function testAccountRecoveryResponsesCreateController_Success_Approved()
     {
         [$request, $policy, $user] = $this->loadFixtureScenario(ResponseCreateScenario::class);
         $admins = UserFactory::make(3)->active()->admin()->persist(3);
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $status = AccountRecoveryResponse::STATUS_APPROVED;
         $data = [
             'account_recovery_request_id' => $request->id,
-            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'status' => $status,
             'responder_foreign_model' => AccountRecoveryResponse::RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY,
             'responder_foreign_key' => $policy->public_key_id,
             'data' => $password,
         ];
 
-        $this->logInAsAdmin();
+        $admin = $this->logInAsAdmin();
         $this->postJson('/account-recovery/responses.json', $data);
         $this->assertResponseOk();
 
         $expectedEmailsCount = count($admins) + 1 + 1; // The admins, plus the one logged in, and the user
         $this->assertEmailQueueCount($expectedEmailsCount);
+
+        // Assess mail sent to the user
+        $this->assertEmailInBatchContains(
+            '/account-recovery/continue/' . $request['user_id'] . '/' . $request['authentication_token_id'],
+            $user->username
+        );
+        $this->assertEmailInBatchContains(
+            "{$admin->profile->first_name}($admin->username) has approved your recovery request.",
+            $user->username
+        );
+        
+        $this->assertAdminEmails($status, $user, $admin, $admins);
+    }
+
+    /**
+     * Successful test case with response rejected
+     */
+    public function testAccountRecoveryResponsesCreateController_Success_Rejected()
+    {
+        [$request, $policy, $user] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        $admins = UserFactory::make(3)->active()->admin()->persist(3);
+        $status = AccountRecoveryResponse::STATUS_REJECTED;
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => $status,
+            'responder_foreign_model' => AccountRecoveryResponse::RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY,
+            'responder_foreign_key' => $policy->public_key_id,
+        ];
+
+        $admin = $this->logInAsAdmin();
+        $this->postJson('/account-recovery/responses.json', $data);
+        $this->assertResponseOk();
+
+        $expectedEmailsCount = count($admins) + 1 + 1; // The admins, plus the one logged in, and the user
+        $this->assertEmailQueueCount($expectedEmailsCount);
+
+        // Assess mail sent to the user
+        $this->assertEmailInBatchNotContains(
+            '/account-recovery/continue/',
+            $user->username
+        );
+        $this->assertEmailInBatchContains(
+            "{$admin->profile->first_name} ($admin->username) has denied your recovery request.",
+            $user->username
+        );
+
+        $this->assertAdminEmails($status, $user, $admin, $admins);
+    }
+    
+    private function assertAdminEmails(string $status, User $user, User $admin, array $admins)
+    {
+        // Assess mail sent to the acting admin
+        $this->assertEmailInBatchContains(
+            "You have updated a recovery request to {$status}.",
+            $admin->username
+        );
+        $this->assertEmailInBatchContains(
+            "You have set the status of the account recovery request initiated by {$user->profile->first_name} ({$user->username}) to {$status}.",
+            $admin->username
+        );
+
+        // Assess the mail sent to the other admins
+        foreach ($admins as $adm) {
+            $this->assertEmailInBatchContains(
+                "{$admin->profile->first_name}({$admin->username}) has updated a recovery request to {$status}.",
+                $adm->username
+            );
+            $this->assertEmailInBatchContains(
+                "{$admin->profile->first_name} ({$admin->username}) has set the status of the request initiated by {$user->profile->first_name} ({$user->username}) to {$status}.",
+                $adm->username
+            );
+        }
     }
 }

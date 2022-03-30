@@ -29,7 +29,7 @@ echo $this->element('Email/module/avatar',[
         'user' => $user,
         'datetime' => $created,
         'text' => __(
-            '{0}({1}) has denied your recovery request.',
+            '{0} ({1}) has denied your recovery request.',
             Purifier::clean($admin['profile']['first_name']),
             Purifier::clean($admin['username']),
         )

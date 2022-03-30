@@ -84,7 +84,7 @@ class AccountRecoveryResponseCreatedAdminEmailRedactor implements SubscribedEmai
      */
     private function makeAdminEmail(User $user, User $admin, AccountRecoveryResponse $response): Email
     {
-        $status = $response->isApproved() ? __('Approved') : __('Rejected');
+        $status = $response->isApproved() ? __('approved') : __('rejected');
         $locale = (new GetUserLocaleService())->getLocale($admin->username);
         $subject = (new LocaleService())->translateString(
             $locale,

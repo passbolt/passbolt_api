@@ -44,6 +44,7 @@ class ResponseCreateScenario implements FixtureScenarioInterface
         $user = UserFactory::make()
             ->user()
             ->with('Gpgkeys', GpgkeyFactory::make()->adaPublicKey())
+            ->withAvatar()
             ->persist();
 
         $policy = AccountRecoveryOrganizationPolicyFactory::make()

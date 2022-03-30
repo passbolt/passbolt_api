@@ -23,11 +23,11 @@ $user = $body['user'];
 $admin = $body['admin'];
 $created = $body['created'];
 $status = $body['status'];
-$userFirstName = Purifier::clean($user['profile']['username']);
+$userFirstName = Purifier::clean($user['profile']['first_name']);
 $userEmail = Purifier::clean($user['username']);
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
+    'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $admin,
         'datetime' => $created,
@@ -39,7 +39,7 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = '<h3>' . $title . '</h3><br/>';
-$text .= __('You have set the status of the account recovery request initiated by {0}({1}) to {2}.', $userFirstName, $userEmail, $status);
+$text .= __('You have set the status of the account recovery request initiated by {0} ({1}) to {2}.', $userFirstName, $userEmail, $status);
 
 echo $this->element('Email/module/text', [
     'text' => $text

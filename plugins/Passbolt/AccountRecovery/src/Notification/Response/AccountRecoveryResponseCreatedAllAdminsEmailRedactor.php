@@ -84,7 +84,7 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactor implements Subscribed
             ->firstOrFail();
 
         foreach ($admins as $admin) {
-            $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $actingAdmin, $response));
+            $emailCollection->addEmail($this->makeAdminEmail($user, $admin, $actingAdmin, $response));
         }
 
         return $emailCollection;
@@ -103,7 +103,7 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactor implements Subscribed
         User $actingAdmin,
         AccountRecoveryResponse $response
     ): Email {
-        $status = $response->isApproved() ? __('Approved') : __('Rejected');
+        $status = $response->isApproved() ? __('approved') : __('rejected');
         $locale = (new GetUserLocaleService())->getLocale($recipient->username);
         $subject = (new LocaleService())->translateString(
             $locale,
