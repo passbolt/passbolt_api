@@ -174,34 +174,29 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     }
 
     /**
-     * @return bool true if the account_recovery_organization_public_key data is set
+     * @return bool true if the account_recovery_user_setting data is set
      */
     protected function isAccountRecoveryUserSettingProvided(): bool
     {
-        $publicKey = $this->request->getData('account_recovery_user_setting');
-
-        return isset($publicKey) && is_array($publicKey);
+        return is_array($this->request->getData('account_recovery_user_setting'));
     }
 
     /**
-     * @return bool true if the account_recovery_organization_public_key data is set
+     * @return bool true if the account_recovery_user_setting.account_recovery_private_key data is set
      */
     protected function isPrivateKeyProvided(): bool
     {
-        $publicKey = $this->request->getData('account_recovery_user_setting.account_recovery_private_key');
-
-        return isset($publicKey) && is_array($publicKey);
+        return is_array($this->request->getData('account_recovery_user_setting.account_recovery_private_key'));
     }
 
     /**
-     * @return bool true if the account_recovery_organization_public_key data is set
+     * @return bool true if the account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords data is set
      */
     protected function arePasswordsProvided(): bool
     {
-        $publicKey = $this->request
-            ->getData('account_recovery_user_setting.account_recovery_private_key_passwords');
-
-        return isset($publicKey) && is_array($publicKey);
+        return is_array($this->request->getData(
+            'account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords'
+        ));
     }
 
     /**
@@ -257,8 +252,9 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
      */
     public function buildPasswordEntitiesFromDataOrFail(): iterable
     {
-        $passwordsData = $this->request
-                ->getData('account_recovery_user_setting.account_recovery_private_key_passwords') ?? [];
+        $passwordsData = $this->request->getData(
+            'account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords'
+        ) ?? [];
 
         try {
             $service = new AccountRecoveryPrivateKeyPasswordsValidationService();

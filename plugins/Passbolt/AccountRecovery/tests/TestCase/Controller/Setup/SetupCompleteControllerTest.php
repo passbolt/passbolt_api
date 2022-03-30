@@ -70,12 +70,14 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             'account_recovery_user_setting' => [
                 'user_id' => $user->id,
                 'status' => AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED,
-                'account_recovery_private_key' => ['data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg')],
-                'account_recovery_private_key_passwords' => [[
-                    'recipient_fingerprint' => $orkFingerprint,
-                    'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
-                    'data' => $this->encrypt($orkFingerprint, $orkArmored),
-                ]],
+                'account_recovery_private_key' => [
+                    'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg'),
+                    'account_recovery_private_key_passwords' => [[
+                        'recipient_fingerprint' => $orkFingerprint,
+                        'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                        'data' => $this->encrypt($orkFingerprint, $orkArmored),
+                    ]],
+                ],
             ],
         ];
         $this->postJson('/setup/complete/' . $user->id . '.json', $data);
@@ -151,12 +153,14 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             'account_recovery_user_setting' => [
                 'user_id' => $user->id,
                 'status' => AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED,
-                'account_recovery_private_key' => ['data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg')],
-                'account_recovery_private_key_passwords' => [[
-                    'recipient_fingerprint' => $orkFingerprint,
-                    'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
-                    'data' => $this->encrypt($orkFingerprint, $orkArmored),
-                ]],
+                'account_recovery_private_key' => [
+                    'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg'),
+                    'account_recovery_private_key_passwords' => [[
+                        'recipient_fingerprint' => $orkFingerprint,
+                        'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                        'data' => $this->encrypt($orkFingerprint, $orkArmored),
+                    ]],
+                ],
             ],
         ];
         $this->postJson('/setup/complete/' . $user->id . '.json', $data);

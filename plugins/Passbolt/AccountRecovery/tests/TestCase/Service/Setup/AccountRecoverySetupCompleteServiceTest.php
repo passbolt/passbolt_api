@@ -102,7 +102,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('account_recovery_user_setting.user_id', $token->user->id)
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $this->encrypt($orkFingerprint, $orkArmored),
@@ -153,7 +153,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $this->encrypt($orkFingerprint, $orkArmored),
@@ -193,7 +193,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $this->serverKeyId,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => 'nope',
@@ -221,7 +221,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $this->serverKeyId,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => 'nope',
@@ -249,7 +249,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $this->serverKeyId,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => 'nope',
@@ -377,7 +377,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('authenticationtoken.token', $token->token)
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $this->serverKeyId,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => 'nope',
@@ -417,7 +417,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', 'not openpgp key')
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $this->encrypt($orkFingerprint, $orkArmored),
@@ -458,7 +458,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $gpgData)
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $gpgData,
@@ -498,7 +498,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => 'not openpgp data',
@@ -538,7 +538,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $this->getDummyPrivateKey(),
@@ -578,7 +578,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
             ]]);
@@ -620,7 +620,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $this->encrypt($otherFingerprint, $otherKey),
@@ -660,7 +660,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $this->encrypt($orkFingerprint, $orkArmored),
             ]]);
@@ -699,7 +699,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAB',
                 'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
                 'data' => $this->encrypt($orkFingerprint, $orkArmored),
@@ -739,7 +739,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'data' => $this->encrypt($orkFingerprint, $orkArmored),
             ]]);
@@ -778,7 +778,7 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
-            ->withData('account_recovery_user_setting.account_recovery_private_key_passwords', [[
+            ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
                 'recipient_fingerprint' => $orkFingerprint,
                 'recipient_foreign_model' => 'SomethingElse',
                 'data' => $this->encrypt($orkFingerprint, $orkArmored),
