@@ -32,7 +32,7 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    public const TEMPLATE = 'Requests/user_recover';
+    public const TEMPLATE = 'AN/user_recover';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.

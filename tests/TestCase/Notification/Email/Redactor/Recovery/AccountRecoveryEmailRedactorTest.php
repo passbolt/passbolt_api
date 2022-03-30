@@ -62,7 +62,7 @@ class AccountRecoveryEmailRedactorTest extends AppIntegrationTestCase
         $this->assertEmailIsInQueue([
             'email' => $user->username,
             'subject' => "Your account recovery, {$user->profile->first_name}!",
-            'template' => 'Requests/user_recover',
+            'template' => 'AN/user_recover',
         ]);
         $emailVars = EmailQueueFactory::find()->firstOrFail()->get('template_vars');
         $this->assertSame($user->username, $emailVars['body']['user']['username']);
