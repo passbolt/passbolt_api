@@ -138,6 +138,16 @@ return [
                         'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_REQUEST_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
                         'guessing' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_REQUEST_GUESSING', true), FILTER_VALIDATE_BOOLEAN),
                     ],
+                    'response' => [
+                        'user' => [
+                            'approved' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_RESPONSE_USER_APPROVED', true), FILTER_VALIDATE_BOOLEAN),
+                            'rejected' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_RESPONSE_USER_REJECTED', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                        'created' => [
+                            'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_RESPONSE_CREATED_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                            'allAdmins' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_RESPONSE_CREATED_ALL_ADMINS', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                    ],
                     'policy' => [
                         'update' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_POLICY_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     ],

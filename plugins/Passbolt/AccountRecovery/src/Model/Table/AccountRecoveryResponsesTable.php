@@ -69,6 +69,8 @@ class AccountRecoveryResponsesTable extends Table
             'foreignKey' => 'foreign_key',
         ]);
 
+        $this->belongsTo('Passbolt/AccountRecovery.AccountRecoveryRequests');
+
         $this->belongsTo('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys', [
            'foreignKey' => 'responder_foreign_key',
         ]);

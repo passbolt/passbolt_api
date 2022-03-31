@@ -74,15 +74,27 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
             'armored_key' => $data->armored_key,
         ];
 
-        $result = (new AccountRecoveryRequestCreateService())->create($data);
-        $this->assertInstanceOf(AccountRecoveryRequest::class, $result);
-        $this->assertFalse($result->hasErrors());
+        $request = (new AccountRecoveryRequestCreateService())->create($data);
+        $this->assertInstanceOf(AccountRecoveryRequest::class, $request);
+        $this->assertFalse($request->hasErrors());
+        $this->assertTrue($request->isPending());
 
         // Assert that all the other requests are deactivated
         $this->assertSame(1, AccountRecoveryRequestFactory::count());
         $this->assertSame($token->id, AccountRecoveryRequestFactory::find()->first()->get('authentication_token_id'));
 
         $this->assertTokenIsUniqueAndInactive($token->id);
+
+        // If we create a second request, the first pending request gets erased
+        $token = AuthenticationTokenFactory::make()
+            ->userId($user->id)
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->active()
+            ->persist();
+        $data['authentication_token'] = ['token' => $token->token];
+        $secondRequest = (new AccountRecoveryRequestCreateService())->create($data);
+        $this->assertSame(1, AccountRecoveryRequestFactory::count());
+        $this->assertSame($secondRequest->id, AccountRecoveryRequestFactory::find()->first()->id);
     }
 
     /**

@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryResponses;
 
 use App\Error\Exception\CustomValidationException;
-use App\Error\Exception\ValidationException;
 use App\Service\OpenPGP\MessageRecipientValidationService;
 use App\Service\OpenPGP\MessageValidationService;
 use App\Service\OpenPGP\PublicKeyValidationService;
@@ -44,7 +43,8 @@ class AccountRecoveryResponsesCreateService
 {
     use ModelAwareTrait;
 
-    public const RESPONSE_CREATED_EVENT_NAME = 'Service.AccountRecoveryResponsesCreate.afterCreate';
+    public const RESPONSE_APPROVED_EVENT_NAME = 'Service.AccountRecoveryResponsesCreate.afterApproved';
+    public const RESPONSE_REJECTED_EVENT_NAME = 'Service.AccountRecoveryResponsesCreate.afterRejected';
 
     /**
      * @var array $data user provider data
@@ -83,16 +83,16 @@ class AccountRecoveryResponsesCreateService
 
         $responseEntity = $this->buildAndValidateResponse($requestEntity);
         $requestEntity = $this->patchAndValidateRequest($requestEntity, $responseEntity);
+        $responseEntity->account_recovery_request = $requestEntity;
 
         // Update original request with updated status
-        $this->AccountRecoveryRequests->getConnection()
-            ->transactional(function () use (&$requestEntity, &$responseEntity) {
-                $requestEntity = $this->AccountRecoveryRequests->saveOrFail($requestEntity, ['checkRules' => false]);
-                $responseEntity = $this->AccountRecoveryResponses->saveOrFail($responseEntity, ['checkRules' => false]);
-            });
+        $this->AccountRecoveryResponses->saveOrFail($responseEntity);
 
         // All good, dispatch event for emails
-        $event = new Event(static::RESPONSE_CREATED_EVENT_NAME, $responseEntity);
+        $eventName = $responseEntity->isApproved()
+            ? static::RESPONSE_APPROVED_EVENT_NAME
+            : static::RESPONSE_REJECTED_EVENT_NAME;
+        $event = new Event($eventName, $responseEntity);
         $this->AccountRecoveryResponses->getEventManager()->dispatch($event);
 
         return $responseEntity;
@@ -208,11 +208,6 @@ class AccountRecoveryResponsesCreateService
             }
         }
 
-        $this->AccountRecoveryResponses->checkRules($responseEntity);
-        if ($responseEntity->getErrors()) {
-            throw new ValidationException($msg, $responseEntity, $this->AccountRecoveryResponses);
-        }
-
         return $responseEntity;
     }
 
@@ -228,12 +223,6 @@ class AccountRecoveryResponsesCreateService
         $msg = __('The account recovery request is invalid.');
         $requestEntity = $this->AccountRecoveryRequests
             ->updateStatusAndValidateEntity($this->uac, $requestEntity, $responseEntity->status);
-
-        // Check for build rules issues
-        $this->AccountRecoveryRequests->checkRules($requestEntity);
-        if ($requestEntity->getErrors()) {
-            throw new ValidationException($msg, $requestEntity, $this->AccountRecoveryRequests);
-        }
 
         return $requestEntity;
     }
