@@ -358,14 +358,15 @@ trait UsersFindersTrait
     }
 
     /**
-     * Build the query that fetches data for user recovery form
+     * Build the query that fetches a user by username
+     * including role and profile
      *
      * @param string $username email of user to retrieve
      * @param array $options options
      * @throws \InvalidArgumentException if the username is not an email
      * @return \Cake\ORM\Query
      */
-    public function findRecover(string $username, ?array $options = [])
+    public function findByUsername(string $username, ?array $options = [])
     {
         if (!Validation::email($username, Configure::read('passbolt.email.validate.mx'))) {
             throw new InvalidArgumentException('The username should be a valid email.');
@@ -379,66 +380,6 @@ trait UsersFindersTrait
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
             ->order(['Users.active' => 'DESC']);
-    }
-
-    /**
-     * Build the query that fetches data for user setup start
-     *
-     * @param string $userId uuid
-     * @throws \InvalidArgumentException if the user id is not a uuid
-     * @return \App\Model\Entity\User $user entity
-     */
-    public function findSetup(string $userId)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
-        }
-
-        // show active first and do not count deleted ones
-        /** @var \App\Model\Entity\User $user */
-        $user = $this->find()
-            ->contain([
-                'Roles',
-                'Profiles' => AvatarsTable::addContainAvatar(),
-            ])
-            ->where([
-                'Users.id' => $userId,
-                'Users.deleted' => false, // forbid deleted users to start setup
-                'Users.active' => false, // forbid users that have completed the setup to retry
-            ])
-            ->first();
-
-        return $user;
-    }
-
-    /**
-     * Build the query that checks data for user setup start/completion
-     *
-     * @param string $userId uuid
-     * @throws \InvalidArgumentException if the user id is not a uuid
-     * @return \App\Model\Entity\User|null $user entity
-     */
-    public function findSetupRecover(string $userId): ?User
-    {
-        if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
-        }
-
-        // show active first and do not count deleted ones
-        /** @var \App\Model\Entity\User|null $user */
-        $user = $this->find('locale')
-            ->contain([
-                'Roles',
-                'Profiles' => AvatarsTable::addContainAvatar(),
-            ])
-            ->where([
-                'Users.id' => $userId,
-                'Users.deleted' => false, // forbid deleted users to start setup
-                'Users.active' => true, // forbid users that have not completed the setup to recover
-            ])
-            ->first();
-
-        return $user;
     }
 
     /**

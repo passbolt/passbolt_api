@@ -80,7 +80,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/recover/complete/nope.json';
         $data = [];
         $this->postJson($url, $data);
-        $this->assertError(400, 'The user identifier should be a valid UUID.');
+        $this->assertError(400);
     }
 
     /**

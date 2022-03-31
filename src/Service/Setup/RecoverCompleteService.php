@@ -21,8 +21,9 @@ use App\Controller\Setup\RecoverCompleteController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Validation\Validation;
+use Cake\Log\Log;
 
 class RecoverCompleteService extends AbstractCompleteService implements RecoverCompleteServiceInterface
 {
@@ -108,15 +109,12 @@ class RecoverCompleteService extends AbstractCompleteService implements RecoverC
      */
     protected function getAndAssertUser(string $userId): User
     {
-        if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
-        }
-        $user = $this->Users->findSetupRecover($userId);
-        if (empty($user)) {
+        try {
+            return (new UserGetService())->getActiveNotDeletedOrFail($userId);
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
             $msg = __('The user does not exist, has not completed the setup or was deleted.');
             throw new BadRequestException($msg);
         }
-
-        return $user;
     }
 }
