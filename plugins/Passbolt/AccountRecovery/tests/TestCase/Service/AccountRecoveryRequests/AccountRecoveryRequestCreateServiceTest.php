@@ -94,7 +94,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
         $data['authentication_token'] = ['token' => $token->token];
         $secondRequest = (new AccountRecoveryRequestCreateService())->create($data);
         $this->assertSame(1, AccountRecoveryRequestFactory::count());
-        $this->assertSame($secondRequest->id, AccountRecoveryRequestFactory::find()->first()->id);
+        $this->assertSame($secondRequest->id, AccountRecoveryRequestFactory::find()->first()->get('id'));
     }
 
     /**
