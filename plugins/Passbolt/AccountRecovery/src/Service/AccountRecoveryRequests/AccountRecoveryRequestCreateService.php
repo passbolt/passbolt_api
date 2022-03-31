@@ -81,7 +81,6 @@ class AccountRecoveryRequestCreateService
         );
         try {
             $this->AccountRecoveryRequests->saveOrFail($request);
-            $this->AuthenticationTokens->setInactive($token->token);
         } catch (PersistenceFailedException $e) {
             if ($e->getEntity()->getError('user_id')) {
                 $this->AuthenticationTokens->setInactive($token->token);

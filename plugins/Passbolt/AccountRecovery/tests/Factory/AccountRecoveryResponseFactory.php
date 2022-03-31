@@ -58,7 +58,7 @@ class AccountRecoveryResponseFactory extends CakephpBaseFactory
                 'status' => AccountRecoveryResponse::STATUS_APPROVED,
                 'responder_foreign_model' => AccountRecoveryResponse::RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'responder_foreign_key' => $faker->uuid(),
-                'data' => $faker->text(),
+                'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg'),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
                 'created' => $date,

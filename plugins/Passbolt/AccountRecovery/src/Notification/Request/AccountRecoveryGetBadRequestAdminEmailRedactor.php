@@ -27,7 +27,7 @@ use App\Utility\Purifier;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\I18n\FrozenTime;
-use Passbolt\AccountRecovery\Controller\AccountRecoveryRequests\AccountRecoveryRequestsGetController;
+use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestGetService;
 use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
@@ -49,7 +49,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
     public function getSubscribedEvents(): array
     {
         return [
-            AccountRecoveryRequestsGetController::ACCOUNT_RECOVERY_GET_BAD_REQUEST,
+            AccountRecoveryRequestGetService::ACCOUNT_RECOVERY_REQUEST_GET_BAD_REQUEST,
         ];
     }
 

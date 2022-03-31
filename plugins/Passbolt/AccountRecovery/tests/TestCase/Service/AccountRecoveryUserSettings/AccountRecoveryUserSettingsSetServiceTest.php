@@ -68,8 +68,8 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
             ->persist();
         $status = AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED;
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The account recovery is mandatory and cannot be rejected.');
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('Invalid request. You cannot opt-out.');
         try {
             $this->service->set(compact('status'));
         } catch (\Exception $e) {
@@ -86,9 +86,14 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
             ->persist();
         $status = AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED;
 
-        $setting = $this->service->set(compact('status'));
-        $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
-        $this->assertTrue(AccountRecoveryUserSettingFactory::get($setting->id)->isApproved());
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('Invalid request. Private key or password are missing.');
+        try {
+            $this->service->set(compact('status'));
+        } catch (\Exception $e) {
+            $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
+            throw $e;
+        }
     }
 
     public function testAccountRecoveryUserSettingsSetService_Errors_Mandatory_No_Status()
@@ -98,8 +103,8 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
             ->mandatory()
             ->persist();
 
-        $this->expectException(PersistenceFailedException::class);
-        $this->expectExceptionMessage('Entity save failure. Found the following errors (status._empty: "This field cannot be left empty").');
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('The account recovery user setting is not valid.');
         try {
             $this->service->set(['foo']);
         } catch (\Exception $e) {
@@ -115,8 +120,8 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
             ->mandatory()
             ->persist();
 
-        $this->expectException(PersistenceFailedException::class);
-        $this->expectExceptionMessage('Entity save failure. Found the following errors (status.inList: "The status should be one of the following: rejected, approved.").');
+        $this->expectException(CustomValidationException::class);
+        $this->expectExceptionMessage('The status should be one of the following: rejected, approved.');
         try {
             $this->service->set(['status' => 'foo']);
         } catch (\Exception $e) {
