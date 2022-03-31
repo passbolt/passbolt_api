@@ -19,9 +19,11 @@ namespace App\Service\Setup;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Gpgkey;
+use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
 use Cake\Validation\Validation;
 
@@ -69,15 +71,15 @@ abstract class AbstractCompleteService
         if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
             throw new BadRequestException(__('An authentication token should be provided.'));
         }
-        $tokenId = $data['authenticationtoken']['token'];
-        if (!Validation::uuid($tokenId)) {
+        $token = $data['authenticationtoken']['token'];
+        if (!Validation::uuid($token)) {
             throw new BadRequestException(__('The authentication token should be a valid UUID.'));
         }
-        if (!$this->AuthenticationTokens->isValid($tokenId, $userId, $tokenType)) {
-            throw new BadRequestException(__('The authentication token is not valid or has expired.'));
+        try {
+            return (new AuthenticationTokenGetService())->getActiveNotExpiredOrFail($token, $userId, $tokenType);
+        } catch (NotFoundException $exception) {
+            throw new BadRequestException(__('The authentication token is not valid.'));
         }
-
-        return $this->AuthenticationTokens->getByToken($tokenId);
     }
 
     /**

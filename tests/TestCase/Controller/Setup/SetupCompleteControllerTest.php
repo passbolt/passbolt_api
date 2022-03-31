@@ -267,11 +267,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             ],
             'expired token' => [
                 'data' => ['token' => $tokenExpired],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
             'inactive token' => [
                 'data' => ['token' => $tokenInactive],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
         ];
         foreach ($fails as $caseName => $case) {

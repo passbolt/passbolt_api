@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Service\Users;
 
 use App\Model\Entity\User;
+use App\Model\Table\AvatarsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\BadRequestException;
@@ -43,6 +44,54 @@ class UserGetService
     }
 
     /**
+     * @param string $userId uuid
+     * @return \App\Model\Entity\User
+     */
+    protected function getOrFail(string $userId): User
+    {
+        if (!Validation::uuid($userId)) {
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
+        }
+
+        try {
+            $where = [$this->Users->aliasField('id') => $userId];
+            $contain = ['Roles', 'Profiles' => AvatarsTable::addContainAvatar()];
+            /** @var \App\Model\Entity\User $userEntity */
+            $userEntity = $this->Users->find()->where($where)->contain($contain)->firstOrFail();
+        } catch (RecordNotFoundException $exception) {
+            throw new NotFoundException(__('The user does not exist.'));
+        }
+
+        if ($userEntity->role->isGuest()) {
+            throw new BadRequestException(__('The user should not be a guest.'));
+        }
+
+        return $userEntity;
+    }
+
+    /**
+     * Get a user by ID or throw relevant HTTP exceptions
+     *
+     * @param string $userId user id uuid
+     * @throws \Cake\Http\Exception\NotFoundException if the user could not be found
+     * @throws \Cake\Http\Exception\BadRequestException if the userId is not a valid uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the is not active or deleted
+     * @return \App\Model\Entity\User
+     */
+    public function getNotActiveNotDeletedOrFail(string $userId): User
+    {
+        $userEntity = $this->getOrFail($userId);
+        if ($userEntity->active) {
+            throw new BadRequestException(__('The user does not exist or is already active.'));
+        }
+        if ($userEntity->deleted) {
+            throw new BadRequestException(__('The user does not exist or is already active.'));
+        }
+
+        return $userEntity;
+    }
+
+    /**
      * Get a user by ID or throw relevant HTTP exceptions
      *
      * @param string $userId user id uuid
@@ -53,19 +102,12 @@ class UserGetService
      */
     public function getActiveNotDeletedOrFail(string $userId): User
     {
-        if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
+        $userEntity = $this->getOrFail($userId);
+        if (!$userEntity->active) {
+            throw new BadRequestException(__('The user does not exist or is not active.'));
         }
-
-        try {
-            $where = ['id' => $userId];
-            /** @var \App\Model\Entity\User $userEntity */
-            $userEntity = $this->Users->find()->where($where)->firstOrFail();
-        } catch (RecordNotFoundException $exception) {
-            throw new NotFoundException(__('The user does not exist.'));
-        }
-        if (!$userEntity->active || $userEntity->deleted) {
-            throw new BadRequestException(__('The user is not active or has been deleted.'));
+        if ($userEntity->deleted) {
+            throw new BadRequestException(__('The user does not exist or is not active.'));
         }
 
         return $userEntity;

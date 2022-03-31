@@ -19,7 +19,10 @@ namespace App\Service\Setup;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
+use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\View\ViewBuilder;
 
 /**
@@ -33,10 +36,12 @@ class SetupStartService extends AbstractStartService implements SetupStartServic
      */
     public function getInfo(string $userId, string $token): array
     {
-        $this->assertRequestSanity($userId, $token);
-        $user = $this->findUser($userId);
-        $token = $this->findToken($user, $token);
-        $this->assertTokenExpiry($user, $token);
+        try {
+            $user = (new UserGetService())->getNotActiveNotDeletedOrFail($userId);
+        } catch (NotFoundException $exception) {
+            throw new BadRequestException(__('The user does not exist or is already active.'));
+        }
+        $this->assertAuthToken($user, $token);
 
         return compact('user');
     }
@@ -53,39 +58,20 @@ class SetupStartService extends AbstractStartService implements SetupStartServic
     }
 
     /**
-     * Find the user requesting the setup
+     * Check the setup token
      *
-     * @param string $userId uuid of the user
-     * @return \App\Model\Entity\User
-     * @throw BadRequestException if the user cannot be found, is deleted or is active.
-     */
-    private function findUser(string $userId): User
-    {
-        $user = $this->Users->findSetup($userId);
-        if (empty($user)) {
-            throw new BadRequestException(__('The user does not exist or is already active.'));
-        }
-
-        return $user;
-    }
-
-    /**
-     * Find the setup token
-     *
-     * @param \App\Model\Entity\User $user user attempting to setup
+     * @param \App\Model\Entity\User $user user attempting to recover
      * @param string $token uuid of the token
-     * @return \App\Model\Entity\AuthenticationToken
      * @throw BadRequestException if the token is not valid
+     * @return void
      */
-    private function findToken(User $user, string $token): AuthenticationToken
+    private function assertAuthToken(User $user, string $token): void
     {
-        $finderOptions = ['userId' => $user->id, 'token' => $token];
-        /** @var \App\Model\Entity\AuthenticationToken $token */
-        $token = $this->AuthenticationTokens->find('activeUserRegistrationToken', $finderOptions)->first();
-        if (empty($token)) {
+        try {
+            (new AuthenticationTokenGetService())
+                ->getActiveNotExpiredOrFail($token, $user->id, AuthenticationToken::TYPE_REGISTER);
+        } catch (NotFoundException $exception) {
             throw new BadRequestException(__('The authentication token is not valid.'));
         }
-
-        return $token;
     }
 }

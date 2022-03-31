@@ -78,7 +78,7 @@ class AuthenticationTokenGetService
                     'expired' => 'The token is expired.',
                 ],
             ];
-            throw new CustomValidationException(__('The authentication token is expired.'), $error);
+            throw new CustomValidationException(__('The authentication token is not valid.'), $error);
         }
 
         if ($tokenEntity->isNotActive()) {
@@ -87,7 +87,7 @@ class AuthenticationTokenGetService
                     'isActive' => 'The token is already consumed.',
                 ],
             ];
-            throw new CustomValidationException(__('The authentication token is not active.'), $error);
+            throw new CustomValidationException(__('The authentication token is not valid.'), $error);
         }
 
         return $tokenEntity;
