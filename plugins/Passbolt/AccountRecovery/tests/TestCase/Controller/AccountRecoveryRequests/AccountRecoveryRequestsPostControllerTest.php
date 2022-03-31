@@ -86,7 +86,7 @@ class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrati
 
         $this->postJson('/account-recovery/requests.json', $payload);
         $this->assertResponseOk();
-        
+
         $this->assertTrue(AuthenticationTokenFactory::get($token->id)->isActive());
 
         $this->assertEventFired(AccountRecoveryRequestCreateService::REQUEST_CREATED_EVENT_NAME);
