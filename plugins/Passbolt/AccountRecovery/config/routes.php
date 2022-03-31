@@ -94,6 +94,8 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
     // Enroll or reject account recovery policy
     // POST /account-recovery/user-settings.json
     $routes->connect('/user-settings', [
-        'prefix' => 'AccountRecoveryUserSettings', 'controller' => 'AccountRecoveryUserSettingsSet', 'action' => 'set',
+        'prefix' => 'AccountRecoveryUserSettings',
+        'controller' => 'AccountRecoveryUserSettingsSet',
+        'action' => 'createOrUpdate',
     ])->setMethods(['POST']);
 });

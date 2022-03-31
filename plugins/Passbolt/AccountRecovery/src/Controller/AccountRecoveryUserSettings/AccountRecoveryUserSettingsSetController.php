@@ -20,14 +20,12 @@ namespace Passbolt\AccountRecovery\Controller\AccountRecoveryUserSettings;
 use App\Controller\AppController;
 use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\AccountRecoveryUserSettingsSetService;
 
-// phpcs:ignore
-
 class AccountRecoveryUserSettingsSetController extends AppController
 {
     /**
      * @return void
      */
-    public function set(): void
+    public function createOrUpdate(): void
     {
         $service = new AccountRecoveryUserSettingsSetService($this->User->getAccessControl());
         $service->set($this->request->getData());
