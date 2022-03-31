@@ -65,6 +65,10 @@ class AccountRecoveryUserSettingsTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users');
+        $this->hasOne('AccountRecoveryPrivateKeys', [
+            'className' => 'Passbolt/AccountRecovery.AccountRecoveryPrivateKeys',
+            'foreignKey' => 'user_id',
+        ]);
         $this->belongsTo('Creator', [
             'className' => 'Users',
             'foreignKey' => 'created_by',
@@ -141,19 +145,36 @@ class AccountRecoveryUserSettingsTable extends Table
      */
     public function buildAndValidateEntity(UserAccessControl $uac, string $status): AccountRecoveryUserSetting
     {
-        $setting = $this->newEntity([
-            'status' => $status,
-            'user_id' => $uac->getId(),
-            'created_by' => $uac->getId(),
-            'modified_by' => $uac->getId(),
-        ], [
-            'accessibleFields' => [
-                'status' => true,
-                'user_id' => true,
-                'created_by' => true,
-                'modified_by' => true,
-            ],
-        ]);
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting|null $setting */
+        $setting = $this->find()
+            ->where(['AccountRecoveryUserSettings.user_id' => $uac->getId()])
+            ->first();
+
+        if ($setting) {
+            $setting = $this->patchEntity($setting, [
+                'status' => $status,
+                'modified_by' => $uac->getId(),
+            ], [
+                'accessibleFields' => [
+                    'status' => true,
+                    'modified_by' => true,
+                ],
+            ]);
+        } else {
+            $setting = $this->newEntity([
+                'status' => $status,
+                'user_id' => $uac->getId(),
+                'created_by' => $uac->getId(),
+                'modified_by' => $uac->getId(),
+            ], [
+                'accessibleFields' => [
+                    'status' => true,
+                    'user_id' => true,
+                    'created_by' => true,
+                    'modified_by' => true,
+                ],
+            ]);
+        }
 
         if ($setting->hasErrors()) {
             if ($setting->getError('status')['inList'] ?? false) {

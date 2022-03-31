@@ -19,7 +19,6 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Service\AccountRecoveryResponse
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
-use App\Middleware\UacAwareMiddlewareTrait;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\UuidFactory;
@@ -37,7 +36,6 @@ use Passbolt\AccountRecovery\Test\Scenario\Request\ResponseCreateScenario;
 
 class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 {
-    use UacAwareMiddlewareTrait;
     use GpgAdaSetupTrait;
     use ScenarioAwareTrait;
 

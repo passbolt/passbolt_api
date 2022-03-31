@@ -71,7 +71,7 @@ class AccountRecoveryGetRequestService
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
         $this->loadModel('Passbolt/AccountRecovery.AccountRecoveryResponses');
         $this->clientIp = $clientIp;
-        (new AccountRecoveryOrganizationPolicyGetService())->validateOrgPolicy();
+        (new AccountRecoveryOrganizationPolicyGetService())->getOrFail();
         $this->setUser($params['userId'] ?? null);
         $this->setToken($params['tokenId'] ?? null);
         $this->setRequest($params['requestId'] ?? null);

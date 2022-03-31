@@ -100,7 +100,7 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
             "{$admin->profile->first_name}($admin->username) has approved your recovery request.",
             $user->username
         );
-        
+
         $this->assertAdminEmails($status, $user, $admin, $admins);
     }
 
@@ -138,7 +138,7 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
 
         $this->assertAdminEmails($status, $user, $admin, $admins);
     }
-    
+
     private function assertAdminEmails(string $status, User $user, User $admin, array $admins)
     {
         // Assess mail sent to the acting admin

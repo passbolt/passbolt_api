@@ -17,20 +17,16 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Service\Setup;
 
-use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\User;
-use App\Service\OpenPGP\MessageValidationService;
 use App\Service\Setup\SetupCompleteService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
-use Passbolt\AccountRecovery\Service\AccountRecoveryPrivateKeyPasswords\AccountRecoveryPrivateKeyPasswordsValidationService; // phpcs:ignore
+use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\AccountRecoveryUserSettingsSetService;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings
@@ -91,63 +87,14 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
 
         // Validate additional settings
         if ($this->isAccountRecoveryUserSettingProvided()) {
-            $userSetting = $this->validateAccountRecoveryUserSetting();
+            $userSettingService = (new AccountRecoveryUserSettingsSetService($this->uac));
+            $userSetting = $userSettingService->patchEntity(
+                $this->request->getData('account_recovery_user_setting')
+            );
             $user->set('account_recovery_user_setting', $userSetting);
-            $this->assertRules($userSetting);
-            if ($userSetting->isApproved()) {
-                $key = $this->validateAccountRecoveryPrivateKey();
-                $passwords = $this->buildPasswordEntitiesFromDataOrFail();
-                $key->set('account_recovery_private_key_passwords', $passwords);
-                $user->set('account_recovery_private_key', $key);
-            }
         }
 
         return $this->saveUserEntity($user, $saveOptions);
-    }
-
-    /**
-     * Check that the user selected setting makes sense as per select org policy
-     *
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting $setting entity
-     * @throws \Cake\Http\Exception\BadRequestException if user rejects and policy is mandatory
-     * @return void
-     */
-    protected function assertRules(AccountRecoveryUserSetting $setting): void
-    {
-        if ($this->policy->isMandatory() && !$setting->isApproved()) {
-            throw new CustomValidationException(__('Invalid request. You cannot opt-out.'), [
-                'account_recovery_user_setting' => [
-                    'status' => [
-                        'isMandatoryRule' => __('The status must be set to approved.'),
-                    ],
-                ],
-            ]);
-        }
-
-        if (!$setting->isApproved() && ($this->isPrivateKeyProvided() || $this->arePasswordsProvided())) {
-            throw new CustomValidationException(__('Invalid request. You cannot both opt-out and provide backup.'), [
-                'account_recovery_user_setting' => [
-                    'status' => [
-                        'isMatchingData' => __('The status must be set to approved.'),
-                    ],
-                ],
-            ]);
-        }
-
-        if ($setting->isApproved() && (!$this->isPrivateKeyProvided() || !$this->arePasswordsProvided())) {
-            $e = [];
-            if (!$this->isPrivateKeyProvided()) {
-                $e['account_recovery_user_setting']['account_recovery_private_key'] = [
-                    '_required' => __('The private key backup must be provided.'),
-                ];
-            }
-            if (!$this->arePasswordsProvided()) {
-                $e['account_recovery_user_setting']['account_recovery_private_key_passwords'] = [
-                    '_required' => __('The private key backup must be provided.'),
-                ];
-            }
-            throw new CustomValidationException(__('Invalid request. Private key or password are missing.'), $e);
-        }
     }
 
     /**
@@ -229,80 +176,5 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
         }
 
         return $user;
-    }
-
-    /**
-     * @throws \App\Error\Exception\CustomValidationException if the settings does not validate
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting
-     */
-    protected function validateAccountRecoveryUserSetting(): AccountRecoveryUserSetting
-    {
-        $status = $this->request->getData('account_recovery_user_setting.status') ?? '';
-        try {
-            return $this->AccountRecoveryUserSettings->buildAndValidateEntity($this->uac, $status);
-        } catch (ValidationException $exception) {
-            throw new CustomValidationException($exception->getMessage(), [
-                'account_recovery_user_setting' => $exception->getErrors(),
-            ]);
-        }
-    }
-
-    /**
-     * @return iterable array of AccountRecoveryPrivateKeyPasswords
-     */
-    public function buildPasswordEntitiesFromDataOrFail(): iterable
-    {
-        $passwordsData = $this->request->getData(
-            'account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords'
-        ) ?? [];
-
-        try {
-            $service = new AccountRecoveryPrivateKeyPasswordsValidationService();
-            $publicKey = $this->policy->account_recovery_organization_public_key->armored_key;
-
-            return $service->buildPasswordEntitiesFromDataOrFail($this->uac, $passwordsData, $publicKey);
-        } catch (CustomValidationException $exception) {
-            // re-wrap errors under parent object
-            throw new CustomValidationException($exception->getMessage(), [
-                'account_recovery_user_setting' => $exception->getErrors(),
-            ]);
-        }
-    }
-
-    /**
-     * @throws \App\Error\Exception\CustomValidationException if the private key does not validate
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey
-     */
-    protected function validateAccountRecoveryPrivateKey(): AccountRecoveryPrivateKey
-    {
-        $data = $this->request
-            ->getData('account_recovery_user_setting.account_recovery_private_key') ?? [];
-
-        try {
-            // Entity validation &
-            $privateKeyEntity = $this->AccountRecoveryPrivateKeys->buildAndValidateEntity($this->uac, $data);
-
-            // Validate private key OpenPGP message &
-            $rules = MessageValidationService::getSymmetricMessageRules();
-            MessageValidationService::parseAndValidateMessage($privateKeyEntity->data, $rules);
-
-            // Validate business rules
-            if (!$this->AccountRecoveryPrivateKeys->checkRules($privateKeyEntity)) {
-                $errors = $privateKeyEntity->getErrors();
-            }
-        } catch (CustomValidationException | ValidationException $exception) {
-            $errors = $exception->getErrors();
-        }
-
-        if (isset($errors) || !isset($privateKeyEntity)) {
-            $msg = __('Could not validate private key data.');
-            throw new CustomValidationException($msg, [
-                'account_recovery_user_setting' => [
-                    'account_recovery_private_key' => $errors ?? [],
-                ],
-            ]);
-        }
-
-        return $privateKeyEntity;
     }
 }

@@ -31,6 +31,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
@@ -983,7 +984,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             'account_recovery_private_key_passwords' => [[
                 'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
                 'recipient_fingerprint' => $newKeyFingerprint,
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'data' => $gpg->encrypt('cofveve'),
             ]],
         ];
@@ -1035,7 +1036,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             'account_recovery_private_key_passwords' => [[
                 'private_key_id' => UuidFactory::uuid('acr.private_key.betty.id'), // betty not exist
                 'recipient_fingerprint' => $newKeyFingerprint,
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'data' => $gpg->encrypt('cofveve'),
             ]],
         ];
@@ -1087,12 +1088,12 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             'account_recovery_private_key_passwords' => [[
                 'private_key_id' => UuidFactory::uuid('acr.private_key.betty.id'), // ada missing
                 'recipient_fingerprint' => $newKeyFingerprint,
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'data' => $msg,
             ],[
                 'private_key_id' => UuidFactory::uuid('acr.private_key.betty.id'), // betty doubled
                 'recipient_fingerprint' => $newKeyFingerprint,
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'data' => $msg,
             ]],
         ];
@@ -1133,7 +1134,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             'account_recovery_private_key_passwords' => [[
                 'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
                 'recipient_fingerprint' => $newKeyFingerprint,
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'data' => 'not a gpg message',
             ]],
         ];
@@ -1177,7 +1178,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             'account_recovery_private_key_passwords' => [[
                 'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
                 'recipient_fingerprint' => $newKeyFingerprint,
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password.msg') ,
             ]],
         ];
@@ -1225,7 +1226,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             'account_recovery_private_key_passwords' => [[
                 'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
                 'recipient_fingerprint' => $newKeyFingerprint,
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'data' => $gpg->encrypt('cofveve'),
             ]],
         ];
@@ -1269,12 +1270,12 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             'account_recovery_private_key_passwords' => [[
                 'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
                 'recipient_fingerprint' => $newKeyFingerprint,
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'data' => $data,
             ],[
                 'private_key_id' => UuidFactory::uuid('acr.private_key.ada.id'),
                 'recipient_fingerprint' => $newKeyFingerprint,
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'data' => $data,
             ]],
         ];
@@ -1345,7 +1346,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         AccountRecoveryPrivateKeyPasswordFactory::make()
             ->setField('private_key_id', UuidFactory::uuid('acr.private_key.ada.id'))
             ->setField('recipient_fingerprint', '03F60E958F4CB29723ACDF761353B5B15D9B054F')
-            ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
+            ->setField('recipient_foreign_model', AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY)
             ->persist();
 
         AccountRecoveryRequestFactory::make()
@@ -1408,13 +1409,13 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         AccountRecoveryPrivateKeyPasswordFactory::make()
             ->setField('private_key_id', UuidFactory::uuid('acr.private_key.ada.id'))
             ->setField('recipient_fingerprint', '03F60E958F4CB29723ACDF761353B5B15D9B054F')
-            ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
+            ->setField('recipient_foreign_model', AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY)
             ->persist();
 
         AccountRecoveryPrivateKeyPasswordFactory::make()
             ->setField('private_key_id', UuidFactory::uuid('acr.private_key.betty.id'))
             ->setField('recipient_fingerprint', '03F60E958F4CB29723ACDF761353B5B15D9B054F')
-            ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
+            ->setField('recipient_foreign_model', AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY)
             ->persist();
     }
 

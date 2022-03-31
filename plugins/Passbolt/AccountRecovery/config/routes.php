@@ -68,8 +68,8 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
     // Create one account recovery request
     // POST /account-recovery/requests.json
     $routes->connect('/requests', [
-        'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsPost', 'action' => 'post'])
-        ->setMethods(['POST']);
+        'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsPost', 'action' => 'post',
+    ])->setMethods(['POST']);
 
     // Landing page for account request request completion (sent by email)
     // GET /account-recovery/requests/:userId/:tokenId
@@ -78,12 +78,19 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
     // View one account recovery request details (non logged in user)
     // GET /account-recovery/requests/:userId/:tokenId.json
     $routes->connect('/requests/:requestId/:userId/:tokenId', [
-            'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsGet', 'action' => 'get'])
-        ->setPass(['requestId', 'userId', 'tokenId'])
-        ->setMethods(['GET']);
+        'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsGet', 'action' => 'get',
+    ])
+    ->setPass(['requestId', 'userId', 'tokenId'])
+    ->setMethods(['GET']);
 
     // POST /account-recovery/responses.json
     $routes->connect('/responses', [
-        'prefix' => 'AccountRecoveryResponses', 'controller' => 'AccountRecoveryResponsesCreate', 'action' => 'post'])
-        ->setMethods(['POST']);
+        'prefix' => 'AccountRecoveryResponses', 'controller' => 'AccountRecoveryResponsesCreate', 'action' => 'post',
+    ])->setMethods(['POST']);
+
+    // Enroll or reject account recovery policy
+    // POST /account-recovery/user-settings.json
+    $routes->connect('/user-settings', [
+        'prefix' => 'AccountRecoveryUserSettings', 'controller' => 'AccountRecoveryUserSettingsSet', 'action' => 'set',
+    ])->setMethods(['POST']);
 });

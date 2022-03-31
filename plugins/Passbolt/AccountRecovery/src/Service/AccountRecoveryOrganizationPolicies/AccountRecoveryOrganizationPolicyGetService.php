@@ -71,11 +71,11 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
      * Throw an exception if the organization policy is disabled or
      * if the public key is empty
      *
-     * @return void
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
      * @throws \Cake\Http\Exception\BadRequestException if the feature is not enabled
      * @throws \Cake\Http\Exception\BadRequestException if the public key is empty
      */
-    public function validateOrgPolicy()
+    public function getOrFail(): AccountRecoveryOrganizationPolicy
     {
         $policy = $this->get();
         if ($policy->isDisabled()) {
@@ -83,6 +83,8 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
         } elseif (is_null($policy->account_recovery_organization_public_key)) {
             throw new BadRequestException(__('The account recovery organization public key is not set.'));
         }
+
+        return $policy;
     }
 
     /**

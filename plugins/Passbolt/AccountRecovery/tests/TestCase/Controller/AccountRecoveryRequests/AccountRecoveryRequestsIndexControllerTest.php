@@ -20,6 +20,7 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Controller\AccountRecoveryReque
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\Validation\Validation;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyFactory;
@@ -93,7 +94,7 @@ class AccountRecoveryRequestsIndexControllerTest extends AccountRecoveryIntegrat
         AccountRecoveryPrivateKeyPasswordFactory::make()
             ->setField('private_key_id', UuidFactory::uuid('acr.private_key.ada.id'))
             ->setField('recipient_fingerprint', '03F60E958F4CB29723ACDF761353B5B15D9B054F')
-            ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey')
+            ->setField('recipient_foreign_model', AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY)
             ->persist();
 
         AccountRecoveryRequestFactory::make()

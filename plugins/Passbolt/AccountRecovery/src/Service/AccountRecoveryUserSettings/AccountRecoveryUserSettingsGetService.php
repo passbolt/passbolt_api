@@ -23,13 +23,13 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings
  */
-class GetAccountRecoveryUserSettingsService
+class AccountRecoveryUserSettingsGetService
 {
     use ModelAwareTrait;
 
     /**
      * @param string $userId User ID
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting|null
      */
     public function get(string $userId): ?AccountRecoveryUserSetting
     {

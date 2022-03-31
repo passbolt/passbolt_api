@@ -45,13 +45,13 @@ class AccountRecoveryPrivateKeyPasswordsValidationService
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param array $passwordsData user provided data
      * @param string $armoredKey key to check the message against
-     * @return iterable array of AccountRecoveryPrivateKeyPasswords
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] array of AccountRecoveryPrivateKeyPasswords
      */
     public function buildPasswordEntitiesFromDataOrFail(
         UserAccessControl $uac,
         array $passwordsData,
         string $armoredKey
-    ): iterable {
+    ): array {
         // Validate entities or fail
         $passwordEntities = $this->AccountRecoveryPrivateKeyPasswords->buildAndValidateEntities($uac, $passwordsData);
 

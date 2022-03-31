@@ -21,6 +21,7 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\UuidFactory;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
@@ -74,7 +75,7 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
                     'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg'),
                     'account_recovery_private_key_passwords' => [[
                         'recipient_fingerprint' => $orkFingerprint,
-                        'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                        'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                         'data' => $this->encrypt($orkFingerprint, $orkArmored),
                     ]],
                 ],
@@ -157,7 +158,7 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
                     'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg'),
                     'account_recovery_private_key_passwords' => [[
                         'recipient_fingerprint' => $orkFingerprint,
-                        'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                        'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                         'data' => $this->encrypt($orkFingerprint, $orkArmored),
                     ]],
                 ],

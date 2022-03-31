@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Test\Scenario\Request;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use CakephpFixtureFactories\Scenario\FixtureScenarioInterface;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
@@ -63,7 +64,7 @@ class ResponseCreateScenario implements FixtureScenarioInterface
         AccountRecoveryPrivateKeyFactory::make()
             ->with('AccountRecoveryPrivateKeyPasswords', AccountRecoveryPrivateKeyPasswordFactory::make()
                 ->setField('recipient_fingerprint', '67BFFCB7B74AF4C85E81AB26508850525CD78BAA')
-                ->setField('recipient_foreign_model', 'AccountRecoveryOrganizationKey'))
+                ->setField('recipient_foreign_model', AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY))
             ->setField('user_id', $user->id)
             ->persist();
 

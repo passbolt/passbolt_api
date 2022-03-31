@@ -19,7 +19,7 @@ namespace Passbolt\AccountRecovery\Service\Setup;
 
 use App\Service\Setup\RecoverStartService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
-use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\GetAccountRecoveryUserSettingsService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\AccountRecoveryUserSettingsGetService;
 
 class AccountRecoveryRecoverStartService extends RecoverStartService
 {
@@ -29,7 +29,7 @@ class AccountRecoveryRecoverStartService extends RecoverStartService
     public function getInfo(string $userId, string $token): array
     {
         $data = parent::getInfo($userId, $token);
-        $userSetting = (new GetAccountRecoveryUserSettingsService())->get($userId);
+        $userSetting = (new AccountRecoveryUserSettingsGetService())->get($userId);
         if ($userSetting) {
             /** @var \App\Model\Entity\User $user */
             $user = $data['user'];

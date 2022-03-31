@@ -31,6 +31,7 @@ use Cake\ORM\Entity;
  * @property string $modified_by
  *
  * @property \App\Model\Entity\User $user
+ * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey $account_recovery_private_key
  */
 class AccountRecoveryUserSetting extends Entity
 {
@@ -51,6 +52,7 @@ class AccountRecoveryUserSetting extends Entity
         'created_by' => false,
         'modified_by' => false,
         'user' => false,
+        'account_recovery_private_key' => false,
     ];
 
     public const ACCOUNT_RECOVERY_USER_SETTING_REJECTED = 'rejected';

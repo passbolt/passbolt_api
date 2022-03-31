@@ -30,7 +30,7 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
-use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\GetAccountRecoveryUserSettingsService;
+use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\AccountRecoveryUserSettingsGetService;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -129,7 +129,7 @@ class AccountRecoveryRequestCreateService
      */
     public function assertUserIsEnrolled(): void
     {
-        $service = new GetAccountRecoveryUserSettingsService();
+        $service = new AccountRecoveryUserSettingsGetService();
         $userSettings = $service->get($this->getData('user_id'));
         if (!isset($userSettings) || $userSettings->isRejected()) {
             $msg = __('Recovery request cannot be created when user is not enrolled.');

@@ -159,9 +159,9 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param array $passwords user provided data
      * @throws \App\Error\Exception\CustomValidationException if data doesn't validate
-     * @return iterable array of entities
+     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] array of entities
      */
-    public function buildAndValidateEntities(UserAccessControl $uac, array $passwords): iterable
+    public function buildAndValidateEntities(UserAccessControl $uac, array $passwords): array
     {
         foreach ($passwords as $i => $entity) {
             $passwords[$i]['created_by'] = $uac->getId();

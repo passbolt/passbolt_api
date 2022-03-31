@@ -20,6 +20,7 @@ use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
 
 /**
@@ -52,7 +53,7 @@ class AccountRecoveryPrivateKeyPasswordFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'recipient_fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-                'recipient_foreign_model' => 'AccountRecoveryOrganizationKey',
+                'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
                 'private_key_id' => $faker->uuid(),
                 'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg'),
                 'created_by' => $faker->uuid(),
