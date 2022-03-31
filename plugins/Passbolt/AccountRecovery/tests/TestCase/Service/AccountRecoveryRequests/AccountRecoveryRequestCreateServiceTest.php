@@ -83,7 +83,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
         $this->assertSame(1, AccountRecoveryRequestFactory::count());
         $this->assertSame($token->id, AccountRecoveryRequestFactory::find()->first()->get('authentication_token_id'));
 
-        $this->assertTokenIsUniqueAndInactive($token->id);
+        $this->assertTokenIsUniqueAndActive($token->id);
 
         // If we create a second request, the first pending request gets erased
         $token = AuthenticationTokenFactory::make()
