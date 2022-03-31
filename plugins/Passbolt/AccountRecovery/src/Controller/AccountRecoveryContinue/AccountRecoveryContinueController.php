@@ -15,21 +15,23 @@ declare(strict_types=1);
  * @since         3.6.0
  */
 
-namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
+namespace Passbolt\AccountRecovery\Controller\AccountRecoveryContinue;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestGetService;
 
 /**
- * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicy
+ * Class AccountRecoveryContinueController
+ *
+ * @package Passbolt\AccountRecovery\Controller\AccountRecoveryContinue
+ * @property \App\Model\Table\UsersTable $Users
  */
-class AccountRecoveryRequestsGetController extends AppController
+class AccountRecoveryContinueController extends AppController
 {
-    public const ACCOUNT_RECOVERY_REQUEST_GET_BAD_REQUEST = 'ACCOUNT_RECOVERY_REQUEST_GET_BAD_REQUEST';
-
     /**
      * @inheritDoc
      */
@@ -41,16 +43,14 @@ class AccountRecoveryRequestsGetController extends AppController
     }
 
     /**
-     * Gets an account recovery request
-     * Sends an email to the admins on suspect request
+     * Render a page to continue the account recovery process
      *
-     * @param string|null $requestId Request ID
      * @param string|null $userId User ID
      * @param string|null $tokenId Token ID
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the data provided is not valid
      */
-    public function get(?string $requestId, ?string $userId, ?string $tokenId): void
+    public function get(?string $userId, ?string $tokenId): void
     {
         if (!isset($userId) || !Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id is invalid.'));
@@ -58,16 +58,24 @@ class AccountRecoveryRequestsGetController extends AppController
         if (!isset($tokenId) || !Validation::uuid($tokenId)) {
             throw new BadRequestException(__('The authentication toke id is invalid.'));
         }
-        if (!isset($requestId) || !Validation::uuid($requestId)) {
-            throw new BadRequestException(__('The request id is invalid.'));
+
+        if ($this->getRequest()->is('json')) {
+            (new AccountRecoveryRequestGetService())->getOrFail($userId, $tokenId);
+            $this->success(__('The operation was successful.'));
+        } else {
+            $this->renderHtml();
         }
+    }
 
-        $ip = $this->getRequest()->clientIp();
-
-        $service = new AccountRecoveryRequestGetService();
-        $requestEntity = $service->getNotCompletedOrFail($requestId, $userId, $tokenId, $ip);
-        $data = $service->decorateResults($requestEntity);
-
-        $this->success(__('The operation was successful.'), $data);
+    /**
+     * @return void
+     */
+    protected function renderHtml(): void
+    {
+        $this->viewBuilder()
+            ->setVar('title', Configure::read('passbolt.meta.title'))
+            ->setLayout('default')
+            ->setTemplatePath('AccountRecovery')
+            ->setTemplate('account_recovery');
     }
 }

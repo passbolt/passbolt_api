@@ -39,7 +39,7 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
     use ModelAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.AN/admin_request';
+    public const ADMIN_TEMPLATE = 'Passbolt/AccountRecovery.AD/admin_request';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.

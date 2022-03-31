@@ -53,7 +53,7 @@ class AccountRecoveryRecoverCompleteService extends RecoverCompleteService
         AuthenticationToken $token,
         string $requestId
     ): AuthenticationToken {
-        (new AccountRecoveryOrganizationPolicyGetService())->validateOrgPolicy();
+        (new AccountRecoveryOrganizationPolicyGetService())->assertOrgPolicy();
 
         if (!Validation::uuid($requestId)) {
             throw new BadRequestException(__('The account recovery request identifier should be a valid UUID.'));

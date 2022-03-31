@@ -75,7 +75,7 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
      * @throws \Cake\Http\Exception\BadRequestException if the feature is not enabled
      * @throws \Cake\Http\Exception\BadRequestException if the public key is empty
      */
-    public function validateOrgPolicy()
+    public function assertOrgPolicy()
     {
         $policy = $this->get();
         if ($policy->isDisabled()) {

@@ -50,10 +50,12 @@ class AccountRecoveryPrivateKeyFactory extends CakephpBaseFactory
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
+            $file = FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'symetric_secret_password_sig_ada.msg';
+
             return [
                 'id' => $faker->uuid(),
                 'user_id' => $faker->uuid(),
-                'data' => FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg',
+                'data' => file_get_contents($file),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),

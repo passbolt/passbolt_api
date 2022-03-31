@@ -19,12 +19,10 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Controller\AccountRecoveryReque
 
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Utility\UuidFactory;
-use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
-use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
+use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryRequestScenario;
 
-class AccountRecoveryRequestsGetJsonControllerTest extends AccountRecoveryIntegrationTestCase
+class AccountRecoveryRequestsGetControllerTest extends AccountRecoveryIntegrationTestCase
 {
     use EmailQueueTrait;
 
@@ -33,19 +31,9 @@ class AccountRecoveryRequestsGetJsonControllerTest extends AccountRecoveryIntegr
      */
     public function testAccountRecoveryRequestsGetController_Success()
     {
-        AccountRecoveryOrganizationPolicyFactory::make()
-            ->mandatory()
-            ->withAccountRecoveryOrganizationPublicKey()
-            ->persist();
-        $user = UserFactory::make()->active()->persist();
-        $request = AccountRecoveryRequestFactory::make()
-            ->withUserAndToken($user->id)
-            ->pending()
-            ->persist();
-
-        $this->getJson(
-            "/account-recovery/requests/$request->id/$request->user_id/$request->authentication_token_id.json"
-        );
+        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
+        $id = "$request->id/$user->id/$token->token";
+        $this->getJson("/account-recovery/requests/$id.json");
         $this->assertResponseOk();
     }
 
@@ -56,24 +44,19 @@ class AccountRecoveryRequestsGetJsonControllerTest extends AccountRecoveryIntegr
      */
     public function testAccountRecoveryRequestsGetController_Bad_Request_ID()
     {
+        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
+
+        // Setup ip address
         $clientIp = 'Foo';
         $this->configRequest(['environment' => ['REMOTE_ADDR' => $clientIp]]);
-        AccountRecoveryOrganizationPolicyFactory::make()
-            ->mandatory()
-            ->withAccountRecoveryOrganizationPublicKey()
-            ->persist();
-        $user = UserFactory::make()->active()->persist();
+
+        // Make three admins
         $nAdmins = 3;
         $admins = UserFactory::make($nAdmins)->active()->admin()->persist();
-        $request = AccountRecoveryRequestFactory::make()
-            ->withUserAndToken($user->id)
-            ->pending()
-            ->persist();
 
-        $token = $request->authentication_token;
-        $requestId = UuidFactory::uuid();
-
-        $this->getJson("/account-recovery/requests/$requestId/$user->id/$token->id.json");
+        // mistake request id with something else
+        $id = "$request->user_id/$user->id/$token->token";
+        $this->getJson("/account-recovery/requests/$id.json");
         $this->assertResponseError('The request could not be found.');
 
         $this->assertEmailQueueCount($nAdmins);
