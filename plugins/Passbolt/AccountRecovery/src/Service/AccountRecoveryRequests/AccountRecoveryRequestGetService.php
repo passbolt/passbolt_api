@@ -183,7 +183,13 @@ class AccountRecoveryRequestGetService
 
             // There should be at least one response
             $responses = $this->AccountRecoveryResponses->find()
-                ->select(['account_recovery_request_id', 'status', 'responder_foreign_model', 'responder_foreign_key', 'data'])
+                ->select([
+                    'account_recovery_request_id',
+                    'status',
+                    'responder_foreign_model',
+                    'responder_foreign_key',
+                    'data',
+                ])
                 ->where(['account_recovery_request_id' => $requestEntity->id])
                 ->all()
                 ->toArray();
