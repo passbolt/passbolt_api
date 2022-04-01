@@ -53,7 +53,7 @@ class AccountRecoveryEmailRedactorTest extends AppIntegrationTestCase
         /** @var UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
         /** @var User $user */
-        $user = $Users->findRecover($user->username)->first();
+        $user = $Users->findByUsername($user->username)->first();
         $token = AuthenticationTokenFactory::make()->persist();
         $event = new Event(UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME, null, compact('user', 'token'));
         EventManager::instance()->dispatch($event);

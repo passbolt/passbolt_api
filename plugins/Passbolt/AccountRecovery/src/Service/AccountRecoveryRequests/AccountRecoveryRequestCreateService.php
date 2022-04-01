@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Service\AccountRecoveryRequests;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\ModelAwareTrait;
@@ -151,23 +152,9 @@ class AccountRecoveryRequestCreateService
         if (!isset($token)) {
             throw new BadRequestException(__('An authentication token should be provided.'));
         }
-        if (!Validation::uuid($token)) {
-            throw new BadRequestException(__('The authentication token should be a valid UUID.'));
-        }
-        if (!$this->AuthenticationTokens->isValid($token, $userId, AuthenticationToken::TYPE_RECOVER)) {
-            throw new BadRequestException(__('The authentication token is not valid or has expired.'));
-        }
 
-        /** @var \App\Model\Entity\AuthenticationToken $tokenEntity */
-        $tokenEntity = $this->AuthenticationTokens->find()
-            ->where([
-                'token' => $token,
-                'active' => true,
-                'type' => AuthenticationToken::TYPE_RECOVER,
-                'user_id' => $userId,
-            ])
-            ->orderDesc('created')
-            ->firstOrFail();
+        $tokenEntity = (new AuthenticationTokenGetService())
+            ->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
 
         // Deactivate all previous active tokens
         $this->AuthenticationTokens->query()

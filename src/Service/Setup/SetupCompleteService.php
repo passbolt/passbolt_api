@@ -21,9 +21,10 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Service\OpenPGP\PublicKeyValidationService;
+use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Validation\Validation;
+use Cake\Http\Exception\NotFoundException;
 
 class SetupCompleteService extends AbstractCompleteService implements SetupCompleteServiceInterface
 {
@@ -120,15 +121,11 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
      */
     protected function getAndAssertUser(string $userId): User
     {
-        if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
-        }
-        $user = $this->Users->findSetup($userId);
-        if (empty($user)) {
+        try {
+            return (new UserGetService())->getNotActiveNotDeletedOrFail($userId);
+        } catch (NotFoundException $exception) {
             $msg = __('The user does not exist, is already active or has been deleted.');
             throw new BadRequestException($msg);
         }
-
-        return $user;
     }
 }

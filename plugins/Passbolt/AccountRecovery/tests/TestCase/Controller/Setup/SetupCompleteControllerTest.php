@@ -165,6 +165,6 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             ],
         ];
         $this->postJson('/setup/complete/' . $user->id . '.json', $data);
-        $this->assertError(400, 'The user does not exist, is already active or has been deleted.');
+        $this->assertError(400, 'The user does not exist or is already active.');
     }
 }

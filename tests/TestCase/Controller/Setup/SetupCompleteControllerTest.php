@@ -267,11 +267,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             ],
             'expired token' => [
                 'data' => ['token' => $tokenExpired],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
             'inactive token' => [
                 'data' => ['token' => $tokenInactive],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
         ];
         foreach ($fails as $caseName => $case) {
@@ -348,7 +348,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $user = UserFactory::make()->active()->deleted()->persist();
         $url = '/setup/complete/' . $user->id . '.json';
         $this->postJson($url, []);
-        $this->assertError(400, 'The user does not exist, is already active or has been deleted.');
+        $this->assertError(400, 'The user does not exist or is already active.');
     }
 
     /**
@@ -361,6 +361,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $user = UserFactory::make()->active()->persist();
         $url = '/setup/complete/' . $user->id . '.json';
         $this->postJson($url, []);
-        $this->assertError(400, 'The user does not exist, is already active or has been deleted.');
+        $this->assertError(400, 'The user does not exist or is already active.');
     }
 }

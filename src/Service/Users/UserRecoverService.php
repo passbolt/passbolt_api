@@ -132,7 +132,7 @@ class UserRecoverService implements UserRecoverServiceInterface
     {
         $data = $this->request->getData();
         /** @var \App\Model\Entity\User|null $user */
-        $user = $this->Users->findRecover($data['username'])->first();
+        $user = $this->Users->findByUsername($data['username'])->first();
 
         if (empty($user)) {
             $msg = __('This user does not exist or has been deleted.') . ' ';

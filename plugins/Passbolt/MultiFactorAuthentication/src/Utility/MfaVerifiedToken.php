@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Utility;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -92,21 +93,18 @@ class MfaVerifiedToken
         // Baseline validity check
         /** @var \App\Model\Table\AuthenticationTokensTable $auth */
         $auth = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        $type = AuthenticationToken::TYPE_MFA;
-        $duration = MfaVerifiedCookie::MAX_DURATION;
-        if (!$auth->isValid($tokenString, $uac->getId(), $type, $duration)) {
-            return false;
-        }
 
         try {
-            $token = $auth->getByToken($tokenString);
-        } catch (RecordNotFoundException $e) {
+            $type = AuthenticationToken::TYPE_MFA;
+            $expiry = MfaVerifiedCookie::MAX_DURATION;
+            $token = (new AuthenticationTokenGetService())
+                ->getActiveNotExpiredOrFail($tokenString, $uac->getId(), $type, $expiry);
+        } catch (\Exception $exception) {
             return false;
         }
 
-        $data = json_decode($token->data ?? '');
-
         // Check for issue when decoding data
+        $data = json_decode($token->data ?? '');
         if ($data === null) {
             $auth->setInactive($token->token);
 

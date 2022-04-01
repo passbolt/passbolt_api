@@ -317,7 +317,7 @@ msgstr ""
 msgid "The authentication token should be a valid UUID."
 msgstr ""
 
-msgid "The authentication token is not valid or has expired."
+msgid "The authentication token is not valid."
 msgstr ""
 
 msgid "The user does not exist, is already active or has been deleted."

@@ -80,7 +80,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/recover/complete/nope.json';
         $data = [];
         $this->postJson($url, $data);
-        $this->assertError(400, 'The user identifier should be a valid UUID.');
+        $this->assertError(400);
     }
 
     /**
@@ -132,11 +132,11 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
             ],
             'expired token' => [
                 'data' => ['token' => $tokenExpired],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
             'inactive token' => [
                 'data' => ['token' => $tokenInactive],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
         ];
         foreach ($fails as $caseName => $case) {
@@ -166,7 +166,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $fails = [
             'wrong type token' => [
                 'data' => ['token' => $tokenWrongType],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
         ];
         foreach ($fails as $caseName => $case) {
