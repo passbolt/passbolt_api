@@ -233,6 +233,7 @@ class AuthenticationTokensTable extends Table
      * @param string|int $expiry the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool true if it is valid
+     * @deprecated use AuthenticationTokenGetService
      */
     public function isValid(string $token, string $userId, ?string $type = null, $expiry = null): bool
     {

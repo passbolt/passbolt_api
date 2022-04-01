@@ -24,7 +24,6 @@ use App\Model\Entity\User;
 use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Log\Log;
 
 class RecoverCompleteService extends AbstractCompleteService implements RecoverCompleteServiceInterface
 {
