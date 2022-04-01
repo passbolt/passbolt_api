@@ -32,7 +32,7 @@ class AccountRecoveryRequestsGetControllerTest extends AccountRecoveryIntegratio
     public function testAccountRecoveryRequestsGetController_Success()
     {
         [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
-        $id = "$request->id/$user->id/$token->id";
+        $id = "$request->id/$user->id/$token->token";
         $this->getJson("/account-recovery/requests/$id.json");
         $this->assertResponseOk();
     }
@@ -55,7 +55,7 @@ class AccountRecoveryRequestsGetControllerTest extends AccountRecoveryIntegratio
         $admins = UserFactory::make($nAdmins)->active()->admin()->persist();
 
         // mistake request id with something else
-        $id = "$request->user_id/$user->id/$token->id";
+        $id = "$request->user_id/$user->id/$token->token";
         $this->getJson("/account-recovery/requests/$id.json");
         $this->assertResponseError('The request could not be found.');
 

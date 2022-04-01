@@ -44,7 +44,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
         [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioPending();
 
         $service = new AccountRecoveryRequestGetService();
-        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
         $data = $service->decorateResults($request);
 
         $this->assertSame($request->id, $data['id']);
@@ -62,7 +62,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
         [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioRejected();
 
         $service = new AccountRecoveryRequestGetService();
-        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
         $data = $service->decorateResults($request);
 
         $this->assertSame($request->id, $data['id']);
@@ -80,7 +80,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
         [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
 
         $service = new AccountRecoveryRequestGetService();
-        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
         $data = $service->decorateResults($request);
 
         $this->assertSame($request->id, $data['id']);
@@ -146,7 +146,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(BadRequestException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
     }
 
     public function testAccountRecoveryRequestGetService_Error_UserDoesNotExist()
@@ -175,7 +175,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
     }
 
     // Token errors
@@ -212,7 +212,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(CustomValidationException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
     }
 
     public function testAccountRecoveryRequestGetService_Error_TokenNotActive()
@@ -228,7 +228,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(CustomValidationException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
     }
 
     public function testAccountRecoveryRequestGetService_Error_TokenNotForUser()
@@ -244,7 +244,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
     }
 
     public function testAccountRecoveryRequestGetService_Error_TokenNotRecoveryType()
@@ -260,7 +260,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
     }
 
     // Request errors
@@ -271,7 +271,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(BadRequestException::class);
-        $service->getNotCompletedOrFail('nope', $user->id, $token->id);
+        $service->getNotCompletedOrFail('nope', $user->id, $token->token);
     }
 
     public function testAccountRecoveryRequestGetService_Error_RequestNotForUser()
@@ -283,7 +283,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
     }
 
     public function testAccountRecoveryRequestGetService_Error_RequestNotForTokenId()
@@ -295,7 +295,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
     }
 
     public function testAccountRecoveryRequestGetService_Error_RequestDoesNotExist()
@@ -320,6 +320,6 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(BadRequestException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
     }
 }

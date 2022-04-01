@@ -59,12 +59,12 @@ class AccountRecoveryRequestGetService
 
     /**
      * @param string $userId uuid
-     * @param string $tokenId uuid
+     * @param string $token uuid
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest entity
      * @throws \Cake\Http\Exception\BadRequestException if policy is disabled, if token id or request is invalid
      * @throws \Cake\Http\Exception\NotFoundException if user or request or token could not be found
      */
-    public function getOrFail(string $userId, string $tokenId): AccountRecoveryRequest
+    public function getOrFail(string $userId, string $token): AccountRecoveryRequest
     {
         // Assert policy is not set to disabled
         (new AccountRecoveryOrganizationPolicyGetService())->getOrFail();
@@ -74,7 +74,7 @@ class AccountRecoveryRequestGetService
 
         // Assert token exist and is valid and belong to the user and is of the right type
         $tokenEntity = (new AuthenticationTokenGetService())
-            ->getActiveNotExpiredOrFail($tokenId, $userId, AuthenticationToken::TYPE_RECOVER);
+            ->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
 
         // Assert user is enrolled in the program
         (new AccountRecoveryUserSettingsGetService())->getOrFail($userId);
@@ -97,7 +97,7 @@ class AccountRecoveryRequestGetService
     /**
      * @param string $requestId uuid
      * @param string $userId uuid
-     * @param string $tokenId uuid
+     * @param string $token uuid
      * @param string|null $clientIp uuid
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest
      * @throws \Cake\Http\Exception\BadRequestException if policy is disabled, if token or request is invalid, request already ompleted etc.
@@ -106,7 +106,7 @@ class AccountRecoveryRequestGetService
     public function getNotCompletedOrFail(
         string $requestId,
         string $userId,
-        string $tokenId,
+        string $token,
         ?string $clientIp = null
     ): AccountRecoveryRequest {
         // Assert policy is not set to disabled
@@ -117,7 +117,7 @@ class AccountRecoveryRequestGetService
 
         // Assert token exist and is valid and belong to the user and is of the right type
         $tokenEntity = (new AuthenticationTokenGetService())
-            ->getActiveNotExpiredOrFail($tokenId, $userId, AuthenticationToken::TYPE_RECOVER);
+            ->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
 
         // Assert user is enrolled in the program
         (new AccountRecoveryUserSettingsGetService())->getOrFail($userId);
