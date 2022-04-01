@@ -275,9 +275,10 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
     public function testAccountRecoveryOptInHappyPathEndToEndTest_UserContinuesRecovery()
     {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request */
-        $request = AccountRecoveryRequestFactory::find()->firstOrFail();
+        $request = AccountRecoveryRequestFactory::find()->contain('AuthenticationTokens')->firstOrFail();
+        $token = $request->authentication_token->token;
 
-        $this->getJson('/account-recovery/continue/' . self::$user->id . '/' . $request->authentication_token_id . '.json');
+        $this->getJson('/account-recovery/continue/' . self::$user->id . '/' . $token . '.json');
         $this->assertResponseOk();
     }
 
@@ -291,9 +292,9 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
     public function testAccountRecoveryOptInHappyPathEndToEndTest_UserGetRequestStatus()
     {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request */
-        $request = AccountRecoveryRequestFactory::find()->firstOrFail();
-
-        $this->getJson('/account-recovery/requests/' . $request->id . '/' . self::$user->id . '/' . $request->authentication_token_id . '.json');
+        $request = AccountRecoveryRequestFactory::find()->contain('AuthenticationTokens')->firstOrFail();
+        $token = $request->authentication_token->token;
+        $this->getJson('/account-recovery/requests/' . $request->id . '/' . self::$user->id . '/' . $token . '.json');
         $this->assertResponseOk();
         $this->assertSame(AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED, $this->_responseJsonBody->status);
     }
