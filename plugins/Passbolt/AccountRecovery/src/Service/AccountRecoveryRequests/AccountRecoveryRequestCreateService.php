@@ -26,6 +26,7 @@ use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -153,8 +154,12 @@ class AccountRecoveryRequestCreateService
             throw new BadRequestException(__('An authentication token should be provided.'));
         }
 
-        $tokenEntity = (new AuthenticationTokenGetService())
-            ->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
+        try {
+            $tokenEntity = (new AuthenticationTokenGetService())
+                ->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
+        } catch (NotFoundException $exception) {
+            throw new BadRequestException(__('The authentication token is not valid or has expired.'));
+        }
 
         // Deactivate all previous active tokens
         $this->AuthenticationTokens->query()

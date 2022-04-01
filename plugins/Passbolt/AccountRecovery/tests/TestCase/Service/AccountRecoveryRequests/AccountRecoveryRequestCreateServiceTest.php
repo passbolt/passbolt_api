@@ -285,7 +285,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
             'fingerprint' => $data->fingerprint,
             'armored_key' => $data->armored_key,
         ];
-        $this->assertExceptionThrownAndTokenInactive($data, $token->id, 'The authentication token is not valid or has expired.');
+        $this->assertExceptionThrownAndTokenInactive($data, $token->id, 'The authentication token is not valid.');
     }
 
     public function testAccountRecoveryRequestCreateService_InvalidArmorKey()
