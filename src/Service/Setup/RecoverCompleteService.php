@@ -23,6 +23,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Log\Log;
 
 class RecoverCompleteService extends AbstractCompleteService implements RecoverCompleteServiceInterface
@@ -111,8 +112,7 @@ class RecoverCompleteService extends AbstractCompleteService implements RecoverC
     {
         try {
             return (new UserGetService())->getActiveNotDeletedOrFail($userId);
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage());
+        } catch (NotFoundException $exception) {
             $msg = __('The user does not exist, has not completed the setup or was deleted.');
             throw new BadRequestException($msg);
         }
