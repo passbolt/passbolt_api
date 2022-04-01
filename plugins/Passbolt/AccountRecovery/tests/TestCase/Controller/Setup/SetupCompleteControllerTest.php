@@ -82,7 +82,7 @@ class SetupCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             ],
         ];
         $this->postJson('/setup/complete/' . $user->id . '.json', $data);
-        $this->assertSuccess();
+        $this->assertResponseOk();
     }
 
     public function testAccountRecoverySetupComplete_Error_InvalidToken()

@@ -59,12 +59,12 @@ class AccountRecoveryRequestGetService
 
     /**
      * @param string $userId uuid
-     * @param string $token uuid
-     * @throws \Cake\Http\Exception\NotFoundException if user or request or token could not be found
-     * @throws \Cake\Http\Exception\BadRequestException if policy is disabled, if token or request is invalid
+     * @param string $tokenId uuid
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest entity
+     * @throws \Cake\Http\Exception\BadRequestException if policy is disabled, if token id or request is invalid
+     * @throws \Cake\Http\Exception\NotFoundException if user or request or token could not be found
      */
-    public function getOrFail(string $userId, string $token): AccountRecoveryRequest
+    public function getOrFail(string $userId, string $tokenId): AccountRecoveryRequest
     {
         // Assert policy is not set to disabled
         (new AccountRecoveryOrganizationPolicyGetService())->getOrFail();
@@ -74,7 +74,7 @@ class AccountRecoveryRequestGetService
 
         // Assert token exist and is valid and belong to the user and is of the right type
         $tokenEntity = (new AuthenticationTokenGetService())
-            ->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
+            ->getActiveNotExpiredOrFail($tokenId, $userId, AuthenticationToken::TYPE_RECOVER);
 
         // Assert user is enrolled in the program
         (new AccountRecoveryUserSettingsGetService())->getOrFail($userId);
@@ -97,16 +97,16 @@ class AccountRecoveryRequestGetService
     /**
      * @param string $requestId uuid
      * @param string $userId uuid
-     * @param string $token uuid
+     * @param string $tokenId uuid
      * @param string|null $clientIp uuid
-     * @throws \Cake\Http\Exception\NotFoundException if user or request or token could not be found
-     * @throws \Cake\Http\Exception\BadRequestException if policy is disabled, if token or request is invalid, request already ompleted etc.
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest
+     * @throws \Cake\Http\Exception\BadRequestException if policy is disabled, if token or request is invalid, request already ompleted etc.
+     * @throws \Cake\Http\Exception\NotFoundException if user or request or token could not be found
      */
     public function getNotCompletedOrFail(
         string $requestId,
         string $userId,
-        string $token,
+        string $tokenId,
         ?string $clientIp = null
     ): AccountRecoveryRequest {
         // Assert policy is not set to disabled
@@ -117,7 +117,7 @@ class AccountRecoveryRequestGetService
 
         // Assert token exist and is valid and belong to the user and is of the right type
         $tokenEntity = (new AuthenticationTokenGetService())
-            ->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
+            ->getActiveNotExpiredOrFail($tokenId, $userId, AuthenticationToken::TYPE_RECOVER);
 
         // Assert user is enrolled in the program
         (new AccountRecoveryUserSettingsGetService())->getOrFail($userId);
@@ -181,7 +181,7 @@ class AccountRecoveryRequestGetService
             }
             $data['account_recovery_private_key']['data'] = $privateKeyEntity->data;
 
-            // There should be at least ne response
+            // There should be at least one response
             $responses = $this->AccountRecoveryResponses->find()
                 ->select(['account_recovery_request_id', 'status', 'responder_foreign_model', 'responder_foreign_key', 'data'])
                 ->where(['account_recovery_request_id' => $requestEntity->id])

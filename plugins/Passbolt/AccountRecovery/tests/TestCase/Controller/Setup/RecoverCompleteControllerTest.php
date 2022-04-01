@@ -67,7 +67,7 @@ class RecoverCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             'account_recovery_request_id' => $request->id,
         ];
         $this->postJson($url, $data);
-        $this->assertSuccess();
+        $this->assertResponseOk();
 
         // Check that token is now inactive
         $this->assertSame(1, AuthenticationTokenFactory::count());

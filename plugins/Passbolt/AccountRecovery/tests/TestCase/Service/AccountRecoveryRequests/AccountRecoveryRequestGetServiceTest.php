@@ -20,12 +20,14 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Service\AccountRecoveryRequests
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Passbolt\AccountRecovery\Plugin;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestGetService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryRequestScenario;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
@@ -42,7 +44,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
         [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioPending();
 
         $service = new AccountRecoveryRequestGetService();
-        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
         $data = $service->decorateResults($request);
 
         $this->assertSame($request->id, $data['id']);
@@ -60,7 +62,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
         [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioRejected();
 
         $service = new AccountRecoveryRequestGetService();
-        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
         $data = $service->decorateResults($request);
 
         $this->assertSame($request->id, $data['id']);
@@ -78,7 +80,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
         [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
 
         $service = new AccountRecoveryRequestGetService();
-        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $request = $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
         $data = $service->decorateResults($request);
 
         $this->assertSame($request->id, $data['id']);
@@ -117,7 +119,8 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
     public function testAccountRecoveryRequestGetService_Error_UserNotActive()
     {
         AccountRecoveryRequestScenario::startPolicy();
-        $user = AccountRecoveryRequestScenario::startUserInactive();
+        $user = UserFactory::make()->inactive()->user()->persist();
+
         $token = AccountRecoveryRequestScenario::startToken($user);
 
         $service = new AccountRecoveryRequestGetService();
@@ -143,7 +146,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(BadRequestException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
     }
 
     public function testAccountRecoveryRequestGetService_Error_UserDoesNotExist()
@@ -161,13 +164,18 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
     public function testAccountRecoveryRequestGetService_Error_UserNotEnrolled()
     {
         AccountRecoveryRequestScenario::startPolicy();
-        $user = AccountRecoveryRequestScenario::startUserNoSettings();
+        $user = UserFactory::make()
+            ->active()
+            ->user()
+            ->with('Gpgkeys')
+            ->persist();
+
         $token = AccountRecoveryRequestScenario::startToken($user);
         $request = AccountRecoveryRequestScenario::startRequestApproved($user, $token);
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
     }
 
     // Token errors
@@ -194,24 +202,33 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
     {
         AccountRecoveryRequestScenario::startPolicy();
         $user = AccountRecoveryRequestScenario::startUser();
-        $token = AccountRecoveryRequestScenario::startTokenExpired($user);
+        $token = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->userId($user->id)
+            ->active()
+            ->expired()
+            ->persist();
         $request = AccountRecoveryRequestScenario::startRequestApproved($user, $token);
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(CustomValidationException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
     }
 
     public function testAccountRecoveryRequestGetService_Error_TokenNotActive()
     {
         AccountRecoveryRequestScenario::startPolicy();
         $user = AccountRecoveryRequestScenario::startUser();
-        $token = AccountRecoveryRequestScenario::startTokenInactive($user);
+        $token = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->userId($user->id)
+            ->inactive()
+            ->persist();
         $request = AccountRecoveryRequestScenario::startRequestApproved($user, $token);
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(CustomValidationException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
     }
 
     public function testAccountRecoveryRequestGetService_Error_TokenNotForUser()
@@ -227,19 +244,23 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
     }
 
     public function testAccountRecoveryRequestGetService_Error_TokenNotRecoveryType()
     {
         AccountRecoveryRequestScenario::startPolicy();
         $user = AccountRecoveryRequestScenario::startUser();
-        $token = AccountRecoveryRequestScenario::startTokenWrongType($user);
+        $token = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_LOGIN)
+            ->userId($user->id)
+            ->active()
+            ->persist();
         $request = AccountRecoveryRequestScenario::startRequestApproved($user, $token);
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
     }
 
     // Request errors
@@ -250,7 +271,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(BadRequestException::class);
-        $service->getNotCompletedOrFail('nope', $user->id, $token->token);
+        $service->getNotCompletedOrFail('nope', $user->id, $token->id);
     }
 
     public function testAccountRecoveryRequestGetService_Error_RequestNotForUser()
@@ -262,7 +283,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
     }
 
     public function testAccountRecoveryRequestGetService_Error_RequestNotForTokenId()
@@ -274,7 +295,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
     }
 
     public function testAccountRecoveryRequestGetService_Error_RequestDoesNotExist()
@@ -291,10 +312,14 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
         AccountRecoveryRequestScenario::startPolicy();
         $user = AccountRecoveryRequestScenario::startUser();
         $token = AccountRecoveryRequestScenario::startToken($user);
-        $request = AccountRecoveryRequestScenario::startRequestCompleted($user, $token);
+        $request = AccountRecoveryRequestFactory::make()
+            ->completed()
+            ->withUser($user->id)
+            ->setField('authentication_token_id', $token->id)
+            ->persist();
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(BadRequestException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $service->getNotCompletedOrFail($request->id, $user->id, $token->id);
     }
 }

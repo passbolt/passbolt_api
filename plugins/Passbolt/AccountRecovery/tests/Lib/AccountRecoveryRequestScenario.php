@@ -52,7 +52,11 @@ class AccountRecoveryRequestScenario
         self::startPolicy();
         $user = self::startUser();
         $token = self::startToken($user);
-        $request = self::startRequestPending($user, $token);
+        $request = AccountRecoveryRequestFactory::make()
+            ->pending()
+            ->withUser($user->id)
+            ->setField('authentication_token_id', $token->id)
+            ->persist();
 
         return [$request, $user, $token];
     }
@@ -62,7 +66,11 @@ class AccountRecoveryRequestScenario
         self::startPolicy();
         $user = self::startUser();
         $token = self::startToken($user);
-        $request = self::startRequestRejected($user, $token);
+        $request = AccountRecoveryRequestFactory::make()
+            ->rejected()
+            ->withUser($user->id)
+            ->setField('authentication_token_id', $token->id)
+            ->persist();
 
         return [$request, $user, $token];
     }
@@ -83,34 +91,6 @@ class AccountRecoveryRequestScenario
             ->persist();
 
         self::startUserSettingsApproved($user);
-
-        return $user;
-    }
-
-    public static function startUserNoSettings(): User
-    {
-        /** @var User $user */
-        $user = UserFactory::make()
-            ->setField('id', UuidFactory::uuid('user.id.ada'))
-            ->active()
-            ->user()
-            ->with('Gpgkeys', GpgkeyFactory::make()->patchData([
-                'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
-                'armored_key' => file_get_contents(FIXTURES . 'Gpgkeys' . DS . 'ada_public.key'),
-            ]))
-            ->persist();
-
-        return $user;
-    }
-
-    public static function startUserInactive(): User
-    {
-        /** @var User $user */
-        $user = UserFactory::make()
-            ->setField('id', UuidFactory::uuid('user.id.ada'))
-            ->inactive()
-            ->user()
-            ->persist();
 
         return $user;
     }
@@ -137,7 +117,7 @@ class AccountRecoveryRequestScenario
     public static function startUserSettingsApproved(User $user): array
     {
         $settings = AccountRecoveryUserSettingFactory::make()
-            ->setField('status', 'approved')
+            ->approved()
             ->setField('user_id', $user->id)
             ->persist();
 
@@ -167,43 +147,6 @@ class AccountRecoveryRequestScenario
         return $token;
     }
 
-    public static function startTokenInactive(User $user): AuthenticationToken
-    {
-        /** @var AuthenticationToken $token */
-        $token = AuthenticationTokenFactory::make()
-            ->type(AuthenticationToken::TYPE_RECOVER)
-            ->userId($user->id)
-            ->inactive()
-            ->persist();
-
-        return $token;
-    }
-
-    public static function startTokenExpired(User $user): AuthenticationToken
-    {
-        /** @var AuthenticationToken $token */
-        $token = AuthenticationTokenFactory::make()
-            ->type(AuthenticationToken::TYPE_RECOVER)
-            ->userId($user->id)
-            ->active()
-            ->expired()
-            ->persist();
-
-        return $token;
-    }
-
-    public static function startTokenWrongType(User $user): AuthenticationToken
-    {
-        /** @var AuthenticationToken $token */
-        $token = AuthenticationTokenFactory::make()
-            ->type(AuthenticationToken::TYPE_LOGIN)
-            ->userId($user->id)
-            ->active()
-            ->persist();
-
-        return $token;
-    }
-
     public static function startPolicy(): AccountRecoveryOrganizationPolicy
     {
         /** @var AccountRecoveryOrganizationPolicy $policy */
@@ -224,8 +167,8 @@ class AccountRecoveryRequestScenario
     {
         /** @var AccountRecoveryRequest $request */
         $request = AccountRecoveryRequestFactory::make()
-            ->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED)
-            ->setField('user_id', $user->id)
+            ->approved()
+            ->withUser($user->id)
             ->setField('authentication_token_id', $token->id)
             ->with('AccountRecoveryResponses', AccountRecoveryResponseFactory::make()->patchData([
                 'status' => AccountRecoveryResponse::STATUS_APPROVED,
@@ -242,7 +185,7 @@ class AccountRecoveryRequestScenario
     {
         /** @var AccountRecoveryRequest $request */
         $request = AccountRecoveryRequestFactory::make()
-            ->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED)
+            ->approved()
             ->setField('user_id', UuidFactory::uuid())
             ->setField('authentication_token_id', $token->id)
             ->with('AccountRecoveryResponses', AccountRecoveryResponseFactory::make()->patchData([
@@ -260,7 +203,7 @@ class AccountRecoveryRequestScenario
     {
         /** @var AccountRecoveryRequest $request */
         $request = AccountRecoveryRequestFactory::make()
-            ->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED)
+            ->approved()
             ->setField('user_id', $user->id)
             ->setField('authentication_token_id', $token->token)
             ->with('AccountRecoveryResponses', AccountRecoveryResponseFactory::make()->patchData([
@@ -269,42 +212,6 @@ class AccountRecoveryRequestScenario
                 'armored_key' => file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
                 'deleted' => null,
             ]))
-            ->persist();
-
-        return $request;
-    }
-
-    public static function startRequestCompleted(User $user, AuthenticationToken $token): AccountRecoveryRequest
-    {
-        /** @var AccountRecoveryRequest $request */
-        $request = AccountRecoveryRequestFactory::make()
-            ->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_COMPLETED)
-            ->setField('user_id', $user->id)
-            ->setField('authentication_token_id', $token->id)
-            ->persist();
-
-        return $request;
-    }
-
-    public static function startRequestPending(User $user, AuthenticationToken $token): AccountRecoveryRequest
-    {
-        /** @var AccountRecoveryRequest $request */
-        $request = AccountRecoveryRequestFactory::make()
-            ->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING)
-            ->setField('user_id', $user->id)
-            ->setField('authentication_token_id', $token->id)
-            ->persist();
-
-        return $request;
-    }
-
-    public static function startRequestRejected(User $user, AuthenticationToken $token): AccountRecoveryRequest
-    {
-        /** @var AccountRecoveryRequest $request */
-        $request = AccountRecoveryRequestFactory::make()
-            ->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED)
-            ->setField('user_id', $user->id)
-            ->setField('authentication_token_id', $token->id)
             ->persist();
 
         return $request;

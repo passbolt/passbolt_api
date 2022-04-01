@@ -140,7 +140,7 @@ class AccountRecoveryContinueControllerTest extends AccountRecoveryIntegrationTe
             ]))
             ->persist();
 
-        $this->getJson('/account-recovery/continue/' . $user->id . '/' . $token->token . '.json');
+        $this->getJson('/account-recovery/continue/' . $user->id . '/' . $token->id . '.json');
         $this->assertResponseCode(200);
     }
 }
