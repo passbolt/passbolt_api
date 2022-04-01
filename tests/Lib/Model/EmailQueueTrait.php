@@ -177,6 +177,20 @@ trait EmailQueueTrait
     }
 
     /**
+     * Render all the emails in the queue.
+     * Useful to spot errors in each mail.
+     *
+     * @return void
+     */
+    protected function renderAllEmails(): void
+    {
+        $emailCount = EmailQueueFactory::count();
+        for ($i = 0; $i < $emailCount; $i++) {
+            $this->renderEmail($i);
+        }
+    }
+
+    /**
      * Helper to collect all the emails redactor. This is called in Application.php
      * When testing emails in a test service, you may call this after all plugins have been loaded.
      *
