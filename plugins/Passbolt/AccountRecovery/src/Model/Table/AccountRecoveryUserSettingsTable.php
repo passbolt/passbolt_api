@@ -67,7 +67,7 @@ class AccountRecoveryUserSettingsTable extends Table
         $this->belongsTo('Users');
         $this->hasOne('AccountRecoveryPrivateKeys', [
             'className' => 'Passbolt/AccountRecovery.AccountRecoveryPrivateKeys',
-            'foreignKey' => 'user_id',
+            'bindingKey' => 'user_id',
         ]);
         $this->belongsTo('Creator', [
             'className' => 'Users',

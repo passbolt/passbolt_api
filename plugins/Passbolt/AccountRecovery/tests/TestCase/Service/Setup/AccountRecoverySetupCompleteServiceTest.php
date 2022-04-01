@@ -96,11 +96,12 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
             ->type(AuthenticationToken::TYPE_REGISTER)
             ->active()
             ->persist();
+        $user = $token->user;
 
         $request = (new ServerRequest())
             ->withData('authenticationtoken.token', $token->token)
             ->withData('gpgkey.armored_key', $this->getDummyPublicKey())
-            ->withData('account_recovery_user_setting.user_id', $token->user->id)
+            ->withData('account_recovery_user_setting.user_id', $user->id)
             ->withData('account_recovery_user_setting.status', AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED)
             ->withData('account_recovery_user_setting.account_recovery_private_key.data', $this->getDummyPrivateKey())
             ->withData('account_recovery_user_setting.account_recovery_private_key.account_recovery_private_key_passwords', [[
@@ -116,13 +117,17 @@ class AccountRecoverySetupCompleteServiceTest extends AccountRecoveryTestCase
         $this->assertSame(1, AccountRecoveryPrivateKeyPasswordFactory::count());
         $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
 
-        $q = AccountRecoveryUserSettingFactory::find()->contain(['Users'])->all()->first();
+        /** @var AccountRecoveryUserSetting $q */
+        $q = AccountRecoveryUserSettingFactory::find()->contain(['Users'])->first();
         $this->assertTrue($q->user->active);
         $this->assertTrue(isset($q->created));
         $this->assertTrue(isset($q->modified));
         $this->assertEquals('approved', $q->status);
         $this->assertEquals($token->user->id, $q->created_by);
         $this->assertEquals($token->user->id, $q->modified_by);
+
+        $pk = AccountRecoveryPrivateKeyFactory::find()->firstOrFail();
+        $this->assertSame($user->id, $pk->get('user_id'));
     }
 
     /**

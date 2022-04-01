@@ -56,7 +56,7 @@ class AccountRecoveryContinueController extends AppController
             throw new BadRequestException(__('The user id is invalid.'));
         }
         if (!isset($tokenId) || !Validation::uuid($tokenId)) {
-            throw new BadRequestException(__('The authentication toke id is invalid.'));
+            throw new BadRequestException(__('The authentication token id is invalid.'));
         }
 
         if ($this->getRequest()->is('json')) {
