@@ -46,7 +46,7 @@ class AuthenticationTokenGetService
     /**
      * Get active and not expired token or fail
      *
-     * @param string $tokenId token value uuid
+     * @param string $token token value
      * @param string $userId user id uuid
      * @param string $type see AuthenticationToken entity types
      * @return \App\Model\Entity\AuthenticationToken
@@ -54,15 +54,15 @@ class AuthenticationTokenGetService
      * @throws \App\Error\Exception\CustomValidationException if the token is expired or inactive
      * @throws \Cake\Http\Exception\BadRequestException if token id is not a valid uuid
      */
-    public function getActiveNotExpiredOrFail(string $tokenId, string $userId, string $type): AuthenticationToken
+    public function getActiveNotExpiredOrFail(string $token, string $userId, string $type): AuthenticationToken
     {
-        if (!Validation::uuid($tokenId)) {
+        if (!Validation::uuid($token)) {
             throw new BadRequestException(__('The token should be a valid UUID.'));
         }
 
         try {
             $where = [
-                'id' => $tokenId,
+                'token' => $token,
                 'type' => $type,
                 'user_id' => $userId,
             ];
