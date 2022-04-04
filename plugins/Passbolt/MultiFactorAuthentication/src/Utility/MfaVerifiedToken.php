@@ -22,7 +22,6 @@ use App\Model\Entity\AuthenticationToken;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 

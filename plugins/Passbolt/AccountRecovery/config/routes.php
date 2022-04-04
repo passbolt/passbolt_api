@@ -37,12 +37,15 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
         ])
         ->setMethods(['POST', 'PUT']);
 
-//    // View the account recovery private key passwords (for the organization recovery key)
-//    // GET /account-recovery/private-key-passwords.json
-//    $routes->connect('/private-key-passwords', [
-//        'prefix' => '', 'controller' => '', 'action' => ''])
-//        ->setMethods(['GET']);
-//
+    // View the account recovery private key passwords (for the organization recovery key)
+    // GET /account-recovery/private-key-passwords.json
+    $routes->connect('/private-key-passwords', [
+            'prefix' => 'AccountRecoveryPrivateKeyPasswords',
+          'controller' => 'AccountRecoveryPrivateKeyPasswordsIndex',
+           'action' => 'index',
+        ])
+        ->setMethods(['GET']);
+
 //    // Create temporary private key passwords
 //    // POST /account-recovery/temp/private-key-passwords.json
 //    $routes->connect('/temp/private-key-passwords', [
