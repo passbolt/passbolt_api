@@ -28,7 +28,7 @@ class AccountRecoveryUserSettingsSetController extends AppController
     public function createOrUpdate(): void
     {
         $service = new AccountRecoveryUserSettingsSetService($this->User->getAccessControl());
-        $service->set($this->request->getData());
-        $this->success(__('The operation was successful.'));
+        $accountRecoveryUserSettings = $service->set($this->request->getData());
+        $this->success(__('The operation was successful.'), $accountRecoveryUserSettings);
     }
 }
