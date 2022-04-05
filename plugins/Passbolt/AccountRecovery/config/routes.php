@@ -71,7 +71,7 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
     // Create one account recovery request
     // POST /account-recovery/requests.json
     $routes->connect('/requests', [
-        'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsPost', 'action' => 'post',
+        'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsCreate', 'action' => 'create',
     ])->setMethods(['POST']);
 
     // Landing page for account request request continue (sent by email)

@@ -29,7 +29,7 @@ use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
-class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrationTestCase
+class AccountRecoveryRequestsCreateControllerTest extends AccountRecoveryIntegrationTestCase
 {
     use EmailQueueTrait;
 
@@ -42,7 +42,7 @@ class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrati
     /**
      * Successful test case
      */
-    public function testAccountRecoveryRequestsPostController_ErrorNotGuest()
+    public function testAccountRecoveryRequestsCreateController_ErrorNotGuest()
     {
         $this->logInAsUser();
         $this->postJson('/account-recovery/requests.json', []);
@@ -52,7 +52,7 @@ class AccountRecoveryRequestsPostControllerTest extends AccountRecoveryIntegrati
     /**
      * Successful test case
      */
-    public function testAccountRecoveryRequestsPostController_Success()
+    public function testAccountRecoveryRequestsCreateController_Success()
     {
         AccountRecoveryOrganizationPolicyFactory::make()
             ->optin()

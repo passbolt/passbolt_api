@@ -27,14 +27,14 @@ use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequ
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicy
  */
-class AccountRecoveryRequestsPostController extends AppController
+class AccountRecoveryRequestsCreateController extends AppController
 {
     /**
      * @inheritDoc
      */
     public function beforeFilter(EventInterface $event)
     {
-        $this->Authentication->allowUnauthenticated(['post']);
+        $this->Authentication->allowUnauthenticated(['create']);
 
         return parent::beforeFilter($event);
     }
@@ -46,7 +46,7 @@ class AccountRecoveryRequestsPostController extends AppController
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the data provided is not valid
      */
-    public function post(): void
+    public function create(): void
     {
         if ($this->User->role() !== Role::GUEST) {
             throw new ForbiddenException(__('Only guest are allowed to create an account recovery request.'));
