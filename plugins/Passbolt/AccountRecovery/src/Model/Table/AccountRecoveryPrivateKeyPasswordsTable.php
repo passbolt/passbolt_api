@@ -177,11 +177,15 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
     /**
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param array $passwords user provided data
+     * @param string $validationRules ruleset
      * @throws \App\Error\Exception\CustomValidationException if data doesn't validate
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] array of entities
      */
-    public function buildAndValidateEntities(UserAccessControl $uac, array $passwords, string $validationRules = 'default'): array
-    {
+    public function buildAndValidateEntities(
+        UserAccessControl $uac,
+        array $passwords,
+        string $validationRules = 'default'
+    ): array {
         if (!in_array($validationRules, ['default', 'rotateKeys'])) {
             throw new InternalErrorException('Invalid validation ruleset.');
         }
@@ -207,7 +211,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
 
         $passwordEntities = $this->newEntities($passwords, [
             'accessibleFields' => $accessibleFields,
-            'validate' => $validationRules
+            'validate' => $validationRules,
         ]);
 
         $errors = [];

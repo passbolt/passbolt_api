@@ -246,9 +246,11 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
     ): iterable {
         $passwordsData = $this->getData('account_recovery_private_key_passwords') ?? [];
         $service = new AccountRecoveryPrivateKeyPasswordsValidationService();
+        $key = $publicKey->armored_key;
+        $rules = 'rotateKeys';
 
         // validate without business rules since new key is not saved yet
-        return $service->buildPasswordEntitiesFromDataOrFail($uac, $passwordsData, $publicKey->armored_key, 'rotateKeys');
+        return $service->buildPasswordEntitiesFromDataOrFail($uac, $passwordsData, $key, $rules);
     }
 
     /**
