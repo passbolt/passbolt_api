@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Test\Utility;
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 
 trait JwtTestTrait
@@ -24,7 +25,7 @@ trait JwtTestTrait
     public function assertAccessTokenIsValid(string $accessToken, string $userId)
     {
         $publicKey = file_get_contents((new JwksGetService())->getKeyPath());
-        $res = JWT::decode($accessToken, $publicKey, array_keys(JWT::$supported_algs));
+        $res = JWT::decode($accessToken, new Key($publicKey, 'RS256'));
         $this->assertSame($userId, $res->sub);
     }
 }
