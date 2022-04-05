@@ -86,7 +86,7 @@ class AccountRecoveryResponsesCreateService
         $responseEntity->account_recovery_request = $requestEntity;
 
         // Update original request with updated status
-        $this->AccountRecoveryResponses->saveOrFail($responseEntity);
+        $this->AccountRecoveryResponses->saveOrFail($responseEntity, compact('uac'));
 
         // All good, dispatch event for emails
         $eventName = $responseEntity->isApproved()
