@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Controller\Auth;
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
 {
@@ -30,13 +31,25 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
         $this->assertTextContains('Authentication is required to continue', $this->_responseJsonHeader->message);
     }
 
+    /**
+     * Happy path
+     * Check that the action is not logged
+     */
     public function testIsAuthenticatedLoggedIn()
     {
-        $this->authenticateAs('ada');
+        $isLogEnabled = $this->isFeaturePluginEnabled('Log');
+        $this->enableFeaturePlugin('Log');
+
+        $this->logInAsUser();
         $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseOk();
         $this->assertInstanceOf(User::class, $this->getSession()->read('Auth.user'));
         $this->assertTextContains('success', $this->_responseJsonHeader->status);
+
+        $this->assertSame(0, ActionLogFactory::count());
+        if (!$isLogEnabled) {
+            $this->disableFeaturePlugin('Log');
+        }
     }
 
     /**
