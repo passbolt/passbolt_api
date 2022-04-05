@@ -50,10 +50,11 @@ class AccountRecoveryPrivateKeyPasswordsValidationService
     public function buildPasswordEntitiesFromDataOrFail(
         UserAccessControl $uac,
         array $passwordsData,
-        string $armoredKey
+        string $armoredKey,
+        string $validationRules = 'default'
     ): array {
         // Validate entities or fail
-        $passwordEntities = $this->AccountRecoveryPrivateKeyPasswords->buildAndValidateEntities($uac, $passwordsData);
+        $passwordEntities = $this->AccountRecoveryPrivateKeyPasswords->buildAndValidateEntities($uac, $passwordsData, $validationRules);
 
         // Check that each message is addressed to the right recipient
         // e.g. that the sub key id is found in the sub packets

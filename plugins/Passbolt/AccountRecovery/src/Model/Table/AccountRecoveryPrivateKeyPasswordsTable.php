@@ -22,6 +22,7 @@ use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
 use ArrayObject;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -121,6 +122,24 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
     }
 
     /**
+     * Validation to use when rotating keys
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationRotateKeys(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+
+        $validator
+            ->uuid('private_key_id', __('The private key identifier should be a valid UUID.'))
+            ->requirePresence('private_key_id', 'create', __('A private key identifier is required.'))
+            ->notEmptyString('private_key_id', __('The private key identifier should not be empty.'));
+
+        return $validator;
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
@@ -161,22 +180,34 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
      * @throws \App\Error\Exception\CustomValidationException if data doesn't validate
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] array of entities
      */
-    public function buildAndValidateEntities(UserAccessControl $uac, array $passwords): array
+    public function buildAndValidateEntities(UserAccessControl $uac, array $passwords, string $validationRules = 'default'): array
     {
+        if (!in_array($validationRules, ['default', 'rotateKeys'])) {
+            throw new InternalErrorException('Invalid validation ruleset.');
+        }
+
         foreach ($passwords as $i => $entity) {
             $passwords[$i]['created_by'] = $uac->getId();
             $passwords[$i]['modified_by'] = $uac->getId();
         }
 
+        $accessibleFields = [
+            'recipient_fingerprint' => true,
+            'recipient_foreign_model' => true,
+            'data' => true,
+            'created_by' => true,
+            'modified_by' => true,
+        ];
+
+        // Private key id should only be set when rotating keys
+        // Otherwise passwords are created with the keys during setup or user settings change
+        if ($validationRules === 'rotateKeys') {
+            $accessibleFields['private_key_id'] = true;
+        }
+
         $passwordEntities = $this->newEntities($passwords, [
-            'accessibleFields' => [
-                'recipient_fingerprint' => true,
-                'recipient_foreign_model' => true,
-                'private_key_id' => true,
-                'data' => true,
-                'created_by' => true,
-                'modified_by' => true,
-            ],
+            'accessibleFields' => $accessibleFields,
+            'validate' => $validationRules
         ]);
 
         $errors = [];
