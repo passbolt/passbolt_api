@@ -30,6 +30,7 @@ use Cake\Collection\CollectionInterface;
 use Cake\Core\Exception\Exception;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -176,7 +177,18 @@ class AccountRecoveryRequestsTable extends Table
      */
     public function afterSave(EventInterface $event, AccountRecoveryRequest $request, \ArrayObject $options)
     {
-        $this->deleteAll([
+        if (isset($options['uac'])) {
+            /** @var \App\Utility\UserAccessControl $uac */
+            $uac = $options['uac'];
+            $modifiedBy = $uac->getId();
+        } else {
+            $modifiedBy = $request->user_id;
+        }
+        $this->updateAll([
+            'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
+            'modified' => FrozenTime::now(),
+            'modified_by' => $modifiedBy,
+        ], [
             'id !=' => $request->id,
             'user_id' => $request->user_id,
         ]);

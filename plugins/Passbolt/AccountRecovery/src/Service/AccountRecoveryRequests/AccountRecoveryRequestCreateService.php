@@ -82,7 +82,7 @@ class AccountRecoveryRequestCreateService
             PublicKeyValidationService::getStrictRules()
         );
         try {
-            $this->AccountRecoveryRequests->saveOrFail($request);
+            $this->AccountRecoveryRequests->saveOrFail($request, compact('uac'));
         } catch (PersistenceFailedException $e) {
             if ($e->getEntity()->getError('user_id')) {
                 $this->AuthenticationTokens->setInactive($token->token);

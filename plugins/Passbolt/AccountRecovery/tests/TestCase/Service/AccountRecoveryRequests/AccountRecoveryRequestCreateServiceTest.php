@@ -80,8 +80,19 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
         $this->assertTrue($request->isPending());
 
         // Assert that all the other requests are deactivated
-        $this->assertSame(1, AccountRecoveryRequestFactory::count());
-        $this->assertSame($token->id, AccountRecoveryRequestFactory::find()->first()->get('authentication_token_id'));
+        $this->assertSame(3, AccountRecoveryRequestFactory::count());
+        /** @var AccountRecoveryRequest[] $requests */
+        $requests = AccountRecoveryRequestFactory::find()->toArray();
+        foreach ($requests as $r) {
+            if ($r->id === $request->id) {
+                $this->assertTrue($r->isPending());
+            } else {
+                $this->assertTrue($r->isRejected());
+                $this->assertTrue($r->modified->isToday());
+                $this->assertEquals($user->id, $r->modified_by);
+            }
+        }
+        $this->assertSame($token->id, AccountRecoveryRequestFactory::get($request->id)->authentication_token_id);
 
         $this->assertTokenIsUniqueAndActive($token->id);
 
@@ -93,8 +104,17 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
             ->persist();
         $data['authentication_token'] = ['token' => $token->token];
         $secondRequest = (new AccountRecoveryRequestCreateService())->create($data);
-        $this->assertSame(1, AccountRecoveryRequestFactory::count());
-        $this->assertSame($secondRequest->id, AccountRecoveryRequestFactory::find()->first()->get('id'));
+        $this->assertSame(4, AccountRecoveryRequestFactory::count());
+        /** @var AccountRecoveryRequest[] $requests */
+        $requests = AccountRecoveryRequestFactory::find()->toArray();
+        foreach ($requests as $r) {
+            if ($r->id === $secondRequest->id) {
+                $this->assertTrue($r->isPending());
+            } else {
+                $this->assertTrue($r->isRejected());
+            }
+        }
+        $this->assertSame($token->id, AccountRecoveryRequestFactory::get($secondRequest->id)->authentication_token_id);
     }
 
     /**

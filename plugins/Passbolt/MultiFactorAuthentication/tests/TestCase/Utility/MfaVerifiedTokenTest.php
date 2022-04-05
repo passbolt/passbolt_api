@@ -63,10 +63,10 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $this->assertTrue($valid);
 
         $token = $this->AuthenticationTokens->find()->where(['token' => $token, 'active' => true ])->firstOrFail();
-        $this->assertNotEmpty($token->data);
-        $data = json_decode($token->data, true);
+        $this->assertNotEmpty($token->get('data'));
+        $data = json_decode($token->get('data'), true);
         $this->assertNotEmpty($data);
-        $this->assertEquals($data['provider'], MfaSettings::PROVIDER_TOTP);
+        $this->assertEquals(MfaSettings::PROVIDER_TOTP, $data['provider']);
     }
 
     /**
@@ -161,8 +161,8 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $uac = UserFactory::make()->user()->persistedUAC();
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, uniqid());
         $token = $this->AuthenticationTokens->find()->where(['token' => $token, 'active' => true ])->firstOrFail();
-        $this->AuthenticationTokens->setInactive($token->token);
-        $success = MfaVerifiedToken::check($uac, $token->token);
+        $this->AuthenticationTokens->setInactive($token->get('token'));
+        $success = MfaVerifiedToken::check($uac, $token->get('token'));
         $this->assertFalse($success);
     }
 
