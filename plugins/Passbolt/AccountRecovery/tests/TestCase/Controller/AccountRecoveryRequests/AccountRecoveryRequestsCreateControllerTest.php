@@ -88,6 +88,7 @@ class AccountRecoveryRequestsCreateControllerTest extends AccountRecoveryIntegra
         $this->assertResponseOk();
 
         $this->assertTrue(AuthenticationTokenFactory::get($token->id)->isActive());
+        $request = AccountRecoveryRequestFactory::find()->firstOrFail();
 
         $this->assertEventFired(AccountRecoveryRequestCreateService::REQUEST_CREATED_EVENT_NAME);
 
@@ -97,6 +98,10 @@ class AccountRecoveryRequestsCreateControllerTest extends AccountRecoveryIntegra
         foreach ($admins as $admin) {
             $this->assertEmailInBatchContains(
                 $user->profile->first_name . ' has initiated an account recovery request',
+                $admin->username
+            );
+            $this->assertEmailInBatchContains(
+                '/account-recovery/requests/review/' . $request->get('id'),
                 $admin->username
             );
         }
