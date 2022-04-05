@@ -66,7 +66,7 @@
         "league/flysystem": "^2.1.1",
         "cakephp/authentication": "^2.7.0",
         "bcrowe/cakephp-api-pagination": "^2.1.0",
-        "firebase/php-jwt": "^5.2",
+        "firebase/php-jwt": "^6.1",
         "spomky-labs/otphp": "^8.3",
         "bacon/bacon-qr-code": "^1.0",
         "enygma/yubikey": "^3.3",
