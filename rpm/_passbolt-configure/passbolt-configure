@@ -552,7 +552,7 @@ __config_get() {
   fi
 }
 setup_firewall() {
-  if rpm -qa | grep -q firewalld
+  if rpm -qa | grep firewalld > /dev/null
   then
     local zone=public
     local services=(http https)
