@@ -50,6 +50,68 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/complete/' . $user->id . '.json';
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $data = [
+            'authentication_token' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+            'user' => [
+                'locale' => 'fr_FR', // Putting on purpose an underscore, though convention is dashed.
+            ],
+        ];
+        $this->postJson($url, $data);
+        $this->assertSuccess();
+
+        // Check key is saved
+        $key = TableRegistry::getTableLocator()->get('Gpgkeys')
+            ->find()->select()->where(['user_id' => $user->id])->first();
+        $this->assertEquals($armoredKey, $key->armored_key);
+        $this->assertEquals('7A795A51A4ABEC4A79AA64BBD5A3CA6EFA858DEE', $key->fingerprint);
+
+        // Check auth token is disabled
+        $token = TableRegistry::getTableLocator()->get('AuthenticationTokens')
+            ->find()->select()->where(['token' => $t->token])->first();
+        $this->assertEquals(false, $token->active);
+
+        // Check that the locale in the payload was stored in the user's settings.
+        $userLocale = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings')
+            ->getFirstPropertyOrFail($user->id, LocaleService::SETTING_PROPERTY)
+            ->value;
+        $this->assertSame('fr-FR', $userLocale);
+        $this->assertEmailIsInQueue([
+            'email' => $admin1->username,
+            'template' => 'LU/user_setup_complete',
+            'subject' => $user->profile->first_name . ' just activated their account on passbolt',
+        ]);
+        $this->assertEmailIsInQueue([
+            'email' => $admin2->username,
+            'template' => 'LU/user_setup_complete',
+            'subject' => $user->profile->first_name . ' just activated their account on passbolt',
+        ]);
+        $this->assertEmailQueueCount(2);
+        Configure::write('passbolt.plugins.log.enabled', $logEnabled);
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
+    public function testSetupComplete_Success_BackwardCompat()
+    {
+        $logEnabled = Configure::read('passbolt.plugins.log.enabled');
+        Configure::write('passbolt.plugins.log.enabled', true);
+        [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+        $user = $t->user;
+        $url = '/setup/complete/' . $user->id . '.json';
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
+        $data = [
             'authenticationtoken' => [
                 'token' => $t->token,
             ],
@@ -109,7 +171,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/complete/' . $user->id . '.json';
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'ecc_nistp521_public.key');
         $data = [
-            'authenticationtoken' => [
+            'authentication_token' => [
                 'token' => $t->token,
             ],
             'gpgkey' => [
@@ -147,7 +209,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
         $url = '/setup/complete/' . $t->user->id . '.json';
         $data = [
-            'authenticationtoken' => [
+            'authentication_token' => [
                 'token' => $t->token,
             ],
             'gpgkey' => [
@@ -183,7 +245,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/complete/' . $user->id . '.json';
         $armoredKey = $deletedUser->gpgkey->armored_key;
         $data = [
-            'authenticationtoken' => [
+            'authentication_token' => [
                 'token' => $t->token,
             ],
             'gpgkey' => [
@@ -276,7 +338,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-                'authenticationtoken' => $case['data'],
+                'authentication_token' => $case['data'],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -328,7 +390,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-                'authenticationtoken' => [
+                'authentication_token' => [
                     'token' => $t->token,
                 ],
                 'gpgkey' => $case['data'],

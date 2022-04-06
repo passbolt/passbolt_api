@@ -68,10 +68,15 @@ abstract class AbstractCompleteService
     protected function getAndAssertToken(string $userId, string $tokenType): AuthenticationToken
     {
         $data = $this->request->getData();
-        if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
+
+        // @depracted since v3.6
+        if (isset($data['authenticationtoken'])) {
+            $data['authentication_token'] = $data['authenticationtoken'];
+        }
+        if (!isset($data['authentication_token']) || !isset($data['authentication_token']['token'])) {
             throw new BadRequestException(__('An authentication token should be provided.'));
         }
-        $token = $data['authenticationtoken']['token'];
+        $token = $data['authentication_token']['token'];
         if (!Validation::uuid($token)) {
             throw new BadRequestException(__('The authentication token should be a valid UUID.'));
         }
