@@ -23,6 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Cake\Routing\Router;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
@@ -101,7 +102,7 @@ class AccountRecoveryRequestsCreateControllerTest extends AccountRecoveryIntegra
                 $admin->username
             );
             $this->assertEmailInBatchContains(
-                '/account-recovery/requests/review/' . $request->get('id'),
+                Router::url('/app/account-recovery/requests/review/' . $request->get('id'), true),
                 $admin->username
             );
         }
