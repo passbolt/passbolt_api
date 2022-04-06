@@ -215,7 +215,7 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
         $request = AccountRecoveryRequestFactory::find()->firstOrFail();
         $this->assertEmailQueueCount(self::$nAdmins + 1);
         $this->assertEmailInBatchContains(
-            Router::url('/account-recovery/requests/review/' . $request->get('id'), true),
+            Router::url('/app/account-recovery/requests/review/' . $request->get('id'), true),
             self::$admin->username
         );
     }

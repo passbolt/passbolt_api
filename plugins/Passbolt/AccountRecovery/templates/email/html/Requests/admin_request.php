@@ -40,6 +40,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/account-recovery/requests/review/' . $requestId, true),
+    'url' => Router::url('/app/account-recovery/requests/review/' . $requestId, true),
     'text' => __('Review the recovery request')
 ]);
