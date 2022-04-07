@@ -3,11 +3,12 @@
 set -euo pipefail
 
 DIR=$(dirname "$(readlink -f "$0")")
-user=${1:-www-data}
 
 # shellcheck source=utils.sh
 # shellcheck disable=SC1091
 source "$DIR"/utils.sh
+
+user="$(get_web_user)"
 
 cd "$DIR"
 
