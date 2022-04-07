@@ -2,12 +2,13 @@
 
 set -euo pipefail
 
-user=${1:-www-data}
 DIR=$(dirname "$(readlink -f "$0")")
 
 # shellcheck source=utils.sh
 # shellcheck disable=SC1091
 source "$DIR/utils.sh"
+
+user="$(get_web_user)"
 
 "$DIR"/versions "$user"
 run_as "$DIR/cake passbolt healthcheck" "$user"
