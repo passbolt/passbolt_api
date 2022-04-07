@@ -101,7 +101,7 @@ build-suse:
 .publish-script: &publish-script |
   yum install -y createrepo rpm-sign
   mkdir -p $COMPONENT/$PACKAGE_ARCH
-  [ $COMPONENT == "testing" ] && rm $COMPONENT/$PACKAGE_ARCH/*rpm
+  [ $COMPONENT == "testing" ] && rm -f $COMPONENT/$PACKAGE_ARCH/*rpm
   cp passbolt-*.rpm $COMPONENT/$PACKAGE_ARCH
   rpm --resign $COMPONENT/$PACKAGE_ARCH/*rpm
   createrepo --update $COMPONENT
@@ -130,8 +130,14 @@ build-suse:
 
 publish-passbolt-yum-el8-testing:
   extends: .publish-rpm
-  dependencies:
-    - build-yum
+  needs:
+    - job: almalinux-8-runtime
+    - job: fedora-34-runtime
+    - job: fedora-35-runtime
+    - job: oraclelinux-8-runtime
+    - job: rockylinux-8-runtime
+    - job: build-yum
+      artifacts: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
@@ -141,8 +147,23 @@ publish-passbolt-yum-el7-testing:
   variables:
     EL_VERSION: "el7"
     COMPONENT: "testing"
-  dependencies:
-    - build-yum-7
+  needs:
+    - job: centos-7-runtime
+    - job: build-yum-7
+      artifacts: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+publish-passbolt-suse-testing:
+  extends: .publish-rpm
+  variables:
+    EL_VERSION: "opensuse"
+    COMPONENT: "testing"
+  needs:
+    - job: opensuse-leap-15-runtime
+    - job: build-suse
+      artifacts: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
@@ -150,9 +171,16 @@ publish-passbolt-yum-el7-testing:
 publish-passbolt-yum-el8-stable:
   extends: .publish-rpm
   variables:
+    EL_VERSION: "el8"
     COMPONENT: "stable"
-  dependencies:
-    - build-yum
+  needs:
+    - job: almalinux-8-runtime
+    - job: fedora-34-runtime
+    - job: fedora-35-runtime
+    - job: oraclelinux-8-runtime
+    - job: rockylinux-8-runtime
+    - job: build-yum
+      artifacts: true
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
@@ -162,8 +190,23 @@ publish-passbolt-yum-el7-stable:
   variables:
     EL_VERSION: "el7"
     COMPONENT: "stable"
-  dependencies:
-    - build-yum-7
+  needs:
+    - job: centos-7-runtime
+    - job: build-yum-7
+      artifacts: true
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
+      when: on_success
+
+publish-passbolt-suse-stable:
+  extends: .publish-rpm
+  variables:
+    EL_VERSION: "opensuse"
+    COMPONENT: "stable"
+  needs:
+    - job: opensuse-leap-15-runtime
+    - job: build-suse
+      artifacts: true
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success

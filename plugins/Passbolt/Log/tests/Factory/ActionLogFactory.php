@@ -42,11 +42,16 @@ class ActionLogFactory extends CakephpBaseFactory
         });
     }
 
+    public function setActionId(string $actionName)
+    {
+        return $this->setField('action_id', UuidFactory::uuid($actionName));
+    }
+
     /**
      * @return $this
      */
     public function loginAction()
     {
-        return $this->patchData(['action_id' => UuidFactory::uuid('AuthLogin.loginPost')]);
+        return $this->setActionId('AuthLogin.loginPost');
     }
 }
