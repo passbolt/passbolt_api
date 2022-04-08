@@ -72,7 +72,7 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
      */
     public function testAccountRecoveryResponsesCreateController_Success_Approved()
     {
-        [$request, $policy, $user] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class);
         $admins = UserFactory::make(3)->active()->admin()->persist(3);
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
         $status = AccountRecoveryResponse::STATUS_APPROVED;
@@ -93,7 +93,7 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
 
         // Assess mail sent to the user
         $this->assertEmailInBatchContains(
-            '/account-recovery/continue/' . $request['user_id'] . '/' . $request['authentication_token_id'],
+            '/account-recovery/continue/' . $request['user_id'] . '/' . $authenticationToken['token'],
             $user->username
         );
         $this->assertEmailInBatchContains(

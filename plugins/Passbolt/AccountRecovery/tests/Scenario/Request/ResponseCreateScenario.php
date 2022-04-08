@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Test\Scenario\Request;
 
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use CakephpFixtureFactories\Scenario\FixtureScenarioInterface;
@@ -68,12 +69,17 @@ class ResponseCreateScenario implements FixtureScenarioInterface
             ->setField('user_id', $user->id)
             ->persist();
 
+        $authenticationToken = AuthenticationTokenFactory::make()
+            ->setField('user_id', $user->id)
+            ->persist();
+
         $request = AccountRecoveryRequestFactory::make()
             ->rsa4096Key_2()
+            ->withToken($authenticationToken->id)
             ->setField('status', $status)
             ->setField('user_id', $user->id)
             ->persist();
 
-        return [$request, $policy, $user];
+        return [$request, $policy, $user, $authenticationToken];
     }
 }

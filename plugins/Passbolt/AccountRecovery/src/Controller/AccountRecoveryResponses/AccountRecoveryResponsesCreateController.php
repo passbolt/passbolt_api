@@ -37,7 +37,7 @@ class AccountRecoveryResponsesCreateController extends AppController
     public function post(): void
     {
         if (!$this->User->isAdmin()) {
-            throw new ForbiddenException(__('Only guest are allowed to create an account recovery request.'));
+            throw new ForbiddenException(__('Only admin are allowed to create an account recovery request.'));
         }
 
         $data = $this->getRequest()->getData();
