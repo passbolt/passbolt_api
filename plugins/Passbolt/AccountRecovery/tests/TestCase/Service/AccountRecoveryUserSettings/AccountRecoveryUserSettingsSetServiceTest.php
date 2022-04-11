@@ -258,7 +258,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         }
     }
 
-    public function testAccountRecoveryUserSettingsSetService_Success_()
+    public function testAccountRecoveryUserSettingsSetService_Success_Approved()
     {
         $policy = AccountRecoveryOrganizationPolicyFactory::make()
             ->optin()
@@ -288,5 +288,90 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         $this->assertSame(1, AccountRecoveryPrivateKeyFactory::count());
         $this->assertSame(1, AccountRecoveryPrivateKeyPasswordFactory::count());
         $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
+    }
+
+    public function testAccountRecoveryUserSettingsSetService_Success_Rejected()
+    {
+        $policy = AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with(
+                'AccountRecoveryOrganizationPublicKeys',
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+            )
+            ->persist();
+
+        $data = [
+            'status' => AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED,
+        ];
+
+        $this->service->set($data);
+
+        $this->assertSame(0, AccountRecoveryPrivateKeyFactory::count());
+        $this->assertSame(0, AccountRecoveryPrivateKeyPasswordFactory::count());
+        $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
+    }
+
+    public function testAccountRecoveryUserSettingsSetService_Error_EnrollTwice()
+    {
+        $policy = AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with(
+                'AccountRecoveryOrganizationPublicKeys',
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+            )
+            ->persist();
+
+        $orkArmored = $policy->account_recovery_organization_public_key->armored_key;
+        $orkFingerprint = $policy->account_recovery_organization_public_key->fingerprint;
+
+        $data = [
+            'status' => AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED,
+            'account_recovery_private_key' => [
+                'data' => $this->getDummyPrivateKey(),
+                'account_recovery_private_key_passwords' => [[
+                    'recipient_fingerprint' => $orkFingerprint,
+                    'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
+                    'data' => $this->encrypt($orkFingerprint, $orkArmored),
+                ]],
+            ],
+        ];
+
+        $this->service->set($data);
+
+        $this->expectException(BadRequestException::class);
+        $this->service->set($data);
+    }
+
+    public function testAccountRecoveryUserSettingsSetService_Error_Deenroll()
+    {
+        $policy = AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with(
+                'AccountRecoveryOrganizationPublicKeys',
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+            )
+            ->persist();
+
+        $orkArmored = $policy->account_recovery_organization_public_key->armored_key;
+        $orkFingerprint = $policy->account_recovery_organization_public_key->fingerprint;
+
+        $data = [
+            'status' => AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_APPROVED,
+            'account_recovery_private_key' => [
+                'data' => $this->getDummyPrivateKey(),
+                'account_recovery_private_key_passwords' => [[
+                    'recipient_fingerprint' => $orkFingerprint,
+                    'recipient_foreign_model' => AccountRecoveryPrivateKeyPassword::RECIPIENT_FOREIGN_MODEL_ORGANIZATION_KEY,
+                    'data' => $this->encrypt($orkFingerprint, $orkArmored),
+                ]],
+            ],
+        ];
+
+        $this->service->set($data);
+
+        $this->expectException(BadRequestException::class);
+        $this->service->set([
+            'status' => AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED,
+        ]);
     }
 }
