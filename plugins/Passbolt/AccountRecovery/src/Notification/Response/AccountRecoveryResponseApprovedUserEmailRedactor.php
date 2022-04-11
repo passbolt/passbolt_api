@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Notification\Response;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
@@ -64,13 +65,17 @@ class AccountRecoveryResponseApprovedUserEmailRedactor implements SubscribedEmai
 
         /** @var \App\Model\Entity\User $user */
         $user = $this->Users->findFirstForEmail($response->account_recovery_request->user_id);
+        /** @var \App\Model\Entity\AuthenticationToken $authenticationToken */
+        $authenticationToken = $this->Users->AuthenticationTokens->get(
+            $response->account_recovery_request->authentication_token_id
+        );
         /** @var \App\Model\Entity\User $admin */
         $admin = $this->Users->find()
             ->where(['Users.id' => $response->modified_by])
             ->contain('Profiles')
             ->firstOrFail();
 
-        $emailCollection->addEmail($this->makeUserEmail($user, $admin, $response));
+        $emailCollection->addEmail($this->makeUserEmail($user, $admin, $response, $authenticationToken));
 
         return $emailCollection;
     }
@@ -79,10 +84,15 @@ class AccountRecoveryResponseApprovedUserEmailRedactor implements SubscribedEmai
      * @param \App\Model\Entity\User $user User
      * @param \App\Model\Entity\User $admin Admin approving the request
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $response Account recovery response
+     * @param \App\Model\Entity\AuthenticationToken $authenticationToken The authentication token associated to the account recovery request
      * @return \App\Notification\Email\Email
      */
-    private function makeUserEmail(User $user, User $admin, AccountRecoveryResponse $response): Email
-    {
+    private function makeUserEmail(
+        User $user,
+        User $admin,
+        AccountRecoveryResponse $response,
+        AuthenticationToken $authenticationToken
+    ): Email {
         $locale = (new GetUserLocaleService())->getLocale($user->username);
         $subject = (new LocaleService())->translateString(
             $locale,
@@ -95,7 +105,7 @@ class AccountRecoveryResponseApprovedUserEmailRedactor implements SubscribedEmai
             'user' => $user,
             'admin' => $admin,
             'created' => $response->modified,
-            'request' => $response->account_recovery_request,
+            'authenticationToken' => $authenticationToken,
         ], 'title' => $subject,];
 
         return new Email($user->username, $subject, $data, self::USER_TEMPLATE);

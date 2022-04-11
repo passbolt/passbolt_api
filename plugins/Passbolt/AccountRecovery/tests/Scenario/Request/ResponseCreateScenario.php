@@ -70,7 +70,7 @@ class ResponseCreateScenario implements FixtureScenarioInterface
             ->setField('user_id', $user->id)
             ->persist();
 
-        $token = AuthenticationTokenFactory::make()
+        $authenticationToken = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->setField('user_id', $user->id)
             ->active()
@@ -78,11 +78,11 @@ class ResponseCreateScenario implements FixtureScenarioInterface
 
         $request = AccountRecoveryRequestFactory::make()
             ->rsa4096Key_2()
+            ->setField('authentication_token_id', $authenticationToken->id)
             ->setField('status', $status)
             ->setField('user_id', $user->id)
-            ->setField('authentication_token_id', $token->id)
             ->persist();
 
-        return [$request, $policy, $user];
+        return [$request, $policy, $user, $authenticationToken];
     }
 }

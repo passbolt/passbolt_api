@@ -243,7 +243,7 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
     public function testAccountRecoveryOptInHappyPathEndToEndTest_AdminApprovesRequest()
     {
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request */
-        $request = AccountRecoveryRequestFactory::find()->firstOrFail();
+        $request = AccountRecoveryRequestFactory::find()->contain('AuthenticationTokens')->firstOrFail();
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
         $policy = AccountRecoveryOrganizationPolicyFactory::find()->firstOrFail();
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
@@ -261,7 +261,7 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
 
         $this->assertEmailQueueCount(self::$nAdmins + 1);
         $this->assertEmailInBatchContains(
-            Router::url('/account-recovery/continue/' . self::$user->id . '/' . $request->authentication_token_id, true),
+            Router::url('/account-recovery/continue/' . self::$user->id . '/' . $request->authentication_token->token, true),
             self::$user->username
         );
     }

@@ -22,7 +22,7 @@ if (PHP_SAPI === 'cli') {
 $user = $body['user'];
 $admin = $body['admin'];
 $created = $body['created'];
-$request = $body['request'];
+$authenticationToken = $body['authenticationToken'];
 
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
@@ -47,6 +47,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/account-recovery/continue/' . $request['user_id'] . '/' . $request['authentication_token_id'], true),
+    'url' => Router::url('/account-recovery/continue/' . $user['id'] . '/' . $authenticationToken['token'], true),
     'text' => __('Complete account recovery')
 ]);
