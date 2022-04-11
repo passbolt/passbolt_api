@@ -71,6 +71,13 @@ class AccountRecoveryUserSettingsSetService
      */
     public function set(array $data): AccountRecoveryUserSetting
     {
+        // Ensure user can only enroll once
+        // It's not possible for a user to enroll and de-enroll or enroll and re-enroll
+        $currentSettings = (new AccountRecoveryUserSettingsGetService())->get($this->uac->getId());
+        if (isset($currentSettings) && $currentSettings->isApproved()) {
+            throw new BadRequestException(__('User account recovery settings cannot be edited.'));
+        }
+
         $setting = $this->patchEntity($data);
         $this->AccountRecoveryUserSettings->saveOrFail($setting);
 
