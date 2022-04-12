@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\AccountRecovery\Test\Scenario\Request;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
@@ -70,12 +71,14 @@ class ResponseCreateScenario implements FixtureScenarioInterface
             ->persist();
 
         $authenticationToken = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_RECOVER)
             ->setField('user_id', $user->id)
+            ->active()
             ->persist();
 
         $request = AccountRecoveryRequestFactory::make()
             ->rsa4096Key_2()
-            ->withToken($authenticationToken->id)
+            ->setField('authentication_token_id', $authenticationToken->id)
             ->setField('status', $status)
             ->setField('user_id', $user->id)
             ->persist();
