@@ -58,8 +58,8 @@ class AccountRecoveryPrivateKeyPasswordFactory extends CakephpBaseFactory
                 'data' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg'),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(1)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(1)),
+                'created' => Chronos::now()->subDay($faker->randomNumber(2)),
+                'modified' => Chronos::now()->subDay($faker->randomNumber(2)),
             ];
         });
     }
