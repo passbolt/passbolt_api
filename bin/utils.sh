@@ -43,7 +43,7 @@ run_as() {
       $switch_user "$command" $shell "$user"
       ;;
 
-    www-data | nginx)
+    www-data | nginx | wwwrun)
       #shellcheck disable=SC2086
       $command
       ;;
@@ -62,4 +62,16 @@ oops() {
   local nc='\033[0m' # No Color
   local err
   err=$("$@" 2>&1) && echo "$err" || echo -e "$red ERROR: $nc$err"
+}
+
+get_web_user() {
+  if [ -f /etc/debian_version ]
+  then
+    echo "www-data"
+  elif [ -f /usr/bin/zypper ]
+  then
+    echo "wwwrun"
+  else
+    echo "nginx"
+  fi
 }

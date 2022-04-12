@@ -23,7 +23,7 @@ use App\Model\Traits\Cleanup\PermissionsCleanupTrait;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -103,12 +103,9 @@ class SecretsTable extends Table
 
         $validator
             ->ascii('data', __('The message should be a valid ASCII string.'))
-            ->add('data', 'isValidGpgMessage', [
-                'rule' => [$this, 'isValidGpgMessageRule'],
-                'message' => __('The message should be a valid ASCII-armored gpg message.'),
-            ])
             ->requirePresence('data', 'create', __('A message is required.'))
-            ->notEmptyString('data', __('The message should not be empty.'));
+            ->notEmptyString('data', __('The message should not be empty.'))
+            ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         return $validator;
     }
@@ -127,20 +124,6 @@ class SecretsTable extends Table
         $validator->remove('resource_id');
 
         return $validator;
-    }
-
-    /**
-     * Check true if field is a valid gpg message.
-     *
-     * @param string $check Value to check
-     * @param array $context A key value list of data containing the validation context.
-     * @return bool Success
-     */
-    public function isValidGpgMessageRule(string $check, array $context)
-    {
-        $gpg = OpenPGPBackendFactory::get();
-
-        return $gpg->isValidMessage($check);
     }
 
     /**

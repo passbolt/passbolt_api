@@ -89,7 +89,7 @@ class SaveTest extends AppTestCase
     public function testSecretsSaveValidationData()
     {
         $testCases = [
-            'isValidGpgMessage' => self::getGpgMessageTestCases(),
+            'isValidOpenPGPMessage' => self::getGpgMessageTestCases(),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];

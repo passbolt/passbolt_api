@@ -9,7 +9,7 @@ use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
- * ResourceFactory
+ * OrganizationSettingFactory
  */
 class OrganizationSettingFactory extends CakephpBaseFactory
 {
@@ -32,9 +32,14 @@ class OrganizationSettingFactory extends CakephpBaseFactory
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
+            $property = OrganizationSetting::UUID_NAMESPACE . $faker->word;
+
             return [
-                'created_by' => $faker->uuid(),
-                'modified_by' => $faker->uuid(),
+                'property' => $property,
+                'property_id' => UuidFactory::uuid($property),
+                'value' => $faker->text(),
+                'created_by' => UuidFactory::uuid(),
+                'modified_by' => UuidFactory::uuid(),
             ];
         });
     }

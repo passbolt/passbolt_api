@@ -60,6 +60,6 @@ trait EmailNotificationSettingsTestTrait
             $settingsToSave[$key] = $setting;
         }
         $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
-        EmailNotificationSettings::save($settingsToSave, $uac);
+        EmailNotificationSettings::save($settingsToSave, $uac, true);
     }
 }

@@ -18,6 +18,7 @@ namespace App\Test\Factory;
 
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
 use Cake\I18n\Time;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
@@ -31,6 +32,7 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
  * @method \App\Model\Entity\User|\App\Model\Entity\User[] persist()
  * @method \App\Model\Entity\User getEntity()
  * @method \App\Model\Entity\User[] getEntities()
+ * @method static \App\Model\Entity\User get($primaryKey, array $options = [])
  */
 class UserFactory extends CakephpBaseFactory
 {
