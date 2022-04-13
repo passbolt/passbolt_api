@@ -1,12 +1,32 @@
 #!/bin/sh
 
 set -eu
+
+if [ -f /usr/bin/zypper ]
+then
+  _OS_FAMILY="suse"
+  zypper install -y rpmdevtools rpmlint rsync libselinux-devel rpm-build bc jq
+else
+  _OS_FAMILY="rhel"
+  yum install -y rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc
+  OS_VERSION=$(grep -E '^VERSION_ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/\"//g')
+  OS_VERSION_MAJOR=$(echo ${OS_VERSION:0:1} | bc)
+
+  if [ ${OS_VERSION_MAJOR} -eq 7 ] || [ ${OS_VERSION_MAJOR} -eq 8 ]
+  then
+    if ! rpm -qa | grep -q epel-release
+    then
+      yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION_MAJOR}.noarch.rpm -y
+    fi
+  fi
+  yum install -y jq
+fi
+
 SCRIPT_DIR="$( cd "$( dirname "${0}" )" && pwd )"
-PKG_VERSION=$(cat $SCRIPT_DIR/../CHANGELOG.md | awk 'match($0, /\[([0-9]+\.[0-9]+\.[0-9]+)\]?/) {print substr($0, RSTART, RLENGTH);exit}' | tr -d "[]")
+PKG_VERSION=$(jq -r '.version' package.json)
 cd ${SCRIPT_DIR}/../..
 PASSBOLT_DIR=$(basename $PWD)
 
-yum install -y rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc
 rpmdev-setuptree
 
 cp -r rpm/_passbolt-configure .
@@ -31,8 +51,10 @@ tar \
     passbolt-${PASSBOLT_FLAVOUR}-server-${PKG_VERSION}
 cd -
 cp rpm/patches/*.diff ~/rpmbuild/SOURCES
-cp rpm/specs/passbolt-server.spec ~/rpmbuild/SPECS/
+cp rpm/specs/* ~/rpmbuild/SPECS/
+
 rpmbuild -ba \
   --define "_passbolt_flavour ${PASSBOLT_FLAVOUR}" \
   --define "_passbolt_version ${PKG_VERSION}" \
+  --define "_os_family ${_OS_FAMILY}" \
   ~/rpmbuild/SPECS/passbolt-server.spec

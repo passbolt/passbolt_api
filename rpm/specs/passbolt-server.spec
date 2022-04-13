@@ -11,25 +11,8 @@ Patch0:         02_webpaths_setup.diff
 Patch1:         01_paths_setup.diff
 Patch2:         03_cake_import_paths.diff
 
-Requires:       php >= 7.3
-Requires:       php-cli >= 7.3
-Requires:       php-mbstring >= 7.3
-Requires:       php-intl >= 7.3
-Requires:       php-mysqlnd >= 7.3
-Requires:       php-fpm >= 7.3
-Requires:       php-xml >= 7.3
-Requires:       php-gd >= 7.3
-Requires:       php-process >= 7.3
-Requires:       php-json >= 7.3
-Requires:       php-pecl-gnupg
-%if "%{_passbolt_flavour}" == "pro"
-Requires:       php-ldap >= 7.3
-%endif
-Requires:       cronie
-Requires:       nginx
-Requires:       mariadb-server
-Requires:       passbolt-server-selinux
-Requires:       haveged
+%include %{_specdir}/%{_os_family}-variables.inc
+%include %{_specdir}/%{_os_family}-requires.inc
 
 %description
 Passbolt on RPM POC
@@ -49,9 +32,9 @@ mkdir -p $RPM_BUILD_ROOT/%{_datadir}/passbolt/examples
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/doc/passbolt-%{_passbolt_flavour}-server
 mkdir -p $RPM_BUILD_ROOT/usr/local/bin
 cp -r config $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/
-mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/jwt
 cp -r config/app.default.php $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/app.php
 rm -f $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/gpg/*
+rm -f $RPM_BUILD_ROOT/%{_sysconfdir}/passbolt/jwt/*
 cp -r cron.d/passbolt-server $RPM_BUILD_ROOT/%{_sysconfdir}/cron.d/passbolt-%{_passbolt_flavour}-server
 cp -r logrotate.d/passbolt-server $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d/passbolt-%{_passbolt_flavour}-server
 cp -r index.php $RPM_BUILD_ROOT/%{_datadir}/php/passbolt
@@ -90,13 +73,14 @@ rm -rf $RPM_BUILD_ROOT
 %post
 chmod +x /usr/local/bin/passbolt-configure
 mkdir -p /var/lib/passbolt/{.gnupg,tmp}
+mkdir -p /var/log/passbolt
 # Adjust some system directory permissions
-chown -R nginx:nginx /var/lib/passbolt
-chown -R nginx:nginx /var/log/passbolt
+chown -R %{_nginx_user}:%{_nginx_group} /var/lib/passbolt
+chown -R %{_nginx_user}:%{_nginx_group} /var/log/passbolt
 # Img public folder should be writeable by nginx
-chown -R nginx:nginx %{_datadir}/php/passbolt/webroot/img/public
+chown -R %{_nginx_user}:%{_nginx_group} %{_datadir}/php/passbolt/webroot/img/public
 chmod 0644 %{_datadir}/php/passbolt/webroot/img/public/empty
-chown -R root:nginx %{_sysconfdir}/passbolt
+chown -R root:%{_nginx_group} %{_sysconfdir}/passbolt
 # No file should be executable except bin/cake
 chmod -R -x+X %{_sysconfdir}/passbolt
 chmod +x %{_datadir}/php/passbolt/bin/cake
@@ -114,29 +98,31 @@ chmod 0770 %{_sysconfdir}/passbolt/jwt
 chmod -R o-rwx %{_sysconfdir}/passbolt/*
 # Strict permissions for gnupg server keyring
 chmod 0700 /var/lib/passbolt/.gnupg/
+sed -i 's/@@NGINX_USER@@/%{_nginx_user}/g' %{_sysconfdir}/cron.d/passbolt-%{_passbolt_flavour}-server
 
-#su - nginx -s /bin/bash -c "gpg --list-keys --home /var/lib/passbolt/.gnupg"
-mkdir -p /var/log/passbolt
-chown -R nginx:nginx /var/log/passbolt
+if [ -f /usr/bin/zypper ]
+then
+  echo "extension=gnupg.so" > /etc/php7/conf.d/gnupg.ini
+fi
 
 set_jwt_keys() {
   if [[ ! -f $jwt_key || ! -f $jwt_pem ]]
-  then 
-    local web_user='nginx'
+  then
     local jwt_dir='%{_sysconfdir}/passbolt/jwt'
     local jwt_key="$jwt_dir/jwt.key"
     local jwt_pem="$jwt_dir/jwt.pem"
-    su -c '/usr/share/php/passbolt/bin/cake passbolt create_jwt_keys' -s /bin/bash "$web_user"
-    chmod 640 "$jwt_key" && chown root:"$web_user" "$jwt_key" 
-    chmod 640 "$jwt_pem" && chown root:"$web_user" "$jwt_pem" 
-  fi 
+    su -c '/usr/share/php/passbolt/bin/cake passbolt create_jwt_keys' -s /bin/bash "%{_nginx_user}"
+    chmod 640 "$jwt_key" && chown root:%{_nginx_group} "$jwt_key"
+    chmod 640 "$jwt_pem" && chown root:%{_nginx_group} "$jwt_pem"
+  fi
 }
 
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/Scriptlets/
 if [ $1 -gt 1 ]
 then
-    su -c '%{_datadir}/php/passbolt/bin/cake passbolt migrate' -s /bin/bash nginx >> /var/log/passbolt/upgrade.log
-    su -c '%{_datadir}/php/passbolt/bin/cake cache clear_all' -s /bin/bash nginx >> /var/log/passbolt/upgrade.log
+    su -c '%{_datadir}/php/passbolt/bin/cake passbolt migrate' -s /bin/bash %{_nginx_user} >> /var/log/passbolt/upgrade.log
+    su -c '%{_datadir}/php/passbolt/bin/cake cache clear_all' -s /bin/bash %{_nginx_user} >> /var/log/passbolt/upgrade.log
+    set_jwt_keys
 fi
 
 set_jwt_keys
@@ -145,4 +131,3 @@ set_jwt_keys
 rm -rf '%{_sysconfdir}/passbolt/jwt'
 
 %changelog
-
