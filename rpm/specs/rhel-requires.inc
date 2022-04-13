@@ -16,4 +16,3 @@ Requires:       cronie
 Requires:       nginx
 Requires:       mariadb-server
 Requires:       passbolt-server-selinux
-Requires:       haveged
