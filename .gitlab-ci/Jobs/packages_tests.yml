@@ -3,7 +3,7 @@
   image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/ruby:latest
   stage: package-tests
   script:
-    - apt update && apt install rsync -y
+    - apt update && apt install rsync build-essential openssh-client -y
     - gem install bundler:2.1.2
     - bundle install
     - cat $GL_REGISTRY_CREDS > ./creds.json
@@ -19,7 +19,7 @@
     - job: build-debian
       artifacts: true
   script:
-    - apt update && apt install rsync -y
+    - apt update && apt install rsync build-essential openssh-client -y
     - gem install bundler:2.1.2
     - bundle install
     - cat $GL_REGISTRY_CREDS > ./creds.json
