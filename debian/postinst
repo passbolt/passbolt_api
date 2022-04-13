@@ -247,11 +247,23 @@ info_message() {
 
 set_jwt_keys() {
   if [[ ! -f $JWT_KEY || ! -f $JWT_PEM ]]
-  then 
+  then
     su -c '/usr/share/php/passbolt/bin/cake passbolt create_jwt_keys' -s /bin/bash www-data
-    chmod 640 "$JWT_KEY" && chown root:www-data "$JWT_KEY" 
-    chmod 640 "$JWT_PEM" && chown root:www-data "$JWT_PEM" 
-  fi 
+    chmod 640 "$JWT_KEY" && chown root:www-data "$JWT_KEY"
+    chmod 640 "$JWT_PEM" && chown root:www-data "$JWT_PEM"
+  fi
+}
+
+pull_last_pub_key() {
+  PUB_EXP_DATE=$(gpg --list-key --keyring /usr/share/keyrings/passbolt-repository.gpg |\
+  grep "\[expires:" | cut -d ":" -f 2 | cut -d " " -f 2 | cut -d "]" -f 1 | head -n 1)
+
+  if [[ ! -z "$PUB_EXP_DATE" ]]
+  then
+  curl -s https://download.passbolt.com/pub.key |\
+  gpg --dearmor | tee /usr/share/keyrings/passbolt-repository.gpg > /dev/null
+  chmod 644 /usr/share/keyrings/passbolt-repository.gpg
+  fi
 }
 
 ###########################################
@@ -265,11 +277,12 @@ case "$deb_action" in
 
     # Run the migrations process on upgrade
     if is_upgrade; then
+      pull_last_pub_key
       su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
       su -c '/usr/share/php/passbolt/bin/cake cache clear_all' -s /bin/bash www-data
       db_purge
       db_stop
-      set_jwt_keys 
+      set_jwt_keys
       exit 0
     fi
 
@@ -288,7 +301,7 @@ case "$deb_action" in
     # nginx setup
     configure_nginx
 
-    set_jwt_keys 
+    set_jwt_keys
 
     info_message
     db_stop
