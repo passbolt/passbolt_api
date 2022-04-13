@@ -1,3 +1,12 @@
+passbolt-pro-server (3.5.0-2) buster; urgency=medium
+  * PB-13923 Update the repository key to sign packages
+  * PB-13749 Update firewalld install check
+  * PB-13743 Fix bad condition logic so setup firewalld
+  * PB-13650 Delete jwt folder only while uninstalling
+  * PB-13783 Update selinux policy RPM package
+
+ -- Gerold Mougenel <gerold@passbolt.com>  Wed, 13 Apr 2022 21:30:00 +0000
+
 passbolt-pro-server (3.5.0-1) buster; urgency=medium
   * PB-13161 As LU I should be able to use passbolt with my Android mobile
   * PB-13161 As LU I should be able to use passbolt with my IOS mobile
