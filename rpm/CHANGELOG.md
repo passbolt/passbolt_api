@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* [3.5.0-2] WED Apr 13 2022 Gerold Mougenel <gerold@passbolt.com>
+- PB-13743 Fix bad condition in passbolt_configure script
+- PB-13749 Update firewalld install check
+
 * [3.5.0-1] TUE Jan 18 2021 Daniel Del Rio <daniel@passbolt.com>
 - PB-13161 As LU I should be able to use passbolt with my Android mobile
 - PB-13161 As LU I should be able to use passbolt with my IOS mobile
