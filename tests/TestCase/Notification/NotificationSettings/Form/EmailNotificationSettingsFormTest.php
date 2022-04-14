@@ -290,6 +290,20 @@ class EmailNotificationSettingsFormTest extends AppTestCase
         );
     }
 
+    public function testNotificationSettingsFormFieldSendAdminUserRecoverAbort()
+    {
+        $testCases = [
+            'boolean' => $this->getBooleanTestCases(),
+        ];
+
+        $this->assertFormFieldFormatValidation(
+            EmailNotificationSettingsForm::class,
+            'send_admin_user_recover_abort',
+            self::getDummyData(),
+            $testCases
+        );
+    }
+
     public function testNotificationSettingsFormIgnoresInvalidKeys()
     {
         $validKeys = static::getDummyData();
@@ -345,6 +359,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             'send_group_user_update' => true,
             'send_group_manager_update' => true,
             'send_admin_user_setup_completed' => true,
+            'send_admin_user_recover_abort' => true,
         ];
 
         return array_merge($default, $data);

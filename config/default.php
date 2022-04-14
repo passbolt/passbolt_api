@@ -110,6 +110,9 @@ return [
                     'user' => [
                         'setup' => [
                             'completed' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_SETUP_COMPLETED', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                        'recover' => [
+                            'abort' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_ABORT', true), FILTER_VALIDATE_BOOLEAN),
                         ]
                     ]
                 ],
