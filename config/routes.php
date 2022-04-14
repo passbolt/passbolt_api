@@ -353,6 +353,10 @@ Router::scope('/setup', function ($routes) {
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
 
+    $routes->connect('/recover/abort/:userId', ['prefix' => 'Setup', 'controller' => 'RecoverAbort', 'action' => 'abort'])
+        ->setPass(['userId'])
+        ->setMethods(['PUT', 'POST']);
+
     // Legacy v1 backward compatibility routes
     $routes->connect('/install/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
         ->setPass(['userId', 'tokenId'])
