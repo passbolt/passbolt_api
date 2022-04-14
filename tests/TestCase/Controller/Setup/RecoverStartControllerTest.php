@@ -25,33 +25,43 @@ use Cake\Utility\Hash;
 
 class RecoverStartControllerTest extends AppIntegrationTestCase
 {
-    /**
-     * @group AN
-     * @group recover
-     * @group recoverStart
-     */
-    public function testRecoverStart_NotFoundError_MissingUrlParameters()
+    public function testRecoverStartController_Success(): void
     {
-        $fails = [
-            'no parameter given' => '/setup/recover/nope',
-            // Add when legacy urls removed (/setup/recover/nope/nope get called instead of 404)
-            //'only one parameter given' => '/setup/recover/start/' . UuidFactory::uuid(),
-            'no parameter given on legacy url' => '/setup/recover',
-            'only one parameter given on legacy url' => '/setup/recover/' . UuidFactory::uuid(),
-        ];
-        foreach ($fails as $case => $url) {
-            $this->get($url);
-            $this->assertResponseCode(404, 'Setup start should fail with 404 on case: ' . $case);
-            $this->_response = null; // Free the memory usage.
-        }
+        $userId = UserFactory::make()->active()->persist()->id;
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->userId($userId)
+            ->persist();
+        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $this->getJson($url);
+        $this->assertResponseOk();
+        $this->assertNotNull($this->_responseJsonBody->user);
+        $this->assertUserAttributes($this->_responseJsonBody->user);
+        $this->assertNotNull($this->_responseJsonBody->user->locale);
+        $this->assertNotNull($this->_responseJsonBody->user->profile);
+        $this->assertNotNull($this->_responseJsonBody->user->role);
     }
 
-    /**
-     * @group AN
-     * @group recover
-     * @group recoverStart
-     */
-    public function testRecoverStartJson_NotFoundError_MissingUrlParameters()
+    public function testRecoverStartController_Error_NotGuest(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
+
+        $userId = $user->id;
+
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->userId($userId)
+            ->persist();
+
+        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(403);
+    }
+
+    public function testRecoverStartController_Error_MissingUrlParameters(): void
     {
         $fails = [
             'no parameter given' => '/setup/recover/nope.json',
@@ -67,12 +77,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         }
     }
 
-    /**
-     * @group AN
-     * @group recover
-     * @group recoverStart
-     */
-    public function testRecoverStartJson_BadRequestError_InvalidParameters()
+    public function testRecoverStartController_Error_InvalidParameters(): void
     {
         $fails = [
             'user not a uuid' => '/setup/recover/start/nope/nope.json',
@@ -88,12 +93,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         }
     }
 
-    /**
-     * @group AN
-     * @group setup
-     * @group recoverStart
-     */
-    public function testRecoverStartJson_BadRequestError_UserInactive()
+    public function testRecoverStartController_Error_UserInactive(): void
     {
         $userId = UserFactory::make()->inactive()->persist()->id;
         $token = UuidFactory::uuid();
@@ -103,12 +103,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('The user does not exist or is not active.');
     }
 
-    /**
-     * @group AN
-     * @group setup
-     * @group recoverStart
-     */
-    public function testRecoverStartJson_BadRequestError_UserNotExist()
+    public function testRecoverStartController_Error_UserNotExist(): void
     {
         $userId = UuidFactory::uuid();
         $token = UuidFactory::uuid();
@@ -118,12 +113,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('The user does not exist or is not active.');
     }
 
-    /**
-     * @group AN
-     * @group setup
-     * @group recoverStart
-     */
-    public function testRecoverStart_BadRequestError_UserDeleted()
+    public function testRecoverStartController_Error_UserDeleted(): void
     {
         $userId = UserFactory::make()->deleted()->persist()->id;
         $token = UuidFactory::uuid();
@@ -133,12 +123,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('The user does not exist or is not active.');
     }
 
-    /**
-     * @group AN
-     * @group setup
-     * @group recoverStart
-     */
-    public function testRecoverStart_BadRequestError_TokenDoesntExist()
+    public function testRecoverStartController_Error_TokenDoesntExist(): void
     {
         $userId = UserFactory::make()->active()->persist()->id;
         $token = UuidFactory::uuid();
@@ -148,12 +133,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('The authentication token is not valid.');
     }
 
-    /**
-     * @group AN
-     * @group setup
-     * @group recoverStart
-     */
-    public function testRecoverStart_BadRequestError_WrongTokenType()
+    public function testRecoverStartController_Error_WrongTokenType(): void
     {
         $userId = UserFactory::make()->active()->persist()->id;
         $t = AuthenticationTokenFactory::make()
@@ -167,12 +147,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('The authentication token is not valid.');
     }
 
-    /**
-     * @group AN
-     * @group setup
-     * @group recoverStart
-     */
-    public function testRecoverStart_BadRequestError_TokenAlreadyConsumed()
+    public function testRecoverStartController_Error_TokenAlreadyConsumed(): void
     {
         $userId = UserFactory::make()->active()->persist()->id;
         $t = AuthenticationTokenFactory::make()
@@ -186,12 +161,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('The authentication token is not valid.');
     }
 
-    /**
-     * @group AN
-     * @group setup
-     * @group recoverStart
-     */
-    public function testRecoverStart_BadRequestError_TokenExpired()
+    public function testRecoverStartController_Error_TokenExpired(): void
     {
         $userId = UserFactory::make()->active()->persist()->id;
         $t = AuthenticationTokenFactory::make()
@@ -209,12 +179,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $this->assertEquals('The token is expired.', $error['expired']);
     }
 
-    /**
-     * @group AN
-     * @group setup
-     * @group recoverStart
-     */
-    public function testRecoverStartJson_Success()
+    public function testRecoverStartController_HTML_Success(): void
     {
         $userId = UserFactory::make()->active()->persist()->id;
         $t = AuthenticationTokenFactory::make()
@@ -222,10 +187,24 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($userId)
             ->persist();
-        $url = "/setup/recover/{$userId}/{$t->token}.json";
-        $this->getJson($url);
+        $url = "/setup/recover/{$userId}/{$t->token}";
+        $this->get($url);
         $this->assertResponseOk();
-        $this->assertNotNull($this->_responseJsonBody->user);
-        $this->assertUserAttributes($this->_responseJsonBody->user);
+    }
+
+    public function testRecoverStartController_HTML_Error_MissingUrlParameters(): void
+    {
+        $fails = [
+            'no parameter given' => '/setup/recover/nope',
+            // Add when legacy urls removed (/setup/recover/nope/nope get called instead of 404)
+            //'only one parameter given' => '/setup/recover/start/' . UuidFactory::uuid(),
+            'no parameter given on legacy url' => '/setup/recover',
+            'only one parameter given on legacy url' => '/setup/recover/' . UuidFactory::uuid(),
+        ];
+        foreach ($fails as $case => $url) {
+            $this->get($url);
+            $this->assertResponseCode(404, 'Setup start should fail with 404 on case: ' . $case);
+            $this->_response = null; // Free the memory usage.
+        }
     }
 }
