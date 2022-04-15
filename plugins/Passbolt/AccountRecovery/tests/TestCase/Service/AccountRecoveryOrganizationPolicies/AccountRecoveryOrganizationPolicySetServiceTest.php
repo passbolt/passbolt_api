@@ -965,11 +965,12 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         $this->startScenarioOptinWithBackupAndRequest();
 
         $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
+        $newKeyFingerprintClean = '23C6C30E241324C90A44A719A86A7EA3739797F5';
         $newKeyFingerprint = '23c6 c30e 2413 24c9 0a44  a719 a86a 7ea3 7397 97f5';
 
         $gpg = OpenPGPBackendFactory::get();
         $gpg->importKeyIntoKeyring($newKeyArmored);
-        $gpg->setEncryptKeyFromFingerprint($newKeyFingerprint);
+        $gpg->setEncryptKeyFromFingerprint($newKeyFingerprintClean);
 
         $data = [
             'policy' => 'opt-out',
@@ -1202,7 +1203,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         $this->startScenarioOptinWithBackupAndRequest();
 
         $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
-        $newKeyFingerprint = '23c6 c30e 2413 24c9 0a44  a719 a86a 7ea3 7397 97f5';
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
 
         $gpg = OpenPGPBackendFactory::get();
         $gpg->importKeyIntoKeyring($newKeyArmored);
@@ -1244,7 +1245,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         $this->startScenarioOptinWithBackupAndRequest();
 
         $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
-        $newKeyFingerprint = '23c6 c30e 2413 24c9 0a44  a719 a86a 7ea3 7397 97f5';
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
 
         $gpg = OpenPGPBackendFactory::get();
         $gpg->importKeyIntoKeyring($newKeyArmored);
@@ -1287,7 +1288,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
         $this->startScenarioOptinWithBackupAndRequest();
 
         $newKeyArmored = file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_2_public.key');
-        $newKeyFingerprint = '23c6 c30e 2413 24c9 0a44  a719 a86a 7ea3 7397 97f5';
+        $newKeyFingerprint = '23C6C30E241324C90A44A719A86A7EA3739797F5';
 
         $gpg = OpenPGPBackendFactory::get();
         $gpg->importKeyIntoKeyring($newKeyArmored);
