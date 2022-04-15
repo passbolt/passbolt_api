@@ -37,6 +37,7 @@ trait OpenPGPBackendGetKeyInfoTrait
      *  - sub_keys      : array of fingerprint, key_id
      *  - public_key_packet_counts : number of public key packets
      *  - secret_key_packet_counts : number of secret key packets
+     *  - armored       : the armored key block for future use
      *
      * Important note : this function is using OpenPGP-PHP library instead of php-gnupg to pre-validate the key.
      * And get more data out of the key packages
@@ -123,6 +124,8 @@ trait OpenPGPBackendGetKeyInfoTrait
         if (!isset($results['uid'])) {
             throw new Exception(__('Invalid key. No user ID found.'));
         }
+
+        $results['armored'] = $armoredKey;
 
         return $results;
     }
