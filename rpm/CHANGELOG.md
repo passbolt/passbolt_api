@@ -25,6 +25,36 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-13158 As AD I should see a tip with proper directory permissions when the JWT assets healthcheck fails
 - PB-12835 Move users setup/recover/register controllers logic into services to welcome the upcoming account recovery feature
 
+* [3.5.0-2] Wed Apr 13 2022 Gerold Mougenel <gerold@passbolt.com>
+- PB-13923 Update the repository key to sign packages
+- PB-13749 Update firewalld install check
+- PB-13743 Fix bad condition logic so setup firewalld
+- PB-13650 Delete jwt folder only while uninstalling
+- PB-13783 Update selinux policy RPM package
+
+* [3.5.0-1] Tue Jan 18 2022 Daniel Del Rio <daniel@passbolt.com>
+- PB-13161 As LU I should be able to use passbolt with my Android mobile
+- PB-13161 As LU I should be able to use passbolt with my IOS mobile
+- PB-5967 As AD I can use passbolt with a PostgreSQL database provider [experimental]
+- PB-5967 As AD I can migrate an existing instance to PostgreSQL with the help of the command line [experimental] and MySQL to Postgres migration tools, e.g. as described here: https://pgloader.readthedocs.io and here: https://pgloader.io/.
+- PB-8513 As LU I can request gpg keys using pagination
+- PB-13321 As a user I can use passbolt in Dutch
+- PB-13321 As a user I can use passbolt in Japanese
+- PB-13321 As a user I can use passbolt in Polish
+- PB-12817 As LU I can import avatars having a jpeg extension
+- PB-12943 As AD I should be able to see log when a user tries to sign-in with an invalid bearer token
+- PB-12888 Improve performances of the operations requiring permissions accesses by replacing the single index on type by a combined index involving the requested columns
+- PB-13177 As AD I should be able to see any gpg keys errors from the healthcheck
+- PB-13183 As LU I should be able create resource having a name or a username of 255 characters long
+- PB-13265 As AD I can create a JWT key pair even if the database is not set
+- PB-13164 As AD I can cleanup duplicate entries in the favorites tables, groups_users and permissions
+- PB-13217 PBL-06-011 Fix ACL on mobile transfer view controller
+- PB-9887 Fix as AD I can send email digest from the /bin/cron script
+- PB-12957 Fix multiple language issues reported by community
+- PB-12914 Fix as a group manager I should not get multiple notifications when a group is updated
+- PB-13158 As AD I should see a tip with proper directory permissions when the JWT assets healthcheck fails
+- PB-12835 Move users setup/recover/register controllers logic into services to welcome the upcoming account recovery feature
+
 * [3.4.0-3] Mon Dec 27 2021 Gerold Mougenel <gerold@passbolt.com>
 - PB-12958 Fix RPM package, add https before fullbaseurl
 
