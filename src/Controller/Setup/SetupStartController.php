@@ -17,9 +17,11 @@ declare(strict_types=1);
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use App\Service\Setup\SetupStartServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\ForbiddenException;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -49,6 +51,11 @@ class SetupStartController extends AppController
      */
     public function start(SetupStartServiceInterface $infoService, string $userId, string $token): void
     {
+        // Do not allow logged in user to start setup
+        if ($this->User->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('Only guest are allowed to start setup.'));
+        }
+
         if ($this->request->is('json')) {
             $data = $infoService->getInfo($userId, $token);
             $this->success(__('The operation was successful.'), $data);

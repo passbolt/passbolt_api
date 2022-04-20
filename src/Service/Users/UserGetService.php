@@ -57,7 +57,7 @@ class UserGetService
             $where = [$this->Users->aliasField('id') => $userId];
             $contain = ['Roles', 'Profiles' => AvatarsTable::addContainAvatar()];
             /** @var \App\Model\Entity\User $userEntity */
-            $userEntity = $this->Users->find()->where($where)->contain($contain)->firstOrFail();
+            $userEntity = $this->Users->find('locale')->where($where)->contain($contain)->firstOrFail();
         } catch (RecordNotFoundException $exception) {
             throw new NotFoundException(__('The user does not exist.'));
         }

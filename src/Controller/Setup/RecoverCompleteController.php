@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use App\Service\Setup\RecoverCompleteServiceInterface;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\ForbiddenException;
 
 class RecoverCompleteController extends AppController
 {
@@ -53,6 +55,11 @@ class RecoverCompleteController extends AppController
      */
     public function complete(RecoverCompleteServiceInterface $recoverCompleteService, string $userId)
     {
+        // Do not allow logged in user to complete setup
+        if ($this->User->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('Only guest are allowed to complete setup.'));
+        }
+
         $recoverCompleteService->complete($userId);
 
         $this->success(__('The recovery was completed successfully.'));
