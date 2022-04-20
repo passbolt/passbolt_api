@@ -20,8 +20,8 @@
 
 .build-passbolt-rpm-package: &build-passbolt-rpm-package |
   rpmdev-setuptree
-  PKG_VERSION=$(jq -r '.version' package.json) \
-  PASSBOLT_VERSION=$(jq -r '.version' package.json) \
+  PKG_VERSION=$(cat rpm/CHANGELOG.md | awk 'match($0, /\[([0-9]+\.[0-9]+\.[0-9]+)\]?/) {print substr($0, RSTART, RLENGTH);exit}' | tr -d "[]")
+  PASSBOLT_PKG_VERSION=$(cat rpm/CHANGELOG.md | awk 'match($0, /\[([0-9]+\.[0-9]+\.[0-9]+\-[0-9])\]?/) {print substr($0, RSTART, RLENGTH);exit}' | awk -F "-" '{print $2}' | tr -d "[]")
   /bin/sh rpm/scripts/build-passbolt-server.sh
   cp ~/rpmbuild/RPMS/noarch/passbolt-* .
 
