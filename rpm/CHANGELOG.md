@@ -28,6 +28,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * [3.5.0-3] Fri Apr 29 2022 Gerold Mougenel <gerold@passbolt.com>
 - PB-15039 fixing repomd.xml signing issues
 
+<<<<<<< HEAD
 * [3.5.0-3] Fri Apr 29 2022 Gerold Mougenel <gerold@passbolt.com>
 - PB-15039 fixing repomd.xml signing issues
 
@@ -87,3 +88,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-9310 Move avatar file_storage logic into AvatarsTable
 - PB-9785 Update JWT healthcheck help messages
 - PB-9656 Migrate fields from utf8mb4 to a more performant encoding when possible
+=======
+## [3.5.0-3] - 2021-11-25
+### Added
+- First version
+
+## [3.3.1] - 2021-11-25
+### Added
+- First version
+>>>>>>> 75a61711c3 (Changed: PB-14947 CI rpm package version retrieving)
