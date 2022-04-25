@@ -32,6 +32,8 @@ build-debian:
   extends: .rules
   image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/debian-bullseye-11-slim:latest
   stage: package-build
+  variables:
+    PASSBOLT_COMPONENT: stable
   dependencies:
     - composer
   artifacts:
@@ -46,13 +48,14 @@ build-debian:
     - |
       apt-get update
       apt-get install -y git-buildpackage devscripts apt-utils debconf-utils fakeroot equivs cdbs
-      make -f debian/rules debian/control
       if [[ ! -z $NIGHTLY || $CI_COMMIT_BRANCH =~ ^(develop|feature\/debian\_*) ]]; then
+        export PASSBOLT_COMPONENT=testing
         gbp dch --snapshot --snapshot-number=$(date +%s) --ignore-branch
       fi
+      make -f debian/rules debian/control
       mk-build-deps -irt'apt-get --no-install-recommends -yV' debian/control
       dpkg-checkbuilddeps
-      debuild --preserve-envvar PASSBOLT_FLAVOUR -us -uc -b -i -I
+      debuild --preserve-envvar PASSBOLT_FLAVOUR --preserve-envvar PASSBOLT_COMPONENT -us -uc -b -i -I
       cp ../*.deb .
       cp ../*.build .
       cp ../*.buildinfo .
@@ -70,7 +73,7 @@ debian-testing:
   extends: .publish
   variables:
     DISTRIBUTION: buster
-    COMPONENT: testing
+    PASSBOLT_COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/debian
     NIGHTLY: "true"
   rules:
@@ -81,7 +84,7 @@ debian-stable:
   extends: .publish
   variables:
     DISTRIBUTION: buster
-    COMPONENT: stable
+    PASSBOLT_COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/debian
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
@@ -91,7 +94,7 @@ ubuntu-testing:
   extends: .publish
   variables:
     DISTRIBUTION: focal
-    COMPONENT: testing
+    PASSBOLT_COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
     NIGHTLY: "true"
   rules:
@@ -102,7 +105,7 @@ ubuntu-stable:
   extends: .publish
   variables:
     DISTRIBUTION: focal
-    COMPONENT: stable
+    PASSBOLT_COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
