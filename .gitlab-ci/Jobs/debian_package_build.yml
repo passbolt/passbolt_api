@@ -70,7 +70,7 @@ debian-testing:
   extends: .publish
   variables:
     DISTRIBUTION: buster
-    COMPONENT: testing
+    PASSBOLT_COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/debian
     NIGHTLY: "true"
   rules:
@@ -81,7 +81,7 @@ debian-stable:
   extends: .publish
   variables:
     DISTRIBUTION: buster
-    COMPONENT: stable
+    PASSBOLT_COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/debian
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
@@ -91,7 +91,7 @@ ubuntu-testing:
   extends: .publish
   variables:
     DISTRIBUTION: focal
-    COMPONENT: testing
+    PASSBOLT_COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
     NIGHTLY: "true"
   rules:
@@ -102,7 +102,7 @@ ubuntu-stable:
   extends: .publish
   variables:
     DISTRIBUTION: focal
-    COMPONENT: stable
+    PASSBOLT_COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
