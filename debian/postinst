@@ -45,7 +45,6 @@ PASSBOLT_SSL_CERT_PATH="/etc/ssl/certs"
 PASSBOLT_SSL_KEY_PATH="/etc/ssl/private"
 RAND_ID="$(date +%s)"
 DISTRONAME=$(grep -E "^ID=" /etc/os-release | awk -F= '{print $2}')
-CODENAME=$(grep -E "^VERSION_CODENAME=" /etc/os-release | awk -F= '{print $2}' || true)
 PASSBOLT_FLAVOUR=@PASSBOLT_FLAVOUR@
 PASSBOLT_COMPONENT=@PASSBOLT_COMPONENT@
 PASSBOLT_FINGERPRINT="3D1A0346C8E1802F774AEF21DE8B853FC155581D"
@@ -259,6 +258,22 @@ set_jwt_keys() {
   fi
 }
 
+set_codename() {
+  if [ -f /etc/debian_version ]
+  then
+      CODENAME=$(grep -E "^VERSION_CODENAME=" /etc/os-release | awk -F= '{print $2}' || true)
+      # We use buster debian package for bullseye
+      if [ "${CODENAME}" = "bullseye" ]
+      then
+          CODENAME="buster"
+      fi
+    fi
+}
+
+create_gnupg_directory() {
+  mkdir -p /root/.gnupg
+}
+
 remove_deprecated_apt_key() {
   gpg --no-default-keyring --keyring=/etc/apt/trusted.gpg --batch --yes --delete-key ${PASSBOLT_FINGERPRINT}
 }
@@ -303,6 +318,8 @@ case "$deb_action" in
 
     # Run the migrations process on upgrade
     if is_upgrade; then
+      set_codename
+      create_gnupg_directory
       remove_deprecated_apt_key
       remove_deprecated_repo_list
       set_new_repo_list
