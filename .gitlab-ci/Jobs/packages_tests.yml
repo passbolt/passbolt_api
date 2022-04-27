@@ -61,13 +61,6 @@ debian-bullseye-runtime:
   variables:
     KITCHEN_JOB: runtime-benchmarks-debian-bullseye
 
-ubuntu-1804-runtime:
-  extends: .kitchen-test-debian
-  needs: ["ubuntu-1804-break"]
-  allow_failure: true
-  variables:
-    KITCHEN_JOB: runtime-benchmarks-ubuntu-1804
-
 ubuntu-2004-runtime:
   extends: .kitchen-test-debian
   needs: ["ubuntu-2004-break"]
@@ -127,13 +120,6 @@ debian-bullseye-break:
   needs: ["debian-bullseye-purge"]
   variables:
     KITCHEN_JOB: break-benchmarks-debian-bullseye
-
-ubuntu-1804-break:
-  extends: .kitchen-test-debian
-  needs: ["ubuntu-1804-purge"]
-  allow_failure: true
-  variables:
-    KITCHEN_JOB: break-benchmarks-ubuntu-1804
 
 ubuntu-2004-break:
   extends: .kitchen-test-debian
@@ -195,13 +181,6 @@ debian-bullseye-purge:
   variables:
     KITCHEN_JOB: purge-benchmarks-debian-bullseye
 
-ubuntu-1804-purge:
-  extends: .kitchen-test-debian
-  needs: ["ubuntu-1804-fs"]
-  allow_failure: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-ubuntu-1804
-
 ubuntu-2004-purge:
   extends: .kitchen-test-debian
   needs: ["ubuntu-2004-fs"]
@@ -261,13 +240,6 @@ debian-bullseye-purge:
   needs: ["debian-bullseye-fs"]
   variables:
     KITCHEN_JOB: purge-benchmarks-debian-bullseye
-
-ubuntu-1804-purge:
-  extends: .kitchen-test-debian
-  needs: ["ubuntu-1804-fs"]
-  allow_failure: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-ubuntu-1804
 
 ubuntu-2004-purge:
   extends: .kitchen-test-debian
@@ -330,12 +302,6 @@ debian-bullseye-fs:
     - composer
   variables:
     KITCHEN_JOB: filesystem-benchmarks-debian-bullseye
-
-ubuntu-1804-fs:
-  extends: .kitchen-test-debian
-  allow_failure: true
-  variables:
-    KITCHEN_JOB: filesystem-benchmarks-ubuntu-1804
 
 ubuntu-2004-fs:
   extends: .kitchen-test-debian

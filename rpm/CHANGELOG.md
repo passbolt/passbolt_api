@@ -2,11 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-* [3.5.0-2] WED Apr 13 2022 Gerold Mougenel <gerold@passbolt.com>
-- PB-13743 Fix bad condition in passbolt_configure script
+* [3.5.0-2] Wed Apr 13 2022 Gerold Mougenel <gerold@passbolt.com>
+- PB-13923 Update the repository key to sign packages
 - PB-13749 Update firewalld install check
+- PB-13743 Fix bad condition logic so setup firewalld
+- PB-13650 Delete jwt folder only while uninstalling
+- PB-13783 Update selinux policy RPM package
 
-* [3.5.0-1] TUE Jan 18 2021 Daniel Del Rio <daniel@passbolt.com>
+* [3.5.0-1] Tue Jan 18 2022 Daniel Del Rio <daniel@passbolt.com>
 - PB-13161 As LU I should be able to use passbolt with my Android mobile
 - PB-13161 As LU I should be able to use passbolt with my IOS mobile
 - PB-5967 As AD I can use passbolt with a PostgreSQL database provider [experimental]
