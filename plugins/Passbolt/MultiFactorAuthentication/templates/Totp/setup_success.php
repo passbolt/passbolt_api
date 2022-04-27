@@ -13,9 +13,9 @@
 ?>
 <div class="grid grid-responsive-12">
     <div class="row">
-        <div class="col7 last">
+        <div class="col7 main-column">
             <h3><?= $title; ?></h3>
-            <div class="success success-large message animated">
+            <div class="feedback-card">
                 <?= $this->element('successMark'); ?>
                 <div class="additional-information">
                     <p>
