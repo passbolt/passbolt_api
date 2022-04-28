@@ -49,6 +49,7 @@ PASSBOLT_FLAVOUR=@PASSBOLT_FLAVOUR@
 PASSBOLT_COMPONENT=@PASSBOLT_COMPONENT@
 PASSBOLT_FINGERPRINT="3D1A0346C8E1802F774AEF21DE8B853FC155581D"
 PASSBOLT_KEYRING_FILE="/usr/share/keyrings/passbolt-repository.gpg"
+GNUPG_DIRECTORY="/root/.gnupg"
 ###########################################
 # Functions to debug debconf responses
 ###########################################
@@ -271,11 +272,12 @@ set_codename() {
 }
 
 create_gnupg_directory() {
-  mkdir -p /root/.gnupg
+  mkdir -p ${GNUPG_DIRECTORY}
+  chmod 700 ${GNUPG_DIRECTORY}
 }
 
 remove_deprecated_apt_key() {
-  gpg --no-default-keyring --keyring=/etc/apt/trusted.gpg --batch --yes --delete-key ${PASSBOLT_FINGERPRINT}
+  gpg --no-default-keyring --keyring=/etc/apt/trusted.gpg --batch --yes --delete-key ${PASSBOLT_FINGERPRINT} || true
 }
 
 remove_deprecated_repo_list() {

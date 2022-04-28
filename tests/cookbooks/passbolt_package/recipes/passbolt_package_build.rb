@@ -105,7 +105,7 @@ if platform_family?('debian')
                && make -f debian/rules debian/control \
                && gbp dch --snapshot --snapshot-number=$(date +%s) --ignore-branch \
                && mk-build-deps -irt'apt-get --no-install-recommends -yV' debian/control && dpkg-checkbuilddeps \
-               && debuild --preserve-envvar PASSBOLT_FLAVOUR -us -uc -b -i -I  \
+               && debuild --preserve-envvar PASSBOLT_FLAVOUR --preserve-envvar PASSBOLT_COMPONENT -us -uc -b -i -I  \
                && cp ../*.deb . \
                && cp ../*.build . \
                && cp ../*.buildinfo . \
