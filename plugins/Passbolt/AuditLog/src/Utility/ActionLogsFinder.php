@@ -176,8 +176,9 @@ class ActionLogsFinder
     {
         $q = $this->ActionLogs
             ->find()
-            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->select(['ActionLogs__id' => 'ActionLogs.id', 'Actions__name' => 'Actions.name'])
             ->contain(['EntitiesHistory.PermissionsHistory'])
+            ->innerJoinWith('Actions')
             ->innerJoinWith('EntitiesHistory.PermissionsHistory')
             ->contain(['EntitiesHistory.PermissionsHistory.PermissionsHistoryResources'])
             ->innerJoinWith('EntitiesHistory.PermissionsHistory.PermissionsHistoryResources')
@@ -185,7 +186,7 @@ class ActionLogsFinder
                 'PermissionsHistoryResources.id' => $resourceId,
                 'ActionLogs.status' => 1,
             ])
-            ->group('ActionLogs.id');
+            ->group(['ActionLogs.id', 'Actions.name']);
 
         return $q;
     }
@@ -200,14 +201,15 @@ class ActionLogsFinder
     {
         $q = $this->ActionLogs
             ->find()
-            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->select(['ActionLogs__id' => 'ActionLogs.id', 'Actions__name' => 'Actions.name'])
             ->contain(['EntitiesHistory.Resources'])
+            ->innerJoinWith('Actions')
             ->innerJoinWith('EntitiesHistory.Resources')
             ->where([
                 'Resources.id' => $resourceId,
                 'ActionLogs.status' => 1,
             ])
-            ->group('ActionLogs.id');
+            ->group(['ActionLogs.id', 'Actions.name']);
 
         return $q;
     }
@@ -222,14 +224,15 @@ class ActionLogsFinder
     {
         $q = $this->ActionLogs
             ->find()
-            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->select(['ActionLogs__id' => 'ActionLogs.id', 'Actions__name' => 'Actions.name'])
             ->contain(['EntitiesHistory.SecretAccesses'])
+            ->innerJoinWith('Actions')
             ->innerJoinWith('EntitiesHistory.SecretAccesses')
             ->where([
                 'SecretAccesses.resource_id' => $resourceId,
                 'ActionLogs.status' => 1,
             ])
-            ->group('ActionLogs.id');
+            ->group(['ActionLogs.id', 'Actions.name']);
 
         return $q;
     }
@@ -244,8 +247,9 @@ class ActionLogsFinder
     {
         $q = $this->ActionLogs
             ->find()
-            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->select(['ActionLogs__id' => 'ActionLogs.id', 'Actions__name' => 'Actions.name'])
             ->contain(['EntitiesHistory.SecretsHistory'])
+            ->innerJoinWith('Actions')
             ->innerJoinWith('EntitiesHistory.SecretsHistory')
             ->contain(['EntitiesHistory.SecretsHistory.SecretsHistoryResources'])
             ->innerJoinWith('EntitiesHistory.SecretsHistory.SecretsHistoryResources')
@@ -253,7 +257,7 @@ class ActionLogsFinder
                 'SecretsHistoryResources.id' => $resourceId,
                 'ActionLogs.status' => 1,
             ])
-            ->group('ActionLogs.id');
+            ->group(['ActionLogs.id', 'Actions.name']);
 
         return $q;
     }
