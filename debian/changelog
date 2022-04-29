@@ -1,3 +1,8 @@
+passbolt-pro-server (3.5.0-3) buster; urgency=medium
+  * PB-14959 updating the pull key logic in debian postinst
+
+ -- Gerold Mougenel <gerold@passbolt.com>  Fri, 29 Apr 2022 14:30:00 +0000
+
 passbolt-pro-server (3.5.0-2) buster; urgency=medium
   * PB-13923 Update the repository key to sign packages
   * PB-13749 Update firewalld install check
