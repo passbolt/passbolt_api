@@ -69,5 +69,6 @@ debian/control: debian/control.in check_env
 	# ${file%.*} stripes the extension from the file name
 	for file in $(PREPARE_FILES); do cat debian/$$file > debian/passbolt-$(PASSBOLT_FLAVOUR)-server.$${file%.*}; done
 	for file in $(PATCHES_FILES); do sed -i "s/@PASSBOLT_FLAVOUR@/$(PASSBOLT_FLAVOUR)/g" $$file; done
+	for file in $(PATCHES_FILES); do sed -i "s/@PASSBOLT_COMPONENT@/$(PASSBOLT_COMPONENT)/g" $$file; done
 
 .PHONY: debian/control check_env
