@@ -103,7 +103,10 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
             ->allowEmptyString('public_key_id', __('The public key identifier should not be empty.'));
 
         $validator
-            ->uuid('created_by', __('The identifier of the user who created the organization policy should be a valid UUID.'))
+            ->uuid(
+                'created_by',
+                __('The identifier of the user who created the organization policy should be a valid UUID.')
+            )
             ->requirePresence(
                 'created_by',
                 'create',
@@ -116,7 +119,10 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
             );
 
         $validator
-            ->uuid('modified_by', __('The identifier of the user who modified the organization policy should be a valid UUID.'))
+            ->uuid(
+                'modified_by',
+                __('The identifier of the user who modified the organization policy should be a valid UUID.')
+            )
             ->requirePresence(
                 'modified_by',
                 'create',

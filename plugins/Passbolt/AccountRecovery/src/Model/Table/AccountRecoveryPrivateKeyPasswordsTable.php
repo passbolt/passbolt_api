@@ -112,7 +112,10 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator
-            ->uuid('created_by', __('The identifier of the user who created the private key passwords should be a valid UUID.'))
+            ->uuid(
+                'created_by',
+                __('The identifier of the user who created the private key passwords should be a valid UUID.')
+            )
             ->requirePresence(
                 'created_by',
                 'create',
@@ -125,7 +128,10 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
             );
 
         $validator
-            ->uuid('modified_by', __('The identifier of the user who modified the private key passwords should be a valid UUID.'))
+            ->uuid(
+                'modified_by',
+                __('The identifier of the user who modified the private key passwords should be a valid UUID.')
+            )
             ->requirePresence(
                 'modified_by',
                 'create',

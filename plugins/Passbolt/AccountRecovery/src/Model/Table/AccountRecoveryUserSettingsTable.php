@@ -114,7 +114,10 @@ class AccountRecoveryUserSettingsTable extends Table
             );
 
         $validator
-            ->uuid('created_by', __('The identifier of the user who created the user settings should be a valid UUID.'))
+            ->uuid(
+                'created_by',
+                __('The identifier of the user who created the user settings should be a valid UUID.')
+            )
             ->requirePresence(
                 'created_by',
                 'create',
@@ -127,7 +130,10 @@ class AccountRecoveryUserSettingsTable extends Table
             );
 
         $validator
-            ->uuid('modified_by', __('The identifier of the user who modified the user settings should be a valid UUID.'))
+            ->uuid(
+                'modified_by',
+                __('The identifier of the user who modified the user settings should be a valid UUID.')
+            )
             ->requirePresence(
                 'modified_by',
                 'create',

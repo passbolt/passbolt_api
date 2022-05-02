@@ -101,7 +101,10 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
             ->allowEmptyDateTime('deleted');
 
         $validator
-            ->uuid('created_by', __('The identifier of the user who created the organization public key should be a valid UUID.'))
+            ->uuid(
+                'created_by',
+                __('The identifier of the user who created the organization public key should be a valid UUID.')
+            )
             ->requirePresence(
                 'created_by',
                 'create',
@@ -114,7 +117,10 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
             );
 
         $validator
-            ->uuid('modified_by', __('The identifier of the user who modified the organization public key should be a valid UUID.'))
+            ->uuid(
+                'modified_by',
+                __('The identifier of the user who modified the organization public key should be a valid UUID.')
+            )
             ->requirePresence(
                 'modified_by',
                 'create',
