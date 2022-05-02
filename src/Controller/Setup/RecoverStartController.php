@@ -51,12 +51,11 @@ class RecoverStartController extends AppController
      */
     public function start(RecoverStartServiceInterface $infoService, string $userId, string $token): void
     {
-        // Do not allow logged in user to recover
-        if ($this->User->role() !== Role::GUEST) {
-            throw new ForbiddenException(__('Only guest are allowed to proceed with account recovery.'));
-        }
-
         if ($this->request->is('json')) {
+            // Do not allow logged in user to recover
+            if ($this->User->role() !== Role::GUEST) {
+                throw new ForbiddenException(__('Only guest are allowed to proceed with account recovery.'));
+            }
             $data = $infoService->getInfo($userId, $token);
             $this->success(__('The operation was successful.'), $data);
         } else {
