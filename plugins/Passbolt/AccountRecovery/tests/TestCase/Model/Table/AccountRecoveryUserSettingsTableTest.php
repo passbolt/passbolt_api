@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Test\TestCase\Model\Table;
 
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Utility\CleanupTrait;
 use Cake\TestSuite\TestCase;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 
@@ -12,6 +13,8 @@ use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
  */
 class AccountRecoveryUserSettingsTableTest extends TestCase
 {
+    use CleanupTrait;
+
     /**
      * Test subject
      *
@@ -53,7 +56,7 @@ class AccountRecoveryUserSettingsTableTest extends TestCase
         $entity = $this->AccountRecoveryUserSettings->newEntity($data);
         $this->assertTrue($entity->hasErrors());
         $this->assertSame(
-            ['_empty' => 'This field cannot be left empty'],
+            ['_empty' => 'The status should not be empty'],
             $entity->getError('status')
         );
     }
@@ -177,5 +180,26 @@ class AccountRecoveryUserSettingsTableTest extends TestCase
             $entity->getError('user_id')
         );
         $this->assertSame(1, AccountRecoveryUserSettingFactory::count());
+    }
+
+    public function testAccountRecoveryUserSettingsTable_CleanupSecretsSoftDeletedUsersSuccess()
+    {
+        $user = UserFactory::make()->user()->deleted()->persist();
+        AccountRecoveryUserSettingFactory::make()
+            ->setField('user_id', $user->id)
+            ->persist();
+
+        $this->assertEquals(1, UserFactory::count());
+        $this->assertEquals(1, AccountRecoveryUserSettingFactory::count());
+        $this->runCleanupChecks('Passbolt/AccountRecovery.AccountRecoveryUserSettings', 'cleanupSoftDeletedUsers', 0);
+    }
+
+    public function testAccountRecoveryUserSettingsTable_CleanupSecretsHardDeletedUsersSuccess()
+    {
+        AccountRecoveryUserSettingFactory::make()->persist();
+
+        $this->assertEquals(0, UserFactory::count());
+        $this->assertEquals(1, AccountRecoveryUserSettingFactory::count());
+        $this->runCleanupChecks('Passbolt/AccountRecovery.AccountRecoveryUserSettings', 'cleanupHardDeletedUsers', 0);
     }
 }

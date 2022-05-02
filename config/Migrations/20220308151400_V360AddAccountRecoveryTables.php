@@ -274,8 +274,7 @@ class V360AddAccountRecoveryTables extends AbstractMigration
                 'collation' => 'ascii_general_ci'
             ])
             ->addColumn('user_id', 'uuid', [
-                'default' => null,
-                'null' => true,
+                'null' => false,
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci'
             ])

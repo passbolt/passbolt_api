@@ -21,6 +21,8 @@ use App\Error\Exception\ValidationException;
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\User\IsActiveUserRule;
 use App\Model\Table\AvatarsTable;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
+use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
@@ -60,6 +62,9 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
  */
 class AccountRecoveryRequestsTable extends Table
 {
+    use TableCleanupTrait;
+    use UsersCleanupTrait;
+
     /**
      * Initialize method
      *
@@ -111,15 +116,25 @@ class AccountRecoveryRequestsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create')
+            ->notEmptyString('id', __('The identifier should not be empty.'), 'update');
 
         $validator
-            ->scalar('status')
-            ->inList('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_STATUSES)
-            ->maxLength('status', 36)
-            ->requirePresence('status', 'create')
-            ->notEmptyString('status');
+            ->scalar('status', __('The status should not be a valid string.'))
+            ->inList(
+                'status',
+                AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_STATUSES,
+                __('This status is not supported.')
+            )
+            ->maxLength('status', 36, __('The status length should be maximum {0} characters.', 36))
+            ->requirePresence('status', 'create', __('A status is required.'))
+            ->notEmptyString('status', __('The status should not be empty.'));
+
+        $validator
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
             ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
@@ -135,14 +150,30 @@ class AccountRecoveryRequestsTable extends Table
             ->add('fingerprint', 'isMatchingKeyFingerprintRule', new IsMatchingKeyFingerprintValidationRule());
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by');
+            ->uuid('created_by', __('The identifier of the user who created the request should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the request is required.')
+            )
+            ->notEmptyString(
+                'created_by',
+                __('The identifier of the user who created the request should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by')
-            ->notEmptyString('modified_by');
+            ->uuid('modified_by', __('The identifier of the user who modified the request should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who modified the request is required.')
+            )
+            ->notEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the request should not be empty.'),
+                false
+            );
 
         return $validator;
     }

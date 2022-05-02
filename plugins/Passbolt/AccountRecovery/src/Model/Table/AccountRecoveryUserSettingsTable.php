@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
+use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Utility\UserAccessControl;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -46,7 +48,9 @@ use Passbolt\AccountRecovery\Model\Table\Traits\TableTruncateTrait;
  */
 class AccountRecoveryUserSettingsTable extends Table
 {
+    use TableCleanupTrait;
     use TableTruncateTrait;
+    use UsersCleanupTrait;
 
     /**
      * Initialize method
@@ -93,7 +97,12 @@ class AccountRecoveryUserSettingsTable extends Table
             ->notEmptyString('id', __('The identifier should not be empty.'), 'update');
 
         $validator
-            ->notEmptyString('status')
+            ->uuid('user_id', __('The user identifier should be a valid UUID.'))
+            ->requirePresence('user_id', 'create', __('A user identifier is required.'))
+            ->notEmptyString('user_id', __('The user identifier should not be empty.'));
+
+        $validator
+            ->notEmptyString('status', __('The status should not be empty'))
             ->requirePresence('status', true, __('A status is required.'))
             ->inList(
                 'status',
@@ -105,14 +114,30 @@ class AccountRecoveryUserSettingsTable extends Table
             );
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by');
+            ->uuid('created_by', __('The identifier of the user who created the user settings should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the user settings is required.')
+            )
+            ->notEmptyString(
+                'created_by',
+                __('The identifier of the user who created the user settings should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by')
-            ->notEmptyString('modified_by');
+            ->uuid('modified_by', __('The identifier of the user who modified the user settings should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who modified the user settings is required.')
+            )
+            ->notEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the user settings should not be empty.'),
+                false
+            );
 
         return $validator;
     }

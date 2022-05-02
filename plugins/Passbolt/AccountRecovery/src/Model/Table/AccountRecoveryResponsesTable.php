@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Core\Exception\Exception;
@@ -48,6 +49,8 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
  */
 class AccountRecoveryResponsesTable extends Table
 {
+    use TableCleanupTrait;
+
     /**
      * Initialize method
      *
@@ -94,42 +97,59 @@ class AccountRecoveryResponsesTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create')
+            ->notEmptyString('id', __('The identifier should not be empty.'), 'update');
 
         $validator
-            ->requirePresence('status', 'create')
-            ->notEmptyString('status')
-            ->scalar('status')
-            ->inList('status', AccountRecoveryResponse::STATUSES)
-            ->maxLength('status', 36);
+            ->scalar('status', __('The status should not be a valid string.'))
+            ->inList('status', AccountRecoveryResponse::STATUSES, __('This status is not supported.'))
+            ->maxLength('status', 36, __('The status length should be maximum {0} characters.', 36))
+            ->requirePresence('status', 'create', __('A status is required.'))
+            ->notEmptyString('status', __('The status should not be empty.'));
 
         $validator
-            ->notEmptyString('responder_foreign_key')
-            ->uuid('responder_foreign_key');
+            ->notEmptyString('responder_foreign_key', __('The responder_foreign_key should not be empty.'))
+            ->uuid('responder_foreign_key', __('The responder_foreign_key should be a valid UUID.'));
 
         $validator
-            ->scalar('responder_foreign_model')
+            ->scalar('responder_foreign_model', __('The responder_foreign_model should be a valid string.'))
             ->requirePresence('responder_foreign_model', 'create')
-            ->notEmptyString('responder_foreign_model')
+            ->notEmptyString('responder_foreign_model', __('The responder_foreign_model should not be empty.'))
             ->inList('responder_foreign_model', AccountRecoveryResponse::ALLOWED_RESPONDER_FOREIGN_MODELS, __(
                 'The responder_foreign_model must be one of the following: {0}.',
                 implode(', ', AccountRecoveryResponse::ALLOWED_RESPONDER_FOREIGN_MODELS)
             ));
 
         $validator
-            ->notEmptyString('data')
+            ->notEmptyString('data', __('The data should not be empty.'))
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by');
+            ->uuid('created_by', __('The identifier of the user who created the response should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the response is required.')
+            )
+            ->notEmptyString(
+                'created_by',
+                __('The identifier of the user who created the response should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by')
-            ->notEmptyString('modified_by');
+            ->uuid('modified_by', __('The identifier of the user who modified the response should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who modified the response is required.')
+            )
+            ->notEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the response should not be empty.'),
+                false
+            );
 
         return $validator;
     }
@@ -241,5 +261,16 @@ class AccountRecoveryResponsesTable extends Table
         }
 
         return $responseEntity;
+    }
+
+    /**
+     * Delete all records where associated responses are deleted
+     *
+     * @param bool|null $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupHardDeletedAccountRecoveryRequests(?bool $dryRun = false): int
+    {
+        return $this->cleanupHardDeleted('AccountRecoveryRequests', $dryRun);
     }
 }

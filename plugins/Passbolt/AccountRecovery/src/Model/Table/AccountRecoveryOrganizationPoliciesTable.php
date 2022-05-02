@@ -99,18 +99,34 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
             );
 
         $validator
-            ->uuid('public_key_id')
-            ->allowEmptyString('public_key_id');
+            ->uuid('public_key_id', __('The public key identifier should be a valid UUID.'))
+            ->allowEmptyString('public_key_id', __('The public key identifier should not be empty.'));
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by');
+            ->uuid('created_by', __('The identifier of the user who created the organization policy should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the organization policy is required.')
+            )
+            ->notEmptyString(
+                'created_by',
+                __('The identifier of the user who created the organization policy should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by')
-            ->notEmptyString('modified_by');
+            ->uuid('modified_by', __('The identifier of the user who modified the organization policy should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who modified the organization policy is required.')
+            )
+            ->notEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the organization policy should not be empty.'),
+                false
+            );
 
         return $validator;
     }

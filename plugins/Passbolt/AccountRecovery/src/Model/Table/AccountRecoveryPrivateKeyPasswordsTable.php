@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
@@ -50,6 +51,7 @@ use Passbolt\AccountRecovery\Model\Table\Traits\TableTruncateTrait;
  */
 class AccountRecoveryPrivateKeyPasswordsTable extends Table
 {
+    use TableCleanupTrait;
     use TableTruncateTrait;
 
     /**
@@ -84,8 +86,9 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create')
+            ->notEmptyString('id', __('The identifier should not be empty.'), 'update');
 
         $validator
             ->ascii('recipient_fingerprint', __('The fingerprint should be a valid ASCII string.'))
@@ -94,29 +97,45 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
             ->add('recipient_fingerprint', 'invalidFingerprint', new IsValidFingerprintValidationRule());
 
         $validator
-            ->scalar('recipient_foreign_model')
-            ->requirePresence('recipient_foreign_model', 'create')
-            ->notEmptyString('recipient_foreign_model')
+            ->scalar('recipient_foreign_model', __('The recipient_foreign_model should be a valid string.'))
+            ->requirePresence('recipient_foreign_model', 'create', __('The recipient_foreign_model must be provided.'))
+            ->notEmptyString('recipient_foreign_model', __('The recipient_foreign_model should not be empty.'))
             ->inList('recipient_foreign_model', AccountRecoveryPrivateKeyPassword::ALLOWED_RECIPIENT_FOREIGN_MODELS, __(
                 'The recipient_foreign_model must be one of the following: {0}.',
                 implode(', ', AccountRecoveryPrivateKeyPassword::ALLOWED_RECIPIENT_FOREIGN_MODELS)
             ));
 
         $validator
-            ->scalar('data')
-            ->requirePresence('data', 'create')
-            ->notEmptyString('data')
+            ->scalar('data', __('The data should be a valid string.'))
+            ->requirePresence('data', 'create', __('The data is required.'))
+            ->notEmptyString('data', __('The data should not be empty.'))
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by');
+            ->uuid('created_by', __('The identifier of the user who created the private key passwords should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the private key passwords is required.')
+            )
+            ->notEmptyString(
+                'created_by',
+                __('The identifier of the user who created the private key passwords should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by')
-            ->notEmptyString('modified_by');
+            ->uuid('modified_by', __('The identifier of the user who modified the private key passwords should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who modified the private key passwords is required.')
+            )
+            ->notEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the private key passwords should not be empty.'),
+                false
+            );
 
         return $validator;
     }
@@ -228,5 +247,16 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
         }
 
         return $passwordEntities;
+    }
+
+    /**
+     * Delete all records where associated private key are deleted
+     *
+     * @param bool|null $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupHardDeletedAccountRecoveryPrivateKeys(?bool $dryRun = false): int
+    {
+        return $this->cleanupHardDeleted('AccountRecoveryPrivateKeys', $dryRun);
     }
 }

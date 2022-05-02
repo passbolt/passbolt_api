@@ -80,7 +80,8 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
     {
         $validator
             ->uuid('id', __('The identifier should be a valid UUID.'))
-            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create');
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create')
+            ->notEmptyString('id', __('The identifier should not be empty.'), 'update');
 
         $validator
             ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
@@ -100,14 +101,30 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
             ->allowEmptyDateTime('deleted');
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by');
+            ->uuid('created_by', __('The identifier of the user who created the organization public key should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the organization public key is required.')
+            )
+            ->notEmptyString(
+                'created_by',
+                __('The identifier of the user who created the organization public key should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by')
-            ->notEmptyString('modified_by');
+            ->uuid('modified_by', __('The identifier of the user who modified the organization public key should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who modified the organization public key is required.')
+            )
+            ->notEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the organization public key should not be empty.'),
+                false
+            );
 
         return $validator;
     }

@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
+use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\ORM\RulesChecker;
@@ -48,7 +50,9 @@ use Passbolt\AccountRecovery\Model\Table\Traits\TableTruncateTrait;
  */
 class AccountRecoveryPrivateKeysTable extends Table
 {
+    use TableCleanupTrait;
     use TableTruncateTrait;
+    use UsersCleanupTrait;
 
     /**
      * Initialize method
@@ -82,8 +86,9 @@ class AccountRecoveryPrivateKeysTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->uuid('id')
-            ->allowEmptyString('id', null, 'create');
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->allowEmptyString('id', __('The identifier should not be empty.'), 'create')
+            ->notEmptyString('id', __('The identifier should not be empty.'), 'update');
 
         $validator
             ->uuid('user_id', __('The user identifier should be a valid UUID.'))
@@ -91,20 +96,36 @@ class AccountRecoveryPrivateKeysTable extends Table
             ->notEmptyString('user_id', __('The user identifier should not be empty.'));
 
         $validator
-            ->scalar('data')
-            ->requirePresence('data', 'create')
-            ->notEmptyString('data')
+            ->scalar('data', __('The data should be a valid string.'))
+            ->requirePresence('data', 'create', __('The data is required.'))
+            ->notEmptyString('data', __('The data should not be empty.'))
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator
-            ->uuid('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by');
+            ->uuid('created_by', __('The identifier of the user who created the private key  should be a valid UUID.'))
+            ->requirePresence(
+                'created_by',
+                'create',
+                __('The identifier of the user who created the private key  is required.')
+            )
+            ->notEmptyString(
+                'created_by',
+                __('The identifier of the user who created the private key  should not be empty.'),
+                false
+            );
 
         $validator
-            ->uuid('modified_by')
-            ->requirePresence('modified_by')
-            ->notEmptyString('modified_by');
+            ->uuid('modified_by', __('The identifier of the user who modified the private key  should be a valid UUID.'))
+            ->requirePresence(
+                'modified_by',
+                'create',
+                __('The identifier of the user who modified the private key is required.')
+            )
+            ->notEmptyString(
+                'modified_by',
+                __('The identifier of the user who modified the private key  should not be empty.'),
+                false
+            );
 
         return $validator;
     }
