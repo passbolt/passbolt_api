@@ -18,9 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Controller\AccountRecoveryContinue;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Validation\Validation;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestGetService;
 
@@ -60,6 +62,10 @@ class AccountRecoveryContinueController extends AppController
         }
 
         if ($this->getRequest()->is('json')) {
+            // Do not allow logged in user to recover
+            if ($this->User->role() !== Role::GUEST) {
+                throw new ForbiddenException(__('Only guest are allowed to proceed with account recovery.'));
+            }
             (new AccountRecoveryRequestGetService())->getOrFail($userId, $tokenId);
             $this->success(__('The operation was successful.'));
         } else {
