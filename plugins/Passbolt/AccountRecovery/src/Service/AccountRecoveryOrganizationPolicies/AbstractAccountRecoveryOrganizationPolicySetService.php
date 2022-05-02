@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
+use App\Service\OpenPGP\PublicKeyRevocationCheckService;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -267,6 +268,14 @@ class AbstractAccountRecoveryOrganizationPolicySetService
                         'invalidArmoredKey' => $exception->getMessage(),
                     ],
                 ],
+            ]);
+        }
+
+        // Check revocation cryptographically
+        // parseAndValidatePublicKey only do superficial signature check
+        if (!(new PublicKeyRevocationCheckService())->check($entity->armored_key)) {
+            throw new CustomValidationException(__('Could not validate key revocation.'), [
+                'account_recovery_organization_revoked_key' => __('Could not validate key revocation.'),
             ]);
         }
 
