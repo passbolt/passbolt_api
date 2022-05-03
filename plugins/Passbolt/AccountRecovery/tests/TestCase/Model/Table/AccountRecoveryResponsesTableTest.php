@@ -17,8 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Model\Table;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Utility\CleanupTrait;
 use Cake\ORM\TableRegistry;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryResponseFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 /**
@@ -26,6 +29,7 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
  */
 class AccountRecoveryResponsesTableTest extends AccountRecoveryTestCase
 {
+    use CleanupTrait;
     use FormatValidationTrait;
 
     /**
@@ -117,5 +121,14 @@ class AccountRecoveryResponsesTableTest extends AccountRecoveryTestCase
     public function testAccountRecoveryResponsesTable_Validation_ModifiedBy()
     {
         $this->markTestIncomplete();
+    }
+
+    public function testAccountRecoveryResponsesTable_CleanupSecretsHardDeleteRequestsSuccess()
+    {
+        AccountRecoveryResponseFactory::make()->persist();
+
+        $this->assertEquals(0, UserFactory::count());
+        $this->assertEquals(1, AccountRecoveryResponseFactory::count());
+        $this->runCleanupChecks('Passbolt/AccountRecovery.AccountRecoveryResponses', 'cleanupHardDeletedAccountRecoveryRequests', 0);
     }
 }

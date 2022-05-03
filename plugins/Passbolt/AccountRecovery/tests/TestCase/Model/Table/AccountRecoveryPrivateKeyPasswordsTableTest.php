@@ -17,7 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Model\Table;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Utility\CleanupTrait;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyPasswordFactory;
@@ -28,6 +30,7 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
  */
 class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCase
 {
+    use CleanupTrait;
     use FormatValidationTrait;
 
     /**
@@ -162,5 +165,14 @@ class AccountRecoveryPrivateKeyPasswordsTableTest extends AccountRecoveryTestCas
             $this->getDefaultOptions(),
             $testCases
         );
+    }
+
+    public function testAccountRecoveryPrivateKeyPasswordsTable_CleanupSecretsHardDeletedPrivateKeysSuccess()
+    {
+        AccountRecoveryPrivateKeyPasswordFactory::make()->persist();
+
+        $this->assertEquals(0, UserFactory::count());
+        $this->assertEquals(1, AccountRecoveryPrivateKeyPasswordFactory::count());
+        $this->runCleanupChecks('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords', 'cleanupHardDeletedAccountRecoveryPrivateKeys', 0);
     }
 }

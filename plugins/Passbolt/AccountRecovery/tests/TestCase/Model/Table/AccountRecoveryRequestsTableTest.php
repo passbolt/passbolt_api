@@ -17,8 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Test\TestCase\Model\Table;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Utility\CleanupTrait;
 use Cake\ORM\TableRegistry;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
 /**
@@ -26,6 +29,7 @@ use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
  */
 class AccountRecoveryRequestsTableTest extends AccountRecoveryTestCase
 {
+    use CleanupTrait;
     use FormatValidationTrait;
 
     /**
@@ -117,5 +121,26 @@ class AccountRecoveryRequestsTableTest extends AccountRecoveryTestCase
     public function testAccountRecoveryRequestsTable_Validation_ModifiedBy()
     {
         $this->markTestIncomplete();
+    }
+
+    public function testAccountRecoveryRequestsTable_CleanupSecretsSoftDeletedUsersSuccess()
+    {
+        $user = UserFactory::make()->user()->deleted()->persist();
+        AccountRecoveryRequestFactory::make()
+            ->setField('user_id', $user->id)
+            ->persist();
+
+        $this->assertEquals(1, UserFactory::count());
+        $this->assertEquals(1, AccountRecoveryRequestFactory::count());
+        $this->runCleanupChecks('Passbolt/AccountRecovery.AccountRecoveryRequests', 'cleanupSoftDeletedUsers', 0);
+    }
+
+    public function testAccountRecoveryRequestsTable_CleanupSecretsHardDeletedUsersSuccess()
+    {
+        AccountRecoveryRequestFactory::make()->persist();
+
+        $this->assertEquals(0, UserFactory::count());
+        $this->assertEquals(1, AccountRecoveryRequestFactory::count());
+        $this->runCleanupChecks('Passbolt/AccountRecovery.AccountRecoveryRequests', 'cleanupHardDeletedUsers', 0);
     }
 }
