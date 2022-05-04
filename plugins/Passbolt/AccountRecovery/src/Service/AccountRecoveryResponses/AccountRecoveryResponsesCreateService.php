@@ -82,9 +82,12 @@ class AccountRecoveryResponsesCreateService
         $requestEntity = $this->assertAndGetAssociatedRequest();
 
         $responseEntity = $this->buildAndValidateResponse($requestEntity);
-        $requestEntity = $this->patchAndValidateRequest($requestEntity, $responseEntity);
+        $requestEntity = $this->AccountRecoveryRequests->updateStatusAndValidateEntity(
+            $this->uac,
+            $requestEntity,
+            $responseEntity->status
+        );
         $responseEntity->account_recovery_request = $requestEntity;
-
         // Update original request with updated status
         $this->AccountRecoveryResponses->saveOrFail($responseEntity, compact('uac'));
 
@@ -209,22 +212,6 @@ class AccountRecoveryResponsesCreateService
         }
 
         return $responseEntity;
-    }
-
-    /**
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $requestEntity request entity
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $responseEntity response entity
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest
-     */
-    protected function patchAndValidateRequest(
-        AccountRecoveryRequest $requestEntity,
-        AccountRecoveryResponse $responseEntity
-    ): AccountRecoveryRequest {
-        $msg = __('The account recovery request is invalid.');
-        $requestEntity = $this->AccountRecoveryRequests
-            ->updateStatusAndValidateEntity($this->uac, $requestEntity, $responseEntity->status);
-
-        return $requestEntity;
     }
 
     /**
