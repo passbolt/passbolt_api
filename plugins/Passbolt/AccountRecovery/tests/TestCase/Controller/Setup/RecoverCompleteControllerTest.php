@@ -24,6 +24,8 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyOrganizationOnlyScenario;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class RecoverCompleteControllerTest extends AccountRecoveryIntegrationTestCase
 {
@@ -56,6 +58,11 @@ class RecoverCompleteControllerTest extends AccountRecoveryIntegrationTestCase
             ->approved()
             ->persist();
 
+        // With multifactor authentication enabled, the MFA token gets cleared
+        $isMFAEnabled = $this->isFeaturePluginEnabled('MultiFactorAuthentication');
+        $this->enableFeaturePlugin('MultiFactorAuthentication');
+        $this->loadFixtureScenario(MfaYubikeyOrganizationOnlyScenario::class);
+
         $url = '/setup/recover/complete/' . $user->id . '.json';
         $data = [
             'authenticationtoken' => [
@@ -77,5 +84,11 @@ class RecoverCompleteControllerTest extends AccountRecoveryIntegrationTestCase
         $this->assertTrue($updatedRequest->isCompleted());
         $this->assertSame($user->id, $updatedRequest->modified_by);
         $this->assertSame(1, AccountRecoveryRequestFactory::count());
+
+        // Check that the cookie was cleared
+        $this->assertCookieExpired(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        if (!$isMFAEnabled) {
+            $this->disableFeaturePlugin('MultiFactorAuthentication');
+        }
     }
 }
