@@ -25,6 +25,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-13158 As AD I should see a tip with proper directory permissions when the JWT assets healthcheck fails
 - PB-12835 Move users setup/recover/register controllers logic into services to welcome the upcoming account recovery feature
 
+* [3.5.0-3] Fri Apr 29 2022 Gerold Mougenel <gerold@passbolt.com>
+- PB-15039 fixing repomd.xml signing issues
+
 * [3.5.0-2] Wed Apr 13 2022 Gerold Mougenel <gerold@passbolt.com>
 - PB-13923 Update the repository key to sign packages
 - PB-13749 Update firewalld install check

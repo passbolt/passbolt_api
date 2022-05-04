@@ -23,7 +23,7 @@ else
 fi
 
 SCRIPT_DIR="$( cd "$( dirname "${0}" )" && pwd )"
-PKG_VERSION=$(jq -r '.version' package.json)
+PKG_VERSION=$(cat $SCRIPT_DIR/../CHANGELOG.md | awk 'match($0, /\[([0-9]+\.[0-9]+\.[0-9]+)\]?/) {print substr($0, RSTART, RLENGTH);exit}' | tr -d "[]")
 cd ${SCRIPT_DIR}/../..
 PASSBOLT_DIR=$(basename $PWD)
 
