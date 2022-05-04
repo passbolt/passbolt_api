@@ -105,7 +105,7 @@ build-suse:
   cp passbolt-*.rpm $COMPONENT/$PACKAGE_ARCH
   rpm --resign $COMPONENT/$PACKAGE_ARCH/*rpm
   createrepo --update $COMPONENT
-  echo "$(kms_decrypt $GPG_PASS | base64 -d)" | gpg --batch --yes --passphrase-fd 0 --detach-sign --armor testing/repodata/repomd.xml
+  echo "$(kms_decrypt $GPG_PASS | base64 -d)" | gpg --batch --yes --passphrase-fd 0 --detach-sign --armor $COMPONENT/repodata/repomd.xml
   google-cloud-sdk/bin/gsutil -m rsync -r -d $COMPONENT "gs://$REPO"
   google-cloud-sdk/bin/gsutil -m setmeta -r -h "Content-Type:text/html" \
     -h "Cache-Control:no-cache" \
