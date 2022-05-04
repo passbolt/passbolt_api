@@ -19,6 +19,7 @@ namespace App\Model\Table;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Gpgkey;
+use App\Model\Rule\IsNotServerKeyFingerprintRule;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\DateTime\IsCreationDateInFuturePastValidationRule;
 use App\Model\Validation\DateTime\IsDateInFutureValidationRule;
@@ -155,6 +156,11 @@ class GpgkeysTable extends Table
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->isUnique(['fingerprint']));
+
+        $rules->add(new IsNotServerKeyFingerprintRule(), 'isNotServerKeyFingerprintRule', [
+            'errorField' => 'fingerprint',
+            'message' => __('You cannot reuse the server keys.'),
+        ]);
 
         return $rules;
     }

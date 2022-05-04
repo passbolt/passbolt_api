@@ -262,8 +262,7 @@ interface OpenPGPBackendInterface
      * Delete key
      *
      * @param string $fingerprint fingerprint
-     * @param bool $allowSecret default false, delete secret key as well
      * @return bool return true if the key was deleted
      */
-    public function deleteKey(string $fingerprint, bool $allowSecret = false): bool;
+    public function deleteKey(string $fingerprint): bool;
 }

@@ -499,13 +499,13 @@ class Gnupg extends OpenPGPBackend
      * Delete a key identified with a fingerprint
      *
      * @param string $fingerprint fingerprint
-     * @param bool $allowSecret default false, delete secret key as well
      * @return bool returns true on success or false on failure.
      */
-    public function deleteKey(string $fingerprint, bool $allowSecret = false): bool
+    public function deleteKey(string $fingerprint): bool
     {
         try {
-            return $this->_gpg->deletekey($fingerprint, $allowSecret); // @phpstan-ignore-line implemented in v0.5
+            /** @psalm-suppress TooFewArguments false positive  */
+            return $this->_gpg->deletekey($fingerprint); // @phpstan-ignore-line implemented in v0.5
         } catch (\Exception $exception) {
             return false;
         }
