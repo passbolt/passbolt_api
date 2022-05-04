@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
+use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Gpgkey;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
@@ -105,7 +107,11 @@ abstract class AbstractCompleteService
             throw new BadRequestException(__('An OpenPGP key must be provided.'));
         }
 
-        // Check basis entity validation rules
-        return $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        try {
+            return $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        } catch (ValidationException $exception) {
+            // Remap errors to match sent data
+            throw new CustomValidationException($exception->getMessage(), ['gpgkey' => $exception->getErrors()]);
+        }
     }
 }

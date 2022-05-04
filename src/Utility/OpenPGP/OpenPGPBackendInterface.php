@@ -257,4 +257,12 @@ interface OpenPGPBackendInterface
      * @return void
      */
     public function clearKeys(): void;
+
+    /**
+     * Delete key
+     *
+     * @param string $fingerprint fingerprint
+     * @return bool return true if the key was deleted
+     */
+    public function deleteKey(string $fingerprint): bool;
 }

@@ -28,7 +28,7 @@ class PublicKeyRevocationCheckService
      * @throws \App\Error\Exception\CustomValidationException if the key cannot be parsed or is invalid
      * @return bool
      */
-    public function check(string $armoredKey): bool
+    public static function check(string $armoredKey): bool
     {
         $rules = PublicKeyValidationService::getHistoricalRules();
         $keyInfo = PublicKeyValidationService::parseAndValidatePublicKey($armoredKey, $rules);
@@ -44,7 +44,7 @@ class PublicKeyRevocationCheckService
             $toVerify = new \OpenPGP_Crypt_RSA($publicKey);
             $signatures = $toVerify->verify($publicKey);
 
-            return $this->searchForRevocation($signatures, $keyInfo['key_id']);
+            return self::searchForRevocation($signatures, $keyInfo['key_id']);
         } else {
             // TODO use php-gnupg revoked flag
             return $keyInfo['revoked'];
@@ -56,11 +56,11 @@ class PublicKeyRevocationCheckService
      * @param string $longKeyId long key id
      * @return bool
      */
-    private function searchForRevocation(array $signatures, string $longKeyId): bool
+    private static function searchForRevocation(array $signatures, string $longKeyId): bool
     {
         foreach ($signatures as $signature) {
             if (is_array($signature)) {
-                if ($this->searchForRevocation($signature, $longKeyId)) {
+                if (self::searchForRevocation($signature, $longKeyId)) {
                     return true;
                 }
             }

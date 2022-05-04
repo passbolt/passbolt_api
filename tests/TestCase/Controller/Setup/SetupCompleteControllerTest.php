@@ -22,6 +22,7 @@ use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
@@ -424,5 +425,75 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/complete/' . $user->id . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist or is already active.');
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
+    public function testSetupComplete_Error_FuturamaKey()
+    {
+        [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+        $user = $t->user;
+        $url = '/setup/complete/' . $user->id . '.json';
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'fry_public.key');
+        $data = [
+            'authentication_token' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+            'user' => [
+                'locale' => 'fr_FR', // Putting on purpose an underscore, though convention is dashed.
+            ],
+        ];
+        $this->postJson($url, $data);
+        $this->assertError(400, 'The OpenPGP armored key could not be validated.');
+        $this->assertNotEmpty($this->_responseJsonBody->gpgkey->key_created->custom);
+        $this->assertFalse(OpenPGPBackendFactory::get()->isKeyInKeyring('8F83E4120302FFAE8884D6E5BD2BC91258CA79B3'));
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
+    public function testSetupComplete_Error_BrokenKey()
+    {
+        OpenPGPBackendFactory::get()->deleteKey('26FD986838F4F9AB318FF56AE5DFCEE142949B78');
+        $armoredKeyOk = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public.key');
+        OpenPGPBackendFactory::get()->importKeyIntoKeyring($armoredKeyOk);
+        $this->assertTrue(OpenPGPBackendFactory::get()->isKeyInKeyring('26FD986838F4F9AB318FF56AE5DFCEE142949B78'));
+
+        [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+        $user = $t->user;
+        $url = '/setup/complete/' . $user->id . '.json';
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public_broken.key');
+        $data = [
+            'authentication_token' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+            'user' => [
+                'locale' => 'fr_FR', // Putting on purpose an underscore, though convention is dashed.
+            ],
+        ];
+        $this->postJson($url, $data);
+        $this->assertError(400, 'The OpenPGP key can not be used to encrypt.');
+        $this->assertFalse(OpenPGPBackendFactory::get()->isKeyInKeyring('26FD986838F4F9AB318FF56AE5DFCEE142949B78'));
     }
 }

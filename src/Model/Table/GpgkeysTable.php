@@ -281,7 +281,7 @@ class GpgkeysTable extends Table
         ]]);
 
         if ($gpgKey->getErrors()) {
-            throw new ValidationException(__('The OpenPGP armored key could not be parsed.'), $gpgKey, $this);
+            throw new ValidationException(__('The OpenPGP armored key could not be validated.'), $gpgKey, $this);
         }
 
         return $gpgKey;
