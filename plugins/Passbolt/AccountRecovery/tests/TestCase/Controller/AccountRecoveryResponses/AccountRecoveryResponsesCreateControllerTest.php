@@ -24,6 +24,7 @@ use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
+use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryRequestFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 use Passbolt\AccountRecovery\Test\Scenario\Request\ResponseCreateScenario;
 
@@ -73,6 +74,10 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
     public function testAccountRecoveryResponsesCreateController_Success_Approved()
     {
         [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        $oldApprovedRequest = AccountRecoveryRequestFactory::make()
+            ->withUser($user->id)
+            ->approved()
+            ->persist();
         $admins = UserFactory::make(3)->active()->admin()->persist(3);
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
         $status = AccountRecoveryResponse::STATUS_APPROVED;
@@ -102,6 +107,9 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
         );
 
         $this->assertAdminEmails($status, $user, $admin, $admins);
+
+        // Assert that the status of the previous approved request is unchanged
+        $this->assertTrue(AccountRecoveryRequestFactory::get($oldApprovedRequest->id)->isApproved());
     }
 
     /**

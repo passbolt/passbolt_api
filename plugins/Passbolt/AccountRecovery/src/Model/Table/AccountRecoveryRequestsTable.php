@@ -215,6 +215,8 @@ class AccountRecoveryRequestsTable extends Table
         } else {
             $modifiedBy = $request->user_id;
         }
+
+        // Set all other pending requests to rejected
         $this->updateAll([
             'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
             'modified' => FrozenTime::now(),
@@ -222,6 +224,7 @@ class AccountRecoveryRequestsTable extends Table
         ], [
             'id !=' => $request->id,
             'user_id' => $request->user_id,
+            'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING,
         ]);
     }
 
