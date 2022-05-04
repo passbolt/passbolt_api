@@ -29,6 +29,7 @@ use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
+use Cake\Validation\Validation;
 use Cake\View\ViewBuilder;
 
 /**
@@ -60,29 +61,25 @@ class UserRecoverService implements UserRecoverServiceInterface
      */
     public function recover(UserAccessControl $uac): void
     {
-        $this->assertValidation();
-        $user = $this->assertRules();
-        $token = null;
-        $adminId = null;
+        $user = $this->getUserOrFail();
+        $options = ['user' => $user];
+        $options['case'] = $this->assertRecoveryCase();
+
         if ($user->active) {
-            $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
-            $event = UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME;
+            $options['token'] = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
+            $eventName = UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME;
         } else {
             // The user has not completed the setup, restart setup
             // Fixes https://github.com/passbolt/passbolt_api/issues/73
-            $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
-            $event = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
+            $options['token'] = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
+            $eventName = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
             if ($uac->isAdmin()) {
-                $adminId = $uac->getId();
+                $options['adminId'] = $uac->getId();
             }
         }
 
         // Create an event to build email with token
-        $options = ['user' => $user, 'token' => $token];
-        if (isset($adminId)) {
-            $options['adminId'] = $adminId;
-        }
-        $event = new Event($event, $this, $options);
+        $event = new Event($eventName, $this, $options);
         $this->getEventManager()->dispatch($event);
     }
 
@@ -98,28 +95,53 @@ class UserRecoverService implements UserRecoverServiceInterface
     }
 
     /**
+     * @return string self::ACCOUNT_RECOVERY_CASE_DEFAULT default
+     */
+    protected function assertRecoveryCase(): string
+    {
+        $case = $this->request->getData('case') ?? null;
+
+        if (!isset($case)) {
+            return self::ACCOUNT_RECOVERY_CASE_DEFAULT;
+        }
+        if (!is_string($case)) {
+            throw new BadRequestException(__('Account recovery case must be a string.'));
+        }
+        if (!in_array($case, self::ACCOUNT_RECOVERY_CASES)) {
+            throw new BadRequestException(__('Account recovery reason not supported.'));
+        }
+
+        return $case;
+    }
+
+    /**
      * Assert some username data is provided
      *
-     * @return \App\Model\Entity\User user entity
      * @throws \Cake\Http\Exception\BadRequestException if the username is not valid
      * @throws \Cake\Http\Exception\BadRequestException if the username is not provided
+     * @return string validated username
      */
-    protected function assertValidation(): User
+    protected function assertUsername(): string
     {
-        $data = $this->request->getData();
-        if (!isset($data['username']) || empty($data['username'])) {
+        $username = $this->request->getData('username') ?? null;
+        if (!isset($username) || !is_string($username) || !Validation::email($username)) {
             throw new BadRequestException(__('Please provide a valid email address.'));
         }
 
-        $user = $this->Users->newEntity(
-            $data,
-            ['validate' => 'recover', 'accessibleFields' => ['username' => true]]
-        );
+        $user = $this->Users->newEntity([
+            'username' => $username,
+        ], [
+            'validate' => 'recover',
+            'accessibleFields' => [
+                'username' => true,
+            ],
+        ]);
+
         if ($user->getErrors()) {
             throw new BadRequestException(__('Please provide a valid email address.'));
         }
 
-        return $user;
+        return $username;
     }
 
     /**
@@ -128,11 +150,12 @@ class UserRecoverService implements UserRecoverServiceInterface
      * @return \App\Model\Entity\User
      * @throws \Cake\Http\Exception\BadRequestException if the user does not exist or has been deleted
      */
-    protected function assertRules(): User
+    protected function getUserOrFail(): User
     {
-        $data = $this->request->getData();
+        $username = $this->assertUsername();
+
         /** @var \App\Model\Entity\User|null $user */
-        $user = $this->Users->findRecover($data['username'])->first();
+        $user = $this->Users->findByUsername($username)->first();
 
         if (empty($user)) {
             $msg = __('This user does not exist or has been deleted.') . ' ';

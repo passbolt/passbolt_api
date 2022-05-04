@@ -150,7 +150,7 @@ module.exports = function(grunt) {
         }, {
           // Javascript applications
           cwd: paths.node_modules_styleguide + 'build/js/dist',
-          src: ['api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js'],
+          src: ['api-account-recovery.js', 'api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js'],
           dest: paths.js + 'app',
           expand: true
         },]

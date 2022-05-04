@@ -83,14 +83,21 @@ class SaveTest extends AppTestCase
             'out of range emoji' => '03F60E958F4CB29723ACDF761353B5B15D9B054🔥',
             'extra space' => '03F6 0E95 8F4C B297 23AC  DF76 1353 B5B1 5D9B 054F',
         ];
-        foreach ($fails as $case => $value) {
-            $this->assertFalse(
-                $this->Gpgkeys->isValidFingerprintRule($value),
-                'Fingerprint validation should fail for case ' . $case
+        foreach ($fails as $case => $fingerprint) {
+            $entity = $this->Gpgkeys->newEntity(compact('fingerprint'));
+            $this->Gpgkeys->save($entity);
+
+            $this->assertSame(
+                'The fingerprint should be a string of 40 hexadecimal characters.',
+                $entity->getError('fingerprint')['custom']
             );
+            $this->assertTrue($entity->hasErrors(), 'Fingerprint validation should fail for case ' . $case);
         }
 
-        $this->assertTrue($this->Gpgkeys->isValidFingerprintRule('03F60E958F4CB29723ACDF761353B5B15D9B054A'));
+        $fingerprint = '03F60E958F4CB29723ACDF761353B5B15D9B054A';
+        $entity = $this->Gpgkeys->newEntity(compact('fingerprint'));
+        $this->Gpgkeys->save($entity);
+        $this->assertEmpty($entity->getError('fingerprint'));
     }
 
     public function testGpgkeysValidationKeyId()
@@ -101,13 +108,19 @@ class SaveTest extends AppTestCase
             'out of range emoji' => '03F60EE🔥',
         ];
         foreach ($fails as $case => $value) {
-            $this->assertFalse(
-                $this->Gpgkeys->isValidKeyIdRule($value),
-                'Fingerprint validation should fail for case ' . $case
+            $entity = $this->Gpgkeys->newEntity(['key_id' => $value]);
+            $this->Gpgkeys->save($entity);
+            $this->assertSame(
+                'The key identifier should be a string of 8 hexadecimal characters.',
+                $entity->getError('key_id')['custom']
             );
+            $this->assertTrue($entity->hasErrors(), 'Key ID validation should fail for case ' . $case);
         }
 
-        $this->assertTrue($this->Gpgkeys->isValidKeyIdRule('03F60E95'));
+        $entity = $this->Gpgkeys->newEntity(['key_id' => '03F60E95']);
+        $this->Gpgkeys->save($entity);
+
+        $this->assertEmpty($entity->getError('key_id'));
     }
 
     public function testGpgkeysValidationKeyType()
@@ -117,43 +130,21 @@ class SaveTest extends AppTestCase
             'short string emoji' => '🔥🔥🔥',
         ];
         foreach ($fails as $case => $value) {
-            $this->assertFalse(
-                $this->Gpgkeys->isValidKeyTypeRule($value),
-                'Fingerprint validation should fail for case ' . $case
+            $entity = $this->Gpgkeys->newEntity(['type' => $value]);
+            $this->Gpgkeys->save($entity);
+            $this->assertSame(
+                'The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.',
+                $entity->getError('type')['custom'],
+                'Gpg Key validation should fail for case ' . $case
             );
         }
 
-        $success = ['RSA', 'DSA', 'ECC', 'ELGAMAL', 'ECDSA', 'DH'];
-        foreach ($success as $i => $case) {
-            $this->assertTrue(
-                $this->Gpgkeys->isValidKeyTypeRule($case),
-                'Key type should work for case ' . $case
-            );
-        }
-    }
+        $success = ['RSA', 'ELGAMAL', 'DSA', 'ECC', 'ECDSA', 'DH', 'EdDSA'];
+        foreach ($success as $type) {
+            $entity = $this->Gpgkeys->newEntity(compact('type'));
+            $this->Gpgkeys->save($entity);
 
-    public function testGpgkeysValidationUidEmail()
-    {
-        $fails = [
-            'short string' => 'AFZ',
-            'email contains emoji' => 'uid (comment) <🔥@nope.com>',
-        ];
-        foreach ($fails as $case => $value) {
-            $this->assertFalse(
-                $this->Gpgkeys->uidContainValidEmailRule($value),
-                'Uid email validation should fail for case ' . $case
-            );
-        }
-
-        $success = [
-            'ok' => 'test <this@fine.com>',
-            'ok with comment' => 'test (comment) <this@fine.com>',
-        ];
-        foreach ($success as $case => $value) {
-            $this->assertTrue(
-                $this->Gpgkeys->uidContainValidEmailRule($value),
-                'Uid email validation should work for case ' . $case
-            );
+            $this->assertEmpty($entity->getError('type'), 'Key type should work for case ' . $type);
         }
     }
 
@@ -164,8 +155,15 @@ class SaveTest extends AppTestCase
             'now' => FrozenTime::now(),
         ];
         foreach ($fails as $case => $value) {
-            $this->assertFalse(
-                $this->Gpgkeys->isInFutureRule($value),
+            $entity = $this->Gpgkeys->newEntity(['expires' => $value]);
+            $this->Gpgkeys->save($entity);
+
+            $this->assertSame(
+                'The key should not already be expired.',
+                $entity->getError('expires')['custom']
+            );
+            $this->assertTrue(
+                $entity->hasErrors(),
                 'Gpgkeys expires date should not validate for case ' . $case
             );
         }
@@ -176,10 +174,10 @@ class SaveTest extends AppTestCase
             'way later' => FrozenTime::createFromDate(2030),
         ];
         foreach ($successes as $case => $value) {
-            $this->assertTrue(
-                $this->Gpgkeys->isInFutureRule($value),
-                'Gpgkeys expires date should validate for case ' . $case
-            );
+            $entity = $this->Gpgkeys->newEntity(['expires' => $value]);
+            $this->Gpgkeys->save($entity);
+
+            $this->assertEmpty($entity->getError('expires'), 'Gpgkeys expires date should validate for case ' . $case);
         }
     }
 
@@ -191,10 +189,14 @@ class SaveTest extends AppTestCase
             'tomorrow as time' => Time::now()->modify('+24 hours'),
         ];
         foreach ($fails as $case => $value) {
-            $this->assertFalse(
-                $this->Gpgkeys->isInFuturePastRule($value),
-                'Gpgkeys created date should not validate for case ' . $case
+            $entity = $this->Gpgkeys->newEntity(['key_created' => $value]);
+            $this->Gpgkeys->save($entity);
+
+            $this->assertSame(
+                'The creation date should be set in the past.',
+                $entity->getError('key_created')['custom']
             );
+            $this->assertTrue($entity->hasErrors(), 'Gpgkeys created date should not validate for case ' . $case);
         }
 
         $successes = [
@@ -203,10 +205,10 @@ class SaveTest extends AppTestCase
             'almost half a day' => Time::now()->modify('+11 hours'),
         ];
         foreach ($successes as $case => $value) {
-            $this->assertTrue(
-                $this->Gpgkeys->isInFuturePastRule($value),
-                'Gpgkeys created date should validate for case ' . $case
-            );
+            $entity = $this->Gpgkeys->newEntity(['key_created' => $value]);
+            $this->Gpgkeys->save($entity);
+
+            $this->assertEmpty($entity->getError('key_created'), 'Gpgkeys created date should validate for case ' . $case);
         }
     }
 
@@ -232,5 +234,44 @@ class SaveTest extends AppTestCase
         $error = $k->getErrors();
         $this->assertNotEmpty($error);
         $this->assertNotEmpty($error['fingerprint']['_isUnique']);
+    }
+
+    public function testGpgkeysSaveECCSuccess()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'ecc_nistp521_public.key');
+
+        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        $this->Gpgkeys->save($k);
+
+        $k = $this->Gpgkeys->find()->where(['fingerprint' => 'AEE8E22ACFBF70527C1BD918F571FEB3B15105EE'])->firstOrFail();
+        $this->assertEquals($k->type, 'ECDSA');
+        $this->assertEquals($k->bits, '521');
+    }
+
+    public function testGpgkeysSaveECCSuccess2()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'ecc_curve25519_public.key');
+
+        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        $this->Gpgkeys->save($k);
+
+        $k = $this->Gpgkeys->find()->where(['fingerprint' => '21DB3781A35DFDA802A9B17557800F30009B7B46'])->firstOrFail();
+        $this->assertEquals($k->type, 'EdDSA');
+        $this->assertEquals($k->bits, '256');
+    }
+
+    public function testGpgkeysSaveECCSuccess3()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'ecc_brainpoolp384_public.key');
+
+        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        $this->Gpgkeys->save($k);
+
+        $k = $this->Gpgkeys->find()->where(['fingerprint' => 'AB78E1897CAF279A1A255DF63B5C02FB8C17837B'])->firstOrFail();
+        $this->assertEquals($k->type, 'ECDSA');
+        $this->assertEquals($k->bits, '384');
     }
 }

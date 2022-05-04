@@ -23,6 +23,16 @@ use Cake\View\ViewBuilder;
 interface UserRecoverServiceInterface
 {
     /**
+     * Account recovery reasons
+     */
+    public const ACCOUNT_RECOVERY_CASE_LOST_PASSPHRASE = 'lost-passphrase';
+    public const ACCOUNT_RECOVERY_CASE_DEFAULT = 'default';
+    public const ACCOUNT_RECOVERY_CASES = [
+        self::ACCOUNT_RECOVERY_CASE_DEFAULT,
+        self::ACCOUNT_RECOVERY_CASE_LOST_PASSPHRASE,
+    ];
+
+    /**
      * @param \App\Utility\UserAccessControl $uac UAC performing the recovery
      * @return void
      */

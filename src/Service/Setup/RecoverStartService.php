@@ -19,7 +19,10 @@ namespace App\Service\Setup;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
+use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\View\ViewBuilder;
 
 class RecoverStartService extends AbstractStartService implements RecoverStartServiceInterface
@@ -29,10 +32,13 @@ class RecoverStartService extends AbstractStartService implements RecoverStartSe
      */
     public function getInfo(string $userId, string $token): array
     {
-        $this->assertRequestSanity($userId, $token);
-        $user = $this->findUser($userId);
-        $token = $this->findToken($user, $token);
-        $this->assertTokenExpiry($user, $token);
+        try {
+            $user = (new UserGetService())->getActiveNotDeletedOrFail($userId);
+        } catch (NotFoundException $exception) {
+            throw new BadRequestException(__('The user does not exist or is not active.'));
+        }
+
+        $this->assertAuthToken($token, $user);
 
         return compact('user');
     }
@@ -49,39 +55,21 @@ class RecoverStartService extends AbstractStartService implements RecoverStartSe
     }
 
     /**
-     * Find the user requesting the recover
-     *
-     * @param string $userId uuid of the user
-     * @return \App\Model\Entity\User
-     * @throw BadRequestException if the user cannot be found, is deleted or is inactive.
-     */
-    private function findUser(string $userId): User
-    {
-        $user = $this->Users->findSetupRecover($userId);
-        if (empty($user)) {
-            throw new BadRequestException(__('The user does not exist or is not active.'));
-        }
-
-        return $user;
-    }
-
-    /**
      * Find the recover token
      *
-     * @param \App\Model\Entity\User $user user attempting to recover
      * @param string $token uuid of the token
-     * @return \App\Model\Entity\AuthenticationToken
+     * @param \App\Model\Entity\User $user user attempting to recover
+     * @return void
+     * @throw Custom if the token is not valid
      * @throw BadRequestException if the token is not valid
      */
-    private function findToken(User $user, string $token): AuthenticationToken
+    private function assertAuthToken(string $token, User $user): void
     {
-        $finderOptions = ['userId' => $user->id, 'token' => $token];
-        /** @var \App\Model\Entity\AuthenticationToken $token */
-        $token = $this->AuthenticationTokens->find('activeUserRecoveryToken', $finderOptions)->first();
-        if (empty($token)) {
+        try {
+            (new AuthenticationTokenGetService())
+                ->getActiveNotExpiredOrFail($token, $user->id, AuthenticationToken::TYPE_RECOVER);
+        } catch (NotFoundException $exception) {
             throw new BadRequestException(__('The authentication token is not valid.'));
         }
-
-        return $token;
     }
 }
