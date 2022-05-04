@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Service\OpenPGP;
 
 use App\Utility\OpenPGP\OpenPGPBackend;
+use Cake\Http\Exception\InternalErrorException;
 
 /**
  * Public Key revocation check service
@@ -47,7 +48,7 @@ class PublicKeyRevocationCheckService
             return self::searchForRevocation($signatures, $keyInfo['key_id']);
         } else {
             // TODO use php-gnupg revoked flag
-            return $keyInfo['revoked'];
+            throw new InternalErrorException('This functionality is not supported with ECC keys.');
         }
     }
 
