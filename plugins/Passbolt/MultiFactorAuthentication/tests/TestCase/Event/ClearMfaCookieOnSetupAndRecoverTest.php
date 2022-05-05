@@ -21,10 +21,12 @@ use App\Controller\Setup\RecoverCompleteController;
 use App\Controller\Setup\SetupCompleteController;
 use App\Controller\Users\UsersRecoverController;
 use App\Controller\Users\UsersRegisterController;
-use Cake\TestSuite\TestCase;
+use App\Test\Factory\RoleFactory;
 use Passbolt\MultiFactorAuthentication\Event\ClearMfaCookieOnSetupAndRecover;
+use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
-class ClearMfaCookieOnSetupAndRecoverTest extends TestCase
+class ClearMfaCookieOnSetupAndRecoverTest extends MfaIntegrationTestCase
 {
     public function testClearMfaCookieOnSetupAndRecover_getListOfControllers()
     {
@@ -36,5 +38,33 @@ class ClearMfaCookieOnSetupAndRecoverTest extends TestCase
             RecoverCompleteController::class,
             RecoverAbortController::class,
         ], $controllersConcerned);
+    }
+
+    /**
+     * On a GET, the expired MFA cookie is not set
+     */
+    public function testClearMfaCookieOnSetupAndRecover_UsersRegisterGetSuccess()
+    {
+        $this->get('/users/register');
+        $this->assertResponseOk();
+        $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+    }
+
+    /**
+     * On a POST, the expired MFA is set
+     */
+    public function testClearMfaCookieOnSetupAndRecover_UsersRegisterPostSuccess()
+    {
+        RoleFactory::make()->user()->persist();
+        $data = [
+            'username' => 'ping.fu@passbolt.com',
+            'profile' => [
+                'first_name' => '傅',
+                'last_name' => '苹',
+            ],
+        ];
+        $this->postJson('/users/register.json', $data);
+        $this->assertResponseSuccess();
+        $this->assertCookieExpired(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 }

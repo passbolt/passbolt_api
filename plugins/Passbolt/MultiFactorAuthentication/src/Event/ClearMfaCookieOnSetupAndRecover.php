@@ -67,8 +67,9 @@ class ClearMfaCookieOnSetupAndRecover implements EventListenerInterface
         $controller = $event->getSubject();
         $isUserGuest = $controller->User->getAccessControl()->roleName() === Role::GUEST;
         $isControllerInList = in_array(get_class($controller), $this->getListOfControllers());
+        $isPost = $controller->getRequest()->is(['POST', 'PUT']);
 
-        if ($isUserGuest && $isControllerInList) {
+        if ($isUserGuest && $isControllerInList && $isPost) {
             (new ClearMfaCookieInResponseService($controller))->clearMfaCookie();
         }
     }
