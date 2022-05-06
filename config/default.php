@@ -201,6 +201,9 @@ return [
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
+            ],
+            'experimental' => [
+                'encryptValidate' => filter_var(env('PASSBOLT_GPG_EXTRA_ENCRYPT_VALIDATE', true), FILTER_VALIDATE_BOOLEAN)
             ]
         ],
 
