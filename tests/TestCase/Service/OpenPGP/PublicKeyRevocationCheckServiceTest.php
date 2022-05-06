@@ -24,22 +24,19 @@ class PublicKeyRevocationCheckServiceTest extends AppTestCase
     public function testPublicKeyRevocationCheckService_Check_Success()
     {
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key');
-        $s = new PublicKeyRevocationCheckService();
-        $this->assertTrue($s->check($armoredKey));
+        $this->assertTrue(PublicKeyRevocationCheckService::check($armoredKey));
     }
 
     public function testPublicKeyRevocationCheckService_Check_ErrorNotRevoked()
     {
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
-        $s = new PublicKeyRevocationCheckService();
-        $this->assertFalse($s->check($armoredKey));
+        $this->assertFalse(PublicKeyRevocationCheckService::check($armoredKey));
     }
 
     public function testPublicKeyRevocationCheckService_Check_ErrorRevokedSigOnly()
     {
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'revoked_sig_public.key');
-        $s = new PublicKeyRevocationCheckService();
-        $this->assertFalse($s->check($armoredKey));
+        $this->assertFalse(PublicKeyRevocationCheckService::check($armoredKey));
     }
 
     public function testPublicKeyRevocationCheckService_Check_SuccessECC()
