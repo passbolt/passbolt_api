@@ -27,6 +27,7 @@ use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\MultiFactorAuthentication\Authenticator\MfaJwtArmoredChallengeService;
 use Passbolt\MultiFactorAuthentication\Event\AddIsMfaEnabledColumnToUsersGrid;
 use Passbolt\MultiFactorAuthentication\Event\AddMfaCookieOnSuccessfulRefreshTokenCreation;
+use Passbolt\MultiFactorAuthentication\Event\ClearMfaCookieOnSetupAndRecover;
 use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
@@ -76,11 +77,12 @@ class Plugin extends BasePlugin
         $app->getEventManager()
             // Decorate the users grid and add the column "is_mfa_enabled"
             ->on(new AddIsMfaEnabledColumnToUsersGrid()) // decorate the query to add the new property on the User entity
-            ->on(new MfaRedactorPool()); // Register email redactors
+            ->on(new MfaRedactorPool()) // Register email redactors
+            ->on(new ClearMfaCookieOnSetupAndRecover()); // Some end points should have a cleared MFA
 
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
-            $app->getEventManager()
-                ->on(new AddMfaCookieOnSuccessfulRefreshTokenCreation()); // If a JWT login or refresh token is successful, and a valid MFA cookie was sent, pass it to the response
+            // If a JWT login or refresh token is successful, and a valid MFA cookie was sent, pass it to the response
+            $app->getEventManager()->on(new AddMfaCookieOnSuccessfulRefreshTokenCreation());
         }
     }
 
