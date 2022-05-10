@@ -21,7 +21,6 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\I18n\FrozenDate;
-use Cake\I18n\FrozenTime;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
@@ -186,7 +185,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
         $this->assertUserRecoverEmail($user);
     }
-    
+
     private function assertUserRecoverEmail(User $user)
     {
         $this->assertEmailIsInQueue([
@@ -199,7 +198,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->assertTextEquals('default', $email->template_vars['body']['case']);
 
         // Assert that the date displayed is now
-        $this->assertEmailInBatchContains(FrozenDate::now()->toFormattedDateString());       
+        $this->assertEmailInBatchContains(FrozenDate::now()->toFormattedDateString());
     }
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseError()
