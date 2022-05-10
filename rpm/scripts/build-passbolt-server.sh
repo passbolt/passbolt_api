@@ -24,6 +24,7 @@ fi
 
 SCRIPT_DIR="$( cd "$( dirname "${0}" )" && pwd )"
 PKG_VERSION=$(cat $SCRIPT_DIR/../CHANGELOG.md | awk 'match($0, /\[([0-9]+\.[0-9]+\.[0-9]+)\]?/) {print substr($0, RSTART, RLENGTH);exit}' | tr -d "[]")
+PASSBOLT_PKG_VERSION=$(cat $SCRIPT_DIR/../CHANGELOG.md | awk 'match($0, /\[([0-9]+\.[0-9]+\.[0-9]+\-[0-9])\]?/) {print substr($0, RSTART, RLENGTH);exit}' | awk -F "-" '{print $2}' | tr -d "[]")
 cd ${SCRIPT_DIR}/../..
 PASSBOLT_DIR=$(basename $PWD)
 
@@ -56,5 +57,6 @@ cp rpm/specs/* ~/rpmbuild/SPECS/
 rpmbuild -ba \
   --define "_passbolt_flavour ${PASSBOLT_FLAVOUR}" \
   --define "_passbolt_version ${PKG_VERSION}" \
+  --define "_passbolt_package_version ${PASSBOLT_PKG_VERSION}" \
   --define "_os_family ${_OS_FAMILY}" \
   ~/rpmbuild/SPECS/passbolt-server.spec

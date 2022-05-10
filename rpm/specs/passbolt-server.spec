@@ -1,6 +1,6 @@
 Name:           passbolt-%{_passbolt_flavour}-server
 Version:        %{_passbolt_version}
-Release:        1%{?dist}
+Release:        %{_passbolt_package_version}
 Summary:        Passbolt
 BuildArch:      noarch
 
