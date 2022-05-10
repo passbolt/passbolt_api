@@ -16,9 +16,12 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
@@ -166,28 +169,26 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseDefault()
     {
-        $user = UserFactory::make()->withAvatar()->user()->persist();
+        $user = UserFactory::make()->withAvatar()->user()->setField('created', FrozenDate::yesterday())->persist();
 
         $this->postJson('/users/recover.json', ['username' => $user->username]);
         $this->assertSuccess();
 
-        $this->assertEmailIsInQueue([
-            'email' => $user->username,
-            'subject' => "Your account recovery, {$user->profile->first_name}!",
-            'template' => 'AN/user_recover',
-        ]);
-
-        $email = EmailQueueFactory::find()->firstOrFail();
-        $this->assertTextEquals('default', $email->template_vars['body']['case']);
+        $this->assertUserRecoverEmail($user);
     }
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseDefault2()
     {
-        $user = UserFactory::make()->withAvatar()->user()->persist();
+        $user = UserFactory::make()->withAvatar()->user()->setField('created', FrozenDate::yesterday())->persist();
 
         $this->postJson('/users/recover.json', ['username' => $user->username, 'case' => 'default']);
         $this->assertSuccess();
 
+        $this->assertUserRecoverEmail($user);
+    }
+    
+    private function assertUserRecoverEmail(User $user)
+    {
         $this->assertEmailIsInQueue([
             'email' => $user->username,
             'subject' => "Your account recovery, {$user->profile->first_name}!",
@@ -196,6 +197,9 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
         $email = EmailQueueFactory::find()->firstOrFail();
         $this->assertTextEquals('default', $email->template_vars['body']['case']);
+
+        // Assert that the date displayed is now
+        $this->assertEmailInBatchContains(FrozenDate::now()->toFormattedDateString());       
     }
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseError()
