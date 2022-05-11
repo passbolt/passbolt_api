@@ -55,6 +55,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
@@ -63,7 +64,6 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         (new JwtKeyPairService())->createKeyPair();
         $this->enableFeaturePlugin('JwtAuthentication');
         $this->setEmailNotificationsSetting('password.create', true);
-        parent::setUp();
     }
 
     public function tearDown(): void

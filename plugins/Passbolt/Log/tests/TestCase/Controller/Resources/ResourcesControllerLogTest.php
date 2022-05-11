@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Log\Test\TestCase\Controller\Resources;
 
-use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
@@ -32,14 +31,11 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
-    public $autoFixtures = false;
-
     /**
      * @dataProvider dataProviderForLoginType
      */
     public function testLogResourcesAddSuccessWithSecrets(string $loginType)
     {
-        ResourceTypeFactory::make()->default()->persist();
         $user = UserFactory::make()->user()->persist();
         $this->loginWithDataProviderLoginTypeValue($loginType, $user);
         $data = [
@@ -79,7 +75,6 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesAddSuccessWithSecretsErrorShouldHaveNoLogs()
     {
-        ResourceTypeFactory::make()->default()->persist();
         $user = UserFactory::make()->user()->persist();
         $this->logInAs($user);
         $data = [
@@ -99,7 +94,6 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesUpdateSuccessWithoutSecrets()
     {
-        $this->loadFixtures();
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resource = [
@@ -134,7 +128,6 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesUpdateSuccessWithSecrets()
     {
-        $this->loadFixtures();
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $adaId = UuidFactory::uuid('user.id.ada');
@@ -191,7 +184,6 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesDeleteSuccess()
     {
-        $this->loadFixtures();
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->deleteJson("/resources/$resourceId.json");

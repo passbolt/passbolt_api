@@ -38,11 +38,27 @@ trait EmailQueueTrait
     }
 
     /**
+     * Asserts that an email with given properties is not in the email queue.
+     */
+    protected function assertEmailIsNotInQueue(array $properties)
+    {
+        $this->assertTrue(EmailQueueFactory::find()->where($properties)->count() === 0, 'The email is not in the email queue.');
+    }
+
+    /**
      * Asserts that an email with given recipient is in the email queue.
      */
     protected function assertEmailWithRecipientIsInQueue(string $email)
     {
         $this->assertEmailIsInQueue(compact('email'));
+    }
+
+    /**
+     * Asserts that an email with given recipient is not in the email queue.
+     */
+    protected function assertEmailWithRecipientIsInNotQueue(string $email)
+    {
+        $this->assertEmailIsNotInQueue(compact('email'));
     }
 
     /**
@@ -126,7 +142,6 @@ trait EmailQueueTrait
      * @param string $string String to search for
      * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
      * @param string $message Error message
-     * @throws \Exception If the test fails.
      */
     protected function assertEmailInBatchContains(string $string, $i = 0, string $message = ''): void
     {
@@ -139,7 +154,6 @@ trait EmailQueueTrait
      * @param string $string String to search for
      * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
      * @param string $message Error message
-     * @throws \Exception If the test fails.
      */
     protected function assertEmailInBatchNotContains(string $string, $i = 0, string $message = ''): void
     {

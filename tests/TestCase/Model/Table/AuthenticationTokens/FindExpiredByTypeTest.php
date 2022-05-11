@@ -29,8 +29,6 @@ class FindExpiredByTypeTest extends AppTestCase
      * @var AuthenticationTokensTable $AuthenticationTokens
      */
     public $AuthenticationTokens;
-    public $autoFixtures = false;
-    public $fixtures = [];
 
     public function setUp(): void
     {

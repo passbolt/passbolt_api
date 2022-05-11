@@ -25,7 +25,6 @@ use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\SkipTablesTruncation;
 use Passbolt\JwtAuthentication\Error\Exception\VerifyToken\ConsumedVerifyTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\VerifyToken\ExpiredVerifyTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\VerifyToken\InvalidVerifyTokenException;
@@ -37,8 +36,6 @@ use Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenValidationService;
  */
 class VerifyTokenValidationServiceTest extends TestCase
 {
-    use SkipTablesTruncation;
-
     /**
      * @var \Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenValidationService
      */
@@ -46,6 +43,7 @@ class VerifyTokenValidationServiceTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         Configure::write(VerifyTokenValidationService::VERIFY_TOKEN_EXPIRY_CONFIG_KEY, '1 hour');
         $this->service = new VerifyTokenValidationService();
         EventManager::instance()->setEventList(new EventList());

@@ -23,12 +23,15 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
  * @see \App\Model\Traits\Permissions\PermissionsFindersTrait::findAllByAro()
  */
 class FindAllByAroTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     public function testFindAllByAro_NoDirectOrInherited()
     {
         /** @var PermissionsTable $table */
@@ -80,6 +83,7 @@ class FindAllByAroTest extends TestCase
 
         // Find all the direct permissions for the user, excluding the inherited ones.
         $result = $table->findAllByAro(PermissionsTable::RESOURCE_ACO, $userA->id)
+            ->all()
             ->extract('id');
         $this->assertCount(2, $result);
         $this->assertContains($resourcesPersonalWithDirectPermission->permissions[0]->id, $result);
@@ -87,6 +91,7 @@ class FindAllByAroTest extends TestCase
 
         // Find all the direct and inherited permissions for the user
         $result = $table->findAllByAro(PermissionsTable::RESOURCE_ACO, $userA->id, ['checkGroupsUsers' => true])
+            ->all()
             ->extract('id');
         $this->assertCount(3, $result);
         $this->assertContains($resourcesPersonalWithDirectPermission->permissions[0]->id, $result);

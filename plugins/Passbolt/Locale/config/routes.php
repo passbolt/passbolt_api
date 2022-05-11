@@ -14,9 +14,10 @@
  * @since         3.2.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/Locale', ['path' => '/locale'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/Locale', ['path' => '/locale'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/settings', ['controller' => 'OrganizationLocalesSelect', 'action' => 'select'])
@@ -26,7 +27,7 @@ Router::plugin('Passbolt/Locale', ['path' => '/locale'], function (RouteBuilder 
 /**
  * Account Setting route
  */
-Router::scope('/account/settings/locales', function ($routes) {
+$routes->scope('/account/settings/locales', function ($routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/', ['plugin' => 'Passbolt/Locale', 'controller' => 'AccountLocalesSelect', 'action' => 'select'])

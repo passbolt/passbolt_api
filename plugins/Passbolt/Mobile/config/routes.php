@@ -14,9 +14,10 @@
  * @since         3.1.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/Mobile', ['path' => '/mobile'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/Mobile', ['path' => '/mobile'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     /**
@@ -28,7 +29,7 @@ Router::plugin('Passbolt/Mobile', ['path' => '/mobile'], function (RouteBuilder 
 
     // update transfer
     $routes
-        ->connect('/transfers/:id', [
+        ->connect('/transfers/{id}', [
             'prefix' => 'Transfers', 'controller' => 'TransfersUpdate', 'action' => 'update',
         ])
         ->setMethods(['POST', 'PUT'])
@@ -36,14 +37,14 @@ Router::plugin('Passbolt/Mobile', ['path' => '/mobile'], function (RouteBuilder 
 
     // without authToken
     $routes
-        ->connect('/transfers/:id/:authToken', [
+        ->connect('/transfers/{id}/{authToken}', [
             'prefix' => 'Transfers', 'controller' => 'TransfersUpdate', 'action' => 'updateNoSession',
         ])
         ->setMethods(['POST', 'PUT'])
         ->setPass(['id', 'authToken']);
 
     // view transfer status
-    $routes->connect('/transfers/:id', ['prefix' => 'Transfers', 'controller' => 'TransfersView', 'action' => 'view'])
+    $routes->connect('/transfers/{id}', ['prefix' => 'Transfers', 'controller' => 'TransfersView', 'action' => 'view'])
         ->setMethods(['GET'])
         ->setPass(['id']);
 });

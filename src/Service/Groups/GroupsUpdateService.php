@@ -146,6 +146,7 @@ class GroupsUpdateService
     {
         return $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $group->id)
             ->select('aco_foreign_key')
+            ->all()
             ->extract('aco_foreign_key')
             ->toArray();
     }

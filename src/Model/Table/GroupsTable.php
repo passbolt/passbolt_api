@@ -311,7 +311,9 @@ class GroupsTable extends Table
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
         $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
-            ->extract('aco_foreign_key')->toArray();
+            ->all()
+            ->extract('aco_foreign_key')
+            ->toArray();
         if (!empty($resourceIds)) {
             /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');

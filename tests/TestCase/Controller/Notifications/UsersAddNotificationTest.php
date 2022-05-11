@@ -18,12 +18,14 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class UsersAddNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
@@ -33,11 +35,12 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
     public function testUserAddNotificationDisabled()
     {
         $this->setEmailNotificationSetting('send.user.create', false);
+        $username = 'new@passbolt.com';
 
         $this->authenticateAs('admin');
         $roles = TableRegistry::getTableLocator()->get('Roles');
         $this->postJson('/users.json', [
-                'username' => 'new@passbolt.com',
+                'username' => $username,
                 'role_id' => $roles->getIdByName(Role::ADMIN),
                 'profile' => [
                     'first_name' => 'new',
@@ -47,9 +50,7 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/new@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue($username);
     }
 
     public function testUserAddNotificationSuccess()
@@ -69,8 +70,6 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/new.user@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('just created an account for you');
+        $this->assertEmailInBatchContains('just created an account for you', 'new.user@passbolt.com');
     }
 }

@@ -14,9 +14,10 @@
  * @since         2.13.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/Reports', ['path' => '/reports'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/Reports', ['path' => '/reports'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     /**
@@ -24,11 +25,11 @@ Router::plugin('Passbolt/Reports', ['path' => '/reports'], function (RouteBuilde
      *
      * @uses \Passbolt\Reports\Controller\Reports\ReportsViewController::getReport()
      */
-    $routes->connect('/:reportSlug/:arg1', ['prefix' => 'Reports', 'controller' => 'ReportsView', 'action' => 'view'])
+    $routes->connect('/{reportSlug}/{arg1}', ['prefix' => 'Reports', 'controller' => 'ReportsView', 'action' => 'view'])
         ->setMethods(['GET'])
         ->setPass(['reportSlug', 'arg1']);
 
-    $routes->connect('/:reportSlug', ['prefix' => 'Reports', 'controller' => 'ReportsView', 'action' => 'view'])
+    $routes->connect('/{reportSlug}', ['prefix' => 'Reports', 'controller' => 'ReportsView', 'action' => 'view'])
         ->setMethods(['GET'])
         ->setPass(['reportSlug']);
 });

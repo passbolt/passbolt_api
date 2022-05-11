@@ -29,6 +29,7 @@ class GnupgTest extends OpenPGPBackendTest
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->originalErrorSettings = ini_get('error_reporting');
         $this->gnupg = new Gnupg();
     }
