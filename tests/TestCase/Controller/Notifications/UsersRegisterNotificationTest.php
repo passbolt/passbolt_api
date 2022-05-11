@@ -17,11 +17,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class UsersRegisterNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
@@ -39,9 +41,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/aurore@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('aurore@passbolt.com');
     }
 
     public function testUserRegisterNotificationSuccess()
@@ -58,8 +58,6 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/aurore@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('You just opened an account');
+        $this->assertEmailInBatchContains('You just opened an account', 'aurore@passbolt.com');
     }
 }

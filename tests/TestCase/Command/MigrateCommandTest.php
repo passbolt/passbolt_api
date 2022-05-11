@@ -17,19 +17,21 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\MigrateCommand;
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
  * App\Command\MigrateCommand Test Case
  *
  * @uses \App\Command\MigrateCommand
  */
-class MigrateCommandTest extends TestCase
+class MigrateCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use PassboltCommandTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

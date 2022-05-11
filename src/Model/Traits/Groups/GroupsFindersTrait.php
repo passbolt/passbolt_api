@@ -252,7 +252,10 @@ trait GroupsFindersTrait
             $subQuery->where(['GroupsUsers.is_admin' => true]);
         }
 
-        $matchingGroupsIds = $subQuery->extract('group_id')->toArray();
+        $matchingGroupsIds = $subQuery
+            ->all()
+            ->extract('group_id')
+            ->toArray();
 
         // Filter the query.
         if (empty($matchingGroupsIds)) {

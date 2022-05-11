@@ -61,6 +61,7 @@ trait ResourcesModelTrait
         }
 
         $resource = $this->addResource($data);
+        /** @var UsersTable $usersTable */
         $usersTable = TableRegistry::getTableLocator()->get('Users');
 
         foreach ($users as $userId => $permissionType) {
@@ -70,7 +71,7 @@ trait ResourcesModelTrait
 
         foreach ($groups as $groupId => $permissionType) {
             $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, PermissionsTable::GROUP_ARO, $groupId, $permissionType);
-            $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
+            $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($groupId)->all()->extract('user_id')->toArray();
             foreach ($groupUsersIds as $groupUserId) {
                 $this->addResourceForUserAssociatedData($resource, $groupUserId);
             }

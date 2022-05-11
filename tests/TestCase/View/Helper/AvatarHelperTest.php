@@ -38,6 +38,7 @@ class AvatarHelperTest extends AppIntegrationTestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->fullBaseUrl = Configure::readOrFail('App.fullBaseUrl');
     }
 

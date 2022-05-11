@@ -19,7 +19,7 @@ namespace App\Model\Validation\DateTime;
 
 use App\Model\Validation\PassboltValidationRule;
 use Cake\Chronos\ChronosInterface;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenTime;
 
 /**
  * Check if a key date is set in the past... tomorrow!
@@ -47,7 +47,7 @@ class IsCreationDateInFuturePastValidationRule extends PassboltValidationRule
         if (!($value instanceof ChronosInterface)) {
             return false;
         }
-        $nowWithMargin = Time::now()->modify('+12 hours');
+        $nowWithMargin = FrozenTime::now()->modify('+12 hours');
 
         return $value->lt($nowWithMargin);
     }

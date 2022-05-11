@@ -23,7 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenTime;
 
 class CleanupTest extends AppTestCase
 {
@@ -43,7 +43,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Favorites', 'cleanupSoftDeletedUsers', 2);
 
-        $favoritesIdsPostCleanup = FavoriteFactory::find()->extract('id')->toArray();
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $favoritesIdsPostCleanup);
         $this->assertContains($favoriteWithUser->id, $favoritesIdsPostCleanup);
         $this->assertContains($favoriteWithHardDeletedUser->id, $favoritesIdsPostCleanup);
@@ -63,7 +63,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Favorites', 'cleanupHardDeletedUsers', 2);
 
-        $favoritesIdsPostCleanup = FavoriteFactory::find()->extract('id')->toArray();
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $favoritesIdsPostCleanup);
         $this->assertContains($favoriteWithUser->id, $favoritesIdsPostCleanup);
         $this->assertContains($favoriteWithSoftDeletedUser->id, $favoritesIdsPostCleanup);
@@ -83,7 +83,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Favorites', 'cleanupSoftDeletedResources', 2);
 
-        $favoritesIdsPostCleanup = FavoriteFactory::find()->extract('id')->toArray();
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $favoritesIdsPostCleanup);
         $this->assertContains($favoriteWithResource->id, $favoritesIdsPostCleanup);
         $this->assertContains($favoriteWithHardDeletedResource->id, $favoritesIdsPostCleanup);
@@ -103,7 +103,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Favorites', 'cleanupHardDeletedResources', 2);
 
-        $favoritesIdsPostCleanup = FavoriteFactory::find()->extract('id')->toArray();
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $favoritesIdsPostCleanup);
         $this->assertContains($favoriteWithResource->id, $favoritesIdsPostCleanup);
         $this->assertContains($favoriteWithSoftDeletedResource->id, $favoritesIdsPostCleanup);
@@ -116,12 +116,12 @@ class CleanupTest extends AppTestCase
             'user_id' => UuidFactory::uuid(),
             'foreign_key' => UuidFactory::uuid(),
             'foreign_model' => 'Resource',
-            'modified' => Time::now(),
+            'modified' => FrozenTime::now(),
         ];
         FavoriteFactory::make($duplicateFavoriteMeta)->persist();
 
         // Duplicate favorite to keep as it is the oldest.
-        $duplicateFavoriteToKeep = FavoriteFactory::make($duplicateFavoriteMeta)->patchData(['modified' => Time::now()->subDay()])->persist();
+        $duplicateFavoriteToKeep = FavoriteFactory::make($duplicateFavoriteMeta)->patchData(['modified' => FrozenTime::now()->subDay()])->persist();
 
         // Witness favorites to not cleanup:
         // - A favorite including a user involved in the cleanup
@@ -139,7 +139,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Favorites', 'cleanupDuplicatedFavorites', 7);
 
-        $favoritesIdsPostCleanup = FavoriteFactory::find()->extract('id')->toArray();
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(7, $favoritesIdsPostCleanup);
         $this->assertContains($duplicateFavoriteToKeep->id, $favoritesIdsPostCleanup);
         $this->assertContains($favoriteWithUserInvolvedInCleanup->id, $favoritesIdsPostCleanup);

@@ -34,7 +34,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     {
         parent::setUp();
 
-        $this->loadPlugins(['Passbolt/EmailNotificationSettings']);
+        $this->loadPlugins(['Passbolt/EmailNotificationSettings' => []]);
         $this->loadNotificationSettings();
     }
 

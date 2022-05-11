@@ -14,9 +14,10 @@
  * @since         3.0.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/EmailDigest', ['path' => '/seleniumtests'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/EmailDigest', ['path' => '/seleniumtests'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     /**

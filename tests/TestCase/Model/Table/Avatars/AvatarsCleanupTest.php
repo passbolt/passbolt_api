@@ -24,10 +24,12 @@ use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 class AvatarsCleanupTest extends TestCase
 {
     use AvatarsModelTrait;
+    use TruncateDirtyTables;
 
     /**
      * Test subject

@@ -24,6 +24,7 @@ use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
 use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenCreateService;
 
@@ -32,8 +33,11 @@ use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenCreateService;
  */
 class RefreshTokenCreateServiceTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     public function setUp(): void
     {
+        parent::setUp();
         EventManager::instance()->setEventList(new EventList());
     }
 
