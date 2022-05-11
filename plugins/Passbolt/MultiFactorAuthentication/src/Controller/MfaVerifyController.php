@@ -19,7 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\Date;
+use Cake\I18n\FrozenDate;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
@@ -79,7 +79,7 @@ abstract class MfaVerifyController extends MfaController
         $sessionId = $sessionIdentificationService->getSessionIdentifier($this->getRequest());
         $token = MfaVerifiedToken::get($uac, $provider, $sessionId, (bool)$this->request->getData('remember'));
         $expiryAt = $this->request->getData('remember') ?
-            (new Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
+            (new FrozenDate())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
             null;
         $cookie = MfaVerifiedCookie::get($this->getRequest(), $token, $expiryAt);
         $this->response = $this->response->withCookie($cookie);

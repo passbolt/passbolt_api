@@ -14,23 +14,24 @@
  * @since         2.0.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/Tags', ['path' => '/tags'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/Tags', ['path' => '/tags'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/', ['prefix' => 'Tags', 'controller' => 'TagsIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/:id', ['prefix' => 'Tags', 'controller' => 'ResourcesTagsAdd', 'action' => 'addPost'])
+    $routes->connect('/{id}', ['prefix' => 'Tags', 'controller' => 'ResourcesTagsAdd', 'action' => 'addPost'])
         ->setPass(['id'])
         ->setMethods(['POST']);
 
-    $routes->connect('/:id', ['prefix' => 'Tags', 'controller' => 'TagsUpdate', 'action' => 'update'])
+    $routes->connect('/{id}', ['prefix' => 'Tags', 'controller' => 'TagsUpdate', 'action' => 'update'])
         ->setPass(['id'])
         ->setMethods(['PUT']);
 
-    $routes->connect('/:id', ['prefix' => 'Tags', 'controller' => 'TagsDelete', 'action' => 'delete'])
+    $routes->connect('/{id}', ['prefix' => 'Tags', 'controller' => 'TagsDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 });

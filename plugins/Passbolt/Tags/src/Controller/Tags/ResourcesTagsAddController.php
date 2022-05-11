@@ -114,7 +114,7 @@ class ResourcesTagsAddController extends AppController
                     $msg = __('You do not have the permission to edit shared tags on this resource.');
                     throw new BadRequestException($msg);
                 } else {
-                    unset($resource->get('tags')[$i]);
+                    unset($resource['tags'][$i]);
                 }
             } else {
                 unset($data[$tagFoundIndex]);

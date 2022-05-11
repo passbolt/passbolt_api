@@ -17,9 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\Ee\Test\TestCase\Command;
 
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Ee\Model\Entity\Subscription;
 use Passbolt\Ee\Service\SubscriptionKeyGetService;
@@ -28,11 +29,12 @@ use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 /**
  * @uses \Passbolt\Ee\Command\SubscriptionCheckCommand
  */
-class SubscriptionImportCommandTest extends TestCase
+class SubscriptionImportCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use DummySubscriptionTrait;
     use ModelAwareTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

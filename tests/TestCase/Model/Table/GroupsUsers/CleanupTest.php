@@ -23,7 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenTime;
 
 class CleanupTest extends AppTestCase
 {
@@ -44,7 +44,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('GroupsUsers', 'cleanupSoftDeletedUsers', 2);
 
-        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->extract('id')->toArray();
+        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $groupsUsersIdsPostCleanup);
         $this->assertContains($groupUserWithUser->id, $groupsUsersIdsPostCleanup);
         $this->assertContains($groupUserWithHardDeletedUser->id, $groupsUsersIdsPostCleanup);
@@ -65,7 +65,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('GroupsUsers', 'cleanupHardDeletedUsers', 2);
 
-        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->extract('id')->toArray();
+        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $groupsUsersIdsPostCleanup);
         $this->assertContains($groupUserWithUser->id, $groupsUsersIdsPostCleanup);
         $this->assertContains($groupUserWithSoftDeletedUser->id, $groupsUsersIdsPostCleanup);
@@ -86,7 +86,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('GroupsUsers', 'cleanupSoftDeletedGroups', 2);
 
-        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->extract('id')->toArray();
+        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $groupsUsersIdsPostCleanup);
         $this->assertContains($groupUserWithGroup->id, $groupsUsersIdsPostCleanup);
         $this->assertContains($groupUserWithHardDeletedGroup->id, $groupsUsersIdsPostCleanup);
@@ -107,7 +107,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('GroupsUsers', 'cleanupHardDeletedGroups', 2);
 
-        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->extract('id')->toArray();
+        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $groupsUsersIdsPostCleanup);
         $this->assertContains($groupUserWithGroup->id, $groupsUsersIdsPostCleanup);
         $this->assertContains($groupUserWithSoftDeletedGroup->id, $groupsUsersIdsPostCleanup);
@@ -119,13 +119,13 @@ class CleanupTest extends AppTestCase
         $duplicateGroupUserMeta = [
             'group_id' => UuidFactory::uuid(),
             'user_id' => UuidFactory::uuid(),
-            'created' => Time::now(),
+            'created' => FrozenTime::now(),
         ];
         GroupsUserFactory::make($duplicateGroupUserMeta)->persist();
 
         // Duplicate group user to keep as it is the oldest.
         $duplicateGroupUserToKeep = GroupsUserFactory::make($duplicateGroupUserMeta)
-            ->patchData(['created' => Time::now()->subDay()])->persist();
+            ->patchData(['created' => FrozenTime::now()->subDay()])->persist();
 
         // Witness groups users to not cleanup:
         // - A group user including a group involved in the cleanup
@@ -139,7 +139,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('GroupsUsers', 'cleanupDuplicatedGroupsUsers', 7);
 
-        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->extract('id')->toArray();
+        $groupsUsersIdsPostCleanup = GroupsUserFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(7, $groupsUsersIdsPostCleanup);
         $this->assertContains($duplicateGroupUserToKeep->id, $groupsUsersIdsPostCleanup);
         $this->assertContains($groupUserWithGroupInvolvedInCleanup->id, $groupsUsersIdsPostCleanup);

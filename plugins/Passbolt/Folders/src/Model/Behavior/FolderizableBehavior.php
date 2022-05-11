@@ -88,7 +88,7 @@ class FolderizableBehavior extends Behavior
      *
      * The implemented events of this behavior depend on configuration
      *
-     * @return array
+     * @return array<string, mixed>
      * @uses handleEvent()
      */
     public function implementedEvents(): array
@@ -172,6 +172,7 @@ class FolderizableBehavior extends Behavior
                 ])
                 ->select(['foreign_id', 'folder_parent_id'])
                 ->disableHydration()
+                ->all()
                 ->combine('foreign_id', 'folder_parent_id')
                 ->toArray();
         }
@@ -203,6 +204,7 @@ class FolderizableBehavior extends Behavior
                 ])
                 ->group('foreign_id')
                 ->disableHydration()
+                ->all()
                 ->combine('foreign_id', 'count')
                 ->toArray();
         }

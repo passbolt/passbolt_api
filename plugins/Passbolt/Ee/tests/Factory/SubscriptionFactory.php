@@ -5,6 +5,7 @@ namespace Passbolt\Ee\Test\Factory;
 
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 use Faker\Generator;
 
 /**
@@ -31,9 +32,12 @@ class SubscriptionFactory extends OrganizationSettingFactory
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
+            /** @var \Passbolt\Ee\Model\Table\SubscriptionsTable $registry */
+            $registry = TableRegistry::getTableLocator()->get($this->getRootTableRegistryName());
+
             return [
-                'property' => $this->getRootTableRegistry()->getProperty(),
-                'property_id' => $this->getRootTableRegistry()->getPropertyId(),
+                'property' => $registry->getProperty(),
+                'property_id' => $registry->getPropertyId(),
                 'value' => $faker->text(),
                 'created_by' => UuidFactory::uuid(),
                 'modified_by' => UuidFactory::uuid(),

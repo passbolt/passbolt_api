@@ -34,6 +34,7 @@ class AvatarProcessingTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         DirectoryUtility::removeRecursively($this->testDirectory);
         mkdir($this->testDirectory);
     }

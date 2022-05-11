@@ -75,7 +75,6 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         ResourcesFixture::class,
         ResourceTypesFixture::class,
         GroupsFixture::class,
-        ProfilesFixture::class,
     ];
 
     public $Groups;

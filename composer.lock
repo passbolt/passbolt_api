@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4278803bf450b8eea411bb6c24bdff9b",
+    "content-hash": "b5c68426dabd650e9fb5cc5a45ce4835",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -306,33 +306,34 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "4.2.9",
+            "version": "4.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "6cb068fd328219d79a02ef6df439b73459071368"
+                "reference": "f20f6df934dac17ff15b044bf369efdc0356fe37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/6cb068fd328219d79a02ef6df439b73459071368",
-                "reference": "6cb068fd328219d79a02ef6df439b73459071368",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/f20f6df934dac17ff15b044bf369efdc0356fe37",
+                "reference": "f20f6df934dac17ff15b044bf369efdc0356fe37",
                 "shasum": ""
             },
             "require": {
-                "cakephp/chronos": "^2.0",
+                "cakephp/chronos": "^2.2",
                 "composer/ca-bundle": "^1.2",
                 "ext-intl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "laminas/laminas-diactoros": "^2.2.2",
                 "laminas/laminas-httphandlerrunner": "^1.1",
-                "league/container": "^3.2",
+                "league/container": "^4.2.0",
                 "php": ">=7.2.0",
+                "psr/container": "^1.1 || ^2.0",
                 "psr/http-client": "^1.0",
                 "psr/http-server-handler": "^1.0",
                 "psr/http-server-middleware": "^1.0",
-                "psr/log": "^1.0.0",
-                "psr/simple-cache": "^1.0.0"
+                "psr/log": "^1.0 || ^2.0",
+                "psr/simple-cache": "^1.0 || ^2.0"
             },
             "replace": {
                 "cakephp/cache": "self.version",
@@ -352,8 +353,8 @@
                 "cakephp/validation": "self.version"
             },
             "require-dev": {
-                "cakephp/cakephp-codesniffer": "^4.0",
-                "mikey179/vfsstream": "^1.6",
+                "cakephp/cakephp-codesniffer": "^4.5",
+                "mikey179/vfsstream": "^1.6.10",
                 "paragonie/csp-builder": "^2.3",
                 "phpunit/phpunit": "^8.5 || ^9.3"
             },
@@ -405,7 +406,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2021-09-11T00:24:13+00:00"
+            "time": "2022-03-26T02:09:46+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -468,29 +469,29 @@
         },
         {
             "name": "cakephp/migrations",
-            "version": "3.1.0",
+            "version": "3.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/migrations.git",
-                "reference": "d22737c31243db89774abfe6a077d254c0eae75a"
+                "reference": "e1b03bfef53ce41feabbf2120021ad5187e80289"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/migrations/zipball/d22737c31243db89774abfe6a077d254c0eae75a",
-                "reference": "d22737c31243db89774abfe6a077d254c0eae75a",
+                "url": "https://api.github.com/repos/cakephp/migrations/zipball/e1b03bfef53ce41feabbf2120021ad5187e80289",
+                "reference": "e1b03bfef53ce41feabbf2120021ad5187e80289",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cache": "^4.0.5",
-                "cakephp/orm": "^4.0.5",
+                "cakephp/cache": "^4.3.0",
+                "cakephp/orm": "^4.3.0",
                 "php": ">=7.2.0",
                 "robmorgan/phinx": "^0.12"
             },
             "require-dev": {
-                "cakephp/bake": "^2.1.0",
-                "cakephp/cakephp": "^4.0.5",
-                "cakephp/cakephp-codesniffer": "~4.1.0",
-                "phpunit/phpunit": "~8.5.0"
+                "cakephp/bake": "^2.6.0",
+                "cakephp/cakephp": "^4.3.0",
+                "cakephp/cakephp-codesniffer": "^4.1",
+                "phpunit/phpunit": "^8.5.0 || ^9.5.0"
             },
             "suggest": {
                 "cakephp/bake": "If you want to generate migrations.",
@@ -524,7 +525,7 @@
                 "issues": "https://github.com/cakephp/migrations/issues",
                 "source": "https://github.com/cakephp/migrations"
             },
-            "time": "2021-05-20T13:57:37+00:00"
+            "time": "2022-05-10T15:01:58+00:00"
         },
         {
             "name": "cakephp/plugin-installer",
@@ -982,16 +983,16 @@
         },
         {
             "name": "laminas/laminas-diactoros",
-            "version": "2.9.0",
+            "version": "2.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-diactoros.git",
-                "reference": "954e2dcfb1607681be44599faac10fc63bb6925a"
+                "reference": "07475df6b4bf6277ae8b9cbbc94d0ac6fee5e726"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/954e2dcfb1607681be44599faac10fc63bb6925a",
-                "reference": "954e2dcfb1607681be44599faac10fc63bb6925a",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/07475df6b4bf6277ae8b9cbbc94d0ac6fee5e726",
+                "reference": "07475df6b4bf6277ae8b9cbbc94d0ac6fee5e726",
                 "shasum": ""
             },
             "require": {
@@ -1077,7 +1078,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-03-29T20:12:16+00:00"
+            "time": "2022-04-06T17:37:15+00:00"
         },
         {
             "name": "laminas/laminas-httphandlerrunner",
@@ -1279,21 +1280,21 @@
         },
         {
             "name": "league/container",
-            "version": "3.4.1",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/container.git",
-                "reference": "84ecbc2dbecc31bd23faf759a0e329ee49abddbd"
+                "reference": "375d13cb828649599ef5d48a339c4af7a26cd0ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/container/zipball/84ecbc2dbecc31bd23faf759a0e329ee49abddbd",
-                "reference": "84ecbc2dbecc31bd23faf759a0e329ee49abddbd",
+                "url": "https://api.github.com/repos/thephpleague/container/zipball/375d13cb828649599ef5d48a339c4af7a26cd0ab",
+                "reference": "375d13cb828649599ef5d48a339c4af7a26cd0ab",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0 || ^8.0",
-                "psr/container": "^1.0.0"
+                "php": "^7.2 || ^8.0",
+                "psr/container": "^1.1 || ^2.0"
             },
             "provide": {
                 "psr/container-implementation": "^1.0"
@@ -1302,15 +1303,19 @@
                 "orno/di": "~2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.0 || ^7.0",
+                "nette/php-generator": "^3.4",
+                "nikic/php-parser": "^4.10",
+                "phpstan/phpstan": "^0.12.47",
+                "phpunit/phpunit": "^8.5.17",
                 "roave/security-advisories": "dev-latest",
                 "scrutinizer/ocular": "^1.8",
-                "squizlabs/php_codesniffer": "^3.5"
+                "squizlabs/php_codesniffer": "^3.6"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.x-dev",
+                    "dev-master": "4.x-dev",
+                    "dev-4.x": "4.x-dev",
                     "dev-3.x": "3.x-dev",
                     "dev-2.x": "2.x-dev",
                     "dev-1.x": "1.x-dev"
@@ -1328,8 +1333,7 @@
             "authors": [
                 {
                     "name": "Phil Bennett",
-                    "email": "philipobenito@gmail.com",
-                    "homepage": "http://www.philipobenito.com",
+                    "email": "mail@philbennett.co.uk",
                     "role": "Developer"
                 }
             ],
@@ -1346,7 +1350,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/container/issues",
-                "source": "https://github.com/thephpleague/container/tree/3.4.1"
+                "source": "https://github.com/thephpleague/container/tree/4.2.0"
             },
             "funding": [
                 {
@@ -1354,7 +1358,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-09T08:23:52+00:00"
+            "time": "2021-11-16T10:29:06+00:00"
         },
         {
             "name": "league/flysystem",
@@ -1500,23 +1504,24 @@
         },
         {
             "name": "lorenzo/cakephp-email-queue",
-            "version": "4.0.0",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lorenzo/cakephp-email-queue.git",
-                "reference": "47b9517122f0333d028b5c1f81dc55b99d1a2695"
+                "reference": "ea06e74107ee69c3eafe27054ae4d8232b5a420e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lorenzo/cakephp-email-queue/zipball/47b9517122f0333d028b5c1f81dc55b99d1a2695",
-                "reference": "47b9517122f0333d028b5c1f81dc55b99d1a2695",
+                "url": "https://api.github.com/repos/lorenzo/cakephp-email-queue/zipball/ea06e74107ee69c3eafe27054ae4d8232b5a420e",
+                "reference": "ea06e74107ee69c3eafe27054ae4d8232b5a420e",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "~4.0"
+                "cakephp/cakephp": "^4.3"
             },
             "require-dev": {
                 "cakephp/cakephp-codesniffer": "^4.0",
+                "cakephp/migrations": "^3.3",
                 "php-coveralls/php-coveralls": "^2.1",
                 "phpunit/phpunit": "^8.5"
             },
@@ -1547,9 +1552,9 @@
             ],
             "support": {
                 "issues": "https://github.com/lorenzo/cakephp-email-queue/issues",
-                "source": "https://github.com/lorenzo/cakephp-email-queue/tree/master"
+                "source": "https://github.com/lorenzo/cakephp-email-queue/tree/v5.0.0"
             },
-            "time": "2020-04-14T10:59:36+00:00"
+            "time": "2022-04-14T10:21:22+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -1835,22 +1840,27 @@
         },
         {
             "name": "psr/container",
-            "version": "1.1.1",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf"
+                "reference": "2ae37329ee82f91efadc282cc2d527fd6065a5ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/8622567409010282b7aeebe4bb841fe98b58dcaf",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/2ae37329ee82f91efadc282cc2d527fd6065a5ef",
+                "reference": "2ae37329ee82f91efadc282cc2d527fd6065a5ef",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Psr\\Container\\": "src/"
@@ -1877,9 +1887,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/1.1.1"
+                "source": "https://github.com/php-fig/container/tree/2.0.1"
             },
-            "time": "2021-03-05T17:36:06+00:00"
+            "time": "2021-03-24T13:40:57+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -3817,37 +3827,29 @@
         },
         {
             "name": "symfony/service-contracts",
-            "version": "v2.5.1",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "24d9dc654b83e91aa59f9d167b131bc3b5bea24c"
+                "reference": "191afdcb5804db960d26d8566b7e9a2843cab3a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/24d9dc654b83e91aa59f9d167b131bc3b5bea24c",
-                "reference": "24d9dc654b83e91aa59f9d167b131bc3b5bea24c",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/191afdcb5804db960d26d8566b7e9a2843cab3a0",
+                "reference": "191afdcb5804db960d26d8566b7e9a2843cab3a0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5",
-                "psr/container": "^1.1",
-                "symfony/deprecation-contracts": "^2.1|^3"
-            },
-            "conflict": {
-                "ext-psr": "<1.1|>=2"
+                "php": "^7.1.3"
             },
             "suggest": {
+                "psr/container": "",
                 "symfony/service-implementation": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.5-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -3880,23 +3882,9 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/service-contracts/tree/v2.5.1"
+                "source": "https://github.com/symfony/service-contracts/tree/v1.1.2"
             },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2022-03-13T20:07:29+00:00"
+            "time": "2019-05-28T07:50:59+00:00"
         },
         {
             "name": "symfony/string",
@@ -4272,21 +4260,21 @@
         },
         {
             "name": "cakephp/bake",
-            "version": "2.5.2",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "bfb856afcfbc70c5cf5341669c3036a45ca15d94"
+                "reference": "3933caa0941b2f75f3e53c5456efdbf588917584"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/bfb856afcfbc70c5cf5341669c3036a45ca15d94",
-                "reference": "bfb856afcfbc70c5cf5341669c3036a45ca15d94",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/3933caa0941b2f75f3e53c5456efdbf588917584",
+                "reference": "3933caa0941b2f75f3e53c5456efdbf588917584",
                 "shasum": ""
             },
             "require": {
                 "brick/varexporter": "^0.3.5",
-                "cakephp/cakephp": "^4.1",
+                "cakephp/cakephp": "^4.3.0",
                 "cakephp/twig-view": "^1.0.2",
                 "php": ">=7.2"
             },
@@ -4294,7 +4282,7 @@
                 "cakephp/cakephp-codesniffer": "^4.0",
                 "cakephp/debug_kit": "^4.1",
                 "cakephp/plugin-installer": "^1.3",
-                "phpunit/phpunit": "~8.5.0"
+                "phpunit/phpunit": "^8.5 || ^9.3"
             },
             "type": "cakephp-plugin",
             "autoload": {
@@ -4324,7 +4312,7 @@
                 "issues": "https://github.com/cakephp/bake/issues",
                 "source": "https://github.com/cakephp/bake"
             },
-            "time": "2021-07-26T14:56:18+00:00"
+            "time": "2022-04-14T08:50:07+00:00"
         },
         {
             "name": "cakephp/debug_kit",
@@ -5891,24 +5879,25 @@
         },
         {
             "name": "passbolt/passbolt-selenium-api",
-            "version": "3.1.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "56faddc72a0331c0cb4aaaf33589b607fc050f61"
+                "reference": "ade46d4c3095b18316cbb0553f875c50a4dd67b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/56faddc72a0331c0cb4aaaf33589b607fc050f61",
-                "reference": "56faddc72a0331c0cb4aaaf33589b607fc050f61",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/ade46d4c3095b18316cbb0553f875c50a4dd67b9",
+                "reference": "ade46d4c3095b18316cbb0553f875c50a4dd67b9",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "^4.0"
+                "cakephp/cakephp": "^4.3"
             },
             "require-dev": {
                 "phpunit/phpunit": "^8.5 || ^9.3"
             },
+            "default-branch": true,
             "type": "cakephp-plugin",
             "autoload": {
                 "psr-4": {
@@ -5942,7 +5931,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2021-11-14T15:35:11+00:00"
+            "time": "2022-05-10T07:48:13+00:00"
         },
         {
             "name": "passbolt/passbolt-test-data",
@@ -8633,20 +8622,20 @@
         },
         {
             "name": "vierge-noire/cakephp-fixture-factories",
-            "version": "v2.4",
+            "version": "v2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierge-noire/cakephp-fixture-factories.git",
-                "reference": "87d8eb48865f6d6848627bafa845b0529d676257"
+                "reference": "4aaf499f6f06a42e3538d2d7c602f04a3a45cfe8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/87d8eb48865f6d6848627bafa845b0529d676257",
-                "reference": "87d8eb48865f6d6848627bafa845b0529d676257",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/4aaf499f6f06a42e3538d2d7c602f04a3a45cfe8",
+                "reference": "4aaf499f6f06a42e3538d2d7c602f04a3a45cfe8",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "^4.0",
+                "cakephp/orm": "^4.0",
                 "fakerphp/faker": "^1.15",
                 "php": ">=7.2",
                 "vierge-noire/cakephp-test-suite-light": "^2.1"
@@ -8658,7 +8647,8 @@
                 "josegonzalez/dotenv": "dev-master",
                 "phpstan/phpstan": "^0.12.48@dev",
                 "phpunit/phpunit": "^8.0",
-                "vierge-noire/cakephp-test-migrator": "^2.1"
+                "vierge-noire/cakephp-test-migrator": "^2.1",
+                "vimeo/psalm": "^4.0"
             },
             "type": "cakephp-plugin",
             "autoload": {
@@ -8689,80 +8679,33 @@
             ],
             "support": {
                 "issues": "https://github.com/vierge-noire/cakephp-fixture-factories/issues",
-                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.4"
+                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.5.1"
             },
-            "time": "2021-09-08T12:15:32+00:00"
-        },
-        {
-            "name": "vierge-noire/cakephp-test-migrator",
-            "version": "v2.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vierge-noire/cakephp-test-migrator.git",
-                "reference": "4fd852809bc60fd716a1620b6ad6f252e8f8f6b1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-test-migrator/zipball/4fd852809bc60fd716a1620b6ad6f252e8f8f6b1",
-                "reference": "4fd852809bc60fd716a1620b6ad6f252e8f8f6b1",
-                "shasum": ""
-            },
-            "require": {
-                "cakephp/cakephp": "^4.0"
-            },
-            "require-dev": {
-                "cakephp/cakephp-codesniffer": "^4.0",
-                "cakephp/migrations": "^3.1",
-                "josegonzalez/dotenv": "dev-master",
-                "phpunit/phpunit": "^8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CakephpTestMigrator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Juan Pablo Ramirez",
-                    "email": "pabloelcolombiano@gmail.com"
-                }
-            ],
-            "description": "Migration helper for the CakePHP Test Suite Light",
-            "support": {
-                "issues": "https://github.com/vierge-noire/cakephp-test-migrator/issues",
-                "source": "https://github.com/vierge-noire/cakephp-test-migrator/tree/v2.5"
-            },
-            "time": "2021-09-19T22:25:57+00:00"
+            "time": "2021-11-07T00:48:31+00:00"
         },
         {
             "name": "vierge-noire/cakephp-test-suite-light",
-            "version": "v2.3",
+            "version": "v2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierge-noire/cakephp-test-suite-light.git",
-                "reference": "cbe5e698e78dfe8a991f5ccbcd8c24f428a0287a"
+                "reference": "35a8055d0702e93bfa60e82e1e58a940f8bd52dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-test-suite-light/zipball/cbe5e698e78dfe8a991f5ccbcd8c24f428a0287a",
-                "reference": "cbe5e698e78dfe8a991f5ccbcd8c24f428a0287a",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-test-suite-light/zipball/35a8055d0702e93bfa60e82e1e58a940f8bd52dc",
+                "reference": "35a8055d0702e93bfa60e82e1e58a940f8bd52dc",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "^4.0",
+                "cakephp/cakephp": "^4.3",
                 "ext-pdo": "*",
-                "php": ">=7.2",
-                "vierge-noire/cakephp-test-migrator": "^2.3"
+                "php": ">=7.2"
             },
             "require-dev": {
-                "cakephp/migrations": "^3.0",
+                "cakephp/migrations": "^3.2",
                 "josegonzalez/dotenv": "dev-master",
-                "phpunit/phpunit": "^8.0"
+                "phpunit/phpunit": "^8.5 || ^9.3"
             },
             "type": "cakephp-plugin",
             "autoload": {
@@ -8791,22 +8734,22 @@
             ],
             "support": {
                 "issues": "https://github.com/vierge-noire/cakephp-test-suite-light/issues",
-                "source": "https://github.com/vierge-noire/cakephp-test-suite-light/tree/v2.3"
+                "source": "https://github.com/vierge-noire/cakephp-test-suite-light/tree/v2.4"
             },
-            "time": "2021-05-24T19:55:28+00:00"
+            "time": "2021-10-24T14:31:56+00:00"
         },
         {
             "name": "vimeo/psalm",
-            "version": "4.22.0",
+            "version": "4.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "fc2c6ab4d5fa5d644d8617089f012f3bb84b8703"
+                "reference": "f1fe6ff483bf325c803df9f510d09a03fd796f88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/fc2c6ab4d5fa5d644d8617089f012f3bb84b8703",
-                "reference": "fc2c6ab4d5fa5d644d8617089f012f3bb84b8703",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/f1fe6ff483bf325c803df9f510d09a03fd796f88",
+                "reference": "f1fe6ff483bf325c803df9f510d09a03fd796f88",
                 "shasum": ""
             },
             "require": {
@@ -8831,6 +8774,7 @@
                 "php": "^7.1|^8",
                 "sebastian/diff": "^3.0 || ^4.0",
                 "symfony/console": "^3.4.17 || ^4.1.6 || ^5.0 || ^6.0",
+                "symfony/polyfill-php80": "^1.25",
                 "webmozart/path-util": "^2.3"
             },
             "provide": {
@@ -8897,9 +8841,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vimeo/psalm/issues",
-                "source": "https://github.com/vimeo/psalm/tree/4.22.0"
+                "source": "https://github.com/vimeo/psalm/tree/4.23.0"
             },
-            "time": "2022-02-24T20:34:05+00:00"
+            "time": "2022-04-28T17:35:49+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -9016,7 +8960,8 @@
     "stability-flags": {
         "singpolyma/openpgp-php": 20,
         "psy/psysh": 0,
-        "passbolt/cakephp-codesniffer": 20
+        "passbolt/cakephp-codesniffer": 20,
+        "passbolt/passbolt-selenium-api": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -9036,5 +8981,5 @@
     "platform-overrides": {
         "php": "7.3"
     },
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }

@@ -468,6 +468,7 @@ class FoldersRelationsTable extends Table
             ->where($conditions)
             ->select('folder_parent_id')
             ->distinct('folder_parent_id')
+            ->all()
             ->extract('folder_parent_id')
             ->toArray();
     }
@@ -492,8 +493,8 @@ class FoldersRelationsTable extends Table
             ->where($conditions)
             ->order('created ')
             ->select('created')
-            ->extract('created')
-            ->first();
+            ->first()
+            ->get('created');
     }
 
     /**
@@ -515,6 +516,7 @@ class FoldersRelationsTable extends Table
             ->where(['foreign_id IN' => $foreignIds])
             ->group('user_id')
             ->having("count(user_id) = $itemsCount")
+            ->all()
             ->extract('user_id')
             ->toArray();
     }
@@ -544,7 +546,9 @@ class FoldersRelationsTable extends Table
                 ],
                 'user_id IN' => $usersIdsHavingAccessToItems,
             ])
-            ->extract('user_id')->toArray();
+            ->all()
+            ->extract('user_id')
+            ->toArray();
     }
 
     /**

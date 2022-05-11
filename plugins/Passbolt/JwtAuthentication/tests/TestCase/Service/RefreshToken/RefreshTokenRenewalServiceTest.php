@@ -25,6 +25,7 @@ use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenCreateService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
@@ -36,6 +37,7 @@ use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 class RefreshTokenRenewalServiceTest extends TestCase
 {
     use ModelAwareTrait;
+    use TruncateDirtyTables;
 
     public function setUp(): void
     {

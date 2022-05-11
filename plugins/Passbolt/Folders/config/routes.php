@@ -14,16 +14,18 @@
  */
 
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
 /**
  * Folders prefixed routes
  */
-Router::plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilder $routes) {
+
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilder $routes) {
     $routes->setExtensions('json');
 
     /**  @uses \Passbolt\Folders\Controller\Folders\FoldersViewController::view() */
-    $routes->connect('/:folderId', ['prefix' => 'Folders', 'controller' => 'FoldersView', 'action' => 'view'])
+    $routes->connect('/{folderId}', ['prefix' => 'Folders', 'controller' => 'FoldersView', 'action' => 'view'])
         ->setPass(['folderId'])
         ->setMethods(['GET']);
 
@@ -32,12 +34,12 @@ Router::plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilde
         ->setMethods(['POST']);
 
     /** @uses \Passbolt\Folders\Controller\Folders\FoldersUpdateController::update() */
-    $routes->connect('/:folderId', ['prefix' => 'Folders', 'controller' => 'FoldersUpdate', 'action' => 'update'])
+    $routes->connect('/{folderId}', ['prefix' => 'Folders', 'controller' => 'FoldersUpdate', 'action' => 'update'])
         ->setPass(['folderId'])
         ->setMethods(['PUT', 'POST']);
 
     /** @uses \Passbolt\Folders\Controller\Folders\FoldersDeleteController::delete() */
-    $routes->connect('/:folderId', ['prefix' => 'Folders', 'controller' => 'FoldersDelete', 'action' => 'delete'])
+    $routes->connect('/{folderId}', ['prefix' => 'Folders', 'controller' => 'FoldersDelete', 'action' => 'delete'])
         ->setPass(['folderId'])
         ->setMethods(['DELETE']);
 
@@ -49,11 +51,11 @@ Router::plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilde
 /**
  * Move prefixed routes
  */
-Router::plugin('Passbolt/Folders', ['path' => '/move'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Folders', ['path' => '/move'], function (RouteBuilder $routes) {
     $routes->setExtensions('json');
 
     /** @uses \Passbolt\Folders\Controller\FoldersRelations\FoldersRelationsMoveController::index() */
-    $routes->connect('/:foreignModel/:foreignId', [
+    $routes->connect('/{foreignModel}/{foreignId}', [
             'prefix' => 'FoldersRelations', 'controller' => 'FoldersRelationsMove', 'action' => 'move',
         ])
         ->setPass(['foreignModel', 'foreignId'])
@@ -63,11 +65,11 @@ Router::plugin('Passbolt/Folders', ['path' => '/move'], function (RouteBuilder $
 /**
  * Share prefixed routes
  */
-Router::plugin('Passbolt/Folders', ['path' => '/share'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Folders', ['path' => '/share'], function (RouteBuilder $routes) {
     $routes->setExtensions('json');
 
     /** @uses \Passbolt\Folders\Controller\FoldersRelations\FoldersRelationsMoveController::index() */
-    $routes->connect('/folder/:folderId', ['prefix' => 'Folders', 'controller' => 'FoldersShare', 'action' => 'share'])
+    $routes->connect('/folder/{folderId}', ['prefix' => 'Folders', 'controller' => 'FoldersShare', 'action' => 'share'])
         ->setPass(['folderId'])
         ->setMethods(['PUT', 'POST']);
 });

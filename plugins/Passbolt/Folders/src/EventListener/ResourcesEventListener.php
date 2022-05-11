@@ -35,7 +35,7 @@ use Passbolt\Folders\Service\Resources\ResourcesAfterSoftDeleteService;
 class ResourcesEventListener implements EventListenerInterface
 {
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

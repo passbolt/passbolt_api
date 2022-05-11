@@ -32,6 +32,7 @@ use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
@@ -49,6 +50,7 @@ abstract class AppTestCase extends TestCase
     use ProfilesModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
+    use TruncateDirtyTables;
     use UserAccessControlTrait;
     use UsersModelTrait;
 

@@ -34,7 +34,7 @@ trait EmailNotificationSettingsDefinitionTrait
     /**
      * Return the event to listen on to register the current notification settings definition
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {

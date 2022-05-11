@@ -90,7 +90,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerUtilityWritePassboltConfigFileSuccess()
     {
-        $this->loadPlugins(['Passbolt/WebInstaller']);
+        $this->loadPlugins(['Passbolt/WebInstaller' => []]);
         $webInstaller = new WebInstaller(null);
 
         // Add the database configuration.
@@ -130,7 +130,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerUtilityInstallDatabaseSuccessAndCreateFirstUserSuccess()
     {
-        $this->loadPlugins(['Migrations']);
+        $this->loadPlugins(['Migrations' => []]);
         $webInstaller = new WebInstaller(null);
         $databaseSettings = $this->getTestDatasourceFromConfig();
         $webInstaller->setSettings('database', $databaseSettings);

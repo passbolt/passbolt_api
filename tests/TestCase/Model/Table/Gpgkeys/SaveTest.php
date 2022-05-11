@@ -19,9 +19,8 @@ namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
-use Cake\I18n\Date;
+use Cake\I18n\FrozenDate;
 use Cake\I18n\FrozenTime;
-use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
@@ -170,7 +169,7 @@ class SaveTest extends AppTestCase
 
         $successes = [
             'tomorrow' => FrozenTime::tomorrow(),
-            'tomorrow as time' => Date::tomorrow(),
+            'tomorrow as time' => FrozenDate::tomorrow(),
             'way later' => FrozenTime::createFromDate(2030),
         ];
         foreach ($successes as $case => $value) {
@@ -185,8 +184,8 @@ class SaveTest extends AppTestCase
     {
         $fails = [
             'future' => FrozenTime::createFromDate(2030),
-            'more than half a day' => Time::now()->modify('+13 hours'),
-            'tomorrow as time' => Time::now()->modify('+24 hours'),
+            'more than half a day' => FrozenTime::now()->modify('+13 hours'),
+            'tomorrow as time' => FrozenTime::now()->modify('+24 hours'),
         ];
         foreach ($fails as $case => $value) {
             $entity = $this->Gpgkeys->newEntity(['key_created' => $value]);
@@ -202,7 +201,7 @@ class SaveTest extends AppTestCase
         $successes = [
             'yesterday' => FrozenTime::yesterday(),
             'now' => FrozenTime::now(),
-            'almost half a day' => Time::now()->modify('+11 hours'),
+            'almost half a day' => FrozenTime::now()->modify('+11 hours'),
         ];
         foreach ($successes as $case => $value) {
             $entity = $this->Gpgkeys->newEntity(['key_created' => $value]);

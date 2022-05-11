@@ -17,21 +17,21 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Test\TestCase\Command;
 
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
-use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 /**
  * @uses \Passbolt\JwtAuthentication\Command\CreateAccessTokenCommand
  */
-class CreateAccessTokenCommandTest extends TestCase
+class CreateAccessTokenCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
-    use FeaturePluginAwareTrait;
     use PassboltCommandTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

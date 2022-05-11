@@ -21,8 +21,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Datasource\ModelAwareTrait;
-use Cake\I18n\Date;
-use CakephpTestSuiteLight\SkipTablesTruncation;
+use Cake\I18n\FrozenDate;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -30,10 +29,10 @@ use CakephpTestSuiteLight\SkipTablesTruncation;
 class IsExpiredTest extends AppTestCase
 {
     use ModelAwareTrait;
-    use SkipTablesTruncation;
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->loadModel('AuthenticationTokens');
     }
 
@@ -54,7 +53,7 @@ class IsExpiredTest extends AppTestCase
     {
         $token = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_REGISTER)
-            ->created(Date::yesterday())
+            ->created(FrozenDate::yesterday())
             ->getEntity();
 
         $result = $this->AuthenticationTokens->isExpired($token, $expiry);

@@ -19,6 +19,7 @@ namespace Passbolt\Ee\Test\TestCase\Model\Table\Subscriptions;
 
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionFormatException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
@@ -32,6 +33,7 @@ use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 class SubscriptionsTableUpdateTest extends TestCase
 {
     use DummySubscriptionTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var \Passbolt\Ee\Model\Table\SubscriptionsTable $Subscriptions
@@ -50,6 +52,7 @@ class SubscriptionsTableUpdateTest extends TestCase
     public function tearDown(): void
     {
         unset($this->Subscriptions);
+        parent::tearDown();
     }
 
     public function testSubscriptionsTableUpdateNonExistent()

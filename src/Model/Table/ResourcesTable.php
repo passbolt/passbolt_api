@@ -333,6 +333,7 @@ class ResourcesTable extends Table
         $Users = TableRegistry::getTableLocator()->get('Users');
         $usersFindOptions['filter']['has-access'] = [$entity->id];
         $allowedUsersIds = $Users->findIndex(Role::USER, $usersFindOptions)
+            ->all()
             ->extract('id')
             ->toArray();
 

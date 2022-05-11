@@ -16,11 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
+use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
 
-class VersionCommandTest extends TestCase
+class VersionCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
 

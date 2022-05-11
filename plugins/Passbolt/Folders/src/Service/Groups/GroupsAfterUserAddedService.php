@@ -87,6 +87,7 @@ class GroupsAfterUserAddedService
     {
         return $this->permissionsTable->findAllByAro(PermissionsTable::FOLDER_ACO, $groupId)
             ->select('aco_foreign_key')
+            ->all()
             ->extract('aco_foreign_key')
             ->toArray();
     }
@@ -101,6 +102,7 @@ class GroupsAfterUserAddedService
     {
         return $this->permissionsTable->findAllByAro(PermissionsTable::RESOURCE_ACO, $groupId)
             ->select('aco_foreign_key')
+            ->all()
             ->extract('aco_foreign_key')
             ->toArray();
     }

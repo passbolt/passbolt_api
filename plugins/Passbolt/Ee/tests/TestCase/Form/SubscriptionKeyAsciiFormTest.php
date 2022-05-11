@@ -36,7 +36,7 @@ class SubscriptionKeyAsciiFormTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Passbolt/Ee']);
+        $this->loadPlugins(['Passbolt/Ee' => []]);
         $this->_licenseKeyForm = new SubscriptionKeyAsciiForm();
         $this->setUpPathAndPublicSubscriptionKey();
     }

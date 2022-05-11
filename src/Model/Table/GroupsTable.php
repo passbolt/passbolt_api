@@ -312,7 +312,9 @@ class GroupsTable extends Table
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
         $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
-            ->extract('aco_foreign_key')->toArray();
+            ->all()
+            ->extract('aco_foreign_key')
+            ->toArray();
         if (!empty($resourceIds)) {
             /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
@@ -323,6 +325,7 @@ class GroupsTable extends Table
             // Find all the folders that only belongs to the deleted group and delete them.
             // Note: all folders that cannot be deleted should have been transferred to other people already.
             $foldersIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::FOLDER_ACO, $group->id)
+                ->all()
                 ->extract('aco_foreign_key')->toArray();
             if (!empty($foldersIds)) {
                 $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');

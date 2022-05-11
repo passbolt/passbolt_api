@@ -33,7 +33,7 @@ use Passbolt\Folders\Service\Groups\GroupsAfterUserRemovedService;
 class GroupsEventListener implements EventListenerInterface
 {
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

@@ -24,7 +24,8 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\Routing\Router;
-use CakephpTestSuiteLight\SkipTablesTruncation;
+use Cake\TestSuite\Fixture\FixtureStrategyInterface;
+use Cake\TestSuite\Fixture\TruncateStrategy;
 use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
@@ -43,7 +44,6 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
 {
     use EmailQueueTrait;
     use GpgAdaSetupTrait;
-    use SkipTablesTruncation;
 
     /**
      * @var \App\Model\Entity\User
@@ -72,6 +72,16 @@ class AccountRecoveryOptInHappyPathEndToEndTest extends AccountRecoveryIntegrati
     {
         $this->renderAllEmails();
         parent::tearDown();
+    }
+
+    /**
+     * Skip table truncation
+     *
+     * @return FixtureStrategyInterface
+     */
+    protected function getFixtureStrategy(): FixtureStrategyInterface
+    {
+        return new TruncateStrategy();
     }
 
     /**

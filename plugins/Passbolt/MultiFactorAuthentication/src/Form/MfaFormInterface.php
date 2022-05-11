@@ -20,7 +20,8 @@ interface MfaFormInterface
 {
     /**
      * @param array $data Data
+     * @param array<string, mixed> $options List of options.
      * @return bool
      */
-    public function execute(array $data): bool;
+    public function execute(array $data, array $options = []): bool;
 }

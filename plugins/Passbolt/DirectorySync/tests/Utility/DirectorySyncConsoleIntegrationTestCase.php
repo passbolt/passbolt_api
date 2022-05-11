@@ -17,14 +17,14 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Test\Utility;
 
 use App\Command\PassboltCommand;
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\DirectoryOrgSettingsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
 
-abstract class DirectorySyncConsoleIntegrationTestCase extends TestCase
+abstract class DirectorySyncConsoleIntegrationTestCase extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use DirectoryOrgSettingsTrait;

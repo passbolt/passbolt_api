@@ -19,17 +19,17 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Middleware;
 use App\Authenticator\SessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\Core\Container;
 use Cake\Http\ServerRequest;
 use Cake\Http\Session;
-use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class MfaRequiredCheckMiddlewareTest extends TestCase
+class MfaRequiredCheckMiddlewareTest extends AppTestCase
 {
     use ScenarioAwareTrait;
     use UserAccessControlTrait;
@@ -38,6 +38,7 @@ class MfaRequiredCheckMiddlewareTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->middleware = new MfaRequiredCheckMiddleware();
     }
 
@@ -45,6 +46,7 @@ class MfaRequiredCheckMiddlewareTest extends TestCase
     {
         unset($this->middleware);
         MfaSettings::clear();
+        parent::tearDown();
     }
 
     public function dataForWhiteListUrl()

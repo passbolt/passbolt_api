@@ -23,6 +23,7 @@ use Cake\Http\Exception\UnauthorizedException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Ee\Model\Entity\Subscription;
 use Passbolt\Ee\Test\Factory\SubscriptionFactory;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
@@ -36,6 +37,7 @@ use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 class SubscriptionsTableTest extends TestCase
 {
     use DummySubscriptionTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var \Passbolt\Ee\Model\Table\SubscriptionsTable
@@ -56,6 +58,7 @@ class SubscriptionsTableTest extends TestCase
     public function tearDown(): void
     {
         unset($this->Subscriptions);
+        parent::tearDown();
     }
 
     public function testSubscriptionsTableInsertMultipleShouldFail()

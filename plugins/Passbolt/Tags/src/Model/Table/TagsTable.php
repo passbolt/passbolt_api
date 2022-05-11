@@ -270,7 +270,7 @@ class TagsTable extends Table
      *
      * @return int number of affected rows
      */
-    public function deleteAllUnusedTags()
+    public function deleteAllUnusedTags(): int
     {
         // SELECT tags.id
         // FROM tags

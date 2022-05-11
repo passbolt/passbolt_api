@@ -18,7 +18,7 @@ namespace App\Test\TestCase\Controller\Gpgkeys;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
 class GpgkeysIndexControllerTest extends AppIntegrationTestCase
@@ -46,10 +46,10 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
         $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
 
         // Find a key at a given time and modify it
-        $t = Time::parse('now');
+        $t = FrozenTime::now();
         sleep(1);
         $gpgkey = $Gpgkeys->find('all')->first();
-        $gpgkey->modified = Time::parse('now');
+        $gpgkey->modified = FrozenTime::now();
         $Gpgkeys->save($gpgkey);
 
         // Find the keys modified since then

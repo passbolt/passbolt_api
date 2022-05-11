@@ -20,6 +20,7 @@ namespace Passbolt\Ee\Test\TestCase\Model\Table\Subscriptions;
 use App\Model\Entity\OrganizationSetting;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionFormatException;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
@@ -32,6 +33,7 @@ use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 class SubscriptionsTableCreateTest extends TestCase
 {
     use DummySubscriptionTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var \Passbolt\Ee\Model\Table\SubscriptionsTable
@@ -50,6 +52,7 @@ class SubscriptionsTableCreateTest extends TestCase
     public function tearDown(): void
     {
         unset($this->Subscriptions);
+        parent::tearDown();
     }
 
     public function testSubscriptionsTableCreateValidSubscriptionKey()

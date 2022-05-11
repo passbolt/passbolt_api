@@ -47,10 +47,11 @@ class MfaForm extends Form implements MfaFormInterface
      * with a remote API, or anything else you may need.
      *
      * @param array $data Form data.
+     * @param array<string, mixed> $options List of options.
      * @return bool False on validation failure, otherwise returns the
      *   result of the `_execute()` method.
      */
-    public function execute(array $data): bool
+    public function execute(array $data, array $options = []): bool
     {
         if (!$this->validate($data)) {
             throw new CustomValidationException(

@@ -132,7 +132,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
 
     public function testFolderDelete_CommonSuccess2_NotifyUsersAfterDelete()
     {
-        $this->loadPlugins(['Passbolt/Folders', 'Passbolt/EmailDigest']);
+                $this->loadPlugins(['Passbolt/Folders' => [], 'Passbolt/EmailDigest' => []]);
         [$folderA, $folderB, $userAId, $userBId] = $this->insertSharedSuccess2Fixture();
 
         $uac = new UserAccessControl(Role::USER, $userAId);

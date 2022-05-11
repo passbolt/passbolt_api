@@ -37,10 +37,7 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
     use GroupsUsersModelTrait;
     use EmailQueueTrait;
 
-    public $autoFixtures = false;
-
-    public $fixtures = [
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
+    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Favorites',
     ];
@@ -79,8 +76,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMUpdateMembersRoleSuccess()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userJId = UuidFactory::uuid('user.id.jean');
@@ -177,8 +172,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMAddMembersSuccess()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userAId = UuidFactory::uuid('user.id.ada');
@@ -247,8 +240,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMDeleteMembersSuccess()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userKId = UuidFactory::uuid('user.id.kathleen');
@@ -302,8 +293,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMUpdateGroupComplexScenarioSuccess()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userAId = UuidFactory::uuid('user.id.ada');
@@ -393,8 +382,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsGMCannotUpdateNameError()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
@@ -421,8 +408,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsADUpdateNameSuccess()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
 
@@ -448,8 +433,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsADUpdateMembersRoleSuccess()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userJId = UuidFactory::uuid('user.id.jean');
@@ -492,8 +475,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsADDeleteMembersSuccess()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userKId = UuidFactory::uuid('user.id.kathleen');
@@ -541,8 +522,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsADUpdateGroupComplexScenarioSuccess()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userJId = UuidFactory::uuid('user.id.jean');
@@ -591,8 +570,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsAdminCannotAddGroupUserError()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userCId = UuidFactory::uuid('user.id.carol');
@@ -614,8 +591,6 @@ hcciUFw5
 
     public function testGroupsUpdateLostAccessFavoritesDeleted()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $userLId = UuidFactory::uuid('user.id.lynne');
         $groupFId = UuidFactory::uuid('group.id.freelancer');
@@ -644,8 +619,6 @@ hcciUFw5
 
     public function testGroupsUpdateAsAdminCannotDeleteGroupUserError()
     {
-        $this->loadFixtures();
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userKId = UuidFactory::uuid('user.id.nancy');

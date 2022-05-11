@@ -116,7 +116,10 @@ trait FoldersModelTrait
         foreach ($groups as $groupId => $permissionType) {
             $this->addPermission('Folder', $folder->get('id'), null, $groupId, $permissionType);
             $folderParentId = $data['folder_parent_id'] ?? null;
-            $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
+            $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($groupId)
+                ->all()
+                ->extract('user_id')
+                ->toArray();
             foreach ($groupUsersIds as $groupUserId) {
                 $folderRelationData = [
                     'foreign_model' => PermissionsTable::FOLDER_ACO,

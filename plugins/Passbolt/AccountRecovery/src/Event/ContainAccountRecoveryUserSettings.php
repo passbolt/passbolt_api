@@ -35,7 +35,7 @@ class ContainAccountRecoveryUserSettings implements EventListenerInterface
     private $isContained = false;
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

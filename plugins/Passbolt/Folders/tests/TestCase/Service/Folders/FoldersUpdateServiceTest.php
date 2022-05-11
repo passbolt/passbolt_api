@@ -126,7 +126,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderSuccess_NotifyUserAfterUpdate()
     {
-        $this->loadPlugins(['Passbolt/Folders', 'Passbolt/EmailDigest']);
+                $this->loadPlugins(['Passbolt/Folders' => [], 'Passbolt/EmailDigest' => []]);
         [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
 

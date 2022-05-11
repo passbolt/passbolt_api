@@ -32,7 +32,7 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.directorySync.enabled', true);
-        $this->loadPlugins(['Passbolt/DirectorySync']);
+        $this->loadPlugins(['Passbolt/DirectorySync' => []]);
         Configure::load('Passbolt/DirectorySync.config', 'default', true);
         $this->mappingRules = Configure::read('passbolt.plugins.directorySync.fieldsMapping.ad');
     }

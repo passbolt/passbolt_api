@@ -29,7 +29,7 @@ class UpdateMfaTokenSessionIdOnRefreshTokenCreated implements EventListenerInter
     use UacAwareMiddlewareTrait;
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

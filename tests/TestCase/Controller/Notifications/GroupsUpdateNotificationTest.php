@@ -18,12 +18,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Users',
         'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Favorites',
@@ -45,11 +47,9 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('added you to the group');
-        $this->assertResponseContains('As member of the group');
-        $this->assertResponseNotContains('And as group manager');
+        $this->assertEmailInBatchContains('added you to the group', 'carol@passbolt.com');
+        $this->assertEmailInBatchContains('As member of the group', 'carol@passbolt.com');
+        $this->assertEmailInBatchNotContains('And as group manager', 'carol@passbolt.com');
     }
 
     public function testUpdateNotificationAddGroupManagerSuccess()
@@ -68,11 +68,9 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('added you to the group');
-        $this->assertResponseContains('As member of the group');
-        $this->assertResponseContains('And as group manager');
+        $this->assertEmailInBatchContains('added you to the group', 'carol@passbolt.com');
+        $this->assertEmailInBatchContains('As member of the group', 'carol@passbolt.com');
+        $this->assertEmailInBatchContains('And as group manager', 'carol@passbolt.com');
     }
 
     public function testUpdateNotificationAddUserDisabled()
@@ -93,9 +91,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showLastEmail/carol@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('carol@passbolt.com');
     }
 
     public function testUpdateNotificationRemoveMemberSuccess()
@@ -111,10 +107,8 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showLastEmail/kathleen@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('you from the group');
-        $this->assertResponseContains('You are no longer a member');
+        $this->assertEmailInBatchContains('you from the group', 'kathleen@passbolt.com');
+        $this->assertEmailInBatchContains('You are no longer a member', 'kathleen@passbolt.com');
     }
 
     public function testUpdateNotificationRemoveMemberDisabled()
@@ -132,9 +126,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showLastEmail/kathleen@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('kathleen@passbolt.com');
     }
 
     public function testUpdateNotificationUpdateMembershipSuccess()
@@ -154,13 +146,15 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showLastEmail/jean@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('You are no longer a group manager of this group.');
+        $this->assertEmailInBatchContains(
+            'You are no longer a group manager of this group.',
+            'jean@passbolt.com'
+        );
 
-        $this->get('/seleniumtests/showLastEmail/nancy@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('You are now a group manager of this group.');
+        $this->assertEmailInBatchContains(
+            'You are now a group manager of this group.',
+            'nancy@passbolt.com'
+        );
     }
 
     public function testUpdateNotificationUpdateMembershipDisabled()
@@ -180,13 +174,8 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showLastEmail/jean@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
-
-        $this->get('/seleniumtests/showLastEmail/nancy@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('jean@passbolt.com');
+        $this->assertEmailWithRecipientIsInNotQueue('nancy@passbolt.com');
     }
 
     public function testUpdateNotificationAdminSummarySuccess()
@@ -209,15 +198,13 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showLastEmail/thelma@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('Added members');
-        $this->assertResponseContains('Ada Lovelace');
-        $this->assertResponseContains('Betty Holberton');
-        $this->assertResponseContains('Removed members');
-        $this->assertResponseContains('Ursula Martin');
-        $this->assertResponseContains('Updated roles');
-        $this->assertResponseContains('Wang Xiaoyun');
+        $this->assertEmailInBatchContains('Added members', 'thelma@passbolt.com');
+        $this->assertEmailInBatchContains('Ada Lovelace', 'thelma@passbolt.com');
+        $this->assertEmailInBatchContains('Betty Holberton', 'thelma@passbolt.com');
+        $this->assertEmailInBatchContains('Removed members', 'thelma@passbolt.com');
+        $this->assertEmailInBatchContains('Ursula Martin', 'thelma@passbolt.com');
+        $this->assertEmailInBatchContains('Updated roles', 'thelma@passbolt.com');
+        $this->assertEmailInBatchContains('Wang Xiaoyun', 'thelma@passbolt.com');
     }
 
     public function testUpdateNotificationUpdateAdminSummaryDisabled()
@@ -242,8 +229,6 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showLastEmail/thelma@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('thelma@passbolt.com');
     }
 }

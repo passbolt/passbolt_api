@@ -6,6 +6,7 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Model\Table;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\CleanupTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 
 /**
@@ -14,6 +15,7 @@ use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 class AccountRecoveryUserSettingsTableTest extends TestCase
 {
     use CleanupTrait;
+    use TruncateDirtyTables;
 
     /**
      * Test subject

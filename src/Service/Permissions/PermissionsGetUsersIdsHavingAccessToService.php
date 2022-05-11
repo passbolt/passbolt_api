@@ -60,6 +60,7 @@ class PermissionsGetUsersIdsHavingAccessToService
         $groupUsersIds = $this->GroupsUsers->find()
             ->where(['group_id IN' => $groupsIdsHavingAccessQuery])
             ->select('user_id')
+            ->all()
             ->extract('user_id')
             ->toArray();
 
@@ -67,6 +68,7 @@ class PermissionsGetUsersIdsHavingAccessToService
         $usersIds = $this->Permissions
             ->findByAroAndAcoForeignKey(PermissionsTable::USER_ARO, $acoForeignKey)
             ->select('aro_foreign_key')
+            ->all()
             ->extract('aro_foreign_key')
             ->toArray();
 

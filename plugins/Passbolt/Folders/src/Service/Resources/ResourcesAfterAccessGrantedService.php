@@ -108,7 +108,10 @@ class ResourcesAfterAccessGrantedService
      */
     private function addResourceToGroupUsersTrees(UserAccessControl $uac, Resource $resource, string $groupId): void
     {
-        $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
+        $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)
+            ->all()
+            ->extract('user_id')
+            ->toArray();
         foreach ($grousUsersIds as $groupUserId) {
             $this->addResourceToUserTree($uac, $resource, $groupUserId);
         }

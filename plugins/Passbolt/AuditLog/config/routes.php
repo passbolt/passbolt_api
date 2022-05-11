@@ -15,17 +15,18 @@
  */
 use Cake\Core\Configure;
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/AuditLog', ['path' => '/actionlog'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/AuditLog', ['path' => '/actionlog'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/resource/:resourceId', ['controller' => 'UserLogs', 'action' => 'viewByResource'])
+    $routes->connect('/resource/{resourceId}', ['controller' => 'UserLogs', 'action' => 'viewByResource'])
            ->setPass(['resourceId'])
            ->setMethods(['GET']);
 
     if (Configure::read('passbolt.plugins.folders.enabled')) {
-        $routes->connect('/folder/:folderId', ['controller' => 'UserLogs', 'action' => 'viewByFolder'])
+        $routes->connect('/folder/{folderId}', ['controller' => 'UserLogs', 'action' => 'viewByFolder'])
                ->setPass(['folderId'])
                ->setMethods(['GET']);
     }

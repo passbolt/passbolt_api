@@ -23,7 +23,7 @@ use Passbolt\MultiFactorAuthentication\Service\ClearMfaCookieInResponseService;
 class ClearMfaCookieInResponse implements EventListenerInterface
 {
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {
