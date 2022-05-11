@@ -25,8 +25,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
 
-    public $autoFixtures = false;
-
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
     ];
@@ -70,8 +68,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_Errors()
     {
-        $this->loadFixtures();
-
         foreach ($this->fails as $case => $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
             $result = $this->_getBodyAsString();
@@ -81,8 +77,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_Error_UserDeleted()
     {
-        $this->loadFixtures();
-
         $data = ['username' => 'sofia@passbolt.com'];
         $error = 'This user does not exist or has been deleted.';
         $this->postJson('/users/recover.json', $data);
@@ -93,8 +87,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_Error_UserNotExist()
     {
-        $this->loadFixtures();
-
         $data = ['username' => 'notauser@passbolt.com'];
         $error = 'This user does not exist or has been deleted.';
         $this->postJson('/users/recover.json', $data);
@@ -108,8 +100,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
      */
     public function testUsersRecoverController_Post_Success(string $username, string $emailTemplate)
     {
-        $this->loadFixtures();
-
         $this->postJson('/users/recover.json', compact('username'));
         $this->assertResponseSuccess('Recovery process started, check your email.');
         $this->assertSuccess();

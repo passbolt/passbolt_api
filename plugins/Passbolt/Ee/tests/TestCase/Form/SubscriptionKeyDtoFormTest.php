@@ -22,10 +22,13 @@ use App\Utility\UuidFactory;
 use Cake\Chronos\Date;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Ee\Form\SubscriptionKeyDtoForm;
 
 class SubscriptionKeyDtoFormTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     protected $baseTestPath;
 
     /**
@@ -36,7 +39,7 @@ class SubscriptionKeyDtoFormTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Passbolt/Ee']);
+        $this->loadPlugins(['Passbolt/Ee' => []]);
         $this->baseTestPath = PLUGINS . 'Passbolt' . DS . 'Ee' . DS . 'tests';
     }
 

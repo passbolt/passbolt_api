@@ -34,11 +34,11 @@ class ShareControllerTest extends AppIntegrationTestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->gpg = OpenPGPBackendFactory::get();
-        parent::setUp();
     }
 
     protected function getValidSecret()

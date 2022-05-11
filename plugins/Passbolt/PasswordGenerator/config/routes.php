@@ -14,9 +14,10 @@
  * @since         3.3.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/PasswordGenerator', ['path' => '/password-generator'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/PasswordGenerator', ['path' => '/password-generator'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/settings', ['controller' => 'PasswordGeneratorSettings', 'action' => 'index'])

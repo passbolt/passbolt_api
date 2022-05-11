@@ -28,10 +28,18 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
 {
     public $ResourcesTags;
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/ResourceTypes',
-        'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Groups', 'app.Alt0/GroupsUsers',
-        'app.Alt0/Permissions', 'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-        'app.Base/Groups', 'app.Base/Favorites',
+        'app.Alt0/GroupsUsers',
+        'app.Alt0/Permissions',
+        'app.Base/Groups',
+        'app.Base/Favorites',
+        'app.Base/Profiles',
+        'app.Base/Roles',
+        'app.Base/Resources',
+        'app.Base/ResourceTypes',
+        'app.Base/Secrets',
+        'app.Base/Users',
+        'plugin.Passbolt/Tags.Base/Tags',
+        'plugin.Passbolt/Tags.Alt0/ResourcesTags',
     ];
 
     public function setUp(): void

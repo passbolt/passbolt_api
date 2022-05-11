@@ -36,7 +36,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
     public function setUp(): void
     {
         $this->sut = new MfaUserSettingsResetEmailRedactor();
-        $this->loadPlugins(['Passbolt/Locale']);
+        $this->loadPlugins(['Passbolt/Locale' => []]);
 
         parent::setUp();
     }

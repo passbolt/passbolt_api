@@ -14,9 +14,10 @@
  * @since         2.5.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     $routes->redirect('/setup', '/mfa/setup/select');
@@ -103,7 +104,7 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
     /**
      * User settings
      */
-    $routes->connect('/setup/:userId', [
+    $routes->connect('/setup/{userId}', [
             'prefix' => 'UserSettings', 'controller' => 'MfaUserSettingsDelete', 'action' => 'delete',
         ])
         ->setPass(['userId'])

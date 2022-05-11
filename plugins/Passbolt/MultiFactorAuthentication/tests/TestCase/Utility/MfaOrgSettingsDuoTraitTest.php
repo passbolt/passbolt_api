@@ -25,8 +25,6 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsDuoTraitTest extends MfaIntegrationTestCase
 {
-    public $autoFixtures = false;
-
     /**
      * @var \App\Model\Table\OrganizationSettingsTable
      */

@@ -131,6 +131,7 @@ class ResourcesTagsTable extends Table
                 'tag_id' => $newTagId,
                 'user_id' => $userId,
             ])
+            ->all()
             ->extract('resource_id')
             ->toArray();
 

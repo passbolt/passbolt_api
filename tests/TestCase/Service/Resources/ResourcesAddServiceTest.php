@@ -27,6 +27,7 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
  * Part of the logic of this test is handled in the ResourcesAddControllerTest.
@@ -37,6 +38,7 @@ use Cake\TestSuite\TestCase;
 class ResourcesAddServiceTest extends TestCase
 {
     use ResourcesModelTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var \App\Model\Table\ResourcesTable

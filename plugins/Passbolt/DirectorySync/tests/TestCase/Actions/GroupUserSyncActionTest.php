@@ -558,7 +558,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     {
         // Since an email is sent in this test, it is necessary to load the EmailDigest plugin
         // in order to set the email's encryption to JSON
-        $this->loadPlugins(['Passbolt/EmailDigest']);
+        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
 
         $defaultGroupAdmin = 'edith@passbolt.com';
         $this->setDefaultGroupAdminUser($defaultGroupAdmin);

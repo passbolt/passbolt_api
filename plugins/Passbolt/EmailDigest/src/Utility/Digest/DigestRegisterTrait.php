@@ -25,7 +25,7 @@ namespace Passbolt\EmailDigest\Utility\Digest;
 trait DigestRegisterTrait
 {
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {

@@ -23,7 +23,7 @@ use Passbolt\AccountRecovery\Service\AccountRecoveryUserDelete\AccountRecoveryUs
 class DeleteAccountRecoveryInfoOnUserDelete implements EventListenerInterface
 {
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

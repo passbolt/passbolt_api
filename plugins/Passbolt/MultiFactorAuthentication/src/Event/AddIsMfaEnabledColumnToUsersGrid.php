@@ -26,7 +26,7 @@ use Passbolt\MultiFactorAuthentication\Model\Query\IsMfaEnabledQueryDecorator;
 class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
 {
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

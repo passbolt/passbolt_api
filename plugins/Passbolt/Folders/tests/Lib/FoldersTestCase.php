@@ -32,7 +32,7 @@ abstract class FoldersTestCase extends AppTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders.enabled', true);
-        $this->loadPlugins(['Passbolt/Locale']);
+        $this->loadPlugins(['Passbolt/Locale' => []]);
 
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $resourcesTable->addBehavior(FolderizableBehavior::class);

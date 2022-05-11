@@ -37,21 +37,15 @@ class UsersDeleteNotificationTest extends AppIntegrationTestCase
         $this->deleteJson('/users/' . $francesId . '.json?api-version=v2');
         $this->assertSuccess();
 
-        $this->get('/seleniumtests/showlastemail/ping@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('deleted the user Ursula');
-        $this->assertResponseContains('Human resource');
-        $this->assertResponseContains('IT support');
+        $this->assertEmailInBatchContains('deleted the user Ursula', 'ping@passbolt.com');
+        $this->assertEmailInBatchContains('Human resource', 'ping@passbolt.com');
+        $this->assertEmailInBatchContains('IT support', 'ping@passbolt.com');
 
-        $this->get('/seleniumtests/showlastemail/thelma@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('deleted the user Ursula');
-        $this->assertResponseContains('Human resource');
-        $this->assertResponseNotContains('IT support');
+        $this->assertEmailInBatchContains('deleted the user Ursula', 'thelma@passbolt.com');
+        $this->assertEmailInBatchContains('Human resource', 'thelma@passbolt.com');
+        $this->assertEmailInBatchNotContains('IT support', 'thelma@passbolt.com');
 
-        $this->get('/seleniumtests/showlastemail/wang@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('wang@passbolt.com');
 
         // Two mails should be in the queue
         $this->assertEmailQueueCount(2);

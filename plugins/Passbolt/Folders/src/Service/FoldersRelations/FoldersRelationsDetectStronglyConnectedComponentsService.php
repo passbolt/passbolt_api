@@ -61,7 +61,10 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
     public function bulkDetectForUsers(array $usersIds)
     {
         $result = [];
-        $usersIdsToCompareWith = $this->Users->findActive()->extract('id')->toArray();
+        $usersIdsToCompareWith = $this->Users->findActive()
+            ->all()
+            ->extract('id')
+            ->toArray();
         $usersFoldersRelations = $this->getUsersFoldersRelationsGroupedByUser($usersIdsToCompareWith);
 
         foreach ($usersIds as $firstUserId) {

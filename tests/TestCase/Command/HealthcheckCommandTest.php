@@ -17,14 +17,16 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\HealthcheckCommand;
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
-class HealthcheckCommandTest extends TestCase
+class HealthcheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use PassboltCommandTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

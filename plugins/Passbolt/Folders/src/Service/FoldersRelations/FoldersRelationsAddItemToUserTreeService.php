@@ -224,6 +224,7 @@ class FoldersRelationsAddItemToUserTreeService
 
         return $query->select(['folder_parent_id'])
             ->distinct('folder_parent_id')
+            ->all()
             ->extract('folder_parent_id')
             ->toArray();
     }
@@ -264,6 +265,7 @@ class FoldersRelationsAddItemToUserTreeService
             $created = $this->Folders
                 ->findById($folderChildId)
                 ->select('created')
+                ->all()
                 ->extract('created')
                 ->first();
             $changes[] = [
@@ -307,6 +309,7 @@ class FoldersRelationsAddItemToUserTreeService
 
         return $query->select(['foreign_id'])
             ->distinct('foreign_id')
+            ->all()
             ->extract('foreign_id')
             ->toArray();
     }

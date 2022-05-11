@@ -207,7 +207,7 @@ class FoldersShareServiceTest extends FoldersTestCase
 
     public function testShareFolderSuccess_NotifyUserAfterShare()
     {
-        $this->loadPlugins(['Passbolt/Folders', 'Passbolt/EmailDigest']);
+                $this->loadPlugins(['Passbolt/Folders' => [], 'Passbolt/EmailDigest' => []]);
         [$folderA, $userAId] = $this->insertFixture_ShareFolderSuccess_AddUser();
         $uac = new UserAccessControl(Role::USER, $userAId);
 

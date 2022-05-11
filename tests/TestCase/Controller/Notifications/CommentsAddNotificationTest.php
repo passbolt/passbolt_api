@@ -18,12 +18,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class CommentsAddNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public $Comments;
 
@@ -44,18 +46,13 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // Every member of the group should get notification
-        $this->get('/seleniumtests/showLastEmail/edith@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('commented on Docker');
-        $this->assertResponseContains('this is a test');
-        $this->get('/seleniumtests/showLastEmail/frances@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->get('/seleniumtests/showLastEmail/grace@passbolt.com');
-        $this->assertResponseCode(200);
+        $this->assertEmailInBatchContains('commented on Docker', 'edith@passbolt.com');
+        $this->assertEmailInBatchContains('this is a test', 'edith@passbolt.com');
+        $this->assertEmailWithRecipientIsInQueue('frances@passbolt.com');
+        $this->assertEmailWithRecipientIsInQueue('grace@passbolt.com');
 
         // except Dame
-        $this->get('/seleniumtests/showLastEmail/dame@passbolt.com');
-        $this->assertResponseCode(500);
+        $this->assertEmailWithRecipientIsInNotQueue('dame@passbolt.com');
     }
 
     public function testCommentsAddNotificationUserSuccess()
@@ -69,16 +66,12 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // Every users with direct permissions should get notified
-        $this->get('/seleniumtests/showLastEmail/dame@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->get('/seleniumtests/showLastEmail/frances@passbolt.com');
-        $this->assertResponseCode(200);
+        $this->assertEmailWithRecipientIsInQueue('dame@passbolt.com');
+        $this->assertEmailWithRecipientIsInQueue('ada@passbolt.com');
+        $this->assertEmailWithRecipientIsInQueue('frances@passbolt.com');
 
         // except Dame
-        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
-        $this->assertResponseCode(500);
+        $this->assertEmailWithRecipientIsInNotQueue('betty@passbolt.com');
     }
 
     public function testCommentsAddNotificationDoNotShowContent()
@@ -92,9 +85,8 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // Every users with direct permissions should get notified
-        $this->get('/seleniumtests/showLastEmail/dame@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseNotContains('this is a test');
+        $this->assertEmailWithRecipientIsInQueue('dame@passbolt.com');
+        $this->assertEmailInBatchNotContains('this is a test', 'dame@passbolt.com');
     }
 
     public function testCommentsAddNotificationDisabled()
@@ -108,9 +100,6 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // Nobody should get notifications
-        $this->get('/seleniumtests/showLastEmail/dame@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(500);
+        $this->assertEmailQueueIsEmpty();
     }
 }

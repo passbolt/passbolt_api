@@ -26,8 +26,6 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
  */
 class DebugCommandTest extends DirectorySyncConsoleIntegrationTestCase
 {
-    public $autoFixtures = false;
-
     /**
      * Test the help option
      *

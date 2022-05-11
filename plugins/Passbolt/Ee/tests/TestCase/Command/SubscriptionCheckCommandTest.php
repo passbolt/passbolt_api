@@ -17,18 +17,20 @@ declare(strict_types=1);
 namespace Passbolt\Ee\Test\TestCase\Command;
 
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Ee\Service\SubscriptionKeyGetService;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
 /**
  * @uses \Passbolt\Ee\Command\SubscriptionCheckCommand
  */
-class SubscriptionCheckCommandTest extends TestCase
+class SubscriptionCheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use DummySubscriptionTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

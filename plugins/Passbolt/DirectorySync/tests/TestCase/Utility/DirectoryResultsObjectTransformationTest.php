@@ -42,7 +42,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
     public function testUserEntryIdProvidedIsNotTransformed()
     {
         Configure::write('passbolt.plugins.directorySync.enabled', true);
-        $this->loadPlugins(['Passbolt/DirectorySync']);
+        $this->loadPlugins(['Passbolt/DirectorySync' => []]);
         Configure::load('Passbolt/DirectorySync.config', 'default', true);
         $mappingRules = Configure::read('passbolt.plugins.directorySync.fieldsMapping.ad');
 
@@ -79,7 +79,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
     public function testUserEntryTransformNoId()
     {
         Configure::write('passbolt.plugins.directorySync.enabled', true);
-        $this->loadPlugins(['Passbolt/DirectorySync']);
+        $this->loadPlugins(['Passbolt/DirectorySync' => []]);
         Configure::load('Passbolt/DirectorySync.config', 'default', true);
         $mappingRules = Configure::read('passbolt.plugins.directorySync.fieldsMapping.ad');
 
@@ -115,7 +115,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
     public function testUserEntryTransformEmail()
     {
         Configure::write('passbolt.plugins.directorySync.enabled', true);
-        $this->loadPlugins(['Passbolt/DirectorySync']);
+        $this->loadPlugins(['Passbolt/DirectorySync' => []]);
         Configure::load('Passbolt/DirectorySync.config', 'default', true);
         $mappingRules = Configure::read('passbolt.plugins.directorySync.fieldsMapping.ad');
 

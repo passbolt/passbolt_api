@@ -174,7 +174,7 @@ class FoldersTable extends Table
     {
         return $this->findById($id)
             ->select('created')
-            ->extract('created')
-            ->first();
+            ->first()
+            ->get('created');
     }
 }

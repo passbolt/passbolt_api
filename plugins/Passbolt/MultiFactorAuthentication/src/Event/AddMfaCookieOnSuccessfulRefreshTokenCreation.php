@@ -52,7 +52,7 @@ class AddMfaCookieOnSuccessfulRefreshTokenCreation implements EventListenerInter
     private $onSuccessfulRefreshTokenCreated = false;
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

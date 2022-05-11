@@ -164,7 +164,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
     public function testCreateFolder_CommonSuccess_NotifyUserAfterCreate()
     {
-        $this->loadPlugins(['Passbolt/Folders', 'Passbolt/EmailDigest']);
+        $this->loadPlugins(['Passbolt/Folders' => [], 'Passbolt/EmailDigest' => []]);
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
         $folderData = ['name' => 'A'];

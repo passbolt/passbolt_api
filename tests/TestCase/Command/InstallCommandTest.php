@@ -49,6 +49,7 @@ class InstallCommandTest extends AppTestCase
         $this->emptyDirectory(CACHE . 'database' . DS);
         $this->enableFeaturePlugin('JwtAuthentication');
         $this->persistValidSubscription();
+        $this->setUpPathAndPublicSubscriptionKey();
         $this->loadNotificationSettings();
     }
 

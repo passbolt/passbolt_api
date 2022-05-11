@@ -15,14 +15,16 @@
  */
 
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
 /**
  * Entreprise Edition aka Passbolt Pro
  *
  * @uses \Passbolt\Ee\Controller\Subscriptions\ReportsViewController::getReport()
  */
-Router::plugin('Passbolt/Ee', ['path' => '/ee'], function (RouteBuilder $routes) {
+
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/Ee', ['path' => '/ee'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     /**

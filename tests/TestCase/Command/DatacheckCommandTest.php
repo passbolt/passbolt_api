@@ -20,17 +20,19 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
  * App\Command\MigrateCommand Test Case
  *
  * @uses \App\Command\MigrateCommand
  */
-class DatacheckCommandTest extends TestCase
+class DatacheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

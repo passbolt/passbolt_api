@@ -21,13 +21,10 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Utility\UuidFactory;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\SkipTablesTruncation;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 
 class AuthenticationTokenTest extends TestCase
 {
-    use SkipTablesTruncation;
-
     public function dataProviderForSessionId()
     {
         return [

@@ -20,11 +20,14 @@ namespace Passbolt\PasswordGenerator\Test\TestCase\Service;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\PasswordGenerator\Plugin;
 use Passbolt\PasswordGenerator\Service\GetPasswordGeneratorService;
 
 class GetPasswordGeneratorServiceTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     /**
      * @dataProvider dataForTestGetPasswordGeneratorHappyPath
      */

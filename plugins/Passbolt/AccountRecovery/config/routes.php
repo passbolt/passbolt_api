@@ -14,9 +14,10 @@
  * @since         3.6.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     // View an account organization policy
@@ -63,7 +64,7 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
 
     // View one account recovery request details
     // GET /account-recovery/requests/:uuid.json
-    $routes->connect('/requests/:id', [
+    $routes->connect('/requests/{id}', [
         'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
@@ -76,14 +77,14 @@ Router::plugin('Passbolt/AccountRecovery', ['path' => '/account-recovery'], func
 
     // Landing page for account request request continue (sent by email)
     // GET /account-recovery/continue/:userId/:tokenId
-    $routes->connect('/continue/:userId/:tokenId', [
+    $routes->connect('/continue/{userId}/{tokenId}', [
         'prefix' => 'AccountRecoveryContinue', 'controller' => 'AccountRecoveryContinue', 'action' => 'get'])
         ->setPass(['userId', 'tokenId'])
         ->setMethods(['GET']);
 
     // View one account recovery request details (non logged in user)
     // GET /account-recovery/requests/:userId/:tokenId.json
-    $routes->connect('/requests/:requestId/:userId/:tokenId', [
+    $routes->connect('/requests/{requestId}/{userId}/{tokenId}', [
         'prefix' => 'AccountRecoveryRequests', 'controller' => 'AccountRecoveryRequestsGet', 'action' => 'get',
     ])
     ->setPass(['requestId', 'userId', 'tokenId'])
