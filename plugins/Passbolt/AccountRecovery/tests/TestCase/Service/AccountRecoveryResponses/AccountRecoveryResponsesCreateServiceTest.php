@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Service\AccountRecoveryResponse
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\UuidFactory;
@@ -41,7 +42,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryResponsesCreateService_Success_Approved()
     {
-        [$request, $policy] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class);
         $uac = UserFactory::make()->admin()->active()->persistedUAC();
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
         $data = [
@@ -78,11 +79,14 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
         $r = AccountRecoveryRequestFactory::find()->toArray();
         $this->assertEquals($r[0]['status'], AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_APPROVED);
         $this->assertEquals($r[0]['modified_by'], $uac->getId());
+
+        // Check that the token is active
+        $this->assertTrue(AuthenticationTokenFactory::get($authenticationToken->id)->isActive());
     }
 
     public function testAccountRecoveryResponsesCreateService_SuccessRejected()
     {
-        [$request, $policy] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class);
         $uac = UserFactory::make()->admin()->active()->persistedUAC();
         $data = [
             'account_recovery_request_id' => $request->id,
@@ -117,6 +121,9 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
         $r = AccountRecoveryRequestFactory::find()->toArray();
         $this->assertEquals($r[0]['status'], AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED);
         $this->assertEquals($r[0]['modified_by'], $uac->getId());
+
+        // Check that the token has been deactivated
+        $this->assertTrue(AuthenticationTokenFactory::get($authenticationToken->id)->isNotActive());
     }
 
     // Error scenarios

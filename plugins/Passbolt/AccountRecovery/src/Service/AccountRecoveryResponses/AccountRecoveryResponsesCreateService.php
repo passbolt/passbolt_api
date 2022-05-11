@@ -91,6 +91,8 @@ class AccountRecoveryResponsesCreateService
         // Update original request with updated status
         $this->AccountRecoveryResponses->saveOrFail($responseEntity, compact('uac'));
 
+        $this->deactivateTokenIfRequestIsRejected($responseEntity);
+
         // All good, dispatch event for emails
         $eventName = $responseEntity->isApproved()
             ? static::RESPONSE_APPROVED_EVENT_NAME
@@ -238,5 +240,24 @@ class AccountRecoveryResponsesCreateService
         }
 
         return Hash::get($this->data, $name);
+    }
+
+    /**
+     * If an admin rejected the request, the token associated is deactivated.
+     *
+     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $response the response
+     * @return void
+     */
+    protected function deactivateTokenIfRequestIsRejected(AccountRecoveryResponse $response): void
+    {
+        if (!$response->isRejected()) {
+            return;
+        }
+
+        $tokenId = $response->account_recovery_request->authentication_token_id;
+        $token = $this->AccountRecoveryRequests->AuthenticationTokens->get($tokenId);
+        $token->setAccess('active', true);
+        $token->set('active', false);
+        $this->AccountRecoveryRequests->AuthenticationTokens->saveOrFail($token);
     }
 }
