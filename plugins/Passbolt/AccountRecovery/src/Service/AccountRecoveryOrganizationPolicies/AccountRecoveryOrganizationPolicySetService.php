@@ -24,6 +24,7 @@ use Cake\Utility\Hash;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 use Passbolt\AccountRecovery\Service\AccountRecoveryPrivateKeyPasswords\AccountRecoveryPrivateKeyPasswordsValidationService; // phpcs:ignore
+use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\AccountRecoveryUserSettingsDeleteService;
 
 class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecoveryOrganizationPolicySetService implements AccountRecoveryOrganizationPolicySetServiceInterface // phpcs:ignore
 {
@@ -149,6 +150,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         ?AccountRecoveryOrganizationPublicKey $newKey = null,
         ?iterable $passwords = null
     ): AccountRecoveryOrganizationPolicy {
+        $oldPolicy = $this->getCurrentPolicyEntity();
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(
             function () use (&$newPolicy, $oldKey, $newKey, $passwords, $uac) {
                 $saveOptions = ['atomic' => false];
@@ -167,6 +169,11 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
                 }
             }
         );
+
+        // Cleanup user settings with rejected status since it's not a valid option anymore
+        if (!$oldPolicy->isDisabled() && $newPolicy->isMandatory()) {
+            (new AccountRecoveryUserSettingsDeleteService())->deleteAllRejected();
+        }
 
         $event = new Event(self::AFTER_UPDATE_POLICY_EVENT, $this, ['uac' => $uac, 'policy' => $newPolicy]);
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
@@ -189,7 +196,6 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $policy = $this->AccountRecoveryOrganizationPolicies->replace($uac, $policy);
 
         // Trigger event for email notifications and co.
-        // TODO email notification and notification setting
         $event = new Event(self::AFTER_ENABLE_POLICY_EVENT, $this, compact('policy', 'uac'));
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 
@@ -203,7 +209,6 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
      */
     public function disablePolicy(UserAccessControl $uac): AccountRecoveryOrganizationPolicy
     {
-        $oldPolicy = $this->getCurrentPolicyEntity();
         $newPolicy = $this->AccountRecoveryOrganizationPolicies->newEntityForDisable($uac);
         $oldKey = $this->buildRevokedKeyEntityFromDataOrFail($uac);
 
@@ -221,14 +226,11 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
                 $this->AccountRecoveryUserSettings->truncate();
 
                 // Cancel pending or non completed requests
-                // TODO move to service to make sure notifications to users are sent
                 $this->AccountRecoveryRequests->rejectAllNonCompleted($uac);
-                // TODO delete all non completed response data
             }
         );
 
         // Trigger event for email notifications and co.
-        // TODO email notification and notification setting
         $event = new Event(self::AFTER_DISABLE_POLICY_EVENT, $this, ['uac' => $uac, 'policy' => $newPolicy]);
         $this->AccountRecoveryOrganizationPolicies->getEventManager()->dispatch($event);
 
@@ -268,7 +270,6 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $passwordsData = $this->getData('account_recovery_private_key_passwords');
 
         // Check there is the correct number of passwords
-        // TODO move as table rule
         $actual = count($passwordsData);
         $expected = $this->AccountRecoveryPrivateKeyPasswords->find()->count();
         if ($actual !== $expected) {
@@ -281,7 +282,6 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         }
 
         // Check there is the correct private key id for the passwords
-        // TODO move as table rule
         $missing = $this->AccountRecoveryPrivateKeys->find()
             ->select('id')
             ->where(['id NOT IN' => Hash::extract($passwordsData, '{n}.private_key_id')])
