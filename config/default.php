@@ -211,6 +211,17 @@ return [
             'jwtAuthentication' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'accountRecoveryRequestHelp' => [
+                // Feature flag to allow client to tune behavior for backward compatibility
+                // e.g. updated recovery process allows for admin email notification with "lost-passphrase" option
+                // @deprecated when v3.5 is dropped - Ref. PB-15046
+                'enabled' => true,
+                'settingsVisibility' => [
+                    'whiteListPublic' => [
+                        'enabled',
+                    ],
+                ],
+            ],
         ],
 
         // Is public registration allowed.
