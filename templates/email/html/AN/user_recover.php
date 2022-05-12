@@ -26,7 +26,7 @@ echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
-        'datetime' => $user['created'],
+        'datetime' => $token['created'],
         'text' => __('You have initiated an account recovery!')
     ])
 ]);

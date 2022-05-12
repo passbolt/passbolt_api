@@ -129,6 +129,7 @@ return [
                         'update' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     ]
                 ],
+                // PRO EDITION ONLY
                 'folder' => [
                     'create' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_CREATE', true), FILTER_VALIDATE_BOOLEAN),
                     'update' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
@@ -236,6 +237,17 @@ return [
             ],
             'jwtAuthentication' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'accountRecoveryRequestHelp' => [
+                // Feature flag to allow client to tune behavior for backward compatibility
+                // e.g. updated recovery process allows for admin email notification with "lost-passphrase" option
+                // @deprecated when v3.5 is dropped - Ref. PB-15046
+                'enabled' => true,
+                'settingsVisibility' => [
+                    'whiteListPublic' => [
+                        'enabled',
+                    ],
+                ],
             ],
             'accountRecovery' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_ACCOUNT_RECOVERY_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
