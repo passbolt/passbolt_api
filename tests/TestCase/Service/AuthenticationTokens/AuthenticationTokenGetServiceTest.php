@@ -33,9 +33,26 @@ use Cake\Http\Exception\NotFoundException;
  */
 class AuthenticationTokenGetServiceTest extends AppTestCase
 {
+    /**
+     * @var \App\Test\Factory\AuthenticationTokenFactory
+     */
+    private $tokenFactory;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->tokenFactory = AuthenticationTokenFactory::make()->with('Users');
+    }
+
+    public function tearDown(): void
+    {
+        unset($this->tokenFactory);
+        parent::tearDown();
+    }
+
     public function testAuthenticationTokenGetService_Success(): void
     {
-        $t0 = AuthenticationTokenFactory::make()->active()->with('Users')->persist();
+        $t0 = $this->tokenFactory->active()->persist();
         $t1 = (new AuthenticationTokenGetService())
             ->getActiveNotExpiredOrFail($t0->token, $t0->user_id, $t0->type);
         $this->assertNotEmpty($t1);
@@ -47,7 +64,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
 
     public function testAuthenticationTokenGetService_Error_InvalidID(): void
     {
-        $t0 = AuthenticationTokenFactory::make()->active()->with('Users')->persist();
+        $t0 = $this->tokenFactory->active()->persist();
         $this->expectException(BadRequestException::class);
         (new AuthenticationTokenGetService())
             ->getActiveNotExpiredOrFail('nope', $t0->user_id, $t0->type);
@@ -55,7 +72,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
 
     public function testAuthenticationTokenGetService_Error_NotFoundID(): void
     {
-        $t0 = AuthenticationTokenFactory::make()->active()->with('Users')->persist();
+        $t0 = $this->tokenFactory->active()->persist();
         $this->expectException(NotFoundException::class);
         (new AuthenticationTokenGetService())
             ->getActiveNotExpiredOrFail(UuidFactory::uuid(), $t0->user_id, $t0->type);
@@ -63,7 +80,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
 
     public function testAuthenticationTokenGetService_Error_DifferentType(): void
     {
-        $t0 = AuthenticationTokenFactory::make()->inactive()->with('Users')->persist();
+        $t0 = $this->tokenFactory->inactive()->persist();
         $this->expectException(NotFoundException::class);
         (new AuthenticationTokenGetService())
             ->getActiveNotExpiredOrFail($t0->token, $t0->user_id, AuthenticationToken::TYPE_MOBILE_TRANSFER);
@@ -71,7 +88,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
 
     public function testAuthenticationTokenGetService_Error_NotActive(): void
     {
-        $t0 = AuthenticationTokenFactory::make()->inactive()->with('Users')->persist();
+        $t0 = $this->tokenFactory->inactive()->persist();
         $this->expectException(CustomValidationException::class);
         (new AuthenticationTokenGetService())
             ->getActiveNotExpiredOrFail($t0->token, $t0->user_id, $t0->type);
@@ -79,9 +96,16 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
 
     public function testAuthenticationTokenGetService_Error_Expired(): void
     {
-        $t0 = AuthenticationTokenFactory::make()->expired()->with('Users')->persist();
+        $t0 = $this->tokenFactory->active()->expired()->persist();
         $this->expectException(CustomValidationException::class);
         (new AuthenticationTokenGetService())
             ->getActiveNotExpiredOrFail($t0->token, $t0->user_id, $t0->type);
+    }
+
+    public function testAuthenticationTokenGetService_Success_ActiveExpired(): void
+    {
+        $t0 = $this->tokenFactory->active()->expired()->persist();
+        $token = (new AuthenticationTokenGetService())->getActiveOrFail($t0->token, $t0->user_id, $t0->type);
+        $this->assertTrue(AuthenticationTokenFactory::get($token->id)->isActive());
     }
 }

@@ -61,6 +61,33 @@ class AuthenticationTokenGetService
         string $type,
         ?string $expiry = null
     ): AuthenticationToken {
+        $tokenEntity = $this->getActiveOrFail($token, $userId, $type);
+
+        if ($tokenEntity->isExpired($expiry)) {
+            $tokenEntity->set('active', false);
+            $this->AuthenticationTokens->save($tokenEntity);
+            $error = [
+                'token' => [
+                    'expired' => __('The token is expired.'),
+                ],
+            ];
+            throw new CustomValidationException(__('The authentication token is not valid.'), $error);
+        }
+
+        return $tokenEntity;
+    }
+
+    /**
+     * @param string $token authentication token
+     * @param string $userId user ID
+     * @param string $type token type
+     * @return \App\Model\Entity\AuthenticationToken
+     * @throws \Cake\Http\Exception\NotFoundException if token is not found
+     * @throws \App\Error\Exception\CustomValidationException if the token is inactive
+     * @throws \Cake\Http\Exception\BadRequestException if token id is not a valid uuid
+     */
+    public function getActiveOrFail(string $token, string $userId, string $type): AuthenticationToken
+    {
         if (!Validation::uuid($token)) {
             throw new BadRequestException(__('The token should be a valid UUID.'));
         }
@@ -81,17 +108,6 @@ class AuthenticationTokenGetService
             $error = [
                 'token' => [
                     'isActive' => __('The token is already consumed.'),
-                ],
-            ];
-            throw new CustomValidationException(__('The authentication token is not valid.'), $error);
-        }
-
-        if ($tokenEntity->isExpired($expiry)) {
-            $tokenEntity->set('active', false);
-            $this->AuthenticationTokens->save($tokenEntity);
-            $error = [
-                'token' => [
-                    'expired' => __('The token is expired.'),
                 ],
             ];
             throw new CustomValidationException(__('The authentication token is not valid.'), $error);
