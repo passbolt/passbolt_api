@@ -26,6 +26,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
+use Cake\I18n\FrozenTime;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
@@ -91,7 +92,7 @@ class AccountRecoveryResponsesCreateService
         // Update original request with updated status
         $this->AccountRecoveryResponses->saveOrFail($responseEntity, compact('uac'));
 
-        $this->deactivateTokenIfRequestIsRejected($responseEntity);
+        $this->deactivateTokenIfRequestIsRejectedOrExtendValidityIfApprovedAndExpired($responseEntity);
 
         // All good, dispatch event for emails
         $eventName = $responseEntity->isApproved()
@@ -244,20 +245,25 @@ class AccountRecoveryResponsesCreateService
 
     /**
      * If an admin rejected the request, the token associated is deactivated.
+     * If an admin approved the request and the associated token is expired, reset the creation time of the token
      *
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse $response the response
      * @return void
      */
-    protected function deactivateTokenIfRequestIsRejected(AccountRecoveryResponse $response): void
-    {
-        if (!$response->isRejected()) {
-            return;
-        }
-
+    protected function deactivateTokenIfRequestIsRejectedOrExtendValidityIfApprovedAndExpired(
+        AccountRecoveryResponse $response
+    ): void {
         $tokenId = $response->account_recovery_request->authentication_token_id;
         $token = $this->AccountRecoveryRequests->AuthenticationTokens->get($tokenId);
-        $token->setAccess('active', true);
-        $token->set('active', false);
-        $this->AccountRecoveryRequests->AuthenticationTokens->saveOrFail($token);
+
+        if ($response->isApproved() && $token->isExpired()) {
+            $token->setAccess('created', true);
+            $token->set('created', FrozenTime::now());
+            $this->AccountRecoveryRequests->AuthenticationTokens->saveOrFail($token);
+        } elseif ($response->isRejected()) {
+            $token->setAccess('active', true);
+            $token->set('active', false);
+            $this->AccountRecoveryRequests->AuthenticationTokens->saveOrFail($token);
+        }
     }
 }

@@ -568,4 +568,32 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
             $this->assertTrue(isset($error['data']['wrongRecipient']));
         }
     }
+
+    public function testAccountRecoveryResponsesCreateService_ExpiredToken()
+    {
+        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        AuthenticationTokenFactory::make($authenticationToken)->expired()->persist();
+        $this->assertTrue(AuthenticationTokenFactory::get($authenticationToken->id)->isExpired());
+
+        $uac = UserFactory::make()->admin()->active()->persistedUAC();
+        $password = $this->encrypt($request->fingerprint, $request->armored_key);
+        $data = [
+            'account_recovery_request_id' => $request->id,
+            'status' => AccountRecoveryResponse::STATUS_APPROVED,
+            'responder_foreign_model' => AccountRecoveryResponse::RESPONDER_FOREIGN_MODEL_ORGANIZATION_KEY,
+            'responder_foreign_key' => $policy->public_key_id,
+            'data' => $password,
+        ];
+
+        try {
+            $results = (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+        } catch (ValidationException | CustomValidationException $exception) {
+            $this->fail($exception->getMessage());
+        }
+
+        // Check that the token is active
+        $token = AuthenticationTokenFactory::get($authenticationToken->id);
+        $this->assertTrue($token->isActive());
+        $this->assertFalse($token->isExpired());
+    }
 }

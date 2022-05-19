@@ -116,8 +116,8 @@ class AccountRecoveryRequestGetService
         $userEntity = (new UserGetService())->getActiveNotDeletedOrFail($userId);
 
         // Assert token exist and is valid and belong to the user and is of the right type
-        $tokenEntity = (new AuthenticationTokenGetService())
-            ->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
+        $tokenService = new AuthenticationTokenGetService();
+        $tokenEntity = $tokenService->getActiveOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
 
         // Assert user is enrolled in the program
         (new AccountRecoveryUserSettingsGetService())->getOrFail($userId);
@@ -142,6 +142,13 @@ class AccountRecoveryRequestGetService
         // Assert request is not already completed
         if ($requestEntity->isCompleted()) {
             throw new BadRequestException(__('The request is already completed.'));
+        }
+        // Assert token is not expired. If so, deactivate the token, reject the request and throw an exception
+        if ($tokenEntity->isExpired()) {
+            $requestEntity->set('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED);
+            $requestEntity->setAccess('status', true);
+            $this->AccountRecoveryRequests->saveOrFail($requestEntity);
+            $tokenService->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
         }
 
         return $requestEntity;

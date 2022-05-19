@@ -211,8 +211,15 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
         $request = AccountRecoveryRequestScenario::startRequestApproved($user, $token);
 
         $service = new AccountRecoveryRequestGetService();
-        $this->expectException(CustomValidationException::class);
-        $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        $exceptionThrown = false;
+        try {
+            $service->getNotCompletedOrFail($request->id, $user->id, $token->token);
+        } catch (CustomValidationException $e) {
+            $exceptionThrown = true;
+        }
+        $this->assertTrue($exceptionThrown);
+        $this->assertTrue(AccountRecoveryRequestFactory::get($request->id)->isRejected());
+        $this->assertTrue(AuthenticationTokenFactory::get($token->id)->isNotActive());
     }
 
     public function testAccountRecoveryRequestGetService_Error_TokenNotActive()
