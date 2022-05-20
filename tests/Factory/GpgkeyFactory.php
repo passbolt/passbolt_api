@@ -16,15 +16,23 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
+use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use Cake\Core\Configure;
+use Cake\I18n\FrozenTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
  * GpgkeyFactory
+
+ * @method \App\Model\Entity\Gpgkey|\App\Model\Entity\Gpgkey[] persist()
+ * @method \App\Model\Entity\Gpgkey getEntity()
+ * @method \App\Model\Entity\Gpgkey[] getEntities()
  */
 class GpgkeyFactory extends CakephpBaseFactory
 {
+    use ArmoredKeyFactoryTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -63,6 +71,29 @@ class GpgkeyFactory extends CakephpBaseFactory
         return $this->patchData([
             'armored_key' => file_get_contents(Configure::read('passbolt.gpg.serverKey.private')),
             'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'),
+        ]);
+    }
+
+    /**
+     * Set the expires field to the past
+     *
+     * @return $this
+     */
+    public function expired()
+    {
+        return $this->setField('expires', FrozenTime::yesterday());
+    }
+
+    /**
+     * Set the armored key and fingerprint to Sofia's one
+     *
+     * @return $this
+     */
+    public function withValidOpenPGPKey()
+    {
+        return $this->patchData([
+            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
+            'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
         ]);
     }
 }

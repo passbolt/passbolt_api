@@ -30,6 +30,7 @@ use Cake\Http\Cookie\CookieCollection;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Authenticator\JwtRefreshTokenAuthenticator;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException;
@@ -39,6 +40,8 @@ use Passbolt\JwtAuthentication\Test\Factory\RefreshTokenAuthenticationTokenFacto
 
 class JwtRefreshTokenAuthenticatorTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     /**
      * @var JwtRefreshTokenAuthenticator
      */
@@ -46,6 +49,7 @@ class JwtRefreshTokenAuthenticatorTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->authenticator = new JwtRefreshTokenAuthenticator(
             $this->createMock(IdentifierInterface::class)
         );

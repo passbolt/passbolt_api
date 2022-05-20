@@ -25,7 +25,6 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\SkipTablesTruncation;
 use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
 
 /**
@@ -38,7 +37,6 @@ use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
 class ResourcesAddServiceStressTest extends TestCase
 {
     use ResourcesModelTrait;
-    use SkipTablesTruncation;
 
     /**
      * @var User The user created once by testTruncateDirtyTables.

@@ -48,21 +48,21 @@ class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
     public function testFindSharedResourceGroupIsSoleOwner_OwnsNothing_DelGroupCase0()
     {
         $groupId = UuidFactory::uuid('group.id.procurement');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindSharedResourceGroupIsSoleOwner_SharedResourceWithMe_DelGroupCase1()
     {
         $groupId = UuidFactory::uuid('group.id.quality_assurance');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindSharedResourceGroupIsSoleOwner_SoleOwnerNotSharedResource_DelGroupCase2()
     {
         $groupId = UuidFactory::uuid('group.id.resource_planning');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
@@ -86,7 +86,7 @@ class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertNotEmpty($resources);
         $this->assertCount(1, $resources);
         $this->assertTrue(in_array(UuidFactory::uuid('resource.id.nodejs'), $resources));
@@ -95,7 +95,7 @@ class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
     public function testFindSharedResourceGroupIsSoleOwner_OwnerAlongWithAnotherUser_DelGroupCase4()
     {
         $groupId = UuidFactory::uuid('group.id.management');
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $groupId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 }

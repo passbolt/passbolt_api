@@ -17,15 +17,17 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\MysqlExportCommand;
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
-class MysqlImportCommandTest extends TestCase
+class MysqlImportCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use PassboltCommandTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

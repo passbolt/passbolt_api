@@ -104,7 +104,9 @@ trait PermissionsFindersTrait
         if ($checkGroupsUsers) {
             // For performance reasons, the groups a user is member of are retrieved in a seprate query.
             $groupsIds = $this->Groups->GroupsUsers->findByUserId($aroForeignKey)
-                ->disableHydration()->extract('group_id')->toArray();
+                ->disableHydration()
+                ->all()
+                ->extract('group_id')->toArray();
             $aroForeignKeys = array_merge($aroForeignKeys, $groupsIds);
         }
 
@@ -156,6 +158,7 @@ trait PermissionsFindersTrait
 
             // (USER_AND_SOLE_MANAGER_GROUPS)
             $groupsSoleManager = $this->Groups->GroupsUsers->findGroupsWhereUserIsSoleManager($aro)
+                ->all()
                 ->extract('group_id')->toArray();
             // (R = ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS)
             $aros = [$aro];
@@ -164,7 +167,9 @@ trait PermissionsFindersTrait
 
             // (USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
             $nonEmptyGroupsSoleManager = $this->Groups->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($aro)
-                ->extract('group_id')->toArray();
+                ->all()
+                ->extract('group_id')
+                ->toArray();
             if (!empty($nonEmptyGroupsSoleManager)) {
                 // (ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
                 $acosOnlyOwnedByUsersAndSoleManagerOfNonEmptyGroups = $this->find()
@@ -295,6 +300,7 @@ trait PermissionsFindersTrait
         $aros = [$aro];
         if ($checkGroupsUsers) {
             $groups = $this->Groups->GroupsUsers->findGroupsWhereUserOnlyMember($aro)
+                ->all()
                 ->extract('group_id')->toArray();
             $aros = array_merge($aros, $groups);
         }

@@ -16,12 +16,14 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
+use App\Test\Lib\AppTestCase;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
-class ShowLogsPathCommandTest extends TestCase
+class ShowLogsPathCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

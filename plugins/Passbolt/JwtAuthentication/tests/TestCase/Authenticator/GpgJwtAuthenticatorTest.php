@@ -30,6 +30,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
@@ -38,6 +39,7 @@ use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 class GpgJwtAuthenticatorTest extends TestCase
 {
     use GpgAdaSetupTrait;
+    use TruncateDirtyTables;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Gpgkeys',
@@ -259,9 +261,8 @@ class GpgJwtAuthenticatorTest extends TestCase
         $serverChallenge = $data['challenge'];
         $this->gpg->clearDecryptKeys();
         $this->gpg->setVerifyKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-        $this->gpg->verify($serverChallenge);
         $this->gpg->setDecryptKeyFromFingerprint($user['gpgkey']['fingerprint'], '');
-        $decryptedChallenge = $this->gpg->decrypt($serverChallenge);
+        $decryptedChallenge = $this->gpg->decrypt($serverChallenge, true);
 
         // Assert challenge content contains required info
         $this->assertNotEmpty($decryptedChallenge);

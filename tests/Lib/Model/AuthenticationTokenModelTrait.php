@@ -61,6 +61,7 @@ trait AuthenticationTokenModelTrait
      * @param $type
      * @param $case
      * @return string token
+     * @deprecated Use the AuthenticationTokenFactory
      */
     public function quickDummyAuthToken($userId, $type, $case = null)
     {

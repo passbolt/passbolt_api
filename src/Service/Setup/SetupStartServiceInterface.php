@@ -17,10 +17,18 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
+use Cake\Http\ServerRequest;
 use Cake\View\ViewBuilder;
 
 interface SetupStartServiceInterface
 {
+    /**
+     * SetupStartServiceInterface constructor.
+     *
+     * @param \Cake\Http\ServerRequest|null $request Server Request
+     */
+    public function __construct(?ServerRequest $request = null);
+
     /**
      * Retrieves user and token information for the setup controllers
      *

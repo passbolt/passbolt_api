@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use App\Service\Setup\SetupCompleteServiceInterface;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\ForbiddenException;
 
 class SetupCompleteController extends AppController
 {
@@ -51,7 +53,17 @@ class SetupCompleteController extends AppController
      */
     public function complete(SetupCompleteServiceInterface $setupCompleteService, string $userId): void
     {
-        $setupCompleteService->complete($userId);
+        // Do not allow logged in user to complete setup
+        if ($this->User->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('Only guest are allowed to complete setup.'));
+        }
+
+        $user = $setupCompleteService->complete($userId);
+
+        $this->dispatchEvent(self::COMPLETE_SUCCESS_EVENT_NAME, [
+            'user' => $user,
+            'data' => $this->getRequest()->getData(),
+        ]);
 
         $this->success(__('The setup was completed successfully.'));
     }

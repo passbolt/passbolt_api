@@ -25,7 +25,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenTime;
 
 class CleanupTest extends AppTestCase
 {
@@ -46,7 +46,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedUsers', 2);
 
-        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $permissionsIdsPostCleanup = PermissionFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithUser->id, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithHardDeletedUser->id, $permissionsIdsPostCleanup);
@@ -67,7 +67,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Permissions', 'cleanupHardDeletedUsers', 2);
 
-        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $permissionsIdsPostCleanup = PermissionFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithUser->id, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithSoftDeletedUser->id, $permissionsIdsPostCleanup);
@@ -88,7 +88,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedGroups', 2);
 
-        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $permissionsIdsPostCleanup = PermissionFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithGroup->id, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithHardDeletedGroup->id, $permissionsIdsPostCleanup);
@@ -109,7 +109,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Permissions', 'cleanupHardDeletedGroups', 2);
 
-        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $permissionsIdsPostCleanup = PermissionFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithGroup->id, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithSoftDeletedGroup->id, $permissionsIdsPostCleanup);
@@ -130,7 +130,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedResources', 2);
 
-        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $permissionsIdsPostCleanup = PermissionFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithResource->id, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithHardDeletedResource->id, $permissionsIdsPostCleanup);
@@ -151,7 +151,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Permissions', 'cleanupHardDeletedResources', 2);
 
-        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $permissionsIdsPostCleanup = PermissionFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(2, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithResource->id, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithSoftDeletedResource->id, $permissionsIdsPostCleanup);
@@ -160,7 +160,7 @@ class CleanupTest extends AppTestCase
     public function testCleanupPermissionsDuplicatedPermissions()
     {
         // Duplicated permissions to cleanup.
-        $duplicatedPermissionsForUser = PermissionFactory::make(['modified' => Time::now()])
+        $duplicatedPermissionsForUser = PermissionFactory::make(['modified' => FrozenTime::now()])
             ->typeOwner()
             ->withAcoResource()
             ->withAroUser()
@@ -169,7 +169,7 @@ class CleanupTest extends AppTestCase
         // Duplicate permission to keep as it is the oldest.
         $duplicatedPermissionForUserMeta = $duplicatedPermissionsForUser->extractOriginal(['aco', 'aco_foreign_key', 'aro', 'aro_foreign_key', 'type']);
         $duplicatedPermissionToKeep = PermissionFactory::make($duplicatedPermissionForUserMeta)
-            ->patchData(['modified' => Time::now()->subDay()])->persist();
+            ->patchData(['modified' => FrozenTime::now()->subDay()])->persist();
 
         $duplicatedPermissionsForGroup = PermissionFactory::make()
             ->typeRead()
@@ -200,7 +200,7 @@ class CleanupTest extends AppTestCase
 
         $this->runCleanupChecks('Permissions', 'cleanupDuplicatedPermissions', 13, ['cleanupCount' => 2]);
 
-        $permissionsIdsPostCleanup = PermissionFactory::find()->extract('id')->toArray();
+        $permissionsIdsPostCleanup = PermissionFactory::find()->all()->extract('id')->toArray();
         $this->assertCount(13, $permissionsIdsPostCleanup);
         $this->assertContains($duplicatedPermissionToKeep->id, $permissionsIdsPostCleanup);
         $this->assertContains($permissionWithResourceInvolvedInCleanup->id, $permissionsIdsPostCleanup);

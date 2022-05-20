@@ -14,9 +14,10 @@
  * @since         2.1.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/AccountSettings', ['path' => '/account/settings'], function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/AccountSettings', ['path' => '/account/settings'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/themes', ['prefix' => 'Themes', 'controller' => 'ThemesIndex', 'action' => 'index'])

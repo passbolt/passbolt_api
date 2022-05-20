@@ -16,7 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
-use Cake\I18n\Time;
+use App\Test\Factory\Traits\FactoryDeletedTrait;
+use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -54,8 +55,8 @@ class GroupFactory extends CakephpBaseFactory
                 'name' => $faker->text(64),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
-                'created' => Time::now()->subDay($faker->randomNumber(4)),
-                'modified' => Time::now()->subDay($faker->randomNumber(4)),
+                'created' => FrozenDate::now()->subDay($faker->randomNumber(4)),
+                'modified' => FrozenDate::now()->subDay($faker->randomNumber(4)),
             ];
         });
     }

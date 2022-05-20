@@ -49,7 +49,7 @@ return [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_REGISTER_TOKEN_EXPIRY', '10 days'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
                 AuthenticationToken::TYPE_RECOVER => [
-                    'expiry' => filter_var(env('PASSBOLT_AUTH_RECOVER_TOKEN_EXPIRY', '1 day'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_RECOVER_TOKEN_EXPIRY', '10 days'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
                 AuthenticationToken::TYPE_LOGIN => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_LOGIN_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
@@ -110,6 +110,9 @@ return [
                     'user' => [
                         'setup' => [
                             'completed' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_SETUP_COMPLETED', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                        'recover' => [
+                            'abort' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_ABORT', true), FILTER_VALIDATE_BOOLEAN),
                         ]
                     ]
                 ],
@@ -172,6 +175,9 @@ return [
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
+            ],
+            'experimental' => [
+                'encryptValidate' => filter_var(env('PASSBOLT_GPG_EXTRA_ENCRYPT_VALIDATE', true), FILTER_VALIDATE_BOOLEAN)
             ]
         ],
 
@@ -204,6 +210,17 @@ return [
             ],
             'jwtAuthentication' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'accountRecoveryRequestHelp' => [
+                // Feature flag to allow client to tune behavior for backward compatibility
+                // e.g. updated recovery process allows for admin email notification with "lost-passphrase" option
+                // @deprecated when v3.5 is dropped - Ref. PB-15046
+                'enabled' => true,
+                'settingsVisibility' => [
+                    'whiteListPublic' => [
+                        'enabled',
+                    ],
+                ],
             ],
         ],
 

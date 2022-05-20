@@ -17,30 +17,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class SetupStartControllerTest extends AppIntegrationTestCase
 {
-    use AuthenticationTokenModelTrait;
-
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-
-    ];
-    public $AuthenticationTokens;
-    private $Users;
-
-    public function setUp(): void
-    {
-        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
-        parent::setUp();
-    }
-
     /**
      * @group AN
      * @group setup
@@ -88,11 +72,12 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStart_BadRequestError_InvalidParameters()
     {
+        $user = UserFactory::make()->inactive()->persist();
         $fails = [
             'user not a uuid' => '/setup/start/nope/' . UuidFactory::uuid() . '.json',
             'user not a uuid with legacy url' => '/setup/install/nope/' . UuidFactory::uuid() . '.json',
-            'token not a uuid' => '/setup/start/' . UuidFactory::uuid('user.id.ruth') . '/nope.json',
-            'token not a uuid with legacy url' => '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/nope.json',
+            'token not a uuid' => '/setup/start/' . $user->id . '/nope.json',
+            'token not a uuid with legacy url' => '/setup/install/' . $user->id . '/nope.json',
             'both not a uuid' => '/setup/install/nope/nope.json',
 
         ];
@@ -110,11 +95,12 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStartJson_BadRequestError_UserAlreadyActive()
     {
-        $userId = UuidFactory::uuid('user.id.admin');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
-        $url = "/setup/install/{$userId}/{$t->token}.json";
+        $token = UuidFactory::uuid();
+        $userId = UserFactory::make()->active()->persist()->id;
+        $url = "/setup/install/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The user does not exist or is already active.');
     }
 
     /**
@@ -124,11 +110,12 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStartJson_BadRequestError_UserNotExist()
     {
+        $token = UuidFactory::uuid();
         $userId = UuidFactory::uuid();
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.admin'), AuthenticationToken::TYPE_RECOVER);
-        $url = "/setup/install/{$userId}/{$t->token}.json";
+        $url = "/setup/install/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The user does not exist or is already active.');
     }
 
     /**
@@ -138,14 +125,12 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStartJson_BadRequestError_UserDeleted()
     {
-        $userId = UuidFactory::uuid('user.id.admin');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
-        $user = $this->Users->findById($userId)->first();
-        $user->deleted = 1;
-        $this->Users->save($user);
-        $url = "/setup/install/{$userId}/{$t->token}.json";
+        $token = UuidFactory::uuid();
+        $userId = UserFactory::make()->inactive()->deleted()->persist()->id;
+        $url = "/setup/install/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The user does not exist or is already active.');
     }
 
     /**
@@ -155,11 +140,12 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStartJson_BadRequestError_TokenDoesntExist()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
+        $userId = UserFactory::make()->inactive()->persist()->id;
         $token = UuidFactory::uuid();
         $url = "/setup/install/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The authentication token is not valid.');
     }
 
     /**
@@ -169,11 +155,16 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStartJson_BadRequestError_WrongTokenType()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
+        $userId = UserFactory::make()->inactive()->persist()->id;
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->userId($userId)
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->persist();
         $url = "/setup/install/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The authentication token is not valid.');
     }
 
     /**
@@ -183,13 +174,16 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStartJson_BadRequestError_TokenAlreadyConsumed()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
-        $t->active = false;
-        $this->AuthenticationTokens->save($t);
+        $userId = UserFactory::make()->inactive()->persist()->id;
+        $t = AuthenticationTokenFactory::make()
+            ->userId($userId)
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->inactive()
+            ->persist();
         $url = "/setup/install/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
+        $this->assertResponseContains('The authentication token is not valid.');
     }
 
     /**
@@ -199,10 +193,13 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStart_BadRequestError_TokenExpired()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
-        $t->created = '2020-01-01 00:00:00';
-        $this->AuthenticationTokens->save($t);
+        $userId = UserFactory::make()->inactive()->persist()->id;
+        $t = AuthenticationTokenFactory::make()
+            ->userId($userId)
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->expired()
+            ->persist();
         $url = "/setup/install/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
@@ -219,8 +216,12 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStartSuccess()
     {
-        $userId = UuidFactory::uuid('user.id.ruth');
-        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
+        $userId = UserFactory::make()->inactive()->persist()->id;
+        $t = AuthenticationTokenFactory::make()
+            ->userId($userId)
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->active()
+            ->persist();
         $url = "/setup/install/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseOk();

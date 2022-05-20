@@ -491,7 +491,7 @@ trait FormatValidationTrait
     protected static function getGpgMessageTestCases()
     {
         return [
-            'rule_name' => 'isValidGpgMessage',
+            'rule_name' => 'isValidOpenPGPMessage',
             'test_cases' => [
                 '!#*' => false,
                 // Message without gpg markers shouldn't be valid

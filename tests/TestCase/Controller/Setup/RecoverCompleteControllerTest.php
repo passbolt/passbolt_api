@@ -80,7 +80,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/recover/complete/nope.json';
         $data = [];
         $this->postJson($url, $data);
-        $this->assertError(400, 'The user identifier should be a valid UUID.');
+        $this->assertError(400);
     }
 
     /**
@@ -107,6 +107,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/recover/complete/' . $userId . '.json';
         $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'expired');
         $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'inactive');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
         $fails = [
             'empty array' => [
@@ -131,16 +132,19 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
             ],
             'expired token' => [
                 'data' => ['token' => $tokenExpired],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
             'inactive token' => [
                 'data' => ['token' => $tokenInactive],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
                 'authenticationtoken' => $case['data'],
+                'gpgkey' => [
+                    'armored_key' => $armoredKey,
+                ],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -157,16 +161,20 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $userId = UuidFactory::uuid('user.id.ada');
         $url = '/setup/recover/complete/' . $userId . '.json';
         $tokenWrongType = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_LOGIN);
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
         $fails = [
             'wrong type token' => [
                 'data' => ['token' => $tokenWrongType],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
                 'authenticationtoken' => $case['data'],
+                'gpgkey' => [
+                    'armored_key' => $armoredKey,
+                ],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);

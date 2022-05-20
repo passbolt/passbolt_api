@@ -17,14 +17,16 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Notification\NotificationSettings\Form;
 
-use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\Event\EventDispatcherTrait;
 use Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class EmailNotificationSettingsFormTest extends AppTestCase
 {
+    use EmailNotificationSettingsTestTrait;
     use EventDispatcherTrait;
     use FormatValidationTrait;
 
@@ -32,11 +34,8 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     {
         parent::setUp();
 
-        $this->loadPlugins(['Passbolt/EmailNotificationSettings']);
-
-        $this->getEventManager()
-            // Add the different email settings definitions for Passbolt Core
-            ->on(new CoreNotificationSettingsDefinition());
+        $this->loadPlugins(['Passbolt/EmailNotificationSettings' => []]);
+        $this->loadNotificationSettings();
     }
 
     public function testNotificationSettingsFormFieldShowComment()
@@ -291,6 +290,20 @@ class EmailNotificationSettingsFormTest extends AppTestCase
         );
     }
 
+    public function testNotificationSettingsFormFieldSendAdminUserRecoverAbort()
+    {
+        $testCases = [
+            'boolean' => $this->getBooleanTestCases(),
+        ];
+
+        $this->assertFormFieldFormatValidation(
+            EmailNotificationSettingsForm::class,
+            'send_admin_user_recover_abort',
+            self::getDummyData(),
+            $testCases
+        );
+    }
+
     public function testNotificationSettingsFormIgnoresInvalidKeys()
     {
         $validKeys = static::getDummyData();
@@ -301,8 +314,9 @@ class EmailNotificationSettingsFormTest extends AppTestCase
 
         ];
         $testCase = array_merge($validKeys, $invalidKeys);
+        EmailNotificationSettings::get();
         $actual = EmailNotificationSettingsForm::stripInvalidKeys($testCase);
-        $this->assertEquals($actual, $validKeys);
+        $this->assertEquals($validKeys, $actual);
     }
 
     public function testNotificationSettingsFormFormatKeys()
@@ -345,6 +359,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             'send_group_user_update' => true,
             'send_group_manager_update' => true,
             'send_admin_user_setup_completed' => true,
+            'send_admin_user_recover_abort' => true,
         ];
 
         return array_merge($default, $data);

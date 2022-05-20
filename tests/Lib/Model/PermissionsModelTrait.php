@@ -48,7 +48,7 @@ trait PermissionsModelTrait
      *
      * @param string $aco Aco
      * @param string $acoForeignKey Target aco
-     * @param string $aro Aro
+     * @param string|null $aro Aro
      * @param string $aroForeignKey Target aro
      * @param int $type The type of permissions
      * @return Permission
@@ -75,6 +75,8 @@ trait PermissionsModelTrait
             'aro_foreign_key' => $aroForeignKey,
             'type' => $type,
         ];
+
+        /** @var Permission $permission */
         $permission = $permissionsTable->newEntity($data, $saveOptions);
         $permissionsTable->saveOrFail($permission, ['checkRules' => false]);
 
@@ -97,9 +99,9 @@ trait PermissionsModelTrait
      *
      * @param string $acoForeignKey
      * @param string $aroForeignKey
-     * @param string $type
+     * @param int $type
      */
-    protected function assertPermission($acoForeignKey, $aroForeignKey, $type)
+    protected function assertPermission(string $acoForeignKey, string $aroForeignKey, int $type): void
     {
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $permission = $permissionsTable->find()->where([

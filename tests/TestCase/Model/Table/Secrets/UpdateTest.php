@@ -75,7 +75,7 @@ hcciUFw5
     public function testValidationData()
     {
         $testCases = [
-            'isValidGpgMessage' => self::getGpgMessageTestCases(),
+            'isValidOpenPGPMessage' => self::getGpgMessageTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
 

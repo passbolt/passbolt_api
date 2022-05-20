@@ -17,12 +17,18 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
-use App\Controller\Setup\SetupCompleteController;
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Entity\User;
+use App\Service\OpenPGP\PublicKeyCanEncryptCheckService;
+use App\Service\OpenPGP\PublicKeyValidationService;
+use App\Service\Users\UserGetService;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Validation\Validation;
+use Cake\Http\Exception\NotFoundException;
+use Cake\Log\Log;
 
 class SetupCompleteService extends AbstractCompleteService implements SetupCompleteServiceInterface
 {
@@ -38,14 +44,35 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
      * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key is not provided or not a valid OpenPGP key
      * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
      * @param string $userId uuid of the user
-     * @return void
+     * @param array|null $saveOptions options
+     * @return \App\Model\Entity\User
      */
-    public function complete(string $userId): void
+    public function complete(string $userId, ?array $saveOptions = []): User
+    {
+        $user = $this->buildUserEntity($userId);
+
+        return $this->saveUserEntity($user, $saveOptions);
+    }
+
+    /**
+     * Build the user entity to be saved.
+     * This method can be extended if additional associations are needed.
+     *
+     * @param string $userId User ID
+     * @return \App\Model\Entity\User
+     */
+    protected function buildUserEntity(string $userId): User
     {
         // Check request sanity
         $user = $this->getAndAssertUser($userId);
         $token = $this->getAndAssertToken($userId, AuthenticationToken::TYPE_REGISTER);
         $gpgkey = $this->getAndAssertGpgkey($userId);
+
+        // New with 3.6 - Check armored key content
+        // The key must not be expired or revoked, or have multiple key blocks, etc.
+        // TODO w4.0 - Move to getAndAssertGpgkey
+        //  Will break compat on recover for non compliant keys
+        PublicKeyValidationService::parseAndValidatePublicKey($gpgkey->armored_key);
 
         // Check business rules before saving
         $this->Gpgkeys->checkRules($gpgkey);
@@ -53,27 +80,50 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
             throw new ValidationException(__('The OpenPGP key data is not valid.'), $gpgkey, $this->Gpgkeys);
         }
 
-        // Deactivate the authentication token
+        // Check key can be used to encrypt
+        // This can happen for example if the key is created in the future
+        // or some other issue prevent the backend to use it, we don't want to fail at the login step
+        if (Configure::read('passbolt.gpg.experimental.encryptValidate')) {
+            if (!PublicKeyCanEncryptCheckService::check($gpgkey->armored_key, $gpgkey->fingerprint)) {
+                $msg = __('The OpenPGP key can not be used to encrypt.');
+                Log::debug($msg, [$gpgkey->armored_key]);
+                throw new CustomValidationException($msg, ['gpgkey' => ['armored_key' => $msg]]);
+            }
+        }
+
+        $user->active = true;
         $token->active = false;
-        if (!$this->AuthenticationTokens->save($token, ['checkRules' => false])) {
+        $user->authentication_tokens = [$token];
+        $user->gpgkey = $gpgkey;
+
+        return $user;
+    }
+
+    /**
+     * Saves and performs some checks on the user and its association
+     *
+     * @param \App\Model\Entity\User $user User to save
+     * @param array|null $saveOptions options
+     * @return \App\Model\Entity\User
+     * @throws \Cake\Http\Exception\InternalErrorException
+     */
+    protected function saveUserEntity(User $user, ?array $saveOptions = []): User
+    {
+        $this->Users->save($user, $saveOptions);
+
+        if ($user->authentication_tokens[0]->hasErrors()) {
             throw new InternalErrorException('Could not update the authentication token data.');
         }
 
-        // Save user GPG key, rules were already checked
-        if (!$this->Gpgkeys->save($gpgkey, ['checkRules' => false])) {
+        if ($user->gpgkey->hasErrors()) {
             throw new InternalErrorException('Could not save the OpenPGP key data.');
         }
 
-        // Update the user
-        $user->active = true;
-        if (!$this->Users->save($user, ['checkRules' => false])) {
+        if ($user->hasErrors()) {
             throw new InternalErrorException('Could not save the user data.');
         }
 
-        $this->dispatchEvent(SetupCompleteController::COMPLETE_SUCCESS_EVENT_NAME, [
-            'user' => $user,
-            'data' => $this->request->getData(),
-        ]);
+        return $user;
     }
 
     /**
@@ -84,17 +134,13 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
      * @throws \Cake\Http\Exception\BadRequestException if the user was deleted, is already active or does not exist
      * @return \App\Model\Entity\User user entity
      */
-    protected function getAndAssertUser(string $userId)
+    protected function getAndAssertUser(string $userId): User
     {
-        if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
-        }
-        $user = $this->Users->findSetup($userId);
-        if (empty($user)) {
+        try {
+            return (new UserGetService())->getNotActiveNotDeletedOrFail($userId);
+        } catch (NotFoundException $exception) {
             $msg = __('The user does not exist, is already active or has been deleted.');
             throw new BadRequestException($msg);
         }
-
-        return $user;
     }
 }

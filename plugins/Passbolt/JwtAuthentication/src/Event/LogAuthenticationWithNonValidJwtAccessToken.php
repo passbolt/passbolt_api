@@ -29,7 +29,7 @@ class LogAuthenticationWithNonValidJwtAccessToken implements EventListenerInterf
     public const AUTHENTICATION_WITH_INVALID_ACCESS_TOKEN_EVENT = 'authentication_with_invalid_access_token_event';
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

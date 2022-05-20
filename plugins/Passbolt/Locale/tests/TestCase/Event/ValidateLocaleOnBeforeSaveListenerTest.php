@@ -21,15 +21,18 @@ use App\Error\Exception\ValidationException;
 use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
 class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Passbolt/Locale']);
+        $this->loadPlugins(['Passbolt/Locale' => []]);
     }
 
     public function tearDown(): void

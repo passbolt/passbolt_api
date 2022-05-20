@@ -17,9 +17,11 @@ declare(strict_types=1);
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use App\Service\Setup\RecoverStartServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\ForbiddenException;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -50,6 +52,10 @@ class RecoverStartController extends AppController
     public function start(RecoverStartServiceInterface $infoService, string $userId, string $token): void
     {
         if ($this->request->is('json')) {
+            // Do not allow logged in user to recover
+            if ($this->User->role() !== Role::GUEST) {
+                throw new ForbiddenException(__('Only guest are allowed to proceed with account recovery.'));
+            }
             $data = $infoService->getInfo($userId, $token);
             $this->success(__('The operation was successful.'), $data);
         } else {

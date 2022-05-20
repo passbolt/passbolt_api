@@ -16,15 +16,16 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use Cake\I18n\FrozenDate;
+use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
-
-    public $autoFixtures = false;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
@@ -49,28 +50,26 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         ];
     }
 
-    public function testRecoverGetRedirect()
+    public function testUsersRecoverController_Get_Redirect()
     {
         $this->get('/recover');
         $this->assertResponseCode(301);
     }
 
-    public function testRecoverGetSuccess()
+    public function testUsersRecoverController_Get_Success()
     {
         $this->get('/users/recover');
         $this->assertResponseOk();
     }
 
-    public function testRecoverGetJsonSuccess()
+    public function testUsersRecoverController_Get_JsonSuccess()
     {
         $this->getJson('/users/recover.json');
         $this->assertSuccess();
     }
 
-    public function testRecoverPostErrors()
+    public function testUsersRecoverController_Post_Errors()
     {
-        $this->loadFixtures();
-
         foreach ($this->fails as $case => $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
             $result = $this->_getBodyAsString();
@@ -78,10 +77,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testRecoverPostError_UserDeleted()
+    public function testUsersRecoverController_Post_Error_UserDeleted()
     {
-        $this->loadFixtures();
-
         $data = ['username' => 'sofia@passbolt.com'];
         $error = 'This user does not exist or has been deleted.';
         $this->postJson('/users/recover.json', $data);
@@ -90,10 +87,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->assertStringContainsString($error, $result);
     }
 
-    public function testRecoverPostError_UserNotExist()
+    public function testUsersRecoverController_Post_Error_UserNotExist()
     {
-        $this->loadFixtures();
-
         $data = ['username' => 'notauser@passbolt.com'];
         $error = 'This user does not exist or has been deleted.';
         $this->postJson('/users/recover.json', $data);
@@ -105,12 +100,9 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     /**
      * @dataProvider dataProviderForPostSuccess
      */
-    public function testRecoverPostSuccess(string $username, string $emailTemplate)
+    public function testUsersRecoverController_Post_Success(string $username, string $emailTemplate)
     {
-        $this->loadFixtures();
-
         $this->postJson('/users/recover.json', compact('username'));
-        $result = $this->_getBodyAsString();
         $this->assertResponseSuccess('Recovery process started, check your email.');
         $this->assertSuccess();
 
@@ -118,7 +110,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->assertEmailQueueCount(1);
     }
 
-    public function testRecoverPostJsonError()
+    public function testUsersRecoverController_Post_JsonError()
     {
         foreach ($this->fails as $case => $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
@@ -126,18 +118,18 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testRecoverPostJsonError_MissingCsrfTokenError()
+    public function testUsersRecoverController_Post_JsonError_MissingCsrfTokenError()
     {
         $this->disableCsrfToken();
-        $this->post('/users/recover.json?api-version=v2');
+        $this->post('/users/recover.json');
         $this->assertResponseCode(403);
     }
 
-    public function testRecoverPostJsonSuccess_For_User_With_Avatar()
+    public function testUsersRecoverController_Post_JsonSuccess_For_User_With_Avatar()
     {
         $user = UserFactory::make()->withAvatar()->user()->persist();
 
-        $this->postJson('/users/recover.json?api-version=v2', ['username' => $user->username]);
+        $this->postJson('/users/recover.json', ['username' => $user->username]);
         $this->assertSuccess();
 
         $this->assertEmailIsInQueue([
@@ -145,5 +137,64 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
             'subject' => "Your account recovery, {$user->profile->first_name}!",
             'template' => 'AN/user_recover',
         ]);
+    }
+
+    public function testUsersRecoverController_Post_JsonSuccess_CaseLostPassphrase()
+    {
+        $user = UserFactory::make()->withAvatar()->user()->persist();
+
+        $this->postJson('/users/recover.json', ['username' => $user->username, 'case' => 'lost-passphrase']);
+        $this->assertSuccess();
+
+        $this->assertEmailIsInQueue([
+            'email' => $user->username,
+            'subject' => "Your account recovery, {$user->profile->first_name}!",
+            'template' => 'AN/user_recover',
+        ]);
+
+        $email = EmailQueueFactory::find()->firstOrFail();
+        $this->assertTextEquals('lost-passphrase', $email->template_vars['body']['case']);
+    }
+
+    public function testUsersRecoverController_Post_JsonSuccess_CaseDefault()
+    {
+        $user = UserFactory::make()->withAvatar()->user()->setField('created', FrozenDate::yesterday())->persist();
+
+        $this->postJson('/users/recover.json', ['username' => $user->username]);
+        $this->assertSuccess();
+
+        $this->assertUserRecoverEmail($user);
+    }
+
+    public function testUsersRecoverController_Post_JsonSuccess_CaseDefault2()
+    {
+        $user = UserFactory::make()->withAvatar()->user()->setField('created', FrozenDate::yesterday())->persist();
+
+        $this->postJson('/users/recover.json', ['username' => $user->username, 'case' => 'default']);
+        $this->assertSuccess();
+
+        $this->assertUserRecoverEmail($user);
+    }
+
+    private function assertUserRecoverEmail(User $user)
+    {
+        $this->assertEmailIsInQueue([
+            'email' => $user->username,
+            'subject' => "Your account recovery, {$user->profile->first_name}!",
+            'template' => 'AN/user_recover',
+        ]);
+
+        $email = EmailQueueFactory::find()->firstOrFail();
+        $this->assertTextEquals('default', $email->template_vars['body']['case']);
+
+        // Assert that the date displayed is now
+        $this->assertEmailInBatchContains(FrozenDate::now()->toFormattedDateString());
+    }
+
+    public function testUsersRecoverController_Post_JsonSuccess_CaseError()
+    {
+        $user = UserFactory::make()->withAvatar()->user()->persist();
+        $this->postJson('/users/recover.json', ['username' => $user->username, 'case' => 'nope']);
+        $this->assertError(400);
     }
 }

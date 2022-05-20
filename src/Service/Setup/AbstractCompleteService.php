@@ -18,11 +18,14 @@ declare(strict_types=1);
 namespace App\Service\Setup;
 
 use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
-use Cake\Datasource\Exception\RecordNotFoundException;
+use App\Model\Entity\Gpgkey;
+use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
 use Cake\Validation\Validation;
 
@@ -44,11 +47,11 @@ abstract class AbstractCompleteService
     /**
      * AbstractCompleteService constructor
      *
-     * @param \Cake\Http\ServerRequest $request Server request
+     * @param \Cake\Http\ServerRequest|null $request Server request
      */
-    public function __construct(ServerRequest $request)
+    public function __construct(?ServerRequest $request = null)
     {
-        $this->request = $request;
+        $this->request = $request ?? new ServerRequest();
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('Gpgkeys');
         $this->loadModel('Users');
@@ -67,20 +70,22 @@ abstract class AbstractCompleteService
     protected function getAndAssertToken(string $userId, string $tokenType): AuthenticationToken
     {
         $data = $this->request->getData();
-        if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
+
+        // @depracted since v3.6
+        if (isset($data['authenticationtoken'])) {
+            $data['authentication_token'] = $data['authenticationtoken'];
+        }
+        if (!isset($data['authentication_token']) || !isset($data['authentication_token']['token'])) {
             throw new BadRequestException(__('An authentication token should be provided.'));
         }
-        $tokenValue = $data['authenticationtoken']['token'];
-        if (!Validation::uuid($tokenValue)) {
+        $token = $data['authentication_token']['token'];
+        if (!Validation::uuid($token)) {
             throw new BadRequestException(__('The authentication token should be a valid UUID.'));
         }
-        if (!$this->AuthenticationTokens->isValid($tokenValue, $userId, $tokenType)) {
-            throw new BadRequestException(__('The authentication token is not valid or has expired.'));
-        }
         try {
-            return $this->AuthenticationTokens->getByToken($tokenValue);
-        } catch (RecordNotFoundException $e) {
-            throw new BadRequestException(__('The authentication token does not exist or is inactive.'));
+            return (new AuthenticationTokenGetService())->getActiveNotExpiredOrFail($token, $userId, $tokenType);
+        } catch (NotFoundException $exception) {
+            throw new BadRequestException(__('The authentication token is not valid.'));
         }
     }
 
@@ -89,26 +94,24 @@ abstract class AbstractCompleteService
      *
      * @param string $userId the user uuid
      * @throws \Cake\Http\Exception\BadRequestException if the gpg key is not provided or not a valid OpenPGP key
+     * @throws \App\Error\Exception\CustomValidationException if armored key content cannot be validated
+     * @throws \App\Error\Exception\ValidationException if key cannot be validated against model rules
      * @return \App\Model\Entity\Gpgkey entity
      */
-    protected function getAndAssertGpgkey(string $userId)
+    protected function getAndAssertGpgkey(string $userId): Gpgkey
     {
         $data = $this->request->getData();
-        $armoredKey = $data['gpgkey']['armored_key'];
+        $armoredKey = $data['gpgkey']['armored_key'] ?? null;
 
-        if (empty($armoredKey)) {
+        if (empty($armoredKey) || !is_string($armoredKey)) {
             throw new BadRequestException(__('An OpenPGP key must be provided.'));
         }
 
-        if (!$this->Gpgkeys->isParsableArmoredPublicKey($armoredKey)) {
-            throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
-        }
         try {
-            $gpgkey = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
-        } catch (CustomValidationException $e) {
-            throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
+            return $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        } catch (ValidationException $exception) {
+            // Remap errors to match sent data
+            throw new CustomValidationException($exception->getMessage(), ['gpgkey' => $exception->getErrors()]);
         }
-
-        return $gpgkey;
     }
 }

@@ -43,7 +43,9 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class AppIntegrationTestCase extends TestCase
 {
@@ -62,6 +64,7 @@ abstract class AppIntegrationTestCase extends TestCase
     use RolesModelTrait;
     use ScenarioAwareTrait;
     use SecretsModelTrait;
+    use TruncateDirtyTables;
     use UsersModelTrait;
 
     /**
@@ -78,6 +81,7 @@ abstract class AppIntegrationTestCase extends TestCase
         OpenPGPBackendFactory::reset();
         UserAction::destroy();
         DigestsPool::clearInstance();
+        EmailNotificationSettings::flushCache();
     }
 
     /**

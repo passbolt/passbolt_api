@@ -17,21 +17,23 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\MigratePostgresCommand;
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
  * App\Command\PostgresMigrationCommand Test Case
  *
  * @uses \App\Command\MigratePostgresCommand
  */
-class MigratePostgresCommandTest extends TestCase
+class MigratePostgresCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use PassboltCommandTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

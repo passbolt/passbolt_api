@@ -17,16 +17,18 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\SendTestEmailCommand;
+use App\Test\Lib\AppTestCase;
 use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\EmailTrait;
-use Cake\TestSuite\TestCase;
 use Cake\TestSuite\TestEmailTransport;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
-class SendTestEmailCommandTest extends TestCase
+class SendTestEmailCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use EmailTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method
