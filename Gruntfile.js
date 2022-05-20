@@ -113,6 +113,9 @@ module.exports = function(grunt) {
             'controls/loading_light.svg',
             'controls/loading_dark.svg',
             'controls/overlay-opacity-50.png',
+            'controls/success.svg',
+            'controls/error.svg',
+            'controls/warning.svg',
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
             'third_party/FirefoxAMO_black.svg',
