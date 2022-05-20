@@ -214,6 +214,7 @@ class GroupsUpdateDryRunService
     {
         return $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $group->id)
             ->select('aco_foreign_key')
+            ->all()
             ->extract('aco_foreign_key')
             ->toArray();
     }
@@ -243,6 +244,7 @@ class GroupsUpdateDryRunService
                 'resource_id IN' => $resourcesIdsGroupHasAccess,
             ])
             ->select('resource_id')
+            ->all()
             ->extract('resource_id')
             ->toArray();
 
@@ -286,7 +288,7 @@ class GroupsUpdateDryRunService
             ->distinct();
 
         // Format the result.
-        $query = $query->map(function ($secret) {
+        $query = $query->all()->map(function ($secret) {
                 return [
                     'resource_id' => $secret->resource_id,
                     'data' => $secret->data,

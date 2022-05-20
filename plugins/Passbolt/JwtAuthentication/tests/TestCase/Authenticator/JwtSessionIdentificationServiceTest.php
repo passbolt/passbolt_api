@@ -20,14 +20,11 @@ use Authentication\AuthenticationService;
 use Authentication\Authenticator\ResultInterface;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\SkipTablesTruncation;
 use Passbolt\JwtAuthentication\Authenticator\JwtSessionIdentificationService;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
 
 class JwtSessionIdentificationServiceTest extends TestCase
 {
-    use SkipTablesTruncation;
-
     public function dataProviderForAuthentication()
     {
         return [

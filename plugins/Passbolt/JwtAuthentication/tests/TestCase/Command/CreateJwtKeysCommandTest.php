@@ -16,21 +16,17 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Test\TestCase\Command;
 
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
-use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\SkipTablesTruncation;
 
 /**
  * @uses \Passbolt\JwtAuthentication\Command\CreateJwtKeysCommand
  */
-class CreateJwtKeysCommandTest extends TestCase
+class CreateJwtKeysCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
-    use FeaturePluginAwareTrait;
     use PassboltCommandTestTrait;
-    use SkipTablesTruncation;
 
     /**
      * setUp method

@@ -21,6 +21,7 @@ use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
@@ -30,6 +31,7 @@ class PreviewEmailBatchServiceTest extends TestCase
 {
     use DummyTranslationTestTrait;
     use EmailDigestMockTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var PreviewEmailBatchService
@@ -39,7 +41,7 @@ class PreviewEmailBatchServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Passbolt/EmailDigest']);
+        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
         $this->setDummyFrenchTranslator();
         $this->previewEmailBatchService = new PreviewEmailBatchService();
         (new AvatarsConfigurationService())->loadConfiguration();
@@ -66,7 +68,7 @@ class PreviewEmailBatchServiceTest extends TestCase
 
     public function testPreviewNextEmailBatchTranslated(): void
     {
-        $this->loadPlugins(['Passbolt/Locale']);
+        $this->loadPlugins(['Passbolt/Locale' => []]);
 
         $frenchLocale = 'fr-FR';
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();

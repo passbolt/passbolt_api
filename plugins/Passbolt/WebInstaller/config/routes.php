@@ -13,12 +13,16 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use Cake\Routing\Router;
 
 /**
  * Selenium tests routes
  */
-Router::plugin('Passbolt/WebInstaller', ['path' => '/install'], function ($routes) {
+
+use Cake\Routing\RouteBuilder;
+
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->plugin('Passbolt/WebInstaller', ['path' => '/install'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/', ['controller' => 'GettingStarted', 'action' => 'index'])

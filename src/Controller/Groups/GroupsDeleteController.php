@@ -140,6 +140,7 @@ class GroupsDeleteController extends AppController
             if (isset($errors['id']['soleOwnerOfSharedContent'])) {
                 $resourcesIds = $this->Permissions
                     ->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)
+                    ->all()
                     ->extract('aco_foreign_key')
                     ->toArray();
                 $body = [];
@@ -182,6 +183,7 @@ class GroupsDeleteController extends AppController
 
         $contentIdBlockingDelete = $this->Permissions
             ->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)
+            ->all()
             ->extract('aco_foreign_key')
             ->toArray();
         sort($contentIdBlockingDelete);

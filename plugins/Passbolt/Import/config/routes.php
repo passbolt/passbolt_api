@@ -13,12 +13,16 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use Cake\Routing\Router;
 
 /**
  * Import routes
  */
-Router::scope('/import', ['plugin' => false], function ($routes) {
+
+use Cake\Routing\RouteBuilder;
+
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->scope('/import', ['plugin' => false], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/resources', ['prefix' => 'Resources', 'controller' => 'ResourcesAdd', 'action' => 'add'])

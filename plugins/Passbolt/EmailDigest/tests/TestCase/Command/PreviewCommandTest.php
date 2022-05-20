@@ -23,6 +23,7 @@ use Cake\I18n\I18n;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
@@ -34,6 +35,7 @@ class PreviewCommandTest extends TestCase
     use ConsoleIntegrationTestTrait;
     use DummyTranslationTestTrait;
     use EmailTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method
@@ -45,7 +47,7 @@ class PreviewCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->setDummyFrenchTranslator();
-        $this->loadPlugins(['Passbolt/EmailDigest']);
+        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
     }
 
     /**
@@ -87,7 +89,7 @@ class PreviewCommandTest extends TestCase
      */
     public function testPreviewCommandLocale(): void
     {
-        $this->loadPlugins(['Passbolt/Locale']);
+        $this->loadPlugins(['Passbolt/Locale' => []]);
         $frenchLocale = 'fr-FR';
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 

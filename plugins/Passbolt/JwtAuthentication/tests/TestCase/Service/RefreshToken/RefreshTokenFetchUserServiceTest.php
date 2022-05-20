@@ -21,6 +21,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAuthenticationService;
 
@@ -31,9 +32,11 @@ use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAuthenticationSe
 class RefreshTokenFetchUserServiceTest extends TestCase
 {
     use ModelAwareTrait;
+    use TruncateDirtyTables;
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->loadModel('AuthenticationTokens');
     }
 

@@ -82,6 +82,7 @@ class UsersDeleteController extends AppController
         // keep a list of group the user was a member of. Useful to notify the group managers after the delete
         $groupIdsNotOnlyMember = $this->GroupsUsers
             ->findGroupsWhereUserNotOnlyMember($id)
+            ->all()
             ->extract('group_id')
             ->toArray();
 
@@ -154,6 +155,7 @@ class UsersDeleteController extends AppController
             if (isset($errors['id']['soleManagerOfNonEmptyGroup'])) {
                 $groupIds = $this->GroupsUsers
                     ->findNonEmptyGroupsWhereUserIsSoleManager($user->id)
+                    ->all()
                     ->extract('group_id')
                     ->toArray();
                 $findGroupsOptions = [];
@@ -167,6 +169,7 @@ class UsersDeleteController extends AppController
                 $acoType = PermissionsTable::RESOURCE_ACO;
                 $resourcesIds = $this->Permissions
                     ->findSharedAcosByAroIsSoleOwner($acoType, $user->id, ['checkGroupsUsers' => true])
+                    ->all()
                     ->extract('aco_foreign_key')->toArray();
                 if ($resourcesIds) {
                     $findResourcesOptions = [];
@@ -180,6 +183,7 @@ class UsersDeleteController extends AppController
 
             $groupsToDeleteIds = $this->GroupsUsers
                 ->findGroupsWhereUserOnlyMember($user->id)
+                ->all()
                 ->extract('group_id')
                 ->toArray();
             if ($groupsToDeleteIds) {
@@ -217,6 +221,7 @@ class UsersDeleteController extends AppController
 
         $groupsIdsBlockingDelete = $this->GroupsUsers
             ->findNonEmptyGroupsWhereUserIsSoleManager($user->id)
+            ->all()
             ->extract('group_id')
             ->toArray();
         sort($groupsIdsBlockingDelete);
@@ -262,6 +267,7 @@ class UsersDeleteController extends AppController
 
         $contentIdBlockingDelete = $this->Permissions
             ->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
+            ->all()
             ->extract('aco_foreign_key')
             ->toArray();
         sort($contentIdBlockingDelete);

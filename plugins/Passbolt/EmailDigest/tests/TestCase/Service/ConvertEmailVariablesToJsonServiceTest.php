@@ -27,11 +27,14 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 use CakephpFixtureFactories\ORM\FactoryTableRegistry;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Service\ConvertEmailVariablesToJsonService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 
 class ConvertEmailVariablesToJsonServiceTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     public function testConvertEmailVariablesToJsonService_Convert()
     {
         $this->loadRoutes();
@@ -39,6 +42,10 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         // Create an email with objects in v3.3.0 mode
         // Forces the serialization to serialize (no Json)
         Configure::write('EmailQueue.serialization_type', 'email_queue.serialize');
+        /**
+         * @psalm-suppress InternalMethod
+         * @psalm-suppress InternalClass
+         */
         FactoryTableRegistry::getTableLocator()->clear();
 
         $users = UserFactory::make(2)->with('Roles')->with('Profiles.Avatars', ['data' => 'Foo'])->persist();
@@ -49,10 +56,14 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
             ->persist();
 
 
-        // Swith to v3.3.1 mode, with variables saved in Json
+        // Switch to v3.3.1 mode, with variables saved in Json
+        /**
+         * @psalm-suppress InternalMethod
+         * @psalm-suppress InternalClass
+         */
         FactoryTableRegistry::getTableLocator()->clear();
         TableRegistry::getTableLocator()->clear();
-        $this->loadPlugins(['Passbolt/EmailDigest']); // This sets the serialize type to Json
+        $this->loadPlugins(['Passbolt/EmailDigest' => []]); // This sets the serialize type to Json
 
         $service = new ConvertEmailVariablesToJsonService();
         $service->convert();

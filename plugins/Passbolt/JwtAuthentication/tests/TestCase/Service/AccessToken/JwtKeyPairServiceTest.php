@@ -21,7 +21,6 @@ use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\UuidFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\SkipTablesTruncation;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
@@ -32,8 +31,6 @@ use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
  */
 class JwtKeyPairServiceTest extends TestCase
 {
-    use SkipTablesTruncation;
-
     public static $publicFilePath = TMP . 'jwt' . DS . 'jwt.pem';
     public static $secretFilePath = TMP . 'jwt' . DS . 'jwt.key';
 
@@ -44,6 +41,7 @@ class JwtKeyPairServiceTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->service = new JwtKeyPairService(
             (new JwtTokenCreateService())->setKeyPath(self::$secretFilePath),
             (new JwksGetService())->setKeyPath(self::$publicFilePath),

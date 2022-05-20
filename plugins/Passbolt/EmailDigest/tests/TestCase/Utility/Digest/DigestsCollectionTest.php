@@ -42,6 +42,7 @@ class DigestsCollectionTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->digestsCollectionMock = $this->createMock(DigestsPool::class);
 
         $this->sut = new DigestsCollection($this->digestsCollectionMock);
