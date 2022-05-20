@@ -21,17 +21,13 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
 ?>
 <div class="grid grid-responsive-12">
     <div class="row">
-        <div class="col12 last">
+        <div class="col7 main-column">
             <h3><?= $title; ?></h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col7">
             <?php if (!$mfaPossible) : ?>
-            <h4><?= __('Sorry no multi factor authentication is enabled for this organization.'); ?></h4>
+            <h4 class="no-border"><?= __('Sorry no multi factor authentication is enabled for this organization.'); ?></h4>
             <p><?= __('Please contact your administrator to enable multi-factor authentication.'); ?></p>
             <?php else : ?>
-            <h4><?= __('Please select a provider'); ?></h4>
+            <h4 class="no-border"><?= __('Please select a provider'); ?></h4>
             <ul class="mfa-providers">
                 <?php if ($body[MfaSettings::ORG_SETTINGS]['totp']) : ?>
                 <li>
@@ -89,8 +85,8 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
             <?php endif; ?>
         </div>
         <div class="col4 last">
-            <h4><?= __('What is multi-factor authentication?'); ?></h4>
-            <div class="message notice">
+            <div class="sidebar-help">
+                <h3><?= __('What is multi-factor authentication?'); ?></h4>
                 <p>
                     <?= __('Multi-factor authentication (MFA) is a method of confirming a user\'s identity that requires presenting two or more pieces of evidence (or factor).'); ?>
                 </p>

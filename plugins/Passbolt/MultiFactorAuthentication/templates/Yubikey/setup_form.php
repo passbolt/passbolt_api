@@ -17,12 +17,8 @@
 <div class="grid grid-responsive-12">
     <?= $this->Form->create($yubikeySetupForm, $formContext); ?>
     <div class="row">
-        <div class="col12 last">
+        <div class="col7 main-column">
             <h3><?= $title; ?></h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col7">
             <div class="input-verify">
                 <?= $this->Form->control('hotp', [
                     'label' => 'Yubikey OTP',
@@ -33,15 +29,9 @@
                 </div>
             </div>
         </div>
-        <div class="col4 last">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col7 last">
-            <div class="actions-wrapper">
-                <a href="<?= Router::url('/mfa/setup/select', true); ?>" class="button cancel">Cancel</a>
-                <input type="submit" class="button primary" value="Validate">
-            </div>
+        <div class="actions-wrapper">
+            <a href="<?= Router::url('/mfa/setup/select', true); ?>" class="button cancel">Cancel</a>
+            <input type="submit" class="button primary" value="Validate">
         </div>
     </div>
     <?= $this->Form->end(); ?>
