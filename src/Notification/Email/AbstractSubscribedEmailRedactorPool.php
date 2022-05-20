@@ -32,7 +32,7 @@ abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInter
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
     final public function implementedEvents(): array
     {

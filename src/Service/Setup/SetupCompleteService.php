@@ -17,14 +17,18 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Service\OpenPGP\PublicKeyCanEncryptCheckService;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Service\Users\UserGetService;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Log\Log;
 
 class SetupCompleteService extends AbstractCompleteService implements SetupCompleteServiceInterface
 {
@@ -74,6 +78,17 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
         $this->Gpgkeys->checkRules($gpgkey);
         if ($gpgkey->getErrors()) {
             throw new ValidationException(__('The OpenPGP key data is not valid.'), $gpgkey, $this->Gpgkeys);
+        }
+
+        // Check key can be used to encrypt
+        // This can happen for example if the key is created in the future
+        // or some other issue prevent the backend to use it, we don't want to fail at the login step
+        if (Configure::read('passbolt.gpg.experimental.encryptValidate')) {
+            if (!PublicKeyCanEncryptCheckService::check($gpgkey->armored_key, $gpgkey->fingerprint)) {
+                $msg = __('The OpenPGP key can not be used to encrypt.');
+                Log::debug($msg, [$gpgkey->armored_key]);
+                throw new CustomValidationException($msg, ['gpgkey' => ['armored_key' => $msg]]);
+            }
         }
 
         $user->active = true;

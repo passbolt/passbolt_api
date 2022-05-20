@@ -71,13 +71,12 @@ trait OpenPGPBackendGetKeyInfoTrait
         if (!$publicKeyPacket instanceof \OpenPGP_PublicKeyPacket) {
             throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
         }
-
         $results['fingerprint'] = @$publicKeyPacket->fingerprint(); // phpcs:ignore
         // will throw an exception if fingerprint is not readable or valid
         $results['key_id'] = self::fingerprintToKeyId($results['fingerprint']);
         $results['type'] = $this->getKeyAlgorithm($publicKeyPacket);
         $results['bits'] = $this->getKeySize($publicKeyPacket);
-        $results['expires'] = $publicKeyPacket->expires($msg);
+        $results['expires'] = @$publicKeyPacket->expires($msg); // phpcs:ignore
         $results['key_created'] = $publicKeyPacket->timestamp;
 
         foreach ($msg->packets as $packet) {

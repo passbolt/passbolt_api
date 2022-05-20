@@ -8,11 +8,13 @@ declare(strict_types=1);
  * unit tests in this file.
  */
 
-use CakephpTestMigrator\Migrator;
+use Cake\TestSuite\ConnectionHelper;
+use Migrations\TestSuite\Migrator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/config/bootstrap.php';
 
 $_SERVER['PHP_SELF'] = '/';
 
-Migrator::migrate();
+(new ConnectionHelper())->addTestAliases();
+(new Migrator())->run();

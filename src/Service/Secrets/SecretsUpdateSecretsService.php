@@ -184,7 +184,10 @@ class SecretsUpdateSecretsService
     {
         $usersIdsHavingAccess = $this->accessService->getUsersIdsHavingAccessTo($resourceId);
         sort($usersIdsHavingAccess);
-        $usersIdsHavingASecret = $this->secretsTable->findByResourceId($resourceId)->extract('user_id')->toArray();
+        $usersIdsHavingASecret = $this->secretsTable->findByResourceId($resourceId)
+            ->all()
+            ->extract('user_id')
+            ->toArray();
         sort($usersIdsHavingASecret);
 
         if ($usersIdsHavingAccess !== $usersIdsHavingASecret) {

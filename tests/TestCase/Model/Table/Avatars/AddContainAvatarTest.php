@@ -21,6 +21,7 @@ use App\Model\Table\AvatarsTable;
 use App\Test\Factory\UserFactory;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -28,6 +29,7 @@ use Cake\TestSuite\TestCase;
 class AddContainAvatarTest extends TestCase
 {
     use ModelAwareTrait;
+    use TruncateDirtyTables;
 
     public function setUp(): void
     {

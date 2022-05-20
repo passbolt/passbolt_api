@@ -358,6 +358,7 @@ class UsersTable extends Table
         // transferred to other people already (ref. checkRules)
         $resourceIds = $this->Permissions
             ->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
+            ->all()
             ->extract('aco_foreign_key')
             ->toArray();
         if (!empty($resourceIds)) {
@@ -370,7 +371,10 @@ class UsersTable extends Table
         // Soft delete all the groups where the user is alone
         // Note that all associated resources are already deleted in previous step
         // ref. findAcosOnlyAroCanAccess checkGroupsUsers = true
-        $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)->extract('group_id')->toArray();
+        $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)
+            ->all()
+            ->extract('group_id')
+            ->toArray();
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
             $this->Permissions->deleteAll(['aro_foreign_key IN' => $groupsId]);

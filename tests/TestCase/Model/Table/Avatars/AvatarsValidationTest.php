@@ -23,6 +23,7 @@ use App\Utility\UuidFactory;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Laminas\Diactoros\UploadedFile;
 
 /**
@@ -31,6 +32,7 @@ use Laminas\Diactoros\UploadedFile;
 class AvatarsValidationTest extends TestCase
 {
     use AvatarsModelTrait;
+    use TruncateDirtyTables;
 
     /**
      * Test subject

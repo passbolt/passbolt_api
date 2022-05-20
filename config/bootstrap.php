@@ -176,19 +176,6 @@ Security::setSalt(Configure::consume('Security.salt'));
 //});
 
 /*
- * Enable immutable time objects in the ORM.
- *
- * You can enable default locale format parsing by adding calls
- * to `useLocaleParser()`. This enables the automatic conversion of
- * locale specific date formats. For details see
- * @link http://book.cakephp.org/3.0/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
- */
-Type::build('time')->useImmutable();
-Type::build('date')->useImmutable();
-Type::build('datetime')->useImmutable();
-Type::build('timestamp')->useImmutable();
-
-/*
  * Set process user constant
  */
 $uid = posix_getuid();
