@@ -85,7 +85,7 @@ class V360AddAccountRecoveryTables extends AbstractMigration
             ])
             ->addColumn('armored_key', 'text', [
                 'default' => null,
-                'limit' => null,
+                'limit' => MysqlAdapter::TEXT_REGULAR,
                 'null' => false,
                 'encoding' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci'
@@ -185,7 +185,7 @@ class V360AddAccountRecoveryTables extends AbstractMigration
             ])
             ->addColumn('data', 'text', [
                 'default' => null,
-                'limit' => null,
+                'limit' => MysqlAdapter::TEXT_REGULAR,
                 'null' => false,
             ])
             ->addColumn('created', 'datetime', [
@@ -238,7 +238,7 @@ class V360AddAccountRecoveryTables extends AbstractMigration
             ])
             ->addColumn('data', 'text', [
                 'default' => null,
-                'limit' => null,
+                'limit' => MysqlAdapter::TEXT_REGULAR,
                 'null' => false,
             ])
             ->addColumn('created', 'datetime', [
@@ -280,7 +280,7 @@ class V360AddAccountRecoveryTables extends AbstractMigration
             ])
             ->addColumn('armored_key', 'text', [
                 'default' => null,
-                'limit' => null,
+                'limit' => MysqlAdapter::TEXT_REGULAR,
                 'null' => true,
             ])
             ->addColumn('fingerprint', 'string', [
@@ -348,7 +348,7 @@ class V360AddAccountRecoveryTables extends AbstractMigration
                 'null' => false,
             ])
             ->addColumn('data', 'text', [
-                'limit' => null,
+                'limit' => MysqlAdapter::TEXT_REGULAR,
                 'null' => true,
             ])
             ->addColumn('status', 'string', [
