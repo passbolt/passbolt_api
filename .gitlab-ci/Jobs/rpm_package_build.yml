@@ -112,7 +112,7 @@ build-suse:
     "gs://$REPO"
 
 .publish-rpm:
-  image: rockylinux/rockylinux:8
+  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-8.5
   stage: publish
   variables:
     GCLOUD_SHA256SUM: "81d0ad64dca3e97d02e873d386bafcc77b416d7c9b45e5ec2387e5075b133fc0"
