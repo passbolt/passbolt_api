@@ -26,6 +26,7 @@ use App\Notification\Email\Redactor\Group\GroupUserAddRequestEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserUpdateEmailRedactor;
 use App\Notification\Email\Redactor\Recovery\AccountRecoveryCompleteAdminEmailRedactor;
+use App\Notification\Email\Redactor\Recovery\AccountRecoveryCompleteUserEmailRedactor;
 use App\Notification\Email\Redactor\Recovery\AccountRecoveryEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceDeleteEmailRedactor;
@@ -68,6 +69,9 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         }
         if ($this->isRedactorEnabled('send.user.recover')) {
             $redactors[] = new AccountRecoveryEmailRedactor();
+        }
+        if ($this->isRedactorEnabled('send.user.recoverComplete')) {
+            $redactors[] = new AccountRecoveryCompleteUserEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.admin.user.recover.abort')) {
             $redactors[] = new SetupRecoverAbortAdminEmailRedactor();

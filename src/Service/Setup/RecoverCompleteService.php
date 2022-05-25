@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
-use App\Controller\Setup\RecoverCompleteController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
@@ -56,7 +55,7 @@ class RecoverCompleteService extends AbstractCompleteService implements RecoverC
             );
         }
 
-        $this->dispatchEvent(RecoverCompleteController::COMPLETE_SUCCESS_EVENT_NAME, [
+        $this->dispatchEvent(RecoverCompleteServiceInterface::COMPLETE_SUCCESS_EVENT_NAME, [
             'user' => $user,
             'data' => $this->request->getData(),
         ]);

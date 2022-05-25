@@ -18,23 +18,20 @@ declare(strict_types=1);
 namespace App\Notification\Email\Redactor\Recovery;
 
 use App\Model\Entity\User;
-use App\Model\Table\AvatarsTable;
-use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Setup\RecoverCompleteServiceInterface;
 use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
-class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedactorInterface
+class AccountRecoveryCompleteUserEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    public const TEMPLATE = 'AD/recover_complete';
+    public const TEMPLATE = 'AN/user_recover_complete';
 
     /**
      * @inheritDoc
@@ -56,37 +53,27 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
 
         /** @var \App\Model\Entity\User $user */
         $user = $event->getData('user');
-
-        /** @var \App\Model\Table\UsersTable $Users */
-        $Users = TableRegistry::getTableLocator()->get(UsersTable::class);
-        $admins = $Users->findAdmins()
-            ->contain([
-                'Profiles' => AvatarsTable::addContainAvatar(),
-            ]);
-        foreach ($admins as $admin) {
-            $emailCollection->addEmail($this->createAccountRecoveryAdminEmail($admin, $user));
-        }
+        $emailCollection->addEmail($this->createAccountRecoveryUserEmail($user));
 
         return $emailCollection;
     }
 
     /**
-     * @param \App\Model\Entity\User $admin Admin
      * @param \App\Model\Entity\User $user User
      * @return \App\Notification\Email\Email
      */
-    private function createAccountRecoveryAdminEmail(User $admin, User $user): Email
+    private function createAccountRecoveryUserEmail(User $user): Email
     {
-        $locale = (new GetUserLocaleService())->getLocale($admin->username);
+        $locale = (new GetUserLocaleService())->getLocale($user->username);
         $subject = (new LocaleService())->translateString(
             $locale,
-            function () use ($user) {
-                return __('{0} just completed the account recovery process', $user->profile->first_name);
+            function () {
+                return __('You just completed the account recovery process!');
             }
         );
 
-        $data = ['body' => compact('admin', 'user'), 'title' => $subject];
+        $data = ['body' => compact('user'), 'title' => $subject];
 
-        return new Email($admin->username, $subject, $data, self::TEMPLATE);
+        return new Email($user->username, $subject, $data, self::TEMPLATE);
     }
 }
