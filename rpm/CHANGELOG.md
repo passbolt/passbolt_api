@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [3.5.0-3] - 2021-11-25
+### Added
+- First version
+
 ## [3.3.1] - 2021-11-25
 ### Added
 - First version
