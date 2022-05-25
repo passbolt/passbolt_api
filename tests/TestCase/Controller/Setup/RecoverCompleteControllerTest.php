@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AvatarFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
@@ -49,11 +50,18 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         Configure::write('passbolt.plugins.log.enabled', true);
         $admins = UserFactory::make(3)
-            ->with('Profiles.Avatars')
+            ->with('Profiles.Avatars', AvatarFactory::make()->setDataWithFileContent())
             ->admin()
             ->persist();
-        $user = UserFactory::make()
+
+        UserFactory::make(5) // Add some inactive admins that should not receive an email
             ->with('Profiles.Avatars')
+            ->admin()
+            ->inactive()
+            ->persist();
+
+        $user = UserFactory::make()
+            ->with('Profiles.Avatars', AvatarFactory::make()->setDataWithFileContent())
             ->user()
             ->active()
             ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
@@ -78,8 +86,17 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $t2 = $this->AuthenticationTokens->get($t->id);
         $this->assertFalse($t2->active);
 
-        // Check that all admins got notified
-        $this->assertEmailQueueCount(count($admins));
+        $this->assertEmailQueueCount(count($admins) + 1);
+        // Check that the user got notified
+        $this->assertEmailInBatchContains(
+            'You just completed an account recovery.',
+            $user->username,
+        );
+        $this->assertEmailInBatchContains(
+            "User Agent: <i>$userAgent</i><br/>User IP: <i></i>",
+            $user->username,
+        );
+        // Check that all admins got notified, as well as the user
         foreach ($admins as $admin) {
             $this->assertEmailInBatchContains(
                 "{$user->profile->first_name} ({$user->username}) just completed an account recovery.",

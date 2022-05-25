@@ -55,7 +55,8 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
             ->addField('send_password_update', ['type' => 'boolean', 'default' => true])
             ->addField('send_password_delete', ['type' => 'boolean', 'default' => true])
             ->addField('send_user_create', ['type' => 'boolean', 'default' => true])
-            ->addField('send_user_recover', ['type' => 'boolean', 'default' => true]);
+            ->addField('send_user_recover', ['type' => 'boolean', 'default' => true])
+            ->addField('send_user_recoverComplete', ['type' => 'boolean', 'default' => true]);
     }
 
     /**
