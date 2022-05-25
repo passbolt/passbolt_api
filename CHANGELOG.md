@@ -2,6 +2,38 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.6.0] - 2021-05-25
+### Added
+- PB-9738 Add account recovery organization policy settings by admins
+- PB-13685 Add account recovery organization settings set with key rotation + misc cleanup
+- PB-12837 Add account recovery setup for users
+- PB-14236 Add account recovery request process for users
+- PB-14236 Add account recovery response process by admins
+- PB-14410 Add the account recovery final step for users after approval by admins
+- PB-14233 List all pending account recovery requests for admins
+- PB-13769 Add account recovery related email notifications to users and admins
+- PB-14452 Add cleanup tasks for account recovery
+
+### Improved
+- PB-9739 OpenPGP key and message validation refactoring
+- PB-14141 Enhanced public/private key validation rules
+- PB-13685 Enhanced secret validation rules
+- PB-14138 Refactor setup and recover related controllers with dependency injection
+- PB-14510 Three trivial endpoints, such as GET on login are not logged anymore
+- PB-14511 The trivial endpoints are cleaned-up from the relevant audit logs table
+
+### Security
+- PB-14400 Upgrade firebase/php-jwt to 6.1
+
+### Fixed
+- PB-14369 Fixes email settings issues in the test suite
+- PB-15046 Handle user lost-passphrase scenarios with API <= v3.5
+- PB-15024 Action logs slow query fix for Maria DB
+- PB-14253 Disable MFA cookie on user setup or recover
+
+### Maintenance
+- PB-14812 Upgrade cakephp/cakephp to 4.3
+
 ## [3.5.0] - 2021-01-12
 ### Added
 - PB-13161 As LU I should be able to use passbolt with my Android mobile
