@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.6.0]
+### Improved
+- PB-9739 OpenPGP key and message validation refactoring
+- PB-14141 Enhanced public/private key validation rules
+- PB-13685 Enhanced secret validation rules
+- PB-14138 Refactor setup and recover related controllers with dependency injection
+- PB-14510 Three trivial endpoints, such as GET on login are not logged anymore
+
+### Security
+- PB-14400 Upgrade firebase/php-jwt to 6.1
+
+### Fixed
+- PB-14369 Fixes email settings issues in the test suite
+- PB-15046 Handle user lost-passphrase scenarios with API <= v3.5
+
+### Maintenance
+- PB-14812 Upgrade cakephp/cakephp to 4.3
+
 ## [3.5.0] - 2021-01-12
 ### Added
 - PB-13161 As LU I should be able to use passbolt with my Android mobile
