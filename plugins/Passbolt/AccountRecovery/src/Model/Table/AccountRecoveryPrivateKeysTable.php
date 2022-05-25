@@ -27,6 +27,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey;
 use Passbolt\AccountRecovery\Model\Table\Traits\TableTruncateTrait;
+use Phinx\Db\Adapter\MysqlAdapter;
 
 /**
  * AccountRecoveryPrivateKeys Model
@@ -99,6 +100,7 @@ class AccountRecoveryPrivateKeysTable extends Table
             ->scalar('data', __('The data should be a valid string.'))
             ->requirePresence('data', 'create', __('The data is required.'))
             ->notEmptyString('data', __('The data should not be empty.'))
+            ->maxLength('data', MysqlAdapter::TEXT_MEDIUM, __('The data is too big.'))
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator

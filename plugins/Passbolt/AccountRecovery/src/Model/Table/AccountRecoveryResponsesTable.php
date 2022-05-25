@@ -28,6 +28,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
+use Phinx\Db\Adapter\MysqlAdapter;
 
 /**
  * AccountRecoveryResponses Model
@@ -123,6 +124,7 @@ class AccountRecoveryResponsesTable extends Table
 
         $validator
             ->notEmptyString('data', __('The data should not be empty.'))
+            ->maxLength('data', MysqlAdapter::TEXT_MEDIUM, __('The data is too big.'))
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator

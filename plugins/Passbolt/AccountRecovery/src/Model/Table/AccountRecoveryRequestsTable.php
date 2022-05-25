@@ -39,6 +39,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
+use Phinx\Db\Adapter\MysqlAdapter;
 
 /**
  * AccountRecoveryRequests Model
@@ -140,6 +141,7 @@ class AccountRecoveryRequestsTable extends Table
             ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
             ->requirePresence('armored_key', 'create', __('An armored key is required.'))
             ->notEmptyString('armored_key', __('The armored key should not be empty.'))
+            ->maxLength('armored_key', MysqlAdapter::TEXT_MEDIUM, __('The armored key is too big.'))
             ->add('armored_key', 'invalidArmoredKey', new IsParsableArmoredKeyValidationRule());
 
         $validator
