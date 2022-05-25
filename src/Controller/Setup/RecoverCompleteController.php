@@ -24,8 +24,6 @@ use Cake\Http\Exception\ForbiddenException;
 
 class RecoverCompleteController extends AppController
 {
-    public const COMPLETE_SUCCESS_EVENT_NAME = 'RecoverCompleteController.complete.success';
-
     /**
      * @inheritDoc
      */

@@ -19,6 +19,8 @@ namespace App\Service\Setup;
 
 interface RecoverCompleteServiceInterface
 {
+    public const COMPLETE_SUCCESS_EVENT_NAME = 'RecoverCompleteServiceInterface.complete.success';
+
     /**
      * Retrieves user and token information for the setup controllers
      *
