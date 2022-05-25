@@ -44,13 +44,6 @@ NGINX_SITES_ENABLED="/etc/nginx/sites-enabled"
 PASSBOLT_SSL_CERT_PATH="/etc/ssl/certs"
 PASSBOLT_SSL_KEY_PATH="/etc/ssl/private"
 RAND_ID="$(date +%s)"
-DISTRONAME=$(grep -E "^ID=" /etc/os-release | awk -F= '{print $2}')
-PASSBOLT_FLAVOUR=@PASSBOLT_FLAVOUR@
-PASSBOLT_COMPONENT=@PASSBOLT_COMPONENT@
-PASSBOLT_FINGERPRINT="3D1A0346C8E1802F774AEF21DE8B853FC155581D"
-PASSBOLT_KEYRING_FILE="/usr/share/keyrings/passbolt-repository.gpg"
-TRUSTED_KEYRING_FILE="/etc/apt/trusted.gpg"
-GNUPG_DIRECTORY="/root/.gnupg"
 ###########################################
 # Functions to debug debconf responses
 ###########################################
@@ -260,58 +253,6 @@ set_jwt_keys() {
   fi
 }
 
-set_codename() {
-  if [ -f /etc/debian_version ]
-  then
-      CODENAME=$(grep -E "^VERSION_CODENAME=" /etc/os-release | awk -F= '{print $2}' || true)
-      # We use buster debian package for bullseye
-      if [ "${CODENAME}" = "bullseye" ]
-      then
-          CODENAME="buster"
-      fi
-    fi
-}
-
-create_gnupg_directory() {
-  mkdir -p ${GNUPG_DIRECTORY}
-  chmod 700 ${GNUPG_DIRECTORY}
-}
-
-remove_deprecated_apt_key() {
-  if test -f "${TRUSTED_KEYRING_FILE}"; then
-    gpg --no-default-keyring --keyring=${TRUSTED_KEYRING_FILE} --batch --yes --delete-key ${PASSBOLT_FINGERPRINT} || true
-  fi
-}
-
-remove_deprecated_repo_list() {
-  rm -f /etc/apt/sources.list.d/passbolt.list
-}
-
-set_new_repo_list() {
-  cat << EOF | tee /etc/apt/sources.list.d/passbolt.sources > /dev/null
-Types: deb
-URIs: https://download.passbolt.com/${PASSBOLT_FLAVOUR}/${DISTRONAME}
-Suites: ${CODENAME}
-Components: ${PASSBOLT_COMPONENT}
-Signed-By: ${PASSBOLT_KEYRING_FILE}
-EOF
-}
-
-pull_updated_pub_key() {
-  declare -a serverlist=("keys.mailvelope.com" "keys.openpgp.org" "pgp.mit.edu")
-  for serverin in "${serverlist[@]}"
-  do
-    gpg --no-default-keyring --keyring ${PASSBOLT_KEYRING_FILE} --keyserver hkps://${serverin} --recv-keys ${PASSBOLT_FINGERPRINT}
-    if [ $? -eq 0 ] ; then
-      break
-    fi
-  done
-}
-
-setting_rights_on_keyring() {
-  chmod 644 ${PASSBOLT_KEYRING_FILE}
-}
-
 ###########################################
 # Script starts here
 ###########################################
@@ -323,13 +264,6 @@ case "$deb_action" in
 
     # Run the migrations process on upgrade
     if is_upgrade; then
-      set_codename
-      create_gnupg_directory
-      remove_deprecated_apt_key
-      remove_deprecated_repo_list
-      set_new_repo_list
-      pull_updated_pub_key
-      setting_rights_on_keyring
       su -c '/usr/share/php/passbolt/bin/cake passbolt migrate' -s /bin/bash www-data
       su -c '/usr/share/php/passbolt/bin/cake cache clear_all' -s /bin/bash www-data
       db_purge
