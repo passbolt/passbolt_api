@@ -113,6 +113,7 @@ return [
                         ],
                         'recover' => [
                             'abort' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_ABORT', true), FILTER_VALIDATE_BOOLEAN),
+                            'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
                         ]
                     ]
                 ],
@@ -281,7 +282,11 @@ return [
                     'TransfersUpdate' => ['updateNoSession'],
                 ]
             ],
-            'csp' => env('PASSBOLT_SECURITY_CSP', true)
+            'csp' => env('PASSBOLT_SECURITY_CSP', true),
+            // enables the storage and display of the user agent (user's browser and hardware related information)
+            'userAgent' => filter_var(env('PASSBOLT_SECURITY_USER_AGENT', true), FILTER_VALIDATE_BOOLEAN),
+            // enables the storage and display if the user IP address
+            'userIp' => filter_var(env('PASSBOLT_SECURITY_USER_IP', true), FILTER_VALIDATE_BOOLEAN),
         ],
 
         // Should the app be SSL / HTTPS only.

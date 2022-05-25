@@ -208,4 +208,13 @@ abstract class AppIntegrationTestCase extends TestCase
         $this->assertTrue($cookie->isSecure());
         $this->assertTrue($cookie->isHttpOnly());
     }
+
+    /**
+     * @param string $agent User agent
+     * @return void
+     */
+    public function mockUserAgent(string $agent = 'foo')
+    {
+        $this->_request['headers']['USER_AGENT'] = $agent;
+    }
 }
