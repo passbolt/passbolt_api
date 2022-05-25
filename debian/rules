@@ -57,6 +57,7 @@ override_dh_fixperms: check_env
 	# www-data needs to write on /etc/passbolt for webinstaller
 	chmod 0770 $(PKG_ROOT)/etc/passbolt
 	chmod 0770 $(PKG_ROOT)/etc/passbolt/gpg
+	chmod 0770 $(PKG_ROOT)/etc/passbolt/jwt
 	chmod -R o-rwx $(PKG_ROOT)/etc/passbolt/*
   # Strict permissions for gnupg server keyring
 	chmod 0700 $(PKG_ROOT)/var/lib/passbolt/.gnupg/
@@ -68,5 +69,6 @@ debian/control: debian/control.in check_env
 	# ${file%.*} stripes the extension from the file name
 	for file in $(PREPARE_FILES); do cat debian/$$file > debian/passbolt-$(PASSBOLT_FLAVOUR)-server.$${file%.*}; done
 	for file in $(PATCHES_FILES); do sed -i "s/@PASSBOLT_FLAVOUR@/$(PASSBOLT_FLAVOUR)/g" $$file; done
+	for file in $(PATCHES_FILES); do sed -i "s/@PASSBOLT_COMPONENT@/$(PASSBOLT_COMPONENT)/g" $$file; done
 
 .PHONY: debian/control check_env

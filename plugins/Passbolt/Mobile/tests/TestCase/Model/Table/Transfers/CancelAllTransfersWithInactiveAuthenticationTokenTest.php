@@ -32,8 +32,6 @@ class CancelAllTransfersWithInactiveAuthenticationTokenTest extends AppTestCase
      * @var TransfersTable $Transfers
      */
     public $Transfers;
-    public $autoFixtures = false;
-    public $fixtures = [];
 
     public function setUp(): void
     {

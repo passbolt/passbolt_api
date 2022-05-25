@@ -19,10 +19,6 @@ namespace App\Utility\OpenPGP\Backends;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use OpenPGP as OpenPGP;
-use OpenPGP_Message as OpenPGP_Message;
-use OpenPGP_PublicKeyPacket as OpenPGP_PublicKeyPacket;
-use OpenPGP_SecretKeyPacket as OpenPGP_SecretKeyPacket;
 
 /**
  * Gpg wrapper utility
@@ -247,121 +243,11 @@ class Gnupg extends OpenPGPBackend
     }
 
     /**
-     * Check if an ASCII armored public key is parsable
-     *
-     * To do this, we try to unarmor the key. If the operation is successful, then we consider that
-     * the key is a valid one.
-     *
-     * @param string $armoredKey ASCII armored key data
-     * @return bool true if valid, false otherwise
-     */
-    public function isParsableArmoredPublicKey(string $armoredKey): bool
-    {
-        try {
-            $this->assertGpgMarker($armoredKey, self::PUBLIC_KEY_MARKER);
-        } catch (Exception $e) {
-            return false;
-        }
-
-        // If we don't manage to unarmor the key, we consider it's not a valid one.
-        $keyUnarmored = $this->unarmor($armoredKey, self::PUBLIC_KEY_MARKER);
-        if ($keyUnarmored === false) {
-            return false;
-        }
-
-        // Try to parse the key
-        // @codingStandardsIgnoreStart
-        $publicKey = @(\OpenPGP_PublicKeyPacket::parse($keyUnarmored));
-        // @codingStandardsIgnoreEnd
-        if (empty($publicKey) || empty($publicKey->fingerprint) || empty($publicKey->key)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if an ASCII armored private key is parsable
-     *
-     * To do this, we try to unarmor the key. If the operation is successful, then we consider that
-     * the key is a valid one.
-     *
-     * @param  string $armoredKey ASCII armored key data
-     * @return bool true if parsable false otherwise
-     */
-    public function isParsableArmoredPrivateKey(string $armoredKey): bool
-    {
-        try {
-            $this->assertGpgMarker($armoredKey, self::PRIVATE_KEY_MARKER);
-        } catch (Exception $e) {
-            return false;
-        }
-
-        // If we don't manage to unarmor the key, we consider it's not a valid one.
-        $keyUnarmored = $this->unarmor($armoredKey, self::PRIVATE_KEY_MARKER);
-        if ($keyUnarmored === false) {
-            return false;
-        }
-
-        // Try to parse the key
-        // @codingStandardsIgnoreStart
-        $privateKey = @(OpenPGP_SecretKeyPacket::parse($keyUnarmored));
-        // @codingStandardsIgnoreEnd
-        if (empty($privateKey) || empty($privateKey->fingerprint) || empty($privateKey->key)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if an ASCII armored signed message is parsable
-     *
-     * @param  string $armored ASCII armored signed message
-     * @return bool
-     */
-    public function isParsableArmoredSignedMessage($armored): bool
-    {
-        try {
-            $marker = $this->getGpgMarker($armored);
-        } catch (Exception $e) {
-            return false;
-        }
-        if ($marker !== self::SIGNED_MESSAGE_MARKER) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if a message is valid.
-     *
-     * To do this, we try to unarmor the message. If the operation is successful, then we consider that
-     * the message is a valid one.
-     *
-     * @param string $armored ASCII armored message data
-     * @return bool true if valid, false otherwise
-     */
-    public function isValidMessage(string $armored): bool
-    {
-        try {
-            $this->assertGpgMarker($armored, self::MESSAGE_MARKER);
-        } catch (Exception $e) {
-            return false;
-        }
-
-        $unarmored = $this->unarmor($armored, self::MESSAGE_MARKER);
-
-        return $unarmored !== false;
-    }
-
-    /**
      * Get public key information.
      *
      * @param string $armoredKey the ASCII armored key block
      * @throws \Cake\Core\Exception\Exception if the armored key cannot be parsed
-     * @return array key information (see getKeyInfo)
+     * @return array key information (see OpenPGPBackendInterface::getKeyInfo)
      */
     public function getPublicKeyInfo(string $armoredKey): array
     {
@@ -373,88 +259,6 @@ class Gnupg extends OpenPGPBackend
         }
 
         return $this->getKeyInfo($armoredKey);
-    }
-
-    /**
-     * Get key information
-     *
-     * Extract the information from the key and return them in an array:
-     *  - fingerprint   : fingerprint of the key, string(40)
-     *  - bits          : size / number of bits (int)
-     *  - type          : algorithm used by the key (RSA, ELGAMAL, DSA, etc..)
-     *  - key_id        : key id, string(8)
-     *  - key_created   : date of creation of the key, timestamp
-     *  - uid           : user id of the key following gpg standard (usually name surname (comment) <email>), string
-     *  - expires       : expiration date or empty if no expiration date, timestamp
-     *
-     * Important note : this function is using OpenPgp-PHP library instead of php-gnupg to pre-validate the key.
-     *
-     * @param string $armoredKey the ASCII armored key block
-     * @return array as described above
-     */
-    public function getKeyInfo(string $armoredKey): array
-    {
-        $keyUnarmored = $this->unarmor($armoredKey, $this->getGpgMarker($armoredKey));
-        if ($keyUnarmored === false) {
-            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
-        }
-
-        // Get the message.
-        $msg = @OpenPGP_Message::parse($keyUnarmored); // phpcs:ignore
-        if (empty($msg->packets)) {
-            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
-        }
-
-        // Parse public key.
-        $publicKey = @OpenPGP_PublicKeyPacket::parse($keyUnarmored); // phpcs:ignore
-        if ($publicKey === null) {
-            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
-        }
-
-        // Get Packets for public key.
-        $publicKeyPacket = $msg->packets[0];
-
-        // If the packet is not a valid publicKey Packet, then we can't retrieve the uid.
-        if (!$publicKeyPacket instanceof OpenPGP_PublicKeyPacket) {
-            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
-        }
-
-        // Get userId.
-        $userIds = [];
-        /** @phpstan-ignore-next-line  */
-        foreach ($msg->signatures() as $signatures) {
-            foreach ($signatures as $signature) {
-                if ($signature instanceof \OpenPGP_UserIDPacket) {
-                    $userIds[] = sprintf('%s', (string)$signature);
-                }
-            }
-        }
-        if (empty($userIds)) {
-            throw new Exception(__('Invalid key. No user ID found.'));
-        }
-
-        // Retrieve algorithm type.
-        $type = OpenPGP_PublicKeyPacket::$algorithms[$publicKeyPacket->algorithm];
-
-        // Retrieve key size.
-        $bits = 0;
-        if (isset(OpenPGP_PublicKeyPacket::$key_fields[$publicKeyPacket->algorithm])) {
-            $keyFirstElt = OpenPGP_PublicKeyPacket::$key_fields[$publicKeyPacket->algorithm][0];
-            $bits = OpenPGP::bitlength($publicKeyPacket->key[$keyFirstElt]);
-        }
-
-        // Build key information array.
-        $info = [
-            'key_id' => $publicKeyPacket->key_id,
-            'fingerprint' => $publicKeyPacket->fingerprint(),
-            'key_created' => $publicKey->timestamp,
-            'expires' => $publicKeyPacket->expires($msg),
-            'bits' => $bits,
-            'type' => $type,
-            'uid' => $userIds[0],
-        ];
-
-        return $info;
     }
 
     /**
@@ -541,7 +345,7 @@ class Gnupg extends OpenPGPBackend
                 throw new Exception($msg);
             }
         }
-        $this->clearDecryptKeys();
+        $this->clearEncryptKeys();
 
         return $encryptedText;
     }
@@ -692,32 +496,18 @@ class Gnupg extends OpenPGPBackend
     }
 
     /**
-     * Forked from OpenPGP::unarmor
-     * Fail if key doesn't contain CRC instead of triggering error
+     * Delete a key identified with a fingerprint
      *
-     * @param string $text key
-     * @param string $header header
-     * @return false|string
+     * @param string $fingerprint fingerprint
+     * @return bool returns true on success or false on failure.
      */
-    private function unarmor(string $text, string $header = 'PGP PUBLIC KEY BLOCK')
+    public function deleteKey(string $fingerprint): bool
     {
-        // @codingStandardsIgnoreStart
-        $header = OpenPGP::header($header);
-        $text = str_replace(["\r\n", "\r"], ["\n", ''], $text);
-        if (
-            ($pos1 = strpos($text, $header)) !== false &&
-            ($pos1 = strpos($text, "\n\n", $pos1 += strlen($header))) !== false
-        ) {
-            $pos2 = strpos($text, "\n=", $pos1 += 2);
-            if ($pos2 === false) {
-                // no CRC, consider the key invalid
-                return false;
-            }
-
-            return base64_decode($text = substr($text, $pos1, $pos2 - $pos1));
+        try {
+            /** @psalm-suppress TooFewArguments false positive  */
+            return $this->_gpg->deletekey($fingerprint); // @phpstan-ignore-line implemented in v0.5
+        } catch (\Exception $exception) {
+            return false;
         }
-
-        return false;
-        // @codingStandardsIgnoreEnd
     }
 }

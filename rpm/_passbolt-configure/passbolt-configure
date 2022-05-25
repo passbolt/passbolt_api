@@ -10,7 +10,7 @@ set -euo pipefail
 # This script must be executed with root permissions        #
 #                                                           #
 # Passbolt, the open source password manager for teams      #
-# (c) 2020 Passbolt SA                                    #
+# (c) 2020 Passbolt SA                                      #
 # https://www.passbolt.com                                  #
 #                                                           #
 #############################################################
@@ -24,10 +24,18 @@ readonly NGINX_SITE_DIR="$NGINX_BASE/conf.d"
 readonly SSL_CERT_PATH='/etc/ssl/certs/passbolt_certificate.crt'
 readonly SSL_KEY_PATH='/etc/ssl/certs/passbolt_private.key'
 readonly LETSENCRYPT_LIVE_DIR='/etc/letsencrypt/live'
-readonly FPM_WWW_POOL="/etc/php-fpm.d/www.conf"
+if [ -f /usr/bin/zypper ]
+then
+  readonly FPM_WWW_POOL="/etc/php7/fpm/php-fpm.d/www.conf"
+  readonly WWW_USER="wwwrun"
+  readonly WWW_GROUP="www"
+else
+  readonly FPM_WWW_POOL="/etc/php-fpm.d/www.conf"
+  readonly WWW_USER="nginx"
+  readonly WWW_GROUP="nginx"
+fi
 readonly FPM_SERVICE="php-fpm"
-readonly WWW_USER="nginx"
-readonly WWW_GROUP="nginx"
+
 
 die(){
   echo "$*" 1>&2
@@ -544,17 +552,24 @@ __config_get() {
   fi
 }
 setup_firewall() {
-  local zone=public
-  local services=(http https)
-  banner "Opening ports 80 and 443 on firewall"
-  
-  enable_service firewalld
-  
-  for i in "${services[@]}"; do
-    firewall-cmd --permanent --zone="$zone" --add-service="$i"
-  done
+  if rpm -qa | grep firewalld > /dev/null
+  then
+    local zone=public
+    local services=(http https)
+    banner "Opening ports 80 and 443 on firewall"
 
-  enable_service firewalld
+    # Set firewall rules only if firewalld is running
+    if firewall-cmd --state --quiet
+    then
+      enable_service firewalld
+
+      for i in "${services[@]}"; do
+        firewall-cmd --permanent --zone="$zone" --add-service="$i"
+      done
+
+      enable_service firewalld
+    fi
+  fi
 }
 
 __install_db() {
@@ -564,14 +579,13 @@ __install_db() {
   local _config_db="$4"
   local mysql_commands
   mysql_commands=$(cat <<EOF
-UPDATE mysql.user SET Password=PASSWORD('$(__config_get "$_config_root_pw")') WHERE User='root';
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('$(__config_get "$_config_root_pw")');
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 CREATE DATABASE IF NOT EXISTS \`$(__config_get "$_config_db")\`;
 GRANT ALL ON \`$(__config_get "$_config_db")\`.* to \`$(__config_get "$_config_user")\`@'localhost' identified by '$(__config_get "$_config_pw")';
-UPDATE mysql.user SET plugin = '' WHERE user = 'root' AND host = 'localhost';
 FLUSH PRIVILEGES;
 EOF
 )
@@ -603,7 +617,12 @@ mysql_setup() {
 
 install_packages() {
   local packages="$1"
-  yum -y install "$packages"
+  if [ -f /usr/bin/zypper ]
+  then
+    zypper install -y "$packages"
+  else
+    yum install -y "$packages"
+  fi
 }
 
 enable_service() {
@@ -631,6 +650,17 @@ setup_fpm(){
   sed -i s:_WWW_USER_:"$WWW_USER": "$FPM_WWW_POOL"
   sed -i s:_WWW_GROUP_:"$WWW_GROUP": "$FPM_WWW_POOL"
 
+  if [ -f /usr/bin/zypper ]
+  then
+    #cp /etc/php7/fpm/php-fpm.conf.default /etc/php7/fpm/php-fpm.conf
+    # fix buggy and shity opensuse php-gnupg package
+    echo "extension=gnupg.so" > /etc/php7/conf.d/gnupg.ini
+    cat /etc/php7/conf.d/gnupg.ini
+    # Comment systemd ProtectSystem
+    sed -i 's/\(^ProtectSystem\)\(.*\)/#\1\2/g' /usr/lib/systemd/system/php-fpm.service
+    systemctl daemon-reload
+  fi
+
   enable_service "$FPM_SERVICE"
 }
 
@@ -638,9 +668,14 @@ __nginx_config(){
   local source_template="$1"
   local nginx_config_file="$2"
   local _config_passbolt_host="$3"
+  local protocol='https'
+
+  if [[ "$(__config_get 'ssl_none')" ]]; then
+    protocol='http'
+  fi
 
   if [ -f /etc/passbolt/passbolt.php ]; then
-    sed -i "s#\(^.*'fullBaseUrl' => '\).*\(',.*$\)#\1$(__config_get "$_config_passbolt_host")\2#g" /etc/passbolt/passbolt.php
+    sed -i "s#\(^.*'fullBaseUrl' => '\).*\(',.*$\)#\1${protocol}://$(__config_get "$_config_passbolt_host")\2#g" /etc/passbolt/passbolt.php
   fi
   cp "$source_template" "$nginx_config_file"
   sed -i s:_SERVER_NAME_:"$(__config_get "$_config_passbolt_host")": "$nginx_config_file"
@@ -654,6 +689,11 @@ __ssl_substitutions(){
 setup_nginx(){
   local passbolt_domain
   local nginx_service="nginx"
+
+  if [ -f /usr/bin/zypper ]
+  then
+    usermod -a -G www nginx
+  fi
 
   if [ ! -f /etc/nginx/conf.d/php-fpm.conf ]
   then

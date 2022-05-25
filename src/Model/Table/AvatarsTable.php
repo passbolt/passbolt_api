@@ -24,6 +24,7 @@ use App\Utility\AvatarProcessing;
 use App\View\Helper\AvatarHelper;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\Event\Event;
 use Cake\Log\Log;
 use Cake\ORM\Query;
@@ -58,8 +59,8 @@ class AvatarsTable extends Table
     use AvatarsCleanupTrait;
 
     public const MAX_SIZE = '5MB';
-    public const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-    public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif'];
+    public const ALLOWED_MIME_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+    public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif'];
 
     /**
      * Initialize method
@@ -163,11 +164,11 @@ class AvatarsTable extends Table
         (new AvatarsCacheService($this))->storeInCache($avatar);
 
         $this->deleteMany($this->find()->where([
-            $this->aliasField('profile_id') => $avatar->get('profile_id'),
-            $this->aliasField('id') . ' <>' => $avatar->get('id'),
+            (new IdentifierExpression('profile_id'))->getIdentifier() => $avatar->get('profile_id'),
+            (new IdentifierExpression('id'))->getIdentifier() . ' <>' => $avatar->get('id'),
         ]));
 
-        $this->deleteMany($this->find()->where($this->aliasField('data') . ' IS NULL'));
+        $this->deleteMany($this->find()->where((new IdentifierExpression('data'))->getIdentifier() . ' IS NULL'));
     }
 
     /**
@@ -219,9 +220,11 @@ class AvatarsTable extends Table
         return [
             'Avatars' => function (Query $q) {
                 // Formatter for empty avatars.
-                return $q->formatResults(function (CollectionInterface $avatars) {
-                    return AvatarsTable::formatResults($avatars);
-                });
+                return $q
+                    ->select(['Avatars.id', 'Avatars.profile_id', 'Avatars.created', 'Avatars.modified'])
+                    ->formatResults(function (CollectionInterface $avatars) {
+                        return AvatarsTable::formatResults($avatars);
+                    });
             },
         ];
     }

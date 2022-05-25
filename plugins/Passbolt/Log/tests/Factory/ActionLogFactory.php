@@ -37,9 +37,14 @@ class ActionLogFactory extends CakephpBaseFactory
                 'action_id' => $faker->uuid(),
                 'context' => $faker->text(255),
                 'status' => 1,
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subMinute($faker->randomNumber(8)),
             ];
         });
+    }
+
+    public function setActionId(string $actionName)
+    {
+        return $this->setField('action_id', UuidFactory::uuid($actionName));
     }
 
     /**
@@ -47,6 +52,6 @@ class ActionLogFactory extends CakephpBaseFactory
      */
     public function loginAction()
     {
-        return $this->patchData(['action_id' => UuidFactory::uuid('AuthLogin.loginPost')]);
+        return $this->setActionId('AuthLogin.loginPost');
     }
 }

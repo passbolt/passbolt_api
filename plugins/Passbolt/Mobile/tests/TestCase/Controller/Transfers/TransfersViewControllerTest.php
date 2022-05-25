@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Mobile\Test\TestCase\Controller\Transfers;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
@@ -29,12 +30,6 @@ class TransfersViewControllerTest extends AppIntegrationTestCase
     use ProfilesModelTrait;
     use TransfersModelTrait;
     use UsersModelTrait;
-
-    public $fixtures = [
-        'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Roles',
-    ];
 
     public function setUp(): void
     {
@@ -50,9 +45,9 @@ class TransfersViewControllerTest extends AppIntegrationTestCase
 
     public function testMobileTransfersViewController_Success()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = $this->logInAsUser();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
-        $this->authenticateAs('ada');
         $this->getJson("/mobile/transfers/$id.json");
         $this->assertSuccess();
         $this->assertTransferAttributes($this->_responseJsonBody);
@@ -63,9 +58,9 @@ class TransfersViewControllerTest extends AppIntegrationTestCase
 
     public function testMobileTransfersViewController_SuccessWithContainUser()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = $this->logInAsUser();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
-        $this->authenticateAs('ada');
         $this->getJson("/mobile/transfers/$id.json?contain[user]=1");
         $this->assertSuccess();
         $this->assertTransferAttributes($this->_responseJsonBody);
@@ -76,9 +71,9 @@ class TransfersViewControllerTest extends AppIntegrationTestCase
 
     public function testMobileTransfersViewController_SuccessWithContainProfileAvatar()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = $this->logInAsUser();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
-        $this->authenticateAs('ada');
         $this->getJson("/mobile/transfers/$id.json?contain[user]=1&contain[user.profile]=1");
         $this->assertSuccess();
         $this->assertTransferAttributes($this->_responseJsonBody);
@@ -89,15 +84,29 @@ class TransfersViewControllerTest extends AppIntegrationTestCase
 
     public function testMobileTransfersViewController_ErrorNotFound()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $id = UuidFactory::uuid('nope');
+        $this->getJson("/mobile/transfers/$id.json?api-version=2");
+        $this->assertError(404);
+    }
+
+    /**
+     * If not the owner of the transfer, cannot view it.
+     */
+    public function testMobileTransfersViewController_ErrorNotOwner()
+    {
+        [$user, $owner] = UserFactory::make(2)->user()->active()->persist();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($owner->id));
+        $this->logInAs($user);
+
+        $id = $transfer->id;
         $this->getJson("/mobile/transfers/$id.json?api-version=2");
         $this->assertError(404);
     }
 
     public function testMobileTransfersViewController_ErrorWrongUuidParameter()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/mobile/transfers/not_uuid.json?api-version=2');
         $this->assertError(400);
     }

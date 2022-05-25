@@ -19,6 +19,7 @@ namespace Passbolt\EmailDigest\Test\TestCase\Service;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
+use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\EntityInterface;
 use Cake\I18n\FrozenTime;
@@ -26,30 +27,43 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 use CakephpFixtureFactories\ORM\FactoryTableRegistry;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Service\ConvertEmailVariablesToJsonService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 
 class ConvertEmailVariablesToJsonServiceTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     public function testConvertEmailVariablesToJsonService_Convert()
     {
+        $this->loadRoutes();
+
         // Create an email with objects in v3.3.0 mode
         // Forces the serialization to serialize (no Json)
         Configure::write('EmailQueue.serialization_type', 'email_queue.serialize');
+        /**
+         * @psalm-suppress InternalMethod
+         * @psalm-suppress InternalClass
+         */
         FactoryTableRegistry::getTableLocator()->clear();
 
-        $users = UserFactory::make(2)->getEntities();
-        $resource = ResourceFactory::make()->getEntity()->toArray();
+        $users = UserFactory::make(2)->with('Roles')->with('Profiles.Avatars', ['data' => 'Foo'])->persist();
+        $resource = ResourceFactory::make()->persist()->toArray();
 
-        $baseFactory = EmailQueueFactory::make()
-            ->setField('template_vars', compact('users', 'resource'));
-        $originalUnsentEmail = $baseFactory->persist();
+        $originalUnsentEmail = EmailQueueFactory::make()
+            ->setField('template_vars', compact('users', 'resource'))
+            ->persist();
 
 
-        // Swith to v3.3.1 mode, with variables saved in Json
+        // Switch to v3.3.1 mode, with variables saved in Json
+        /**
+         * @psalm-suppress InternalMethod
+         * @psalm-suppress InternalClass
+         */
         FactoryTableRegistry::getTableLocator()->clear();
         TableRegistry::getTableLocator()->clear();
-        $this->loadPlugins(['Passbolt/EmailDigest']); // This sets the serialize type to Json
+        $this->loadPlugins(['Passbolt/EmailDigest' => []]); // This sets the serialize type to Json
 
         $service = new ConvertEmailVariablesToJsonService();
         $service->convert();
@@ -66,6 +80,12 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         array $users,
         array $resource
     ): void {
+        // ConvertEmailVariablesToJsonService was meant to migrate MySQL serialized email variables
+        // into JSON. PostGRES came after and is therefore not concerned.
+        if (ConnectionManager::get('test')->getDriver() instanceof Postgres) {
+            $this->expectNotToPerformAssertions();
+            return;
+        }
         $hydratedVars = EmailQueueFactory::find()->where([
             'id' => $originalUnsentEmail->get('id'),
             'email' => $originalUnsentEmail->get('email'),
@@ -81,8 +101,10 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         $assertVars = function (array $vars) use ($users, $resource) {
             $this->assertSame($users[0]->username, $vars['users'][0]['username']);
             $this->assertSame($users[0]->role->name, $vars['users'][0]['role']['name']);
+            $this->assertNull($vars['users'][0]['profile']['avatar']['data'] ?? null);
             $this->assertSame($users[1]->username, $vars['users'][1]['username']);
             $this->assertSame($users[1]->role->name, $vars['users'][1]['role']['name']);
+            $this->assertNull($vars['users'][1]['profile']['avatar']['data'] ?? null);
             $this->assertSame($resource['name'], $vars['resource']['name']);
             // Dates are accessible under the $date['date] key!
             $this->assertInstanceOf(FrozenTime::class, FrozenTime::parse($vars['resource']['created']['date']));

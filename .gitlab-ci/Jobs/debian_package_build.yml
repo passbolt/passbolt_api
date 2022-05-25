@@ -1,5 +1,5 @@
 services:
-  - docker:19.03.0-dind
+  - registry.gitlab.com/passbolt/passbolt-ci-docker-images/dind:latest
 
 .rules:
   rules:
@@ -22,7 +22,7 @@ services:
 composer:
   extends: .dependencies
   variables:
-    PACKAGE_MANAGER_IMAGE: "composer:latest"
+    PACKAGE_MANAGER_IMAGE: "registry.gitlab.com/passbolt/passbolt-ci-docker-images/composer:latest"
     PACKAGE_MANAGER_PATH: vendor/
   script:
     - |
@@ -30,8 +30,10 @@ composer:
 
 build-debian:
   extends: .rules
-  image: debian:stable-slim
+  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/debian-bullseye-11-slim:latest
   stage: package-build
+  variables:
+    PASSBOLT_COMPONENT: stable
   dependencies:
     - composer
   artifacts:
@@ -46,13 +48,14 @@ build-debian:
     - |
       apt-get update
       apt-get install -y git-buildpackage devscripts apt-utils debconf-utils fakeroot equivs cdbs
-      make -f debian/rules debian/control
-      if [[ $CI_COMMIT_BRANCH =~ ^(develop|feature\/debian\_*) ]]; then
+      if [[ ! -z $NIGHTLY || $CI_COMMIT_BRANCH =~ ^(develop|feature\/debian\_*) ]]; then
+        export PASSBOLT_COMPONENT=testing
         gbp dch --snapshot --snapshot-number=$(date +%s) --ignore-branch
       fi
+      make -f debian/rules debian/control
       mk-build-deps -irt'apt-get --no-install-recommends -yV' debian/control
       dpkg-checkbuilddeps
-      debuild --preserve-envvar PASSBOLT_FLAVOUR -us -uc -b -i -I
+      debuild --preserve-envvar PASSBOLT_FLAVOUR --preserve-envvar PASSBOLT_COMPONENT -us -uc -b -i -I
       cp ../*.deb .
       cp ../*.build .
       cp ../*.buildinfo .
@@ -70,8 +73,9 @@ debian-testing:
   extends: .publish
   variables:
     DISTRIBUTION: buster
-    COMPONENT: testing
+    PASSBOLT_COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/debian
+    NIGHTLY: "true"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
@@ -80,18 +84,19 @@ debian-stable:
   extends: .publish
   variables:
     DISTRIBUTION: buster
-    COMPONENT: stable
+    PASSBOLT_COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/debian
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
 
 ubuntu-testing:
   extends: .publish
   variables:
     DISTRIBUTION: focal
-    COMPONENT: testing
+    PASSBOLT_COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
+    NIGHTLY: "true"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
@@ -100,9 +105,8 @@ ubuntu-stable:
   extends: .publish
   variables:
     DISTRIBUTION: focal
-    COMPONENT: stable
+    PASSBOLT_COMPONENT: stable
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/'
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
-

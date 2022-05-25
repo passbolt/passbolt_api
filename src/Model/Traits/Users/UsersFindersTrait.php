@@ -23,6 +23,7 @@ use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
@@ -58,14 +59,12 @@ trait UsersFindersTrait
         }
 
         // Otherwise use a subquery to find all the users that are members of all the listed groups
+        $having = $query->getConnection()->getDriver()->quoteIdentifier('COUNT(GroupsUsers.user_id)');
         $subQuery = $this->GroupsUsers->find()
-            ->select([
-                'GroupsUsers.user_id',
-                'count' => $query->func()->count('GroupsUsers.user_id'),
-            ])
+            ->select('GroupsUsers.user_id')
             ->where(['GroupsUsers.group_id IN' => $groupsIds])
             ->group('GroupsUsers.user_id')
-            ->having(['count' => count($groupsIds)]);
+            ->having([$having => count($groupsIds)]);
 
         // Execute the sub query and extract the user ids.
         $matchingUserIds = Hash::extract($subQuery->toArray(), '{n}.user_id');
@@ -120,7 +119,7 @@ trait UsersFindersTrait
             ->select('Groups.id')
             ->where([
                 'Groups.deleted' => false,
-                'GroupsUsers.user_id = Users.id',
+                'GroupsUsers.user_id' => new IdentifierExpression('Users.id'),
             ]);
 
         // Use distinct to avoid duplicate as it can happen that a user is member of two groups which
@@ -130,7 +129,7 @@ trait UsersFindersTrait
             // Or on users who are members of a group which have permissions.
             ->where(
                 ['OR' => [
-                    ['PermissionsFilterAccess.aro_foreign_key = Users.id'],
+                    ['PermissionsFilterAccess.aro_foreign_key' => new IdentifierExpression('Users.id')],
                     ['PermissionsFilterAccess.aro_foreign_key IN' => $groupsSubquery],
                 ]]
             );
@@ -359,14 +358,15 @@ trait UsersFindersTrait
     }
 
     /**
-     * Build the query that fetches data for user recovery form
+     * Build the query that fetches a user by username
+     * including role and profile
      *
      * @param string $username email of user to retrieve
      * @param array $options options
      * @throws \InvalidArgumentException if the username is not an email
      * @return \Cake\ORM\Query
      */
-    public function findRecover(string $username, ?array $options = [])
+    public function findByUsername(string $username, ?array $options = [])
     {
         if (!Validation::email($username, Configure::read('passbolt.email.validate.mx'))) {
             throw new InvalidArgumentException('The username should be a valid email.');
@@ -380,66 +380,6 @@ trait UsersFindersTrait
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
             ->order(['Users.active' => 'DESC']);
-    }
-
-    /**
-     * Build the query that fetches data for user setup start
-     *
-     * @param string $userId uuid
-     * @throws \InvalidArgumentException if the user id is not a uuid
-     * @return \App\Model\Entity\User $user entity
-     */
-    public function findSetup(string $userId)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
-        }
-
-        // show active first and do not count deleted ones
-        /** @var \App\Model\Entity\User $user */
-        $user = $this->find()
-            ->contain([
-                'Roles',
-                'Profiles' => AvatarsTable::addContainAvatar(),
-            ])
-            ->where([
-                'Users.id' => $userId,
-                'Users.deleted' => false, // forbid deleted users to start setup
-                'Users.active' => false, // forbid users that have completed the setup to retry
-            ])
-            ->first();
-
-        return $user;
-    }
-
-    /**
-     * Build the query that checks data for user setup start/completion
-     *
-     * @param string $userId uuid
-     * @throws \InvalidArgumentException if the user id is not a uuid
-     * @return \App\Model\Entity\User $user entity
-     */
-    public function findSetupRecover(string $userId)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
-        }
-
-        // show active first and do not count deleted ones
-        /** @var \App\Model\Entity\User $user */
-        $user = $this->find('locale')
-            ->contain([
-                'Roles',
-                'Profiles' => AvatarsTable::addContainAvatar(),
-            ])
-            ->where([
-                'Users.id' => $userId,
-                'Users.deleted' => false, // forbid deleted users to start setup
-                'Users.active' => true, // forbid users that have not completed the setup to recover
-            ])
-            ->first();
-
-        return $user;
     }
 
     /**
@@ -535,12 +475,11 @@ trait UsersFindersTrait
         $subQuery = $this->ActionLogs->find();
         $subQuery->select([
                 'user_id' => 'user_id',
-                'last_logged_in' => $subQuery->func()->max('ActionLogs.created'),
+                'last_logged_in' => $subQuery->func()->max(new IdentifierExpression('ActionLogs.created')),
             ])
             ->where([
-                'ActionLogs.action_id' => $loginActionId,
-                'ActionLogs.user_id IS NOT NULL',
-                'ActionLogs.status' => 1,
+                 'ActionLogs.action_id' => $loginActionId,
+                 'ActionLogs.status' => 1,
             ])
             ->group('user_id');
 
@@ -551,7 +490,9 @@ trait UsersFindersTrait
                 'table' => $subQuery,
                 'alias' => 'JoinedUsersLastLoggedIn',
                 'type' => 'LEFT',
-                'conditions' => 'Users.id = JoinedUsersLastLoggedIn.user_id',
+                'conditions' => [
+                    'Users.id' => new IdentifierExpression('JoinedUsersLastLoggedIn.user_id'),
+                ],
             ]);
 
         // The last logged in date should be formatted as other dates (FrozenTime).
@@ -567,16 +508,27 @@ trait UsersFindersTrait
     }
 
     /**
-     * Active and non deleted users only.
+     * Active and non deleted users.
+     *
+     * @param \Cake\ORM\Query $query Query to carve.
+     * @return \Cake\ORM\Query
+     */
+    public function findActiveNotDeleted(Query $query): Query
+    {
+        return $query->where([
+            $this->aliasField('active') => true,
+            $this->aliasField('deleted') => false,
+        ]);
+    }
+
+    /**
+     * Active and non deleted users only with role
      *
      * @param \Cake\ORM\Query $query Query to carve.
      * @return \Cake\ORM\Query
      */
     public function findActiveNotDeletedContainRole(Query $query): Query
     {
-        return $query->where([
-           $this->aliasField('active') => true,
-           $this->aliasField('deleted') => false,
-        ])->contain('Roles');
+        return $query->find('activeNotDeleted')->contain('Roles');
     }
 }

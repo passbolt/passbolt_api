@@ -42,6 +42,24 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->assertStringContainsString('Database configuration', $data);
     }
 
+    /**
+     * Data passed by the user during the DB setup
+     *
+     * @return array
+     */
+    private function postData(): array
+    {
+        $dataSource = $this->getTestDatasourceFromConfig();
+
+        return [
+            'host' => $dataSource['host'],
+            'port' => $dataSource['port'],
+            'username' => $dataSource['username'],
+            'password' => $dataSource['password'],
+            'database' => $dataSource['database'],
+        ];
+    }
+
     public function testWebInstallerDatabasePostSuccess()
     {
         $postData = $this->getTestDatasourceFromConfig();
@@ -55,7 +73,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerDatabasePostError_InvalidData()
     {
-        $postData = $this->getTestDatasourceFromConfig();
+        $postData = $this->postData();
         $postData['port'] = 'invalid-port';
         $this->post('/install/database', $postData);
         $data = $this->_getBodyAsString();
@@ -73,5 +91,17 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertStringContainsString('A connection could not be established with the credentials provided. Please verify the settings.', $data);
+    }
+
+    public function testWebInstallerDatabasePostError_DriverNotSupported()
+    {
+        // This breaks further test
+        // Sessions is carried over to next test...
+        $postData = $this->postData();
+        $postData['driver'] = 'invalid-driver';
+        $this->post('/install/database', $postData);
+        $data = $this->_getBodyAsString();
+        $this->assertResponseOk();
+        $this->assertStringContainsString('Database driver invalid-driver could not be found.', $data);
     }
 }

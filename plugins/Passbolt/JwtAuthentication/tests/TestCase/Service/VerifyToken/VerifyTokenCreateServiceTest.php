@@ -25,6 +25,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenCreateService;
 use Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenValidationService;
 
@@ -35,6 +36,7 @@ use Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenValidationService;
 class VerifyTokenCreateServiceTest extends TestCase
 {
     use ModelAwareTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var \Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenCreateService
@@ -48,6 +50,7 @@ class VerifyTokenCreateServiceTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->service = new VerifyTokenCreateService();
         $this->loadModel('AuthenticationTokens');
     }

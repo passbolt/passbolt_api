@@ -18,12 +18,15 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
 class UsersAddControllerTest extends AppIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
         'app.Base/Profiles',
@@ -167,9 +170,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->postJson('/users.json', $data);
         $this->assertResponseSuccess();
 
-        $this->get('/seleniumtests/showlastemail/aurore@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('created an account for you');
+        $this->assertEmailInBatchContains('created an account for you', 'aurore@passbolt.com');
     }
 
     public function testUsersAddRequestDataApiUserExistError()

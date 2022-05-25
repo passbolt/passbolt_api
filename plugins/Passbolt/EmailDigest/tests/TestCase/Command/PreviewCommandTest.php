@@ -23,6 +23,7 @@ use Cake\I18n\I18n;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
@@ -34,6 +35,7 @@ class PreviewCommandTest extends TestCase
     use ConsoleIntegrationTestTrait;
     use DummyTranslationTestTrait;
     use EmailTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method
@@ -45,7 +47,7 @@ class PreviewCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->setDummyFrenchTranslator();
-        $this->loadPlugins(['Passbolt/EmailDigest']);
+        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
     }
 
     /**
@@ -53,10 +55,10 @@ class PreviewCommandTest extends TestCase
      */
     public function testPreviewCommandHelp(): void
     {
-        $this->exec('passbolt preview -h');
+        $this->exec('passbolt email_digest preview -h');
         $this->assertExitSuccess();
         $this->assertOutputContains('Preview a batch of queued emails as emails digests.');
-        $this->assertOutputContains('cake passbolt preview');
+        $this->assertOutputContains('cake passbolt email_digest preview');
     }
 
     /**
@@ -72,7 +74,7 @@ class PreviewCommandTest extends TestCase
 
         /** @var \Cake\Datasource\EntityInterface $email */
         $email = EmailQueueFactory::make()->persist();
-        $this->exec('passbolt preview --body true');
+        $this->exec('passbolt email_digest preview --body true');
         $this->assertExitSuccess();
         $this->assertOutputContains('Sending email from: ' . $email->get('from_email'));
         $this->assertOutputContains('Sending email to: ' . $email->get('email'));
@@ -87,14 +89,14 @@ class PreviewCommandTest extends TestCase
      */
     public function testPreviewCommandLocale(): void
     {
-        $this->loadPlugins(['Passbolt/Locale']);
+        $this->loadPlugins(['Passbolt/Locale' => []]);
         $frenchLocale = 'fr-FR';
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
         EmailQueueFactory::make()->listeningToBeforeSave()->persist();
         EmailQueueFactory::make()->listeningToBeforeSave()->setRecipient($frenchSpeakingUser->username)->persist();
 
-        $this->exec('passbolt preview --body true');
+        $this->exec('passbolt email_digest preview --body true');
 
         $this->assertExitSuccess();
 

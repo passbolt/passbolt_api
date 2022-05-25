@@ -25,6 +25,11 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
 {
     public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
 
+    /**
+     * @var \App\Model\Table\GroupsUsersTable
+     */
+    public $GroupsUsers;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -41,7 +46,10 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
     {
         // Ada is not manager of any group
         $userId = UuidFactory::uuid('user.id.ada');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+            ->all()
+            ->extract('group_id')
+            ->toArray();
         $this->assertEmpty($result);
     }
 
@@ -49,7 +57,10 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
     {
         // Ursula is manager of it_support group where ping is also manager
         $userId = UuidFactory::uuid('user.id.ursula');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+            ->all()
+            ->extract('group_id')
+            ->toArray();
         $this->assertEmpty($result);
     }
 
@@ -57,12 +68,18 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
     {
         // Admin is manager of a lot of empty groups and no active groups
         $userId = UuidFactory::uuid('user.id.admin');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+            ->all()
+            ->extract('group_id')
+            ->toArray();
         $this->assertEmpty($result);
 
         // Same for hedy but only 1 group
         $userId = UuidFactory::uuid('user.id.hedy');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+            ->all()
+            ->extract('group_id')
+            ->toArray();
         $this->assertEmpty($result);
     }
 
@@ -70,13 +87,19 @@ class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
     {
         // Frances is admin of the accounting group where grace is also a user
         $userId = UuidFactory::uuid('user.id.frances');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+            ->all()
+            ->extract('group_id')
+            ->toArray();
         $this->assertNotEmpty($result);
         $this->assertEquals($result[0], UuidFactory::uuid('group.id.accounting'));
 
         // Same for jean with freelancer group but with more members
         $userId = UuidFactory::uuid('user.id.jean');
-        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
+        $result = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)
+            ->all()
+            ->extract('group_id')
+            ->toArray();
         $this->assertNotEmpty($result);
         $this->assertEquals($result[0], UuidFactory::uuid('group.id.freelancer'));
     }

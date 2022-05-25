@@ -28,7 +28,7 @@ class SetSessionIdentifierOnLogin implements EventListenerInterface
     use ContainerAwareMiddlewareTrait;
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

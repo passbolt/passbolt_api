@@ -16,11 +16,13 @@ declare(strict_types=1);
  */
 namespace App\Utility\Healthchecks;
 
+use App\Model\Entity\Gpgkey;
+use App\Model\Rule\Gpgkeys\GopengpgFormatRule;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 
 class GpgHealthchecks
 {
@@ -44,6 +46,7 @@ class GpgHealthchecks
         $checks = self::gpgCanDecrypt($checks);
         $checks = self::gpgCanDecryptVerify($checks);
         $checks = self::gpgCanVerify($checks);
+        $checks = self::gpgIsFormatGopengpgValid($checks);
 
         return $checks;
     }
@@ -179,10 +182,9 @@ class GpgHealthchecks
             if ($publicKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
-            /** @var \App\Model\Table\GpgkeysTable $Gpgkeys */
-            $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
+
             $checks['gpg']['gpgKeyPublicEmail'] = is_string($publicKeyInfo['uid']) &&
-                $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
+                PublicKeyValidationService::uidContainValidEmail($publicKeyInfo['uid']);
         }
 
         return $checks;
@@ -435,6 +437,28 @@ class GpgHealthchecks
             } catch (Exception $e) {
             }
         }
+
+        return $checks;
+    }
+
+    /**
+     * Check if both server keys are Gopengpg readable.
+     * There should for example be no empty line before the end of
+     * the block.
+     *
+     * @param array|null $checks List of checks
+     * @return array
+     */
+    public static function gpgIsFormatGopengpgValid(?array $checks = []): array
+    {
+        // Gpg keys should have only one return line
+        $publicKey = new Gpgkey();
+        $publicKey->armored_key = file_get_contents(Configure::read('passbolt.gpg.serverKey.public'));
+        $privateKey = new Gpgkey();
+        $privateKey->armored_key = file_get_contents(Configure::read('passbolt.gpg.serverKey.private'));
+        $rule = new GopengpgFormatRule();
+        $checks['gpg']['isPublicServerKeyGopengpgCompatible'] = $rule($publicKey);
+        $checks['gpg']['isPrivateServerKeyGopengpgCompatible'] = $rule($privateKey);
 
         return $checks;
     }

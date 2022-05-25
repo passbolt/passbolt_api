@@ -55,6 +55,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
@@ -63,7 +64,6 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         (new JwtKeyPairService())->createKeyPair();
         $this->enableFeaturePlugin('JwtAuthentication');
         $this->setEmailNotificationsSetting('password.create', true);
-        parent::setUp();
     }
 
     public function tearDown(): void
@@ -253,7 +253,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
                 'data' => $this->getDummyResourcesPostData(['secrets' => []]),
             ]],
             ['secret is invalid', [
-                'errorField' => 'secrets.0.data.isValidGpgMessage',
+                'errorField' => 'secrets.0.data.isValidOpenPGPMessage',
                 'data' => $this->getDummyResourcesPostData(['secrets' => [
                     0 => ['data' => 'Invalid secret'],
                 ]]),
@@ -296,7 +296,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 
     public function testResourcesAddNonValidUserUuid()
     {
-        $user = UserFactory::make(['id' => '123'])->persist();
+        $user = UserFactory::make(['id' => 'Not a valid UUID'])->getEntity();
         $this->logInAs($user);
         $this->postJson('/resources.json?api-version=v2');
         $this->assertResponseFailure('The user identifier should be a valid UUID.');

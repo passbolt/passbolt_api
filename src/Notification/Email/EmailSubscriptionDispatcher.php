@@ -94,7 +94,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function implementedEvents(): array
     {

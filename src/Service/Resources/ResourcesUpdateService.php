@@ -32,7 +32,7 @@ use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenTime;
 use Cake\Utility\Hash;
 
 class ResourcesUpdateService
@@ -218,7 +218,7 @@ class ResourcesUpdateService
         $data['modified_by'] = $uac->getId();
         // Force the modified field to be updated to ensure the field is updated even if no meta are. It's the case
         // when a user updates only the secret.
-        $data['modified'] = new Time();
+        $data['modified'] = new FrozenTime();
 
         $accessibleFields = [
             'name' => true,

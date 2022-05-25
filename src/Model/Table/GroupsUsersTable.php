@@ -42,15 +42,17 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\GroupsUser[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \App\Model\Entity\GroupsUser findOrCreate($search, ?callable $callback = null, $options = [])
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \App\Model\Entity\GroupsUser newEmptyEntity()
  * @method \App\Model\Entity\GroupsUser saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
  * @method \Cake\ORM\Query findByGroupId(string $groupId)
  * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
+ * @method \Cake\ORM\Query findByGroupIdAndUserId(string $groupId, string $userId)
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class GroupsUsersTable extends Table
 {
@@ -420,5 +422,18 @@ class GroupsUsersTable extends Table
     public function cleanupHardDeletedGroups($dryRun = false)
     {
         return $this->cleanupHardDeleted('Groups', $dryRun);
+    }
+
+    /**
+     * Delete duplicated groups users
+     *
+     * @param bool $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupDuplicatedGroupsUsers(?bool $dryRun = false): int
+    {
+        $keys = ['group_id', 'user_id'];
+
+        return $this->cleanupDuplicates($keys, $dryRun);
     }
 }

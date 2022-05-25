@@ -10,6 +10,7 @@ return [
                     'blackList' => [
                         'AuthIsAuthenticated.isAuthenticated',
                         'TransfersView.view',
+                        'AuthLogin.loginGet',
                     ],
                 ],
             ],

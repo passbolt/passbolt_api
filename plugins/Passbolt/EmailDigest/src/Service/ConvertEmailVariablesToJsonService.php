@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\EmailDigest\Service;
 
-use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 
@@ -62,7 +61,7 @@ class ConvertEmailVariablesToJsonService
             ->newQuery()
             ->select(['id', 'template_vars'])
             ->from($EmailQueueTable->getTable())
-            ->where(['sent' => false])
+            ->where(['sent' => 0])
             ->execute()
             ->fetchAll('assoc');
     }

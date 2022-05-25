@@ -16,19 +16,23 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
+use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
  * App\Command\MigrateCommand Test Case
  *
  * @uses \App\Command\MigrateCommand
  */
-class DatacheckCommandTest extends TestCase
+class DatacheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method
@@ -57,11 +61,18 @@ class DatacheckCommandTest extends TestCase
      */
     public function testDatacheckCommandNoOptions()
     {
-        UserFactory::make()->user()->persist();
+        UserFactory::make()
+            ->with('Gpgkeys')
+            ->withAvatar()
+            ->user()
+            ->persist();
         ResourceFactory::make()->persist();
+        AuthenticationTokenFactory::make()->persist();
+        FavoriteFactory::make()->persist();
         $this->exec('passbolt datacheck');
         $this->assertExitSuccess();
         $this->assertOutputContains('PASS');
+        $this->assertOutputContains('FAIL');
 
         $checks = [
             'AuthenticationTokens',

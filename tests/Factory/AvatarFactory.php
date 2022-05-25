@@ -44,7 +44,7 @@ class AvatarFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                // For performance sake, we do not create an image here
+                // For performance's sake, we do not create an image here
                 'data' => $faker->text(),
             ];
         });
@@ -73,5 +73,16 @@ class AvatarFactory extends CakephpBaseFactory
         }
 
         return $this->with('Profiles.Users', $userFactory);
+    }
+
+    /**
+     * @param string|null $fileName Name of the file where the avatar is stored. This should be a small image.
+     * @return AvatarFactory
+     */
+    public function setDataWithFileContent(?string $fileName = null)
+    {
+        $fileName = $fileName ?? FIXTURES . 'Avatar' . DS . '50_60.png';
+
+        return $this->setField('data', file_get_contents($fileName));
     }
 }

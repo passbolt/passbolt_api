@@ -22,8 +22,10 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 
 class HealthcheckCommand extends PassboltCommand
 {
@@ -375,7 +377,10 @@ class HealthcheckCommand extends PassboltCommand
         $this->warning(
             $checks['ssl']['notSelfSigned'],
             __('Not using a self-signed certificate'),
-            __('Using a self-signed certificate')
+            __('Using a self-signed certificate'),
+            [
+                'Check https://help.passbolt.com/faq/hosting/troubleshoot-ssl',
+            ]
         );
         if (isset($checks['ssl']['info'])) {
             $this->help($checks['ssl']['info']);
@@ -679,6 +684,19 @@ class HealthcheckCommand extends PassboltCommand
                 __('The public key can be used to verify a signature.'),
                 __('The public key cannot be used to verify a signature.')
             );
+            $gopengpgHelpMessage = ['Remove all empty new lines above the end block line.'];
+            $this->assert(
+                $checks['gpg']['isPublicServerKeyGopengpgCompatible'],
+                'The server public key format is Gopengpg compatible.',
+                'The server public key format is not Gopengpg compatible.',
+                $gopengpgHelpMessage
+            );
+            $this->assert(
+                $checks['gpg']['isPrivateServerKeyGopengpgCompatible'],
+                'The server private key format is Gopengpg compatible.',
+                'The server public key format is not Gopengpg compatible.',
+                $gopengpgHelpMessage
+            );
         }
     }
 
@@ -714,9 +732,10 @@ class HealthcheckCommand extends PassboltCommand
             "The {$directory} directory should not be writable.",
             [
                 'You can try: ',
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $directory,
-                'sudo chmod 550 ' . $directory,
-                'sudo chmod 440 $(find ' . $directory . ' -type f)',
+                'sudo chown -Rf root:' . PROCESS_USER . ' ' . $directory,
+                'sudo chmod 750 ' . $directory,
+                'sudo chmod 640 ' . JwtTokenCreateService::JWT_SECRET_KEY_PATH,
+                'sudo chmod 640 ' . JwksGetService::PUBLIC_KEY_PATH,
             ]
         );
 

@@ -22,6 +22,7 @@ use Cake\I18n\I18n;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
@@ -33,6 +34,7 @@ class SenderCommandTest extends TestCase
     use ConsoleIntegrationTestTrait;
     use DummyTranslationTestTrait;
     use EmailTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method
@@ -44,7 +46,7 @@ class SenderCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->setDummyFrenchTranslator();
-        $this->loadPlugins(['Passbolt/EmailDigest']);
+        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
     }
 
     /**
@@ -52,10 +54,10 @@ class SenderCommandTest extends TestCase
      */
     public function testSenderCommandHelp()
     {
-        $this->exec('passbolt sender -h');
+        $this->exec('passbolt email_digest send -h');
         $this->assertExitSuccess();
         $this->assertOutputContains('Sends a batch of queued emails as emails digests.');
-        $this->assertOutputContains('cake passbolt sender');
+        $this->assertOutputContains('cake passbolt email_digest send');
     }
 
     /**
@@ -66,7 +68,7 @@ class SenderCommandTest extends TestCase
         /** @var \Cake\Datasource\EntityInterface $email */
         $email = EmailQueueFactory::make()->persist();
 
-        $this->exec('passbolt sender');
+        $this->exec('passbolt email_digest send');
 
         $this->assertExitSuccess();
         $this->assertMailSentFrom($email->get('from_email'));
@@ -83,7 +85,7 @@ class SenderCommandTest extends TestCase
      */
     public function testSenderCommandLocale()
     {
-        $this->loadPlugins(['Passbolt/Locale']);
+        $this->loadPlugins(['Passbolt/Locale' => []]);
         $frenchLocale = 'fr-FR';
 
         $frenchSpeakingUser = UserFactory::make()->withLocale($frenchLocale)->persist();
@@ -96,7 +98,7 @@ class SenderCommandTest extends TestCase
             ->setRecipient($frenchSpeakingUser->username)
             ->persist();
 
-        $this->exec('passbolt sender');
+        $this->exec('passbolt email_digest send');
         $this->assertExitSuccess();
 
         $this->assertMailContainsAt(0, $this->getDummyEnglishEmailSentence());

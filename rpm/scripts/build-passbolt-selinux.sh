@@ -5,27 +5,34 @@ set -exu
 SCRIPT_DIR="$( cd "$( dirname "${0}" )" && pwd )"
 cd ${SCRIPT_DIR}/../..
 
-yum install -y rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc
-echo "setuptree"
+if [ -f /usr/bin/zypper ]
+then
+  zypper install -y rpmdevtools rpmlint rsync libselinux-devel rpm-build bc
+else
+  yum install -y rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc
+fi
+
 rpmdev-setuptree
 
+OS_NAME=$(grep -E '^ID=' /etc/os-release | awk -F= '{print $2}')
 OS_VERSION=$(grep -E '^VERSION_ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/\"//g')
 OS_VERSION_MAJOR=$(echo ${OS_VERSION:0:1} | bc)
 _POLICYCOREUTILS_PYTHON=policycoreutils-python
-if [ ${OS_VERSION_MAJOR} -gt 7 ]
+if [ ${OS_VERSION_MAJOR} -gt 7 ] || [ ${OS_NAME} = "fedora" ]
 then
   _POLICYCOREUTILS_PYTHON=policycoreutils-python-utils
 fi
 
 cp rpm/specs/passbolt-server-selinux.spec ~/rpmbuild/SPECS/
-cd rpm/passbolt-server-selinux-${PKG_VERSION}
+cd rpm/passbolt-server-selinux
 make clean
 echo "make"
 make
 cd ..
 tar --create \
     --gzip \
-    --file ~/rpmbuild/SOURCES/passbolt-server-selinux-${PKG_VERSION}.tar.gz passbolt-server-selinux-${PKG_VERSION}
+    --transform="flags=r;s|passbolt-server-selinux|passbolt-server-selinux-${PKG_VERSION}|" \
+    --file ~/rpmbuild/SOURCES/passbolt-server-selinux-${PKG_VERSION}.tar.gz passbolt-server-selinux
 cd -
 make clean
 rpmbuild -ba \

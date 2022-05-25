@@ -254,7 +254,7 @@ class ResourcesShareService
      */
     private function postGroupAccessRevoked(Resource $resource, string $groupId)
     {
-        $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
+        $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)->all()->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
             $this->postUserAccessRevoked($resource, $groupUserId);
         }

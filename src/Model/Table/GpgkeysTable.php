@@ -16,14 +16,19 @@ declare(strict_types=1);
  */
 namespace App\Model\Table;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Gpgkey;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Cake\Chronos\ChronosInterface;
-use Cake\Core\Configure;
+use App\Model\Rule\IsNotServerKeyFingerprintRule;
+use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
+use App\Model\Validation\DateTime\IsCreationDateInFuturePastValidationRule;
+use App\Model\Validation\DateTime\IsDateInFutureValidationRule;
+use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
+use App\Model\Validation\GpgkeyType\IsValidGpgkeyTypeValidationRule;
+use App\Model\Validation\KeyId\IsValidKeyIdValidationRule;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Core\Exception\Exception;
 use Cake\I18n\FrozenTime;
-use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -89,10 +94,13 @@ class GpgkeysTable extends Table
             ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
             ->requirePresence('armored_key', 'create', __('An armored key is required.'))
             ->notEmptyString('armored_key', __('The armored key should not be empty.'))
-            ->add('armored_key', ['custom' => [
-                'rule' => [$this, 'isParsableArmoredPublicKey'],
-                'message' => __('The armored key should be a valid ASCII-armored OpenPGP key.'),
-            ]]);
+            ->add('armored_key', 'custom', new IsParsableArmoredKeyValidationRule());
+
+        $validator
+            ->ascii('fingerprint', __('The fingerprint should be a valid ASCII string.'))
+            ->requirePresence('fingerprint', 'create', __('A fingerprint is required'))
+            ->notEmptyString('fingerprint', __('The fingerprint should not be empty'))
+            ->add('fingerprint', 'custom', new IsValidFingerprintValidationRule());
 
         $validator
             ->integer('bits', 'The length should be a valid integer.')
@@ -106,45 +114,24 @@ class GpgkeysTable extends Table
             ->ascii('key_id', __('The key identifier should be a valid ASCII string.'))
             ->requirePresence('key_id', 'create', __('A key identifier is required.'))
             ->notEmptyString('key_id', __('The key identifier should not be empty.'))
-            ->add('key_id', ['custom' => [
-                'rule' => [$this, 'isValidKeyIdRule'],
-                'message' => __('The key identifier should be a string of 8 hexadecimal characters.'),
-            ]]);
-
-        $validator
-            ->ascii('fingerprint', __('The fingerprint should be a valid ASCII string.'))
-            ->requirePresence('fingerprint', 'create', __('A fingerprint is required'))
-            ->notEmptyString('fingerprint', __('The fingerprint should not be empty'))
-            ->add('fingerprint', ['custom' => [
-                'rule' => [$this, 'isValidFingerprintRule'],
-                'message' => __('The fingerprint should be a string of 40 hexadecimal characters.'),
-            ]]);
+            ->add('key_id', 'custom', new IsValidKeyIdValidationRule());
 
         $validator
             ->ascii('type', __('The type should be a valid ASCII string.'))
             ->requirePresence('type', 'create', __('A type is required'))
             ->notEmptyString('type', __('The type should not be empty'))
-            ->add('type', ['custom' => [
-                'rule' => [$this, 'isValidKeyTypeRule'],
-                'message' => __('The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.'),
-            ]]);
+            ->add('type', 'custom', new IsValidGpgkeyTypeValidationRule());
 
         $validator
             ->dateTime('expires', ['ymd'], __('The expiry should be a valid date.'))
             ->allowEmptyDateTime('expires')
-            ->add('expires', ['custom' => [
-                'rule' => [$this, 'isInFutureRule'],
-                'message' => __('The key should not already be expired.'),
-            ]]);
+            ->add('expires', 'custom', new IsDateInFutureValidationRule());
 
         $validator
             ->dateTime('key_created', ['ymd'], __('The creation date should be a valid date.'))
             ->requirePresence('key_created', 'create', __('A creation date is required.'))
             ->notEmptyDateTime('key_created', __('The creation date should not be empty.'))
-            ->add('key_created', ['custom' => [
-                'rule' => [$this, 'isInFuturePastRule'],
-                'message' => __('The creation date should be set in the past.'),
-            ]]);
+            ->add('key_created', 'custom', new IsCreationDateInFuturePastValidationRule());
 
         $validator
             ->boolean('deleted', __('The deleted status should be a valid boolean.'))
@@ -170,121 +157,12 @@ class GpgkeysTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->isUnique(['fingerprint']));
 
+        $rules->add(new IsNotServerKeyFingerprintRule(), 'isNotServerKeyFingerprintRule', [
+            'errorField' => 'fingerprint',
+            'message' => __('You cannot reuse the server keys.'),
+        ]);
+
         return $rules;
-    }
-
-    /**
-     * Custom validation rule to validate fingerprint
-     *
-     * @param string $value fingerprint
-     * @param array|null $context not in use
-     * @return bool
-     */
-    public function isValidFingerprintRule(string $value, ?array $context = null): bool
-    {
-        return self::isValidFingerprint($value);
-    }
-
-    /**
-     * Return true if string is a valid fingerprint
-     *
-     * @param string $value fingerprint
-     * @return bool
-     */
-    public static function isValidFingerprint(string $value): bool
-    {
-        return preg_match('/^[A-F0-9]{40}$/', $value) === 1;
-    }
-
-    /**
-     * Custom validation rule to validate key id
-     *
-     * @param string $value fingerprint
-     * @param array|null $context not in use
-     * @return bool
-     */
-    public function isValidKeyIdRule(string $value, ?array $context = null): bool
-    {
-        return preg_match('/^[A-F0-9]{8,16}$/', $value) === 1;
-    }
-
-    /**
-     * Custom validation rule to validate key id
-     *
-     * @param string $value fingerprint
-     * @param array|null $context not in use
-     * @return bool
-     */
-    public function isParsableArmoredPublicKey(string $value, ?array $context = null)
-    {
-        $gpg = OpenPGPBackendFactory::get();
-
-        return $gpg->isParsableArmoredPublicKey($value);
-    }
-
-    /**
-     * Check if a key date is set in the past... tomorrow!
-     *
-     * In a ideal world we should check if a key date is set in the past from 'now'
-     * where now is the time of reference of the server. But in practice we
-     * allow a next day margin because users had the issue of having keys generated
-     * by systems that were ahead of server time. Refs. PASSBOLT-1505.
-     *
-     * @param \Cake\Chronos\ChronosInterface $value Cake Datetime
-     * @return bool
-     */
-    public function isInFuturePastRule(ChronosInterface $value): bool
-    {
-        $nowWithMargin = Time::now()->modify('+12 hours');
-
-        return $value->lt($nowWithMargin);
-    }
-
-    /**
-     * Check if a key date is set in the future
-     * Used to check key expiry date
-     *
-     * @param \Cake\Chronos\ChronosInterface $value Cake Datetime
-     * @return bool
-     */
-    public function isInFutureRule(ChronosInterface $value)
-    {
-        return $value->gt(FrozenTime::now());
-    }
-
-    /**
-     * Custom validation rule to validate key type
-     *
-     * @param string $value fingerprint
-     * @param array|null $context not in use
-     * @return bool
-     */
-    public function isValidKeyTypeRule(string $value, ?array $context = null): bool
-    {
-        foreach (\OpenPGP_PublicKeyPacket::$algorithms as $i => $algorithm) {
-            if ($value === $algorithm) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Check for valid email inside OpenPGP key UID
-     *
-     * @param string $value gpg key uid
-     * @param array|null $context not in use
-     * @return bool
-     */
-    public function uidContainValidEmailRule(string $value, ?array $context = null): bool
-    {
-        preg_match('/<(\S+@\S+)>$/', $value, $matches);
-        if (isset($matches[1])) {
-            return Validation::email($matches[1], Configure::read('passbolt.email.validate.mx'));
-        }
-
-        return false;
     }
 
     /**
@@ -342,7 +220,7 @@ class GpgkeysTable extends Table
         if (!Validation::uuid($userId)) {
             throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
-        if (!$this->isValidFingerprintRule($fingerprint)) {
+        if (!PublicKeyValidationService::isValidFingerprint($fingerprint)) {
             throw new \InvalidArgumentException('The fingerprint should be a valid hexadecimal string.');
         }
 
@@ -369,10 +247,13 @@ class GpgkeysTable extends Table
             throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         try {
-            $gpg = OpenPGPBackendFactory::get();
-            $info = $gpg->getPublicKeyInfo($armoredKey);
-        } catch (Exception $e) {
-            throw new ValidationException(__('Could not parse the key info.'));
+            $info = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
+        } catch (\Exception $e) {
+            throw new CustomValidationException(__('A valid OpenPGP key must be provided.'), [
+                'armored_key' => [
+                    'isParsable' => __('The OpenPGP armored key could not be parsed.'),
+                ],
+            ]);
         }
 
         $data = [
@@ -387,11 +268,53 @@ class GpgkeysTable extends Table
             'key_created' => new FrozenTime($info['key_created']),
             'expires' => null,
         ];
+
         if (!empty($info['expires'])) {
             $data['expires'] = new FrozenTime($info['expires']);
         }
-        $gpgkey = $this->newEntity($data, ['accessibleFields' => ['*' => true]]);
 
-        return $gpgkey;
+        $gpgKey = $this->newEntity($data, ['accessibleFields' => [
+            'user_id' => true,
+            'fingerprint' => true,
+            'bits' => true,
+            'type' => true,
+            'key_id' => true,
+            'uid' => true,
+            'armored_key' => true,
+            'key_created' => true,
+            'deleted' => true,
+            'expires' => true,
+        ]]);
+
+        if ($gpgKey->getErrors()) {
+            throw new ValidationException(__('The OpenPGP armored key could not be validated.'), $gpgKey, $this);
+        }
+
+        return $gpgKey;
+    }
+
+    /**
+     * Custom validation rule to validate key id
+     *
+     * @param string $value fingerprint
+     * @param array|null $context not in use
+     * @return bool
+     * @deprecated Use PublicKeyValidationService::isParsableArmoredPublicKey
+     */
+    public function isParsableArmoredPublicKey(string $value, ?array $context = null): bool
+    {
+        return PublicKeyValidationService::isParsableArmoredPublicKey($value);
+    }
+
+    /**
+     * Return true if string is a valid fingerprint
+     *
+     * @deprecated use PublicKeyValidationService::isValidFingerprint();
+     * @param string $value fingerprint
+     * @return bool
+     */
+    public static function isValidFingerprint(string $value): bool
+    {
+        return PublicKeyValidationService::isValidFingerprint($value);
     }
 }

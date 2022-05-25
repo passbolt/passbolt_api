@@ -1,0 +1,38 @@
+
+module passbolt-server 0.2;
+
+require {
+	type etc_t;
+	type unreserved_port_t;
+	type smtp_port_t;
+	type var_lib_t;
+	type httpd_t;
+	type httpd_var_lib_t;
+    type var_log_t;
+	type cron_var_lib_t;
+	type postfix_local_t;
+	type mysqld_port_t;
+    class sock_file { getattr setattr unlink write create };
+	class dir { add_name setattr write };
+	class file { create rename write unlink setattr open getattr read };
+    class tcp_socket name_connect;
+    class process setrlimit;
+    class dir search;
+}
+
+#============= httpd_t ==============
+allow httpd_t etc_t:dir { add_name setattr write };
+allow httpd_t etc_t:file { create write setattr };
+allow httpd_t var_lib_t:dir setattr;
+allow httpd_t var_lib_t:file { write rename unlink };
+allow httpd_t var_lib_t:sock_file { create getattr unlink write setattr };
+allow httpd_t var_log_t:file { write open };
+allow httpd_t unreserved_port_t:tcp_socket name_connect;
+allow httpd_t smtp_port_t:tcp_socket name_connect;
+allow httpd_t self:process setrlimit;
+allow httpd_t cron_var_lib_t:file { getattr read write open };
+allow httpd_t mysqld_port_t:tcp_socket name_connect;
+
+#============= postfix_local_t ==============
+allow postfix_local_t httpd_var_lib_t:dir search;
+

@@ -18,22 +18,25 @@ namespace Passbolt\WebInstaller\Utility;
 
 use App\Utility\Healthchecks;
 use Cake\Core\Exception\Exception;
+use Cake\Database\Connection;
+use Cake\Database\Driver\Mysql;
 use Cake\Datasource\ConnectionManager;
-use Cake\Utility\Hash;
 
 class DatabaseConfiguration
 {
     /**
      * Build a database configuration
      *
-     * @param array $data form data
+     * @param string[] $data form data
      * @return array
      */
-    public static function buildConfig($data)
+    public static function buildConfig(array $data): array
     {
         return [
             'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            // For the moment, we take MySQL per default.
+            // Later we will offer the possibility to choose between MySQL and Postgres in the form
+            'driver' => $data['driver'] ?? env('DATASOURCES_DEFAULT_DRIVER', Mysql::class),
             'persistent' => false,
             'host' => $data['host'],
             'port' => $data['port'],
@@ -71,14 +74,17 @@ class DatabaseConfiguration
     public static function testConnection()
     {
         $connection = ConnectionManager::get('default');
-
-        try {
-            $connection->execute('SHOW TABLES')->fetchAll('assoc');
-        } catch (\Throwable $e) {
+        if (!($connection instanceof Connection)) {
             return false;
         }
 
-        return true;
+        try {
+            $connection->connect();
+
+            return true;
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     /**
@@ -88,10 +94,7 @@ class DatabaseConfiguration
      */
     public static function getTables()
     {
-        $connection = ConnectionManager::get('default');
-        $tables = $connection->execute('SHOW TABLES')->fetchAll();
-
-        return Hash::extract($tables, '{n}.0');
+        return ConnectionManager::get('default')->getSchemaCollection()->listTables();
     }
 
     /**

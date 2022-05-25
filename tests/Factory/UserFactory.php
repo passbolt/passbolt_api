@@ -18,8 +18,9 @@ namespace App\Test\Factory;
 
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
@@ -28,13 +29,14 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
 /**
  * UserFactory
  *
- * @method \App\Model\Entity\User persist()
+ * @method \App\Model\Entity\User|\App\Model\Entity\User[] persist()
  * @method \App\Model\Entity\User getEntity()
  * @method \App\Model\Entity\User[] getEntities()
+ * @method static \App\Model\Entity\User get($primaryKey, array $options = [])
  */
 class UserFactory extends CakephpBaseFactory
 {
-    use FactoryHelperTrait;
+    use FactoryDeletedTrait;
 
     /**
      * Defines the Table Registry used to generate entities with
@@ -57,18 +59,16 @@ class UserFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             return [
                 'username' => $faker->userName() . '@passbolt.com',
+                'role_id' => $faker->uuid(),
                 'active' => true,
                 'deleted' => false,
-                'created' => Time::now()->subDay($faker->randomNumber(4)),
-                'modified' => Time::now()->subDay($faker->randomNumber(4)),
+                'created' => FrozenDate::now()->subDay($faker->randomNumber(4)),
+                'modified' => FrozenDate::now()->subDay($faker->randomNumber(4)),
             ];
         });
 
-        $this
-            ->with('Roles')
-            ->with('Profiles')
-            ->with('Gpgkeys')
-            ->with('GroupsUsers');
+        $this->with('Profiles')
+            ->with('Roles');
     }
 
     /**
@@ -172,8 +172,23 @@ class UserFactory extends CakephpBaseFactory
         return new UserAccessControl($user->role->name, $user->get('id'), $user->get('username'));
     }
 
-    public function withAuthenticationTokens(AuthenticationTokenFactory $factory)
+    /**
+     * @param AuthenticationTokenFactory $factory Authentication token
+     * @return UserFactory this
+     */
+    public function withAuthenticationTokens(AuthenticationTokenFactory $factory): self
     {
         return $this->with('AuthenticationTokens', $factory);
+    }
+
+    /**
+     * @param string $filename File to import
+     * @return UserFactory this
+     */
+    public function withAvatar(string $filename = FIXTURES . 'Avatar' . DS . 'ada.jpg'): self
+    {
+        return $this->with('Profiles.Avatars', [
+            'data' => file_get_contents($filename),
+        ]);
     }
 }

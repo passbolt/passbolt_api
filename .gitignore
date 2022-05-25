@@ -44,6 +44,7 @@ debian/*substvars*
 /_passbolt-configure
 /cron.d
 /logrotate.d
+/*.rpm
 
 # CakePHP specific files #
 ##########################

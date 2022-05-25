@@ -47,7 +47,34 @@ class Role extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
         'id' => false,
+        'name' => false,
+        'description' => false,
+        'created' => false,
+        'modified' => false,
     ];
+
+    /**
+     * @return bool if role name is guest returns true
+     */
+    public function isGuest(): bool
+    {
+        return $this->name === self::GUEST;
+    }
+
+    /**
+     * @return bool if role name is user returns true
+     */
+    public function isUser(): bool
+    {
+        return $this->name === self::USER;
+    }
+
+    /**
+     * @return bool if role name is admin returns true
+     */
+    public function isAdmin(): bool
+    {
+        return $this->name === self::ADMIN;
+    }
 }

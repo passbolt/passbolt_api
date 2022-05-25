@@ -19,17 +19,19 @@ namespace Passbolt\Locale\Test\TestCase\Service;
 
 use Cake\I18n\I18n;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Locale\Service\LocaleService;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
 class LocaleServiceTest extends TestCase
 {
     use DummyTranslationTestTrait;
+    use TruncateDirtyTables;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Passbolt/Locale']);
+        $this->loadPlugins(['Passbolt/Locale' => []]);
         I18n::setLocale('en_UK');
     }
 
@@ -39,9 +41,12 @@ class LocaleServiceTest extends TestCase
     public function testGetSystemLocales(): void
     {
         $this->assertSame([
-            'en-UK',
             'de-DE',
+            'en-UK',
             'fr-FR',
+            'ja-JP',
+            'nl-NL',
+            'pl-PL',
             'sv-SE',
         ], LocaleService::getSystemLocales());
     }

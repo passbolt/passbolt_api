@@ -17,84 +17,136 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Favorites;
 
+use App\Test\Factory\FavoriteFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
+use Cake\I18n\FrozenTime;
 
 class CleanupTest extends AppTestCase
 {
     use CleanupTrait;
 
-    public $Favorites;
-    public $Groups;
-    public $fixtures = [
-        'app.Base/Users', 'app.Alt0/Permissions', 'app.Base/Resources', 'app.Base/Favorites',
-    ];
-    public $options;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
-        $this->options = ['accessibleFields' => [
-            'user_id' => true,
-            'foreign_model' => true,
-            'foreign_key' => true,
-        ]];
-    }
-
-    public function tearDown(): void
-    {
-        unset($this->Favorites);
-        parent::tearDown();
-    }
-
     public function testCleanupFavoritesSoftDeletedUsersSuccess()
     {
-        $originalCount = $this->Favorites->find()->count();
-        $fav = $this->Favorites->newEntity([
-            'user_id' => UuidFactory::uuid('user.id.sofia'),
-            'foreign_model' => 'Resource',
-            'foreign_key' => UuidFactory::uuid('resource.id.april'),
-        ], $this->options);
-        $this->Favorites->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Favorites', 'cleanupSoftDeletedUsers', $originalCount);
+        // The favorite to cleanup.
+        FavoriteFactory::make()
+            ->with('Users', UserFactory::make()->deleted())
+            ->persist();
+        // The favorites to keep.
+        $favoriteWithUser = FavoriteFactory::make()
+            ->with('Users')
+            ->persist();
+        $favoriteWithHardDeletedUser = FavoriteFactory::make()->persist();
+
+        $this->runCleanupChecks('Favorites', 'cleanupSoftDeletedUsers', 2);
+
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
+        $this->assertCount(2, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithUser->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithHardDeletedUser->id, $favoritesIdsPostCleanup);
     }
 
     public function testCleanupFavoritesHardDeletedUsersSuccess()
     {
-        $originalCount = $this->Favorites->find()->count();
-        $fav = $this->Favorites->newEntity([
-            'user_id' => UuidFactory::uuid('user.id.nope'),
-            'foreign_model' => 'Resource',
-            'foreign_key' => UuidFactory::uuid('resource.id.april'),
-        ], $this->options);
-        $this->Favorites->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Favorites', 'cleanupHardDeletedUsers', $originalCount);
+        // The favorite to cleanup.
+        FavoriteFactory::make()->persist();
+        // The favorites to keep.
+        $favoriteWithUser = FavoriteFactory::make()
+            ->with('Users')
+            ->persist();
+        $favoriteWithSoftDeletedUser = FavoriteFactory::make()
+            ->with('Users', UserFactory::make()->deleted())
+            ->persist();
+
+        $this->runCleanupChecks('Favorites', 'cleanupHardDeletedUsers', 2);
+
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
+        $this->assertCount(2, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithUser->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithSoftDeletedUser->id, $favoritesIdsPostCleanup);
     }
 
     public function testCleanupFavoritesSoftDeletedResourcesSuccess()
     {
-        $originalCount = $this->Favorites->find()->count();
-        $fav = $this->Favorites->newEntity([
-            'user_id' => UuidFactory::uuid('user.id.ada'),
-            'foreign_model' => 'Resource',
-            'foreign_key' => UuidFactory::uuid('resource.id.jquery'),
-        ], $this->options);
-        $this->Favorites->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Favorites', 'cleanupSoftDeletedResources', $originalCount);
+        // The favorite to cleanup.
+        FavoriteFactory::make()
+            ->with('Resources', ResourceFactory::make()->deleted())
+            ->persist();
+        // The favorites to keep.
+        $favoriteWithResource = FavoriteFactory::make()
+            ->with('Resources')
+            ->persist();
+        $favoriteWithHardDeletedResource = FavoriteFactory::make()->persist();
+
+        $this->runCleanupChecks('Favorites', 'cleanupSoftDeletedResources', 2);
+
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
+        $this->assertCount(2, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithResource->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithHardDeletedResource->id, $favoritesIdsPostCleanup);
     }
 
     public function testCleanupFavoritesHardDeletedResourcesSuccess()
     {
-        $originalCount = $this->Favorites->find()->count();
-        $fav = $this->Favorites->newEntity([
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+        // The favorite to cleanup.
+        FavoriteFactory::make()->persist();
+        // The favorites to keep.
+        $favoriteWithResource = FavoriteFactory::make()
+            ->with('Resources')
+            ->persist();
+        $favoriteWithSoftDeletedResource = FavoriteFactory::make()
+            ->with('Resources', ResourceFactory::make()->deleted())
+            ->persist();
+
+        $this->runCleanupChecks('Favorites', 'cleanupHardDeletedResources', 2);
+
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
+        $this->assertCount(2, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithResource->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithSoftDeletedResource->id, $favoritesIdsPostCleanup);
+    }
+
+    public function testCleanupFavoritesDuplicatedFavorites()
+    {
+        // Duplicated favorites to cleanup.
+        $duplicateFavoriteMeta = [
+            'user_id' => UuidFactory::uuid(),
+            'foreign_key' => UuidFactory::uuid(),
             'foreign_model' => 'Resource',
-            'foreign_key' => UuidFactory::uuid('resource.id.nope'),
-        ], $this->options);
-        $this->Favorites->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Favorites', 'cleanupHardDeletedResources', $originalCount);
+            'modified' => FrozenTime::now(),
+        ];
+        FavoriteFactory::make($duplicateFavoriteMeta)->persist();
+
+        // Duplicate favorite to keep as it is the oldest.
+        $duplicateFavoriteToKeep = FavoriteFactory::make($duplicateFavoriteMeta)->patchData(['modified' => FrozenTime::now()->subDay()])->persist();
+
+        // Witness favorites to not cleanup:
+        // - A favorite including a user involved in the cleanup
+        // - A favorite including a foreign key involved in the cleanup
+        // - A user having 2 different resources as favorite.
+        // - A resource marked as favorite by 2 different users.
+        $favoriteWithUserInvolvedInCleanup = FavoriteFactory::make($duplicateFavoriteMeta)->patchData(['foreign_key' => UuidFactory::uuid()])->persist();
+        $favoriteWithForeignKeyInvolvedInCleanup = FavoriteFactory::make($duplicateFavoriteMeta)->patchData(['user_id' => UuidFactory::uuid()])->persist();
+        $resources = ResourceFactory::make(2)->persist();
+        $users = UserFactory::make(2)->persist();
+        $favoriteToKeep1 = FavoriteFactory::make(['user_id' => $users[0]->id, 'foreign_key' => $resources[0]->id, 'foreign_model' => 'Resource'])->persist();
+        $favoriteToKeep2 = FavoriteFactory::make(['user_id' => $users[0]->id, 'foreign_key' => $resources[1]->id, 'foreign_model' => 'Resource'])->persist();
+        $favoriteToKeep3 = FavoriteFactory::make(['user_id' => $users[1]->id, 'foreign_key' => $resources[0]->id, 'foreign_model' => 'Resource'])->persist();
+        $favoriteToKeep4 = FavoriteFactory::make(['user_id' => $users[1]->id, 'foreign_key' => $resources[1]->id, 'foreign_model' => 'Resource'])->persist();
+
+        $this->runCleanupChecks('Favorites', 'cleanupDuplicatedFavorites', 7);
+
+        $favoritesIdsPostCleanup = FavoriteFactory::find()->all()->extract('id')->toArray();
+        $this->assertCount(7, $favoritesIdsPostCleanup);
+        $this->assertContains($duplicateFavoriteToKeep->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithUserInvolvedInCleanup->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteWithForeignKeyInvolvedInCleanup->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteToKeep1->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteToKeep2->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteToKeep3->id, $favoritesIdsPostCleanup);
+        $this->assertContains($favoriteToKeep4->id, $favoritesIdsPostCleanup);
     }
 }
