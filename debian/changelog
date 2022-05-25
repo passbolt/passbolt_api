@@ -1,3 +1,19 @@
+passbolt-pro-server (3.6.0-1) buster; urgency=medium
+  * PB-9738 Add account recovery organization policy settings by admins
+  * PB-13685 Add account recovery organization settings set with key rotation + misc cleanup
+  * PB-12837 Add account recovery setup for users
+  * PB-14236 Add account recovery request process for users
+  * PB-14236 Add account recovery response process by admins
+  * PB-14410 Add the account recovery final step for users after approval by admins
+  * PB-14233 List all pending account recovery requests for admins
+  * PB-13769 Add account recovery related email notifications to users and admins
+  * PB-14452 Add cleanup tasks for account recovery
+  * PB-16123 Remove key rotation logic from package post install scripts
+  * PB-15277 Remove mariadb dependency for RPM package
+  * PB-14947 Package versionning for RPM
+
+ -- Gerold Mougenel <gerold@passbolt.com>  Wed, 25 May 2022 17:30:00 +0000
+
 passbolt-pro-server (3.5.0-3) buster; urgency=medium
   * PB-14959 updating the pull key logic in debian postinst
 
@@ -6,7 +22,7 @@ passbolt-pro-server (3.5.0-3) buster; urgency=medium
 passbolt-pro-server (3.5.0-2) buster; urgency=medium
   * PB-13923 Update the repository key to sign packages
   * PB-13749 Update firewalld install check
-  * PB-13743 Fix bad condition logic so setup firewalld
+  * PB-13743 Fix bad condition logic to setup firewalld
   * PB-13650 Delete jwt folder only while uninstalling
   * PB-13783 Update selinux policy RPM package
 

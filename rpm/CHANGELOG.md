@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* [3.6.0-1] Wed May 25 2022 Gerold Mougenel <gerold@passbolt.com>
+- PB-9738 Add account recovery organization policy settings by admins
+- PB-13685 Add account recovery organization settings set with key rotation + misc cleanup
+- PB-12837 Add account recovery setup for users
+- PB-14236 Add account recovery request process for users
+- PB-14236 Add account recovery response process by admins
+- PB-14410 Add the account recovery final step for users after approval by admins
+- PB-14233 List all pending account recovery requests for admins
+- PB-13769 Add account recovery related email notifications to users and admins
+- PB-14452 Add cleanup tasks for account recovery
+- PB-16123 Remove key rotation logic from package post install scripts
+- PB-15277 Remove mariadb dependency for RPM package
+- PB-14947 Package versionning for RPM
+
 * [3.5.0-3] Fri Apr 29 2022 Gerold Mougenel <gerold@passbolt.com>
 - PB-15039 fixing repomd.xml signing issues
 
