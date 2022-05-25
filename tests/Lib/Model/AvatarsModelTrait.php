@@ -84,9 +84,9 @@ trait AvatarsModelTrait
      * @param string $format Format
      * @return UploadedFile
      */
-    public function createUploadFile(string $format = 'png')
+    public function createUploadFile(string $format = 'png'): UploadedFile
     {
-        $uploadFile = FIXTURES . 'Avatar' . DS . 'ada' . '.' . $format;
+        $uploadFile = FIXTURES . 'Avatar' . DS . 'ada.' . $format;
 
         return new UploadedFile(
             $uploadFile,
