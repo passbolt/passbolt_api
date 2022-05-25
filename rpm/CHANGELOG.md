@@ -28,6 +28,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * [3.5.0-3] Fri Apr 29 2022 Gerold Mougenel <gerold@passbolt.com>
 - PB-15039 fixing repomd.xml signing issues
 
+* [3.5.0-3] Fri Apr 29 2022 Gerold Mougenel <gerold@passbolt.com>
+- PB-15039 fixing repomd.xml signing issues
+
 * [3.5.0-2] Wed Apr 13 2022 Gerold Mougenel <gerold@passbolt.com>
 - PB-13923 Update the repository key to sign packages
 - PB-13749 Update firewalld install check
