@@ -11,6 +11,7 @@ Requires:       php7-json >= 7.3
 Requires:       php7-curl >= 7.3
 Requires:       php7-posix >= 7.3
 Requires:       php7-fileinfo >= 7.3
+Requires:       php7-openssl >= 7.3
 Requires:       php7-pecl
 Requires:       php7-gnupg
 %if "%{_passbolt_flavour}" == "pro"

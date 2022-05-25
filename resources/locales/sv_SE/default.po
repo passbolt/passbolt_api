@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2021-10-06 14:32+0000\n"
-"PO-Revision-Date: 2021-10-13 14:14\n"
+"PO-Revision-Date: 2022-01-11 13:51\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -1136,10 +1136,10 @@ msgid "Validation success for authenticationToken {0}"
 msgstr "Validering lyckades för autentiseringtoken {0}"
 
 msgid "Could not save the avatar in the {0} file."
-msgstr ""
+msgstr "Kunde inte spara avataren i filen {0}."
 
 msgid "The avatar id is not valid."
-msgstr ""
+msgstr "Avatar-ID är inte giltigt."
 
 msgid "Validation failed for comment {0}. {1}"
 msgstr "Validering misslyckades för kommentar {0}. {1}"
@@ -1202,10 +1202,10 @@ msgid "Could not validate resource data."
 msgstr "Kunde inte validera resursdata."
 
 msgid "An unexpected error occured, please contact an administrator."
-msgstr ""
+msgstr "Ett oväntat fel uppstod, kontakta en administratör."
 
 msgid "The server returned the following error:"
-msgstr ""
+msgstr "Servern returnerade följande fel:"
 
 msgid "Validation failed for resource {0}. {1}"
 msgstr "Validering misslyckades för resursen {0}. {1}"
@@ -1358,124 +1358,124 @@ msgid "The notification settings for the organization were updated."
 msgstr "Aviseringsinställningarna för organisationen uppdaterades."
 
 msgid "The challenge cannot be decrypted."
-msgstr ""
+msgstr "Utmaningen kan inte dekrypteras."
 
 msgid "The challenge is invalid. Deserialization failed."
-msgstr ""
+msgstr "Utmaningen är ogiltig. Deserialiseringen misslyckades."
 
 msgid "The challenge is invalid. Validation Failed."
-msgstr ""
+msgstr "Utmaningen är ogiltig. Valideringen misslyckades."
 
 msgid "The config for the server private key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "Konfigurationen för serverns fingeravtryck för privat nyckel är inte tillgänglig eller ofullständig."
 
 msgid "The config for the server private key passphrase is invalid."
-msgstr ""
+msgstr "Konfigurationen för serverns privata nyckels lösenfras är ogiltig."
 
 msgid "The user id is missing or invalid."
-msgstr ""
+msgstr "Användar-ID saknas eller är ogiltigt."
 
 msgid "The user OpenPGP key does not exist, or is invalid, or has been deleted."
-msgstr ""
+msgstr "Användarens OpenPGP-nyckel finns inte, är ogiltig eller har tagits bort."
 
 msgid "The user signature is invalid."
-msgstr ""
+msgstr "Användarsignaturen är ogiltig."
 
 msgid "The user challenge is missing or invalid."
-msgstr ""
+msgstr "Användarutmaningen saknas eller är ogiltig."
 
 msgid "The version is invalid."
-msgstr ""
+msgstr "Versionen är ogiltig."
 
 msgid "The domain is invalid."
-msgstr ""
+msgstr "Domänen är ogiltig."
 
 msgid "The domain is invalid. Expected: {0} and got {1}"
-msgstr ""
+msgstr "Domänen är ogiltig. Förväntat: {0} och fick {1}"
 
 msgid "The authentication was a success."
-msgstr ""
+msgstr "Autentiseringen lyckades."
 
 msgid "The authentication failed."
-msgstr ""
+msgstr "Autentiseringen misslyckades."
 
 msgid "The credentials are missing."
-msgstr ""
+msgstr "Referenser saknas."
 
 msgid "The user does not exist or is not active or has been deleted."
-msgstr ""
+msgstr "Användaren finns inte, är inte aktiv eller har tagits bort."
 
 msgid "The credentials are invalid."
-msgstr ""
+msgstr "Referenserna är ogiltiga."
 
 msgid "An internal error occurred."
-msgstr ""
+msgstr "Ett internt fel har uppstått."
 
 msgid "The verify token is invalid."
-msgstr ""
+msgstr "Verifieringstoken är ogiltigt."
 
 msgid "The route {0} is not permitted with JWT authentication."
-msgstr ""
+msgstr "Rutt {0} är inte tillåtet med JWT-autentisering."
 
 msgid "The key pair for JWT Authentication is not complete. The following file could not be read: {0}."
-msgstr ""
+msgstr "Nyckelparet för JWT-autentisering är inte komplett. Följande fil kunde inte läsas: {0}."
 
 msgid "The JWT public key could not be read or is not valid."
-msgstr ""
+msgstr "Den publika JWT-nyckeln kunde inte läsas eller är ogiltig."
 
 msgid "The JWT private key should be at least {0} bytes long."
-msgstr ""
+msgstr "Den privata JWT-nyckeln bör vara minst {0} bytes lång."
 
 msgid "The configuration {0} is not correctly set."
-msgstr ""
+msgstr "Konfigurationen {0} är inte korrekt inställd."
 
 msgid "No active refresh token matching the request could be found."
-msgstr ""
+msgstr "Ingen aktiv uppdateringstoken som matchar förfrågan kunde hittas."
 
 msgid "The refresh token provided was already used."
-msgstr ""
+msgstr "Uppdateringstoken som tillhandahålls har redan använts."
 
 msgid "Expired refresh token provided."
-msgstr ""
+msgstr "Förfallen uppdateringstoken angiven."
 
 msgid "The refresh token should be a valid UUID."
-msgstr ""
+msgstr "Uppdateringstoken bör vara ett giltigt UUID."
 
 msgid "This is not a valid user id."
-msgstr ""
+msgstr "Detta är inte ett giltigt användar-ID."
 
 msgid "Invalid verify token expiry."
-msgstr ""
+msgstr "Ogiltig verifieringstoken upphör."
 
 msgid "Attempt to access an expired verify token."
-msgstr ""
+msgstr "Försök att komma åt en förfallen verifieringstoken."
 
 msgid "Invalid verify token format."
-msgstr ""
+msgstr "Ogiltigt format för verifieringstoken."
 
 msgid "Invalid user ID format."
-msgstr ""
+msgstr "Ogiltigt användar-ID-format."
 
 msgid "Verify token has been already used in the past."
-msgstr ""
+msgstr "Verifieringstoken har redan använts tidigare."
 
 msgid "Security warning!"
-msgstr ""
+msgstr "Säkerhetsvarning!"
 
 msgid "An unknown user with IP: {0} attempted to identify as {1}."
-msgstr ""
+msgstr "En okänd användare med IP: {0} försökte identifiera sig som {1}."
 
 msgid "This is a potential security issue."
-msgstr ""
+msgstr "Detta är en potentiell säkerhetsfråga."
 
 msgid "Please investigate!"
-msgstr ""
+msgstr "Vänligen undersök!"
 
 msgid "An unknown user with IP: {0}  attempted to steal your login data."
-msgstr ""
+msgstr "En okänd användare med IP: {0}  försökte stjäla dina inloggningsuppgifter."
 
 msgid "Please get in tough with one of your administrators."
-msgstr ""
+msgstr "Vänligen kontakta en av dina administratörer."
 
 msgid "This is not a valid locale."
 msgstr "Detta är inte ett giltigt språk."
@@ -1586,118 +1586,118 @@ msgid "Could not validate secret history data."
 msgstr "Kunde inte validera hemlig historikdata."
 
 msgid "Information about the transfer is required."
-msgstr ""
+msgstr "Information om överföringen krävs."
 
 msgid "The operation was successful"
-msgstr ""
+msgstr "Åtgärden lyckades"
 
 msgid "The transfer id is not valid."
-msgstr ""
+msgstr "Överförings-ID är inte giltigt."
 
 msgid "The authentication token should be a valid uuid."
-msgstr ""
+msgstr "Autentiseringstoken ska vara ett giltigt uuid."
 
 msgid "The authentication token is invalid."
-msgstr ""
+msgstr "Autentiserings-token är inte giltig."
 
 msgid "The transfer id should be a uuid."
-msgstr ""
+msgstr "Överförings-id bör vara en uuid."
 
 msgid "The user id should be a uuid."
-msgstr ""
+msgstr "Användar-id bör vara ett uuid."
 
 msgid "A user id is required"
-msgstr ""
+msgstr "Ett användar-ID krävs"
 
 msgid "The hash should be an ascii string."
-msgstr ""
+msgstr "Hashen bör vara en ascii-sträng."
 
 msgid "The hash should be {0} characters in length."
-msgstr ""
+msgstr "Hashen bör vara {0} tecken långt."
 
 msgid "The data transfer hash is required."
-msgstr ""
+msgstr "Hashen för dataöverföring krävs."
 
 msgid "The current page should be a non negative integer."
-msgstr ""
+msgstr "Den aktuella sidan bör vara ett icke negativt heltal."
 
 msgid "The current page number is required"
-msgstr ""
+msgstr "Det aktuella sidnumret krävs"
 
 msgid "The current page number should be equal or inferior to the total number of pages."
-msgstr ""
+msgstr "Det aktuella sidnumret ska vara lika med eller under det totala antalet sidor."
 
 msgid "The current page cannot be greater than {0}"
-msgstr ""
+msgstr "Den aktuella sidan får inte vara större än {0}"
 
 msgid "The total number of pages should a non negative integer."
-msgstr ""
+msgstr "Det totala antalet sidor bör vara ett icke-negativt heltal."
 
 msgid "The total number of pages is required."
-msgstr ""
+msgstr "Det totala antalet sidor krävs."
 
 msgid "The total number of pages should be greater than 0."
-msgstr ""
+msgstr "Det totala antalet sidor bör vara större än 0."
 
 msgid "The total number of pages cannot be greater than {0}"
-msgstr ""
+msgstr "Det totala antalet sidor kan inte vara större än {0}"
 
 msgid "The status should not be empty."
-msgstr ""
+msgstr "Statusen får inte vara tom."
 
 msgid "The status is required."
-msgstr ""
+msgstr "Statusen måste anges."
 
 msgid "The status must be one of the following: {0}."
-msgstr ""
+msgstr "Statusen måste vara en av följande: {0}."
 
 msgid "The user must be active."
-msgstr ""
+msgstr "Användaren måste vara aktiv."
 
 msgid "Could not validate the transfer data."
-msgstr ""
+msgstr "Kunde inte validera överföringsdata."
 
 msgid "The transfer could not be created."
-msgstr ""
+msgstr "Överföringen kunde inte skapas."
 
 msgid "Could not update the transfer data."
-msgstr ""
+msgstr "Kunde inte uppdatera överföringsdatan."
 
 msgid "The transfer could not be updated."
-msgstr ""
+msgstr "Överföringen kunde inte uppdateras."
 
 msgid "This operation is not allowed."
-msgstr ""
+msgstr "Denna åtgärd är inte tillåten."
 
 msgid "Restarting a transfer is not allowed."
-msgstr ""
+msgstr "Att starta om en överföring är inte tillåtet."
 
 msgid "The operation is already over."
-msgstr ""
+msgstr "Operationen är redan över."
 
 msgid "The current page does not match the total number of pages."
-msgstr ""
+msgstr "Den aktuella sidan matchar inte det totala antalet sidor."
 
 msgid "This operation is not allowed for this user."
-msgstr ""
+msgstr "Denna åtgärd är inte tillåten för den här användaren."
 
 msgid "The authentication token is missing."
-msgstr ""
+msgstr "Autentiseringstoken saknas."
 
 msgid "The authentication token is not valid for this user."
-msgstr ""
+msgstr "Autentiseringstoken är inte giltig för den här användaren."
 
 msgid "The authentication token type is invalid."
-msgstr ""
+msgstr "Typen av autentiseringstoken är ogiltig."
 
 msgid "The authentication token is not active."
-msgstr ""
+msgstr "Autentiseringstoken är inte aktiv."
 
 msgid "The authentication token is expired."
-msgstr ""
+msgstr "Autentiseringstoken har gått ut."
 
 msgid "The password generator value \"{0}\" is not valid."
-msgstr ""
+msgstr "Lösenordsgeneratorns värde \"{0}\" är inte giltigt."
 
 msgid "5 minutes"
 msgstr "5 minuter"
@@ -2219,13 +2219,13 @@ msgid "Installing"
 msgstr "Installerar"
 
 msgid "Existing installation?"
-msgstr ""
+msgstr "Befintlig installation?"
 
 msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
-msgstr ""
+msgstr "Om du vill använda en befintlig passbolt-databas kommer installationsprogrammet att uppdatera den till den aktuella passbolt-versionen samtidigt som dina data behålls."
 
 msgid "As a precaution, do not forget to backup your database before you continue."
-msgstr ""
+msgstr "Glöm inte att säkerhetskopiera din databas innan du fortsätter."
 
 msgid "Help"
 msgstr "Hjälp"
@@ -2255,10 +2255,10 @@ msgid "Your email address"
 msgstr "Din e-postadress"
 
 msgid "Why do I need a SMTP server?"
-msgstr ""
+msgstr "Varför behöver jag en SMTP-server?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
-msgstr ""
+msgstr "Passbolt behöver en SMTP-server för att kunna skicka inbjudningsmail efter att ett konto har skapats och för att kunna skicka e-postmeddelanden."
 
 msgid "The requested address was not found on this server."
 msgstr "Den begärda adressen hittades inte på denna server."
@@ -2285,7 +2285,7 @@ msgid "Member"
 msgstr "Medlem"
 
 msgid "Updated roles"
-msgstr ""
+msgstr "Uppdaterade roller"
 
 msgid "is now group manager"
 msgstr "är nu gruppchef"
