@@ -20,8 +20,8 @@
 
 .build-passbolt-rpm-package: &build-passbolt-rpm-package |
   rpmdev-setuptree
-  PKG_VERSION=$(jq -r '.version' package.json) \
-  PASSBOLT_VERSION=$(jq -r '.version' package.json) \
+  PKG_VERSION=$(cat rpm/CHANGELOG.md | awk 'match($0, /\[([0-9]+\.[0-9]+\.[0-9]+)\]?/) {print substr($0, RSTART, RLENGTH);exit}' | tr -d "[]")
+  PASSBOLT_PKG_VERSION=$(cat rpm/CHANGELOG.md | awk 'match($0, /\[([0-9]+\.[0-9]+\.[0-9]+\-[0-9])\]?/) {print substr($0, RSTART, RLENGTH);exit}' | awk -F "-" '{print $2}' | tr -d "[]")
   /bin/sh rpm/scripts/build-passbolt-server.sh
   cp ~/rpmbuild/RPMS/noarch/passbolt-* .
 
@@ -112,7 +112,7 @@ build-suse:
     "gs://$REPO"
 
 .publish-rpm:
-  image: rockylinux/rockylinux:8
+  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-8.5
   stage: publish
   variables:
     GCLOUD_SHA256SUM: "81d0ad64dca3e97d02e873d386bafcc77b416d7c9b45e5ec2387e5075b133fc0"

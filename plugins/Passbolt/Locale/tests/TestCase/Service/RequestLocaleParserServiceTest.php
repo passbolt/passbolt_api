@@ -19,6 +19,7 @@ namespace Passbolt\Locale\Test\TestCase\Service;
 
 use App\Test\Factory\OrganizationSettingFactory;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\RequestLocaleParserService;
 use Passbolt\Locale\Test\Lib\DummySystemLocaleTestTrait;
@@ -27,10 +28,12 @@ use Psr\Http\Message\ServerRequestInterface;
 class RequestLocaleParserServiceTest extends TestCase
 {
     use DummySystemLocaleTestTrait;
+    use TruncateDirtyTables;
 
     public function setUp(): void
     {
-        $this->loadPlugins(['Passbolt/Locale']);
+        parent::setUp();
+        $this->loadPlugins(['Passbolt/Locale' => []]);
         $this->addFooSystemLocale();
     }
 

@@ -18,6 +18,7 @@ namespace App\Test\Factory;
 
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\Traits\FactoryDeletedTrait;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
@@ -25,8 +26,8 @@ use Faker\Generator;
 /**
  * ResourceFactory
  *
- * @method \App\Model\Entity\Resource getEntity()()
- * @method \App\Model\Entity\Resource[] getEntities()()
+ * @method \App\Model\Entity\Resource getEntity()
+ * @method \App\Model\Entity\Resource[] getEntities()
  * @method \App\Model\Entity\Resource persist()
  */
 class ResourceFactory extends CakephpBaseFactory

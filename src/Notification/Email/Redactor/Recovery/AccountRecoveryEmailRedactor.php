@@ -58,8 +58,10 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
         $user = $event->getData('user');
         /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = $event->getData('token');
+        /** @var string $case */
+        $case = $event->getData('case') ?? 'default';
 
-        $emailCollection->addEmail($this->createAccountRecoveryEmail($user, $token));
+        $emailCollection->addEmail($this->createAccountRecoveryEmail($user, $token, $case));
 
         return $emailCollection;
     }
@@ -67,9 +69,10 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \App\Model\Entity\User $user User
      * @param \App\Model\Entity\AuthenticationToken $token Token for recovery
+     * @param string $case 'lost-passphrase' or 'default'
      * @return \App\Notification\Email\Email
      */
-    private function createAccountRecoveryEmail(User $user, AuthenticationToken $token): Email
+    private function createAccountRecoveryEmail(User $user, AuthenticationToken $token, string $case): Email
     {
         $locale = (new GetUserLocaleService())->getLocale($user->username);
         $subject = (new LocaleService())->translateString(
@@ -79,7 +82,7 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
             }
         );
 
-        $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
+        $data = ['body' => ['user' => $user, 'token' => $token, 'case' => $case], 'title' => $subject];
 
         return new Email($user->username, $subject, $data, self::TEMPLATE);
     }

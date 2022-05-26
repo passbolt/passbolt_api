@@ -48,7 +48,7 @@ class ShareSearchController extends AppController
         $groups = $this->_searchGroups($options);
         $users = $this->_searchUsers($options);
 
-        $aros = $users->append($groups);
+        $aros = $users->all()->append($groups);
         $output = $this->_formatResult($aros);
 
         $this->success(__('The operation was successful.'), $output);

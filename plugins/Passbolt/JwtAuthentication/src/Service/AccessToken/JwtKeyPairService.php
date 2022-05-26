@@ -18,6 +18,7 @@ namespace Passbolt\JwtAuthentication\Service\AccessToken;
 
 use App\Utility\UuidFactory;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Passbolt\JwtAuthentication\Command\CreateJwtKeysCommand;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 
@@ -142,7 +143,7 @@ class JwtKeyPairService
 
             $jwt = $this->secretService->createToken($uuid, '2 seconds');
 
-            return JWT::decode($jwt, $publicKey, [$this->secretService::JWT_ALG]);
+            return JWT::decode($jwt, new Key($publicKey, $this->secretService::JWT_ALG));
         } catch (\Throwable $e) {
             throw new InvalidJwtKeyPairException($e->getMessage());
         }

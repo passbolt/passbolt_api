@@ -14,13 +14,14 @@
  * @since         3.3.0
  */
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::scope('/', function (RouteBuilder $routes) {
+/** @var \Cake\Routing\RouteBuilder $routes */
+
+$routes->scope('/', function (RouteBuilder $routes) {
     $routes->redirect('.well-known/jwks.json', '/auth/jwt/jwks.json');
 });
 
-Router::plugin('Passbolt/JwtAuthentication', ['path' => '/auth/jwt'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/JwtAuthentication', ['path' => '/auth/jwt'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
     // WARNING - if you add routes, check whether it should be included in

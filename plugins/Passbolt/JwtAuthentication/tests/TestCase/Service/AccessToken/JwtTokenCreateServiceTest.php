@@ -21,7 +21,6 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\SkipTablesTruncation;
 use Firebase\JWT\ExpiredException;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtTestTrait;
@@ -32,7 +31,6 @@ use Passbolt\JwtAuthentication\Test\Utility\JwtTestTrait;
 class JwtTokenCreateServiceTest extends TestCase
 {
     use JwtTestTrait;
-    use SkipTablesTruncation;
 
     public function tokenExpiration(): array
     {

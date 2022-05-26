@@ -20,12 +20,14 @@ namespace Passbolt\Locale\Test\TestCase\Model\Behavior;
 use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Test\Lib\DummySystemLocaleTestTrait;
 
 class LocaleBehaviorTest extends TestCase
 {
     use DummySystemLocaleTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var \App\Model\Table\UsersTable
@@ -35,7 +37,7 @@ class LocaleBehaviorTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Passbolt/Locale']);
+        $this->loadPlugins(['Passbolt/Locale' => []]);
         $this->usersTable = TableRegistry::getTableLocator()->get('Users');
     }
 

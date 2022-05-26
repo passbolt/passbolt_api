@@ -30,6 +30,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
@@ -38,6 +39,7 @@ use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 class GpgJwtAuthenticatorTest extends TestCase
 {
     use GpgAdaSetupTrait;
+    use TruncateDirtyTables;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Gpgkeys',

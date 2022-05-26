@@ -18,11 +18,11 @@ namespace App\Utility\Healthchecks;
 
 use App\Model\Entity\Gpgkey;
 use App\Model\Rule\Gpgkeys\GopengpgFormatRule;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 
 class GpgHealthchecks
 {
@@ -182,10 +182,9 @@ class GpgHealthchecks
             if ($publicKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
-            /** @var \App\Model\Table\GpgkeysTable $Gpgkeys */
-            $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
+
             $checks['gpg']['gpgKeyPublicEmail'] = is_string($publicKeyInfo['uid']) &&
-                $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
+                PublicKeyValidationService::uidContainValidEmail($publicKeyInfo['uid']);
         }
 
         return $checks;

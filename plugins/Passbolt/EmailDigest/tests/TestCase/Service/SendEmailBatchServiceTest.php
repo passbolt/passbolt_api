@@ -50,7 +50,7 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadPlugins(['Passbolt/EmailDigest']);
+        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
 
         // Mock the digest service
         $this->emailDigestServiceMock = $this->createMock(EmailDigestService::class);

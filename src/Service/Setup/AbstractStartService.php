@@ -17,15 +17,12 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
-use App\Error\Exception\CustomValidationException;
-use App\Model\Entity\AuthenticationToken;
-use App\Model\Entity\User;
 use Cake\Datasource\ModelAwareTrait;
-use Cake\Http\Exception\BadRequestException;
-use Cake\Validation\Validation;
+use Cake\Http\ServerRequest;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * @property \App\Model\Table\UserAgentsTable $UserAgents
  * @property \App\Model\Table\UsersTable $Users
  */
 abstract class AbstractStartService
@@ -33,50 +30,36 @@ abstract class AbstractStartService
     use ModelAwareTrait;
 
     /**
-     * AbstractStartService constructor
+     * @var \Cake\Http\ServerRequest
      */
-    public function __construct()
+    protected $request;
+
+    /**
+     * AbstractStartService constructor
+     *
+     * @param \Cake\Http\ServerRequest|null $request Server Request
+     */
+    public function __construct(?ServerRequest $request = null)
     {
         $this->loadModel('AuthenticationTokens');
+        $this->loadModel('UserAgents');
         $this->loadModel('Users');
+        $this->request = $request ?? new ServerRequest();
     }
 
     /**
-     * Assert that the setup start request is valid
+     * Assert if the browser is supported. Redirect if the browser is not supported.
      *
-     * @param string $userId uuid
-     * @param string $tokenId uuid
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException if the token is missing or not a uuid
-     * @throws \Cake\Http\Exception\BadRequestException if the user id is missing or not a uuid
+     * @return bool
      */
-    protected function assertRequestSanity(string $userId, string $tokenId): void
+    protected function isBrowserSupported(): bool
     {
-        if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
+        $supportedBrowsers = ['firefox', 'chrome'];
+        $browserName = strtolower($this->UserAgents->browserName());
+        if (!in_array($browserName, $supportedBrowsers)) {
+            return false;
         }
-        if (!Validation::uuid($tokenId)) {
-            throw new BadRequestException(__('The token should be a valid UUID.'));
-        }
-    }
 
-    /**
-     * Assert the token expiry. If the token is expired, regenerate a new one and throw an notify the client with an error.
-     *
-     * @param \App\Model\Entity\User $user user attempting to recover
-     * @param \App\Model\Entity\AuthenticationToken $token the recovery token
-     * @return void
-     * @throw CustomValidationException if the token is expired
-     */
-    protected function assertTokenExpiry(User $user, AuthenticationToken $token): void
-    {
-        if ($this->AuthenticationTokens->isExpired($token)) {
-            $error = [
-                'token' => [
-                    'expired' => 'The token is expired.',
-                ],
-            ];
-            throw new CustomValidationException(__('The token is expired.'), $error);
-        }
+        return true;
     }
 }

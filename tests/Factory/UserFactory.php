@@ -18,8 +18,9 @@ namespace App\Test\Factory;
 
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
@@ -31,6 +32,7 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
  * @method \App\Model\Entity\User|\App\Model\Entity\User[] persist()
  * @method \App\Model\Entity\User getEntity()
  * @method \App\Model\Entity\User[] getEntities()
+ * @method static \App\Model\Entity\User get($primaryKey, array $options = [])
  */
 class UserFactory extends CakephpBaseFactory
 {
@@ -60,8 +62,8 @@ class UserFactory extends CakephpBaseFactory
                 'role_id' => $faker->uuid(),
                 'active' => true,
                 'deleted' => false,
-                'created' => Time::now()->subDay($faker->randomNumber(4)),
-                'modified' => Time::now()->subDay($faker->randomNumber(4)),
+                'created' => FrozenDate::now()->subDay($faker->randomNumber(4)),
+                'modified' => FrozenDate::now()->subDay($faker->randomNumber(4)),
             ];
         });
 

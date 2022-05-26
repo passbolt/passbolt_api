@@ -23,7 +23,7 @@ use App\Service\Users\UserRegisterService;
 use App\Service\Users\UserRegisterServiceInterface;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
-use Psr\Http\Message\ServerRequestInterface;
+use Cake\Http\ServerRequest;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -39,9 +39,9 @@ class UserServiceProvider extends ServiceProvider
     {
         $container
             ->add(UserRegisterServiceInterface::class, UserRegisterService::class)
-            ->addArgument(ServerRequestInterface::class);
+            ->addArgument(ServerRequest::class);
         $container
             ->add(UserRecoverServiceInterface::class, UserRecoverService::class)
-            ->addArgument(ServerRequestInterface::class);
+            ->addArgument(ServerRequest::class);
     }
 }

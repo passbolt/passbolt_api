@@ -17,6 +17,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AvatarFactory;
+use App\Test\Factory\GpgkeyFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\EmailQueueTrait;
@@ -29,7 +32,6 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
     use AuthenticationTokenModelTrait;
     use EmailQueueTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',];
     public $AuthenticationTokens;
 
     public function setUp(): void
@@ -49,9 +51,28 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
     {
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         Configure::write('passbolt.plugins.log.enabled', true);
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_RECOVER);
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
-        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
+        $admins = UserFactory::make(3)
+            ->with('Profiles.Avatars', AvatarFactory::make()->setDataWithFileContent())
+            ->admin()
+            ->persist();
+
+        UserFactory::make(5) // Add some inactive admins that should not receive an email
+            ->with('Profiles.Avatars')
+            ->admin()
+            ->inactive()
+            ->persist();
+
+        $user = UserFactory::make()
+            ->with('Profiles.Avatars', AvatarFactory::make()->setDataWithFileContent())
+            ->user()
+            ->active()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
+            ->persist();
+        $userAgent = 'FooAgent';
+        $this->mockUserAgent($userAgent);
+        $t = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
+        $url = '/setup/recover/complete/' . $user->id . '.json';
+        $armoredKey = $user->gpgkey->armored_key;
         $data = [
             'authenticationtoken' => [
                 'token' => $t->token,
@@ -66,7 +87,28 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         // Check that token is now inactive
         $t2 = $this->AuthenticationTokens->get($t->id);
         $this->assertFalse($t2->active);
-        $this->assertEmailQueueIsEmpty();
+
+        $this->assertEmailQueueCount(count($admins) + 1);
+        // Check that the user got notified
+        $this->assertEmailInBatchContains(
+            'You just completed an account recovery.',
+            $user->username,
+        );
+        $this->assertEmailInBatchContains(
+            "User Agent: <i>$userAgent</i><br/>User IP: <i></i>",
+            $user->username,
+        );
+        // Check that all admins got notified, as well as the user
+        foreach ($admins as $admin) {
+            $this->assertEmailInBatchContains(
+                "{$user->profile->first_name} ({$user->username}) just completed an account recovery.",
+                $admin->username,
+            );
+            $this->assertEmailInBatchContains(
+                "User Agent: <i>$userAgent</i><br/>User IP: <i></i>",
+                $admin->username,
+            );
+        }
         Configure::write('passbolt.plugins.log.enabled', $logEnabled);
     }
 
@@ -80,7 +122,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/recover/complete/nope.json';
         $data = [];
         $this->postJson($url, $data);
-        $this->assertError(400, 'The user identifier should be a valid UUID.');
+        $this->assertError(400);
     }
 
     /**
@@ -103,7 +145,13 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverCompleteInvalidAuthenticationTokenError()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()
+            ->user()
+            ->active()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
+            ->persist();
+        $userId = $user->id;
+        $armoredKey = $user->gpgkey->armored_key;
         $url = '/setup/recover/complete/' . $userId . '.json';
         $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'expired');
         $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'inactive');
@@ -131,16 +179,19 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
             ],
             'expired token' => [
                 'data' => ['token' => $tokenExpired],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
             'inactive token' => [
                 'data' => ['token' => $tokenInactive],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
                 'authenticationtoken' => $case['data'],
+                'gpgkey' => [
+                    'armored_key' => $armoredKey,
+                ],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -154,19 +205,29 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverCompleteAuthenticationTokenTypeError()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $user = UserFactory::make()
+            ->user()
+            ->active()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
+            ->persist();
+        $userId = $user->id;
+        $armoredKey = $user->gpgkey->armored_key;
         $url = '/setup/recover/complete/' . $userId . '.json';
         $tokenWrongType = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_LOGIN);
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
         $fails = [
             'wrong type token' => [
                 'data' => ['token' => $tokenWrongType],
-                'message' => 'The authentication token is not valid or has expired.',
+                'message' => 'The authentication token is not valid.',
             ],
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
                 'authenticationtoken' => $case['data'],
+                'gpgkey' => [
+                    'armored_key' => $armoredKey,
+                ],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -180,10 +241,17 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverCompleteInvalidGpgkeyError()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_RECOVER);
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
+        $user = UserFactory::make()
+            ->user()
+            ->active()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
+            ->persist();
+        $userId = $user->id;
+        $armoredKey = $user->gpgkey->armored_key;
 
-        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
+        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_RECOVER);
+        $url = '/setup/recover/complete/' . $userId . '.json';
+
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
         $fails = [
             'empty array' => [

@@ -23,6 +23,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
 /**
@@ -33,6 +34,8 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
  */
 class AvatarsTransferServiceTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     /**
      * @var \App\Model\Table\AvatarsTable
      */

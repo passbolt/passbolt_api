@@ -14,5 +14,4 @@ Requires:       php-ldap >= 7.3
 %endif
 Requires:       cronie
 Requires:       nginx
-Requires:       mariadb-server
 Requires:       passbolt-server-selinux

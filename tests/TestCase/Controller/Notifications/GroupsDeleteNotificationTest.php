@@ -18,12 +18,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class GroupsDeleteNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public $Groups;
 
@@ -41,12 +43,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/edith@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
-        $this->get('/seleniumtests/showLastEmail/frances@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailQueueIsEmpty();
     }
 
     public function testGroupsDeleteNotificationSuccess()
@@ -58,13 +55,9 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/frances@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('deleted the group ');
+        $this->assertEmailInBatchContains('deleted the group ', 'frances@passbolt.com');
 
         // emails are not send if you add yourself to a group
-        $this->get('/seleniumtests/showLastEmail/edith@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('edith@passbolt.com');
     }
 }

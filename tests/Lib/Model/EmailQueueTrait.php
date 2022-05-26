@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Model;
 
+use App\Notification\Email\EmailSubscriptionDispatcher;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Cake\View\ViewBuilder;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
@@ -38,6 +38,14 @@ trait EmailQueueTrait
     }
 
     /**
+     * Asserts that an email with given properties is not in the email queue.
+     */
+    protected function assertEmailIsNotInQueue(array $properties)
+    {
+        $this->assertTrue(EmailQueueFactory::find()->where($properties)->count() === 0, 'The email is not in the email queue.');
+    }
+
+    /**
      * Asserts that an email with given recipient is in the email queue.
      */
     protected function assertEmailWithRecipientIsInQueue(string $email)
@@ -46,11 +54,19 @@ trait EmailQueueTrait
     }
 
     /**
+     * Asserts that an email with given recipient is not in the email queue.
+     */
+    protected function assertEmailWithRecipientIsInNotQueue(string $email)
+    {
+        $this->assertEmailIsNotInQueue(compact('email'));
+    }
+
+    /**
      * Asserts that n emails are in the email queue.
      */
     protected function assertEmailQueueCount(int $n)
     {
-        $this->assertSame($n, EmailQueueFactory::find()->count());
+        $this->assertSame($n, EmailQueueFactory::count());
     }
 
     /**
@@ -124,14 +140,37 @@ trait EmailQueueTrait
      * Asserts that a string is found in an email of the email queue.
      *
      * @param string $string String to search for
-     * @param int $i Email position in the queue (start with 0), default 0
+     * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
      * @param string $message Error message
-     * @throws \Exception If the test fails.
      */
-    protected function assertEmailInBatchContains(string $string, int $i = 0, string $message = ''): void
+    protected function assertEmailInBatchContains(string $string, $i = 0, string $message = ''): void
     {
-        $EmailQueue = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
-        $email = $EmailQueue->find()->order('id')->offset($i)->first();
+        $this->assertStringContainsString($string, $this->renderEmail($i), $message);
+    }
+
+    /**
+     * Asserts that a string is not found in an email of the email queue.
+     *
+     * @param string $string String to search for
+     * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
+     * @param string $message Error message
+     */
+    protected function assertEmailInBatchNotContains(string $string, $i = 0, string $message = ''): void
+    {
+        $this->assertStringNotContainsString($string, $this->renderEmail($i), $message);
+    }
+
+    /**
+     * @param int|string $i Email position in batch or recipient
+     * @return string
+     */
+    protected function renderEmail($i = 0): string
+    {
+        if (is_int($i)) {
+            $email = EmailQueueFactory::find()->order('id')->offset($i)->first();
+        } else {
+            $email = EmailQueueFactory::find()->where(['email' => $i])->first();
+        }
         if (empty($email)) {
             $this->fail("The email queue does not have an email at index $i");
         }
@@ -142,13 +181,51 @@ trait EmailQueueTrait
         $viewBuilder->setVar('title', $email->get('subject'));
         $viewBuilder->setVar('body', $email->get('template_vars')['body']);
 
-        $viewBuilder
+        return $viewBuilder
             ->setLayout('default')
             ->setLayoutPath("email/$format")
             ->setTemplate($email->get('template'))
-            ->setTemplatePath("email/$format");
+            ->setTemplatePath("email/$format")
+            ->build()
+            ->render();
+    }
 
-        $renderedEmail = $viewBuilder->build()->render();
-        $this->assertStringContainsString($string, $renderedEmail, $message);
+    /**
+     * Render all the emails in the queue.
+     * Useful to spot errors in each mail.
+     *
+     * @return void
+     */
+    protected function renderAllEmails(): void
+    {
+        $emailCount = EmailQueueFactory::count();
+        for ($i = 0; $i < $emailCount; $i++) {
+            $this->renderEmail($i);
+        }
+    }
+
+    /**
+     * Helper to collect all the emails redactor. This is called in Application.php
+     * When testing emails in a test service, you may call this after all plugins have been loaded.
+     *
+     * In addition, we load the plugins that are required for the emails to work properly
+     *
+     * @param array $plugins Plugins to load. Needed to load email redactor pools
+     * @return void
+     */
+    protected function initEmailForServiceTest(array $plugins = []): void
+    {
+        $this->loadPlugins(array_merge($plugins, ['Passbolt/Locale', 'Passbolt/EmailDigest',]));
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
+    }
+
+    /**
+     * Deletes all emails in the queue.
+     *
+     * @return void
+     */
+    protected function deleteEmailQueue(): void
+    {
+        EmailQueueFactory::find()->delete()->execute();
     }
 }

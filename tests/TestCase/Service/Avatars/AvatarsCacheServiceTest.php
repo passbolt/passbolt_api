@@ -22,6 +22,7 @@ use App\Service\Avatars\AvatarsCacheService;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Laminas\Diactoros\Stream;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
@@ -30,6 +31,8 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
  */
 class AvatarsCacheServiceTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     /**
      * @var \App\Model\Table\AvatarsTable
      */

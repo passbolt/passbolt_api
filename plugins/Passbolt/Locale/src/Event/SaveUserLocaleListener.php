@@ -16,10 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\Locale\Event;
 
-use App\Controller\Setup\RecoverCompleteController;
 use App\Controller\Setup\SetupCompleteController;
 use App\Controller\Users\UsersRegisterController;
 use App\Error\Exception\ValidationException;
+use App\Service\Setup\RecoverCompleteServiceInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Log\Log;
@@ -37,7 +37,7 @@ class SaveUserLocaleListener implements EventListenerInterface
     {
         return [
             SetupCompleteController::COMPLETE_SUCCESS_EVENT_NAME => 'setUserLocaleIfFoundInPayload',
-            RecoverCompleteController::COMPLETE_SUCCESS_EVENT_NAME => 'setUserLocaleIfFoundInPayload',
+            RecoverCompleteServiceInterface::COMPLETE_SUCCESS_EVENT_NAME => 'setUserLocaleIfFoundInPayload',
             UsersRegisterController::USERS_REGISTER_EVENT_NAME => 'setUserLocaleIfFoundInPayload',
         ];
     }

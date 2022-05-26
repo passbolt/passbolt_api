@@ -49,7 +49,7 @@ return [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_REGISTER_TOKEN_EXPIRY', '10 days'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
                 AuthenticationToken::TYPE_RECOVER => [
-                    'expiry' => filter_var(env('PASSBOLT_AUTH_RECOVER_TOKEN_EXPIRY', '1 day'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_RECOVER_TOKEN_EXPIRY', '10 days'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
                 AuthenticationToken::TYPE_LOGIN => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_LOGIN_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
@@ -102,14 +102,19 @@ return [
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
                 'user' => [
-                    // WARNING: disabling these will prevent user from signing up.
+                    // WARNING: disabling PASSBOLT_EMAIL_SEND_USER_CREATE and PASSBOLT_EMAIL_SEND_USER_RECOVER will prevent user from signing up.
                     'create' => filter_var(env('PASSBOLT_EMAIL_SEND_USER_CREATE', true), FILTER_VALIDATE_BOOLEAN),
                     'recover' => filter_var(env('PASSBOLT_EMAIL_SEND_USER_RECOVER', true), FILTER_VALIDATE_BOOLEAN),
+                    'recoverComplete' => filter_var(env('PASSBOLT_EMAIL_SEND_USER_RECOVER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
                 'admin' => [
                     'user' => [
                         'setup' => [
                             'completed' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_SETUP_COMPLETED', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                        'recover' => [
+                            'abort' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_ABORT', true), FILTER_VALIDATE_BOOLEAN),
+                            'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
                         ]
                     ]
                 ],
@@ -172,6 +177,9 @@ return [
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
+            ],
+            'experimental' => [
+                'encryptValidate' => filter_var(env('PASSBOLT_GPG_EXTRA_ENCRYPT_VALIDATE', true), FILTER_VALIDATE_BOOLEAN)
             ]
         ],
 
@@ -205,6 +213,17 @@ return [
             'jwtAuthentication' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'accountRecoveryRequestHelp' => [
+                // Feature flag to allow client to tune behavior for backward compatibility
+                // e.g. updated recovery process allows for admin email notification with "lost-passphrase" option
+                // @deprecated when v3.5 is dropped - Ref. PB-15046
+                'enabled' => true,
+                'settingsVisibility' => [
+                    'whiteListPublic' => [
+                        'enabled',
+                    ],
+                ],
+            ],
         ],
 
         // Is public registration allowed.
@@ -234,7 +253,11 @@ return [
                     'TransfersUpdate' => ['updateNoSession'],
                 ]
             ],
-            'csp' => env('PASSBOLT_SECURITY_CSP', true)
+            'csp' => env('PASSBOLT_SECURITY_CSP', true),
+            // enables the storage and display of the user agent (user's browser and hardware related information)
+            'userAgent' => filter_var(env('PASSBOLT_SECURITY_USER_AGENT', true), FILTER_VALIDATE_BOOLEAN),
+            // enables the storage and display if the user IP address
+            'userIp' => filter_var(env('PASSBOLT_SECURITY_USER_IP', true), FILTER_VALIDATE_BOOLEAN),
         ],
 
         // Should the app be SSL / HTTPS only.

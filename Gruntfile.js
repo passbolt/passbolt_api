@@ -112,6 +112,9 @@ module.exports = function(grunt) {
             'controls/loading_light.svg',
             'controls/loading_dark.svg',
             'controls/overlay-opacity-50.png',
+            'controls/success.svg',
+            'controls/error.svg',
+            'controls/warning.svg',
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
             'third_party/FirefoxAMO_black.svg',
@@ -132,13 +135,13 @@ module.exports = function(grunt) {
         }, {
           // CSS
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
-          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
         }, {
           // Midgar css theme
           cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
-          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
           expand: true
         },{
@@ -150,7 +153,7 @@ module.exports = function(grunt) {
         }, {
           // Javascript applications
           cwd: paths.node_modules_styleguide + 'build/js/dist',
-          src: ['api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js'],
+          src: ['api-account-recovery.js', 'api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js'],
           dest: paths.js + 'app',
           expand: true
         },]
