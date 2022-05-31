@@ -18,4 +18,3 @@ Requires:       php7-ldap >= 7.3
 %endif
 Requires:       cronie
 Requires:       nginx
-Requires:       mariadb
