@@ -30,7 +30,7 @@ trait UserAccessControlTrait
      * @param string $role optional
      * @return UserAccessControl
      */
-    public function mockUserAccessControl($user, $role = Role::GUEST)
+    public function mockUserAccessControl($user = 'guest', $role = Role::GUEST)
     {
         return new UserAccessControl($role, UuidFactory::uuid('user.id.' . $user), $user . '@passbolt.com');
     }

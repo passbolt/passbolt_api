@@ -30,7 +30,7 @@ use Cake\TestSuite\TestCase;
 class QueryStringComponentTest extends TestCase
 {
     /**
-     * @var MockObject|ComponentRegistry
+     * @var \PHPUnit\Framework\MockObject\MockObject|ComponentRegistry
      */
     private $registryMock;
 

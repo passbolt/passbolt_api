@@ -31,7 +31,7 @@ use Cake\ORM\TableRegistry;
 class PermissionsGetUsersIdsHavingAccessToServiceTest extends AppTestCase
 {
     /**
-     * @var PermissionsTable
+     * @var \Passbolt\AccountSettings\Model\Table\PermissionsTable
      */
     public $permissionsTable;
 
