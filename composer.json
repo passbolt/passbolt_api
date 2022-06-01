@@ -9,10 +9,14 @@
         "passbolt"
     ],
     "config": {
-      "optimize-autoloader": true,
-      "platform": {
-        "php": "7.3"
-      }
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "7.3"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "cakephp/plugin-installer": true
+        }
     },
     "authors": [
         {
@@ -77,7 +81,7 @@
         "passbolt/passbolt-test-data": "^3.2.0",
         "vierge-noire/cakephp-fixture-factories": "v2.5.1",
         "cakephp/localized": "4.0.0",
-        "vimeo/psalm": "^4.9"
+        "vimeo/psalm": "^4.23.0"
     },
     "autoload": {
         "psr-4": {
@@ -117,23 +121,23 @@
         "post-install-cmd": "App\\Console\\Installer::postInstall",
         "post-create-project-cmd": "App\\Console\\Installer::postInstall",
         "check": [
-          "@test",
-          "@cs-check"
+            "@test",
+            "@cs-check"
         ],
         "cs-check": "phpcs --colors -p --ignore=*.js,*/templates/* ./src ./tests ./plugins",
         "cs-fix": "phpcbf --colors --ignore=*.js,*/templates/* ./src ./tests ./plugins",
         "install-dev": [
-          "@composer install --dev",
-          "npm install",
-          "./node_modules/.bin/grunt appjs-update",
-          "./node_modules/.bin/grunt styleguide-update"
+            "@composer install --dev",
+            "npm install",
+            "./node_modules/.bin/grunt appjs-update",
+            "./node_modules/.bin/grunt styleguide-update"
         ],
         "stan": "phpstan analyse --memory-limit=-1",
         "psalm": "psalm",
         "test": "phpunit --colors=always",
         "externalize-locale-strings": [
-          "./bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes",
-          "find resources/locales/en_UK -name '*.pot' -exec sh -c 'mv \"$1\" \"${1%.pot}.po\"' _ {} \\;"
+            "./bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes",
+            "find resources/locales/en_UK -name '*.pot' -exec sh -c 'mv \"$1\" \"${1%.pot}.po\"' _ {} \\;"
         ]
     },
     "prefer-stable": true
