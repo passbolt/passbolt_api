@@ -28,7 +28,7 @@ trait EntitiesHistoryTrait
         return $entityHistory;
     }
 
-    public function assertEntitiesHistoryCount($count, $conditions = [])
+    public function assertEntitiesHistoryCount($count, ?array $conditions = [])
     {
         $entityHistoryCount = $this->EntitiesHistory
             ->find()
@@ -37,7 +37,7 @@ trait EntitiesHistoryTrait
         $this->assertEquals($entityHistoryCount, $count);
     }
 
-    public function assertOneEntityHistory($conditions = [])
+    public function assertOneEntityHistory(?array $conditions = [])
     {
         return $this->assertEntitiesHistoryCount(1, $conditions);
     }

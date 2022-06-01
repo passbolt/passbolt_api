@@ -14,10 +14,20 @@
 check-style-strict:
   extends: .cs-check
   allow_failure: false
-  only:
-    - common
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "common"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+      when: on_success
 
 check-style:
   extends: .cs-check
-  except:
-    - common
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "common"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "develop"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "master"'
+      when: on_success

@@ -66,6 +66,15 @@ abstract class AppTestCase extends TestCase
     }
 
     /**
+     * Tear dow
+     */
+    public function tearDown(): void
+    {
+        $this->clearPlugins();
+        parent::tearDown();
+    }
+
+    /**
      * Initialize string masks.
      *
      * The string masks are UTF8 strings containing various languages and emojis, and that can be used for testing.

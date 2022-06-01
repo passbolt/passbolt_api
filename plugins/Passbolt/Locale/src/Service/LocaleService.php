@@ -108,7 +108,7 @@ class LocaleService
      */
     public function dasherizeLocale(?string $locale = ''): string
     {
-        return str_replace('_', '-', $locale);
+        return str_replace('_', '-', $locale ?? '');
     }
 
     /**
@@ -117,7 +117,7 @@ class LocaleService
      */
     public function underscoreLocale(?string $locale = ''): string
     {
-        return str_replace('-', '_', $locale);
+        return str_replace('-', '_', $locale ?? '');
     }
 
     /**

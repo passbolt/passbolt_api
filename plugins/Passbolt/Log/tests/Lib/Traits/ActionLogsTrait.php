@@ -24,8 +24,8 @@ trait ActionLogsTrait
     /**
      * Add an action log
      *
-     * @param array $data The data
-     * @param array $options The options
+     * @param array|null $data The data
+     * @param array|null $options The options
      * @return ActionLog
      * @throws \Exception
      */
@@ -68,10 +68,10 @@ trait ActionLogsTrait
      * Get a dummy action log with test data.
      * The relation returned should pass a default validation.
      *
-     * @param array $data Custom data that will be merged with the default content.
+     * @param array|null $data Custom data that will be merged with the default content.
      * @return array
      */
-    public function getDummyActionLogData($data = []): array
+    public function getDummyActionLogData(?array $data = []): array
     {
         $entityContent = [
             'user_id' => UuidFactory::uuid('user.id.test-place-holder'),

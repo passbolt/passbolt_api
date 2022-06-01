@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
 use Cake\Datasource\ConnectionManager;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
@@ -26,7 +27,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
-        $this->truncateTables();
+        $this->dropAllTables();
         $this->initWebInstallerSession();
         $this->backupConfiguration();
     }
@@ -35,6 +36,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
     {
         parent::tearDown();
         $this->restoreConfiguration();
+        TableRegistry::getTableLocator()->clear();
     }
 
     protected function getInstallSessionData()

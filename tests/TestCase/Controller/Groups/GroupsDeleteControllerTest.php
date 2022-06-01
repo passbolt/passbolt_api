@@ -27,7 +27,6 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
 
     public $Groups;
-    public $GroupsGroups;
     public $Permissions;
 
     public $fixtures = [
@@ -40,7 +39,6 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-        $this->GroupsGroups = TableRegistry::getTableLocator()->get('GroupsGroups');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
     }
 

@@ -85,7 +85,7 @@ class AvatarsCacheServiceTest extends TestCase
     /**
      * @dataProvider dataForTestAvatarsCacheServiceStore
      */
-    public function testAvatarsCacheServiceStore($data)
+    public function testAvatarsCacheServiceStore12($data)
     {
         $id = UuidFactory::uuid();
         $avatar = new Avatar(compact('id', 'data'));
@@ -107,8 +107,10 @@ class AvatarsCacheServiceTest extends TestCase
         $getRights = function (string $filepath) {
             return substr(decoct(fileperms($filepath)), -4);
         };
-        $this->assertSame('0644', $getRights($mediumFileName));
-        $this->assertSame('0644', $getRights($smallFileName));
+
+        // Cater for Ubuntu / Debian default umask variations
+        $this->assertTrue($getRights($mediumFileName) === '0644' || $getRights($mediumFileName) === '0664');
+        $this->assertTrue($getRights($smallFileName) === '0644' || $getRights($smallFileName) === '0664');
 
         $this->assertSame(
             file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png'),

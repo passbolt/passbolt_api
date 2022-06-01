@@ -20,6 +20,7 @@ use App\Error\Exception\ExceptionWithErrorsDetailInterface;
 use App\Utility\UserAction;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Log\Log;
 use Cake\Routing\Router;
 
 /**
@@ -42,6 +43,10 @@ class ErrorController extends AppController
             $body = '';
             if ($error instanceof ExceptionWithErrorsDetailInterface) {
                 $body = $error->getErrors();
+            }
+            if ($error instanceof InternalErrorException) {
+                Log::error($error->getMessage());
+                Log::error($error->getTraceAsString());
             }
             $header = [
                 'id' => UserAction::getInstance()->getUserActionId(),
