@@ -49,3 +49,6 @@ echo $this->element('Email/module/button', [
     'url' => Router::url('/setup/install/' . $user['id'] . '/' . $token['token'], true),
     'text' => __('get started')
 ]);
+
+$text .= 'Please keep a copy of this message in your records;';
+$text .= 'Your enclosed link is your only sign-in option for browser add-ons.';
