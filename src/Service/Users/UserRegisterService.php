@@ -55,17 +55,17 @@ class UserRegisterService implements UserRegisterServiceInterface
         $data = $this->request->getData();
         $public_registration = Configure::read('passbolt.registration.public');
 
-        if($public_registration === true) {
-            $allowed_domains = Configure::read('passbolt.registration.allowed_domains',['*']);
-            if(filter_var($data["username"],FILTER_VALIDATE_EMAIL)) {
-                $splitted_username = explode('@',$data["username"]);
+        if ($public_registration === true) {
+            $allowed_domains = Configure::read('passbolt.registration.allowed_domains', ['*']);
+            if (filter_var($data['username'], FILTER_VALIDATE_EMAIL)) {
+                $splitted_username = explode('@', $data['username']);
                 $domain = array_pop($splitted_username);
 
-                if (!(in_array($domain, $allowed_domains)) && !(in_array('*',$allowed_domains))) {
+                if (!in_array($domain, $allowed_domains) && !in_array('*', $allowed_domains)) {
                     return null;
                 }
             }
-	}
+        }
 
         $user = $this->Users->register($data);
 
