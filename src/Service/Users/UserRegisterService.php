@@ -58,7 +58,9 @@ class UserRegisterService implements UserRegisterServiceInterface
         if($public_registration === true) {
             $allowed_domains = Configure::read('passbolt.registration.allowed_domains',['*']);
             if(filter_var($data["username"],FILTER_VALIDATE_EMAIL)) {
-                $domain = array_pop(explode('@',$data["username"]));
+                $splitted_username = explode('@',$data["username"]);
+                $domain = array_pop($splitted_username);
+
                 if (!(in_array($domain, $allowed_domains)) && !(in_array('*',$allowed_domains))) {
                     return null;
                 }
