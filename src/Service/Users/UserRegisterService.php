@@ -19,6 +19,7 @@ namespace App\Service\Users;
 
 use App\Controller\Users\UsersRegisterController;
 use App\Model\Entity\User;
+use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\ServerRequest;
@@ -52,6 +53,18 @@ class UserRegisterService implements UserRegisterServiceInterface
     public function register(): User
     {
         $data = $this->request->getData();
+        $public_registration = Configure::read('passbolt.registration.public');
+
+        if($public_registration === true) {
+            $allowed_domains = Configure::read('passbolt.registration.allowed_domains',['*']);
+            if(filter_var($data["username"],FILTER_VALIDATE_EMAIL)) {
+                $domain = array_pop(explode('@',$data["username"]));
+                if (!(in_array($domain, $allowed_domains)) && !(in_array('*',$allowed_domains))) {
+                    return null;
+                }
+            }
+	}
+
         $user = $this->Users->register($data);
 
         $this->dispatchEvent(UsersRegisterController::USERS_REGISTER_EVENT_NAME, [
