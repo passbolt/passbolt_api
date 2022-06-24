@@ -33,7 +33,7 @@ $invitedWhen = $body['invitedWhen'];
 /** @var bool $invitedByYou */
 $invitedByYou = $body['invitedByYou'];
 
-$avatar = 'img/avatar/user.png';
+$avatar = '/img/avatar/user.png';
 
 echo $this->element('Email/module/avatar',[
     'url' => Router::url($avatar, true),
