@@ -51,11 +51,14 @@ ready(function () {
     submitButton.setAttribute('disabled', 'disabled');
     submitButton.classList.add('processing');
 
-    try{
+    try {
       const keyPair = await generateKey(nameInput.value, emailInput.value, commentInput.value);
-      privateKeyArmoredInput.setAttribute("value", keyPair.privateKeyArmored.trim());
-      publicKeyArmoredInput.setAttribute("value", keyPair.publicKeyArmored.trim());
-      fingerprintInput.setAttribute("value", keyPair.key.primaryKey.getFingerprint().toUpperCase());
+      const privateKey = keyPair.privateKey.trim();
+      const publicKey = keyPair.publicKey.trim();
+      privateKeyArmoredInput.setAttribute("value", privateKey);
+      publicKeyArmoredInput.setAttribute("value", publicKey);
+      const fingerprint = (await openpgp.readKey({armoredKey: privateKey})).getFingerprint().toUpperCase();
+      fingerprintInput.setAttribute("value", fingerprint);
       setTimeout(() => {
         form.submit(); // wait some seconds to prevent key from being "in the future"
       }, 3000);
@@ -151,11 +154,15 @@ ready(function () {
   const generateKey = async function(name, email, comment) {
     comment = comment != undefined && comment != '' ? ` (${comment})` : '';
     const userId = `${name}${comment} <${email}>`;
-    const length = '2048';
+    const length = '3072';
 
     return await openpgp.generateKey({
-      numBits: length,
-      userIds: userId,
+      rsaBits: length,
+      userIDs: [{
+        name: `${name}${comment}`,
+        email: email,
+      }],
+      type: 'rsa'
     });
   };
 
