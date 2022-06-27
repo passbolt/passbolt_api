@@ -151,7 +151,7 @@ ready(function () {
   const generateKey = async function(name, email, comment) {
     comment = comment != undefined && comment != '' ? ` (${comment})` : '';
     const userId = `${name}${comment} <${email}>`;
-    const length = '2048';
+    const length = '3072';
 
     return await openpgp.generateKey({
       numBits: length,
