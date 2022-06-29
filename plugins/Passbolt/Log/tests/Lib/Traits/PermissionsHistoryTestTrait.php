@@ -15,35 +15,34 @@ declare(strict_types=1);
  */
 namespace Passbolt\Log\Test\Lib\Traits;
 
-trait EntitiesHistoryTrait
+trait PermissionsHistoryTestTrait
 {
-    public function assertEntityHistoryExists($conditions)
+    public function assertPermissionHistoryExists($conditions)
     {
-        $entityHistory = $this->EntitiesHistory
+        $permissionHistory = $this->PermissionsHistory
             ->find()
             ->where($conditions)
             ->first();
-        $this->assertNotEmpty($entityHistory, 'No corresponding entityHistory could be found');
+        $this->assertNotEmpty($permissionHistory, 'No corresponding permissionsHistory could be found');
 
-        return $entityHistory;
+        return $permissionHistory;
     }
 
-    public function assertEntitiesHistoryCount($count, ?array $conditions = [])
+    public function assertPermissionsHistoryCount($expectedCount)
     {
-        $entityHistoryCount = $this->EntitiesHistory
+        $entityHistoryCount = $this->PermissionsHistory
             ->find()
-            ->where($conditions)
             ->count();
-        $this->assertEquals($entityHistoryCount, $count);
+        $this->assertEquals($expectedCount, $entityHistoryCount);
     }
 
-    public function assertOneEntityHistory(?array $conditions = [])
+    public function assertOnePermissionHistory()
     {
-        return $this->assertEntitiesHistoryCount(1, $conditions);
+        $this->assertPermissionsHistoryCount(1);
     }
 
-    public function assertEntitiesHistoryEmpty()
+    public function assertPermissionsHistoryEmpty()
     {
-        return $this->assertEntitiesHistoryCount(0);
+        $this->assertPermissionsHistoryCount(0);
     }
 }

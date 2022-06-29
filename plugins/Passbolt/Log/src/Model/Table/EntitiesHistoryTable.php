@@ -84,6 +84,9 @@ class EntitiesHistoryTable extends Table
             'foreignKey' => 'foreign_key',
             'className' => 'Passbolt/Log.SecretAccesses',
         ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'foreign_key',
+        ]);
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             $this->belongsTo('FoldersHistory', [
                 'foreignKey' => 'foreign_key',

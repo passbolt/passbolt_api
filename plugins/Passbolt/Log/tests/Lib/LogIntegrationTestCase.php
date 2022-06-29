@@ -23,13 +23,13 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
-use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
-use Passbolt\Log\Test\Lib\Traits\EntitiesHistoryTrait;
+use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
+use Passbolt\Log\Test\Lib\Traits\EntitiesHistoryTestTrait;
 
 abstract class LogIntegrationTestCase extends AppIntegrationTestCase
 {
-    use ActionLogsTrait;
-    use EntitiesHistoryTrait;
+    use ActionLogsTestTrait;
+    use EntitiesHistoryTestTrait;
     use JwtAuthTestTrait;
 
     public const JWT_LOGIN = 'jwt_login';
