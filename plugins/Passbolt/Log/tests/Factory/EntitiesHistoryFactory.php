@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 
-namespace Passbolt\Log\Test\Factory;
-
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,20 +15,22 @@ namespace Passbolt\Log\Test\Factory;
  * @since         3.7.0
  */
 
-use App\Utility\UuidFactory;
+namespace Passbolt\Log\Test\Factory;
+
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\Log\Model\Entity\EntityHistory;
 
 /**
  * ActionLogFactory
  *
- * @method \Passbolt\Log\Model\Entity\ActionLog|\Passbolt\Log\Model\Entity\ActionLog[] persist()
- * @method \Passbolt\Log\Model\Entity\ActionLog getEntity()
- * @method \Passbolt\Log\Model\Entity\ActionLog[] getEntities()
- * @method static \Passbolt\Log\Model\Entity\ActionLog get($primaryKey, array $options = [])
+ * @method \Passbolt\Log\Model\Entity\EntityHistory|\Passbolt\Log\Model\Entity\EntityHistory[] persist()
+ * @method \Passbolt\Log\Model\Entity\EntityHistory getEntity()
+ * @method \Passbolt\Log\Model\Entity\EntityHistory[] getEntities()
+ * @method static \Passbolt\Log\Model\Entity\EntityHistory get($primaryKey, array $options = [])
  */
-class ActionLogFactory extends CakephpBaseFactory
+class EntitiesHistoryFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -39,7 +39,7 @@ class ActionLogFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'Passbolt/Log.ActionLogs';
+        return 'Passbolt/Log.EntitiesHistory';
     }
 
     /**
@@ -52,41 +52,29 @@ class ActionLogFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'user_id' => $faker->uuid(),
-                'action_id' => $faker->uuid(),
-                'context' => $faker->text(255),
-                'status' => 1,
+                'action_log_id' => $faker->uuid(),
+                'foreign_model' => $faker->word(),
+                'foreign_key' => $faker->uuid(),
+                'crud' => $faker->randomLetter(),
+                'status' => $faker->boolean(),
                 'created' => Chronos::now()->subMinute($faker->randomNumber(8)),
             ];
         });
     }
 
-    public function setActionId(string $actionName)
+    /**
+     * @return $this
+     */
+    public function users()
     {
-        return $this->setField('action_id', UuidFactory::uuid($actionName));
+        return $this->setField('foreign_model', 'Users');
     }
 
     /**
      * @return $this
      */
-    public function loginAction()
+    public function create()
     {
-        return $this->setActionId('AuthLogin.loginPost');
-    }
-
-    /**
-     * @return $this
-     */
-    public function active()
-    {
-        return $this->setField('status', 1);
-    }
-
-    /**
-     * @return $this
-     */
-    public function inactive()
-    {
-        return $this->setField('status', 0);
+        return $this->setField('crud', EntityHistory::CRUD_CREATE);
     }
 }

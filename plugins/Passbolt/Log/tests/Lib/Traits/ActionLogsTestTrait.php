@@ -19,7 +19,7 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\ActionLog;
 
-trait ActionLogsTrait
+trait ActionLogsTestTrait
 {
     /**
      * Add an action log

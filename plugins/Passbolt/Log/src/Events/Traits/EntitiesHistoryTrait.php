@@ -150,6 +150,20 @@ trait EntitiesHistoryTrait
                 ],
             ],
         ],
+        'UsersEdit.editPost' => [
+            'models' => [
+                'Users' => [
+                    EntityHistory::CRUD_UPDATE,
+                ],
+            ],
+        ],
+        'UsersDelete.delete' => [
+            'models' => [
+                'Users' => [
+                    EntityHistory::CRUD_DELETE,
+                ],
+            ],
+        ],
     ];
 
     /**
