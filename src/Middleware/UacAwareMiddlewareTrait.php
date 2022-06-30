@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Middleware;
 
+use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Http\ServerRequest;
 
@@ -27,16 +28,16 @@ trait UacAwareMiddlewareTrait
      * AuthenticationMiddleware
      *
      * @param \Cake\Http\ServerRequest $request Server Request
-     * @return \App\Utility\UserAccessControl|null User Access Controller or null if not authenticated
+     * @return \App\Utility\UserAccessControl User Access Controller (GUEST) if not authenticated
      * @see Application::middleware()
      */
-    protected function getUacInRequest(ServerRequest $request): ?UserAccessControl
+    protected function getUacInRequest(ServerRequest $request): UserAccessControl
     {
         // Return false if user is not logged in
         /** @var \Authentication\Identity $identity */
-        $identity = $request->getAttribute('identity', null);
+        $identity = $request->getAttribute('identity');
         if (empty($identity)) {
-            return null;
+            return new UserAccessControl(Role::GUEST);
         }
 
         // User might be stored in the field "user" of the
