@@ -18,6 +18,7 @@ namespace Passbolt\Log\Test\Lib\Traits;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\ActionLog;
+use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 trait ActionLogsTestTrait
 {
@@ -87,8 +88,7 @@ trait ActionLogsTestTrait
 
     public function assertActionLogExists($conditions)
     {
-        $actionLog = $this->ActionLogs
-            ->find()
+        $actionLog = ActionLogFactory::find()
             ->where($conditions)
             ->first();
         $this->assertNotEmpty($actionLog, 'No corresponding actionLog could be found');
@@ -98,10 +98,7 @@ trait ActionLogsTestTrait
 
     public function assertActionLogsCount($expectedCount)
     {
-        $actionLogCount = $this->ActionLogs
-            ->find()
-            ->count();
-        $this->assertEquals($expectedCount, $actionLogCount);
+        $this->assertEquals($expectedCount, ActionLogFactory::count());
     }
 
     public function assertOneActionLog()

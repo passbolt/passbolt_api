@@ -312,7 +312,7 @@ trait EntitiesHistoryTrait
      */
     private function _getCrudType(Event $event)
     {
-        $entity = $event->getData()['entity'];
+        $entity = $event->getData('entity');
         $crud = EntityHistory::CRUD_CREATE;
 
         if ($event->getName() == 'Model.afterSave' && !$entity->isNew()) {
@@ -352,7 +352,7 @@ trait EntitiesHistoryTrait
      * @param string $actionName action name
      * @return bool
      */
-    private function isLogOperationNeeded(Event $event, string $actionName)
+    private function isLogOperationNeeded(Event $event, string $actionName): bool
     {
         $config = $this->getEntitiesHistoryConfig($actionName);
         $table = $event->getSubject();

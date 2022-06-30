@@ -65,6 +65,11 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
      */
     protected $ActionLogs;
 
+    /**
+     * @var \Passbolt\Log\Model\Table\ActionsTable
+     */
+    protected $Actions;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -79,6 +84,7 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         $this->SecretAccesses = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretAccesses');
         $this->EntitiesHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
         $this->ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        $this->Actions = TableRegistry::getTableLocator()->get('Passbolt/Log.Actions');
 
         // Make sure associations are loaded correctly, e.g. without depending on
         // ActionListeners -> model.Initialize, as the callback will not be fired twice
@@ -99,6 +105,8 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         ]);
         $this->enableFeaturePlugin('JwtAuthentication');
         (new JwtKeyPairService())->createKeyPair();
+
+        $this->Actions->clearCache();
     }
 
     public function tearDown(): void
