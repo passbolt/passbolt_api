@@ -17,54 +17,64 @@ declare(strict_types=1);
 
 namespace App\Service\Groups;
 
-use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
 use App\Model\Table\PermissionsTable;
+use App\Model\Validation\GroupsUsersChange\GroupsUsersChangeValidator;
+use App\Service\Users\UserGetService;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsUpdateDryRunService
 {
-    use ModelAwareTrait;
-
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    private $Groups;
-
-    /**
-     * @var \App\Model\Table\GroupsUsersTable
-     */
-    private $GroupsUsers;
-
-    /**
-     * @var \App\Service\Groups\GroupsUpdateGroupUsersService
-     */
-    private $groupsUpdateGroupUsersService;
+    private $groupsTable;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $Permissions;
+    private $permissionsTable;
 
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $Secrets;
+    private $secretsTable;
+
+    /**
+     * @var \App\Model\Table\GroupsUsersTable
+     */
+    private $groupsUsersTable;
+
+    /**
+     * @var \App\Service\Groups\GroupGetService
+     */
+    private $groupGetService;
+
+    /**
+     * @var \App\Service\Users\UserGetService
+     */
+    private $userGetService;
 
     /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        $this->loadModel('Groups');
-        $this->loadModel('GroupsUsers');
-        $this->loadModel('Permissions');
-        $this->loadModel('Secrets');
-        $this->groupsUpdateGroupUsersService = new GroupsUpdateGroupUsersService();
+        /** @phpstan-ignore-next-line */
+        $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
+        /** @phpstan-ignore-next-line */
+        $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
+        /** @phpstan-ignore-next-line */
+        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        /** @phpstan-ignore-next-line */
+        $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->groupGetService = new GroupGetService();
+        $this->userGetService = new UserGetService();
     }
 
     /**
@@ -82,80 +92,37 @@ class GroupsUpdateDryRunService
      */
     public function dryRun(UserAccessControl $uac, string $groupId, ?array $changes = []): array
     {
-        $group = $this->getGroup($groupId);
-        $usersMissingSecrets = [];
-        $operatorSecretsToEncrypt = [];
-
-        $this->Groups->getConnection()->transactional(
-            function () use ($uac, $group, $changes, &$usersMissingSecrets, &$operatorSecretsToEncrypt) {
-                $updateGroupsUsersResult = $this->updateGroupUsers($uac, $group, $changes);
-                $addedGroupUsers = Hash::get($updateGroupsUsersResult, 'added', []);
-                $usersMissingSecrets = $this->getUsersMissingSecrets($group, $addedGroupUsers);
-                $operatorSecretsToEncrypt = $this->getOperatorSecretsToEncrypt($uac, $usersMissingSecrets);
-
-                // Dry run, don't commit the transaction.
-                return false;
-            }
-        );
+        $group = $this->groupGetService->getNotDeletedOrFail($groupId);
+        $this->assertChanges($group, $changes);
+        $isUacManager = $this->groupsUsersTable->isManager($uac->getId(), $group->id);
+        if ($isUacManager) {
+            $missingSecrets = $this->getAddedGroupsUsersMissingSecrets($group, $changes);
+            $operatorSecretsToEncrypt = $this->getOperatorSecretsToEncrypt($uac, $missingSecrets);
+        }
 
         return [
-            'secrets' => $operatorSecretsToEncrypt,
-            'secretsNeeded' => $usersMissingSecrets,
+            'secrets' => $operatorSecretsToEncrypt ?? [],
+            'secretsNeeded' => $missingSecrets ?? [],
         ];
     }
 
     /**
-     * Retrieve the group.
+     * Assert the list of changes.
      *
-     * @param string $groupId The target group to retrieve
-     * @return \App\Model\Entity\Group
-     * @throws \Cake\Http\Exception\NotFoundException If the group does not exist.
-     */
-    private function getGroup(string $groupId): Group
-    {
-        /** @var \App\Model\Entity\Group|null $group */
-        $group = $this->Groups->findById($groupId)->first();
-        if (empty($group) || $group->get('deleted')) {
-            throw new NotFoundException(__('The group does not exist.'));
-        }
-
-        return $group;
-    }
-
-    /**
-     * Update the group users of a group.
-     *
-     * @param \App\Utility\UserAccessControl $uac The current user
-     * @param \App\Model\Entity\Group $group The target group
+     * @param \App\Model\Entity\Group $group The group to update
      * @param array $changes The list of group users changes to apply
-     * @return array
-     * [
-     *   added => <array> List of added group users
-     *   deleted => <array> List of deleted group users
-     *   updated => <array> List of updated group users
-     * ]
-     * @throws \Exception If something unexpected occurred
+     * @return void
      */
-    private function updateGroupUsers(UserAccessControl $uac, Group $group, array $changes): array
+    private function assertChanges(Group $group, array $changes): void
     {
-        if (empty($changes)) {
-            return [];
+        $validator = new GroupsUsersChangeValidator();
+        foreach ($changes as $rowIndexRef => $change) {
+            $errors = $validator->validate($change);
+            if (!empty($errors)) {
+                $group->setError('groups_users', [$rowIndexRef => $errors]);
+                $this->handleValidationErrors($group);
+            }
         }
-
-        // Only a group manager can add new members to a group.
-        $canAdd = $this->GroupsUsers->isManager($uac->getId(), $group->id);
-        if (!$canAdd) {
-            return [];
-        }
-
-        try {
-            return $this->groupsUpdateGroupUsersService->updateGroupUsers($uac, $group->id, $changes);
-        } catch (CustomValidationException $e) {
-            $group->setError('groups_users', $e->getErrors());
-            $this->handleValidationErrors($group);
-        }
-
-        return [];
     }
 
     /**
@@ -169,15 +136,15 @@ class GroupsUpdateDryRunService
     {
         $errors = $group->getErrors();
         if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate group data.'), $group, $this->Groups);
+            throw new ValidationException(__('Could not validate group data.'), $group, $this->groupsTable);
         }
     }
 
     /**
      * Get the secrets that will require to be encrypted for the users added to the group.
      *
-     * @param \App\Model\Entity\Group $group The target group.
-     * @param array|null $addedGroupUsers The list of group users that have been added to the group
+     * @param \App\Model\Entity\Group $group The group to update.
+     * @param array $changes The list of group users changes.
      * @return array A list of secrets to request to the client
      * [
      *   [
@@ -187,74 +154,61 @@ class GroupsUpdateDryRunService
      *   ...
      * ]
      */
-    private function getUsersMissingSecrets(Group $group, ?array $addedGroupUsers = []): array
+    private function getAddedGroupsUsersMissingSecrets(Group $group, array $changes = []): array
     {
-        $usersMissingSecrets = [];
+        $missingSecrets = [];
 
-        $resourcesIdsGroupHasAccess = $this->getResourcesIdsGroupHasAccess($group);
-        if (empty($resourcesIdsGroupHasAccess)) {
-            return $usersMissingSecrets;
+        foreach ($changes as $rowIndexRef => $groupUserData) {
+            $id = Hash::get($groupUserData, 'id');
+            if (!$id) {
+                $userId = Hash::get($groupUserData, 'user_id');
+                $this->assertUserToAdd($group, $userId, $rowIndexRef);
+                $userMissingSecrets = $this->getAddedGroupUserMissingSecrets($group->id, $userId);
+                $missingSecrets = array_merge($missingSecrets, $userMissingSecrets);
+            }
         }
 
-        foreach ($addedGroupUsers as $groupUser) {
-            $userMissingSecrets = $this->getUserMissingSecrets($groupUser->user_id, $resourcesIdsGroupHasAccess);
-            $usersMissingSecrets = array_merge($usersMissingSecrets, $userMissingSecrets);
-        }
-
-        return $usersMissingSecrets;
+        return $missingSecrets;
     }
 
     /**
-     * Retrieve the resources ids a group has access.
-     *
-     * @param \App\Model\Entity\Group $group The target group
-     * @return array The list of resources ids
+     * @param \App\Model\Entity\Group $group The group to update.
+     * @param string $userId The identifier of the user to add
+     * @param int $rowIndexRef The index of the treated group user in the request data, for error purpose.
+     * @return void
      */
-    private function getResourcesIdsGroupHasAccess(Group $group): array
+    private function assertUserToAdd(Group $group, string $userId, int $rowIndexRef): void
     {
-        return $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $group->id)
-            ->select('aco_foreign_key')
+        try {
+            $this->userGetService->getActiveNotDeletedOrFail($userId);
+        } catch (NotFoundException | BadRequestException $e) {
+            $errors = ['user_id' => ['user_exists' => ['Cannot find the user.']]];
+            $group->setError('groups_users', [$rowIndexRef => $errors]);
+            $this->handleValidationErrors($group);
+        }
+    }
+
+    /**
+     * Get the missing secrets required to add a user to a group.
+     *
+     * @param string $groupId The identifier of the group to update.
+     * @param string $userId The identifier of the user to add
+     * @return array
+     */
+    private function getAddedGroupUserMissingSecrets(string $groupId, string $userId): array
+    {
+        $missingSecretsResourcesIds = $this->permissionsTable
+            ->findAcosAccessesDiffBetweenGroupAndUser(PermissionsTable::RESOURCE_ACO, $groupId, $userId)
             ->all()
             ->extract('aco_foreign_key')
             ->toArray();
-    }
 
-    /**
-     * Get the secrets that will require to be encrypted for a user added to the group.
-     *
-     * @param string $userId The target user
-     * @param array $resourcesIdsGroupHasAccess The resources ids the group has access
-     * @return array A list of secrets to request to the client
-     * [
-     *   [
-     *     'resource_id' => uuid,
-     *     'user_id' => uuid
-     *   ],
-     *   ...
-     * ]
-     */
-    private function getUserMissingSecrets(string $userId, array $resourcesIdsGroupHasAccess): array
-    {
-        $userMissingSecrets = [];
-
-        // Retrieve the resources ids a user has a secret for.
-        $resourcesIdsUserHasSecrets = $this->Secrets->find()
-            ->where([
+        return array_map(function ($resourceId) use ($userId) {
+            return [
+                'resource_id' => $resourceId,
                 'user_id' => $userId,
-                'resource_id IN' => $resourcesIdsGroupHasAccess,
-            ])
-            ->select('resource_id')
-            ->all()
-            ->extract('resource_id')
-            ->toArray();
-
-        $resourcesIdsUserMissingSecrets = array_diff($resourcesIdsGroupHasAccess, $resourcesIdsUserHasSecrets);
-
-        foreach ($resourcesIdsUserMissingSecrets as $resourceIdUserMissingSecret) {
-            $userMissingSecrets[] = ['resource_id' => $resourceIdUserMissingSecret, 'user_id' => $userId];
-        }
-
-        return $userMissingSecrets;
+            ];
+        }, $missingSecretsResourcesIds);
     }
 
     /**
@@ -279,7 +233,7 @@ class GroupsUpdateDryRunService
         $resourceIds = array_unique(Hash::extract($usersMissingSecrets, '{n}.resource_id'));
 
         // Retrieve the secrets the operator will have to encrypt.
-        $query = $this->Secrets->find()
+        $query = $this->secretsTable->find()
             ->where([
                 'resource_id IN' => $resourceIds,
                 'user_id' => $uac->getId() ?? '',

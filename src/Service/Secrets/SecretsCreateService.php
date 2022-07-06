@@ -42,16 +42,17 @@ class SecretsCreateService
      * Create a secret.
      *
      * @param array $data The secret data
+     * @param bool $checkRules Should run the table build rules. Default true.
      * @return \App\Model\Entity\Secret
      * @throws \Exception
      */
-    public function create(array $data): Secret
+    public function create(array $data, bool $checkRules = true): Secret
     {
         $secret = $this->buildEntity($data);
         $this->handleValidationErrors($secret);
 
-        $this->secretsTable->getConnection()->transactional(function () use ($secret) {
-            $this->secretsTable->save($secret);
+        $this->secretsTable->getConnection()->transactional(function () use ($secret, $checkRules) {
+            $this->secretsTable->save($secret, ['checkRules' => $checkRules]);
             $this->handleValidationErrors($secret);
         });
 
