@@ -27,9 +27,11 @@ use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
+use App\Test\Lib\Utility\ErrorTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
@@ -40,6 +42,7 @@ abstract class AppTestCase extends TestCase
     use ArrayTrait;
     use CommentsModelTrait;
     use EntityTrait;
+    use ErrorTrait;
     use FavoritesModelTrait;
     use FeaturePluginAwareTrait;
     use GroupsModelTrait;
@@ -61,6 +64,8 @@ abstract class AppTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.log.enabled', false);
+        $this->loadRoutes();
         DigestsPool::clearInstance();
         EmailNotificationSettings::flushCache();
     }

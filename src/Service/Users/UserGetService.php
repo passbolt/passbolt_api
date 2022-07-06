@@ -26,10 +26,10 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * Class UserGetActiveService
+ * Class UserGetService
  *
  * @package App\Service\Users
- * @property \App\Model\Table\AuthenticationTokensTable $Users
+ * @property \App\Model\Table\UsersTable $Users
  */
 class UserGetService
 {

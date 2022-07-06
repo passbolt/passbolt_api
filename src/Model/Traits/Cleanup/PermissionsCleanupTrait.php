@@ -17,6 +17,9 @@ declare(strict_types=1);
 namespace App\Model\Traits\Cleanup;
 
 use App\Model\Table\PermissionsTable;
+use Cake\Database\Expression\IdentifierExpression;
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Query;
 
 trait PermissionsCleanupTrait
 {
@@ -28,20 +31,67 @@ trait PermissionsCleanupTrait
      */
     public function cleanupHardDeletedPermissions(?bool $dryRun = false): int
     {
-        $secretsToDelete = [];
-        $secrets = $this->find('all')->select(['id', 'resource_id', 'user_id']);
-        $acoType = PermissionsTable::RESOURCE_ACO;
+        if (!$dryRun) {
+            $secretsIdsToDelete = $this->findSecretsToDelete()
+                ->select('id')
+                ->all()
+                ->extract('id')
+                ->toArray();
 
-        foreach ($secrets as $secret) {
-            if (!$this->Resources->Permissions->hasAccess($acoType, $secret->resource_id, $secret->user_id)) {
-                $secretsToDelete[] = $secret->id;
+            if (!empty($secretsIdsToDelete)) {
+                return $this->deleteAll(['id IN' => $secretsIdsToDelete]);
             }
         }
 
-        if (!$dryRun && !empty($secretsToDelete)) {
-            $this->deleteAll(['id IN' => $secretsToDelete]);
-        }
+        return $this->findSecretsToDelete()
+            ->count();
+    }
 
-        return count($secretsToDelete);
+    /**
+     * Find the secrets to delete.
+     *
+     * @return \Cake\ORM\Query
+     */
+    private function findSecretsToDelete(): Query
+    {
+        $directUsersSecretsQuery = $this->Resources->Permissions->find()
+            ->select([
+                'resource_id' => 'aco_foreign_key',
+                'user_id' => 'aro_foreign_key',
+            ])
+            ->where([
+                'aco' => PermissionsTable::RESOURCE_ACO,
+                'aro' => PermissionsTable::USER_ARO,
+            ]);
+
+        $inheritedUsersSecretsQuery = $this->Resources->Permissions->find()
+            ->select([
+                'resource_id' => 'aco_foreign_key',
+                'user_id' => 'groups_users.user_id',
+            ])
+            ->leftJoin('groups_users', 'aro_foreign_key = group_id')
+            ->where([
+                'aco' => PermissionsTable::RESOURCE_ACO,
+                'aro' => PermissionsTable::GROUP_ARO,
+            ]);
+
+        $userExpectedSecretsQuery = $directUsersSecretsQuery
+            ->union($inheritedUsersSecretsQuery)
+            ->group(['resource_id', 'user_id']);
+
+        // Use a "LEFT JOIN" instead of a "NOT IN" for performance reason.
+        return $this->find()
+            ->join([
+                'table' => $userExpectedSecretsQuery,
+                'alias' => 'ExpectedSecrets',
+                'type' => 'LEFT',
+                'conditions' => [
+                    'ExpectedSecrets.resource_id' => new IdentifierExpression('Secrets.resource_id'),
+                    'ExpectedSecrets.user_id' => new IdentifierExpression('Secrets.user_id'),
+                ],
+            ])
+            ->where(function (QueryExpression $exp) {
+                 return $exp->isNull('ExpectedSecrets.resource_id');
+            });
     }
 }

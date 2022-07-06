@@ -164,7 +164,7 @@ class GroupsTable extends Table
             ),
             'group_unique'
         );
-        $rules->addCreate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
+        $rules->addCreate([$this, 'atLeastOneAdminRule'], 'at_least_one_group_manager', [
             'errorField' => 'groups_users',
             'message' => __('A group manager should be provided.'),
         ]);
