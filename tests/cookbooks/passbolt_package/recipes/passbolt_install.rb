@@ -17,7 +17,7 @@ if platform_family?('debian')
   end
 elsif platform_family?('rhel', 'suse', 'fedora')
   package 'RHEL/SUSE: Install dependencies' do
-    package_name ['rpmdevtools', 'bc', 'createrepo', 'firewalld']
+    package_name ['rpmdevtools', 'bc', 'createrepo_c', 'firewalld']
     action :install
   end
 

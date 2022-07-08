@@ -19,7 +19,7 @@ then
   cp passbolt-*.rpm ~/rpmbuild/RPMS/noarch
 fi
 
-createrepo --update ~/rpmbuild/RPMS
+createrepo_c --update ~/rpmbuild/RPMS
 
 cat << EOF | tee ${REPOPATH}/local.repo
 [local]
