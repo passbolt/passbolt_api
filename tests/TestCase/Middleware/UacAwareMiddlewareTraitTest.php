@@ -42,4 +42,13 @@ class UacAwareMiddlewareTraitTest extends TestCase
         $this->assertSame(Role::USER, $uac->roleName());
         $this->assertSame($user->username, $uac->getUsername());
     }
+
+    public function testUacAwareMiddlewareTraitTest_Without_Identity_Should_Return_Guest_UAC()
+    {
+        $uac = $this->getUacInRequest(new ServerRequest());
+
+        $this->assertSame(Role::GUEST, $uac->roleName());
+        $this->assertNull($uac->getId());
+        $this->assertNull($uac->getUsername());
+    }
 }
