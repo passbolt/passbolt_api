@@ -281,4 +281,10 @@ mQINBFYuIFQBEACpYmcjzX1XC0LPJCMOY/LwxIB3lGfL5+X5kJSfLpWDYKa0XFXv
         $this->assertEquals(384, $keyInfo['bits']);
         $this->assertEquals('ECDSA', $keyInfo['type']);
     }
+
+    public function testPublicKeyValidationService_unamorFails()
+    {
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public_broken_base64.key');
+        $this->assertFalse(PublicKeyValidationService::isParsableArmoredPublicKey($armoredKey));
+    }
 }
