@@ -132,7 +132,7 @@ class SaveTest extends AppTestCase
             $entity = $this->Gpgkeys->newEntity(['type' => $value]);
             $this->Gpgkeys->save($entity);
             $this->assertSame(
-                'The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.',
+                'The type should be one of the following: RSA, ECC, ECDSA, DH.',
                 $entity->getError('type')['custom'],
                 'Gpg Key validation should fail for case ' . $case
             );

@@ -40,6 +40,7 @@ class PublicKeyValidationService
 
     // Other supported validation rules
     public const IS_VALID_ALGORITHM_RULE = 'isValidAlgorithmRule';
+    public const IS_VALID_ALGORITHM_STRICT_RULE = 'isValidAlgorithmStrictRule';
     public const IS_VALID_FINGERPRINT_RULE = 'isValidFingerprintRule';
     public const IS_VALID_KEY_ID_RULE = 'isValidKeyIdRule';
     public const IS_VALID_KEY_SIZE_RULE = 'isValidKeySizeRule';
@@ -98,6 +99,7 @@ class PublicKeyValidationService
     {
         return array_merge(self::getDefaultRules(), [
             self::IS_VALID_KEY_SIZE_STRICT_RULE,
+            self::IS_VALID_ALGORITHM_STRICT_RULE,
         ]);
     }
 
@@ -144,6 +146,11 @@ class PublicKeyValidationService
         foreach ($rules as $ruleName) {
             switch ($ruleName) {
                 case self::IS_VALID_ALGORITHM_RULE:
+                    if (!self::isValidAlgorithm($keyInfo['type'], false)) {
+                        $validationErrors[$ruleName] = __('The algorithm is invalid.');
+                    }
+                    break;
+                case self::IS_VALID_ALGORITHM_STRICT_RULE:
                     if (!self::isValidAlgorithm($keyInfo['type'])) {
                         $validationErrors[$ruleName] = __('The algorithm is invalid.');
                     }
@@ -413,16 +420,16 @@ class PublicKeyValidationService
      * Custom validation rule to validate key algorithm
      *
      * @param string|null $algorithm RSA, ECC, EdDSA, etc. see OpenPGP_PublicKeyPacket::$algorithms.
-     * @param bool $strict exclude DSA and ELGAMAL, default false
+     * @param bool $strict exclude DSA and ELGAMAL, default true
      * @return bool
      */
-    public static function isValidAlgorithm(?string $algorithm = null, $strict = false): bool
+    public static function isValidAlgorithm(?string $algorithm = null, bool $strict = true): bool
     {
         if (!isset($algorithm)) {
             return false;
         }
         $supported = \OpenPGP_PublicKeyPacket::$algorithms;
-        if ($strict) {
+        if ($strict === true) {
             // Minus legacy items such as DSA, ELGAMAL
             // Default in openpgp.js v5
             unset($supported[16]);

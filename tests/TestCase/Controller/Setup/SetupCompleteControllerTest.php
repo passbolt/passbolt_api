@@ -228,6 +228,35 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
+    public function testSetupComplete_ErrorWithWeakKey()
+    {
+        // Complete setup with sofia's key (deleted user)
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+
+        $url = '/setup/complete/' . $t->user->id . '.json';
+        $data = [
+            'authentication_token' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'elgamal_public.key'),
+            ],
+        ];
+        $this->postJson($url, $data);
+        $this->assertError();
+        $this->assertNotEmpty($this->_responseJsonBody);
+        $this->assertStringContainsString('isValidAlgorithmStrictRule', $this->_getBodyAsString());
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupComplete_ErrorWithKeyBelongingToDeletedUser()
     {
         // Complete setup with sofia's key (deleted user)
@@ -480,7 +509,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             ->persist();
         $user = $t->user;
         $url = '/setup/complete/' . $user->id . '.json';
-        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public_broken.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa3072_public_broken.key');
         $data = [
             'authentication_token' => [
                 'token' => $t->token,
@@ -494,6 +523,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson($url, $data);
         $this->assertError(400, 'The OpenPGP key can not be used to encrypt.');
-        $this->assertFalse(OpenPGPBackendFactory::get()->isKeyInKeyring('26FD986838F4F9AB318FF56AE5DFCEE142949B78'));
+        $this->assertFalse(OpenPGPBackendFactory::get()->isKeyInKeyring('AE77104424962CDF8C2BB6A53C557610555EC24C'));
     }
 }
