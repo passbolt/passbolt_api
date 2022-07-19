@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.7.0
  */
 
-namespace App\Test\TestCase\Model\Table\Validation\GroupsUsersChange;
+namespace App\Test\TestCase\Model\Validation\GroupsUsersChange;
 
 use App\Model\Validation\GroupsUsersChange\GroupsUsersChangeValidator;
 use App\Test\Lib\AppTestCase;
