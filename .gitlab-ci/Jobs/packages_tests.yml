@@ -165,6 +165,17 @@ opensuse-leap-15-runtime:
   variables:
     KITCHEN_JOB: runtime-benchmarks-opensuse-leap-15
 
+redhat-9-runtime:
+  extends: .kitchen-test-yum
+  needs:
+    - job: redhat-9-break
+    - job: composer
+      artifacts: true
+    - job: build-yum
+      artifacts: true
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-redhat-9
+
 debian-buster-break:
   extends: .kitchen-test-debian
   needs:
@@ -285,6 +296,17 @@ opensuse-leap-15-break:
       artifacts: true
   variables:
     KITCHEN_JOB: break-benchmarks-opensuse-leap-15
+
+redhat-9-break:
+  extends: .kitchen-test-yum
+  needs:
+    - job: redhat-9-purge
+    - job: composer
+      artifacts: true
+    - job: build-yum
+      artifacts: true
+  variables:
+    KITCHEN_JOB: break-benchmarks-redhat-9
 
 debian-buster-purge:
   extends: .kitchen-test-debian
@@ -407,126 +429,16 @@ opensuse-leap-15-purge:
   variables:
     KITCHEN_JOB: purge-benchmarks-opensuse-leap-15
 
-debian-buster-purge:
-  extends: .kitchen-test-debian
-  needs:
-    - job: debian-buster-fs
-    - job: composer
-      artifacts: true
-    - job: build-debian
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-debian-buster
-
-debian-bullseye-purge:
-  extends: .kitchen-test-debian
-  needs:
-    - job: debian-bullseye-fs
-    - job: composer
-      artifacts: true
-    - job: build-debian
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-debian-bullseye
-
-ubuntu-2004-purge:
-  extends: .kitchen-test-debian
-  needs:
-    - job: ubuntu-2004-fs
-    - job: composer
-      artifacts: true
-    - job: build-debian
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-ubuntu-2004
-
-ubuntu-2204-purge:
-  extends: .kitchen-test-debian
-  needs:
-    - job: ubuntu-2204-fs
-    - job: composer
-      artifacts: true
-    - job: build-debian
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-ubuntu-2204
-
-centos-7-purge:
-  extends: .kitchen-test-yum-7
-  needs:
-    - job: centos-7-fs
-    - job: composer
-      artifacts: true
-    - job: build-yum-7
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-centos-7
-
-almalinux-8-purge:
+redhat-9-purge:
   extends: .kitchen-test-yum
   needs:
-    - job: almalinux-8-fs
+    - job: redhat-9-fs
     - job: composer
       artifacts: true
     - job: build-yum
       artifacts: true
   variables:
-    KITCHEN_JOB: purge-benchmarks-almalinux-8
-
-fedora-34-purge:
-  extends: .kitchen-test-yum
-  needs:
-    - job: fedora-34-fs
-    - job: composer
-      artifacts: true
-    - job: build-yum
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-fedora-34
-
-fedora-35-purge:
-  extends: .kitchen-test-yum
-  needs:
-    - job: fedora-35-fs
-    - job: composer
-      artifacts: true
-    - job: build-yum
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-fedora-35
-
-oraclelinux-8-purge:
-  extends: .kitchen-test-yum
-  needs:
-    - job: oraclelinux-8-fs
-    - job: composer
-      artifacts: true
-    - job: build-yum
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-oraclelinux-8
-
-rockylinux-8-purge:
-  extends: .kitchen-test-yum
-  needs:
-    - job: rockylinux-8-fs
-    - job: composer
-      artifacts: true
-    - job: build-yum
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-rockylinux-8
-
-opensuse-leap-15-purge:
-  extends: .kitchen-test-suse
-  needs:
-    - job: opensuse-leap-15-fs
-    - job: composer
-      artifacts: true
-    - job: build-suse
-      artifacts: true
-  variables:
-    KITCHEN_JOB: purge-benchmarks-opensuse-leap-15
+    KITCHEN_JOB: purge-benchmarks-redhat-9
 
 debian-buster-fs:
   extends: .kitchen-test-debian
@@ -582,3 +494,8 @@ opensuse-leap-15-fs:
   extends: .kitchen-test-suse
   variables:
     KITCHEN_JOB: filesystem-benchmarks-opensuse-leap-15
+
+redhat-9-fs:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-redhat-9
