@@ -1,6 +1,6 @@
 {
   "name": "passbolt_api",
-  "version": "3.6.1",
+  "version": "3.7.0",
   "description": "The backend application for the open source password manager for teams",
   "repository": {
     "url": "https://github.com/passbolt/passbolt_api"
@@ -18,11 +18,11 @@
   "homepage": "https://www.passbolt.com",
   "devDependencies": {
     "babel-polyfill": "^6.26.0",
-    "grunt": "^1.3.0",
+    "grunt": "^1.5.3",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "jquery": "^3.5.1",
     "openpgp": "5.2.1",
-    "passbolt-styleguide": "3.6.1"
+    "passbolt-styleguide": "3.7.0-alpha1"
   }
 }
