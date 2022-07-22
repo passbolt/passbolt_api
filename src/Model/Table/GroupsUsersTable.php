@@ -42,6 +42,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\GroupsUser[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \App\Model\Entity\GroupsUser findOrCreate($search, ?callable $callback = null, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \App\Model\Entity\GroupsUser newEmptyEntity()
  * @method \App\Model\Entity\GroupsUser saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\GroupsUser[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
@@ -52,6 +53,7 @@ use Cake\Validation\Validator;
  * @method \Cake\ORM\Query findByGroupId(string $groupId)
  * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
  * @method \Cake\ORM\Query findByGroupIdAndUserId(string $groupId, string $userId)
+ * @method \Cake\ORM\Query findByGroupIdAndIsAdmin(string $groupId, bool $isAdmin)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class GroupsUsersTable extends Table

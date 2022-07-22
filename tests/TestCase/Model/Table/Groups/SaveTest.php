@@ -170,6 +170,6 @@ class SaveTest extends AppTestCase
         $this->assertFalse($save);
         $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['groups_users']['at_least_one_admin']);
+        $this->assertNotNull($errors['groups_users']['at_least_one_group_manager']);
     }
 }

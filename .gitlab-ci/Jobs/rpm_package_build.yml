@@ -52,7 +52,7 @@
 build-yum:
   extends: .build-rpm
   variables:
-    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo firewalld"
+    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo_c firewalld"
   script:
     - PKG_VERSION=0.3 /bin/sh rpm/scripts/build-passbolt-selinux.sh
     - *install-jq-rhel-8
@@ -62,7 +62,7 @@ build-yum-7:
   extends: .build-rpm
   image: centos:7
   variables:
-    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo firewalld"
+    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo_c firewalld"
   script:
     - PKG_VERSION=0.3 /bin/sh rpm/scripts/build-passbolt-selinux.sh
     - *install-jq-rhel-7
@@ -71,7 +71,7 @@ build-yum-7:
 build-suse:
   extends: .build-zypper
   variables:
-    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo firewalld"
+    DEPENDENCIES: "rpmdevtools rpmlint rsync selinux-policy-devel rpm-build bc createrepo_c firewalld"
   script:
     - zypper install -y rpmdevtools rpmlint rsync rpm-build bc jq
     - *build-passbolt-rpm-package
@@ -99,12 +99,12 @@ build-suse:
   - echo "%_gpg_name $GPG_KEY_ID" >> ~/.rpmmacros
 
 .publish-script: &publish-script |
-  yum install -y createrepo rpm-sign
+  yum install -y createrepo_c rpm-sign
   mkdir -p $COMPONENT/$PACKAGE_ARCH
   [ $COMPONENT == "testing" ] && rm -f $COMPONENT/$PACKAGE_ARCH/*rpm
   cp passbolt-*.rpm $COMPONENT/$PACKAGE_ARCH
   rpm --resign $COMPONENT/$PACKAGE_ARCH/*rpm
-  createrepo --update $COMPONENT
+  createrepo_c --update $COMPONENT
   echo "$(kms_decrypt $GPG_PASS | base64 -d)" | gpg --batch --yes --passphrase-fd 0 --detach-sign --armor $COMPONENT/repodata/repomd.xml
   google-cloud-sdk/bin/gsutil -m rsync -r -d $COMPONENT "gs://$REPO"
   google-cloud-sdk/bin/gsutil -m setmeta -r -h "Content-Type:text/html" \

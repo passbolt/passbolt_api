@@ -76,7 +76,7 @@ class SendTestEmailCommandTest extends AppTestCase
     {
         $this->exec('passbolt send_test_email');
         $this->assertExitSuccess();
-        $this->assertMailSentTo('doesnotexist@passboltdummydomain.com');
+        $this->assertMailSentTo('no-reply@passbolt.com');
         $this->assertMailSubjectContains('Passbolt test email');
         $this->assertMailCount(1);
     }

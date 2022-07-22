@@ -30,7 +30,7 @@ use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
-use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
+use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
 
 /**
  * Class AuthJwtLogoutControllerTest
@@ -41,7 +41,7 @@ use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
  */
 class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
 {
-    use ActionLogsTrait;
+    use ActionLogsTestTrait;
     use EmailQueueTrait;
     use ModelAwareTrait;
 

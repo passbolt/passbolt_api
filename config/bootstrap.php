@@ -121,6 +121,9 @@ ini_set('intl.default_locale', 'en_UK');
 /*
  * Register application error and exception handlers.
  */
+if (!Configure::read('debug')) {
+    Configure::write('Error.errorLevel', E_ALL ^ E_DEPRECATED);
+}
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
 } else {

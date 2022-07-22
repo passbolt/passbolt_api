@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\Users;
 
+use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use Cake\View\ViewBuilder;
 
@@ -34,9 +35,9 @@ interface UserRecoverServiceInterface
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC performing the recovery
-     * @return void
+     * @return \App\Model\Entity\User
      */
-    public function recover(UserAccessControl $uac);
+    public function recover(UserAccessControl $uac): User;
 
     /**
      * @param \Cake\View\ViewBuilder $viewBuilder View builder

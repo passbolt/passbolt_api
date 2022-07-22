@@ -19,6 +19,8 @@ namespace App\Controller\Setup;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Service\Setup\SetupCompleteServiceInterface;
+use App\Utility\UserAccessControl;
+use App\Utility\UserAction;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
 
@@ -59,6 +61,8 @@ class SetupCompleteController extends AppController
         }
 
         $user = $setupCompleteService->complete($userId);
+        $uac = new UserAccessControl($user['role']['name'], $user['id']);
+        UserAction::getInstance()->setUserAccessControl($uac);
 
         $this->dispatchEvent(self::COMPLETE_SUCCESS_EVENT_NAME, [
             'user' => $user,

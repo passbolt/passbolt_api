@@ -22,12 +22,13 @@
     DATASOURCES_TEST_PASSWORD: $MYSQL_PASSWORD
     DATASOURCES_TEST_HOST: 127.0.0.1
   before_script:
+    - mysql --version
     - mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "ALTER USER '$DATASOURCES_TEST_USERNAME'@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
     - mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME;" mysql
 
 .postgres-template:
   services:
-    - postgres:12.2-alpine
+    - postgres:12.2-alpine # should be DATABASE_ENGINE_VERSION
   # Postgres services variables
   variables:
     POSTGRES_DB: test
@@ -61,6 +62,15 @@
     - docker-php-ext-enable pdo_pgsql
     - printf "postgres:5432:test:user:testing-password" > ~/.pgpass
     - chmod 0600 ~/.pgpass
+# TO BE REPLACED WITH
+#  before_script:
+#    - apt-get update
+#    - apt-get install libpq-dev postgresql-client -yqq
+#    - docker-php-ext-install pdo_pgsql
+#    # official way to provide password to psql: http://www.postgresql.org/docs/9.3/static/libpq-envars.html
+#    - export PGPASSWORD=$POSTGRES_PASSWORD
+#    - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+#    - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
 
 .test-template:
   stage: unit-test
@@ -72,28 +82,79 @@
     APP_FULL_BASE_URL: http://127.0.0.1
     PASSBOLT_REGISTRATION_PUBLIC: 1
     PASSBOLT_SELENIUM_ACTIVE: 1
-    PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED: 1 # Remove that line once JWT is enabled by default
     # This is the development dummy fingerprint
     PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
     PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
   image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
   script:
     - cp config/app.default.php config/app.php
-    - composer install --dev --no-interaction
+    - composer install --no-interaction
     - gpg --import config/gpg/unsecure_private.key
     - gpg --import config/gpg/unsecure.key
-    - ./bin/cake passbolt create_jwt_keys -q
+    - ./bin/cake passbolt create_jwt_keys
     - $PHPUNIT_COMMAND
-  only:
-    - branches
   artifacts:
     reports:
       junit: unitreport.xml
-  except:
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /skip-unit/
+  rules:
+    - if: '$CI_COMMIT_MESSAGE !~ /skip-unit/'
 
+##
+## CUSTOM COMBINATIONS
+##
+php7.4-mysql5.7:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "mysql:5.7"
+  extends:
+    - .mysql-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null'
 
+# TO BE REMOVED
+php7.4-postgres:
+  variables:
+    PHP_VERSION: "7.4"
+  extends:
+    - .postgres-template
+    - .test-template
+
+#php7.4-postgres12.11:
+#  variables:
+#    PHP_VERSION: "7.4"
+#    DATABASE_ENGINE_VERSION: "postgres:12.11"
+#  extends:
+#    - .postgres-template
+#    - .test-template
+#  rules:
+#    - if: '$TEST_DISABLED == null'
+
+##
+## DEBIAN COMBINATIONS
+##
+## DEBIAN 10 BUSTER
+php7.3-mariadb10.3:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "mariadb:10.3"
+  extends:
+    - .mysql-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null'
+
+#php7.4-postgres11.16:
+#  variables:
+#    PHP_VERSION: "7.4"
+#    DATABASE_ENGINE_VERSION: "postgres:11.16"
+#  extends:
+#    - .postgres-template
+#    - .test-template
+#  rules:
+#    - if: '$TEST_DISABLED == null'
+
+## DEBIAN 11 BULLSEYE
 php7.4-mariadb10.5:
   variables:
     PHP_VERSION: "7.4"
@@ -101,57 +162,22 @@ php7.4-mariadb10.5:
   extends:
     - .mysql-template
     - .test-template
-  except:
-    variables:
-      - $TEST_DISABLED
-  only:
-    - develop
-    - master
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
-php7.4-mariadb10.4:
-  variables:
-    PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: "mariadb:10.4"
-  extends:
-    - .mysql-template
-    - .test-template
-  except:
-    variables:
-      - $TEST_DISABLED
-  only:
-    - develop
-    - master
+#php7.4-postgres13.7:
+#  variables:
+#    PHP_VERSION: "7.4"
+#    DATABASE_ENGINE_VERSION: "postgres:13.7"
+#  extends:
+#    - .postgres-template
+#    - .test-template
+#  rules:
+#    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+#    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
-php7.3-mariadb10.4:
-  variables:
-    PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: "mariadb:10.4"
-  extends:
-    - .mysql-template
-    - .test-template
-  except:
-    variables:
-      - $TEST_DISABLED
-  only:
-    - develop
-    - master
-
-php7.4-mariadb10.3:
-  variables:
-    PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: "mariadb:10.3"
-  extends:
-    - .mysql-template
-    - .test-template
-
-php7.3-mysql5.7:
-  variables:
-    PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: "mysql:5.7"
-  extends:
-    - .mysql-template
-    - .test-template
-
+## UBUNTU 20.04 LTS FOCAL
 php7.4-mysql8:
   variables:
     PHP_VERSION: "7.4"
@@ -159,16 +185,86 @@ php7.4-mysql8:
   extends:
     - .mysql-template
     - .test-template
-  except:
-    variables:
-      - $TEST_DISABLED
-  only:
-    - develop
-    - master
+  rules:
+    - if: '$TEST_DISABLED == null'
 
-php7.4-postgres:
+#php7.4-postgres12.11:
+#  variables:
+#    PHP_VERSION: "7.4"
+#    DATABASE_ENGINE_VERSION: "postgres:12.11"
+#  extends:
+#    - .postgres-template
+#    - .test-template
+#  rules:
+#    - if: '$TEST_DISABLED == null'
+
+## UBUNTU 22.04 LTS JAMMY
+php8.1-mysql8:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "mysql:8.0"
+  extends:
+    - .mysql-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null'
+
+#php8.1-postgres14.3:
+#  variables:
+#    PHP_VERSION: "8.1"
+#    DATABASE_ENGINE_VERSION: "postgres:14.3"
+#  extends:
+#    - .postgres-template
+#    - .test-template
+#  rules:
+#    - if: '$TEST_DISABLED == null'
+
+##
+## RPM COMBINATIONS
+##
+## CENTOS 7 - with remi and mariadb repos
+php7.4-mariadb10.3:
   variables:
     PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "mariadb:10.3"
   extends:
-    - .postgres-template
+    - .mysql-template
     - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+
+## ROCKY LINUX 8.6
+php8.0-mariadb10.5:
+  variables:
+    PHP_VERSION: "8.0"
+    DATABASE_ENGINE_VERSION: "mariadb:10.5"
+  extends:
+    - .mysql-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+
+## RHEL 9
+php8.0-mariadb8.0:
+  variables:
+    PHP_VERSION: "8.0"
+    DATABASE_ENGINE_VERSION: "mysql:8.0"
+  extends:
+    - .mysql-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+
+#php8.0-postgres13.7:
+#  variables:
+#    PHP_VERSION: "8.0"
+#    DATABASE_ENGINE_VERSION: "postgres:13.7"
+#  extends:
+#    - .postgres-template
+#    - .test-template
+#  rules:
+#    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+#    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'

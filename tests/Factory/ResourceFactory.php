@@ -68,7 +68,7 @@ class ResourceFactory extends CakephpBaseFactory
     /**
      * Define the associated permissions to create for a given list of aros (users or groups).
      *
-     * @param array $aros Array of users or groups to create the resource for
+     * @param array $aros Array of users or groups to create a permission for
      * @param mixed $permissionsType (Optional) The permission type, default OWNER
      * @return ResourceFactory
      */
@@ -78,6 +78,22 @@ class ResourceFactory extends CakephpBaseFactory
             $aroType = $aro instanceof User ? PermissionsTable::USER_ARO : PermissionsTable::GROUP_ARO;
             $permissionsMeta = ['aco' => PermissionsTable::RESOURCE_ACO, 'aro' => $aroType, 'aro_foreign_key' => $aro->id, 'type' => $permissionsType];
             $this->with('Permissions', $permissionsMeta);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Define the secrets for the given users
+     *
+     * @param array $aros Array of users to create a secret for
+     * @return ResourceFactory
+     */
+    public function withSecretsFor(array $users): ResourceFactory
+    {
+        foreach ($users as $user) {
+            $secretData = ['user_id' => $user->id];
+            $this->with('Secrets', $secretData);
         }
 
         return $this;
