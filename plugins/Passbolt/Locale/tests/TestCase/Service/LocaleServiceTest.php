@@ -43,8 +43,10 @@ class LocaleServiceTest extends TestCase
         $this->assertSame([
             'de-DE',
             'en-UK',
+            'es-ES',
             'fr-FR',
             'ja-JP',
+            'lt-LT',
             'nl-NL',
             'pl-PL',
             'sv-SE',
