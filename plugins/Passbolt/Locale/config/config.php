@@ -22,12 +22,20 @@ return [
                         'label' => 'English',
                     ],
                     [
+                        'locale' => 'es-ES',
+                        'label' => 'Español',
+                    ],
+                    [
                         'locale' => 'fr-FR',
                         'label' => 'Français',
                     ],
                     [
                         'locale' => 'ja-JP',
                         'label' => '日本語',
+                    ],
+                    [
+                        'locale' => 'lt-LT',
+                        'label' => 'Lietuvių',
                     ],
                     [
                         'locale' => 'nl-NL',
