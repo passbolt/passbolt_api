@@ -19,6 +19,8 @@ namespace App\Controller\Setup;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Service\Setup\RecoverStartServiceInterface;
+use App\Utility\UserAccessControl;
+use App\Utility\UserAction;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
@@ -57,6 +59,11 @@ class RecoverStartController extends AppController
                 throw new ForbiddenException(__('Only guest are allowed to proceed with account recovery.'));
             }
             $data = $infoService->getInfo($userId, $token);
+
+            $user = $data['user'];
+            $uac = new UserAccessControl($user['role']['name'], $user['id']);
+            UserAction::getInstance()->setUserAccessControl($uac);
+
             $this->success(__('The operation was successful.'), $data);
         } else {
             $this->set('title', Configure::read('passbolt.meta.description'));

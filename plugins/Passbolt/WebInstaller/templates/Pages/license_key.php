@@ -8,7 +8,7 @@ $this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">
-        <?= $this->element('navigation', ['selectedSection' => 'license_key']) ?>
+        <?= $this->element('navigation', ['selectedSection' => 'subscription_key']) ?>
     </div>
     <!-- main -->
     <?= $this->Form->create($formExecuteResult); ?>
@@ -21,7 +21,7 @@ $this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
                                 <h2><?= __('Copy paste your Passbolt Pro subscription key here'); ?></h2>
                                 <?= $this->Flash->render() ?>
                                 <div class="input textarea gpgkey">
-                                    <?= $this->Form->control('license_key', ['type' => 'textarea', 'class' => ['key-content']]); ?>
+                                    <?= $this->Form->control('subscription_key', ['type' => 'textarea', 'class' => ['key-content']]); ?>
                                 </div>
                                 <div class="input file">
                                     <a role="button" class="button" id="key-chooser"><?= __('Browse'); ?></a>
@@ -31,7 +31,7 @@ $this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
                         </div>
                 </div>
                 <div class="col5 last">
-                    <?= $this->element('sidebar/license_key_explanations') ?>
+                    <?= $this->element('sidebar/subscription_key_explanations') ?>
                 </div>
             </div>
             <div class="row last">

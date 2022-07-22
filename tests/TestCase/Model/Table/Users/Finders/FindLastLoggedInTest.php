@@ -22,11 +22,11 @@ use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
+use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
 
 class FindLastLoggedInTest extends AppIntegrationTestCase
 {
-    use ActionLogsTrait;
+    use ActionLogsTestTrait;
 
     public $fixtures = [
         UsersFixture::class,

@@ -131,7 +131,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $databaseSettings = $this->getTestDatasourceFromConfig();
         $webInstaller->setSettings('database', $databaseSettings);
         $webInstaller->initDatabaseConnection();
-        $this->truncateTables();
+        $this->dropAllTables();
         $webInstaller->installDatabase();
 
         // Validate schema

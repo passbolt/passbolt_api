@@ -40,7 +40,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
     public $Resources;
 
     /**
-     * @var PermissionsTable
+     * @var \Passbolt\AccountSettings\Model\Table\PermissionsTable
      */
     public $Permissions;
 

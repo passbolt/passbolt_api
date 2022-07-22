@@ -3,13 +3,32 @@ declare(strict_types=1);
 
 namespace Passbolt\Log\Test\Factory;
 
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.7.0
+ */
+
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
- * ProfileFactory
+ * ActionLogFactory
+ *
+ * @method \Passbolt\Log\Model\Entity\ActionLog|\Passbolt\Log\Model\Entity\ActionLog[] persist()
+ * @method \Passbolt\Log\Model\Entity\ActionLog getEntity()
+ * @method \Passbolt\Log\Model\Entity\ActionLog[] getEntities()
+ * @method static \Passbolt\Log\Model\Entity\ActionLog get($primaryKey, array $options = [])
  */
 class ActionLogFactory extends CakephpBaseFactory
 {
@@ -53,5 +72,21 @@ class ActionLogFactory extends CakephpBaseFactory
     public function loginAction()
     {
         return $this->setActionId('AuthLogin.loginPost');
+    }
+
+    /**
+     * @return $this
+     */
+    public function active()
+    {
+        return $this->setField('status', 1);
+    }
+
+    /**
+     * @return $this
+     */
+    public function inactive()
+    {
+        return $this->setField('status', 0);
     }
 }

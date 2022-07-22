@@ -115,12 +115,6 @@ class ResourcesTable extends Table
 
         $this->belongsTo('ResourceTypes');
 
-        if ($this->isFeaturePluginEnabled('Tags')) {
-            $this->belongsToMany('Tags', [
-                'through' => 'Passbolt/Tags.ResourcesTags',
-            ]);
-        }
-
         if ($this->isFeaturePluginEnabled('Folders')) {
             $this->hasMany('Passbolt/Folders.FoldersRelations', [
                 'className' => 'Passbolt/Folders.FoldersRelations',

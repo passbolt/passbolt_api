@@ -32,6 +32,9 @@ platforms:
   - name: ubuntu-20.04
     driver:
       image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/ubuntu-focal-2004:latest
+  - name: ubuntu-22.04
+    driver:
+      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/ubuntu-jammy-2204:latest
   - name: redhat-8
     driver:
       image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-8:latest

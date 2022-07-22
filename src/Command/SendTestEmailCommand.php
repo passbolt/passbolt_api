@@ -150,7 +150,7 @@ class SendTestEmailCommand extends PassboltCommand
     {
         $recipient = $args->getOption('recipient');
         if (!is_string($recipient) || empty($recipient)) {
-            $recipient = 'doesnotexist@passboltdummydomain.com';
+            $recipient = 'no-reply@passbolt.com';
         }
 
         return $recipient;

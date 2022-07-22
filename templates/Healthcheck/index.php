@@ -66,12 +66,18 @@ sudo su -s /bin/bash -c "./bin/cake passbolt \
                 <h3>Something wrong?</h3>
                 <p>Hang in there! You can find more information on how to install and update passbolt in the official online help.</p>
                 <a class="button medium"" href="https://help.passbolt.com" target="_blank" rel="noopener noreferrer">
+                    <span class="svg-icon life-ring icon-only">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.70966 13.43C11.0731 13.43 13.7996 10.7034 13.7996 7.34C13.7996 3.97659 11.0731 1.25 7.70966 1.25C4.34624 1.25 1.61969 3.97659 1.61969 7.34C1.61969 10.7034 4.34624 13.43 7.70966 13.43Z" fill="none" stroke="var(--icon-color)" vector-effect="non-scaling-stroke" stroke-width="var(--icon-stroke-width)" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7.70966 9.77999C9.05723 9.77999 10.1497 8.68757 10.1497 7.33999C10.1497 5.99242 9.05723 4.89999 7.70966 4.89999C6.36208 4.89999 5.26971 5.99242 5.26971 7.33999C5.26971 8.68757 6.36208 9.77999 7.70966 9.77999Z" fill="none" stroke="var(--icon-color)" vector-effect="non-scaling-stroke" stroke-width="var(--icon-stroke-width)" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M3.40973 3.03L5.98969 5.62" fill="none" stroke="var(--icon-color)" vector-effect="non-scaling-stroke" stroke-width="var(--icon-stroke-width)" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9.43964 9.06L12.0197 11.65" fill="none" stroke="var(--icon-color)" vector-effect="non-scaling-stroke" stroke-width="var(--icon-stroke-width)" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9.43964 5.62L12.0197 3.03" fill="none" stroke="var(--icon-color)" vector-effect="non-scaling-stroke" stroke-width="var(--icon-stroke-width)" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9.43964 5.62L11.5897 3.47" fill="none" stroke="var(--icon-color)" vector-effect="non-scaling-stroke" stroke-width="var(--icon-stroke-width)" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M3.40973 11.65L5.98969 9.06" fill="none" stroke="var(--icon-color)" vector-effect="non-scaling-stroke" stroke-width="var(--icon-stroke-width)" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
                     <span>
-                        <span class="svg-icon life-ring icon-only">
-                            <svg width="1792" height="1792" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M256 504c136.967 0 248-111.033 248-248S392.967 8 256 8 8 119.033 8 256s111.033 248 248 248zm-103.398-76.72l53.411-53.411c31.806 13.506 68.128 13.522 99.974 0l53.411 53.411c-63.217 38.319-143.579 38.319-206.796 0zM336 256c0 44.112-35.888 80-80 80s-80-35.888-80-80 35.888-80 80-80 80 35.888 80 80zm91.28 103.398l-53.411-53.411c13.505-31.806 13.522-68.128 0-99.974l53.411-53.411c38.319 63.217 38.319 143.579 0 206.796zM359.397 84.72l-53.411 53.411c-31.806-13.505-68.128-13.522-99.973 0L152.602 84.72c63.217-38.319 143.579-38.319 206.795 0zM84.72 152.602l53.411 53.411c-13.506 31.806-13.522 68.128 0 99.974L84.72 359.398c-38.319-63.217-38.319-143.579 0-206.796z"/>
-                            </svg>
-                        </span>
                         <?php echo __('Help'); ?>
                     </span>
                 </a>

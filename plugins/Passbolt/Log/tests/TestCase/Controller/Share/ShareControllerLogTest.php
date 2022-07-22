@@ -22,8 +22,8 @@ use Cake\Datasource\ModelAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
-use Passbolt\Log\Test\Lib\Traits\PermissionsHistoryTrait;
-use Passbolt\Log\Test\Lib\Traits\SecretsHistoryTrait;
+use Passbolt\Log\Test\Lib\Traits\PermissionsHistoryTestTrait;
+use Passbolt\Log\Test\Lib\Traits\SecretsHistoryTestTrait;
 
 /**
  * Class ShareControllerLogTest
@@ -35,8 +35,8 @@ use Passbolt\Log\Test\Lib\Traits\SecretsHistoryTrait;
 class ShareControllerLogTest extends LogIntegrationTestCase
 {
     use ModelAwareTrait;
-    use PermissionsHistoryTrait;
-    use SecretsHistoryTrait;
+    use PermissionsHistoryTestTrait;
+    use SecretsHistoryTestTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles',

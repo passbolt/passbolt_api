@@ -23,7 +23,9 @@ use Cake\ORM\TableRegistry;
 
 class FavoritesDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
+    ];
 
     public function testFavoritesDeleteSuccess()
     {
@@ -41,7 +43,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->disableCsrfToken();
         $this->authenticateAs('dame');
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
-        $this->delete("/favorites/$favoriteId.json?api-version=2");
+        $this->delete("/favorites/$favoriteId.json");
         $this->assertResponseCode(403);
     }
 
@@ -72,7 +74,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
     public function testFavoritesDeleteErrorNotAuthenticated()
     {
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
-        $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
+        $this->deleteJson("/favorites/$favoriteId.json");
         $this->assertAuthenticationError();
     }
 }

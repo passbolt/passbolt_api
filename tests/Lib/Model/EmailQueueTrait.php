@@ -18,6 +18,7 @@ namespace App\Test\Lib\Model;
 
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\View\ViewBuilder;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
@@ -198,7 +199,12 @@ trait EmailQueueTrait
      */
     protected function renderAllEmails(): void
     {
-        $emailCount = EmailQueueFactory::count();
+        $emailCount = ConnectionManager::get('test')
+            ->newQuery()
+            ->select('*')
+            ->from('email_queue')
+            ->execute()
+            ->rowCount();
         for ($i = 0; $i < $emailCount; $i++) {
             $this->renderEmail($i);
         }
@@ -226,6 +232,9 @@ trait EmailQueueTrait
      */
     protected function deleteEmailQueue(): void
     {
-        EmailQueueFactory::find()->delete()->execute();
+        ConnectionManager::get('test')
+            ->newQuery()
+            ->delete('email_queue')
+            ->execute();
     }
 }

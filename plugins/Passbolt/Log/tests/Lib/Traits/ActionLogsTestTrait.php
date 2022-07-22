@@ -18,14 +18,15 @@ namespace Passbolt\Log\Test\Lib\Traits;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\ActionLog;
+use Passbolt\Log\Test\Factory\ActionLogFactory;
 
-trait ActionLogsTrait
+trait ActionLogsTestTrait
 {
     /**
      * Add an action log
      *
-     * @param array $data The data
-     * @param array $options The options
+     * @param array|null $data The data
+     * @param array|null $options The options
      * @return ActionLog
      * @throws \Exception
      */
@@ -68,10 +69,10 @@ trait ActionLogsTrait
      * Get a dummy action log with test data.
      * The relation returned should pass a default validation.
      *
-     * @param array $data Custom data that will be merged with the default content.
+     * @param array|null $data Custom data that will be merged with the default content.
      * @return array
      */
-    public function getDummyActionLogData($data = []): array
+    public function getDummyActionLogData(?array $data = []): array
     {
         $entityContent = [
             'user_id' => UuidFactory::uuid('user.id.test-place-holder'),
@@ -87,8 +88,7 @@ trait ActionLogsTrait
 
     public function assertActionLogExists($conditions)
     {
-        $actionLog = $this->ActionLogs
-            ->find()
+        $actionLog = ActionLogFactory::find()
             ->where($conditions)
             ->first();
         $this->assertNotEmpty($actionLog, 'No corresponding actionLog could be found');
@@ -98,10 +98,7 @@ trait ActionLogsTrait
 
     public function assertActionLogsCount($expectedCount)
     {
-        $actionLogCount = $this->ActionLogs
-            ->find()
-            ->count();
-        $this->assertEquals($expectedCount, $actionLogCount);
+        $this->assertEquals($expectedCount, ActionLogFactory::count());
     }
 
     public function assertOneActionLog()

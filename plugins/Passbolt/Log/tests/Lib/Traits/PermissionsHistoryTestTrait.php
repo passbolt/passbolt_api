@@ -15,7 +15,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Log\Test\Lib\Traits;
 
-trait PermissionsHistoryTrait
+trait PermissionsHistoryTestTrait
 {
     public function assertPermissionHistoryExists($conditions)
     {

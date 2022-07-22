@@ -23,13 +23,13 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
-use Passbolt\Log\Test\Lib\Traits\ActionLogsTrait;
-use Passbolt\Log\Test\Lib\Traits\EntitiesHistoryTrait;
+use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
+use Passbolt\Log\Test\Lib\Traits\EntitiesHistoryTestTrait;
 
 abstract class LogIntegrationTestCase extends AppIntegrationTestCase
 {
-    use ActionLogsTrait;
-    use EntitiesHistoryTrait;
+    use ActionLogsTestTrait;
+    use EntitiesHistoryTestTrait;
     use JwtAuthTestTrait;
 
     public const JWT_LOGIN = 'jwt_login';
@@ -65,12 +65,18 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
      */
     protected $ActionLogs;
 
+    /**
+     * @var \Passbolt\Log\Model\Table\ActionsTable
+     */
+    protected $Actions;
+
     public function setUp(): void
     {
         parent::setUp();
         Configure::write('passbolt.plugins.log.enabled', true);
 
         UserAction::destroy();
+        TableRegistry::getTableLocator()->clear();
 
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
@@ -78,6 +84,7 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         $this->SecretAccesses = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretAccesses');
         $this->EntitiesHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
         $this->ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        $this->Actions = TableRegistry::getTableLocator()->get('Passbolt/Log.Actions');
 
         // Make sure associations are loaded correctly, e.g. without depending on
         // ActionListeners -> model.Initialize, as the callback will not be fired twice
@@ -98,6 +105,8 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         ]);
         $this->enableFeaturePlugin('JwtAuthentication');
         (new JwtKeyPairService())->createKeyPair();
+
+        $this->Actions->clearCache();
     }
 
     public function tearDown(): void

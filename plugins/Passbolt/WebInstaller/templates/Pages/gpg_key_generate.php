@@ -62,8 +62,8 @@ $this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom'
                         <label for="KeyLength">Key Length</label>
                         <select name="data[Key][length]" id="KeyLength" disabled="disabled" class="fluid">
                             <option value="1024">1024</option>
-                            <option value="2048" selected="selected">2048</option>
-                            <option value="3072">3072</option>
+                            <option value="2048">2048</option>
+                            <option value="3072" selected="selected">3072</option>
                             <option value="4096">4096</option>
                         </select>
                     </div>

@@ -33,7 +33,7 @@ class SubscribedEmailRedactorTraitTest extends TestCase
     private $sut;
 
     /**
-     * @var EmailSubscriptionManager|MockObject
+     * @var EmailSubscriptionManager|\PHPUnit\Framework\MockObject\MockObject
      */
     private $subscriptionManagerMock;
 
