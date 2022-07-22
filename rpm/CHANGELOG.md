@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* [3.6.0-1] Wed May 25 2022 Gerold Mougenel <gerold@passbolt.com>
+- PB-9739 OpenPGP key and message validation refactoring
+- PB-14141 Enhanced public/private key validation rules
+- PB-13685 Enhanced secret validation rules
+- PB-14138 Refactor setup and recover related controllers with dependency injection
+- PB-14510 Three trivial endpoints, such as GET on login are not logged anymore
+- PB-16123 Remove key rotation logic from package post install scripts
+- PB-15277 Remove mariadb dependency for RPM package
+- PB-14947 Package versioning for RPM
+
 * [3.5.0-3] Fri Apr 29 2022 Gerold Mougenel <gerold@passbolt.com>
 - PB-15039 fixing repomd.xml signing issues
 

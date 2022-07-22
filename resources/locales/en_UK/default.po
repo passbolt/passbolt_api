@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2021-10-06 14:32+0000\n"
+"POT-Creation-Date: 2022-07-22 15:26+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -278,55 +278,28 @@ msgstr ""
 msgid "The secret does not exist."
 msgstr ""
 
-msgid "The key provided does not belong to given user."
+msgid "Only guest are allowed to abort recovery process."
+msgstr ""
+
+msgid "An authentication token must be provided."
+msgstr ""
+
+msgid "The recovery process was aborted."
+msgstr ""
+
+msgid "Only guest are allowed to complete setup."
 msgstr ""
 
 msgid "The recovery was completed successfully."
 msgstr ""
 
-msgid "The user identifier should be a valid UUID."
-msgstr ""
-
-msgid "The user does not exist, has not completed the setup or was deleted."
-msgstr ""
-
-msgid "The user does not exist or is not active."
-msgstr ""
-
-msgid "The authentication token is not valid."
-msgstr ""
-
-msgid "The token is expired."
-msgstr ""
-
-msgid "The OpenPGP key data is not valid."
+msgid "Only guest are allowed to proceed with account recovery."
 msgstr ""
 
 msgid "The setup was completed successfully."
 msgstr ""
 
-msgid "An authentication token should be provided."
-msgstr ""
-
-msgid "The authentication token should be a valid UUID."
-msgstr ""
-
-msgid "The authentication token is not valid."
-msgstr ""
-
-msgid "The user does not exist, is already active or has been deleted."
-msgstr ""
-
-msgid "An OpenPGP key must be provided."
-msgstr ""
-
-msgid "A valid OpenPGP key must be provided."
-msgstr ""
-
-msgid "The token should be a valid UUID."
-msgstr ""
-
-msgid "The user does not exist or is active."
+msgid "Only guest are allowed to start setup."
 msgstr ""
 
 msgid "You are not authorized to share this resource."
@@ -342,6 +315,9 @@ msgid "The user can be deleted."
 msgstr ""
 
 msgid "The user has been deleted successfully."
+msgstr ""
+
+msgid "The user identifier should be a valid UUID."
 msgstr ""
 
 msgid "You are not allowed to delete yourself."
@@ -386,18 +362,6 @@ msgstr ""
 msgid "Recovery process started, check your email."
 msgstr ""
 
-msgid "Please provide a valid email address."
-msgstr ""
-
-msgid "This user does not exist or has been deleted."
-msgstr ""
-
-msgid "Please register and complete the setup first."
-msgstr ""
-
-msgid "Please contact your administrator."
-msgstr ""
-
 msgid "Registration is not opened to public. Please contact your administrator."
 msgstr ""
 
@@ -411,6 +375,9 @@ msgid "The user does not exist."
 msgstr ""
 
 msgid "The identifier should not be empty."
+msgstr ""
+
+msgid "The token should be a valid UUID."
 msgstr ""
 
 msgid "A token is required."
@@ -560,7 +527,13 @@ msgstr ""
 msgid "The armored key should not be empty."
 msgstr ""
 
-msgid "The armored key should be a valid ASCII-armored OpenPGP key."
+msgid "The fingerprint should be a valid ASCII string."
+msgstr ""
+
+msgid "A fingerprint is required"
+msgstr ""
+
+msgid "The fingerprint should not be empty"
 msgstr ""
 
 msgid "A length is required."
@@ -578,21 +551,6 @@ msgstr ""
 msgid "The key identifier should not be empty."
 msgstr ""
 
-msgid "The key identifier should be a string of 8 hexadecimal characters."
-msgstr ""
-
-msgid "The fingerprint should be a valid ASCII string."
-msgstr ""
-
-msgid "A fingerprint is required"
-msgstr ""
-
-msgid "The fingerprint should not be empty"
-msgstr ""
-
-msgid "The fingerprint should be a string of 40 hexadecimal characters."
-msgstr ""
-
 msgid "The type should be a valid ASCII string."
 msgstr ""
 
@@ -602,13 +560,7 @@ msgstr ""
 msgid "The type should not be empty"
 msgstr ""
 
-msgid "The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH."
-msgstr ""
-
 msgid "The expiry should be a valid date."
-msgstr ""
-
-msgid "The key should not already be expired."
 msgstr ""
 
 msgid "The creation date should be a valid date."
@@ -618,9 +570,6 @@ msgid "A creation date is required."
 msgstr ""
 
 msgid "The creation date should not be empty."
-msgstr ""
-
-msgid "The creation date should be set in the past."
 msgstr ""
 
 msgid "The deleted status should be a valid boolean."
@@ -635,7 +584,16 @@ msgstr ""
 msgid "The user identifier should not be empty"
 msgstr ""
 
-msgid "Could not parse the key info."
+msgid "You cannot reuse the server keys."
+msgstr ""
+
+msgid "A valid OpenPGP key must be provided."
+msgstr ""
+
+msgid "The OpenPGP armored key could not be parsed."
+msgstr ""
+
+msgid "The OpenPGP armored key could not be validated."
 msgstr ""
 
 msgid "The name should be a valid UTF8 string."
@@ -713,7 +671,7 @@ msgstr ""
 msgid "The property should not be empty."
 msgstr ""
 
-msgid "The property should be an alphabetical string and only point is accepted as special characters."
+msgid "The property should be an alphabetical string and only dot is accepted as special characters."
 msgstr ""
 
 msgid "The property identifier should be a valid UUID."
@@ -950,9 +908,6 @@ msgstr ""
 msgid "The message should be a valid ASCII string."
 msgstr ""
 
-msgid "The message should be a valid ASCII-armored gpg message."
-msgstr ""
-
 msgid "A message is required."
 msgstr ""
 
@@ -1001,6 +956,33 @@ msgstr ""
 msgid "Could not delete the user {0}, please try again later."
 msgstr ""
 
+msgid "The armored key should be a valid ASCII-armored OpenPGP key."
+msgstr ""
+
+msgid "The message should be a valid ASCII-armored OpenPGP message."
+msgstr ""
+
+msgid "The creation date should be set in the past."
+msgstr ""
+
+msgid "The key should not already be expired."
+msgstr ""
+
+msgid "The fingerprint does not match the one of the armored key."
+msgstr ""
+
+msgid "The fingerprint should be a string of 40 hexadecimal characters."
+msgstr ""
+
+msgid "The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH."
+msgstr ""
+
+msgid "The delete status should be a valid boolean."
+msgstr ""
+
+msgid "The key identifier should be a string of 8 hexadecimal characters."
+msgstr ""
+
 msgid "{0} just activated their account on passbolt"
 msgstr ""
 
@@ -1025,6 +1007,12 @@ msgstr ""
 msgid "{0} updated your membership in the group {1}"
 msgstr ""
 
+msgid "{0} just completed the account recovery process"
+msgstr ""
+
+msgid "You just completed the account recovery process!"
+msgstr ""
+
 msgid "Your account recovery, {0}!"
 msgstr ""
 
@@ -1035,6 +1023,9 @@ msgid "{0} deleted the password {1}"
 msgstr ""
 
 msgid "{0} edited the password {1}"
+msgstr ""
+
+msgid "{0} can not complete the account recovery process!"
 msgstr ""
 
 msgid "{0} shared the password {1}"
@@ -1091,6 +1082,9 @@ msgstr ""
 msgid "The send on user setup completed setting should be a boolean."
 msgstr ""
 
+msgid "The send on user recover abort setting should be a boolean."
+msgstr ""
+
 msgid "The send on comment added setting should be a boolean."
 msgstr ""
 
@@ -1125,6 +1119,18 @@ msgid "The send on user created setting should be a boolean."
 msgstr ""
 
 msgid "The send on user recovered setting should be a boolean."
+msgstr ""
+
+msgid "The token is expired."
+msgstr ""
+
+msgid "The authentication token is not valid."
+msgstr ""
+
+msgid "The authentication token could not be found."
+msgstr ""
+
+msgid "The token is already consumed."
 msgstr ""
 
 msgid "Validation failed for authenticationToken {0}. {1}"
@@ -1163,6 +1169,12 @@ msgstr ""
 msgid "Failed to encrypt with key {0}. {1}"
 msgstr ""
 
+msgid "Key expired: {0}."
+msgstr ""
+
+msgid "Expiration date valid for key {0}."
+msgstr ""
+
 msgid "Validation failed for group {0}. {1}"
 msgstr ""
 
@@ -1172,10 +1184,76 @@ msgstr ""
 msgid "Could not validate group user data."
 msgstr ""
 
-msgid "The group user does not exist."
+msgid "Could not validate sub key data."
 msgstr ""
 
-msgid "At least one group manager should be provided."
+msgid "Public key sub key id could not be found."
+msgstr ""
+
+msgid "Could not validate message data."
+msgstr ""
+
+msgid "Recipient information could not be found."
+msgstr ""
+
+msgid "The public key could not be parsed."
+msgstr ""
+
+msgid "The armored message must not contain an extra line before the end block."
+msgstr ""
+
+msgid "The message must contain an asymmetric packet."
+msgstr ""
+
+msgid "The message must contain a symmetric packet."
+msgstr ""
+
+msgid "The message must contain only one recipient."
+msgstr ""
+
+msgid "Unknown key validation rule: {0}"
+msgstr ""
+
+msgid "The armored message could not be validated."
+msgstr ""
+
+msgid "The algorithm is invalid."
+msgstr ""
+
+msgid "The fingerprint id is invalid."
+msgstr ""
+
+msgid "The public key id is invalid."
+msgstr ""
+
+msgid "The key size is not valid."
+msgstr ""
+
+msgid "The key size must match security recommendations."
+msgstr ""
+
+msgid "The key creation date must not be in the future."
+msgstr ""
+
+msgid "The key must not be expired."
+msgstr ""
+
+msgid "The key must not include an expiry date."
+msgstr ""
+
+msgid "The key must be revoked."
+msgstr ""
+
+msgid "The key must not be revoked."
+msgstr ""
+
+msgid "The armored key must not contain an extra line before the end block."
+msgstr ""
+
+msgid "The armored key must not contain multiple keys."
+msgstr ""
+
+msgid "The public key could not be validated."
 msgstr ""
 
 msgid "Could not validate permission data."
@@ -1241,6 +1319,63 @@ msgstr ""
 msgid "The secrets of all the users having access to the resource are required."
 msgstr ""
 
+msgid "An authentication token should be provided."
+msgstr ""
+
+msgid "The authentication token should be a valid UUID."
+msgstr ""
+
+msgid "An OpenPGP key must be provided."
+msgstr ""
+
+msgid "The authentication token could not be saved."
+msgstr ""
+
+msgid "The user does not exist, has not completed the setup or was deleted."
+msgstr ""
+
+msgid "Could not update the authentication token data."
+msgstr ""
+
+msgid "The key provided does not belong to given user."
+msgstr ""
+
+msgid "The user does not exist or is not active."
+msgstr ""
+
+msgid "The OpenPGP key data is not valid."
+msgstr ""
+
+msgid "The OpenPGP key can not be used to encrypt."
+msgstr ""
+
+msgid "The user does not exist, is already active or has been deleted."
+msgstr ""
+
+msgid "The user does not exist or is already active."
+msgstr ""
+
+msgid "The user should not be a guest."
+msgstr ""
+
+msgid "Account recovery case must be a string."
+msgstr ""
+
+msgid "Account recovery reason not supported."
+msgstr ""
+
+msgid "Please provide a valid email address."
+msgstr ""
+
+msgid "This user does not exist or has been deleted."
+msgstr ""
+
+msgid "Please register and complete the setup first."
+msgstr ""
+
+msgid "Please contact your administrator."
+msgstr ""
+
 msgid "Validation failed for user {0}. {1}"
 msgstr ""
 
@@ -1263,12 +1398,6 @@ msgid "Could not use key {0} for signing."
 msgstr ""
 
 msgid "Could not parse the OpenPGP public key."
-msgstr ""
-
-msgid "Invalid key. No OpenPGP public key package found."
-msgstr ""
-
-msgid "Invalid key. No user ID found."
 msgstr ""
 
 msgid "Could not import the OpenPGP key."
@@ -1308,6 +1437,18 @@ msgid "The fingerprint does not match the one associated with the key on file."
 msgstr ""
 
 msgid "No OpenPGP marker found."
+msgstr ""
+
+msgid "Invalid key. No OpenPGP public key package found."
+msgstr ""
+
+msgid "Invalid key. No user ID found."
+msgstr ""
+
+msgid "Unsupported algorithm."
+msgstr ""
+
+msgid "Invalid key. No OpenPGP package found."
 msgstr ""
 
 msgid "This is not a valid OpenPGP armored marker."
@@ -1355,6 +1496,12 @@ msgstr ""
 msgid "The notification settings for the organization were updated."
 msgstr ""
 
+msgid "The supplied email notification settings are not valid"
+msgstr ""
+
+msgid "The user signature could not be verified."
+msgstr ""
+
 msgid "The challenge cannot be decrypted."
 msgstr ""
 
@@ -1376,9 +1523,6 @@ msgstr ""
 msgid "The user OpenPGP key does not exist, or is invalid, or has been deleted."
 msgstr ""
 
-msgid "The user signature is invalid."
-msgstr ""
-
 msgid "The user challenge is missing or invalid."
 msgstr ""
 
@@ -1389,6 +1533,9 @@ msgid "The domain is invalid."
 msgstr ""
 
 msgid "The domain is invalid. Expected: {0} and got {1}"
+msgstr ""
+
+msgid "The following file could not be read: {0}."
 msgstr ""
 
 msgid "The authentication was a success."
@@ -1409,13 +1556,25 @@ msgstr ""
 msgid "An internal error occurred."
 msgstr ""
 
+msgid "Authentication security alert"
+msgstr ""
+
+msgid "No active refresh token matching the request could be found."
+msgstr ""
+
+msgid "The user is deactivated."
+msgstr ""
+
+msgid "The user is deleted."
+msgstr ""
+
 msgid "The verify token is invalid."
 msgstr ""
 
 msgid "The route {0} is not permitted with JWT authentication."
 msgstr ""
 
-msgid "The key pair for JWT Authentication is not complete. The following file could not be read: {0}."
+msgid "The key pair for JWT Authentication is not complete."
 msgstr ""
 
 msgid "The JWT public key could not be read or is not valid."
@@ -1427,19 +1586,16 @@ msgstr ""
 msgid "The configuration {0} is not correctly set."
 msgstr ""
 
-msgid "No active refresh token matching the request could be found."
+msgid "The refresh token should be a valid UUID."
+msgstr ""
+
+msgid "The user ID should be a valid UUID."
 msgstr ""
 
 msgid "The refresh token provided was already used."
 msgstr ""
 
 msgid "Expired refresh token provided."
-msgstr ""
-
-msgid "The refresh token should be a valid UUID."
-msgstr ""
-
-msgid "This is not a valid user id."
 msgstr ""
 
 msgid "Invalid verify token expiry."
@@ -1628,7 +1784,7 @@ msgstr ""
 msgid "The current page cannot be greater than {0}"
 msgstr ""
 
-msgid "The total number of pages should a non negative integer."
+msgid "The total number of pages should be a non negative integer."
 msgstr ""
 
 msgid "The total number of pages is required."
@@ -1950,6 +2106,9 @@ msgid "The force ssl setting should be a valid boolean."
 msgstr ""
 
 msgid "The database schema does not match the one expected"
+msgstr ""
+
+msgid "The database cannot be installed"
 msgstr ""
 
 msgid "There was a problem creating the first user"
@@ -2312,6 +2471,24 @@ msgstr ""
 msgid "register"
 msgstr ""
 
+msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
+msgstr ""
+
+msgid "View user in passbolt"
+msgstr ""
+
+msgid "{0} cannot complete the account recovery process!"
+msgstr ""
+
+msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
+msgstr ""
+
+msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
+msgstr ""
+
+msgid "Please check with them first to confirm."
+msgstr ""
+
 msgid "You have initiated an account recovery!"
 msgstr ""
 
@@ -2328,6 +2505,9 @@ msgid "Click on the link below to proceed."
 msgstr ""
 
 msgid "start recovery"
+msgstr ""
+
+msgid "You just completed an account recovery. Feel free to get in touch with an admin if you feel this action looks suspicious."
 msgstr ""
 
 msgid "{0} just created an account for you on passbolt!"
@@ -2496,6 +2676,12 @@ msgid "This user was invited by {0} {1}."
 msgstr ""
 
 msgid "view users"
+msgstr ""
+
+msgid "This email is an automatic notification sent by"
+msgstr ""
+
+msgid "You can disable these notifications by requesting an administrator to delete your account."
 msgstr ""
 
 msgid "The locale {0} is not valid or not supported."
