@@ -35,6 +35,11 @@ platforms:
   - name: ubuntu-22.04
     driver:
       image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/ubuntu-jammy-2204:latest
+  - name: redhat-9
+    driver:
+      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-9:latest
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
   - name: redhat-8
     driver:
       image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-8:latest
