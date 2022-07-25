@@ -103,10 +103,12 @@ trait OpenPGPBackendGetKeyInfoTrait
             // Look into public key sub packet to find subkey id / fingerprint
             // Will be useful to validate recipients of asymetric encrypted messages
             if (($packet instanceof \OpenPGP_PublicSubkeyPacket) || ($packet instanceof \OpenPGP_SecretSubkeyPacket)) {
-                $results['sub_keys'][] = [
-                    'key_id' => self::fingerprintToKeyId($packet->fingerprint),
-                    'fingerprint' => $packet->fingerprint,
-                ];
+                if ($packet->fingerprint !== null) {
+                    $results['sub_keys'][] = [
+                        'key_id' => self::fingerprintToKeyId($packet->fingerprint),
+                        'fingerprint' => $packet->fingerprint,
+                    ];
+                }
             }
 
             // Some OpenPGP message can contain multiple keys, causing some known issues
