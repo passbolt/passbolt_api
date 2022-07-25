@@ -55,6 +55,11 @@ platforms:
       image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-8:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
+  - name: rockylinux-9
+    driver:
+      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-9:latest
+      privileged: true
+      pid_one_command: /usr/lib/systemd/systemd
   - name: almalinux-8
     driver:
       image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/almalinux-8:latest
