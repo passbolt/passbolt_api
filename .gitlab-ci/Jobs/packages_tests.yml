@@ -154,6 +154,17 @@ rockylinux-8-runtime:
   variables:
     KITCHEN_JOB: runtime-benchmarks-rockylinux-8
 
+rockylinux-9-runtime:
+  extends: .kitchen-test-yum
+  needs:
+    - job: rockylinux-9-break
+    - job: composer
+      artifacts: true
+    - job: build-yum
+      artifacts: true
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-rockylinux-9
+
 opensuse-leap-15-runtime:
   extends: .kitchen-test-suse
   needs:
@@ -285,6 +296,17 @@ rockylinux-8-break:
       artifacts: true
   variables:
     KITCHEN_JOB: break-benchmarks-rockylinux-8
+
+rockylinux-9-break:
+  extends: .kitchen-test-yum
+  needs:
+    - job: rockylinux-9-purge
+    - job: composer
+      artifacts: true
+    - job: build-yum
+      artifacts: true
+  variables:
+    KITCHEN_JOB: break-benchmarks-rockylinux-9
 
 opensuse-leap-15-break:
   extends: .kitchen-test-suse
@@ -418,6 +440,17 @@ rockylinux-8-purge:
   variables:
     KITCHEN_JOB: purge-benchmarks-rockylinux-8
 
+rockylinux-9-purge:
+  extends: .kitchen-test-yum
+  needs:
+    - job: rockylinux-9-fs
+    - job: composer
+      artifacts: true
+    - job: build-yum
+      artifacts: true
+  variables:
+    KITCHEN_JOB: purge-benchmarks-rockylinux-9
+
 opensuse-leap-15-purge:
   extends: .kitchen-test-suse
   needs:
@@ -489,6 +522,11 @@ rockylinux-8-fs:
   extends: .kitchen-test-yum
   variables:
     KITCHEN_JOB: filesystem-benchmarks-rockylinux-8
+
+rockylinux-9-fs:
+  extends: .kitchen-test-yum
+  variables:
+    KITCHEN_JOB: filesystem-benchmarks-rockylinux-9
 
 opensuse-leap-15-fs:
   extends: .kitchen-test-suse
