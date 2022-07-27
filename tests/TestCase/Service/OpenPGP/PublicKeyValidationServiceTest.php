@@ -112,9 +112,9 @@ class PublicKeyValidationServiceTest extends AppTestCase
         $this->assertTrue(PublicKeyValidationService::isValidAlgorithm('RSA'));
         $this->assertTrue(PublicKeyValidationService::isValidAlgorithm('ECC'));
         $this->assertTrue(PublicKeyValidationService::isValidAlgorithm('ECDSA'));
-        $this->assertTrue(PublicKeyValidationService::isValidAlgorithm('ELGAMAL'));
+        $this->assertFalse(PublicKeyValidationService::isValidAlgorithm('ELGAMAL'));
         $this->assertTrue(PublicKeyValidationService::isValidAlgorithm('DH'));
-        $this->assertTrue(PublicKeyValidationService::isValidAlgorithm('DSA'));
+        $this->assertFalse(PublicKeyValidationService::isValidAlgorithm('DSA'));
 
         $this->assertTrue(PublicKeyValidationService::isValidAlgorithm('RSA', true));
         $this->assertTrue(PublicKeyValidationService::isValidAlgorithm('ECC', true));
@@ -280,5 +280,11 @@ mQINBFYuIFQBEACpYmcjzX1XC0LPJCMOY/LwxIB3lGfL5+X5kJSfLpWDYKa0XFXv
         $keyInfo = PublicKeyValidationService::parseAndValidatePublicKey($armoredKey, PublicKeyValidationService::getHistoricalRules());
         $this->assertEquals(384, $keyInfo['bits']);
         $this->assertEquals('ECDSA', $keyInfo['type']);
+    }
+
+    public function testPublicKeyValidationService_unamorFails()
+    {
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public_broken_base64.key');
+        $this->assertFalse(PublicKeyValidationService::isParsableArmoredPublicKey($armoredKey));
     }
 }

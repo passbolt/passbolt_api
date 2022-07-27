@@ -59,8 +59,8 @@ trait OpenPGPBackendArmoredParseTrait
                 // no CRC, consider the key invalid
                 return false;
             }
-
-            return base64_decode($text = substr($text, $pos1, $pos2 - $pos1));
+            $text = substr($text, $pos1, $pos2 - $pos1);
+            return base64_decode($text, true);
         }
 
         return false;

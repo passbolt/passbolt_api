@@ -12,7 +12,7 @@ else
   OS_VERSION=$(grep -E '^VERSION_ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/\"//g')
   OS_VERSION_MAJOR=$(echo ${OS_VERSION:0:1} | bc)
 
-  if [ ${OS_VERSION_MAJOR} -eq 7 ] || [ ${OS_VERSION_MAJOR} -eq 8 ]
+  if [ ${OS_VERSION_MAJOR} -eq 7 ] || [ ${OS_VERSION_MAJOR} -eq 8 ] || [ ${OS_VERSION_MAJOR} -eq 9 ]
   then
     if ! rpm -qa | grep -q epel-release
     then

@@ -27,7 +27,7 @@ class IsValidGpgkeyTypeValidationRule extends PassboltValidationRule
      */
     public function defaultErrorMessage($value, $context): string
     {
-        return __('The type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.');
+        return __('The type should be one of the following: RSA, ECC, ECDSA, DH.');
     }
 
     /**
@@ -39,6 +39,8 @@ class IsValidGpgkeyTypeValidationRule extends PassboltValidationRule
             return false;
         }
 
-        return PublicKeyValidationService::isValidAlgorithm($value);
+        // @deprecated switch to strict mode with v4
+        // See PublicKeyValidationService::getStrictRules
+        return PublicKeyValidationService::isValidAlgorithm($value, false);
     }
 }

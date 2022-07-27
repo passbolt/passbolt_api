@@ -72,7 +72,10 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
         // The key must not be expired or revoked, or have multiple key blocks, etc.
         // TODO w4.0 - Move to getAndAssertGpgkey
         //  Will break compat on recover for non compliant keys
-        PublicKeyValidationService::parseAndValidatePublicKey($gpgkey->armored_key);
+        PublicKeyValidationService::parseAndValidatePublicKey(
+            $gpgkey->armored_key,
+            PublicKeyValidationService::getStrictRules()
+        );
 
         // Check business rules before saving
         $this->Gpgkeys->checkRules($gpgkey);
