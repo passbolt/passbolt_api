@@ -45,8 +45,9 @@ return [
         // e.g. where the passbolt instance will be reachable to your end users.
         // This information is need to render images in emails for example.
         'fullBaseUrl' => 'https://www.passbolt.test',
-        // OPTIONAL you can specify the base directory the app resides in
-        // useful for example if you are running passbolt in a subdirectory like localhost/passbolt
+        // OPTIONAL
+        // You can specify the base directory the app resides in.
+        // Useful if you are running passbolt in a subdirectory like example.com/passbolt
         // Ensure your string starts with a / and does NOT end with a /
         // 'base' => '/subdir'
     ],
