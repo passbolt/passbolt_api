@@ -5,6 +5,13 @@
 # Copyright:: 2020, The Authors, All Rights Reserved.
 #
 
+execute 'what is there where we are' do
+  cwd     "#{node['dest_dir']}"
+  command 'ls -l && pwd'
+  live_stream true
+  action :run
+end
+
 if platform_family?('rhel', 'suse', 'fedora')
   file '/etc/resolv.conf' do
     content 'nameserver 1.1.1.1'
@@ -103,7 +110,7 @@ if platform_family?('debian')
       cwd     "#{node['dest_dir']}"
       command "export PASSBOLT_FLAVOUR=#{node['passbolt_flavour']} \
                && make -f debian/rules debian/control \
-               && gbp dch --snapshot --snapshot-number=$(date +%s) --ignore-branch \
+               && gbp dch --snapshot --snapshot-number=$(date +%s) --ignore-branch >/dev/null 2>&1 \
                && mk-build-deps -irt'apt-get --no-install-recommends -yV' debian/control && dpkg-checkbuilddeps \
                && debuild --preserve-envvar PASSBOLT_FLAVOUR --preserve-envvar PASSBOLT_COMPONENT -us -uc -b -i -I  \
                && cp ../*.deb . \

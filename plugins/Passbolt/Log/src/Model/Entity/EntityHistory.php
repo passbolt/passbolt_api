@@ -28,9 +28,11 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $created
  * @property \Passbolt\Log\Model\Entity\ActionLog $action_log
  * @property \Passbolt\Log\Model\Entity\PermissionHistory $permissions_history
+ * @property \Passbolt\Folders\Model\Entity\FolderHistory $folders_history
  * @property \Passbolt\Log\Model\Entity\SecretHistory $secrets_history
  * @property \App\Model\Entity\Resource $resource
  * @property \Passbolt\Log\Model\Entity\SecretAccess $secret_access
+ * @property \App\Model\Entity\User $user
  */
 class EntityHistory extends Entity
 {

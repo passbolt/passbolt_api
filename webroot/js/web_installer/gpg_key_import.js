@@ -75,11 +75,10 @@ ready(function () {
     const armoredKey = armoredKeyTextarea.value.trim();
 
     try{
-      const privateKeys = await openpgp.key.readArmored(armoredKey);
-      const key = privateKeys.keys[0];
+      const key = await openpgp.readKey({armoredKey: armoredKey});
       privateKeyArmoredInput.setAttribute("value", key.armor().trim());
       publicKeyArmoredInput.setAttribute("value", key.toPublic().armor().trim());
-      fingerprintInput.setAttribute("value", key.primaryKey.getFingerprint().toUpperCase());
+      fingerprintInput.setAttribute("value", key.getFingerprint().toUpperCase());
       form.submit();
     } catch(error) {
       console.error(error);
@@ -101,13 +100,14 @@ ready(function () {
       return false;
     }
 
-    const privateKeys = await openpgp.key.readArmored(armoredKey);
-    if (privateKeys.err && privateKeys.err.length) {
-      handleFieldValidationError(armoredKeyTextarea, privateKeys.err[0].message);
+    let key;
+    try {
+      key = await openpgp.readKey({armoredKey: armoredKey});
+    } catch (e) {
+      handleFieldValidationError(armoredKeyTextarea, e.message);
       return false;
     }
 
-    const key = privateKeys.keys[0];
     if (!key.isPrivate()) {
       handleFieldValidationError(armoredKeyTextarea, 'The key is not a valid private key.');
       return false;

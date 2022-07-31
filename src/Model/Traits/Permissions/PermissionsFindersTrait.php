@@ -332,6 +332,37 @@ trait PermissionsFindersTrait
     }
 
     /**
+     * Find access differences between a group and user.
+     * Return only the accesses that are found in the group accesses but not in the user accesses, such as array_diff
+     * will do.
+     *
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $groupId The group identifier.
+     * @param string $userId The user identifier.
+     * @return \Cake\ORM\Query
+     */
+    public function findAcosAccessesDiffBetweenGroupAndUser(string $acoType, string $groupId, string $userId): Query
+    {
+        // R = All the resources or folders that are only accessible by a group and not accessible by a user
+
+        // Details:
+        // ACOS_GROUP_ACCESS, is the set of ACOS that a group can access
+        // ACOS_USER_ACCESS, is the set of ACOS that a user can access
+        // R = ACOS_GROUP_ACCESS - ACOS_USER_ACCESS
+
+        // ACOS_USER_ACCESS
+        $remainAccessAcoForeignKeysQuery = $this->findAllByAro($acoType, $userId, ['checkGroupsUsers' => true])
+            ->select('aco_foreign_key');
+
+        // R = ACOS_GROUP_ACCESS - ACOS_USER_ACCESS
+        return $this->findAllByAro($acoType, $groupId)
+            ->select('aco_foreign_key')
+            ->where([
+                'aco_foreign_key NOT IN' => $remainAccessAcoForeignKeysQuery,
+            ]);
+    }
+
+    /**
      * Returns a query retrieving the acos (resources or folders) a given aro (user or group) is owner of.
      *
      * @param string $acoType The aco type. By instance Resource or Folder.

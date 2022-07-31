@@ -59,7 +59,7 @@ class UserRecoverService implements UserRecoverServiceInterface
     /**
      * @inheritDoc
      */
-    public function recover(UserAccessControl $uac): void
+    public function recover(UserAccessControl $uac): User
     {
         $user = $this->getUserOrFail();
         $options = ['user' => $user];
@@ -81,6 +81,8 @@ class UserRecoverService implements UserRecoverServiceInterface
         // Create an event to build email with token
         $event = new Event($eventName, $this, $options);
         $this->getEventManager()->dispatch($event);
+
+        return $user;
     }
 
     /**

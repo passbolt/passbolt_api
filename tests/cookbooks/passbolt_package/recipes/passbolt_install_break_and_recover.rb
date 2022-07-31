@@ -15,7 +15,7 @@ elsif platform_family?('rhel', 'suse', 'fedora')
     if platform_family?('rhel', 'fedora')
       flush_cache [ :before ]
     end
-    package_name ['curl', 'nginx', 'mariadb-server', 'createrepo', 'firewalld']
+    package_name ['curl', 'nginx', 'mariadb-server', 'createrepo_c', 'firewalld']
     action :install
   end
   service 'firewalld' do

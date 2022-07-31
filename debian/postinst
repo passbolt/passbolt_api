@@ -29,8 +29,8 @@ declare -A sql_values
 declare -A nginx_values
 
 # We want to extract php version in the form: "php7.x"
-PHP_MAJOR_MINOR="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[2-4]\).*:\1:')"
-PHP_VERSION="php${PHP_MAJOR_MINOR}"
+PHP_MAJOR_MINOR_PATCH="$(php -r "echo PHP_VERSION;" | sed 's:\(7\.[2-4]\).*:\1:')"
+PHP_MAJOR_MINOR="$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')"
 
 JWT_DIR="/etc/passbolt/jwt"
 JWT_KEY="$JWT_DIR/jwt.key"
@@ -44,6 +44,7 @@ NGINX_SITES_ENABLED="/etc/nginx/sites-enabled"
 PASSBOLT_SSL_CERT_PATH="/etc/ssl/certs"
 PASSBOLT_SSL_KEY_PATH="/etc/ssl/private"
 RAND_ID="$(date +%s)"
+CODENAME=$(grep -E "^VERSION_CODENAME=" /etc/os-release | awk -F= '{print $2}' || true)
 ###########################################
 # Functions to debug debconf responses
 ###########################################
@@ -177,7 +178,12 @@ configure_nginx_config_file() {
     cp $NGINX_CONF_EXAMPLE "$NGINX_SITES_AVAILABLE"
     ln -sf "$NGINX_SITES_AVAILABLE/nginx-passbolt.conf" "$NGINX_SITES_ENABLED/"
     sed -i "s/# server_name/server_name ${nginx_values[domain]};/g" $NGINX_CONF
-    sed -i "s/__PHP_VERSION__/$PHP_VERSION/g" $NGINX_CONF
+    if [ "${CODENAME}" = "jammy" ]
+      then
+          sed -i "s/__PHP_SOCK__/php${PHP_MAJOR_MINOR}-fpm.sock/g" $NGINX_CONF
+      else
+          sed -i "s/__PHP_SOCK__/php${PHP_MAJOR_MINOR_PATCH}-fpm.sock/g" $NGINX_CONF
+      fi
   fi
 }
 

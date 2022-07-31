@@ -53,7 +53,7 @@ trait PermissionsModelTrait
      * @param int $type The type of permissions
      * @return Permission
      */
-    public function addPermission(string $aco, string $acoForeignKey, ?string $aro = null, string $aroForeignKey, int $type = Permission::OWNER)
+    public function addPermission(string $aco, string $acoForeignKey, ?string $aro, string $aroForeignKey, int $type = Permission::OWNER)
     {
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $saveOptions = [

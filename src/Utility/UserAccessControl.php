@@ -70,7 +70,7 @@ class UserAccessControl
      *
      * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->userId;
     }
@@ -80,7 +80,7 @@ class UserAccessControl
      *
      * @return string
      */
-    public function roleName()
+    public function roleName(): string
     {
         return $this->roleName;
     }
@@ -88,7 +88,7 @@ class UserAccessControl
     /**
      * @return null|string
      */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->username;
     }
@@ -98,9 +98,19 @@ class UserAccessControl
      *
      * @return bool
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->roleName() === Role::ADMIN;
+    }
+
+    /**
+     * Check if the user is a guest
+     *
+     * @return bool
+     */
+    public function isGuest(): bool
+    {
+        return $this->roleName() === Role::GUEST;
     }
 
     /**
@@ -109,7 +119,7 @@ class UserAccessControl
      * @param string $userId the user uuid
      * @return bool
      */
-    public function is(string $userId)
+    public function is(string $userId): bool
     {
         return $this->getId() === $userId;
     }
@@ -119,7 +129,7 @@ class UserAccessControl
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'userId' => $this->userId,

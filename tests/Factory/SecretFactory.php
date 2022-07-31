@@ -52,10 +52,6 @@ class SecretFactory extends CakephpBaseFactory
                 'data' => $this->getValidSecret(),
             ];
         });
-
-        $this
-            ->with('Users')
-            ->with('Resources');
     }
 
     /**

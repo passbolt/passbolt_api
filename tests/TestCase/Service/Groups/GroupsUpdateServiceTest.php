@@ -18,9 +18,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Service\Groups;
 
 use App\Error\Exception\ValidationException;
-use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Service\Groups\GroupsUpdateService;
+use App\Service\GroupsUsers\GroupsUsersAddService;
+use App\Service\GroupsUsers\GroupsUsersDeleteService;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -35,19 +39,8 @@ use Cake\Utility\Hash;
  */
 class GroupsUpdateServiceTest extends AppTestCase
 {
-    public $fixtures = [
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Favorites',
-    ];
-
     /**
-     * @var GroupsTable
-     */
-    private $groupsTable;
-
-    /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
@@ -59,7 +52,6 @@ class GroupsUpdateServiceTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->service = new GroupsUpdateService();
     }
@@ -69,549 +61,474 @@ class GroupsUpdateServiceTest extends AppTestCase
     public function testUpdateSuccess_Common_EventsAreFired()
     {
         // Enable event tracking
-        $this->groupsTable->getEventManager()->setEventList(new EventList());
+        $this->groupsUsersTable->getEventManager()->setEventList(new EventList());
 
-        [$r1, $r2, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        [$r1, $r2, $g1, $u1, $u2, $u3, $u4] = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
 
-        // Events are trigger when a user is added or removed from a group
-        $userAGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first();
-        $userDId = UuidFactory::uuid('user.id.dame');
+        // Events are triggered when a user is added or removed from a group
         $changes = [
-            ['id' => $userAGroupUser->id, 'delete' => true],
-            ['user_id' => $userDId, 'is_admin' => true],
+            ['id' => $g1->groups_users[0]->id, 'delete' => true],
+            ['user_id' => $u4->id, 'is_admin' => true],
         ];
         $secrets = [
-            ['resource_id' => $r1->id, 'user_id' => $userDId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
-            ['resource_id' => $r2->id, 'user_id' => $userDId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r1->id, 'user_id' => $u4->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r2->id, 'user_id' => $u4->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
             ];
 
         $this->service->update($uac, $g1->id, [], $changes, $secrets);
-        $this->assertEventFired(GroupsUpdateService::AFTER_GROUP_USER_REMOVED_EVENT_NAME, $this->groupsTable->getEventManager());
-        $this->assertEventFired(GroupsUpdateService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $this->groupsTable->getEventManager());
+        $this->assertEventFired(GroupsUsersDeleteService::AFTER_GROUP_USER_DELETED_EVENT_NAME, $this->groupsUsersTable->getEventManager());
+        $this->assertEventFired(GroupsUsersAddService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $this->groupsUsersTable->getEventManager());
     }
 
-    /* ADD/UPDATE/DELETE GROUP USER */
+    /* ******************************************
+     * Success - mix add/update/delete group users
+     ****************************************** */
 
     public function testUpdateSuccess_AddGroupUser_HavingMultipleResourceSharedWith()
     {
-        [$r1, $r2, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first()->id;
-        $userBGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first()->id;
-        $userCGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userCId)->first()->id;
-        $userDId = UuidFactory::uuid('user.id.dame');
+        [$r1, $r2, $g1, $userA, $userB, $userC, $userD] = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
+        $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userA->id)->first()->id;
+        $userBGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userB->id)->first()->id;
+        $userCGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userC->id)->first()->id;
         $changes = [
             ['id' => $userAGroupUserId, 'delete' => true],
             ['id' => $userBGroupUserId, 'is_admin' => false],
             ['id' => $userCGroupUserId, 'delete' => true],
-            ['user_id' => $userDId, 'is_admin' => true],
+            ['user_id' => $userD->id, 'is_admin' => true],
         ];
         $secrets = [
-            ['resource_id' => $r1->id, 'user_id' => $userDId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
-            ['resource_id' => $r2->id, 'user_id' => $userDId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r1->id, 'user_id' => $userD->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r2->id, 'user_id' => $userD->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
         ];
 
         $this->service->update($uac, $g1->id, [], $changes, $secrets);
 
-        $this->assertUserIsNotMemberOf($g1->id, $userAId);
-        $this->assertUserIsMemberOf($g1->id, $userBId, false);
-        $this->assertUserIsNotMemberOf($g1->id, $userCId);
-        $this->assertUserIsMemberOf($g1->id, $userDId, true);
+        $this->assertUserIsNotMemberOf($g1->id, $userA->id);
+        $this->assertUserIsMemberOf($g1->id, $userB->id, false);
+        $this->assertUserIsNotMemberOf($g1->id, $userC->id);
+        $this->assertUserIsMemberOf($g1->id, $userD->id, true);
         // R1
-        $this->assertSecretExists($r1->id, $userAId);
-        $this->assertSecretExists($r1->id, $userBId);
-        $this->assertSecretNotExist($r1->id, $userCId);
-        $this->assertSecretExists($r1->id, $userDId);
+        $this->assertSecretExists($r1->id, $userA->id);
+        $this->assertSecretExists($r1->id, $userB->id);
+        $this->assertSecretNotExist($r1->id, $userC->id);
+        $this->assertSecretExists($r1->id, $userD->id);
         // R2
-        $this->assertSecretExists($r1->id, $userAId);
-        $this->assertSecretExists($r1->id, $userBId);
-        $this->assertSecretNotExist($r1->id, $userCId);
-        $this->assertSecretExists($r1->id, $userDId);
+        $this->assertSecretExists($r2->id, $userA->id);
+        $this->assertSecretExists($r2->id, $userB->id);
+        $this->assertSecretNotExist($r2->id, $userC->id);
+        $this->assertSecretExists($r2->id, $userD->id);
     }
 
-    private function insertFixture_AddGroupUser_HavingMultipleResourceSharedWith()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => true],
-            ['user_id' => $userCId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $r2, $g1, $userAId, $userBId, $userCId];
-    }
-
-    /* ADD GROUP USER */
+    /* ******************************************
+     * Success - add user to group
+     ****************************************** */
 
     public function testUpdateSuccess_AddGroupUser_HavingOneResourceSharedWith()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $userDId = UuidFactory::uuid('user.id.dame');
+        [$r1, $g1, $userA, $userB, $userC, $userD] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        $uac = new UserAccessControl(Role::USER, $userA->id);
         $changes = [
-            ['user_id' => $userCId, 'is_admin' => true],
-            ['user_id' => $userDId, 'is_admin' => false],
+            ['user_id' => $userC->id, 'is_admin' => true],
+            ['user_id' => $userD->id, 'is_admin' => false],
         ];
         $secrets = [
-            ['resource_id' => $r1->id, 'user_id' => $userCId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
-            ['resource_id' => $r1->id, 'user_id' => $userDId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r1->id, 'user_id' => $userC->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r1->id, 'user_id' => $userD->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
         ];
 
         $this->service->update($uac, $g1->id, [], $changes, $secrets);
 
-        $this->assertUserIsMemberOf($g1->id, $userAId, true);
-        $this->assertUserIsMemberOf($g1->id, $userBId, false);
-        $this->assertUserIsMemberOf($g1->id, $userCId, true);
-        $this->assertUserIsMemberOf($g1->id, $userDId, false);
-        $this->assertSecretExists($r1->id, $userAId);
-        $this->assertSecretExists($r1->id, $userBId);
-        $this->assertSecretExists($r1->id, $userCId);
-        $this->assertSecretExists($r1->id, $userDId);
-    }
-
-    private function insertFixture_AddGroupUser_HavingOneResourceSharedWith()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => false],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $userAId, $userBId];
+        $this->assertUserIsMemberOf($g1->id, $userA->id, true);
+        $this->assertUserIsMemberOf($g1->id, $userB->id, false);
+        $this->assertUserIsMemberOf($g1->id, $userC->id, true);
+        $this->assertUserIsMemberOf($g1->id, $userD->id, false);
+        $this->assertSecretExists($r1->id, $userA->id);
+        $this->assertSecretExists($r1->id, $userB->id);
+        $this->assertSecretExists($r1->id, $userC->id);
+        $this->assertSecretExists($r1->id, $userD->id);
     }
 
     public function testUpdateSuccess_AddGroupUser_HavingMultipleResourcesSharedWith()
     {
-        [$r1, $r2, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingMultipleResourcesSharedWith();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $userDId = UuidFactory::uuid('user.id.dame');
+        [$r1, $r2, $g1, $u1, $u2] = $this->insertFixture_AddGroupUser_HavingMultipleResourcesSharedWith();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $u3 = UserFactory::make()->persist();
+        $u4 = UserFactory::make()->persist();
+
         $changes = [
-            ['user_id' => $userCId, 'is_admin' => true],
-            ['user_id' => $userDId, 'is_admin' => false],
+            ['user_id' => $u3->id, 'is_admin' => true],
+            ['user_id' => $u4->id, 'is_admin' => false],
         ];
         $secrets = [
-            ['resource_id' => $r1->id, 'user_id' => $userCId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
-            ['resource_id' => $r1->id, 'user_id' => $userDId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
-            ['resource_id' => $r2->id, 'user_id' => $userCId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
-            ['resource_id' => $r2->id, 'user_id' => $userDId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r1->id, 'user_id' => $u3->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r1->id, 'user_id' => $u4->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r2->id, 'user_id' => $u3->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r2->id, 'user_id' => $u4->id, 'data' => Hash::get($this->getDummySecretData(), 'data')],
         ];
 
         $this->service->update($uac, $g1->id, [], $changes, $secrets);
 
-        $this->assertUserIsMemberOf($g1->id, $userAId, true);
-        $this->assertUserIsMemberOf($g1->id, $userBId, false);
-        $this->assertUserIsMemberOf($g1->id, $userCId, true);
-        $this->assertUserIsMemberOf($g1->id, $userDId, false);
-        $this->assertSecretExists($r1->id, $userAId);
-        $this->assertSecretExists($r1->id, $userBId);
-        $this->assertSecretExists($r1->id, $userCId);
-        $this->assertSecretExists($r1->id, $userDId);
-        $this->assertSecretExists($r2->id, $userAId);
-        $this->assertSecretExists($r2->id, $userBId);
-        $this->assertSecretExists($r2->id, $userCId);
-        $this->assertSecretExists($r2->id, $userDId);
-    }
-
-    private function insertFixture_AddGroupUser_HavingMultipleResourcesSharedWith()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => false],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $r2, $g1, $userAId, $userBId];
+        $this->assertUserIsMemberOf($g1->id, $u1->id, true);
+        $this->assertUserIsMemberOf($g1->id, $u2->id, false);
+        $this->assertUserIsMemberOf($g1->id, $u3->id, true);
+        $this->assertUserIsMemberOf($g1->id, $u4->id, false);
+        $this->assertSecretExists($r1->id, $u1->id);
+        $this->assertSecretExists($r1->id, $u2->id);
+        $this->assertSecretExists($r1->id, $u3->id);
+        $this->assertSecretExists($r1->id, $u4->id);
+        $this->assertSecretExists($r2->id, $u1->id);
+        $this->assertSecretExists($r2->id, $u2->id);
+        $this->assertSecretExists($r2->id, $u3->id);
+        $this->assertSecretExists($r2->id, $u4->id);
     }
 
     public function testUpdateSuccess_AddGroupUser_UserHasAlreadyAccessToTheResource()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_UserHasAlreadyAccessToTheResource();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $data = [
-            ['user_id' => $userBId, 'is_admin' => true],
-        ];
+        [$r1, $g1, $u1, $u2] = $this->insertFixture_AddGroupUser_UserHasAlreadyAccessToTheResource();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
 
-        $this->service->update($uac, $g1->id, [], $data);
-
-        $this->assertUserIsMemberOf($g1->id, $userAId, true);
-        $this->assertUserIsMemberOf($g1->id, $userBId, true);
-        $this->assertSecretExists($r1->id, $userAId);
-        $this->assertSecretExists($r1->id, $userBId);
-    }
-
-    private function insertFixture_AddGroupUser_UserHasAlreadyAccessToTheResource()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userBId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $userAId, $userBId];
-    }
-
-    public function testUpdateError_AddGroupUser_GroupUserValidation()
-    {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $data = [
-            ['user_id' => $userCId, 'is_admin' => 42],
-        ];
-
+        $changes = [['user_id' => $u2->id, 'is_admin' => true]];
         try {
-            $this->service->update($uac, $g1->id, [], $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.is_admin.boolean');
+            $this->service->update($uac, $g1->id, [], $changes);
+        } catch (\Exception $e) {
+            dd($e->getErrors());
         }
 
-        $this->assertUserIsMemberOf($g1->id, $userAId, true);
-        $this->assertUserIsMemberOf($g1->id, $userBId, false);
-        $this->assertUserIsNotMemberOf($g1->id, $userCId);
-        $this->assertSecretExists($r1->id, $userAId);
-        $this->assertSecretExists($r1->id, $userBId);
-        $this->assertSecretNotExist($r1->id, $userCId);
+        $this->assertUserIsMemberOf($g1->id, $u1->id, true);
+        $this->assertUserIsMemberOf($g1->id, $u2->id, true);
+        $this->assertSecretExists($r1->id, $u1->id);
+        $this->assertSecretExists($r1->id, $u2->id);
     }
 
-    private function assertUpdateDryRunValidationException(ValidationException $e, string $errorFieldName)
+    /* ******************************************
+     * Error - add user to group
+     ****************************************** */
+
+    public function testUpdateError_AddGroupUser_GroupUserValidation_InvalidUserId()
     {
-        $this->assertEquals('Could not validate group data.', $e->getMessage());
-        $error = Hash::get($e->getErrors(), $errorFieldName);
-        $this->assertNotNull($error, "Expected error not found : {$errorFieldName}. Errors: " . json_encode($e->getErrors()));
+        [$r1, $g1, $u1, $u2] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $u3 = UserFactory::make()->persist();
+
+        $changes = [['user_id' => ['not-a-valid-uuid'], 'is_admin' => true]];
+        try {
+            $this->service->update($uac, $g1->id, [], $changes);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.user_id.uuid');
+        }
+
+        $this->assertUserIsMemberOf($g1->id, $u1->id, true);
+        $this->assertUserIsMemberOf($g1->id, $u2->id, false);
+        $this->assertUserIsNotMemberOf($g1->id, $u3->id);
+        $this->assertSecretExists($r1->id, $u1->id);
+        $this->assertSecretExists($r1->id, $u2->id);
+        $this->assertSecretNotExist($r1->id, $u3->id);
+    }
+
+    public function testUpdateError_AddGroupUser_GroupUserValidation_InvalidGroupUserData()
+    {
+        [$r1, $g1, $u1, $u2] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $u3 = UserFactory::make()->persist();
+
+        $changes = [['user_id' => $u3->id, 'is_admin' => 42]];
+        try {
+            $this->service->update($uac, $g1->id, [], $changes);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.is_admin.boolean');
+        }
+
+        $this->assertUserIsMemberOf($g1->id, $u1->id, true);
+        $this->assertUserIsMemberOf($g1->id, $u2->id, false);
+        $this->assertUserIsNotMemberOf($g1->id, $u3->id);
+        $this->assertSecretExists($r1->id, $u1->id);
+        $this->assertSecretExists($r1->id, $u2->id);
+        $this->assertSecretNotExist($r1->id, $u3->id);
     }
 
     public function testUpdateError_AddGroupUser_GroupUserBuildRuleValidation_UserNotExist()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userCId = UuidFactory::uuid('user.id.carol');
+        [$r1, $g1, $u1] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $u3 = UserFactory::make()->persist();
         $userNotExistId = UuidFactory::uuid();
-        $data = [
-            ['user_id' => $userCId, 'is_admin' => true],
+
+        $changes = [
+            ['user_id' => $u3->id, 'is_admin' => true],
             ['user_id' => $userNotExistId, 'is_admin' => false],
         ];
+        $secrets = [['resource_id' => $r1->id, 'user_id' => $u3->id, 'data' => Hash::get($this->getDummySecretData(), 'data')]];
 
         try {
-            $this->service->update($uac, $g1->id, [], $data);
+            $this->service->update($uac, $g1->id, [], $changes, $secrets);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.1.user_id.user_exists');
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.1.user_id.user_exists');
         }
     }
 
     public function testUpdateError_AddGroupUser_SecretValidation_NotEnoughSecretsProvided()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $changes = [
-            ['user_id' => $userCId, 'is_admin' => true],
-        ];
+        [$r1, $g1, $u1] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $u3 = UserFactory::make()->persist();
+
+        $changes = [['user_id' => $u3->id, 'is_admin' => true]];
         $secrets = [];
 
         try {
             $this->service->update($uac, $g1->id, [], $changes, $secrets);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'secrets.secrets_provided');
+            // @todo rename all_missing, maybe all_required?
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.secrets.all_missing');
         }
     }
 
     public function testUpdateError_AddGroupUser_SecretValidation_SecretForAResourceTheGroupHasNoAccess()
     {
-        [$r1, $r2, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_SecretValidation_SecretForAResourceTheGroupHasNoAccess();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $changes = [
-            ['user_id' => $userCId, 'is_admin' => true],
-        ];
-        $secrets = [
-            ['resource_id' => $r2->id, 'user_id' => $userCId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
-        ];
+        [$r1, $r2, $g1, $u1, $u2] = $this->insertFixture_AddGroupUser_SecretValidation_SecretForAResourceTheGroupHasNoAccess();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $u3 = UserFactory::make()->persist();
+
+        $changes = [['user_id' => $u3->id, 'is_admin' => true]];
+        $secrets = [['resource_id' => $r2->id, 'user_id' => $u3->id, 'data' => Hash::get($this->getDummySecretData(), 'data')]];
 
         try {
             $this->service->update($uac, $g1->id, [], $changes, $secrets);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'secrets.secrets_provided');
+            // @todo resource_id ou directement secrets.0 et l'erreur, c'est pas vraiment un champs ici mais l'intégralité du secret qu'on ne prend pas.
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.secrets.0.resource_id.only_missing');
         }
+    }
+
+    /* ******************************************
+     * Success - update group user
+     ****************************************** */
+
+    public function testUpdateSuccess_UpdateGroupUser()
+    {
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+
+        $data = [
+            ['id' => $g1->groups_users[0]->id, 'is_admin' => false],
+            ['id' => $g1->groups_users[1]->id, 'is_admin' => true],
+        ];
+        $this->service->update($uac, $g1->id, $data);
+
+        $this->assertUserIsMemberOf($g1->id, $u1->id, true);
+        $this->assertUserIsMemberOf($g1->id, $u2->id, false);
+    }
+
+    /* ******************************************
+     * Error - update group user
+     ****************************************** */
+
+    public function testUpdateError_UpdateGroupUser_InvalidGroupUserData()
+    {
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+
+        $data = [['id' => $g1->groups_users[0]->id, 'is_admin' => 42]];
+        try {
+            $this->service->update($uac, $g1->id, [], $data);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.is_admin.boolean');
+        }
+    }
+
+    public function testUpdateError_UpdateGroupUser_NonExistingGroupUserRecord()
+    {
+        [$r1, $g1, $u1] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+
+        $userGroupNotExist = UuidFactory::uuid();
+        $data = [['id' => $userGroupNotExist, 'is_admin' => true]];
+        try {
+            $this->service->update($uac, $g1->id, [], $data);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.id.exists');
+        }
+    }
+
+    public function testUpdateError_UpdateGroupUser_RemoveLastGroupManager()
+    {
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+
+        $data = [['id' => $g1->groups_users[0]->id, 'is_admin' => false]];
+        try {
+            $this->service->update($uac, $g1->id, [], $data);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.is_admin.at_least_one_group_manager');
+        }
+    }
+
+    public function testUpdateError_UpdateGroupUser_GroupUserFromAnotherGroup()
+    {
+        [$g1, $g2, $u1] = $this->insertFixture_TwoGroupsWithTwoMembers();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+
+        $data = [['id' => $g2->groups_users[1]->id, 'is_admin' => true]];
+
+        try {
+            $this->service->update($uac, $g1->id, [], $data);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.id.exists');
+        }
+    }
+
+    /* ******************************************
+     * Success - remove user from group
+     ****************************************** */
+
+    public function testUpdateSuccess_DeleteSingleGroupUser()
+    {
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+
+        $data = [['id' => $g1->groups_users[1]->id, 'delete' => true]];
+        $this->service->update($uac, $g1->id, [], $data);
+
+        $this->assertUserIsMemberOf($g1->id, $u1->id, true);
+        $this->assertUserIsNotMemberOf($g1->id, $u2->id);
+    }
+
+    /* ******************************************
+     * Error - remove user from group
+     ****************************************** */
+
+    public function testUpdateError_DeleteGroupUser_GroupUserValidation_GroupUserNotExist()
+    {
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+        $userGroupNotExist = UuidFactory::uuid();
+
+        $data = [['id' => $userGroupNotExist, 'delete' => true]];
+        try {
+            $this->service->update($uac, $g1->id, [], $data);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.id.exists');
+        }
+    }
+
+    public function testUpdateError_DeleteGroupUser_RemoveLastGroupManager()
+    {
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+
+        $data = [['id' => $g1->groups_users[0]->id, 'delete' => true]];
+        try {
+            $this->service->update($uac, $g1->id, [], $data);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.is_admin.at_least_one_group_manager');
+        }
+    }
+
+    public function testUpdateError_DeleteGroupUser_GroupUserFromAnotherGroup()
+    {
+        [$g1, $g2, $u1] = $this->insertFixture_TwoGroupsWithTwoMembers();
+        $uac = new UserAccessControl(Role::USER, $u1->id);
+
+        $data = [['id' => $g2->groups_users[1]->id, 'delete' => true]];
+
+        try {
+            $this->service->update($uac, $g1->id, [], $data);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (ValidationException $e) {
+            $this->assertValidationException($e, 'Could not validate group data.', 'groups_users.0.id.exists');
+        }
+    }
+
+    /* ******************************************
+     * Fixtures
+     ****************************************** */
+
+    private function insertFixture_AddGroupUser_HavingMultipleResourceSharedWith(): array
+    {
+        $u1 = UserFactory::make()->persist();
+        $u2 = UserFactory::make()->persist();
+        $u3 = UserFactory::make()->persist();
+        $u4 = UserFactory::make()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2, $u3])->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2, $u3])->persist();
+        $r2 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2, $u3])->persist();
+
+        return [$r1, $r2, $g1, $u1, $u2, $u3, $u4];
+    }
+
+    private function insertFixture_AddGroupUser_HavingOneResourceSharedWith(): array
+    {
+        $u1 = UserFactory::make()->persist();
+        $u2 = UserFactory::make()->persist();
+        $u3 = UserFactory::make()->persist();
+        $u4 = UserFactory::make()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
+
+        return [$r1, $g1, $u1, $u2, $u3, $u4];
+    }
+
+    private function insertFixture_AddGroupUser_HavingMultipleResourcesSharedWith()
+    {
+        $u1 = UserFactory::make()->persist();
+        $u2 = UserFactory::make()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
+        $r2 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
+
+        return [$r1, $r2, $g1, $u1, $u2];
+    }
+
+    private function insertFixture_AddGroupUser_UserHasAlreadyAccessToTheResource()
+    {
+        $u1 = UserFactory::make()->persist();
+        $u2 = UserFactory::make()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$u2, $g1])->withSecretsFor([$u1, $u2])->persist();
+
+        return [$r1, $g1, $u1, $u2];
     }
 
     private function insertFixture_AddGroupUser_SecretValidation_SecretForAResourceTheGroupHasNoAccess()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => false],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER]);
+        $u1 = UserFactory::make()->persist();
+        $u2 = UserFactory::make()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
+        $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
+        $r2 = ResourceFactory::make()->withPermissionsFor([$u1])->withSecretsFor([$u1])->persist();
 
-        return [$r1, $r2, $g1, $userAId, $userBId];
+        return [$r1, $r2, $g1, $u1, $u2];
     }
 
-    /* UPDATE GROUP USER */
-
-    public function testUpdateSuccess_UpdateGroupUser()
+    private function insertFixture_GroupWithOneManagerAndOneMember(): array
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser();
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $u1 = UserFactory::make()->persist();
+        $u2 = UserFactory::make()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
 
-        $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first()->id;
-        $userBGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first()->id;
-        $data = [
-            ['id' => $userAGroupUserId, 'is_admin' => false],
-            ['id' => $userBGroupUserId, 'is_admin' => true],
-        ];
-        $this->service->update($uac, $g1->id, $data);
-
-        $this->assertUserIsMemberOf($g1->id, $userAId, true);
-        $this->assertUserIsMemberOf($g1->id, $userBId, false);
+        return [$u1, $u2, $g1];
     }
 
-    private function insertFixture_UpdateGroupUser()
+    private function insertFixture_TwoGroupsWithTwoMembers()
     {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => false],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $u1 = UserFactory::make()->persist();
+        $u2 = UserFactory::make()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
+        $g2 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
 
-        return [$r1, $g1, $userAId, $userBId];
-    }
-
-    public function testUpdateError_UpdateGroupUser_GroupUserValidation()
-    {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first()->id;
-        $data = [
-            ['id' => $userAGroupUserId, 'is_admin' => 42],
-        ];
-        try {
-            $this->service->update($uac, $g1->id, [], $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.is_admin.boolean');
-        }
-    }
-
-    public function testUpdateError_UpdateGroupUser_GroupUserBuildRuleValidation_GroupUserNotExist()
-    {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userGroupNotExist = UuidFactory::uuid();
-        $data = [
-            ['id' => $userGroupNotExist, 'is_admin' => true],
-        ];
-        try {
-            $this->service->update($uac, $g1->id, [], $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.id.exists');
-        }
-    }
-
-    public function testUpdateError_UpdateGroupUser_GroupUserBuildRuleValidation_AtLeastOneGroupManager()
-    {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first()->id;
-        $data = [
-            ['id' => $userAGroupUserId, 'is_admin' => false],
-        ];
-        try {
-            $this->service->update($uac, $g1->id, [], $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.at_least_one_group_manager');
-        }
-    }
-
-    public function testUpdateError_UpdateGroupUser_Validation_UpdateGroupUserOfAnotherGroup()
-    {
-        [$r1, $g1, $g2, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser_Validation_UpdateGroupUserOfAnotherGroup();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userAGroup2UserId = $this->groupsUsersTable->findByGroupIdAndUserId($g2->id, $userAId)->first()->id;
-        $data = [
-            ['id' => $userAGroup2UserId, 'is_admin' => false],
-        ];
-
-        try {
-            $this->service->update($uac, $g1->id, [], $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.id.exists');
-        }
-    }
-
-    private function insertFixture_UpdateGroupUser_Validation_UpdateGroupUserOfAnotherGroup()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $g2 = $this->addGroup(['name' => 'G2', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $g2, $userAId, $userBId];
-    }
-
-    /* DELETE GROUP USER */
-
-    public function testUpdateSuccess_DeleteGroupUser()
-    {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_DeleteGroupUser();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first()->id;
-        $userCGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userCId)->first()->id;
-        $data = [
-            ['id' => $userBGroupUserId, 'delete' => true],
-            ['id' => $userCGroupUserId, 'delete' => true],
-        ];
-        $this->service->update($uac, $g1->id, [], $data);
-
-        $this->assertUserIsMemberOf($g1->id, $userAId, true);
-        $this->assertUserIsNotMemberOf($g1->id, $userBId);
-        $this->assertUserIsNotMemberOf($g1->id, $userCId);
-        $this->assertSecretExists($r1->id, $userAId);
-        $this->assertSecretNotExist($r1->id, $userBId);
-        $this->assertSecretNotExist($r1->id, $userCId);
-    }
-
-    private function insertFixture_DeleteGroupUser()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => true],
-            ['user_id' => $userCId, 'is_admin' => false],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $userAId, $userBId, $userCId];
-    }
-
-    public function testUpdateSuccess_DeleteGroupUser_UserHasOtherAccessToTheResource()
-    {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_DeleteGroupUser_UserHasOtherAccessToTheResource();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userBGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first()->id;
-        $data = [
-            ['id' => $userBGroupUserId, 'delete' => true],
-        ];
-        $this->service->update($uac, $g1->id, [], $data);
-
-        $this->assertUserIsMemberOf($g1->id, $userAId, true);
-        $this->assertUserIsNotMemberOf($g1->id, $userBId);
-        $this->assertSecretExists($r1->id, $userAId);
-        $this->assertSecretExists($r1->id, $userBId);
-    }
-
-    private function insertFixture_DeleteGroupUser_UserHasOtherAccessToTheResource()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userBId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $userAId, $userBId];
-    }
-
-    public function testUpdateError_DeleteGroupUser_GroupUserValidation_GroupUserNotExist()
-    {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_DeleteGroupUser();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userGroupNotExist = UuidFactory::uuid();
-        $data = [
-            ['id' => $userGroupNotExist, 'delete' => true],
-        ];
-
-        try {
-            $this->service->update($uac, $g1->id, [], $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.id.exists');
-        }
-    }
-
-    public function testUpdateError_DeleteGroupUser_GroupUserBuildRuleValidation_AtLeastOneGroupManager()
-    {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_DeleteGroupUser();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first()->id;
-        $userBGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first()->id;
-        $data = [
-            ['id' => $userAGroupUserId, 'delete' => true],
-            ['id' => $userBGroupUserId, 'delete' => true],
-        ];
-
-        try {
-            $this->service->update($uac, $g1->id, [], $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.at_least_one_group_manager');
-        }
-    }
-
-    public function testUpdateError_DeleteGroupUser_Validation_DeleteGroupUserOfAnotherGroup()
-    {
-        [$r1, $g1, $g2, $userAId, $userBId] = $this->insertFixture_DeleteGroupUser_Validation_DeleteGroupUserOfAnotherGroup();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userAGroup2UserId = $this->groupsUsersTable->findByGroupIdAndUserId($g2->id, $userAId)->first()->id;
-        $data = [
-            ['id' => $userAGroup2UserId, 'delete' => true],
-        ];
-
-        try {
-            $this->service->update($uac, $g1->id, [], $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.id.exists');
-        }
-    }
-
-    private function insertFixture_DeleteGroupUser_Validation_DeleteGroupUserOfAnotherGroup()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $g2 = $this->addGroup(['name' => 'G2', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $g2, $userAId, $userBId];
+        return [$g1, $g2, $u1, $u2];
     }
 }

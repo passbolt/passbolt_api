@@ -153,14 +153,14 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
                 'data' => $this->_getDummyPostData(['name' => ['test']]),
             ],
             'at least one group manager' => [
-                'errorField' => 'groups_users.at_least_one_admin',
+                'errorField' => 'groups_users.at_least_one_group_manager',
                 'errorMessage' => 'A group manager should be provided.',
                 'data' => $this->_getDummyPostData(['groups_users' => [
                     ['user_id' => UuidFactory::uuid('user.id.ada')],
                 ]]),
             ],
             'nos users provided' => [
-                'errorField' => 'groups_users.at_least_one_admin',
+                'errorField' => 'groups_users.at_least_one_group_manager',
                 'errorMessage' => 'A group manager should be provided.',
                 'data' => ['name' => 'New group name'],
             ],
