@@ -59,7 +59,7 @@ class UsersRegisterController extends AppController
     {
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
-            throw new ForbiddenException(__('Only guest are allowed to register.'));
+            throw new ForbiddenException(__('Only guests are allowed to register.'));
         }
 
         $this->set('title', Configure::read('passbolt.meta.description'));
@@ -81,7 +81,7 @@ class UsersRegisterController extends AppController
 
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
-            throw new ForbiddenException(__('Only guest are allowed to register.'));
+            throw new ForbiddenException(__('Only guests are allowed to register.'));
         }
 
         $user = $userRegisterService->register();
