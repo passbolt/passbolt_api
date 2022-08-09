@@ -135,9 +135,9 @@
         "stan": "phpstan analyse --memory-limit=-1",
         "psalm": "psalm",
         "test": "phpunit --colors=always",
-        "externalize-locale-strings": [
-            "./bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes",
-            "find resources/locales/en_UK -name '*.pot' -exec sh -c 'mv \"$1\" \"${1%.pot}.po\"' _ {} \\;"
+        "i18n:externalize": [
+          "./bin/cake i18n extract --app ./ --paths src,plugins,templates --output resources/locales/en_UK --exclude /tests,/vendors,/src/Command --overwrite --extract-core no --no-location --merge yes",
+          "find resources/locales/en_UK -name '*.pot' -exec sh -c 'mv \"$1\" \"${1%.pot}.po\"' _ {} \\;"
         ]
     },
     "prefer-stable": true
