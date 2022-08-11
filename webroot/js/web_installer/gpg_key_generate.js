@@ -149,22 +149,39 @@ ready(function () {
    * @param {string} name The user id name
    * @param {string} email The user id email
    * @param {string} comment The user id comment
-   * @return {openpgp.Key}
+   * @return {Promise<object>} Object containing the generated key pair
+   * @throw Error If the key cannot be generated
    */
   const generateKey = async function(name, email, comment) {
-    comment = comment != undefined && comment != '' ? ` (${comment})` : '';
-    const userId = `${name}${comment} <${email}>`;
-    const length = '3072';
+    const keyComment = comment ? ` (${comment})` : '';
+    const keyName = `${name}${keyComment}`;
 
-    return await openpgp.generateKey({
-      rsaBits: length,
-      userIDs: [{
-        name: `${name}${comment}`,
-        email: email,
-      }],
-      type: 'rsa'
-    });
+    return delegateGenerateKey(keyName, email);
   };
+
+  /**
+   * Delegate the key generation to a service worker.
+   * @param {string} name The key name
+   * @param {string} email The key email
+   * @return {Promise<object>} Object containing the generated key pair
+   * @throw Error If the key cannot be generated
+   */
+  const delegateGenerateKey = async (name, email) => {
+    const worker = new Worker('/js/web_installer/generate_key_worker.js');
+
+    return new Promise((resolve, reject) => {
+      const channel = new MessageChannel();
+      channel.port1.onmessage = (result) => {
+        if (result.data instanceof Error) {
+          reject(result.data);
+        } else {
+          resolve(result.data);
+        }
+        worker.terminate();
+      };
+      worker.postMessage({ name, email }, [channel.port2]);
+    });
+  }
 
   init();
 });
