@@ -1,3 +1,11 @@
+passbolt-ce-server (3.7.1-1) buster; urgency=medium
+  * PB-18381 Fix source language typos
+  * PB-18397 Fix as an admin I can generate a server key with the webinstaller within an instance over http
+  * PB-17096 Fix resouce_types name and slug postgresql compatibility
+  * PB-18372 Bump styleguide version to 3.7.1
+
+  -- Daniel del Rio <daniel@passbolt.com>  Fri, 12 Ago 2022 12:00:00 +0000
+
 passbolt-ce-server (3.7.0-1) buster; urgency=medium
   * PB-17098 Add rockylinux 9 support
   * PB-16751 Add Redhat 9 support
@@ -8,7 +16,7 @@ passbolt-ce-server (3.7.0-1) buster; urgency=medium
   * PB-16161 Create action log endpoint for user CRUD
   * PB-16844 Common part of the user recovery and setup audit log
 
--- Gerold Mougenel <gerold@passbolt.com>  Thu, 28 July 2022 15:35:00 +0000
+  -- Gerold Mougenel <gerold@passbolt.com>  Thu, 28 July 2022 15:35:00 +0000
 
 passbolt-ce-server (3.6.0-1) buster; urgency=medium
   * PB-9739 OpenPGP key and message validation refactoring
@@ -20,12 +28,12 @@ passbolt-ce-server (3.6.0-1) buster; urgency=medium
   * PB-15277 Remove mariadb dependency for RPM package
   * PB-14947 Package versionning for RPM
 
--- Gerold Mougenel <gerold@passbolt.com>  Wed, 25 May 2022 17:30:00 +0000
+  -- Gerold Mougenel <gerold@passbolt.com>  Wed, 25 May 2022 17:30:00 +0000
 
 passbolt-ce-server (3.5.0-3) buster; urgency=medium
   * PB-14959 updating the pull key logic in debian postinst
 
--- Gerold Mougenel <gerold@passbolt.com>  Fri, 29 Apr 2022 14:30:00 +0000
+  -- Gerold Mougenel <gerold@passbolt.com>  Fri, 29 Apr 2022 14:30:00 +0000
 
 passbolt-ce-server (3.5.0-2) buster; urgency=medium
   * PB-13923 Update the repository key to sign packages
