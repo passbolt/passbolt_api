@@ -54,7 +54,7 @@ class SetupStartController extends AppController
         if ($this->request->is('json')) {
             // Do not allow logged in user to start setup
             if ($this->User->role() !== Role::GUEST) {
-                throw new ForbiddenException(__('Only guest are allowed to start setup.'));
+                throw new ForbiddenException(__('Only guests are allowed to start setup.'));
             }
             $data = $infoService->getInfo($userId, $token);
             $this->success(__('The operation was successful.'), $data);

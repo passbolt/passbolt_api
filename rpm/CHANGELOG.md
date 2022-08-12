@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* [3.7.1-1] Fri Ago 12 2022 Daniel Del Rio <gerold@passbolt.com>
+- PB-18381 Fix source language typos
+- PB-18397 Fix as an admin I can generate a server key with the webinstaller within an instance over http
+- PB-17096 Fix resouce_types name and slug postgresql compatibility
+- PB-18372 Bump styleguide version to 3.7.1
+
 * [3.7.0-1] Thu July 28 2022 Gerold Mougenel <gerold@passbolt.com>
 - PB-17098 Add rockylinux 9 support
 - PB-16751 Add Redhat 9 support

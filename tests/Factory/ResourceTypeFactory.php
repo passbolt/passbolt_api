@@ -9,6 +9,11 @@ use Faker\Generator;
 
 /**
  * ResourceFactory
+ *
+ * @method \App\Model\Entity\ResourceType|\App\Model\Entity\ResourceType[] persist()
+ * @method \App\Model\Entity\ResourceType getEntity()
+ * @method \App\Model\Entity\ResourceType[] getEntities()
+ * @method static \App\Model\Entity\ResourceType get($primaryKey, array $options = [])
  */
 class ResourceTypeFactory extends CakephpBaseFactory
 {

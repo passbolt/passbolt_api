@@ -77,7 +77,7 @@ class UsersRecoverController extends AppController
 
         // Do not allow logged in user to recover
         if (!in_array($this->User->role(), [Role::GUEST, Role::ADMIN])) {
-            throw new ForbiddenException(__('Only guest are allowed to recover an account. Please logout first.'));
+            throw new ForbiddenException(__('Only guests are allowed to recover an account. Please logout first.'));
         }
 
         $userRecoverService->recover($this->User->getAccessControl());
