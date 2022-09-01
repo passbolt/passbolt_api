@@ -100,7 +100,9 @@
             "Passbolt\\JwtAuthentication\\": "./plugins/PassboltCe/JwtAuthentication/src",
             "Passbolt\\Import\\": "./plugins/PassboltCe/Import/src",
             "Passbolt\\Export\\": "./plugins/PassboltCe/Export/src",
-            "Passbolt\\ResourceTypes\\": "./plugins/PassboltCe/ResourceTypes/src"
+            "Passbolt\\ResourceTypes\\": "./plugins/PassboltCe/ResourceTypes/src",
+            "Passbolt\\SmtpSettings\\": "./plugins/Passbolt/SmtpSettings/src"
+
         }
     },
     "autoload-dev": {
@@ -116,7 +118,8 @@
             "Passbolt\\EmailDigest\\Test\\": "./plugins/PassboltCe/EmailDigest/tests",
             "Passbolt\\Reports\\Test\\": "./plugins/PassboltCe/Reports/tests",
             "Passbolt\\Mobile\\Test\\": "./plugins/PassboltCe/Mobile/tests",
-            "Passbolt\\JwtAuthentication\\Test\\": "./plugins/PassboltCe/JwtAuthentication/tests"
+            "Passbolt\\JwtAuthentication\\Test\\": "./plugins/PassboltCe/JwtAuthentication/tests",
+            "Passbolt\\SmtpSettings\\Test\\": "./plugins/Passbolt/SmtpSettings/tests"
         }
     },
     "scripts": {

@@ -251,6 +251,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->addFeaturePluginIfEnabled($this, 'Mobile');
         $this->addFeaturePluginIfEnabled($this, 'JwtAuthentication');
         $this->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
+        $this->addFeaturePluginIfEnabled($this, 'SmtpSettings');
 
         if (!WebInstallerMiddleware::isConfigured()) {
             $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
