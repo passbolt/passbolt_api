@@ -23,6 +23,7 @@
     DATASOURCES_TEST_HOST: 127.0.0.1
   before_script:
     - mysql --version
+    - while ! mysqladmin -u root -h $DATASOURCES_DEFAULT_HOST -p$MYSQL_ROOT_PASSWORD ping; do sleep 1; done
     - mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "ALTER USER '$DATASOURCES_TEST_USERNAME'@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
     - mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME;" mysql
 
