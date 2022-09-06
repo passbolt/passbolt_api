@@ -17,11 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Test\TestCase\Middleware;
 
-use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\I18n\I18n;
 use Passbolt\Locale\Service\RequestLocaleParserService;
+use Passbolt\Locale\Test\Factory\LocaleSettingFactory;
 
 class LocaleMiddlewareTest extends AppIntegrationTestCase
 {
@@ -34,7 +34,7 @@ class LocaleMiddlewareTest extends AppIntegrationTestCase
     public function testLocaleMiddlewareUnauthenticatedRequestWithOrgSetting()
     {
         $locale = 'fr_FR';
-        OrganizationSettingFactory::make()->locale($locale)->persist();
+        LocaleSettingFactory::make()->locale($locale)->persist();
 
         $this->getJson('/auth/is-authenticated.json');
         $this->assertAuthenticationError();
@@ -45,7 +45,7 @@ class LocaleMiddlewareTest extends AppIntegrationTestCase
     {
         $locale = 'fr_FR';
         $localeKey = RequestLocaleParserService::QUERY_KEY;
-        OrganizationSettingFactory::make()->locale($locale)->persist();
+        LocaleSettingFactory::make()->locale($locale)->persist();
 
         $this->getJson('/auth/is-authenticated.json?' . $localeKey . '=' . $locale);
         $this->assertAuthenticationError();
@@ -55,7 +55,7 @@ class LocaleMiddlewareTest extends AppIntegrationTestCase
     public function testLocaleMiddlewareAuthenticatedWithAccountSetting(): void
     {
         $locale = 'fr_FR';
-        OrganizationSettingFactory::make()->locale($locale)->persist();
+        LocaleSettingFactory::make()->locale($locale)->persist();
 
         $user = UserFactory::make()->user()->withLocale($locale)->persist();
 
@@ -69,7 +69,7 @@ class LocaleMiddlewareTest extends AppIntegrationTestCase
     {
         $locale = 'fr_FR';
         $localeKey = RequestLocaleParserService::QUERY_KEY;
-        OrganizationSettingFactory::make()->locale($locale)->persist();
+        LocaleSettingFactory::make()->locale($locale)->persist();
         $user = UserFactory::make()->user()->withLocale('foo')->persist();
 
         $this->logInAs($user);

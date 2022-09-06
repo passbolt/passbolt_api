@@ -72,12 +72,18 @@ class EmailConfigurationForm extends Form
 
         $validator
             ->requirePresence('tls', 'create', __('A TLS setting is required.'))
-            ->boolean('tls', __('The TLS setting should be a valid boolean.'));
+            ->add('tls', 'tls', [
+                'rule' => function ($value) {
+                    return $value === true || $value == 1;
+                },
+                'message' => __('The TLS setting should be "true" or NULL.'),
+            ])
+            ->allowEmptyString('tls');
 
         $validator
             ->requirePresence('port', 'create', __('A port number is required.'))
-            ->numeric('port', __('The port number should be numeric.'))
-            ->range('port', [0, 65535], __('The port number should be between {0} and {1}.', '0', '65535'));
+            ->integer('port', __('The port number should be numeric.'))
+            ->range('port', [1, 65535], __('The port number should be between {0} and {1}.', '1', '65535'));
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
