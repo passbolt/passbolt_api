@@ -23,6 +23,7 @@
     DATASOURCES_TEST_HOST: 127.0.0.1
   before_script:
     - mysql --version
+    - while ! mysqladmin -u root -h $DATASOURCES_DEFAULT_HOST -p$MYSQL_ROOT_PASSWORD ping; do sleep 1; done
     - mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "ALTER USER '$DATASOURCES_TEST_USERNAME'@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
     - mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME;" mysql
 
@@ -105,7 +106,7 @@
 php7.4-mysql5.7:
   variables:
     PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: "mysql:5.7"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-5.7'
   extends:
     - .mysql-template
     - .test-template
@@ -137,7 +138,7 @@ php7.4-postgres:
 php7.3-mariadb10.3:
   variables:
     PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: "mariadb:10.3"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.3'
   extends:
     - .mysql-template
     - .test-template
@@ -158,7 +159,7 @@ php7.3-mariadb10.3:
 php7.4-mariadb10.5:
   variables:
     PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: "mariadb:10.5"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.5'
   extends:
     - .mysql-template
     - .test-template
@@ -181,7 +182,7 @@ php7.4-mariadb10.5:
 php7.4-mysql8:
   variables:
     PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: "mysql:8.0"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
   extends:
     - .mysql-template
     - .test-template
@@ -202,7 +203,7 @@ php7.4-mysql8:
 php8.1-mysql8:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "mysql:8.0"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
   extends:
     - .mysql-template
     - .test-template
@@ -226,7 +227,7 @@ php8.1-mysql8:
 php7.4-mariadb10.3:
   variables:
     PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: "mariadb:10.3"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.3'
   extends:
     - .mysql-template
     - .test-template
@@ -238,7 +239,7 @@ php7.4-mariadb10.3:
 php8.0-mariadb10.5:
   variables:
     PHP_VERSION: "8.0"
-    DATABASE_ENGINE_VERSION: "mariadb:10.5"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.5'
   extends:
     - .mysql-template
     - .test-template
@@ -250,7 +251,7 @@ php8.0-mariadb10.5:
 php8.0-mariadb8.0:
   variables:
     PHP_VERSION: "8.0"
-    DATABASE_ENGINE_VERSION: "mysql:8.0"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
   extends:
     - .mysql-template
     - .test-template
