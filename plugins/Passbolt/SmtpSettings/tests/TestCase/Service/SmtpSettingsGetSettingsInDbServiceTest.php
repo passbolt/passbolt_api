@@ -19,8 +19,8 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Test\Factory\OrganizationSettingFactory;
-use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
+use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
@@ -29,7 +29,7 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 /**
  * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsSetService
  */
-class SmtpSettingsGetSettingsInDbServiceTest extends AppTestCase
+class SmtpSettingsGetSettingsInDbServiceTest extends TestCase
 {
     use GpgAdaSetupTrait;
     use SmtpSettingsTestTrait;

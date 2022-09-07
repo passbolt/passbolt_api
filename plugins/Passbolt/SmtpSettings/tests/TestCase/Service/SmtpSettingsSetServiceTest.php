@@ -21,6 +21,7 @@ use App\Error\Exception\FormValidationException;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
@@ -79,6 +80,22 @@ class SmtpSettingsSetServiceTest extends TestCase
         $this->expectException(FormValidationException::class);
         $this->expectExceptionMessage('Could not validate the smtp settings.');
         $this->service->saveSettings($data);
+    }
+
+    public function testSmtpSettingsSetServiceTest_Valid_But_Too_Many_Fields()
+    {
+        $this->gpgSetup();
+        $data = $this->getSmtpSettingsData();
+        $data['bar'] = 'Foo'; // These settings should be filtered out
+
+        $this->service->saveSettings($data);
+
+        $settings = SmtpSettingFactory::find()->firstOrFail();
+        $value = $settings->get('value');
+        $this->gpg->setDecryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), '');
+        $value = $this->gpg->decrypt($value);
+        $settings = json_decode($value, true);
+        $this->assertSame($this->getSmtpSettingsData(), $settings);
     }
 
     public function data_For_testSmtpSettingsSetServiceTest_Valid(): array

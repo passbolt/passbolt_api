@@ -14,32 +14,24 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.8.0
  */
-namespace Passbolt\SmtpSettings;
 
-use Cake\Core\BasePlugin;
-use Cake\Core\PluginApplicationInterface;
+namespace Passbolt\SmtpSettings\Test\TestCase;
+
 use Cake\Mailer\TransportFactory;
+use Cake\TestSuite\TestCase;
 use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
+use Passbolt\SmtpSettings\Plugin;
 
-class Plugin extends BasePlugin
+/**
+ * @covers \Passbolt\SmtpSettings\Plugin
+ */
+class SmtpSettingsPluginTest extends TestCase
 {
-    /**
-     * @inheritDoc
-     */
-    public function bootstrap(PluginApplicationInterface $app): void
+    public function testSmtpSettingsPluginTest_mapSmtpTransport()
     {
-        parent::bootstrap($app);
-        $this->mapSmtpTransport();
-    }
+        (new Plugin())->mapSmtpTransport();
 
-    /**
-     * Map the SMTP Transport to a custom one that will read the settings
-     * in the organization settings table, or fall back on the legacy ones
-     *
-     * @return void
-     */
-    public function mapSmtpTransport(): void
-    {
-        TransportFactory::setDsnClassMap(['smtp' => SmtpTransport::class]);
+        $className = TransportFactory::getDsnClassMap()['smtp'];
+        $this->assertSame(SmtpTransport::class, $className);
     }
 }
