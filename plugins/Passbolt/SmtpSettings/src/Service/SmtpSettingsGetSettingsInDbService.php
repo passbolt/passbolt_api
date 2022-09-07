@@ -44,7 +44,7 @@ class SmtpSettingsGetSettingsInDbService
         }
 
         if (!$form->execute($data)) {
-            throw new FormValidationException(__('The data entered are not correct'), $form);
+            throw new FormValidationException(__('Could not validate the smtp settings found in database.'), $form);
         }
 
         return $form->getData();
@@ -75,21 +75,21 @@ class SmtpSettingsGetSettingsInDbService
      *
      * @param string $encryptedValue Encrypted value to be decrypted
      * @return string
+     * @throw InternalErrorException If the smtp settings cannot be decrypted
      */
     protected function decrypt(string $encryptedValue): string
     {
-        $gpgConfig = Configure::read('passbolt.gpg');
-        $keyId = $gpgConfig['serverKey']['fingerprint'];
-        $passphrase = $gpgConfig['serverKey']['passphrase'];
+        $keyFingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
         $gpg = OpenPGPBackendFactory::get();
 
         try {
-            $gpg->setDecryptKeyFromFingerprint($keyId, $passphrase);
+            $gpg->setDecryptKeyFromFingerprint($keyFingerprint, $passphrase);
 
             return $gpg->decrypt($encryptedValue);
         } catch (\Throwable $e) {
-            $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
-            $msg .= __('To fix this problem, you need to configure the SMTP server again.') . ' ';
+            $msg = __('The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database.');
+            $msg .= ' ' . __('To fix this problem, you need to configure the SMTP server again.') . ' ';
             $msg .= $e->getMessage();
             throw new InternalErrorException($msg);
         }

@@ -28,9 +28,8 @@ class SmtpSettingsGetService
     public const SMTP_SETTINGS_SOURCES = [self::SMTP_SETTINGS_SOURCE_DB, self::SMTP_SETTINGS_SOURCE_FILE];
 
     /**
-     * Validates the SMTP Settings provided in the payload
-     * Encrypts in the data
-     * Saves the settings
+     * Read STMP settings in the DB, or in file
+     * Validates the setting and return them
      *
      * @return array
      * @throws \App\Error\Exception\FormValidationException if the data does not validate the EmailConfigurationForm
@@ -52,11 +51,19 @@ class SmtpSettingsGetService
      */
     protected function readConfigInDbOrFile(): array
     {
+        return $this->readConfigInDb() ?? $this->readConfigInFile();
+    }
+
+    /**
+     * Reads the SMTP settings in DB
+     *
+     * @return array|null
+     */
+    protected function readConfigInDb(): ?array
+    {
         $config = (new SmtpSettingsGetSettingsInDbService())->getSettings();
-        if (is_null($config)) {
-            return $this->readConfigInFile();
-        } else {
-            $config['source'] = self::SMTP_SETTINGS_SOURCE_DB;
+        if (!is_null($config)) {
+            $config['source'] = 'db';
         }
 
         return $config;
