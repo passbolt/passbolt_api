@@ -26,8 +26,6 @@ use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class SmtpSettingsSetService
 {
-    public const SMTP_SETTINGS_PROPERTY_NAME = OrganizationSetting::UUID_NAMESPACE . 'smtp';
-
     /**
      * @var \App\Utility\UserAccessControl
      */
@@ -63,7 +61,7 @@ class SmtpSettingsSetService
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
 
         return $OrganizationSettings->createOrUpdateSetting(
-            self::SMTP_SETTINGS_PROPERTY_NAME,
+            OrganizationSetting::UUID_NAMESPACE . SmtpSettingsGetSettingsInDbService::SMTP_SETTINGS_PROPERTY_NAME,
             $value,
             $this->uac
         );

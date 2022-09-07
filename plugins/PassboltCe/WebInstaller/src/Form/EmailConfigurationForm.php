@@ -104,15 +104,4 @@ class EmailConfigurationForm extends Form
 
         return $validator;
     }
-
-    /**
-     * Execute implementation.
-     *
-     * @param array $data form data
-     * @return bool
-     */
-    protected function _execute(array $data): bool
-    {
-        return true;
-    }
 }

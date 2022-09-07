@@ -22,49 +22,40 @@ use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
-class SmtpSettingsPostControllerTest extends AppIntegrationTestCase
+class SmtpSettingsGetControllerTest extends AppIntegrationTestCase
 {
     use GpgAdaSetupTrait;
     use SmtpSettingsTestTrait;
 
-    public function testSmtpSettingsPostController_Success()
+    public function testSmtpSettingsGetController_Success()
     {
         $this->gpgSetup();
         $this->logInAsAdmin();
 
         $data = $this->getSmtpSettingsData();
-        $this->postJson('/smtp/settings.json', $data);
-        $this->assertSuccess();
-
-        $this->assertSame(1, SmtpSettingFactory::count());
-    }
-
-    public function testSmtpSettingsPostController_Invalid()
-    {
         $this->gpgSetup();
-        $this->logInAsAdmin();
+        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
+        $encryptedSettings = $this->gpg->encrypt(json_encode($data));
+        SmtpSettingFactory::make()->value($encryptedSettings)->persist();
 
-        $data = $this->getSmtpSettingsData('sender_email', 'foo');
-        $this->postJson('/smtp/settings.json', $data);
-        $this->assertBadRequestError('Could not validate the smtp settings.');
-        $this->assertSame(
-            'The sender email should be a valid email address.',
-            $this->_responseJsonBody->sender_email->email
-        );
+        $this->getJson('/smtp/settings.json');
+        $this->assertSuccess();
+        $retrievedData = (array)$this->_responseJsonBody;
+        $expectedData = $data + ['source' => 'db'];
 
-        $this->assertSame(0, SmtpSettingFactory::count());
+        $this->assertSame($expectedData, $retrievedData);
     }
 
-    public function testSmtpSettingsPostController_Not_Admin_Should_Have_No_Access()
+    public function testSmtpSettingsGetController_Not_Admin_Should_Have_No_Access()
     {
         $this->logInAsUser();
-        $this->postJson('/smtp/settings.json');
+        $this->getJson('/smtp/settings.json');
         $this->assertForbiddenError('Access restricted to administrators.');
     }
 
-    public function testSmtpSettingsPostController_Guest_Should_Have_No_Access()
+    public function testSmtpSettingsGetController_Guest_Should_Have_No_Access()
     {
-        $this->postJson('/smtp/settings.json');
+        $this->getJson('/smtp/settings.json');
         $this->assertAuthenticationError();
     }
 }

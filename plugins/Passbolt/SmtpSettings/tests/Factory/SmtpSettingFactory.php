@@ -17,9 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\Factory;
 
+use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 
 /**
  * SmtpSettingFactory
@@ -36,7 +37,7 @@ class SmtpSettingFactory extends OrganizationSettingFactory
     {
         parent::setDefaultTemplate();
 
-        $property = SmtpSettingsSetService::SMTP_SETTINGS_PROPERTY_NAME;
+        $property = OrganizationSetting::UUID_NAMESPACE . SmtpSettingsGetSettingsInDbService::SMTP_SETTINGS_PROPERTY_NAME;
         $this->patchData([
             'property' => $property,
             'property_id' => UuidFactory::uuid($property),

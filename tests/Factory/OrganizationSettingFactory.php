@@ -71,11 +71,15 @@ class OrganizationSettingFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param $value
+     * @param string|array $value Value to set
      * @return $this
      */
     public function value($value)
     {
-        return $this->setField('value', json_encode($value));
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+
+        return $this->setField('value', $value);
     }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Controller;
 
 use App\Controller\AppController;
+use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 
 class SmtpSettingsGetController extends AppController
 {
@@ -27,7 +28,10 @@ class SmtpSettingsGetController extends AppController
      */
     public function get()
     {
-       // Get settings with the SmtpSettingsGetService
-        $this->success(__('The operation was successful.'));
+        $this->User->assertIsAdmin();
+
+        $settings = (new SmtpSettingsGetService())->getSettings();
+
+        $this->success(__('The operation was successful.'), $settings);
     }
 }

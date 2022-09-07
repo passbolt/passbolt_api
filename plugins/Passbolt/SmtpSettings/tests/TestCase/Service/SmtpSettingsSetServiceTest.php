@@ -22,6 +22,7 @@ use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
@@ -33,6 +34,7 @@ class SmtpSettingsSetServiceTest extends TestCase
 {
     use GpgAdaSetupTrait;
     use SmtpSettingsTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var SmtpSettingsSetService
