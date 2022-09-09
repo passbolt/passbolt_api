@@ -22,7 +22,7 @@ use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 class SmtpSettingsPostController extends AppController
 {
     /**
-     * SmtpSettings Index action
+     * SmtpSettings POST action
      *
      * @return void
      */

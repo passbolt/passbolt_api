@@ -39,7 +39,7 @@ class EmailConfigurationForm extends Form
             ->addField('port', ['type' => 'string'])
             ->addField('username', ['type' => 'string'])
             ->addField('password', ['type' => 'string'])
-            ->addField('test_email_to', ['type' => 'string']);
+            ->addField('email_test_to', ['type' => 'string']);
     }
 
     /**
@@ -97,7 +97,7 @@ class EmailConfigurationForm extends Form
 
         $validator
             ->email(
-                'test_email_to',
+                'email_test_to',
                 Configure::read('passbolt.email.validate.mx'),
                 __('The test email should be a valid email address.')
             );

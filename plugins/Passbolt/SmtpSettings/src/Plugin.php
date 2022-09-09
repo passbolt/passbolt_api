@@ -17,9 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings;
 
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Mailer\TransportFactory;
 use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
 class Plugin extends BasePlugin
 {
@@ -30,6 +32,14 @@ class Plugin extends BasePlugin
     {
         parent::bootstrap($app);
         $this->mapSmtpTransport();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container->add(SmtpSettingsSendTestEmailService::class);
     }
 
     /**

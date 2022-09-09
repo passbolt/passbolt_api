@@ -17,12 +17,15 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/SmtpSettings', ['path' => '/smtp/settings'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/SmtpSettings', ['path' => '/smtp'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['controller' => 'SmtpSettingsGet', 'action' => 'get'])
+    $routes->connect('/settings', ['controller' => 'SmtpSettingsGet', 'action' => 'get'])
         ->setMethods(['GET']);
 
-    $routes->connect('/', ['controller' => 'SmtpSettingsPost', 'action' => 'post'])
+    $routes->connect('/settings', ['controller' => 'SmtpSettingsPost', 'action' => 'post'])
         ->setMethods(['POST', 'PUT']);
+
+    $routes->connect('/email', ['controller' => 'SmtpSettingsEmail', 'action' => 'sendTestEmail'])
+        ->setMethods(['POST']);
 });

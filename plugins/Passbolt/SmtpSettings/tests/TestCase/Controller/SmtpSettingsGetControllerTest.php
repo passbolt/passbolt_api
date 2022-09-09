@@ -29,7 +29,6 @@ class SmtpSettingsGetControllerTest extends AppIntegrationTestCase
 
     public function testSmtpSettingsGetController_Success()
     {
-        $this->gpgSetup();
         $this->logInAsAdmin();
 
         $data = $this->getSmtpSettingsData();
