@@ -17,8 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
-use App\Error\Exception\FormValidationException;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
+use App\Utility\Filesystem\DirectoryUtility;
+use Cake\Core\Configure;
 use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -40,6 +41,11 @@ class SmtpSettingsGetServiceTest extends TestCase
      */
     protected $service;
 
+    /**
+     * @var string
+     */
+    protected $dummyPassboltFile = TMP . 'tests' . DS . 'passbolt.php';
+
     public function setUp(): void
     {
         parent::setUp();
@@ -50,27 +56,48 @@ class SmtpSettingsGetServiceTest extends TestCase
     public function tearDown(): void
     {
         unset($this->service);
+        DirectoryUtility::removeRecursively($this->dummyPassboltFile);
         parent::tearDown();
     }
 
     public function testSmtpSettingsGetServiceTest_Valid_File_Source()
     {
-        TransportFactory::get('default')->setConfig([
-            'host' => 'some test host',
-            'tls' => true,
-            'port' => '25',
-            'username' => 'user',
-            'password' => 'secret',
+        $this->setTransportConfig();
+        $this->makeDummyPassboltFile([
+            'EmailTransport' => 'Foo',
+            'Email' => 'Bar',
         ]);
 
-        try {
-            $settings = $this->service->getSettings();
-        } catch (FormValidationException $e) {
-            $this->fail($e->getMessage() . ' ' . json_encode($e->getErrors()));
-        }
+        $service = new SmtpSettingsGetService($this->dummyPassboltFile);
+        $settings = $service->getSettings();
 
         $this->assertSettingsHaveTheRightKeys($settings);
         $this->assertSame('file', $settings['source']);
+    }
+
+    public function testSmtpSettingsGetServiceTest_Incomplete_File_Source()
+    {
+        $this->setTransportConfig();
+        $this->makeDummyPassboltFile([
+            'EmailTransport' => 'Foo',
+        ]);
+
+        $service = new SmtpSettingsGetService($this->dummyPassboltFile);
+        $settings = $service->getSettings();
+
+        $this->assertSettingsHaveTheRightKeys($settings);
+        $this->assertSame('env', $settings['source']);
+    }
+
+    public function testSmtpSettingsGetServiceTest_Valid_Env_Source()
+    {
+        $this->setTransportConfig();
+
+        $service = new SmtpSettingsGetService($this->dummyPassboltFile);
+        $settings = $service->getSettings();
+
+        $this->assertSettingsHaveTheRightKeys($settings);
+        $this->assertSame('env', $settings['source']);
     }
 
     public function testSmtpSettingsGetServiceTest_Valid_DB_Source()
@@ -94,5 +121,22 @@ class SmtpSettingsGetServiceTest extends TestCase
         foreach ($expectedKeys as $key) {
             $this->assertArrayHasKey($key, $settings, "The key $key is not returned in the settings");
         }
+    }
+
+    private function setTransportConfig()
+    {
+        TransportFactory::get('default')->setConfig([
+            'host' => 'some test host',
+            'tls' => true,
+            'port' => '25',
+            'username' => 'user',
+            'password' => 'secret',
+        ]);
+    }
+
+    private function makeDummyPassboltFile(array $data)
+    {
+        $phpConfig = new Configure\Engine\PhpConfig(TMP . 'tests' . DS);
+        $phpConfig->dump('passbolt', $data);
     }
 }

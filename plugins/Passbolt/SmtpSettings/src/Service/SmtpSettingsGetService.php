@@ -25,7 +25,20 @@ class SmtpSettingsGetService
 {
     public const SMTP_SETTINGS_SOURCE_FILE = 'file';
     public const SMTP_SETTINGS_SOURCE_DB = 'db';
-    public const SMTP_SETTINGS_SOURCES = [self::SMTP_SETTINGS_SOURCE_DB, self::SMTP_SETTINGS_SOURCE_FILE];
+    public const SMTP_SETTINGS_SOURCE_ENV = 'env';
+
+    /**
+     * @var string
+     */
+    private $passboltFileName;
+
+    /**
+     * @param string $passboltFileName The passbolt config file, modifiable for unit test purpose.
+     */
+    public function __construct(string $passboltFileName = CONFIG . DS . 'passbolt_.php')
+    {
+        $this->passboltFileName = $passboltFileName;
+    }
 
     /**
      * Read STMP settings in the DB, or in file
@@ -63,7 +76,7 @@ class SmtpSettingsGetService
     {
         $config = (new SmtpSettingsGetSettingsInDbService())->getSettings();
         if (!is_null($config)) {
-            $config['source'] = 'db';
+            $config['source'] = self::SMTP_SETTINGS_SOURCE_DB;
         }
 
         return $config;
@@ -75,7 +88,11 @@ class SmtpSettingsGetService
     protected function readConfigInFile(): array
     {
         $config = TransportFactory::get('default')->getConfig();
-        $config['source'] = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_FILE;
+        if ($this->isSmtpDefinedInPassboltConfigFile()) {
+            $config['source'] = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_FILE;
+        } else {
+            $config['source'] = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_ENV;
+        }
         $from = Mailer::getConfig('default')['from'];
         foreach ($from as $email => $name) {
             $config['sender_email'] = $email;
@@ -83,5 +100,37 @@ class SmtpSettingsGetService
         }
 
         return $config;
+    }
+
+    /**
+     * Checks that the passbolt file is readable.
+     *
+     * Loads the config and checks if both SMTP config and sender email
+     * are defined.
+     *
+     * This method is mocked in tests, its functionality is not unit tested: handle with care.
+     *
+     * @return bool true if SMTP and sender info are defined in config/passbolt.php
+     */
+    protected function isSmtpDefinedInPassboltConfigFile(): bool
+    {
+        if (!$this->isPassboltConfigFileFoundAndReadable()) {
+            return false;
+        }
+
+        $fileConfig = require $this->passboltFileName;
+
+        $isEmailTransportDefinedInConfig = array_key_exists('EmailTransport', $fileConfig);
+        $isEmailSenderDefinedInConfig = array_key_exists('Email', $fileConfig);
+
+        return $isEmailSenderDefinedInConfig && $isEmailTransportDefinedInConfig;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isPassboltConfigFileFoundAndReadable(): bool
+    {
+        return \file_exists($this->passboltFileName) && \is_readable($this->passboltFileName);
     }
 }
