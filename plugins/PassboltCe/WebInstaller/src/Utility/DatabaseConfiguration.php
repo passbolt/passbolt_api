@@ -21,6 +21,7 @@ use Cake\Core\Exception\Exception;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
 use Cake\Datasource\ConnectionManager;
+use Cake\Log\Log;
 
 class DatabaseConfiguration
 {
@@ -83,6 +84,8 @@ class DatabaseConfiguration
 
             return true;
         } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+
             return false;
         }
     }

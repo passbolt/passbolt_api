@@ -70,6 +70,24 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         );
     }
 
+    public function testWebInstallerEmailPostSuccess_With_No_Test_Emails()
+    {
+        $postData = [
+            'sender_name' => 'Passbolt Test',
+            'sender_email' => 'test@passbolt.com',
+            'host' => 'unreachable_host',
+            'tls' => true,
+            'port' => 123,
+            'username' => 'test@passbolt.com',
+            'password' => 'password',
+            'email_test_to' => '',
+        ];
+
+        $this->post('/install/email', $postData);
+        $this->assertRedirect('/install/installation');
+        $this->assertMailCount(0);
+    }
+
     public function testWebInstallerEmailPostError_InvalidData()
     {
         $postData = [

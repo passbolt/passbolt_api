@@ -44,7 +44,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
         ];
         $this->post('/install/account_creation', $postData);
         $this->assertResponseCode(302);
-        $this->assertRedirectContains('install/installation');
+        $this->assertRedirectContains('install/email');
 
         $expectedData = [
             'username' => 'aurore@passbolt.com',

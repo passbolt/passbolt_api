@@ -96,6 +96,7 @@ class EmailConfigurationForm extends Form
             ->utf8('password', __('The password should be a valid BMP-UTF8 string.'));
 
         $validator
+            ->allowEmptyString('email_test_to')
             ->email(
                 'email_test_to',
                 Configure::read('passbolt.email.validate.mx'),

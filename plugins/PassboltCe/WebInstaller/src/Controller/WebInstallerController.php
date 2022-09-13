@@ -118,11 +118,11 @@ class WebInstallerController extends Controller
         }
         $sections['database'] = __('Database');
         $sections['server_keys'] = __('Server keys');
-        $sections['emails'] = __('Emails');
         $sections['options'] = __('Options');
         if (!$hasAdmin) {
             $sections['first_user'] = __('First user');
         }
+        $sections['emails'] = __('Emails');
         $sections['installation'] = __('Installation');
         $sections['end'] = __('That\'s it!');
 

@@ -43,7 +43,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $postData = $this->getDummyGpgkey();
         $this->post('/install/gpg_key_import', $postData);
         $this->assertResponseCode(302);
-        $this->assertRedirectContains('install/email');
+        $this->assertRedirectContains('install/options');
         $this->assertSession($postData, 'webinstaller.gpg');
     }
 

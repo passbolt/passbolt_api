@@ -43,28 +43,6 @@ return [
         ],
     ],
 
-    // Email configuration.
-    'EmailTransport' => [
-        'default' => [
-            'host' => '<?= $config['email']['host'] ?>',
-            'port' => <?= $config['email']['port'] ?>,
-            'username' => <?= empty($config['email']['username']) ? 'null' : "'{$config['email']['username']}'" ?>,
-            'password' => <?= empty($config['email']['password']) ? 'null' : "'{$config['email']['password']}'" ?>,
-            // Is this a secure connection? true if yes, null if no.
-            'tls' => <?= $config['email']['tls'] ? 'true' : 'null' ?>,
-            //'timeout' => 30,
-            //'client' => null,
-            //'url' => null,
-        ],
-    ],
-    'Email' => [
-        'default' => [
-            // Defines the default name and email of the sender of the emails.
-            'from' => ['<?= $config['email']['sender_email'] ?>' => '<?= $config['email']['sender_name'] ?>'],
-            //'charset' => 'utf-8',
-            //'headerCharset' => 'utf-8',
-        ],
-    ],
     'passbolt' => [
         // GPG Configuration.
         // The keyring must to be owned and accessible by the webserver user.

@@ -62,7 +62,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         ];
         $this->post('/install/options', $postData);
         $this->assertResponseCode(302);
-        $this->assertRedirectContains('/install/installation');
+        $this->assertRedirectContains('/install/email');
     }
 
     public function testWebInstallerOptionPostError_InvalidData()
