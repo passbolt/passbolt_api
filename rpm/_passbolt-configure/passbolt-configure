@@ -714,15 +714,13 @@ EOF
   enable_service "$nginx_service"
 
   if [[ "$(__config_get 'ssl_auto')" == 'true' ]]; then
-    if __setup_letsencrypt 'passbolt_hostname' 'letsencrypt_email'; then
-      __nginx_config "$script_directory/conf/nginx/passbolt_ssl.conf" "$NGINX_SITE_DIR/passbolt_ssl.conf" 'passbolt_hostname'
-      ln -s "$LETSENCRYPT_LIVE_DIR/$passbolt_domain/cert.pem" "$SSL_CERT_PATH"
-      ln -s "$LETSENCRYPT_LIVE_DIR/$passbolt_domain/privkey.pem" "$SSL_KEY_PATH"
-      __ssl_substitutions
-      enable_service "$nginx_service"
-    else
-      banner "WARNING: Unable to setup SSL using lets encrypt. Please check the install.log"
-    fi
+    __install_certbot
+    __setup_letsencrypt 'passbolt_hostname' 'letsencrypt_email'
+    __nginx_config "$script_directory/conf/nginx/passbolt_ssl.conf" "$NGINX_SITE_DIR/passbolt_ssl.conf" 'passbolt_hostname'
+    ln -sf "$LETSENCRYPT_LIVE_DIR/$passbolt_domain/cert.pem" "$SSL_CERT_PATH"
+    ln -sf "$LETSENCRYPT_LIVE_DIR/$passbolt_domain/privkey.pem" "$SSL_KEY_PATH"
+    __ssl_substitutions
+    enable_service "$nginx_service"
   fi
 
   if [[ "$(__config_get 'ssl_manual')" == 'true' ]]; then
@@ -753,6 +751,21 @@ __copy_ssl_certs() {
   fi
 }
 
+__install_certbot() {
+   if [ -f /usr/bin/zypper ]
+   then
+     zypper remove -y certbot || /bin/true
+   else
+     yum remove -y certbot || /bin/true
+   fi
+   python3 -m venv /opt/certbot/
+   /opt/certbot/bin/pip install --upgrade pip
+   /opt/certbot/bin/pip install certbot certbot-nginx
+   ln -sf /opt/certbot/bin/certbot /usr/bin/certbot
+   sudo sed -i '/certbot renew/d' /etc/crontab
+   echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time; time.sleep(random.random() * 3600)' && sudo certbot renew -q" | sudo tee -a /etc/crontab > /dev/null
+}
+
 __setup_letsencrypt() {
   local _config_passbolt_host="$1"
   local _config_email="$2"
@@ -771,10 +784,10 @@ main(){
   disclaimer
   interactive_prompter
   banner 'Installing os dependencies...'
+  setup_firewall
   setup_nginx
   setup_fpm
   mysql_setup
-  setup_firewall
   setup_entropy
   installation_complete
 }
