@@ -18,9 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
-use App\Utility\Filesystem\DirectoryUtility;
-use Cake\Core\Configure;
-use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
@@ -41,11 +38,6 @@ class SmtpSettingsGetServiceTest extends TestCase
      */
     protected $service;
 
-    /**
-     * @var string
-     */
-    protected $dummyPassboltFile = TMP . 'tests' . DS . 'passbolt.php';
-
     public function setUp(): void
     {
         parent::setUp();
@@ -56,7 +48,7 @@ class SmtpSettingsGetServiceTest extends TestCase
     public function tearDown(): void
     {
         unset($this->service);
-        DirectoryUtility::removeRecursively($this->dummyPassboltFile);
+        $this->deletePassboltDummyFile();
         parent::tearDown();
     }
 
@@ -121,22 +113,5 @@ class SmtpSettingsGetServiceTest extends TestCase
         foreach ($expectedKeys as $key) {
             $this->assertArrayHasKey($key, $settings, "The key $key is not returned in the settings");
         }
-    }
-
-    private function setTransportConfig()
-    {
-        TransportFactory::get('default')->setConfig([
-            'host' => 'some test host',
-            'tls' => true,
-            'port' => '25',
-            'username' => 'user',
-            'password' => 'secret',
-        ]);
-    }
-
-    private function makeDummyPassboltFile(array $data)
-    {
-        $phpConfig = new Configure\Engine\PhpConfig(TMP . 'tests' . DS);
-        $phpConfig->dump('passbolt', $data);
     }
 }

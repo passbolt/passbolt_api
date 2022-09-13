@@ -33,6 +33,7 @@ class SmtpSettingsGetSettingsInDbService
      *
      * @return array|null
      * @throws \App\Error\Exception\FormValidationException if the data does not validate the EmailConfigurationForm
+     * @throws \Cake\Http\Exception\InternalErrorException if the data in the DB cannot be decrypted
      */
     public function getSettings(): ?array
     {
@@ -44,6 +45,9 @@ class SmtpSettingsGetSettingsInDbService
         }
 
         if (!$form->execute($data)) {
+            // An exception is thrown, the settings should not be consumed, but the source is appended for
+            // diagnostic purposes.
+            $form->set('source', SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_DB);
             throw new FormValidationException(__('Could not validate the smtp settings found in database.'), $form);
         }
 
@@ -54,6 +58,7 @@ class SmtpSettingsGetSettingsInDbService
      * Reads SMTP in the organization settings table
      *
      * @return array|null
+     * @throws \Cake\Http\Exception\InternalErrorException if the data in the DB cannot be decrypted
      */
     protected function readConfigInDB(): ?array
     {

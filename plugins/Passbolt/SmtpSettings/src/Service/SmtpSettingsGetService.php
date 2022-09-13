@@ -35,7 +35,7 @@ class SmtpSettingsGetService
     /**
      * @param string $passboltFileName The passbolt config file, modifiable for unit test purpose.
      */
-    public function __construct(string $passboltFileName = CONFIG . DS . 'passbolt_.php')
+    public function __construct(string $passboltFileName = CONFIG . DS . 'passbolt.php')
     {
         $this->passboltFileName = $passboltFileName;
     }
@@ -46,6 +46,7 @@ class SmtpSettingsGetService
      *
      * @return array
      * @throws \App\Error\Exception\FormValidationException if the data does not validate the EmailConfigurationForm
+     * @throws \Cake\Http\Exception\InternalErrorException if the data in the DB cannot be decrypted
      */
     public function getSettings(): array
     {
@@ -61,6 +62,7 @@ class SmtpSettingsGetService
 
     /**
      * @return array
+     * @throws \Cake\Http\Exception\InternalErrorException if the data in the DB cannot be decrypted
      */
     protected function readConfigInDbOrFile(): array
     {
@@ -71,6 +73,7 @@ class SmtpSettingsGetService
      * Reads the SMTP settings in DB
      *
      * @return array|null
+     * @throws \Cake\Http\Exception\InternalErrorException if the data in the DB cannot be decrypted
      */
     protected function readConfigInDb(): ?array
     {

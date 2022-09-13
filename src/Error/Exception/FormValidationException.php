@@ -60,4 +60,12 @@ class FormValidationException extends HttpException implements
     {
         return $this->form->getErrors();
     }
+
+    /**
+     * @return \Cake\Form\Form
+     */
+    public function getForm(): Form
+    {
+        return $this->form;
+    }
 }

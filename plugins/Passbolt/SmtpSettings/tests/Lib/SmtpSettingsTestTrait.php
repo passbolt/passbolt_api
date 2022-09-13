@@ -17,11 +17,20 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\Lib;
 
+use App\Utility\Filesystem\DirectoryUtility;
+use Cake\Core\Configure\Engine\PhpConfig;
+use Cake\Mailer\TransportFactory;
+
 /**
  * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsSetService
  */
 trait SmtpSettingsTestTrait
 {
+    /**
+     * @var string
+     */
+    protected $dummyPassboltFile = TMP . 'tests' . DS . 'passbolt.php';
+
     private function getSmtpSettingsData(?string $field = null, $value = null): array
     {
         $validData = [
@@ -39,5 +48,33 @@ trait SmtpSettingsTestTrait
         }
 
         return $validData;
+    }
+
+    private function setTransportConfig(?string $field = null, $value = null): void
+    {
+        $validConfig = [
+            'host' => 'some test host',
+            'tls' => true,
+            'port' => '25',
+            'username' => 'user',
+            'password' => 'secret',
+        ];
+
+        if (isset($field)) {
+            $validConfig[$field] = $value;
+        }
+
+        TransportFactory::get('default')->setConfig($validConfig);
+    }
+
+    private function makeDummyPassboltFile(array $data)
+    {
+        $phpConfig = new PhpConfig(TMP . 'tests' . DS);
+        $phpConfig->dump('passbolt', $data);
+    }
+
+    private function deletePassboltDummyFile(): void
+    {
+        DirectoryUtility::removeRecursively($this->dummyPassboltFile);
     }
 }
