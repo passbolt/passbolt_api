@@ -2,49 +2,59 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.7.2] - 2022-09-13
+### Fixed
+- PB-18380 Let passbolt-configure script setup certbot for RHEL9 support
+- PB-16983 Handles the lack of permissions on image directory when deleting
+- PB-16898 Redesign download a supported browser to get started
+
+### Improved
+- PB-18650 Add a check on mysql status in order to run mysql commands only when it's ready in unit tests
+- PB-18664 Add retry logic to Gitlab CI jobs
+
 ## [3.7.1] - 2022-08-10
-PB-18381 Fix source language typos
-PB-18397 Fix as an admin I can generate a server key with the webinstaller within an instance over http
-PB-17096 Fix resouce_types name and slug postgresql compatibility
-PB-18372 Bump styleguide version to 3.7.1
+- PB-18381 Fix source language typos
+- PB-18397 Fix as an admin I can generate a server key with the webinstaller within an instance over http
+- PB-17096 Fix resouce_types name and slug postgresql compatibility
+- PB-18372 Bump styleguide version to 3.7.1
 
 ## [3.7.0] - 2022-07-28
 ### Added
-PB-17098 Add rockylinux 9 support
-PB-16751 Add Redhat 9 support
-PB-16749 Add Ubuntu 22.04 support
-PB-16950 Add Spanish and Lithuanian support
-PB-14514 Add PHP8.0 support
-PB-14514 Fix PHP8.1 compatibility issues
-PB-16161 Create action log endpoint for user CRUD
-PB-16844 Common part of the user recovery and setup audit log
+- PB-17098 Add rockylinux 9 support
+- PB-16751 Add Redhat 9 support
+- PB-16749 Add Ubuntu 22.04 support
+- PB-16950 Add Spanish and Lithuanian support
+- PB-14514 Add PHP8.0 support
+- PB-14514 Fix PHP8.1 compatibility issues
+- PB-16161 Create action log endpoint for user CRUD
+- PB-16844 Common part of the user recovery and setup audit log
 
 ### Security
-PB-17068 PBL-07-002 Fix key algorithm validation should be set to strict on setup
-PB-17068 Fix OpenPGP unarmor should use base64_decode in strict mode
-PB-17068 SEC-1292 Fix unsafe default recipient email address (Credit: Ashley Primo)
+- PB-17068 PBL-07-002 Fix key algorithm validation should be set to strict on setup
+- PB-17068 Fix OpenPGP unarmor should use base64_decode in strict mode
+- PB-17068 SEC-1292 Fix unsafe default recipient email address (Credit: Ashley Primo)
 
 ### Fixed
-PB-16705 As group manager updating group memberships I should not get a timeout
-PB-16949 As group manager deleting a group user the operation should not be slowed down by the folders plugin
-PB-16705 As a group manager updating group memberships I should not get a timeout due to a plugin integration
-PB-17068 Fix GroupsUsersValidatorTest psr-4 autoloading warning
-PB-17007 As AD performing a cleanup of the missing folders relations I should not get a timeout
-PB-16749 Fix jobs to reuse last job artifact instead of rebuilding it everytime
-PB-16877 Fixes ClearMfaCookieOnSetupAndRecover for controllers without User component
-PB-16666 GITHUB-432 Fix healthcheck style
+- PB-16705 As group manager updating group memberships I should not get a timeout
+- PB-16949 As group manager deleting a group user the operation should not be slowed down by the folders plugin
+- PB-16705 As a group manager updating group memberships I should not get a timeout due to a plugin integration
+- PB-17068 Fix GroupsUsersValidatorTest psr-4 autoloading warning
+- PB-17007 As AD performing a cleanup of the missing folders relations I should not get a timeout
+- PB-16749 Fix jobs to reuse last job artifact instead of rebuilding it everytime
+- PB-16877 Fixes ClearMfaCookieOnSetupAndRecover for controllers without User component
+- PB-16666 GITHUB-432 Fix healthcheck style
 
 ### Maintenance
-PB-17009 Replace createrepo by createrepo_c
-PB-16956 Misc Fixture Factories refactoring
-PB-16956 Modernize folders plugin bootstrap, add src/Plugin.php file
-PB-16806 UacAwareMiddleware trait now return UAC exclusively. More typing in UAC object.
-PB-16161 Renames ambiguous testing traits
-PB-16161Add and enhance log related factories
-PB-16791 Upgrade webinstaller openpgpjs to v5
-PB-14514 Update to composer v2.2 + Fix CI jobs
-PB-16657 Remove mariadb dependency
-PB-16161 Refactor to split folder, resource and user related logic in respective classes
+- PB-17009 Replace createrepo by createrepo_c
+- PB-16956 Misc Fixture Factories refactoring
+- PB-16956 Modernize folders plugin bootstrap, add src/Plugin.php file
+- PB-16806 UacAwareMiddleware trait now return UAC exclusively. More typing in UAC object.
+- PB-16161 Renames ambiguous testing traits
+- PB-16161Add and enhance log related factories
+- PB-16791 Upgrade webinstaller openpgpjs to v5
+- PB-14514 Update to composer v2.2 + Fix CI jobs
+- PB-16657 Remove mariadb dependency
+- PB-16161 Refactor to split folder, resource and user related logic in respective classes
 
 ## [3.6.0]
 ### Improved
