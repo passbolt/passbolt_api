@@ -25,7 +25,7 @@ use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**
- * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsSetService
+ * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsGetService
  */
 class SmtpSettingsGetServiceTest extends TestCase
 {

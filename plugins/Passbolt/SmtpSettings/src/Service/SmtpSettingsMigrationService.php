@@ -1,0 +1,125 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.8.0
+ */
+namespace Passbolt\SmtpSettings\Service;
+
+use App\Model\Entity\Role;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Utility\UserAccessControl;
+use Cake\Log\Log;
+use Cake\ORM\TableRegistry;
+
+class SmtpSettingsMigrationService
+{
+    use FeaturePluginAwareTrait;
+
+    /**
+     * @var array
+     */
+    private $smtpSettings;
+
+    /**
+     * @var string
+     */
+    private $passboltFileName;
+
+    /**
+     * @param string $passboltFileName The passbolt config file, modifiable for unit test purpose.
+     */
+    public function __construct(string $passboltFileName = CONFIG . DS . 'passbolt.php')
+    {
+        $this->passboltFileName = $passboltFileName;
+    }
+
+    /**
+     * Save SMTP Settings in the DB if defined in config/passbolt.php file
+     *
+     * @return array|null
+     */
+    public function migrateSmtpSettingsToDb(): ?array
+    {
+        if (!$this->isFeaturePluginEnabled('SmtpSettings')) {
+            return null;
+        }
+
+        try {
+            $this->fetchSettings();
+            if ($this->isSourceFile()) {
+                $this->saveSettingsInDb();
+            }
+        } catch (\Throwable $e) {
+            $this->logError($e->getMessage());
+        }
+
+        return $this->smtpSettings;
+    }
+
+    /**
+     * Read the present settings
+     *
+     * @return void
+     */
+    private function fetchSettings(): void
+    {
+        $this->smtpSettings = (new SmtpSettingsGetService($this->passboltFileName))->getSettings();
+        Log::info('SMTP Settings were detected in ' . $this->getSource() . '.');
+    }
+
+    /**
+     * Import settings in the DB if found in file
+     *
+     * @return void
+     * @throws \Exception if no admin is found
+     */
+    private function saveSettingsInDb(): void
+    {
+        /** @var \App\Model\Table\UsersTable $Users */
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        $admin = $Users->findFirstAdmin();
+        if (is_null($admin)) {
+            throw new \Exception('No admin found in the DB');
+        }
+        $uac = new UserAccessControl(Role::ADMIN, $admin->id);
+        (new SmtpSettingsSetService($uac))->saveSettings($this->smtpSettings);
+        Log::info('SMTP Settings were imported from ' . CONFIG . DS . 'passbolt.php to the database.');
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getSource(): ?string
+    {
+        return $this->smtpSettings['source'] ?? null;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isSourceFile(): bool
+    {
+        return $this->getSource() === SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_FILE;
+    }
+
+    /**
+     * @param string $msg Message to log
+     * @return void
+     */
+    private function logError(string $msg): void
+    {
+        Log::error('There was an error in V380SmtpSettingsMigrationService');
+        Log::error($msg);
+    }
+}
