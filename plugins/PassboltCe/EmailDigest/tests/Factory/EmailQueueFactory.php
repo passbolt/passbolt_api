@@ -83,7 +83,7 @@ class EmailQueueFactory extends CakephpBaseFactory
 
     public function getEmailDigestTestFixturePath(): string
     {
-        return str_replace('/', DS, PLUGINS . 'Passbolt/EmailDigest/tests/Fixture/templates/');
+        return str_replace('/', DS, PLUGINS . 'PassboltCe/EmailDigest/tests/Fixture/templates/');
     }
 
     /**
