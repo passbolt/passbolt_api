@@ -19,16 +19,16 @@ namespace Passbolt\AccountSettings\Test\TestCase\Model\Table;
 
 use BadMethodCallException;
 use Cake\Datasource\ModelAwareTrait;
+use Cake\TestSuite\TestCase;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
-use Passbolt\AccountSettings\Test\Lib\AccountSettingsPluginTestCase;
 
 /**
  * Passbolt\AccountSettings\Model\Table\AccountSettingsTable Test Case
  *
  * @property \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings
  */
-class AccountSettingsTableTest extends AccountSettingsPluginTestCase
+class AccountSettingsTableTest extends TestCase
 {
     use ModelAwareTrait;
 
