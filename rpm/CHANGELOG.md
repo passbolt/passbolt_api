@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* [3.7.0-1] Thu July 28 2022 Gerold Mougenel <gerold@passbolt.com>
+- PB-17098 Add rockylinux 9 support
+- PB-16751 Add Redhat 9 support
+- PB-16749 Add Ubuntu 22.04 support
+- PB-16950 Add Spanish and Lithuanian support
+- PB-14514 Add PHP8.0 support
+- PB-14514 Fix PHP8.1 compatibility issues
+- PB-16161 Create action log endpoint for user CRUD
+- PB-16844 Common part of the user recovery and setup audit log
+
 * [3.6.0-1] Wed May 25 2022 Gerold Mougenel <gerold@passbolt.com>
 - PB-9739 OpenPGP key and message validation refactoring
 - PB-14141 Enhanced public/private key validation rules
