@@ -125,6 +125,11 @@ module.exports = function(grunt) {
             'third_party/edge-addon-white.svg',
             'third_party/chosen-sprite.png',
             'third_party/chosen-sprite@2x.png',
+            'third_party/firefox.svg',
+            'third_party/chrome.svg',
+            'third_party/edge.svg',
+            'third_party/brave.svg',
+            'third_party/vivaldi.svg',
             // Setup
             'illustrations/email.png',
             // Themes preview

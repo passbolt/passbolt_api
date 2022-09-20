@@ -36,14 +36,34 @@ class DirectoryUtilityTest extends TestCase
         mkdir($subFolder);
         file_put_contents($fileName, $fileContent);
 
-        // Make sure that that the creation was successful
+        // Make sure that the creation was successful
         $this->assertSame($fileContent, file_get_contents($fileName), "The file $fileName could not be read or created");
 
         // Delete the parent folder
         DirectoryUtility::removeRecursively($folderToDelete);
 
         // The parent folder should have disappeared
-        $this->assertSame(false, is_dir($folderToDelete));
+        $this->assertFalse(is_dir($folderToDelete));
+    }
+
+    public function testDirectoryUtilityRemoveRecursively_Directory_Is_Not_Executable()
+    {
+        $folderToDelete = TMP . 'test_folder';
+
+        // Create a non-executable folder
+        mkdir($folderToDelete, 0664);
+
+        // Delete the parent folder
+        DirectoryUtility::removeRecursively($folderToDelete);
+
+        // The folder should not have disappeared since it is not executable
+        $this->assertTrue(is_dir($folderToDelete));
+
+        // Delete the folder
+        rmdir($folderToDelete);
+
+        // The parent folder should have disappeared
+        $this->assertFalse(is_dir($folderToDelete));
     }
 
     public function testDirectoryUtilityIsFileExecutable_OnNonExistingFile()

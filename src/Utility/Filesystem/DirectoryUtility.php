@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Utility\Filesystem;
 
+use Cake\Log\Log;
+
 class DirectoryUtility
 {
     /**
@@ -44,7 +46,23 @@ class DirectoryUtility
             }
         }
 
-        return rmdir($directoryName);
+        if (!is_writable($directoryName) || !is_readable($directoryName) || !self::isExecutable($directoryName)) {
+            $error = __('The directory {0} cannot be deleted', $directoryName);
+            Log::warning($error);
+
+            return false;
+        }
+
+        if (!@rmdir($directoryName)) { // @codingStandardsIgnoreLine
+            if (is_array(error_get_last())) {
+                $error = json_encode(error_get_last());
+                Log::warning($error);
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
