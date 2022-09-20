@@ -23,6 +23,8 @@ use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class SmtpSettingsGetService
 {
+    use SmtpSettingsServiceTrait;
+
     public const SMTP_SETTINGS_SOURCE_FILE = 'file';
     public const SMTP_SETTINGS_SOURCE_DB = 'db';
     public const SMTP_SETTINGS_SOURCE_ENV = 'env';
@@ -57,7 +59,9 @@ class SmtpSettingsGetService
             throw new FormValidationException(__('Could not validate the smtp settings.'), $form);
         }
 
-        return $form->getData();
+        $allowedFields = array_merge(['source'], SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS);
+
+        return $this->sanitizeData($form->getData(), $allowedFields);
     }
 
     /**

@@ -81,16 +81,4 @@ class SmtpSettingsGetSettingsInDbServiceTest extends TestCase
         $settings = $this->service->getSettings();
         $this->assertSame(null, $settings);
     }
-
-    private function assertSettingsHaveTheRightKeys(array $settings)
-    {
-        $keys = array_keys($settings);
-        $expectedKeys = [
-            'host', 'port', 'username', 'password', 'tls', 'sender_email', 'sender_name',
-        ];
-        asort($keys);
-        asort($expectedKeys);
-
-        $this->assertEquals(array_values($expectedKeys), array_values($keys));
-    }
 }

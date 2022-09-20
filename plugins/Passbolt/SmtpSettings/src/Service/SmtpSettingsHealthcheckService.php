@@ -60,12 +60,12 @@ class SmtpSettingsHealthcheckService
             $check['errorMessage'] = json_encode($e->getErrors());
         } catch (\Throwable $e) {
             $check['hasDecryptionIssue'] = true;
-            $check['isInDb'] = true;
             $check['errorMessage'] = $e->getMessage();
             $source = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_DB;
         }
 
         $check['source'] = $this->mapSource($source) ?? __('not found');
+        $check['isInDb'] = $source === SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_DB;
         $checks['smtpSettings'] = $check;
 
         return $checks;
@@ -82,7 +82,7 @@ class SmtpSettingsHealthcheckService
     {
         $map = [
             SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_DB => __('database'),
-            SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_FILE => CONFIG . DS . 'passbolt.php',
+            SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_FILE => CONFIG . 'passbolt.php',
             SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_ENV => __('env variables'),
 
         ];

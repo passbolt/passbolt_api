@@ -26,6 +26,8 @@ use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class SmtpSettingsSetService
 {
+    use SmtpSettingsServiceTrait;
+
     public const SMTP_SETTINGS_ALLOWED_FIELDS = [
         'sender_name',
         'sender_email',
@@ -60,7 +62,7 @@ class SmtpSettingsSetService
      */
     public function saveSettings(array $data): OrganizationSetting
     {
-        $data = $this->sanitizeData($data);
+        $data = $this->sanitizeData($data, self::SMTP_SETTINGS_ALLOWED_FIELDS);
 
         $form = new EmailConfigurationForm();
         if (!$form->execute($data)) {
@@ -73,7 +75,7 @@ class SmtpSettingsSetService
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
 
         return $OrganizationSettings->createOrUpdateSetting(
-            OrganizationSetting::UUID_NAMESPACE . SmtpSettingsGetSettingsInDbService::SMTP_SETTINGS_PROPERTY_NAME,
+            SmtpSettingsGetSettingsInDbService::SMTP_SETTINGS_PROPERTY_NAME,
             $value,
             $this->uac
         );
@@ -95,22 +97,5 @@ class SmtpSettingsSetService
         $gpg->setEncryptKeyFromFingerprint($keyId);
 
         return $gpg->encrypt(json_encode($data));
-    }
-
-    /**
-     * Silently remove fields that are not allowed
-     *
-     * @param array $data data
-     * @return array
-     */
-    private function sanitizeData(array $data): array
-    {
-        foreach ($data as $k => $v) {
-            if (!in_array($k, self::SMTP_SETTINGS_ALLOWED_FIELDS)) {
-                unset($data[$k]);
-            }
-        }
-
-        return $data;
     }
 }

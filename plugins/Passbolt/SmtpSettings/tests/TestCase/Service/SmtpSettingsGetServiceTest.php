@@ -18,9 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
+use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
@@ -32,6 +34,7 @@ class SmtpSettingsGetServiceTest extends TestCase
     use GpgAdaSetupTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
+    use UserAccessControlTrait;
 
     /**
      * @var SmtpSettingsGetService
@@ -63,8 +66,9 @@ class SmtpSettingsGetServiceTest extends TestCase
         $service = new SmtpSettingsGetService($this->dummyPassboltFile);
         $settings = $service->getSettings();
 
-        $this->assertSettingsHaveTheRightKeys($settings);
         $this->assertSame('file', $settings['source']);
+        unset($settings['source']);
+        $this->assertSettingsHaveTheRightKeys($settings);
     }
 
     public function testSmtpSettingsGetServiceTest_Incomplete_File_Source()
@@ -77,8 +81,9 @@ class SmtpSettingsGetServiceTest extends TestCase
         $service = new SmtpSettingsGetService($this->dummyPassboltFile);
         $settings = $service->getSettings();
 
-        $this->assertSettingsHaveTheRightKeys($settings);
         $this->assertSame('env', $settings['source']);
+        unset($settings['source']);
+        $this->assertSettingsHaveTheRightKeys($settings);
     }
 
     public function testSmtpSettingsGetServiceTest_Valid_Env_Source()
@@ -88,8 +93,9 @@ class SmtpSettingsGetServiceTest extends TestCase
         $service = new SmtpSettingsGetService($this->dummyPassboltFile);
         $settings = $service->getSettings();
 
-        $this->assertSettingsHaveTheRightKeys($settings);
         $this->assertSame('env', $settings['source']);
+        unset($settings['source']);
+        $this->assertSettingsHaveTheRightKeys($settings);
     }
 
     public function testSmtpSettingsGetServiceTest_Valid_DB_Source()
@@ -101,17 +107,24 @@ class SmtpSettingsGetServiceTest extends TestCase
 
         $settings = $this->service->getSettings();
 
-        $this->assertSettingsHaveTheRightKeys($settings);
         $this->assertSame('db', $settings['source']);
+        unset($settings['source']);
+        $this->assertSettingsHaveTheRightKeys($settings);
     }
 
-    private function assertSettingsHaveTheRightKeys(array $settings)
+    public function testSmtpSettingsGetServiceTest_Valid_Integration_With_SetService()
     {
-        $expectedKeys = [
-            'source', 'host', 'port', 'username', 'password', 'tls', 'sender_email', 'sender_name',
-        ];
-        foreach ($expectedKeys as $key) {
-            $this->assertArrayHasKey($key, $settings, "The key $key is not returned in the settings");
-        }
+        $this->gpgSetup();
+        $data = $this->getSmtpSettingsData();
+
+        $setService = new SmtpSettingsSetService($this->mockAdminAccessControl());
+        $setService->saveSettings($data);
+
+        $service = new SmtpSettingsGetService();
+        $settings = $service->getSettings();
+
+        $this->assertSame('db', $settings['source']);
+        unset($settings['source']);
+        $this->assertSame($data, $settings);
     }
 }

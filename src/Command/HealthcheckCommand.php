@@ -780,6 +780,7 @@ class HealthcheckCommand extends PassboltCommand
         $smtpSettingsCheck = $checks['smtpSettings'];
         $isPluginEnabled = $smtpSettingsCheck['isEnabled'];
         $source = $smtpSettingsCheck['source'];
+        $isInDb = $smtpSettingsCheck['isInDb'];
         $pluginName = 'SMTP Settings';
 
         $this->title($pluginName);
@@ -801,7 +802,14 @@ class HealthcheckCommand extends PassboltCommand
             __('SMTP Settings coherent. You may send a test email to validate them.'),
             __('SMTP Setting errors: {0}', $validationErrors)
         );
-        $this->info(__('The SMTP Settings are defined in {0}.', $source));
+
+        $msg = __('The SMTP Settings are defined in {0}.', $source);
+        $this->warning(
+            $isInDb,
+            $msg,
+            $msg,
+            __('It is recommended to set the SMTP Settings in the data through the administration section.')
+        );
     }
 
     /**

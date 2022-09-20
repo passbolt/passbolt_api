@@ -64,6 +64,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
             'isEnabled' => true,
             'errorMessage' => false,
             'source' => 'database',
+            'isInDb' => true,
         ],];
 
         $this->assertSame($expected, $checks);
@@ -82,6 +83,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
             'isEnabled' => true,
             'errorMessage' => '{"port":{"range":"The port number should be between 1 and 65535."}}',
             'source' => 'database',
+            'isInDb' => true,
         ],];
 
         $this->assertSame($expected, $checks);
@@ -99,7 +101,8 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
         $expected = ['smtpSettings' => [
             'isEnabled' => true,
             'errorMessage' => false,
-            'source' => CONFIG . DS . 'passbolt.php',
+            'source' => CONFIG . 'passbolt.php',
+            'isInDb' => false,
         ],];
 
         $this->assertSame($expected, $checks);
@@ -117,7 +120,8 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
         $expected = ['smtpSettings' => [
             'isEnabled' => true,
             'errorMessage' => '{"port":{"range":"The port number should be between 1 and 65535."}}',
-            'source' => CONFIG . DS . 'passbolt.php',
+            'source' => CONFIG . 'passbolt.php',
+            'isInDb' => false,
         ],];
 
         $this->assertSame($expected, $checks);
@@ -132,6 +136,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
             'isEnabled' => true,
             'errorMessage' => false,
             'source' => 'env variables',
+            'isInDb' => false,
         ],];
 
         $this->assertSame($expected, $checks);
@@ -146,6 +151,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
             'isEnabled' => true,
             'errorMessage' => '{"port":{"range":"The port number should be between 1 and 65535."}}',
             'source' => 'env variables',
+            'isInDb' => false,
         ],];
 
         $this->assertSame($expected, $checks);
