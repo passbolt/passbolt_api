@@ -24,7 +24,7 @@ use Cake\Core\Configure;
     <?= $this->fetch('css') ?>
     <?= $this->fetch('scriptTop') ?>
 </head>
-<body>
+<body spellcheck="false">
 <!-- main -->
 <div id="container" class="page <?php echo $this->fetch('page_classes') ?>">
 <?php echo $this->fetch('content'); ?>
