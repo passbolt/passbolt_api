@@ -1,10 +1,19 @@
+passbolt-ce-server (3.7.2-1) buster; urgency=medium
+  * PB-18380 Let passbolt-configure script setup certbot for RHEL9 support
+  * PB-16983 Handles the lack of permissions on image directory when deleting
+  * PB-16898 Redesign download a supported browser to get started
+  * PB-18650 Add a check on mysql status in order to run mysql commands only when it's ready in unit tests
+  * PB-18664 Add retry logic to Gitlab CI jobs
+
+  -- Gerold Mougenel <gerold@passbolt.com>  Wed, 21 Sep 2022 10:15:00 +0000
+
 passbolt-ce-server (3.7.1-1) buster; urgency=medium
   * PB-18381 Fix source language typos
   * PB-18397 Fix as an admin I can generate a server key with the webinstaller within an instance over http
   * PB-17096 Fix resouce_types name and slug postgresql compatibility
   * PB-18372 Bump styleguide version to 3.7.1
 
-  -- Daniel del Rio <daniel@passbolt.com>  Fri, 12 Ago 2022 12:00:00 +0000
+  -- Daniel del Rio <daniel@passbolt.com>  Fri, 12 Aug 2022 12:00:00 +0000
 
 passbolt-ce-server (3.7.0-1) buster; urgency=medium
   * PB-17098 Add rockylinux 9 support
