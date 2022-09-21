@@ -130,7 +130,7 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
     </style>
     <![endif]-->
 </head>
-<body style="margin: 0;padding: 0;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #F5F5F5;height: 100% !important;width: 100% !important;">
+<body spellcheck="false" style="margin: 0;padding: 0;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #F5F5F5;height: 100% !important;width: 100% !important;">
 <center>
     <!-- HEADER // -->
     <table border="0" cellpadding="0" cellspacing="0" height="37" width="100%" id="headerTable" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;margin: 0;padding: 0;background-color: #F5F5F5;width: 100% !important;height: 37px !important;">
