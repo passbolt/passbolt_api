@@ -68,6 +68,8 @@ build-debian:
     - build-debian
   script:
     - /publisher.sh
+  retry:
+    max: 0
 
 .publish-debian:
   extends: .publish-apt
