@@ -128,6 +128,8 @@ build-suse:
     - *gpg-setup
   script:
     - *publish-script
+  retry:
+    max: 0
 
 publish-passbolt-yum-el8-testing:
   extends: .publish-rpm

@@ -30,6 +30,7 @@ include:
   - local: '/.gitlab-ci/Jobs/packages_tests.yml'
   - local: '/.gitlab-ci/Jobs/style_check.yml'
   - local: '/.gitlab-ci/Jobs/rpm_package_build.yml'
+  - local: '/.gitlab-ci/Jobs/repo_backup_operations.yml'
 
 code_quality:
   stage: unit-test
