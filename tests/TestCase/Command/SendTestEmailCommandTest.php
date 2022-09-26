@@ -16,19 +16,17 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
-use App\Command\SendTestEmailCommand;
 use App\Test\Lib\AppTestCase;
 use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestEmailTransport;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
 class SendTestEmailCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use EmailTrait;
-    use TruncateDirtyTables;
 
     /**
      * setUp method
@@ -55,7 +53,7 @@ class SendTestEmailCommandTest extends AppTestCase
 
     public function tearDown(): void
     {
-        TransportFactory::drop(SendTestEmailCommand::TRANSPORT_CONFIG_NAME);
+        TransportFactory::drop(SmtpSettingsSendTestEmailService::TRANSPORT_CONFIG_NAME_DEBUG_EMAIL);
     }
 
     /**
@@ -92,6 +90,16 @@ class SendTestEmailCommandTest extends AppTestCase
         $this->assertMailSentTo($recipient);
         $this->assertMailSubjectContains('Passbolt test email');
         $this->assertMailCount(1);
+    }
+
+    /**
+     * Basic test with invalid recipient
+     */
+    public function testSendTestEmailCommandWithInvalidRecipient()
+    {
+        $recipient = 'this is not a valid recipient';
+        $this->exec('passbolt send_test_email -r ' . $recipient);
+        $this->assertExitError();
     }
 
     /**

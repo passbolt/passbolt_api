@@ -40,29 +40,31 @@ class SmtpSettingsSendTestEmailService
     public const EMAIL_TEST_TO = 'email_test_to';
 
     /**
-     * @var \Cake\Mailer\Mailer
+     * @var \Cake\Mailer\Mailer|null
      */
     private $email;
 
     /**
      * @param array $smtpSettings SMTP Settings passed in the payload
-     * @return array
+     * @return \Cake\Mailer\Mailer
      * @throws \App\Error\Exception\FormValidationException if the settings passed do not validate the EmailConfigurationForm
      */
-    public function sendTestEmail(array $smtpSettings): array
+    public function sendTestEmail(array $smtpSettings): Mailer
     {
         $this->validateSmtpSettings($smtpSettings);
 
         $this->email = new Mailer('default');
         $this->setTransport(self::TRANSPORT_CLASS_NAME_DEBUG_SMTP, $smtpSettings);
 
-        return $this->email
+        $this->email
             ->setFrom([
                 $smtpSettings['sender_email'] => $smtpSettings['sender_name'],
             ])
             ->setTo($smtpSettings[self::EMAIL_TEST_TO])
-            ->setSubject(__('passbolt test email'))
+            ->setSubject(__('Passbolt test email'))
             ->deliver($this->getDefaultMessage());
+
+        return $this->email;
     }
 
     /**
@@ -70,6 +72,10 @@ class SmtpSettingsSendTestEmailService
      */
     public function getTrace(): array
     {
+        if (is_null($this->email)) {
+            return [];
+        }
+
         $transport = $this->email->getTransport();
 
         if ($transport instanceof DebugSmtpTransport) {
@@ -137,7 +143,7 @@ class SmtpSettingsSendTestEmailService
      *
      * @return bool
      */
-    protected function isRunningOnTestEnvironment(): bool
+    public function isRunningOnTestEnvironment(): bool
     {
         return TransportFactory::getConfig('default')['className'] === TestEmailTransport::class;
     }

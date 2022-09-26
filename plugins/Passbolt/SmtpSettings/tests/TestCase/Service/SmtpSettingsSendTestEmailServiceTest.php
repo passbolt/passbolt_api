@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
+use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
@@ -75,5 +76,32 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         $data = $this->getSmtpSettingsData() + ['email_test_to' => 'foo'];
         $this->expectException(FormValidationException::class);
         $this->service->sendTestEmail($data);
+    }
+
+    public function testSmtpSettingsSendTestEmailService_NoSmtpTransport_Should_Throw_Exception()
+    {
+        $oldConfig = $newConfig = TransportFactory::getConfig('default');
+        $newConfig['className'] = 'notSmtp';
+        TransportFactory::drop('default');
+        TransportFactory::setConfig('default', $newConfig);
+
+        $recipient = 'test@test.test';
+        $data = $this->getSmtpSettingsData() + [$this->service::EMAIL_TEST_TO => $recipient];
+
+        $passed = false;
+        try {
+            $this->service->sendTestEmail($data);
+        } catch (\BadMethodCallException $e) {
+            $passed = true;
+        }
+
+        TransportFactory::drop('default');
+        TransportFactory::setConfig('default', $oldConfig);
+        $this->assertSame(true, $passed, 'This test should throw a \BadMethodCallException');
+    }
+
+    public function testSmtpSettingsSendTestEmailService_GetTrace_On_No_Email_Initiated()
+    {
+        $this->assertSame([], $this->service->getTrace());
     }
 }

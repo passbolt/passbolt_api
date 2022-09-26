@@ -808,7 +808,7 @@ class HealthcheckCommand extends PassboltCommand
             $isInDb,
             $msg,
             $msg,
-            __('It is recommended to set the SMTP Settings in the data through the administration section.')
+            __('It is recommended to set the SMTP Settings in the database through the administration section.')
         );
     }
 

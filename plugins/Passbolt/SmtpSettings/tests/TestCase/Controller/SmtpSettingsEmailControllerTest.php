@@ -20,11 +20,13 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\TestSuite\EmailTrait;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
 {
     use EmailTrait;
+    use SmtpSettingsIntegrationTestTrait;
     use SmtpSettingsTestTrait;
 
     public function testSmtpSettingsEmailController_Success()
@@ -82,23 +84,5 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
     {
         $this->getJson('/smtp/settings.json');
         $this->assertAuthenticationError();
-    }
-
-    /**
-     * Throwing an exception on email sending is complex as the Debug Smtp Transport will bypass this.
-     * This method injects a mock of the SmtpSettingsSendTestEmailService that will generate an exception
-     * and will return a trace.
-     *
-     * @param array $trace
-     */
-    private function mockSmtpSettingsSendTestEmailServiceWithTrace(array $trace)
-    {
-        $this->mockService(SmtpSettingsSendTestEmailService::class, function () use ($trace) {
-            $service = $this->getMockBuilder(SmtpSettingsSendTestEmailService::class)->getMock();
-            $service->method('sendTestEmail')->willThrowException(new \Exception());
-            $service->method('getTrace')->willReturn($trace);
-
-            return $service;
-        });
     }
 }
