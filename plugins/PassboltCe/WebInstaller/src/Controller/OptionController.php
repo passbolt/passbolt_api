@@ -32,8 +32,7 @@ class OptionController extends WebInstallerController
         parent::initialize();
         $this->stepInfo['previous'] = '/install/gpg_key';
         $this->stepInfo['template'] = 'Pages/options';
-        $this->stepInfo['next'] = $this->webInstaller->getSettings('hasAdmin') ?
-            'install/email' : '/install/account_creation';
+        $this->stepInfo['next'] = 'install/email';
     }
 
     /**

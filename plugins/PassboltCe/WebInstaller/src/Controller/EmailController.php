@@ -38,7 +38,8 @@ class EmailController extends WebInstallerController
     {
         parent::initialize();
         $this->stepInfo['previous'] = '/install/options';
-        $this->stepInfo['next'] = '/install/installation';
+        $this->stepInfo['next'] = $this->webInstaller->getSettings('hasAdmin') ?
+            'install/installation' : '/install/account_creation';
         $this->stepInfo['template'] = 'Pages/email';
     }
 

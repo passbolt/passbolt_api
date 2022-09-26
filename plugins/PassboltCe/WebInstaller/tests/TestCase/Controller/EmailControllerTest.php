@@ -55,6 +55,23 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
             'port' => 123,
             'username' => 'test@passbolt.com',
             'password' => 'password',
+        ];
+
+        $this->post('/install/email', $postData);
+        $this->assertRedirectContains('install/account_creation');
+        $this->assertMailCount(0);
+    }
+
+    public function testWebInstallerEmailPostTestEmailSuccess()
+    {
+        $postData = [
+            'sender_name' => 'Passbolt Test',
+            'sender_email' => 'test@passbolt.com',
+            'host' => 'unreachable_host',
+            'tls' => true,
+            'port' => 123,
+            'username' => 'test@passbolt.com',
+            'password' => 'password',
             'send_test_email' => true,
             'email_test_to' => 'receiver@passbolt.test',
         ];
@@ -84,7 +101,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         ];
 
         $this->post('/install/email', $postData);
-        $this->assertRedirect('/install/installation');
+        $this->assertRedirect('/install/account_creation');
         $this->assertMailCount(0);
     }
 
