@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.7.3] - 2022-09-27
+### Security
+- PB-19090 Protect forms from spell-jacking attack
+
 ## [3.7.2] - 2022-09-20
 ### Fixed
 - PB-18380 Let passbolt-configure script setup certbot for RHEL9 support
@@ -986,7 +990,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.7.2...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.7.3...HEAD
+[3.7.3]: https://github.com/passbolt/passbolt_api/compare/v3.7.2...v3.7.3
 [3.7.2]: https://github.com/passbolt/passbolt_api/compare/v3.7.1...v3.7.2
 [3.7.1]: https://github.com/passbolt/passbolt_api/compare/v3.7.0...v3.7.1
 [3.7.0]: https://github.com/passbolt/passbolt_api/compare/v3.6.0...v3.7.0
