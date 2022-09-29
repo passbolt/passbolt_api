@@ -49,9 +49,6 @@ class SmtpSettingsMigrationServiceTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * The case where no admin is in the DB will never occur, but just in case to ensure we are covered...
-     */
     public function testSmtpSettingsMigrationServiceTest_Plugin_Disabled()
     {
         $this->disableFeaturePlugin('SmtpSettings');
@@ -65,7 +62,7 @@ class SmtpSettingsMigrationServiceTest extends TestCase
     }
 
     /**
-     * The case where no admin is in the DB will never occur, but just in case to ensure we are covered...
+     * The case will happen on instance where an administrator has not yet completed its registration (extension setup).
      */
     public function testSmtpSettingsMigrationServiceTest_Valid_File_Source_No_Admin()
     {

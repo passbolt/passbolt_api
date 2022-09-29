@@ -25,7 +25,7 @@ use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
 {
     /**
-     * @param array $config Config in file
+     * @inheritDoc
      */
     public function __construct(array $config = [])
     {

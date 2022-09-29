@@ -43,7 +43,7 @@ class SmtpSettingsGetService
     }
 
     /**
-     * Read STMP settings in the DB, or in file
+     * Read SMTP settings in the DB, or in file.
      * Validates the setting and return them
      *
      * @return array
