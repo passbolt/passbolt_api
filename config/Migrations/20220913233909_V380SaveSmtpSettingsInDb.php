@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Migrations\AbstractMigration;
 use Passbolt\SmtpSettings\Service\SmtpSettingsMigrationService;
 
 class V380SaveSmtpSettingsInDb extends AbstractMigration
 {
-    use \App\Utility\Application\FeaturePluginAwareTrait;
+    use FeaturePluginAwareTrait;
 
     /**
      * Change Method.

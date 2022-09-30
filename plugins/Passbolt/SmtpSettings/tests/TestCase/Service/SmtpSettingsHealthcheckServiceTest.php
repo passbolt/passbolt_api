@@ -159,7 +159,8 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
 
     public function testSmtpSettingsHealthcheckServiceTest_Decryption_Error()
     {
-        SmtpSettingFactory::make()->value(['foo' => 'bar'])->persist();
+        // Invalid settings
+        SmtpSettingFactory::make()->persist();
 
         $checks = $this->service->check()['smtpSettings'];
 

@@ -37,6 +37,9 @@ class SmtpSettingsSendTestEmailService
      */
     public const TRANSPORT_CONFIG_NAME_DEBUG_EMAIL = 'debugEmail';
 
+    /**
+     * Name of the field in the form defining the recipient of the test email
+     */
     public const EMAIL_TEST_TO = 'email_test_to';
 
     /**
@@ -55,14 +58,7 @@ class SmtpSettingsSendTestEmailService
 
         $this->email = new Mailer('default');
         $this->setTransport(self::TRANSPORT_CLASS_NAME_DEBUG_SMTP, $smtpSettings);
-
-        $this->email
-            ->setFrom([
-                $smtpSettings['sender_email'] => $smtpSettings['sender_name'],
-            ])
-            ->setTo($smtpSettings[self::EMAIL_TEST_TO])
-            ->setSubject(__('Passbolt test email'))
-            ->deliver($this->getDefaultMessage());
+        $this->sendEmail($smtpSettings);
 
         return $this->email;
     }
@@ -83,6 +79,21 @@ class SmtpSettingsSendTestEmailService
         }
 
         return [];
+    }
+
+    /**
+     * @param array $smtpSettings SMTP Settings of the email
+     * @return void
+     */
+    protected function sendEmail(array $smtpSettings): void
+    {
+        $this->email
+            ->setFrom([
+                $smtpSettings['sender_email'] => $smtpSettings['sender_name'],
+            ])
+            ->setTo($smtpSettings[self::EMAIL_TEST_TO])
+            ->setSubject(__('Passbolt test email'))
+            ->deliver($this->getDefaultMessage());
     }
 
     /**

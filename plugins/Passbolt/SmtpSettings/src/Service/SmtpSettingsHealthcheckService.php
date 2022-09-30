@@ -18,6 +18,7 @@ namespace Passbolt\SmtpSettings\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Http\Exception\InternalErrorException;
 
 class SmtpSettingsHealthcheckService
 {
@@ -58,10 +59,12 @@ class SmtpSettingsHealthcheckService
         } catch (FormValidationException $e) {
             $source = $e->getForm()->getData('source');
             $check['errorMessage'] = json_encode($e->getErrors());
-        } catch (\Throwable $e) {
-            $check['hasDecryptionIssue'] = true;
+        } catch (InternalErrorException $e) {
             $check['errorMessage'] = $e->getMessage();
             $source = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_DB;
+        } catch (\Throwable $e) {
+            $check['errorMessage'] = $e->getMessage();
+            $source = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_UNDEFINED;
         }
 
         $check['source'] = $this->mapSource($source) ?? __('not found');
@@ -84,7 +87,7 @@ class SmtpSettingsHealthcheckService
             SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_DB => __('database'),
             SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_FILE => CONFIG . 'passbolt.php',
             SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_ENV => __('env variables'),
-
+            SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_UNDEFINED => __('undefined'),
         ];
 
         return $map[$source] ?? null;

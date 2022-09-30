@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\Lib;
 
+use Cake\Mailer\Mailer;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
 /**
@@ -38,6 +39,19 @@ trait SmtpSettingsIntegrationTestTrait
             $service = $this->getMockBuilder(SmtpSettingsSendTestEmailService::class)->getMock();
             $service->method('sendTestEmail')->willThrowException(new \Exception($errorMessage));
             $service->method('getTrace')->willReturn($trace);
+
+            return $service;
+        });
+    }
+
+    /**
+     * Mock the response of the SmtpSettingsSendTestEmailService to simulate a successful sent email
+     */
+    private function mockSmtpSettingsSendTestEmailServiceSuccessful()
+    {
+        $this->mockService(SmtpSettingsSendTestEmailService::class, function () {
+            $service = $this->getMockBuilder(SmtpSettingsSendTestEmailService::class)->getMock();
+            $service->method('sendTestEmail')->willReturn(new Mailer());
 
             return $service;
         });

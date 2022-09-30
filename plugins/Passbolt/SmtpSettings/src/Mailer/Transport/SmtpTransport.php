@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Mailer\Transport;
 
-use Cake\Log\Log;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 
 /**
@@ -35,19 +34,13 @@ class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
     }
 
     /**
-     * @param array $configInFile config in File
+     * @param array $fallbackConfig config in File
      * @return array
      */
-    protected function readConfigInDb(array $configInFile): array
+    protected function readConfigInDb(array $fallbackConfig): array
     {
-        $configInDb = null;
+        $configInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
 
-        try {
-            $configInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
-        } catch (\Throwable $e) {
-            Log::error($e->getMessage());
-        }
-
-        return $configInDb ?? $configInFile;
+        return $configInDb ?? $fallbackConfig;
     }
 }

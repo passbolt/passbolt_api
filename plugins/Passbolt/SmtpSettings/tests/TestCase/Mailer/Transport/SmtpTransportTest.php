@@ -17,7 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\TestCase\Mailer\Transport;
 
+use App\Error\Exception\FormValidationException;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
@@ -62,33 +64,28 @@ class SmtpTransportTest extends TestCase
 
     public function testSmtpTransport_In_DB_Not_Decryptable_Should_Return_File_Settings()
     {
-        $configInDb = $this->getSmtpSettingsData();
-        $configInFile = $configInDb + ['sender_name' => 'Ada Lovelace'];
         $this->gpgSetup();
         $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
         SmtpSettingFactory::make()->value('Foo')->persist();
 
-        $transport = new SmtpTransport($configInFile);
-        $configInTransport = $transport->getConfig();
-
-        // The config in File should be returned
-        $this->assertSettingsHaveTheRightKeyValues($configInFile, $configInTransport);
+        $this->expectException(InternalErrorException::class);
+        $this->expectExceptionMessage('The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database. To fix this problem, you need to configure the SMTP server again. Decryption failed.');
+        new SmtpTransport();
     }
 
     public function testSmtpTransport_No_Valid_Data_Should_Return_File_Values()
     {
-        $configInFile = $this->getSmtpSettingsData();
-        $configInDb = $configInFile + ['sender_name' => null]; // This is not a valid data
+        $configInFile = $configInDb = $this->getSmtpSettingsData();
+        $configInDb['sender_name'] = null; // This is not a valid data
         $this->gpgSetup();
         $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
         $encryptedSettings = $this->gpg->encrypt(json_encode($configInDb));
         SmtpSettingFactory::make()->value($encryptedSettings)->persist();
 
-        $transport = new SmtpTransport($configInFile);
-        $configInTransport = $transport->getConfig();
+        $this->expectException(FormValidationException::class);
+        $this->expectExceptionMessage('Could not validate the smtp settings found in database.');
 
-        // The config in File should be returned
-        $this->assertSettingsHaveTheRightKeyValues($configInFile, $configInTransport);
+        new SmtpTransport();
     }
 
     private function assertSettingsHaveTheRightKeyValues(array $configExpected, array $configInTransport)

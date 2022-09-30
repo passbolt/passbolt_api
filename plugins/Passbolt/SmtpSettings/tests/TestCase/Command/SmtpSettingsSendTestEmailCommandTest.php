@@ -16,15 +16,18 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
+use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 class SmtpSettingsSendTestEmailCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
+    use GpgAdaSetupTrait;
     use SmtpSettingsIntegrationTestTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
@@ -53,5 +56,33 @@ class SmtpSettingsSendTestEmailCommandTest extends TestCase
         $this->assertExitError();
         $this->assertOutputContains('<info> bar');
         $this->assertOutputContains("<error>Error: $errorMessage");
+    }
+
+    /**
+     * Basic test with invalid SMTP Settings in DB
+     */
+    public function testSendTestEmailCommandWithFailingToSendTest_With_Invalid_Settings_In_DB_Should_Fail()
+    {
+        SmtpSettingFactory::make()->persist();
+        $this->mockSmtpSettingsSendTestEmailServiceSuccessful();
+        $this->exec('passbolt send_test_email -r test@test.test');
+        $this->assertOutputContains('<error>The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database. To fix this problem, you need to configure the SMTP server again.');
+        $this->assertExitError();
+    }
+
+    /**
+     * Basic test with valid SMTP Settings in DB
+     */
+    public function testSendTestEmailCommandWithFailingToSendTest_With_Valid_Settings_In_DB()
+    {
+        $data = $this->getSmtpSettingsData();
+        $this->gpgSetup();
+        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
+        $encryptedSettings = $this->gpg->encrypt(json_encode($data));
+        SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+
+        $this->mockSmtpSettingsSendTestEmailServiceSuccessful();
+        $this->exec('passbolt send_test_email -r test@test.test');
+        $this->assertExitSuccess();
     }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
+use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
@@ -78,7 +79,7 @@ class SmtpSettingsMigrationServiceTest extends TestCase
         $settings = $service->migrateSmtpSettingsToDb();
 
         $this->assertSame(0, SmtpSettingFactory::count());
-        $this->assertSourceInSettingsIs('file', $settings);
+        $this->assertNull($settings);
     }
 
     public function testSmtpSettingsMigrationServiceTest_Valid_File_Source()
@@ -93,6 +94,7 @@ class SmtpSettingsMigrationServiceTest extends TestCase
         $settings = $service->migrateSmtpSettingsToDb();
 
         $this->assertSame(1, SmtpSettingFactory::count());
+        $this->assertInstanceOf(OrganizationSetting::class, $settings);
         $this->assertSourceInSettingsIs('file', $settings);
     }
 
@@ -112,7 +114,7 @@ class SmtpSettingsMigrationServiceTest extends TestCase
         $settings = $service->migrateSmtpSettingsToDb();
 
         $this->assertSame(0, SmtpSettingFactory::count());
-        $this->assertSourceInSettingsIs('env', $settings);
+        $this->assertNull($settings);
     }
 
     public function testSmtpSettingsMigrationServiceTest_Valid_Env_Source()
@@ -123,10 +125,10 @@ class SmtpSettingsMigrationServiceTest extends TestCase
         $settings = $service->migrateSmtpSettingsToDb();
 
         $this->assertSame(0, SmtpSettingFactory::count());
-        $this->assertSourceInSettingsIs('env', $settings);
+        $this->assertNull($settings);
     }
 
-    private function assertSourceInSettingsIs(string $source, ?array $settings): void
+    private function assertSourceInSettingsIs(string $source, ?OrganizationSetting $settings): void
     {
         $this->assertSame($source, $settings['source'] ?? null);
     }

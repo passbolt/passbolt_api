@@ -117,14 +117,14 @@ class EmailController extends WebInstallerController
         $service = new SmtpSettingsSendTestEmailService();
         try {
             $service->sendTestEmail($data);
-            $data = ['test_email_status' => true];
+            $result = ['test_email_status' => true];
         } catch (\Throwable $e) {
-            $data = [
+            $result = [
                 'test_email_status' => false,
                 'test_email_error' => $e->getMessage(),
                 'test_email_trace' => $service->getTrace(),
             ];
         }
-        $this->set($data);
+        $this->set($result);
     }
 }

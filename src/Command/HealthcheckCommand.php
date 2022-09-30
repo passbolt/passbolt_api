@@ -766,7 +766,7 @@ class HealthcheckCommand extends PassboltCommand
     }
 
     /**
-     * Assert that JWT files exist, are writable and valid
+     * Assert that SMTP settings are defined in DB and valid
      *
      * @param array|null $checks existing results
      * @return void
@@ -779,8 +779,6 @@ class HealthcheckCommand extends PassboltCommand
 
         $smtpSettingsCheck = $checks['smtpSettings'];
         $isPluginEnabled = $smtpSettingsCheck['isEnabled'];
-        $source = $smtpSettingsCheck['source'];
-        $isInDb = $smtpSettingsCheck['isInDb'];
         $pluginName = 'SMTP Settings';
 
         $this->title($pluginName);
@@ -795,6 +793,9 @@ class HealthcheckCommand extends PassboltCommand
             return;
         }
 
+        $source = $smtpSettingsCheck['source'];
+        $isInDb = $smtpSettingsCheck['isInDb'];
+
         $validationErrors = $smtpSettingsCheck['errorMessage'] ?? null;
         $isSmtpSettingsValid = !is_string($validationErrors);
         $this->assert(
@@ -803,7 +804,7 @@ class HealthcheckCommand extends PassboltCommand
             __('SMTP Setting errors: {0}', $validationErrors)
         );
 
-        $msg = __('The SMTP Settings are defined in {0}.', $source);
+        $msg = __('The SMTP Settings source is: {0}.', $source);
         $this->warning(
             $isInDb,
             $msg,

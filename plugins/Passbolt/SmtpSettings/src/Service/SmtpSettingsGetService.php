@@ -28,6 +28,7 @@ class SmtpSettingsGetService
     public const SMTP_SETTINGS_SOURCE_FILE = 'file';
     public const SMTP_SETTINGS_SOURCE_DB = 'db';
     public const SMTP_SETTINGS_SOURCE_ENV = 'env';
+    public const SMTP_SETTINGS_SOURCE_UNDEFINED = 'undefined';
 
     /**
      * @var string

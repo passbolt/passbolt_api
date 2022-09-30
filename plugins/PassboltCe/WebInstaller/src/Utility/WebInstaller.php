@@ -305,6 +305,12 @@ class WebInstaller
     {
         $smtpSettings = $this->getSettings('email');
         $userId = $this->getSettings('user.user_id');
+        if (is_null($userId)) {
+            /** @var \App\Model\Table\UsersTable $Users */
+            $Users = TableRegistry::getTableLocator()->get('Users');
+            $admin = $Users->findFirstAdmin();
+            $userId = $admin->get('id');
+        }
         $uac = new UserAccessControl(Role::ADMIN, $userId);
         $service = new SmtpSettingsSetService($uac);
         $service->saveSettings($smtpSettings);

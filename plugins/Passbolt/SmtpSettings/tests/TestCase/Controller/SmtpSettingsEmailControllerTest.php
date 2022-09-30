@@ -20,6 +20,7 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\TestSuite\EmailTrait;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
@@ -31,6 +32,9 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
 
     public function testSmtpSettingsEmailController_Success()
     {
+        // Insert some dummy SMTP settings in the DB to ensure that these are ignored by the DebugSmtpTransport
+        SmtpSettingFactory::make()->persist();
+
         $recipient = 'test@test.test';
         $data = $this->getSmtpSettingsData() + [SmtpSettingsSendTestEmailService::EMAIL_TEST_TO => $recipient];
         $this->logInAsAdmin();

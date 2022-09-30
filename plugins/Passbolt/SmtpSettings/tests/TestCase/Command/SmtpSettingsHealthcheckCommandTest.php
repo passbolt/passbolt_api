@@ -48,7 +48,7 @@ class SmtpSettingsHealthcheckCommandTest extends AppTestCase
         $this->assertExitSuccess();
         if ($this->isFeaturePluginEnabled('SmtpSettings')) {
             $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings plugin is enabled.');
-            $this->assertOutputContains('<warning>[WARN] The SMTP Settings are defined in ');
+            $this->assertOutputContains('<warning>[WARN] The SMTP Settings source is: ');
         } else {
             $this->assertOutputContains(' <warning>[WARN] The {0} plugin is disabled. Enable the plugin in order to define SMTP settings in the database.</warning>');
         }
@@ -71,12 +71,25 @@ class SmtpSettingsHealthcheckCommandTest extends AppTestCase
         if ($this->isFeaturePluginEnabled('SmtpSettings')) {
             $validationErrorMessage = '<error>[FAIL] SMTP Setting errors: {"sender_email":{"email":"The sender email should be a valid email address."}}</error>';
             $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings plugin is enabled.');
-            $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings are defined in database.');
+            $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings source is: database.');
             $this->assertOutputContains($validationErrorMessage);
             $this->assertOutputContains(' 1 error(s) found. Hang in there!');
         } else {
             $this->assertOutputContains(' <warning>[WARN] The {0} plugin is disabled. Enable the plugin in order to define SMTP settings in the database.</warning>');
             $this->assertOutputContains('No error found. Nice one sparky!');
+        }
+    }
+
+    public function testHealthcheckCommand_SmtpSettings_Plugin_Deactivated()
+    {
+        $wasPluginEnabled = $this->isFeaturePluginEnabled('SmtpSettings');
+        $this->disableFeaturePlugin('SmtpSettings');
+        $this->exec('passbolt healthcheck --smtpSettings');
+        $this->assertExitSuccess();
+        $this->assertOutputContains(' <warning>[WARN] The {0} plugin is disabled. Enable the plugin in order to define SMTP settings in the database.</warning>');
+        $this->assertOutputContains('No error found. Nice one sparky!');
+        if ($wasPluginEnabled) {
+            $this->enableFeaturePlugin('SmtpSettings');
         }
     }
 }

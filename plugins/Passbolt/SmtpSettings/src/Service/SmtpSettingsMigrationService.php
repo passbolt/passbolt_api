@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Service;
 
+use App\Model\Entity\OrganizationSetting;
 use App\Model\Entity\Role;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UserAccessControl;
@@ -47,24 +48,26 @@ class SmtpSettingsMigrationService
     /**
      * Save SMTP Settings in the DB if defined in config/passbolt.php file
      *
-     * @return array|null
+     * @return \App\Model\Entity\OrganizationSetting|null
      */
-    public function migrateSmtpSettingsToDb(): ?array
+    public function migrateSmtpSettingsToDb(): ?OrganizationSetting
     {
         if (!$this->isFeaturePluginEnabled('SmtpSettings')) {
             return null;
         }
 
+        $orgSetting = null;
         try {
             $this->fetchSettings();
             if ($this->isSourceFile()) {
-                $this->saveSettingsInDb();
+                $orgSetting = $this->saveSettingsInDb();
+                $orgSetting->set('source', SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_FILE);
             }
         } catch (\Throwable $e) {
             $this->logError($e->getMessage());
         }
 
-        return $this->smtpSettings;
+        return $orgSetting;
     }
 
     /**
@@ -81,10 +84,10 @@ class SmtpSettingsMigrationService
     /**
      * Import settings in the DB if found in file
      *
-     * @return void
+     * @return \App\Model\Entity\OrganizationSetting
      * @throws \Exception if no admin is found
      */
-    private function saveSettingsInDb(): void
+    private function saveSettingsInDb(): OrganizationSetting
     {
         /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
@@ -93,8 +96,10 @@ class SmtpSettingsMigrationService
             throw new \Exception('No admin found in the DB');
         }
         $uac = new UserAccessControl(Role::ADMIN, $admin->id);
-        (new SmtpSettingsSetService($uac))->saveSettings($this->smtpSettings);
+        $orgSetting = (new SmtpSettingsSetService($uac))->saveSettings($this->smtpSettings);
         Log::info('SMTP Settings were imported from ' . CONFIG . DS . 'passbolt.php to the database.');
+
+        return $orgSetting;
     }
 
     /**
