@@ -40,10 +40,12 @@ calculate_test_groups() {
   # Run a mysql container required to run phpunit. Even for running --list-tests??
   docker run -d --name mysqltestcounter --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test mysql:$MYSQL_VERSION
   local DB_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysqltestcounter)
-  sleep 10
 
   # Get all tests and split them in regex groups
   docker run -i --rm --workdir='/app' -v ${PWD}:/app registry.gitlab.com/passbolt/php-test-base-images:$PHP_VERSION /bin/bash -c "
+      until mysqladmin -h $DB_HOST -u root -ptest ping > /dev/null 2>&1; do
+        sleep 1
+      done && \
       gpg --import config/gpg/unsecure_private.key > /dev/null 2>&1 && \
       gpg --import config/gpg/unsecure.key > /dev/null 2>&1 && \
       PASSBOLT_REGISTRATION_PUBLIC=1 \
@@ -77,14 +79,12 @@ start_test() {
   docker run -d --name mysqltestLAB$SERVER --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test mysql:$MYSQL_VERSION
   MYSQL_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysqltestLAB$SERVER)
 
-  # Wait till mysql containers are running
-  until mysqladmin -h $MYSQL_IP -u root -ptest ping > /dev/null 2>&1; do
-    sleep 1
-  done
-
 	RANDOM_DB_NAME=$(echo $RANDOM)
-	mysqladmin -u root -h ${MYSQL_IP} create test$RANDOM_DB_NAME -ptest
   docker run -w=/app --name phpunitLAB$SERVER -v ${PWD}:/app registry.gitlab.com/passbolt/php-test-base-images:$PHP_VERSION bash -c "
+      until mysqladmin -h $MYSQL_IP -u root -ptest ping > /dev/null 2>&1; do
+        sleep 1
+      done
+      mysqladmin -u root -h ${MYSQL_IP} create test$RANDOM_DB_NAME -ptest
       gpg --import config/gpg/unsecure_private.key > /dev/null 2>&1 && \
       gpg --import config/gpg/unsecure.key > /dev/null 2>&1 && \
       PASSBOLT_REGISTRATION_PUBLIC=1 \
@@ -99,7 +99,10 @@ start_test() {
       DATASOURCES_TEST_HOST=${MYSQL_IP} \
       vendor/bin/phpunit --filter='${TEST_GROUP}'" > phpunit_test_log$SERVER.txt &
 
-  sleep 3
+  until docker inspect -f '{{.State.Pid}}' phpunitLAB$SERVER; do
+    sleep 1
+  done
+
   PIDS+=$(docker inspect -f '{{.State.Pid}}' phpunitLAB$SERVER)
 }
 
