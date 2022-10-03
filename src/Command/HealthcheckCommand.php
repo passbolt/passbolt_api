@@ -785,7 +785,7 @@ class HealthcheckCommand extends PassboltCommand
         $this->warning(
             $isPluginEnabled,
             __('The {0} plugin is enabled.', $pluginName),
-            __('The {0} plugin is disabled.') . ' ' .
+            __('The {0} plugin is disabled.', $pluginName) . ' ' .
             __('Enable the plugin in order to define SMTP settings in the database.')
         );
 

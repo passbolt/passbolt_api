@@ -105,4 +105,33 @@ class EmailConfigurationForm extends Form
 
         return $validator;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute(array $data, array $options = []): bool
+    {
+        $data = $this->mapTlsToTrueOrNull($data);
+
+        return parent::execute($data, $options);
+    }
+
+    /**
+     * Map the value of TLS to null if set to 0 or false
+     *
+     * @param array $data Form data
+     * @return array
+     */
+    protected function mapTlsToTrueOrNull(array $data): array
+    {
+        if (!isset($data['tls'])) {
+            return $data;
+        }
+
+        if ($data['tls'] == false) {
+            $data['tls'] = null;
+        }
+
+        return $data;
+    }
 }
