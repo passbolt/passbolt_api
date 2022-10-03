@@ -26,7 +26,14 @@ PHP_VERSION=8.1
 PIDS=()
 
 cleanup_docker() {
-  while docker ps | grep phpunitLAB; do sleep 1; done
+
+  printf "Waiting for php containers to finish"
+  while docker ps | grep phpunitLAB > /dev/null 2>&1; do
+    printf "."
+    sleep 1
+  done
+  printf "DONE! \n"
+
   docker ps -a | grep mysqltestLAB | awk '{print $1}' | xargs docker kill
   docker ps -a | grep mysqltestLAB | awk '{print $1}' | xargs docker rm
   docker ps -a | grep phpunitLAB | awk '{print $1}' | xargs docker rm
@@ -99,7 +106,7 @@ start_test() {
       DATASOURCES_TEST_HOST=${MYSQL_IP} \
       vendor/bin/phpunit --filter='${TEST_GROUP}'" > phpunit_test_log$SERVER.txt &
 
-  until docker inspect -f '{{.State.Pid}}' phpunitLAB$SERVER; do
+  until docker inspect -f '{{.State.Pid}}' phpunitLAB$SERVER > /dev/null 2>&1; do
     sleep 1
   done
 
@@ -113,12 +120,7 @@ for group in $(calculate_test_groups); do
   COUNT=$(($COUNT +1))
 done
 
-# Hacky way to make the script wait till threads are done
-sleep 70
-for pid in ${PIDS[@]}; do
-  wait $pid
-done
-
+wait
 # Clean docker containers
 cleanup_docker
 
