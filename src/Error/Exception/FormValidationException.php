@@ -47,8 +47,9 @@ class FormValidationException extends HttpException implements
         string $message,
         Form $form
     ) {
-        parent::__construct($message);
         $this->form = $form;
+        $message .= ' ' . json_encode($this->getErrors());
+        parent::__construct($message);
     }
 
     /**

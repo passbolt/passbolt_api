@@ -19,6 +19,8 @@ namespace Passbolt\WebInstaller\Controller;
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use Cake\Core\Exception\Exception;
+use Cake\Log\Log;
+use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
@@ -136,6 +138,7 @@ class DatabaseController extends WebInstallerController
             $this->testConnection($data);
             DatabaseConfiguration::setDefaultConfig($data);
             $hasAdmin = $this->hasAdmin();
+            $hasSmtpSettings = $this->hasValidSmtpSettingsInDB();
         } catch (Exception $e) {
             $this->_error($e->getMessage());
 
@@ -144,6 +147,7 @@ class DatabaseController extends WebInstallerController
 
         $this->webInstaller->setSettings('database', $data);
         $this->webInstaller->setSettings('hasAdmin', $hasAdmin);
+        $this->webInstaller->setSettings('hasSmtpSettings', $hasSmtpSettings);
         $this->webInstaller->saveSettings();
 
         $this->goToNextStep();
@@ -170,6 +174,22 @@ class DatabaseController extends WebInstallerController
             ->count();
 
         return $nbAdmins > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function hasValidSmtpSettingsInDB(): bool
+    {
+        try {
+            $smtpSettingsInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+
+            return false;
+        }
+
+        return !is_null($smtpSettingsInDb);
     }
 
     /**

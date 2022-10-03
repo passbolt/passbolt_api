@@ -97,5 +97,10 @@ class SmtpTransportTest extends TestCase
         foreach ($settingKeys as $v) {
             $this->assertSame($configExpected[$v], $configInTransport[$v]);
         }
+
+        $excludedSettings = ['id', 'created', 'modified', 'created_by', 'modified_by'];
+        foreach ($excludedSettings as $key) {
+            $this->assertArrayNotHasKey($key, $configInTransport);
+        }
     }
 }

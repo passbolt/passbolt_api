@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Controller;
 
 use App\Controller\AppController;
+use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 
 class SmtpSettingsPostController extends AppController
@@ -33,6 +34,8 @@ class SmtpSettingsPostController extends AppController
         $service = new SmtpSettingsSetService($this->User->getAccessControl());
         $service->saveSettings($this->getRequest()->getData());
 
-        $this->success(__('The operation was successful.'));
+        $settings = (new SmtpSettingsGetService())->getSettings();
+
+        $this->success(__('The operation was successful.'), $settings);
     }
 }

@@ -68,17 +68,20 @@ class SmtpSettingsSetServiceTest extends TestCase
 
         $this->assertInstanceOf(OrganizationSetting::class, $settings);
         $this->assertSame(1, SmtpSettingFactory::count());
+        $decryptedSettings = $this->decryptSettings($settings);
+        foreach ($data as $field => $expectedValue) {
+            $this->assertSame($expectedValue, $decryptedSettings[$field]);
+        }
     }
 
-    /**
-     * @dataProvider data_For_testSmtpSettingsSetServiceTest_Invalid
-     */
-    public function testSmtpSettingsSetServiceTest_Invalid(string $failingField, $value)
+    public function testSmtpSettingsSetServiceTest_Invalid()
     {
-        $data = $this->getSmtpSettingsData($failingField, $value);
+        $failingField = 'port';
+        $data = $this->getSmtpSettingsData('port', 'abc');
 
         $this->expectException(FormValidationException::class);
         $this->expectExceptionMessage('Could not validate the smtp settings.');
+        $this->expectExceptionMessage($failingField);
         $this->service->saveSettings($data);
     }
 
@@ -90,41 +93,30 @@ class SmtpSettingsSetServiceTest extends TestCase
 
         $this->service->saveSettings($data);
 
+        /** @var \App\Model\Entity\OrganizationSetting $settings */
         $settings = SmtpSettingFactory::find()->firstOrFail();
-        $value = $settings->get('value');
-        $this->gpg->setDecryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), '');
-        $value = $this->gpg->decrypt($value);
-        $settings = json_decode($value, true);
-        $this->assertSame($this->getSmtpSettingsData(), $settings);
+        unset($data['bar']);
+        $this->assertSame($data, $this->decryptSettings($settings));
     }
 
     public function data_For_testSmtpSettingsSetServiceTest_Valid(): array
     {
         return [
             [],
-            ['username', null],
-            ['password', null],
-            ['tls', null],
-            ['tls', 1],
-            ['tls', '1'],
-            ['port', '123'],
+            ['password', 'passwordwith"'],
+            ['password', "passwordwith'"],
         ];
     }
 
-    public function data_For_testSmtpSettingsSetServiceTest_Invalid(): array
+    /**
+     * @param \App\Model\Entity\OrganizationSetting $settings Org setting in the DB
+     * @return array
+     */
+    public function decryptSettings(OrganizationSetting $settings): array
     {
-        return [
-            ['sender_name', ''],
-            ['sender_email', 'foo'],
-            ['sender_email', ''],
-            ['host', ''],
-            ['tls', 'true'],
-            ['tls', false],
-            ['tls', 0],
-            ['tls', '0'],
-            ['port', 'abc'],
-            ['port', 0],
-            ['port', 1.2],
-        ];
+        $this->gpg->setDecryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), '');
+        $value = $this->gpg->decrypt($settings->get('value'));
+
+        return json_decode($value, true);
     }
 }

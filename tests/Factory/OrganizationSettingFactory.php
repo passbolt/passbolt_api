@@ -19,11 +19,17 @@ namespace App\Test\Factory;
 
 use App\Model\Entity\OrganizationSetting;
 use App\Utility\UuidFactory;
+use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
 /**
  * OrganizationSettingFactory
+ *
+ * @method \App\Model\Entity\OrganizationSetting|\App\Model\Entity\OrganizationSetting[] persist()
+ * @method \App\Model\Entity\OrganizationSetting getEntity()
+ * @method \App\Model\Entity\OrganizationSetting[] getEntities()
+ * @method static \App\Model\Entity\OrganizationSetting get($primaryKey, array $options = [])
  */
 class OrganizationSettingFactory extends CakephpBaseFactory
 {
@@ -52,6 +58,8 @@ class OrganizationSettingFactory extends CakephpBaseFactory
                 'property' => $property,
                 'property_id' => UuidFactory::uuid($property),
                 'value' => $faker->text(),
+                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'created_by' => UuidFactory::uuid(),
                 'modified_by' => UuidFactory::uuid(),
             ];

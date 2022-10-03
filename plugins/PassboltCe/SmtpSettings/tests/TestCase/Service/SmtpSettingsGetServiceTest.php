@@ -68,7 +68,7 @@ class SmtpSettingsGetServiceTest extends TestCase
 
         $this->assertSame('file', $settings['source']);
         unset($settings['source']);
-        $this->assertSettingsHaveTheRightKeys($settings);
+        $this->assertFileSettingsHaveTheRightKeys($settings);
     }
 
     public function testSmtpSettingsGetServiceTest_Incomplete_File_Source()
@@ -83,7 +83,7 @@ class SmtpSettingsGetServiceTest extends TestCase
 
         $this->assertSame('env', $settings['source']);
         unset($settings['source']);
-        $this->assertSettingsHaveTheRightKeys($settings);
+        $this->assertFileSettingsHaveTheRightKeys($settings);
     }
 
     public function testSmtpSettingsGetServiceTest_Valid_Env_Source()
@@ -95,7 +95,7 @@ class SmtpSettingsGetServiceTest extends TestCase
 
         $this->assertSame('env', $settings['source']);
         unset($settings['source']);
-        $this->assertSettingsHaveTheRightKeys($settings);
+        $this->assertFileSettingsHaveTheRightKeys($settings);
     }
 
     public function testSmtpSettingsGetServiceTest_Valid_DB_Source()
@@ -109,7 +109,7 @@ class SmtpSettingsGetServiceTest extends TestCase
 
         $this->assertSame('db', $settings['source']);
         unset($settings['source']);
-        $this->assertSettingsHaveTheRightKeys($settings);
+        $this->assertDBSettingsHaveTheRightKeys($settings);
     }
 
     public function testSmtpSettingsGetServiceTest_Valid_Integration_With_SetService()
@@ -118,13 +118,26 @@ class SmtpSettingsGetServiceTest extends TestCase
         $data = $this->getSmtpSettingsData();
 
         $setService = new SmtpSettingsSetService($this->mockAdminAccessControl());
-        $setService->saveSettings($data);
+        $savedSettings = $setService->saveSettings($data);
 
         $service = new SmtpSettingsGetService();
         $settings = $service->getSettings();
 
-        $this->assertSame('db', $settings['source']);
-        unset($settings['source']);
-        $this->assertSame($data, $settings);
+        $this->assertEquals($savedSettings->created->format('yy-m-d H:m:s'), $settings['created']->format('yy-m-d H:m:s'));
+        $this->assertEquals($savedSettings->modified->format('yy-m-d H:m:s'), $settings['modified']->format('yy-m-d H:m:s'));
+        unset($settings['created']);
+        unset($settings['modified']);
+
+        $expectedSettings = array_merge(
+            ['id' => $savedSettings->id,],
+            $data,
+            [
+                'created_by' => $savedSettings->created_by,
+                'modified_by' => $savedSettings->modified_by,
+            ],
+            ['source' => 'db']
+        );
+
+        $this->assertEquals($expectedSettings, $settings);
     }
 }

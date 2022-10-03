@@ -61,7 +61,7 @@ class SmtpSettingsGetSettingsInDbServiceTest extends TestCase
 
         $settings = $this->service->getSettings();
 
-        $this->assertSettingsHaveTheRightKeys($settings);
+        $this->assertDBSettingsHaveTheRightKeys($settings);
     }
 
     public function testSmtpSettingsGetSettingsInDbService_No_Valid_Data()

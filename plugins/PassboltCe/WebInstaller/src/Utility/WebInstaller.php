@@ -304,6 +304,10 @@ class WebInstaller
     public function saveSmtpSettingsInDb(): void
     {
         $smtpSettings = $this->getSettings('email');
+        if (empty($smtpSettings)) {
+            return;
+        }
+
         $userId = $this->getSettings('user.user_id');
         if (is_null($userId)) {
             /** @var \App\Model\Table\UsersTable $Users */

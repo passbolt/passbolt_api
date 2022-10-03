@@ -23,6 +23,7 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\TestEmailTransport;
 use Cake\Utility\Hash;
+use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
@@ -248,7 +249,7 @@ class SendTestEmailCommand extends PassboltCommand
     {
         $transportConfig = TransportFactory::getConfig('default');
         $className = Hash::get($transportConfig, 'className');
-        if ($className != 'Smtp' && $className !== TestEmailTransport::class) {
+        if ($className != 'Smtp' && $className != SmtpTransport::class && $className !== TestEmailTransport::class) {
             $msg = __('Your email transport configuration is not set to use "Smtp". ({0} is set instead)', $className);
             $this->error($msg, $io);
             $this->error(__('This email debug task is only for SMTP configurations.'), $io);

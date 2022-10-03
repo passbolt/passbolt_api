@@ -34,6 +34,7 @@ class SmtpSettingsGetSettingsInDbService
      * @return array|null
      * @throws \App\Error\Exception\FormValidationException if the data does not validate the EmailConfigurationForm
      * @throws \Cake\Http\Exception\InternalErrorException if the data in the DB cannot be decrypted
+     * @throws \Cake\Database\Exception\MissingConnectionException if the database is not in place (this is the case during installation)
      */
     public function getSettings(): ?array
     {
@@ -72,7 +73,16 @@ class SmtpSettingsGetSettingsInDbService
         $value = $settings->get('value');
         $decryptedValue = $this->decrypt($value);
 
-        return json_decode($decryptedValue, true);
+        return array_merge(
+            ['id' => $settings['id']],
+            json_decode($decryptedValue, true),
+            [
+                'created' => $settings['created'],
+                'modified' => $settings['modified'],
+                'created_by' => $settings['created_by'],
+                'modified_by' => $settings['modified_by'],
+            ]
+        );
     }
 
     /**

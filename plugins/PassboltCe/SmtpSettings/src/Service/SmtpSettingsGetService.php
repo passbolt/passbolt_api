@@ -60,7 +60,9 @@ class SmtpSettingsGetService
             throw new FormValidationException(__('Could not validate the smtp settings.'), $form);
         }
 
-        $allowedFields = array_merge(['source'], SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS);
+        $allowedFields = array_merge([
+            'source', 'id', 'created', 'modified', 'created_by', 'modified_by',
+        ], SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS);
 
         return $this->sanitizeData($form->getData(), $allowedFields);
     }
@@ -101,7 +103,7 @@ class SmtpSettingsGetService
         } else {
             $config['source'] = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_ENV;
         }
-        $from = Mailer::getConfig('default')['from'];
+        $from = Mailer::getConfig('default')['from'] ?? [];
         foreach ($from as $email => $name) {
             $config['sender_email'] = $email;
             $config['sender_name'] = $name;

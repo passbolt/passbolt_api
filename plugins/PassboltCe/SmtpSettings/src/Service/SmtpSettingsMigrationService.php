@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Service;
 
+use App\Error\Exception\NoAdminInDbException;
 use App\Model\Entity\OrganizationSetting;
 use App\Model\Entity\Role;
 use App\Utility\Application\FeaturePluginAwareTrait;
@@ -63,8 +64,11 @@ class SmtpSettingsMigrationService
                 $orgSetting = $this->saveSettingsInDb();
                 $orgSetting->set('source', SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_FILE);
             }
+        } catch (NoAdminInDbException $e) {
+          // Silently do nothing, this is probably due running a fresh installation
+            Log::info($e->getMessage() . ' Ignoring the import of the SMTP Settings.');
         } catch (\Throwable $e) {
-            $this->logError($e->getMessage());
+            $this->logWarning($e->getMessage());
         }
 
         return $orgSetting;
@@ -85,16 +89,13 @@ class SmtpSettingsMigrationService
      * Import settings in the DB if found in file
      *
      * @return \App\Model\Entity\OrganizationSetting
-     * @throws \Exception if no admin is found
+     * @throws \App\Error\Exception\NoAdminInDbException if no admin is found
      */
     private function saveSettingsInDb(): OrganizationSetting
     {
         /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
-        $admin = $Users->findFirstAdmin();
-        if (is_null($admin)) {
-            throw new \Exception('No admin found in the DB');
-        }
+        $admin = $Users->findFirstAdminOrThrowNoAdminInDbException();
         $uac = new UserAccessControl(Role::ADMIN, $admin->id);
         $orgSetting = (new SmtpSettingsSetService($uac))->saveSettings($this->smtpSettings);
         Log::info('SMTP Settings were imported from ' . CONFIG . DS . 'passbolt.php to the database.');
@@ -122,9 +123,9 @@ class SmtpSettingsMigrationService
      * @param string $msg Message to log
      * @return void
      */
-    private function logError(string $msg): void
+    private function logWarning(string $msg): void
     {
-        Log::error('There was an error in V380SmtpSettingsMigrationService');
-        Log::error($msg);
+        Log::warning('There was an error in V380SaveSmtpSettingsInDb');
+        Log::warning($msg);
     }
 }

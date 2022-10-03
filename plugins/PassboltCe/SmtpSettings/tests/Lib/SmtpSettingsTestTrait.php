@@ -38,9 +38,9 @@ trait SmtpSettingsTestTrait
             'sender_email' => 'johndoe@passbolt.test',
             'host' => 'some host',
             'tls' => true,
-            'port' => '25',
-            'username' => 'user',
-            'password' => 'secret',
+            'port' => (string)rand(1, 999),
+            'username' => 'test-user',
+            'password' => 'test-secret',
         ];
 
         if (isset($field)) {
@@ -78,11 +78,24 @@ trait SmtpSettingsTestTrait
         DirectoryUtility::removeRecursively($this->dummyPassboltFile);
     }
 
-    private function assertSettingsHaveTheRightKeys(array $settings)
+    private function assertFileSettingsHaveTheRightKeys(array $settings)
     {
         $keys = array_keys($settings);
         $expectedKeys = [
             'host', 'port', 'username', 'password', 'tls', 'sender_email', 'sender_name',
+        ];
+        asort($keys);
+        asort($expectedKeys);
+
+        $this->assertEquals(array_values($expectedKeys), array_values($keys));
+    }
+
+    private function assertDBSettingsHaveTheRightKeys(array $settings)
+    {
+        $keys = array_keys($settings);
+        $expectedKeys = [
+            'id', 'host', 'port', 'username', 'password', 'tls', 'sender_email', 'sender_name',
+            'created', 'modified', 'created_by', 'modified_by',
         ];
         asort($keys);
         asort($expectedKeys);

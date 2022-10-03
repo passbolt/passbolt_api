@@ -14,24 +14,23 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.8.0
  */
+namespace App\Error\Exception;
 
-namespace Passbolt\SmtpSettings\Test\TestCase;
-
-use Cake\Mailer\TransportFactory;
-use Cake\TestSuite\TestCase;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
-use Passbolt\SmtpSettings\Plugin;
+use Cake\Http\Exception\InternalErrorException;
 
 /**
- * @covers \Passbolt\SmtpSettings\Plugin
+ * Exception raised when a validation rule is not satisfied in a Form.
  */
-class SmtpSettingsPluginTest extends TestCase
+class NoAdminInDbException extends InternalErrorException
 {
-    public function testSmtpSettingsPluginTest_mapSmtpTransport()
+    /**
+     * Constructor.
+     *
+     * @param string|null $message The error message
+     */
+    public function __construct(?string $message = null)
     {
-        (new Plugin())->mapSmtpTransport();
-
-        $className = TransportFactory::getDsnClassMap()['smtp'];
-        $this->assertSame(SmtpTransport::class, $className);
+        $message = $message ?? __('No admin were found in the database.');
+        parent::__construct($message);
     }
 }
