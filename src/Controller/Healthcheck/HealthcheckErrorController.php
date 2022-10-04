@@ -24,7 +24,6 @@ use Cake\Http\Exception\NotFoundException;
 
 class HealthcheckErrorController extends AppController
 {
-
     /**
      * @inheritDoc
      */
@@ -42,7 +41,7 @@ class HealthcheckErrorController extends AppController
      * Used to test the error handling.
      *
      * @return void
-     * @throws InternalErrorException
+     * @throws \Cake\Http\Exception\InternalErrorException
      */
     public function internal(): void
     {
