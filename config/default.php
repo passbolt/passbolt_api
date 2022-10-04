@@ -185,7 +185,7 @@ return [
 
         // Healthcheck
         'healthcheck' => [
-            'error' => filter_var(env('PASSBOLT_HEALTHCHECK_ERROR', false), FILTER_VALIDATE_BOOLEAN)
+            'error' => filter_var(env('PASSBOLT_HEALTHCHECK_ERROR', true), FILTER_VALIDATE_BOOLEAN)
         ],
 
         // Legal

@@ -12,21 +12,24 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         3.7.4
  */
 namespace App\Test\TestCase\Controller\Healthcheck;
 
-use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
-class HealthcheckErrorControllerTest extends AppIntegrationTestCase
+class HealthcheckErrorControllerTest extends TestCase
 {
+    use IntegrationTestTrait;
+
     public function testHealthcheckErrorDisabled()
     {
         $og = Configure::read('passbolt.healthcheck.error');
         Configure::write('passbolt.healthcheck.error', false);
-        $this->getJson('/healthcheck/error.json');
-        $this->assertError(404);
+        $this->get('/healthcheck/error.json');
+        $this->assertResponseCode(404);
         Configure::write('passbolt.healthcheck.error', $og);
     }
 
@@ -34,8 +37,8 @@ class HealthcheckErrorControllerTest extends AppIntegrationTestCase
     {
         $og = Configure::read('passbolt.healthcheck.error');
         Configure::write('passbolt.healthcheck.error', true);
-        $this->getJson('/healthcheck/error.json');
-        $this->assertError(500);
+        $this->get('/healthcheck/error.json');
+        $this->assertResponseCode(500);
         Configure::write('passbolt.healthcheck.error', $og);
     }
 }
