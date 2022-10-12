@@ -56,6 +56,8 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
 
         /** @var \App\Model\Entity\User $user */
         $user = $event->getData('user');
+        $clientIp = $event->getData('clientIp') ?? '';
+        $userAgent = $event->getData('userAgent') ?? '';
 
         /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get(UsersTable::class);
@@ -64,7 +66,7 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ]);
         foreach ($admins as $admin) {
-            $emailCollection->addEmail($this->createAccountRecoveryAdminEmail($admin, $user));
+            $emailCollection->addEmail($this->createAccountRecoveryAdminEmail($admin, $user, $clientIp, $userAgent));
         }
 
         return $emailCollection;
@@ -73,10 +75,16 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
     /**
      * @param \App\Model\Entity\User $admin Admin
      * @param \App\Model\Entity\User $user User
+     * @param string $clientIp Client IP address
+     * @param string $userAgent Client User Agent
      * @return \App\Notification\Email\Email
      */
-    private function createAccountRecoveryAdminEmail(User $admin, User $user): Email
-    {
+    private function createAccountRecoveryAdminEmail(
+        User $admin,
+        User $user,
+        string $clientIp,
+        string $userAgent
+    ): Email {
         $locale = (new GetUserLocaleService())->getLocale($admin->username);
         $subject = (new LocaleService())->translateString(
             $locale,
@@ -85,7 +93,7 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
             }
         );
 
-        $data = ['body' => compact('admin', 'user'), 'title' => $subject];
+        $data = ['body' => compact('admin', 'user', 'clientIp', 'userAgent'), 'title' => $subject];
 
         return new Email($admin->username, $subject, $data, self::TEMPLATE);
     }
