@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\Lib;
 
-use Cake\Mailer\Mailer;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
 /**
@@ -33,10 +32,12 @@ trait SmtpSettingsIntegrationTestTrait
      * @param array $trace
      * @param string $errorMessage
      */
-    private function mockSmtpSettingsSendTestEmailServiceWithTrace(array $trace, string $errorMessage = '')
+    private function mockSmtpSettingsSendTestEmailServiceFail(array $trace, string $errorMessage = '')
     {
         $this->mockService(SmtpSettingsSendTestEmailService::class, function () use ($trace, $errorMessage) {
-            $service = $this->getMockBuilder(SmtpSettingsSendTestEmailService::class)->getMock();
+            $service = $this->getMockBuilder(SmtpSettingsSendTestEmailService::class)
+                ->onlyMethods(['getTrace', 'sendTestEmail'])
+                ->getMock();
             $service->method('sendTestEmail')->willThrowException(new \Exception($errorMessage));
             $service->method('getTrace')->willReturn($trace);
 
@@ -46,12 +47,16 @@ trait SmtpSettingsIntegrationTestTrait
 
     /**
      * Mock the response of the SmtpSettingsSendTestEmailService to simulate a successful sent email
+     *
+     * @param array $trace
      */
-    private function mockSmtpSettingsSendTestEmailServiceSuccessful()
+    private function mockSmtpSettingsSendTestEmailServiceSuccessful(array $trace = [])
     {
-        $this->mockService(SmtpSettingsSendTestEmailService::class, function () {
-            $service = $this->getMockBuilder(SmtpSettingsSendTestEmailService::class)->getMock();
-            $service->method('sendTestEmail')->willReturn(new Mailer());
+        $this->mockService(SmtpSettingsSendTestEmailService::class, function () use ($trace) {
+            $service = $this->getMockBuilder(SmtpSettingsSendTestEmailService::class)
+                ->onlyMethods(['getTrace'])
+                ->getMock();
+            $service->method('getTrace')->willReturn($trace);
 
             return $service;
         });

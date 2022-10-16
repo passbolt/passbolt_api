@@ -18,24 +18,17 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
-use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 class SmtpSettingsGetControllerTest extends AppIntegrationTestCase
 {
-    use GpgAdaSetupTrait;
     use SmtpSettingsTestTrait;
 
     public function testSmtpSettingsGetController_Success()
     {
         $this->logInAsAdmin();
-
         $data = $this->getSmtpSettingsData();
-        $this->gpgSetup();
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $encryptedSettings = $this->gpg->encrypt(json_encode($data));
-        $savedSettings = SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+        $savedSettings = $this->encryptAndPersistSmtpSettings($data);
 
         $this->getJson('/smtp/settings.json');
         $this->assertSuccess();

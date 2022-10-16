@@ -39,6 +39,9 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
         $data = $this->getSmtpSettingsData() + [SmtpSettingsSendTestEmailService::EMAIL_TEST_TO => $recipient];
         $this->logInAsAdmin();
 
+        $trace = ['foo' => 'bar'];
+        $this->mockSmtpSettingsSendTestEmailServiceSuccessful($trace);
+
         $this->postJson('/smtp/email.json', $data);
         $this->assertSuccess();
         $this->assertMailSentFrom('johndoe@passbolt.test');
@@ -48,14 +51,16 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
         $this->assertMailContains(
             'If you receive this email, it means that your passbolt smtp configuration is working fine.'
         );
-        $this->assertNull($this->_responseJsonBody);
+        $debug = $trace;
+        $response = json_decode(json_encode($this->_responseJsonBody), true);
+        $this->assertSame(compact('debug'), $response);
     }
 
     public function testSmtpSettingsEmailController_Email_Error()
     {
         $this->logInAsAdmin();
         $trace = ['foo' => 'bar'];
-        $this->mockSmtpSettingsSendTestEmailServiceWithTrace($trace);
+        $this->mockSmtpSettingsSendTestEmailServiceFail($trace);
 
         $this->postJson('/smtp/email.json', []);
         $this->assertError();

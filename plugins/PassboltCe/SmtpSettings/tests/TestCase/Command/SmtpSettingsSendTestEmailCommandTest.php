@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
-use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
@@ -27,7 +27,7 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 class SmtpSettingsSendTestEmailCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
-    use GpgAdaSetupTrait;
+    use EmailTrait;
     use SmtpSettingsIntegrationTestTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
@@ -48,9 +48,13 @@ class SmtpSettingsSendTestEmailCommandTest extends TestCase
      */
     public function testSendTestEmailCommandWithFailingToSendTest_Should_Display_Trace()
     {
+        // Insert valid data to pass validation
+        $data = $this->getSmtpSettingsData();
+        $this->encryptAndPersistSmtpSettings($data);
+
         $trace = [['cmd' => 'bar']];
         $errorMessage = 'Error message bar';
-        $this->mockSmtpSettingsSendTestEmailServiceWithTrace($trace, $errorMessage);
+        $this->mockSmtpSettingsSendTestEmailServiceFail($trace, $errorMessage);
 
         $this->exec('passbolt send_test_email -r test@test.test');
         $this->assertExitError();
@@ -76,13 +80,14 @@ class SmtpSettingsSendTestEmailCommandTest extends TestCase
     public function testSendTestEmailCommandWithFailingToSendTest_With_Valid_Settings_In_DB()
     {
         $data = $this->getSmtpSettingsData();
-        $this->gpgSetup();
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $encryptedSettings = $this->gpg->encrypt(json_encode($data));
-        SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+        $this->encryptAndPersistSmtpSettings($data);
+        $trace = [['cmd' => 'bar']];
+        $this->mockSmtpSettingsSendTestEmailServiceSuccessful($trace);
 
-        $this->mockSmtpSettingsSendTestEmailServiceSuccessful();
         $this->exec('passbolt send_test_email -r test@test.test');
+
         $this->assertExitSuccess();
+        $this->assertOutputContains('<info>Trace</info>');
+        $this->assertOutputContains('<info> bar</info>');
     }
 }

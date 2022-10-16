@@ -57,7 +57,7 @@ class SmtpSettingsSendTestEmailService
         $this->validateSmtpSettings($smtpSettings);
 
         $this->email = new Mailer('default');
-        $this->setTransport(self::TRANSPORT_CLASS_NAME_DEBUG_SMTP, $smtpSettings);
+        $this->setDebugTransport($smtpSettings);
         $this->sendEmail($smtpSettings);
 
         return $this->email;
@@ -117,17 +117,16 @@ class SmtpSettingsSendTestEmailService
      * Set a custom transport class name.
      * In the context of this debugger, we'll use our own class name.
      *
-     * @param string $customTransportClassName name of the custom transport class to use
      * @param array $data request data
      * @return void
      */
-    protected function setTransport(string $customTransportClassName, array $data): void
+    protected function setDebugTransport(array $data): void
     {
         if ($this->isRunningOnTestEnvironment()) {
             return;
         }
         $transportConfig = TransportFactory::getConfig('default');
-        $transportConfig['className'] = $customTransportClassName;
+        $transportConfig['className'] = self::TRANSPORT_CLASS_NAME_DEBUG_SMTP;
         $transportConfig['host'] = $data['host'];
         $transportConfig['port'] = $data['port'];
         $transportConfig['username'] = empty($data['username']) ? null : $data['username'];

@@ -17,15 +17,20 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\Lib;
 
+use App\Model\Entity\OrganizationSetting;
+use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\Filesystem\DirectoryUtility;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Mailer\TransportFactory;
+use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 
 /**
  * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsSetService
  */
 trait SmtpSettingsTestTrait
 {
+    use GpgAdaSetupTrait;
+
     /**
      * @var string
      */
@@ -48,6 +53,18 @@ trait SmtpSettingsTestTrait
         }
 
         return $validData;
+    }
+
+    private function encryptAndPersistSmtpSettings($data): OrganizationSetting
+    {
+        $this->gpgSetup();
+        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
+        $encryptedSettings = $this->gpg->encrypt(json_encode($data));
+
+        /** @var \App\Model\Entity\OrganizationSetting $setting */
+        $setting = SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+
+        return $setting;
     }
 
     private function setTransportConfig(?string $field = null, $value = null): void

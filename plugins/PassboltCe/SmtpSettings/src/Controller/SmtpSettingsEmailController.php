@@ -34,7 +34,8 @@ class SmtpSettingsEmailController extends AppController
 
         try {
             $sendTestEmailService->sendTestEmail($this->getRequest()->getData());
-            $this->success(__('The operation was successful.'));
+            $debug = $sendTestEmailService->getTrace();
+            $this->success(__('The operation was successful.'), compact('debug'));
         } catch (FormValidationException $e) {
             throw $e;
         } catch (\Throwable $e) {

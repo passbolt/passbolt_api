@@ -84,11 +84,9 @@ class SendTestEmailCommand extends PassboltCommand
         $this->checkFromIsSet($transportConfig, $io);
 
         $this->displayConfiguration($transportConfig, $args, $io);
-
         $this->sendEmail($transportConfig, $args, $io);
-        if (!$this->sendTestEmailService->isRunningOnTestEnvironment()) {
-            $this->displayTrace($this->sendTestEmailService->getTrace(), $io);
-        }
+        $this->displayTrace($this->sendTestEmailService->getTrace(), $io);
+
         $io->nl(0);
         $this->success('The message has been successfully sent!', $io);
 
@@ -167,8 +165,6 @@ class SendTestEmailCommand extends PassboltCommand
      */
     protected function sendEmail(array $transportConfig, Arguments $args, ConsoleIo $io): void
     {
-        $transportConfig[SmtpSettingsSendTestEmailService::EMAIL_TEST_TO] = $this->getRecipient($args);
-
         try {
             $this->sendTestEmailService->sendTestEmail($transportConfig);
         } catch (\Exception $e) {

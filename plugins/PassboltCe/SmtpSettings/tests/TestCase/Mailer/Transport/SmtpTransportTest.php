@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Mailer\Transport;
 
 use App\Error\Exception\FormValidationException;
-use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -31,17 +30,13 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
  */
 class SmtpTransportTest extends TestCase
 {
-    use GpgAdaSetupTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
 
     public function testSmtpTransport_With_Valid_DB_Settings()
     {
         $configInDb = $this->getSmtpSettingsData();
-        $this->gpgSetup();
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $encryptedSettings = $this->gpg->encrypt(json_encode($configInDb));
-        SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+        $this->encryptAndPersistSmtpSettings($configInDb);
 
         $configInFile = ['sender_name' => 'Ada Lovelace'];
         $transport = new SmtpTransport($configInFile);
@@ -73,14 +68,10 @@ class SmtpTransportTest extends TestCase
         new SmtpTransport();
     }
 
-    public function testSmtpTransport_No_Valid_Data_Should_Return_File_Values()
+    public function testSmtpTransport_No_Valid_Data_Should_Throw_Error()
     {
-        $configInFile = $configInDb = $this->getSmtpSettingsData();
-        $configInDb['sender_name'] = null; // This is not a valid data
-        $this->gpgSetup();
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $encryptedSettings = $this->gpg->encrypt(json_encode($configInDb));
-        SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+        $configInDb = $this->getSmtpSettingsData('sender_name', null); // This is not a valid data
+        $this->encryptAndPersistSmtpSettings($configInDb);
 
         $this->expectException(FormValidationException::class);
         $this->expectExceptionMessage('Could not validate the smtp settings found in database.');

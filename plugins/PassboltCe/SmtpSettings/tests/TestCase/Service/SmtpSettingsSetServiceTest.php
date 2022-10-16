@@ -20,7 +20,6 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 use App\Error\Exception\FormValidationException;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -33,7 +32,6 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
  */
 class SmtpSettingsSetServiceTest extends TestCase
 {
-    use GpgAdaSetupTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
 
@@ -112,7 +110,7 @@ class SmtpSettingsSetServiceTest extends TestCase
      * @param \App\Model\Entity\OrganizationSetting $settings Org setting in the DB
      * @return array
      */
-    public function decryptSettings(OrganizationSetting $settings): array
+    private function decryptSettings(OrganizationSetting $settings): array
     {
         $this->gpg->setDecryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), '');
         $value = $this->gpg->decrypt($settings->get('value'));

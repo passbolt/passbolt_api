@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
-use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Service\SmtpSettingsHealthcheckService;
@@ -29,7 +28,6 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
  */
 class SmtpSettingsHealthcheckServiceTest extends TestCase
 {
-    use GpgAdaSetupTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
 
@@ -53,10 +51,8 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
 
     public function testSmtpSettingsHealthcheckServiceTest_Valid_DB()
     {
-        $this->gpgSetup();
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $encryptedSettings = $this->gpg->encrypt(json_encode($this->getSmtpSettingsData()));
-        SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+        $data = $this->getSmtpSettingsData();
+        $this->encryptAndPersistSmtpSettings($data);
         $otherChecks = ['foo' => 'bar'];
 
         $checks = $this->service->check($otherChecks);
@@ -72,10 +68,8 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
 
     public function testSmtpSettingsHealthcheckServiceTest_Invalid_DB()
     {
-        $this->gpgSetup();
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $encryptedSettings = $this->gpg->encrypt(json_encode($this->getSmtpSettingsData('port', 0)));
-        SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+        $data = $this->getSmtpSettingsData('port', 0);
+        $this->encryptAndPersistSmtpSettings($data);
         $otherChecks = ['foo' => 'bar'];
 
         $checks = $this->service->check($otherChecks);

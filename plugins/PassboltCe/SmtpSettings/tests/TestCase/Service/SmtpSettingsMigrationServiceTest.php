@@ -19,7 +19,6 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -32,7 +31,6 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
  */
 class SmtpSettingsMigrationServiceTest extends TestCase
 {
-    use GpgAdaSetupTrait;
     use FeaturePluginAwareTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;

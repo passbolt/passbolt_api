@@ -19,11 +19,9 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Test\Factory\OrganizationSettingFactory;
-use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
-use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**
@@ -31,7 +29,6 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
  */
 class SmtpSettingsGetSettingsInDbServiceTest extends TestCase
 {
-    use GpgAdaSetupTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
 
@@ -54,10 +51,8 @@ class SmtpSettingsGetSettingsInDbServiceTest extends TestCase
 
     public function testSmtpSettingsGetSettingsInDbService_Valid()
     {
-        $this->gpgSetup();
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $encryptedSettings = $this->gpg->encrypt(json_encode($this->getSmtpSettingsData()));
-        SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+        $data = $this->getSmtpSettingsData();
+        $this->encryptAndPersistSmtpSettings($data);
 
         $settings = $this->service->getSettings();
 
@@ -66,11 +61,7 @@ class SmtpSettingsGetSettingsInDbServiceTest extends TestCase
 
     public function testSmtpSettingsGetSettingsInDbService_No_Valid_Data()
     {
-        $this->gpgSetup();
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $encryptedSettings = $this->gpg->encrypt(json_encode(['Foo' => 'Bar']));
-        SmtpSettingFactory::make()->value($encryptedSettings)->persist();
-
+        $this->encryptAndPersistSmtpSettings(['Foo' => 'Bar']);
         $this->expectException(FormValidationException::class);
         $this->service->getSettings();
     }

@@ -17,16 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 class SmtpSettingsHealthcheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
-    use GpgAdaSetupTrait;
     use PassboltCommandTestTrait;
     use SmtpSettingsTestTrait;
 
@@ -58,12 +55,8 @@ class SmtpSettingsHealthcheckCommandTest extends AppTestCase
     public function testHealthcheckCommand_SmtpSettings_Invalid()
     {
         if ($this->isFeaturePluginEnabled('SmtpSettings')) {
-            $this->gpgSetup();
-            $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-            $encryptedSettings = $this->gpg->encrypt(
-                json_encode($this->getSmtpSettingsData('sender_email', 'not a valid email'))
-            );
-            SmtpSettingFactory::make()->value($encryptedSettings)->persist();
+            $data = $this->getSmtpSettingsData('sender_email', 'not a valid email');
+            $this->encryptAndPersistSmtpSettings($data);
         }
 
         $this->exec('passbolt healthcheck --smtpSettings');
