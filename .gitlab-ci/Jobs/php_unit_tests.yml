@@ -270,6 +270,7 @@
 ##    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
 ##    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 parallel-testing:
+  stage: unit-test
   image: $CI_REGISTRY_IMAGE_TEST:8.1
   variables:
     DOCKER_HOST: tcp://localhost:2376/
