@@ -22,7 +22,12 @@ set -euo pipefail
 
 TEST_GROUP_SIZE=200
 MYSQL_VERSION=5.7
-PHP_VERSION=8.1
+# FOR M1 users, use:
+# MYSQL_DOCKER_IMAGE="arm64v8/mysql"
+# PHP_UNIT_DOCKER_IMAGE="registry.gitlab.com/passbolt/php-test-base-images/8.1-arm64:8.1"
+#
+MYSQL_DOCKER_IMAGE="mysql"
+PHP_UNIT_DOCKER_IMAGE="registry.gitlab.com/passbolt/php-test-base-images:8.1"
 PIDS=()
 
 cleanup_docker() {
@@ -45,11 +50,11 @@ cleanup_docker() {
 calculate_test_groups() {
 
   # Run a mysql container required to run phpunit. Even for running --list-tests??
-  docker run -d --name mysqltestcounter --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test mysql:$MYSQL_VERSION
+  docker run -d --name mysqltestcounter --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test $MYSQL_DOCKER_IMAGE:$MYSQL_VERSION
   local DB_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysqltestcounter)
 
   # Get all tests and split them in regex groups
-  docker run -i --rm --workdir='/app' -v ${PWD}:/app registry.gitlab.com/passbolt/php-test-base-images:$PHP_VERSION /bin/bash -c "
+  docker run -i --rm --workdir='/app' -v ${PWD}:/app $PHP_UNIT_DOCKER_IMAGE /bin/bash -c "
       until mysqladmin -h $DB_HOST -u root -ptest ping > /dev/null 2>&1; do
         sleep 1
       done && \
@@ -83,11 +88,11 @@ start_test() {
   local SERVER=$1
   local TEST_GROUP=$2
   local MYSQL_IP=1.1.1.1
-  docker run -d --name mysqltestLAB$SERVER --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test mysql:$MYSQL_VERSION
+  docker run -d --name mysqltestLAB$SERVER --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test $MYSQL_DOCKER_IMAGE:$MYSQL_VERSION
   MYSQL_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysqltestLAB$SERVER)
 
 	RANDOM_DB_NAME=$(echo $RANDOM)
-  docker run -w=/app --name phpunitLAB$SERVER -v ${PWD}:/app registry.gitlab.com/passbolt/php-test-base-images:$PHP_VERSION bash -c "
+  docker run -w=/app --name phpunitLAB$SERVER -v ${PWD}:/app $PHP_UNIT_DOCKER_IMAGE bash -c "
       until mysqladmin -h $MYSQL_IP -u root -ptest ping > /dev/null 2>&1; do
         sleep 1
       done
