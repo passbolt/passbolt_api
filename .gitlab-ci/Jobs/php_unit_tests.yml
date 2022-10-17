@@ -269,3 +269,19 @@
 ##  rules:
 ##    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
 ##    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+parallel-testing:
+  image: $CI_REGISTRY_IMAGE_TEST:8.1
+  variables:
+    DOCKER_HOST: tcp://localhost:2376/
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  services:
+    - docker:20.10.16-dind
+  script:
+    - cp config/app.default.php config/app.php
+    - composer install --no-interaction
+    - gpg --import config/gpg/unsecure_private.key
+    - gpg --import config/gpg/unsecure.key
+    - ./bin/cake passbolt create_jwt_keys
+    - ./parapassboltest.sh
