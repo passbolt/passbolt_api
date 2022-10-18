@@ -23,7 +23,7 @@ set -euo pipefail
 TEST_GROUP_SIZE=200
 MYSQL_VERSION=5.7
 # FOR M1 users, use:
-# MYSQL_DOCKER_IMAGE="arm64v8/mysql"
+# MYSQL_DOCKER_IMAGE="biarms/mysql"
 # PHP_UNIT_DOCKER_IMAGE="registry.gitlab.com/passbolt/php-test-base-images/8.1-arm64:8.1"
 #
 MYSQL_DOCKER_IMAGE="mysql"
@@ -99,6 +99,7 @@ start_test() {
       mysqladmin -u root -h ${MYSQL_IP} create test$RANDOM_DB_NAME -ptest
       gpg --import config/gpg/unsecure_private.key > /dev/null 2>&1 && \
       gpg --import config/gpg/unsecure.key > /dev/null 2>&1 && \
+      DEBUG=1 \
       PASSBOLT_REGISTRATION_PUBLIC=1 \
       PASSBOLT_SELENIUM_ACTIVE=1 \
       APP_FULL_BASE_URL=http://127.0.0.1 \
