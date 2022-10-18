@@ -1028,7 +1028,7 @@ msgid "{0} updated your membership in the group {1}"
 msgstr "{0} a mis à jour votre adhésion au groupe {1}"
 
 msgid "Your account recovery, {0}!"
-msgstr "Récupération de votre compte, {0}!"
+msgstr "Récupération de votre compte, {0} !"
 
 msgid "You added the password {0}"
 msgstr "Vous avez ajouté le mot de passe {0}"
@@ -1046,7 +1046,7 @@ msgid "{0} deleted user {1}"
 msgstr "{0} a supprimé l'utilisateur {1}"
 
 msgid "Welcome to passbolt, {0}!"
-msgstr "Bienvenue sur passbolt, {0}!"
+msgstr "Bienvenue sur passbolt, {0} !"
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} a mis à jour vos adhésions à plusieurs groupes"
@@ -1769,7 +1769,7 @@ msgid "passbolt test email"
 msgstr "email de test passbolt"
 
 msgid "Congratulations!"
-msgstr "Félicitations!"
+msgstr "Félicitations !"
 
 msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
 msgstr "Si vous recevez cet e-mail, cela signifie que votre configuration smtp de de passbolt fonctionne correctement."
@@ -1805,7 +1805,7 @@ msgid "Installation"
 msgstr "Installation"
 
 msgid "That's it!"
-msgstr "Voilà!"
+msgstr "Voilà !"
 
 msgid "A host name is required."
 msgstr "Un nom d'hôte est requis."
@@ -1985,7 +1985,7 @@ msgid "The server OpenPGP private key file is not writable."
 msgstr "Le fichier de clé privée OpenPGP du serveur n'est pas accessible en écriture."
 
 msgid "Create your user account!"
-msgstr "Créez votre compte utilisateur!"
+msgstr "Créez votre compte utilisateur !"
 
 msgid "Admin user details"
 msgstr "Détails de l'utilisateur admin"
@@ -2075,7 +2075,7 @@ msgid "Passbolt is not configured."
 msgstr "Passbolt n'est pas configuré."
 
 msgid "Passbolt is not configured yet!"
-msgstr "Passbolt n'est pas encore configuré!"
+msgstr "Passbolt n'est pas encore configuré !"
 
 msgid "If you see this page, it means that passbolt is present on your server but not configured. Click on \"Get Started\" to launch the configuration wizard."
 msgstr "Si vous voyez cette page, cela signifie que passbolt est présent sur votre serveur mais pas encore configuré. Cliquez sur \"Démarrer\" pour lancer l'assistant de configuration."
@@ -2162,10 +2162,10 @@ msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
 msgstr "Bienvenue sur Passbolt Pro ! Commençons par la configuration."
 
 msgid "Nice one! Your environment is ready for passbolt."
-msgstr "Génial! Votre environnement est prêt pour passbolt."
+msgstr "Génial ! Votre environnement est prêt pour passbolt."
 
 msgid "Oops!! Passbolt cannot run yet on your server."
-msgstr "Oups!! Passbolt ne peut pas encore être exécuté sur votre serveur."
+msgstr "Oups !! Passbolt ne peut pas encore être exécuté sur votre serveur."
 
 msgid "Environment is configured correctly."
 msgstr "L'environnement est configuré correctement."
@@ -2195,7 +2195,7 @@ msgid "The configuration is complete"
 msgstr "La configuration est terminée"
 
 msgid "Success!"
-msgstr "Succès!"
+msgstr "Succès !"
 
 msgid "You have completed successfully the configuration procedure, congrats!"
 msgstr "Vous avez terminé avec succès la procédure de configuration, félicitations !"
@@ -2318,7 +2318,7 @@ msgid "You have initiated an account recovery!"
 msgstr "Vous avez initié une récupération de compte !"
 
 msgid "Welcome back!"
-msgstr "Bienvenue à nouveau!"
+msgstr "Bienvenue à nouveau !"
 
 msgid "You just requested to recover your passbolt account on this device."
 msgstr "Vous venez juste de demander de récupérer votre compte passbolt sur cet appareil."
@@ -2333,7 +2333,7 @@ msgid "start recovery"
 msgstr "démarrer la récupération"
 
 msgid "{0} just created an account for you on passbolt!"
-msgstr "{0} vient de créer un compte pour vous sur passbolt!"
+msgstr "{0} vient de créer un compte pour vous sur passbolt !"
 
 msgid "Welcome {0}"
 msgstr "Bienvenue {0}"
@@ -2345,16 +2345,16 @@ msgid "Passbolt is an open source password manager."
 msgstr "Passbolt est un gestionnaire de mots de passe open source."
 
 msgid "It is designed to allow sharing credentials securely with your team!"
-msgstr "Il est conçu pour permettre le partage d'identifiants avec votre équipe en toute sécurité!"
+msgstr "Il est conçu pour permettre le partage d'identifiants avec votre équipe en toute sécurité !"
 
 msgid "Let's take the next five minutes to get you started!"
-msgstr "Nous allons prendre les cinq prochaines minutes pour vous aider à démarrer!"
+msgstr "Nous allons prendre les cinq prochaines minutes pour vous aider à démarrer !"
 
 msgid "get started"
 msgstr "démarrer"
 
 msgid "You just created your account on passbolt!"
-msgstr "Vous venez de créer votre compte sur passbolt!"
+msgstr "Vous venez de créer votre compte sur passbolt !"
 
 msgid "You just opened an account on passbolt at {0}."
 msgstr "Vous venez d'ouvrir un compte sur passbolt à l'adresse {0}."
@@ -2483,7 +2483,7 @@ msgid "{0} resources were shared with you."
 msgstr "{0} ressources ont été partagées avec vous."
 
 msgid "{0} just activated their account on passbolt!"
-msgstr "{0} vient d'activer son compte sur passbolt!"
+msgstr "{0} vient d'activer son compte sur passbolt !"
 
 msgid "The user is now active on passbolt and you can share passwords with them."
 msgstr "L'utilisateur est maintenant actif sur passbolt et vous pouvez partager des mots de passe avec lui."
