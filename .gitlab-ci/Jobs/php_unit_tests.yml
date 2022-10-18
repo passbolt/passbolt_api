@@ -292,4 +292,5 @@ parallel-testing:
     - gpg --import config/gpg/unsecure_private.key
     - gpg --import config/gpg/unsecure.key
     - ./bin/cake passbolt create_jwt_keys
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - ./parapassboltest.sh
