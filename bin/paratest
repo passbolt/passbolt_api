@@ -2,14 +2,13 @@
 
 set -euo pipefail
 
-# PARAPASSBOLTTEST AKA PARAPA
+# PARAPASSBOLTTEST AKA PARAPA (I'm loving it, yes, sorry about the reference)
 #
 # THIS SCRIPT IS EXPERIMENTAL
 # Adjust test size to your CPU CORES.
 # By default PHP version is 8
 # You need access to the gitlab registry of this project: passbolt/php-test-base-images
 # Around 200 or 300 in 8 cpu machine takes 1 minute to run all tests. Other combinations could lead to broken tests ??
-# TODO run tests isolated 1 by 1
 # Test logs are stored in logfiles on the current working dir and showed to stdout at
 # the end of the execution
 # You can follow the execution with: watch -n1 docker ps
@@ -99,6 +98,7 @@ start_test() {
       mysqladmin -u root -h ${MYSQL_IP} create test$RANDOM_DB_NAME -ptest
       gpg --import config/gpg/unsecure_private.key > /dev/null 2>&1 && \
       gpg --import config/gpg/unsecure.key > /dev/null 2>&1 && \
+      mkdir -p tmp/paratest && \
       DEBUG=1 \
       PASSBOLT_REGISTRATION_PUBLIC=1 \
       PASSBOLT_SELENIUM_ACTIVE=1 \
@@ -110,7 +110,7 @@ start_test() {
       DATASOURCES_TEST_USERNAME=test \
       DATASOURCES_TEST_PASSWORD=test \
       DATASOURCES_TEST_HOST=${MYSQL_IP} \
-      vendor/bin/phpunit --filter='${TEST_GROUP}'" > phpunit_test_log$SERVER.txt &
+      vendor/bin/phpunit --filter='${TEST_GROUP}'" > tmp/paratest/phpunit_test_log$SERVER.txt &
 
   until docker inspect -f '{{.State.Pid}}' phpunitLAB$SERVER > /dev/null 2>&1; do
     sleep 1
