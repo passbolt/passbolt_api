@@ -2219,7 +2219,7 @@ msgid "Installing"
 msgstr "Installation en cours"
 
 msgid "Existing installation?"
-msgstr "Installation existante?"
+msgstr "Installation existante ?"
 
 msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
 msgstr "Si vous voulez utiliser une base de données passbolt existante, l'installateur s'occupera de la mettre à jour vers la version actuelle de passbolt tout en conservant vos données."
