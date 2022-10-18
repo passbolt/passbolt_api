@@ -280,6 +280,13 @@ parallel-testing:
   services:
     - docker:20.10.16-dind
   script:
+    - apt-get update
+    - apt-get install -y ca-certificates curl gnupg lsb-release
+    - mkdir -p /etc/apt/keyrings
+    - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    - echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bullseye stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    - apt-get update
+    - apt-get install -y docker-ce-cli
     - cp config/app.default.php config/app.php
     - composer install --no-interaction
     - gpg --import config/gpg/unsecure_private.key
