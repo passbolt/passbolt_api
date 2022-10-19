@@ -22,14 +22,14 @@
     - gpg --import config/gpg/unsecure.key
     - ./bin/cake passbolt create_jwt_keys
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - bin/paratest -d $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION -p $DATABASE_ENGINE_VERSION
+    - bin/paratest -d "$CI_REGISTRY_IMAGE_TEST:$PHP_VERSION" -p "$DATABASE_ENGINE_VERSION"
 ##
 ## CUSTOM COMBINATIONS
 ##
 php7.4-mysql5.7:
   variables:
     PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-5.7'
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-5.7"
   extends:
     - .test-template
   rules:
@@ -39,7 +39,7 @@ php7.4-mysql5.7:
 php7.4-postgres:
   variables:
     PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-12.2-alpine:latest'
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-12.2-alpine:latest"
   extends:
     - .test-template
 
@@ -50,7 +50,7 @@ php7.4-postgres:
 php7.3-mariadb10.3:
   variables:
     PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.3'
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.3"
   extends:
     - .test-template
   rules:
@@ -60,7 +60,7 @@ php7.3-mariadb10.3:
 php7.4-mariadb10.5:
   variables:
     PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.5'
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.5"
   extends:
     - .test-template
   rules:
@@ -71,7 +71,7 @@ php7.4-mariadb10.5:
 php7.4-mysql8:
   variables:
     PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-8.0"
   extends:
     - .test-template
   rules:
@@ -81,7 +81,7 @@ php7.4-mysql8:
 php8.1-mysql8:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-8.0"
   extends:
     - .test-template
   rules:
@@ -94,7 +94,7 @@ php8.1-mysql8:
 php7.4-mariadb10.3:
   variables:
     PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.3'
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.3"
   extends:
     - .test-template
   rules:
@@ -105,7 +105,7 @@ php7.4-mariadb10.3:
 php8.0-mariadb10.5:
   variables:
     PHP_VERSION: "8.0"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.5'
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.5"
   extends:
     - .test-template
   rules:
@@ -116,7 +116,7 @@ php8.0-mariadb10.5:
 php8.0-mariadb8.0:
   variables:
     PHP_VERSION: "8.0"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-8.0"
   extends:
     - .test-template
   rules:
