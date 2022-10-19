@@ -14,10 +14,10 @@ set -euo pipefail
 # You can follow the execution with: watch -n1 docker ps
 #
 # If containers remain dangling after a script execution you can run manually:
-#  docker ps -a | grep mysqltestLAB | awk '{print $1}' | xargs docker kill
-#  docker ps -a | grep mysqltestLAB | awk '{print $1}' | xargs docker rm
-#  docker ps -a | grep phpunitLAB | awk '{print $1}' | xargs docker kill
-#  docker ps -a | grep phpunitLAB | awk '{print $1}' | xargs docker rm
+#  docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker kill
+#  docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker rm
+#  docker ps -a | grep passboltUnitTestGroup | awk '{print $1}' | xargs docker kill
+#  docker ps -a | grep passboltUnitTestGroup | awk '{print $1}' | xargs docker rm
 
 TEST_GROUP_SIZE=200
 DATABASE_DOCKER_IMAGE="mysql:5.7"
@@ -87,15 +87,15 @@ get_options() {
 cleanup_docker() {
 
   printf "Waiting for php containers to finish"
-  while docker ps | grep phpunitLAB > /dev/null 2>&1; do
+  while docker ps | grep passboltUnitTestGroup > /dev/null 2>&1; do
     printf "."
     sleep 1
   done
   printf "DONE! \n"
 
-  docker ps -a | grep mysqltestLAB | awk '{print $1}' | xargs docker kill
-  docker ps -a | grep mysqltestLAB | awk '{print $1}' | xargs docker rm
-  docker ps -a | grep phpunitLAB | awk '{print $1}' | xargs docker rm
+  docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker kill
+  docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker rm
+  docker ps -a | grep passboltUnitTestGroup | awk '{print $1}' | xargs docker rm
 
   docker kill mysqltestcounter
   docker rm mysqltestcounter
@@ -137,16 +137,16 @@ calculate_test_groups() {
     awk '{print "/"$1"/"}'
 }
 
-start_test() {
+start_test_mysql() {
 
   local SERVER=$1
   local TEST_GROUP=$2
   local MYSQL_IP=1.1.1.1
-  docker run -d --name mysqltestLAB$SERVER --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test $DATABASE_DOCKER_IMAGE
-  MYSQL_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysqltestLAB$SERVER)
+  docker run -d --name phpunitDataSource$SERVER --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test $DATABASE_DOCKER_IMAGE
+  MYSQL_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' phpunitDataSource$SERVER)
 
 	RANDOM_DB_NAME=$(echo $RANDOM)
-  docker run -w=/app --name phpunitLAB$SERVER -v ${PWD}:/app $PHP_UNIT_DOCKER_IMAGE bash -c "
+  docker run -w=/app --name passboltUnitTestGroup$SERVER -v ${PWD}:/app $PHP_UNIT_DOCKER_IMAGE bash -c "
       until mysqladmin -h $MYSQL_IP -u root -ptest ping > /dev/null 2>&1; do
         sleep 1
       done
@@ -166,11 +166,11 @@ start_test() {
       DATASOURCES_TEST_HOST=${MYSQL_IP} \
       vendor/bin/phpunit --filter='${TEST_GROUP}'" > tmp/paratest/phpunit_test_log$SERVER.txt &
 
-  until docker inspect -f '{{.State.Pid}}' phpunitLAB$SERVER > /dev/null 2>&1; do
+  until docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER > /dev/null 2>&1; do
     sleep 1
   done
 
-  PIDS+=$(docker inspect -f '{{.State.Pid}}' phpunitLAB$SERVER)
+  PIDS+=$(docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER)
 }
 
 get_options "$@"
@@ -180,7 +180,7 @@ mkdir -p $LOG_PATH
 # Start the tests in background
 COUNT=0
 for group in $(calculate_test_groups); do
-  start_test $COUNT $group &
+  start_test_mysql $COUNT $group &
   COUNT=$(($COUNT +1))
 done
 
