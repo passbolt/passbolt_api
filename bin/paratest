@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -exuo pipefail
+set -euo pipefail
 
 # PARAPASSBOLTTEST AKA PARAPA (I'm loving it, yes, sorry about the reference)
 #
