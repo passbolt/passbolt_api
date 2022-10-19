@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -exuo pipefail
 
 # PARAPASSBOLTTEST AKA PARAPA (I'm loving it, yes, sorry about the reference)
 #
@@ -98,8 +98,6 @@ cleanup_docker() {
   docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker kill
   docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker rm
   docker ps -a | grep passboltUnitTestGroup | awk '{print $1}' | xargs docker rm
-
-  exit $EXIT_STATUS
 }
 
 calculate_test_groups() {
