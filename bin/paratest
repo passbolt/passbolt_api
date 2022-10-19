@@ -7,17 +7,10 @@ set -euo pipefail
 # THIS SCRIPT IS EXPERIMENTAL
 # Adjust test size to your CPU CORES.
 # By default PHP version is 8
-# You need access to the gitlab registry of this project: passbolt/php-test-base-images
-# Around 200 or 300 in 8 cpu machine takes 1 minute to run all tests. Other combinations could lead to broken tests ??
-# Test logs are stored in logfiles on the current working dir and showed to stdout at
+# Around 200 or 300 in 8 cpu machine takes 1 minute to run all tests.
+# Test logs are stored in logfiles on the $LOG_PATH and showed to stdout at
 # the end of the execution
-# You can follow the execution with: watch -n1 docker ps
 #
-# If containers remain dangling after a script execution you can run manually:
-#  docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker kill
-#  docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker rm
-#  docker ps -a | grep passboltUnitTestGroup | awk '{print $1}' | xargs docker kill
-#  docker ps -a | grep passboltUnitTestGroup | awk '{print $1}' | xargs docker rm
 
 TEST_GROUP_SIZE=200
 DATABASE_DOCKER_IMAGE="mysql:5.7"
@@ -93,38 +86,31 @@ cleanup_docker() {
   done
   printf "DONE! \n"
 
+  EXIT_CODES=$(docker ps -a | grep passboltUnitTestGroup | awk '{print $1}' | xargs -I {} docker inspect {} --format='{{.State.ExitCode}}')
+
+  for code in $EXIT_CODES; do
+    if [[ $code != 0 ]]; then
+      EXIT_STATUS=$code
+      break
+    fi
+  done
+
   docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker kill
   docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker rm
   docker ps -a | grep passboltUnitTestGroup | awk '{print $1}' | xargs docker rm
 
-  docker kill mysqltestcounter
-  docker rm mysqltestcounter
+  exit $EXIT_STATUS
 }
 
 calculate_test_groups() {
 
-  # Run a mysql container required to run phpunit. Even for running --list-tests??
-  docker run -d --name mysqltestcounter --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test $DATABASE_DOCKER_IMAGE
-  local DB_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysqltestcounter)
-
-  # Get all tests and split them in regex groups
-  docker run -i --rm --workdir='/app' -v ${PWD}:/app $PHP_UNIT_DOCKER_IMAGE /bin/bash -c "
-      until mysqladmin -h $DB_HOST -u root -ptest ping > /dev/null 2>&1; do
-        sleep 1
-      done && \
-      gpg --import config/gpg/unsecure_private.key > /dev/null 2>&1 && \
-      gpg --import config/gpg/unsecure.key > /dev/null 2>&1 && \
-      PASSBOLT_REGISTRATION_PUBLIC=1 \
-      PASSBOLT_SELENIUM_ACTIVE=1 \
-      APP_FULL_BASE_URL=http://127.0.0.1 \
-      PASSBOLT_GPG_SERVER_KEY_PUBLIC=config/gpg/unsecure.key \
-      PASSBOLT_GPG_SERVER_KEY_PRIVATE=config/gpg/unsecure_private.key \
-      PASSBOLT_GPG_SERVER_KEY_FINGERPRINT=2FC8945833C51946E937F9FED47B0811573EE67E \
-      DATASOURCES_TEST_DATABASE=test \
-      DATASOURCES_TEST_USERNAME=test \
-      DATASOURCES_TEST_PASSWORD=test \
-      DATASOURCES_TEST_HOST=$DB_HOST \
-      vendor/bin/phpunit --list-tests" | \
+  docker run -i \
+    --rm \
+    --workdir='/app' \
+    -v ${PWD}:/app \
+    $PHP_UNIT_DOCKER_IMAGE \
+    /bin/bash -c "
+      vendor/bin/phpunit --bootstrap config/bootstrap.php --list-tests" | \
     awk -F '::' '{print $2}' | \
     awk NF | \
     awk -F '\"' '{print $1}' | \
@@ -141,16 +127,29 @@ start_test_mysql() {
 
   local SERVER=$1
   local TEST_GROUP=$2
-  local MYSQL_IP=1.1.1.1
-  docker run -d --name phpunitDataSource$SERVER --tmpfs /var/lib/mysql:rw -e MYSQL_USER=test -e MYSQL_PASSWORD=test -e MYSQL_DATABASE=test -e MYSQL_ROOT_PASSWORD=test $DATABASE_DOCKER_IMAGE
-  MYSQL_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' phpunitDataSource$SERVER)
+  local DATASOURCE_HOST=1.1.1.1
+
+  docker run -d \
+    --name phpunitDataSource$SERVER \
+    --tmpfs /var/lib/mysql:rw \
+    -e MYSQL_USER=test \
+    -e MYSQL_PASSWORD=test \
+    -e MYSQL_DATABASE=test \
+    -e MYSQL_ROOT_PASSWORD=test \
+    $DATABASE_DOCKER_IMAGE
+
+  DATASOURCE_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' phpunitDataSource$SERVER)
 
 	RANDOM_DB_NAME=$(echo $RANDOM)
-  docker run -w=/app --name passboltUnitTestGroup$SERVER -v ${PWD}:/app $PHP_UNIT_DOCKER_IMAGE bash -c "
-      until mysqladmin -h $MYSQL_IP -u root -ptest ping > /dev/null 2>&1; do
+  docker run -d \
+    -w=/app \
+    --name passboltUnitTestGroup$SERVER \
+    -v ${PWD}:/app \
+    $PHP_UNIT_DOCKER_IMAGE bash -c "
+      until mysqladmin -h $DATASOURCE_HOST -u root -ptest ping > /dev/null 2>&1; do
         sleep 1
       done
-      mysqladmin -u root -h ${MYSQL_IP} create test$RANDOM_DB_NAME -ptest
+      mysqladmin -u root -h ${DATASOURCE_HOST} create test$RANDOM_DB_NAME -ptest && \
       gpg --import config/gpg/unsecure_private.key > /dev/null 2>&1 && \
       gpg --import config/gpg/unsecure.key > /dev/null 2>&1 && \
       DEBUG=1 \
@@ -163,7 +162,59 @@ start_test_mysql() {
       DATASOURCES_TEST_DATABASE=test \
       DATASOURCES_TEST_USERNAME=test \
       DATASOURCES_TEST_PASSWORD=test \
-      DATASOURCES_TEST_HOST=${MYSQL_IP} \
+      DATASOURCES_TEST_HOST=${DATASOURCE_HOST} \
+      vendor/bin/phpunit --filter='${TEST_GROUP}'" > tmp/paratest/phpunit_test_log$SERVER.txt &
+
+  until docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER > /dev/null 2>&1; do
+    sleep 1
+  done
+
+  PIDS+=$(docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER)
+}
+
+start_test_postgres() {
+
+  local SERVER=$1
+  local TEST_GROUP=$2
+  local DATASOURCE_HOST=1.1.1.1
+
+  docker run -d \
+    --name phpunitDataSource$SERVER \
+    --tmpfs /var/lib/postgresql/data:rw \
+    -e POSTGRES_USER=test \
+    -e POSTGRES_PASSWORD=test \
+    -e POSTGRES_HOST_AUTH_METHOD=trust \
+    -e POSTGRES_DATABASE=test \
+    $DATABASE_DOCKER_IMAGE
+
+  DATASOURCE_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' phpunitDataSource$SERVER)
+
+	RANDOM_DB_NAME=$(echo $RANDOM)
+  docker run -d \
+    -w=/app \
+    --name passboltUnitTestGroup$SERVER \
+    -v ${PWD}:/app \
+    $PHP_UNIT_DOCKER_IMAGE bash -c "
+      until pg_isready --host=$DATASOURCE_HOST --port=5432 > /dev/null 2>&1; do
+        sleep 1
+      done
+      psql -U test -h ${DATASOURCE_HOST} -c 'create database test$RANDOM_DB_NAME;' && \
+      gpg --import config/gpg/unsecure_private.key > /dev/null 2>&1 && \
+      gpg --import config/gpg/unsecure.key > /dev/null 2>&1 && \
+      DEBUG=1 \
+      PASSBOLT_REGISTRATION_PUBLIC=1 \
+      PASSBOLT_SELENIUM_ACTIVE=1 \
+      APP_FULL_BASE_URL=http://127.0.0.1 \
+      PASSBOLT_GPG_SERVER_KEY_PUBLIC=config/gpg/unsecure.key \
+      PASSBOLT_GPG_SERVER_KEY_PRIVATE=config/gpg/unsecure_private.key \
+      PASSBOLT_GPG_SERVER_KEY_FINGERPRINT=2FC8945833C51946E937F9FED47B0811573EE67E \
+      DATASOURCES_TEST_DATABASE=test \
+      DATASOURCES_TEST_USERNAME=test \
+      DATASOURCES_TEST_PASSWORD=test \
+      DATASOURCES_TEST_DRIVER='Cake\Database\Driver\Postgres' \
+      DATASOURCES_TEST_PORT=5432 \
+      DATASOURCES_TEST_ENCODING=utf8 \
+      DATASOURCES_TEST_HOST=${DATASOURCE_HOST} \
       vendor/bin/phpunit --filter='${TEST_GROUP}'" > tmp/paratest/phpunit_test_log$SERVER.txt &
 
   until docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER > /dev/null 2>&1; do
@@ -175,14 +226,26 @@ start_test_mysql() {
 
 get_options "$@"
 
+EXIT_STATUS=0
 mkdir -p $LOG_PATH
 
-# Start the tests in background
-COUNT=0
-for group in $(calculate_test_groups); do
-  start_test_mysql $COUNT $group &
-  COUNT=$(($COUNT +1))
-done
+if [[ "$DATABASE_DOCKER_IMAGE" == *"mysql"* ]]; then
+  # Start the tests in background
+  COUNT=0
+  for group in $(calculate_test_groups); do
+    start_test_mysql $COUNT $group &
+    COUNT=$(($COUNT +1))
+  done
+fi
+
+if [[ "$DATABASE_DOCKER_IMAGE" == *"postgre"* ]]; then
+  # Start the tests in background
+  COUNT=0
+  for group in $(calculate_test_groups); do
+    start_test_postgres $COUNT $group &
+    COUNT=$(($COUNT +1))
+  done
+fi
 
 wait
 # Clean docker containers
@@ -190,3 +253,5 @@ cleanup_docker
 
 # Show test results in console
 cat $LOG_PATH/phpunit_test_log*.txt
+
+exit $EXIT_STATUS
