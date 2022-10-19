@@ -134,7 +134,12 @@ start_test_mysql() {
     -e MYSQL_PASSWORD=test \
     -e MYSQL_DATABASE=test \
     -e MYSQL_ROOT_PASSWORD=test \
-    $DATABASE_DOCKER_IMAGE
+    $DATABASE_DOCKER_IMAGE \
+    bash -c "
+      docker-entrypoint.sh mysqld \
+        --default-authentication-plugin=mysql_native_password \
+        --log-bin-trust-function-creators=1
+    "
 
   DATASOURCE_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' phpunitDataSource$SERVER)
 
@@ -158,7 +163,7 @@ start_test_mysql() {
       PASSBOLT_GPG_SERVER_KEY_PRIVATE=config/gpg/unsecure_private.key \
       PASSBOLT_GPG_SERVER_KEY_FINGERPRINT=2FC8945833C51946E937F9FED47B0811573EE67E \
       DATASOURCES_TEST_DATABASE=test \
-      DATASOURCES_TEST_USERNAME=test \
+      DATASOURCES_TEST_USERNAME=root \
       DATASOURCES_TEST_PASSWORD=test \
       DATASOURCES_TEST_HOST=${DATASOURCE_HOST} \
       vendor/bin/phpunit --filter='${TEST_GROUP}'" > tmp/paratest/phpunit_test_log$SERVER.txt &
