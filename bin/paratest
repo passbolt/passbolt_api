@@ -141,7 +141,7 @@ start_test_mysql() {
   DATASOURCE_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' phpunitDataSource$SERVER)
 
 	RANDOM_DB_NAME=$(echo $RANDOM)
-  docker run -d \
+  docker run \
     -w=/app \
     --name passboltUnitTestGroup$SERVER \
     -v ${PWD}:/app \
@@ -190,7 +190,7 @@ start_test_postgres() {
   DATASOURCE_HOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' phpunitDataSource$SERVER)
 
 	RANDOM_DB_NAME=$(echo $RANDOM)
-  docker run -d \
+  docker run \
     -w=/app \
     --name passboltUnitTestGroup$SERVER \
     -v ${PWD}:/app \
