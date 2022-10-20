@@ -108,6 +108,9 @@ class RequestLocaleParserService extends LocaleService
             return null;
         }
 
-        return Hash::get($user, 'username');
+        $userInSession = Hash::get($user, 'user.username');
+        $userInJwtAuthentication = Hash::get($user, 'username');
+
+        return $userInSession ?? $userInJwtAuthentication;
     }
 }
