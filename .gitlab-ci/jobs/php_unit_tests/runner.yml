@@ -54,7 +54,7 @@
     - when: manual
 
 include:
-  - local: './php_73.yml'
-  - local: './php_74.yml'
-  - local: './php_81.yml'
-  - local: './php_82.yml'
+  - local: '/.gitlab-ci/jobs/php_unit_tests/php_73.yml'
+  - local: '/.gitlab-ci/jobs/php_unit_tests/php_74.yml'
+  - local: '/.gitlab-ci/jobs/php_unit_tests/php_81.yml'
+  - local: '/.gitlab-ci/jobs/php_unit_tests/php_82.yml'
