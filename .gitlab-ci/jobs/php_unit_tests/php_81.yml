@@ -5,14 +5,14 @@
 php8.1-postgres11:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "postgres:11"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-11-alpine"
   extends:
     - .test-template-scheduled
 
 php8.1-postgres12:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "postgres:12"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-12-alpine"
   extends:
     - .test-template-scheduled
 
@@ -21,7 +21,7 @@ php8.1-postgres12:
 php8.1-postgres13:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "postgres:13"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-13-alpine"
   extends:
     - .test-template
 
@@ -30,16 +30,9 @@ php8.1-postgres13:
 php8.1-postgres14:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "postgres:14"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-14-alpine"
   extends:
     - .test-template
-
-php8.1-postgres15:
-  variables:
-    PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "postgres:15"
-  extends:
-    - .test-template-scheduled
 
 ###################
 # PHP 8.1 MariaDB #

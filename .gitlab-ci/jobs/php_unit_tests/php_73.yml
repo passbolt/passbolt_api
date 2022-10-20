@@ -7,35 +7,28 @@
 php7.3-postgres11:
   variables:
     PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: "postgres:11"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-11-alpine"
   extends:
     - .test-template
 
 php7.3-postgres12:
   variables:
     PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: "postgres:12"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-12-alpine"
   extends:
     - .test-template-scheduled
 
 php7.3-postgres13:
   variables:
     PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: "postgres:13"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-13-alpine"
   extends:
     - .test-template-scheduled
 
 php7.3-postgres14:
   variables:
     PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: "postgres:14"
-  extends:
-    - .test-template-scheduled
-
-php7.3-postgres15:
-  variables:
-    PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: "postgres:15"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-14-alpine"
   extends:
     - .test-template-scheduled
 

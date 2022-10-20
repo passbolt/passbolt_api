@@ -7,7 +7,7 @@
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
   services:
-    - docker:20.10.16-dind
+    - $CI_REGISTRY/dind:latest
   script:
     - apt-get update
     - apt-get install -y ca-certificates curl gnupg lsb-release
@@ -33,7 +33,7 @@
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
   services:
-    - docker:20.10.16-dind
+    - $CI_REGISTRY_USER/dind:latest
   script:
     - apt-get update
     - apt-get install -y ca-certificates curl gnupg lsb-release
