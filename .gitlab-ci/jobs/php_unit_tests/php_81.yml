@@ -1,0 +1,92 @@
+####################
+# PHP 8.1 postgres #
+####################
+
+php8.1-postgres11:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "postgres:11"
+  extends:
+    - .test-template-scheduled
+
+php8.1-postgres12:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "postgres:12"
+  extends:
+    - .test-template-scheduled
+
+# Supported on:
+# - RHEL8
+php8.1-postgres13:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "postgres:13"
+  extends:
+    - .test-template
+
+# Supported on:
+# - Ubuntu Jammy (22.04)
+php8.1-postgres14:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "postgres:14"
+  extends:
+    - .test-template
+
+php8.1-postgres15:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "postgres:15"
+  extends:
+    - .test-template-scheduled
+
+###################
+# PHP 8.1 MariaDB #
+###################
+
+php8.1-mariadb10.3:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.3"
+  extends:
+    - .test-template-scheduled
+
+# Supported on:
+# - RHEL8
+php8.1-mariadb10.5:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.5"
+  extends:
+    - .test-template
+
+# Supported on:
+# - Ubuntu Jammy (22.04)
+php8.1-mariadb10.6:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.6"
+  extends:
+    - .test-template
+
+#################
+# PHP 8.1 MySQL #
+#################
+
+php8.1-mysql5.7:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-5.7"
+  extends:
+    - .test-template-scheduled
+
+# Supported on:
+# - Ubuntu Jammy (22.04)
+# - RHEL8
+php8.1-mysql8:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-8.0"
+  extends:
+    - .test-template

@@ -1,0 +1,91 @@
+####################
+# PHP 7.4 postgres #
+####################
+
+php7.4-postgres11:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "postgres:11"
+  extends:
+    - .test-template-scheduled
+
+# Supported on:
+# - Ubuntu focal (20.04)
+php7.4-postgres12:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "postgres:12"
+  extends:
+    - .test-template
+
+# Supported on:
+# - Debian bullseye
+php7.4-postgres13:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "postgres:13"
+  extends:
+    - .test-template-scheduled
+
+php7.4-postgres14:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "postgres:14"
+  extends:
+    - .test-template-scheduled
+
+php7.4-postgres15:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "postgres:15"
+  extends:
+    - .test-template-scheduled
+
+###################
+# PHP 7.4 MariaDB #
+###################
+
+php7.4-mariadb10.3:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.3"
+  extends:
+    - .test-template-scheduled
+
+# Supported on:
+# - Debian bullseye
+php7.4-mariadb10.5:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.5"
+  extends:
+    - .test-template
+
+php7.4-mariadb10.6:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.6"
+  extends:
+    - .test-template-scheduled
+
+#################
+# PHP 7.4 MySQL #
+#################
+
+# Supported on:
+# - Debian bullseye
+php7.4-mysql5.7:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-5.7"
+  extends:
+    - .test-template
+
+# Supported on:
+# - Debian bullseye
+php7.4-mysql8:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-8.0"
+  extends:
+    - .test-template

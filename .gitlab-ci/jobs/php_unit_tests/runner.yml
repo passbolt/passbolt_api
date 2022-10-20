@@ -1,0 +1,60 @@
+.test-template:
+  stage: unit-test
+  image: $CI_REGISTRY_IMAGE_TEST:8.1
+  variables:
+    DOCKER_HOST: tcp://localhost:2376/
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  services:
+    - docker:20.10.16-dind
+  script:
+    - apt-get update
+    - apt-get install -y ca-certificates curl gnupg lsb-release
+    - mkdir -p /etc/apt/keyrings
+    - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    - echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bullseye stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    - apt-get update
+    - apt-get install -y docker-ce-cli
+    - cp config/app.default.php config/app.php
+    - composer install --no-interaction
+    - gpg --import config/gpg/unsecure_private.key
+    - gpg --import config/gpg/unsecure.key
+    - ./bin/cake passbolt create_jwt_keys
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - bin/paratest -p "$CI_REGISTRY_IMAGE_TEST:$PHP_VERSION" -d "$DATABASE_ENGINE_VERSION"
+
+.test-template-scheduled:
+  stage: unit-test
+  image: $CI_REGISTRY_IMAGE_TEST:8.1
+  variables:
+    DOCKER_HOST: tcp://localhost:2376/
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  services:
+    - docker:20.10.16-dind
+  script:
+    - apt-get update
+    - apt-get install -y ca-certificates curl gnupg lsb-release
+    - mkdir -p /etc/apt/keyrings
+    - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    - echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bullseye stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    - apt-get update
+    - apt-get install -y docker-ce-cli
+    - cp config/app.default.php config/app.php
+    - composer install --no-interaction
+    - gpg --import config/gpg/unsecure_private.key
+    - gpg --import config/gpg/unsecure.key
+    - ./bin/cake passbolt create_jwt_keys
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - bin/paratest -p "$CI_REGISTRY_IMAGE_TEST:$PHP_VERSION" -d "$DATABASE_ENGINE_VERSION"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - when: manual
+
+include:
+  - local: './php_73.yml'
+  - local: './php_74.yml'
+  - local: './php_81.yml'
+  - local: './php_82.yml'
