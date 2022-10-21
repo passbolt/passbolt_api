@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\Locale\Test\TestCase\Service;
 
 use App\Test\Factory\OrganizationSettingFactory;
+use App\Test\Factory\UserFactory;
+use Authentication\Authenticator\Result;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Locale\Service\GetOrgLocaleService;
@@ -75,6 +77,44 @@ class RequestLocaleParserServiceTest extends TestCase
 
         $this->assertSame(
             $expected,
+            $service->getLocale()
+        );
+    }
+
+    public function testRequestLocaleParserService_Get_Authenticated_User_Locale()
+    {
+        $organizationLocale = 'foo';
+        OrganizationSettingFactory::make()->locale($organizationLocale)->persist();
+
+        $userLocale = 'fr-FR';
+        $user = UserFactory::make()->withLocale($userLocale)->persist();
+
+        // Not authenticated
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturn(null);
+        $service = new RequestLocaleParserService($request);
+        $this->assertSame(
+            $organizationLocale,
+            $service->getLocale()
+        );
+
+        // Session authenticated
+        $result = new Result(compact('user'), Result::SUCCESS);
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturn($result);
+        $service = new RequestLocaleParserService($request);
+        $this->assertSame(
+            $userLocale,
+            $service->getLocale()
+        );
+
+        // Jwt authenticated
+        $result = new Result($user, Result::SUCCESS);
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturn($result);
+        $service = new RequestLocaleParserService($request);
+        $this->assertSame(
+            $userLocale,
             $service->getLocale()
         );
     }

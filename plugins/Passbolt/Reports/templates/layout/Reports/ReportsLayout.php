@@ -24,7 +24,7 @@ use Cake\Core\Configure;
     <?= $this->element('Header/meta') ?>
     <?= $this->Html->css('themes/default/api_reports.min.css?v=' . Configure::read('passbolt.version')); ?>
 </head>
-<body class="report report-html">
+<body spellcheck="false" class="report report-html">
     <div id="container" class="report report-html <?php echo $this->fetch('page_classes') ?>">
         <div class="grid">
     <?php echo $this->element('Common/reportHeader', [ 'report' => $report]); ?>

@@ -46,6 +46,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
 {
     use ContainerAwareMiddlewareTrait;
     use EventDispatcherTrait;
+    use \App\Authenticator\GpgAuthenticatorTrait;
 
     public const PROTOCOL_VERSION = '1.0.0';
 
@@ -407,13 +408,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      */
     public function assertArmoredChallenge($armoredChallenge): void
     {
-        if (
-            !isset($armoredChallenge) ||
-            !is_string($armoredChallenge) ||
-            !$this->gpg->isValidMessage($armoredChallenge)
-        ) {
-            throw new BadRequestException(__('The user challenge is missing or invalid.'));
-        }
+        $this->assertGpgMessageIsValid($this->gpg, $armoredChallenge, __('The user challenge is missing or invalid.'));
     }
 
     /**

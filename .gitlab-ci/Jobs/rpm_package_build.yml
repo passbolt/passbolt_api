@@ -129,85 +129,109 @@ build-suse:
   script:
     - *publish-script
 
-publish-passbolt-yum-el8-testing:
+.publish-yum-el8:
   extends: .publish-rpm
   needs:
-    - job: almalinux-8-runtime
-    - job: fedora-34-runtime
-    - job: fedora-35-runtime
-    - job: oraclelinux-8-runtime
-    - job: rockylinux-8-runtime
+    - job: "almalinux-8-runtime"
+    - job: "almalinux-8-break"
+    - job: "almalinux-8-purge"
+    - job: "almalinux-8-fs"
+    - job: "fedora-34-runtime"
+    - job: "fedora-34-break"
+    - job: "fedora-34-purge"
+    - job: "fedora-34-fs"
+    - job: "fedora-35-runtime"
+    - job: "fedora-35-break"
+    - job: "fedora-35-purge"
+    - job: "fedora-35-fs"
+    - job: "oraclelinux-8-runtime"
+    - job: "oraclelinux-8-break"
+    - job: "oraclelinux-8-purge"
+    - job: "oraclelinux-8-fs"
+    - job: "rockylinux-8-runtime"
+    - job: "rockylinux-8-break"
+    - job: "rockylinux-8-purge"
+    - job: "rockylinux-8-fs"
+    - job: "rockylinux-9-runtime"
+    - job: "rockylinux-9-break"
+    - job: "rockylinux-9-purge"
+    - job: "rockylinux-9-fs"
+    - job: "redhat-9-runtime"
+    - job: "redhat-9-break"
+    - job: "redhat-9-purge"
+    - job: "redhat-9-fs"
     - job: build-yum
       artifacts: true
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: on_success
 
-publish-passbolt-yum-el7-testing:
-  extends: .publish-rpm
+publish-yum-el8-testing:
+  extends: .publish-yum-el8
   variables:
-    EL_VERSION: "el7"
     COMPONENT: "testing"
-  needs:
-    - job: centos-7-runtime
-    - job: build-yum-7
-      artifacts: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
 
-publish-passbolt-suse-testing:
-  extends: .publish-rpm
+publish-yum-el8-stable:
+  extends: .publish-yum-el8
   variables:
-    EL_VERSION: "opensuse"
-    COMPONENT: "testing"
-  needs:
-    - job: opensuse-leap-15-runtime
-    - job: build-suse
-      artifacts: true
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: on_success
-
-publish-passbolt-yum-el8-stable:
-  extends: .publish-rpm
-  variables:
-    EL_VERSION: "el8"
     COMPONENT: "stable"
-  needs:
-    - job: almalinux-8-runtime
-    - job: fedora-34-runtime
-    - job: fedora-35-runtime
-    - job: oraclelinux-8-runtime
-    - job: rockylinux-8-runtime
-    - job: build-yum
-      artifacts: true
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
 
-publish-passbolt-yum-el7-stable:
+.publish-yum-el7:
   extends: .publish-rpm
   variables:
     EL_VERSION: "el7"
-    COMPONENT: "stable"
   needs:
-    - job: centos-7-runtime
+    - job: "centos-7-runtime"
+    - job: "centos-7-break"
+    - job: "centos-7-purge"
+    - job: "centos-7-fs"
     - job: build-yum-7
       artifacts: true
+
+publish-yum-el7-testing:
+  extends: .publish-yum-el7
+  variables:
+    COMPONENT: "testing"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+publish-yum-el7-stable:
+  extends: .publish-yum-el7
+  variables:
+    COMPONENT: "stable"
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
 
-publish-passbolt-suse-stable:
+
+.publish-suse:
   extends: .publish-rpm
   variables:
     EL_VERSION: "opensuse"
-    COMPONENT: "stable"
   needs:
-    - job: opensuse-leap-15-runtime
+    - job: "opensuse-leap-15-runtime"
+    - job: "opensuse-leap-15-break"
+    - job: "opensuse-leap-15-purge"
+    - job: "opensuse-leap-15-fs"
     - job: build-suse
       artifacts: true
+
+publish-suse-testing:
+  extends: .publish-suse
+  variables:
+    COMPONENT: "testing"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+
+publish-suse-stable:
+  extends: .publish-suse
+  variables:
+    COMPONENT: "stable"
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success

@@ -24,7 +24,7 @@ use Cake\Core\Configure;
     <?= $this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]); ?>
 <?= $this->fetch('css') ?>
 </head>
-<body>
+<body spellcheck="false">
 <div id="container" class="error page <?= $this->fetch('pageClass') ?>">
 <?= $this->element('Navigation/default'); ?>
 <div id="content">
