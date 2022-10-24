@@ -16,11 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Healthcheck;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
-use Cake\TestSuite\TestCase;
 
-class HealthcheckErrorControllerTest extends TestCase
+class HealthcheckErrorControllerTest extends AppIntegrationTestCase
 {
     use IntegrationTestTrait;
 
