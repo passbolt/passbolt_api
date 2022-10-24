@@ -126,12 +126,3 @@ package-repo-restore-suse-stable:
   extends: .package-repo-restore-stable
   needs:
     - publish-passbolt-suse-stable
-
-#package-repo-restore-stable:
-#  extends: .package-repo-restore
-#  needs:
-#    - publish-passbolt-yum-el8-stable
-#    - publish-passbolt-yum-el7-stable
-#    - publish-passbolt-suse-stable
-#    - debian-stable
-#    - ubuntu-stable
