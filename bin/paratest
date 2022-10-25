@@ -138,6 +138,8 @@ start_test_mysql() {
     bash -c "
       docker-entrypoint.sh mysqld \
         --default-authentication-plugin=mysql_native_password \
+        --character-set-server=utf8mb4 \
+        --collation-server=utf8mb4_unicode_ci \
         --log-bin-trust-function-creators=1
     "
 
@@ -231,6 +233,7 @@ get_options "$@"
 
 EXIT_STATUS=0
 mkdir -p $LOG_PATH
+rm $LOG_PATH/* || true
 
 if [[ "$DATABASE_DOCKER_IMAGE" == *"mysql"* ]] || [[ "$DATABASE_DOCKER_IMAGE" == *"mariadb"* ]] ; then
   # Start the tests in background
