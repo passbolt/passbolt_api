@@ -79,7 +79,7 @@ class SmtpSettingsHealthcheckCommandTest extends AppTestCase
         $this->disableFeaturePlugin('SmtpSettings');
         $this->exec('passbolt healthcheck --smtpSettings');
         $this->assertExitSuccess();
-        $this->assertOutputContains(' <warning>[WARN] The {0} plugin is disabled. Enable the plugin in order to define SMTP settings in the database.</warning>');
+        $this->assertOutputContains(' <warning>[WARN] The SMTP Settings plugin is disabled. Enable the plugin in order to define SMTP settings in the database.</warning>');
         $this->assertOutputContains('No error found. Nice one sparky!');
         if ($wasPluginEnabled) {
             $this->enableFeaturePlugin('SmtpSettings');
