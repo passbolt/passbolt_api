@@ -132,7 +132,7 @@ hcciUFw5
         }
     }
 
-    public function dataForTestErrorValidation()
+    public function dataForTestErrorValidation(): array
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
@@ -140,6 +140,7 @@ hcciUFw5
         $userEId = UuidFactory::uuid('user.id.edith');
         $userRId = UuidFactory::uuid('user.id.ruth');
         $userSId = UuidFactory::uuid('user.id.sofia');
+
         return [
             ['cannot a permission that does not exist', [
                 'errorField' => 'permissions.0.id.exists',
