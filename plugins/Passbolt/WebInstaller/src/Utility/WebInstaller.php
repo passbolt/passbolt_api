@@ -28,6 +28,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Migrations\Migrations;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
+use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 
 class WebInstaller
 {
@@ -151,10 +152,11 @@ class WebInstaller
     /**
      * Install passbolt.
      *
+     * @param \Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService $configFolderPermissionService service to change the permissions
      * @throws \Exception
      * @return void
      */
-    public function install(): void
+    public function install(WebInstallerChangeConfigFolderPermissionService $configFolderPermissionService): void
     {
         $this->initDatabaseConnection();
         $this->importGpgKey();
@@ -163,7 +165,7 @@ class WebInstaller
         $this->createFirstUser();
         $this->saveSettings();
         $this->deleteTmpFiles();
-        $this->changeConfigFolderPermission();
+        $configFolderPermissionService->changeConfigFolderPermission();
         $this->flushSettings();
     }
 
@@ -267,31 +269,5 @@ class WebInstaller
             'user_id' => $user->id,
             'token' => $token->token,
         ]);
-    }
-
-    /**
-     * Change the config folder permissions.
-     *
-     * @return void
-     */
-    public function changeConfigFolderPermission(): void
-    {
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(CONFIG),
-            \RecursiveIteratorIterator::SELF_FIRST,
-            \RecursiveIteratorIterator::CATCH_GET_CHILD // Don't throw an error if one child cannot be opened
-        );
-        foreach ($iterator as $name => $fileInfo) {
-            if ($fileInfo->getFilename() == '..') {
-                continue;
-            }
-            if (is_writable($name)) {
-                if (is_dir($name)) {
-                    chmod($name, 0550);
-                } else {
-                    chmod($name, 0440);
-                }
-            }
-        }
     }
 }
