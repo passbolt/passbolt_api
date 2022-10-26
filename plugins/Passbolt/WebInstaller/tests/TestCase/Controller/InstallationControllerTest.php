@@ -16,9 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
+use App\Utility\Filesystem\DirectoryUtility;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class InstallationControllerTest extends WebInstallerIntegrationTestCase
@@ -259,6 +261,15 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $tables = $connection->getSchemaCollection()->listTables();
         $this->assertEmpty($tables);
 
+        $testConfigDir = TMP . 'test_config' . DS;
+        mkdir($testConfigDir);
+        $testConfigFile = $testConfigDir . 'test_file.txt';
+        file_put_contents($testConfigFile, 'blah');
+        $configFolderPermissionService = new WebInstallerChangeConfigFolderPermissionService($testConfigDir);
+        $this->mockService(WebInstallerChangeConfigFolderPermissionService::class, function () use ($configFolderPermissionService) {
+            return $configFolderPermissionService;
+        });
+
         $this->get('/install/installation/do_install.json');
 
         $tables = $connection->getSchemaCollection()->listTables();
@@ -270,5 +281,13 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $this->assertTrue(isset($result['token']));
         $this->assertTrue(Validation::uuid($result['user_id']));
         $this->assertTrue(Validation::uuid($result['token']));
+
+        $filePermission = substr(sprintf('%o', fileperms($testConfigFile)), -4);
+        $folderPermission = substr(sprintf('%o', fileperms($testConfigDir)), -4);
+        $this->assertEquals('0440', $filePermission);
+        $this->assertEquals('0550', $folderPermission);
+        chmod($testConfigFile, 0775);
+        chmod($testConfigDir, 0775);
+        DirectoryUtility::removeRecursively($testConfigDir);
     }
 }
