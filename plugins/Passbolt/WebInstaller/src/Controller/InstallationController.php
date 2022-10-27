@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
+
 class InstallationController extends WebInstallerController
 {
     /**
@@ -46,11 +48,12 @@ class InstallationController extends WebInstallerController
     /**
      * Install passbolt.
      *
+     * @param \Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService $configFolderPermissionService Service handling the config directory permissions
      * @return void
      */
-    public function install()
+    public function install(WebInstallerChangeConfigFolderPermissionService $configFolderPermissionService)
     {
-        $this->webInstaller->install();
+        $this->webInstaller->install($configFolderPermissionService);
         $this->set('data', $this->webInstaller->getSettings('user'));
         $this->viewBuilder()->setLayout('ajax');
         $this->render('Pages/installation_result');

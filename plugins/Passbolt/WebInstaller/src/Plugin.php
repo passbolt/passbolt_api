@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller;
 
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
 use Cake\Http\MiddlewareQueue;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
+use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 
 class Plugin extends BasePlugin
 {
@@ -28,5 +30,18 @@ class Plugin extends BasePlugin
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         return $middlewareQueue->add(WebInstallerMiddleware::class);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container
+            ->add(
+                WebInstallerChangeConfigFolderPermissionService::class,
+                WebInstallerChangeConfigFolderPermissionService::class
+            )
+            ->addArgument(CONFIG);
     }
 }
