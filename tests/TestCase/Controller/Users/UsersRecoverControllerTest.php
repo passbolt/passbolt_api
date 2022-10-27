@@ -137,6 +137,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
             'subject' => "Your account recovery, {$user->profile->first_name}!",
             'template' => 'AN/user_recover',
         ]);
+        $avatarTitle = $user['profile']['first_name'] . ' ' . $user['profile']['last_name'];
+        $this->assertEmailInBatchContains($avatarTitle);
     }
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseLostPassphrase()
