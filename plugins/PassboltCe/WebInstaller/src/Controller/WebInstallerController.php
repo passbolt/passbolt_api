@@ -110,6 +110,7 @@ class WebInstallerController extends Controller
     {
         $pluginLicenseEnabled = !empty(Configure::read('passbolt.plugins.license'));
         $hasAdmin = $this->webInstaller->getSettings('hasAdmin');
+        $hasSmtpSettings = $this->webInstaller->getSettings('hasSmtpSettings');
         $sections = [];
 
         $sections['system_check'] = __('System check');
@@ -118,8 +119,10 @@ class WebInstallerController extends Controller
         }
         $sections['database'] = __('Database');
         $sections['server_keys'] = __('Server keys');
-        $sections['emails'] = __('Emails');
         $sections['options'] = __('Options');
+        if (!$hasSmtpSettings) {
+            $sections['emails'] = __('Emails');
+        }
         if (!$hasAdmin) {
             $sections['first_user'] = __('First user');
         }

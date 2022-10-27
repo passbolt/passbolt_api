@@ -30,10 +30,9 @@ class OptionController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = '/install/email';
+        $this->stepInfo['previous'] = '/install/gpg_key';
         $this->stepInfo['template'] = 'Pages/options';
-        $this->stepInfo['next'] = $this->webInstaller->getSettings('hasAdmin') ?
-            'install/installation' : '/install/account_creation';
+        $this->stepInfo['next'] = $this->getNext();
     }
 
     /**
@@ -99,5 +98,21 @@ class OptionController extends WebInstallerController
         }
 
         return $data;
+    }
+
+    /**
+     * Define the next step
+     *
+     * @return string
+     */
+    protected function getNext(): string
+    {
+        if (!$this->webInstaller->getSettings('hasSmtpSettings')) {
+            return 'install/email';
+        } elseif (!$this->webInstaller->getSettings('hasAdmin')) {
+            return '/install/account_creation';
+        } else {
+            return 'install/installation';
+        }
     }
 }

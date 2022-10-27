@@ -39,7 +39,7 @@ class EmailConfigurationForm extends Form
             ->addField('port', ['type' => 'string'])
             ->addField('username', ['type' => 'string'])
             ->addField('password', ['type' => 'string'])
-            ->addField('test_email_to', ['type' => 'string']);
+            ->addField('email_test_to', ['type' => 'string']);
     }
 
     /**
@@ -72,12 +72,18 @@ class EmailConfigurationForm extends Form
 
         $validator
             ->requirePresence('tls', 'create', __('A TLS setting is required.'))
-            ->boolean('tls', __('The TLS setting should be a valid boolean.'));
+            ->add('tls', 'tls', [
+                'rule' => function ($value) {
+                    return $value === true || $value == 1;
+                },
+                'message' => __('The TLS setting should be "true" or NULL.'),
+            ])
+            ->allowEmptyString('tls');
 
         $validator
             ->requirePresence('port', 'create', __('A port number is required.'))
-            ->numeric('port', __('The port number should be numeric.'))
-            ->range('port', [0, 65535], __('The port number should be between {0} and {1}.', '0', '65535'));
+            ->integer('port', __('The port number should be numeric.'))
+            ->range('port', [1, 65535], __('The port number should be between {0} and {1}.', '1', '65535'));
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
@@ -90,8 +96,9 @@ class EmailConfigurationForm extends Form
             ->utf8('password', __('The password should be a valid BMP-UTF8 string.'));
 
         $validator
+            ->allowEmptyString('email_test_to')
             ->email(
-                'test_email_to',
+                'email_test_to',
                 Configure::read('passbolt.email.validate.mx'),
                 __('The test email should be a valid email address.')
             );
@@ -100,13 +107,31 @@ class EmailConfigurationForm extends Form
     }
 
     /**
-     * Execute implementation.
-     *
-     * @param array $data form data
-     * @return bool
+     * @inheritDoc
      */
-    protected function _execute(array $data): bool
+    public function execute(array $data, array $options = []): bool
     {
-        return true;
+        $data = $this->mapTlsToTrueOrNull($data);
+
+        return parent::execute($data, $options);
+    }
+
+    /**
+     * Map the value of TLS to null if set to 0 or false
+     *
+     * @param array $data Form data
+     * @return array
+     */
+    protected function mapTlsToTrueOrNull(array $data): array
+    {
+        if (!isset($data['tls'])) {
+            return $data;
+        }
+
+        if ($data['tls'] == false) {
+            $data['tls'] = null;
+        }
+
+        return $data;
     }
 }

@@ -17,12 +17,12 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Test\TestCase\Service;
 
-use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\GetUserLocaleService;
+use Passbolt\Locale\Test\Factory\LocaleSettingFactory;
 use Passbolt\Locale\Test\Lib\DummySystemLocaleTestTrait;
 
 class GetUserLocaleServiceTest extends TestCase
@@ -66,7 +66,7 @@ class GetUserLocaleServiceTest extends TestCase
             ->withLocale('fr-FR')
             ->persist();
 
-        OrganizationSettingFactory::make()->locale('foo')->persist();
+        LocaleSettingFactory::make()->locale('foo')->persist();
 
         $service = new GetUserLocaleService();
 

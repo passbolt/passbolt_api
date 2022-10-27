@@ -26,7 +26,7 @@ class InstallationController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = '/install/options';
+        $this->stepInfo['previous'] = $this->getPrevious();
         $this->stepInfo['template'] = 'Pages/email';
         $this->stepInfo['install'] = '/install/installation/do_install';
     }
@@ -54,5 +54,21 @@ class InstallationController extends WebInstallerController
         $this->set('data', $this->webInstaller->getSettings('user'));
         $this->viewBuilder()->setLayout('ajax');
         $this->render('Pages/installation_result');
+    }
+
+    /**
+     * Define the previous step
+     *
+     * @return string
+     */
+    protected function getPrevious(): string
+    {
+        if (!$this->webInstaller->getSettings('hasAdmin')) {
+            return '/install/account_creation';
+        } elseif (!$this->webInstaller->getSettings('hasSmtpSettings')) {
+            return 'install/email';
+        } else {
+            return 'install/options';
+        }
     }
 }

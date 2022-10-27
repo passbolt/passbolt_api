@@ -17,11 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Test\TestCase\Service;
 
-use App\Test\Factory\OrganizationSettingFactory;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\RequestLocaleParserService;
+use Passbolt\Locale\Test\Factory\LocaleSettingFactory;
 use Passbolt\Locale\Test\Lib\DummySystemLocaleTestTrait;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -66,7 +66,7 @@ class RequestLocaleParserServiceTest extends TestCase
     public function testRequestLocaleParserServiceGetLocaleWithUrl(?string $localeInTheUrl, ?string $expected): void
     {
         $organizationLocale = 'foo';
-        OrganizationSettingFactory::make()->locale($organizationLocale)->persist();
+        LocaleSettingFactory::make()->locale($organizationLocale)->persist();
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getQueryParams')->willReturn([RequestLocaleParserService::QUERY_KEY => $localeInTheUrl]);

@@ -21,6 +21,8 @@ use Cake\Core\Exception\Exception;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
 use Cake\Datasource\ConnectionManager;
+use Cake\Log\Log;
+use Cake\ORM\TableRegistry;
 
 class DatabaseConfiguration
 {
@@ -63,6 +65,7 @@ class DatabaseConfiguration
         ConnectionManager::drop($configName);
         $dbConfig = self::buildConfig($config);
         ConnectionManager::setConfig($configName, $dbConfig);
+        TableRegistry::getTableLocator()->clear();
     }
 
     /**
@@ -83,6 +86,8 @@ class DatabaseConfiguration
 
             return true;
         } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+
             return false;
         }
     }

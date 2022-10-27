@@ -17,25 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Exception\Exception;
-use Cake\Mailer\Mailer;
-use Cake\Mailer\TransportFactory;
-use Cake\TestSuite\TestEmailTransport;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
 {
-    /**
-     * Transport class to be used for testing.
-     * We use our own DebugSmtp that will get the server communication trace.
-     */
-    public const TRANSPORT_CLASS = 'DebugSmtp';
-
-    /**
-     * Name of the transport configuration that we'll use.
-     * (will be created on the fly).
-     */
-    public const TRANSPORT_CONFIG_NAME = 'debugEmail';
-
     /**
      * Contains the email class.
      *
@@ -51,8 +37,9 @@ class EmailController extends WebInstallerController
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = '/install/gpg_key';
-        $this->stepInfo['next'] = '/install/options';
+        $this->stepInfo['previous'] = '/install/options';
+        $this->stepInfo['next'] = $this->webInstaller->getSettings('hasAdmin') ?
+            'install/installation' : '/install/account_creation';
         $this->stepInfo['template'] = 'Pages/email';
     }
 
@@ -85,7 +72,7 @@ class EmailController extends WebInstallerController
      */
     protected function indexPost()
     {
-        $data = $this->request->getData();
+        $data = $this->getRequest()->getData();
         try {
             $this->validateData($data);
         } catch (Exception $e) {
@@ -125,79 +112,19 @@ class EmailController extends WebInstallerController
      * @param array $data request data
      * @return void
      */
-    protected function sendTestEmail($data)
+    protected function sendTestEmail(array $data)
     {
-        $this->email = new Mailer('default');
-        $this->_setTransport(self::TRANSPORT_CLASS, $data);
-
+        $service = new SmtpSettingsSendTestEmailService();
         try {
-            $this->email
-                ->setFrom([
-                    $data['sender_email'] => $data['sender_name'],
-                ])
-                ->setTo($data['email_test_to'])
-                ->setSubject(__('passbolt test email'))
-                ->deliver($this->_getDefaultMessage());
-        } catch (\Exception $e) {
-            /** @var \App\Mailer\Transport\DebugSmtpTransport $transport */
-            $transport = $this->email->getTransport();
-            $trace = $transport->getTrace();
-            $this->set([
+            $service->sendTestEmail($data);
+            $result = ['test_email_status' => true];
+        } catch (\Throwable $e) {
+            $result = [
                 'test_email_status' => false,
                 'test_email_error' => $e->getMessage(),
-                'test_email_trace' => $trace,
-            ]);
-
-            return;
+                'test_email_trace' => $service->getTrace(),
+            ];
         }
-        $this->set(['test_email_status' => true]);
-    }
-
-    /**
-     * Set a custom transport class name.
-     * In the context of this debugger, we'll use our own class name.
-     *
-     * @param string $customTransportClassName name of the custom transport class to use
-     * @param array $data request data
-     * @return void
-     */
-    protected function _setTransport($customTransportClassName, $data)
-    {
-        if ($this->isRunningOnTestEnvironment()) {
-            return;
-        }
-        $transportConfig = TransportFactory::getConfig('default');
-        $transportConfig['className'] = $customTransportClassName;
-        $transportConfig['host'] = $data['host'];
-        $transportConfig['port'] = $data['port'];
-        $transportConfig['username'] = empty($data['username']) ? null : $data['username'];
-        $transportConfig['password'] = empty($data['password']) ? null : $data['password'];
-        $transportConfig['tls'] = ($data['tls'] == '1' ? true : null);
-        TransportFactory::setConfig(self::TRANSPORT_CONFIG_NAME, $transportConfig);
-        $this->email->setTransport(self::TRANSPORT_CONFIG_NAME);
-    }
-
-    /**
-     * Get default message (email content).
-     *
-     * @return string
-     */
-    protected function _getDefaultMessage()
-    {
-        $message = __('Congratulations!') . "\n" .
-            __('If you receive this email, it means that your passbolt smtp configuration is working fine.');
-
-        return $message;
-    }
-
-    /**
-     * We exceptionally need here to detect test environment in order to make
-     * the sending of email testable.
-     *
-     * @return bool
-     */
-    protected function isRunningOnTestEnvironment(): bool
-    {
-        return TransportFactory::getConfig('default')['className'] === TestEmailTransport::class;
+        $this->set($result);
     }
 }
