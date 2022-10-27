@@ -42,14 +42,17 @@ class FormValidationException extends HttpException implements
      *
      * @param string $message The error message
      * @param \Cake\Form\Form $form The form
+     * @param int|null $code The error code
+     * @param \Throwable|null $previous the previous exception.
      */
     public function __construct(
         string $message,
-        Form $form
+        Form $form,
+        ?int $code = null,
+        ?\Throwable $previous = null
     ) {
         $this->form = $form;
-        $message .= ' ' . json_encode($this->getErrors());
-        parent::__construct($message);
+        parent::__construct($message, $code, $previous);
     }
 
     /**

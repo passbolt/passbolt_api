@@ -74,12 +74,10 @@ class SmtpSettingsSetServiceTest extends TestCase
 
     public function testSmtpSettingsSetServiceTest_Invalid()
     {
-        $failingField = 'port';
         $data = $this->getSmtpSettingsData('port', 'abc');
 
         $this->expectException(FormValidationException::class);
         $this->expectExceptionMessage('Could not validate the smtp settings.');
-        $this->expectExceptionMessage($failingField);
         $this->service->saveSettings($data);
     }
 

@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Mailer\Transport;
 
-use Cake\Database\Exception\MissingConnectionException;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 
 /**
@@ -40,11 +39,7 @@ class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
      */
     protected function readConfigInDb(array $fallbackConfig): array
     {
-        try {
-            $configInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
-        } catch (MissingConnectionException $e) {
-            return $fallbackConfig;
-        }
+        $configInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
 
         if (isset($configInDb)) {
             return [

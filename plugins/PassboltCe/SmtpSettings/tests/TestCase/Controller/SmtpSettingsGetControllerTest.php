@@ -48,6 +48,19 @@ class SmtpSettingsGetControllerTest extends AppIntegrationTestCase
         $this->assertSame($expectedData, $retrievedData);
     }
 
+    public function testSmtpSettingsGetController_Validation_Failure()
+    {
+        $this->logInAsAdmin();
+        $data = $this->getSmtpSettingsData('port', 0);
+        $this->encryptAndPersistSmtpSettings($data);
+
+        $this->getJson('/smtp/settings.json');
+        $this->assertResponseError('Could not validate the smtp settings.');
+        $errorMessageInBody = $this->_responseJsonBody->port->range;
+
+        $this->assertSame($errorMessageInBody, 'The port number should be between 1 and 65535.');
+    }
+
     public function testSmtpSettingsGetController_Not_Admin_Should_Have_No_Access()
     {
         $this->logInAsUser();
