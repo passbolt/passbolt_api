@@ -53,16 +53,20 @@ class AccountRecoveryCompleteUserEmailRedactor implements SubscribedEmailRedacto
 
         /** @var \App\Model\Entity\User $user */
         $user = $event->getData('user');
-        $emailCollection->addEmail($this->createAccountRecoveryUserEmail($user));
+        $clientIp = $event->getData('clientIp') ?? '';
+        $userAgent = $event->getData('userAgent') ?? '';
+        $emailCollection->addEmail($this->createAccountRecoveryUserEmail($user, $clientIp, $userAgent));
 
         return $emailCollection;
     }
 
     /**
      * @param \App\Model\Entity\User $user User
+     * @param string $clientIp Client IP address
+     * @param string $userAgent Client User Agent
      * @return \App\Notification\Email\Email
      */
-    private function createAccountRecoveryUserEmail(User $user): Email
+    private function createAccountRecoveryUserEmail(User $user, string $clientIp, string $userAgent): Email
     {
         $locale = (new GetUserLocaleService())->getLocale($user->username);
         $subject = (new LocaleService())->translateString(
@@ -72,7 +76,7 @@ class AccountRecoveryCompleteUserEmailRedactor implements SubscribedEmailRedacto
             }
         );
 
-        $data = ['body' => compact('user'), 'title' => $subject];
+        $data = ['body' => compact('user', 'clientIp', 'userAgent'), 'title' => $subject];
 
         return new Email($user->username, $subject, $data, self::TEMPLATE);
     }

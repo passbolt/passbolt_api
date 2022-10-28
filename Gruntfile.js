@@ -162,6 +162,18 @@ module.exports = function(grunt) {
           src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
           expand: true
+        }, {
+          // Solarized light css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/solarized_light',
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
+          dest: paths.webroot + 'css/themes/solarized_light',
+          expand: true
+        }, {
+          // Solarized dark css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/solarized_dark',
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
+          dest: paths.webroot + 'css/themes/solarized_dark',
+          expand: true
         },{
           // Translation files
           cwd: paths.node_modules_styleguide + 'src/locales',

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Locale\Service;
 
 use Cake\ORM\Query;
+use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 
 class GetUserLocaleService extends LocaleService
@@ -28,7 +29,7 @@ class GetUserLocaleService extends LocaleService
     public $AccountSettings;
 
     /**
-     * It is important here to have a user name, and no user or user id.
+     * It is important here to have a username, and no user or user id.
      * This will be handy when detecting an email's recipient locale.
      *
      * Read the locale in:
@@ -57,9 +58,8 @@ class GetUserLocaleService extends LocaleService
      */
     protected function getLocaleFromUsername(string $username): ?string
     {
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
-
-        $setting = $this->AccountSettings
+        $setting = TableRegistry::getTableLocator()
+            ->get('Passbolt/AccountSettings.AccountSettings')
             ->find('byProperty', ['property' => static::SETTING_PROPERTY])
             ->innerJoinWith('Users', function (Query $q) use ($username) {
                 return $q->where([

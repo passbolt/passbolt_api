@@ -58,6 +58,8 @@ class RecoverCompleteService extends AbstractCompleteService implements RecoverC
         $this->dispatchEvent(RecoverCompleteServiceInterface::COMPLETE_SUCCESS_EVENT_NAME, [
             'user' => $user,
             'data' => $this->request->getData(),
+            'clientIp' => $this->request->clientIp(),
+            'userAgent' => $this->request->getEnv('HTTP_USER_AGENT'),
         ]);
     }
 

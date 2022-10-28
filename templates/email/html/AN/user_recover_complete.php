@@ -21,6 +21,8 @@ if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
 $user = $body['user'];
+$clientIp = $body['clientIp'];
+$userAgent = $body['userAgent'];
 $username = Purifier::clean($user['username']);
 $userFirstName = Purifier::clean($user['profile']['first_name']);
 
@@ -37,7 +39,7 @@ $text = ' ' . __('You just completed an account recovery. Feel free to get in to
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
-echo $this->element('Email/module/user_info');
+echo $this->element('Email/module/user_info', compact('userAgent', 'clientIp'));
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/app/users/view/' . $user['id'] , true),
