@@ -31,7 +31,7 @@ class CommentsViewService
     use \Cake\Event\EventDispatcherTrait;
 
     /**
-     * @var \Cake\ORM\CommentsTable
+     * @var \App\Model\Table\CommentsTable
      */
     private $Comments;
 
