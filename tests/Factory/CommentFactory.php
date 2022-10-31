@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
+use App\Model\Entity\Comment;
 use App\Model\Entity\Resource;
 use App\Model\Entity\User;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
@@ -83,5 +84,37 @@ class CommentFactory extends CakephpBaseFactory
         }
 
         return $this->with('Resources', $resource)->setField('foreign_model', 'Resource');
+    }
+
+    public function withParent(?Comment $comment = null)
+    {
+        if (!isset($comment)) {
+            $comment = CommentFactory::make()->getEntity();
+        }
+
+        return $this->with('Parents', $comment)->setField('foreign_model', 'Resource')->setField('parent_id', $comment->get('id'));
+    }
+
+    public function withCreatorAndModifier(?User $user = null)
+    {
+        return $this->withModifier($user)->withCreator($user);
+    }
+
+    public function withModifier(?User $user = null)
+    {
+        if (!isset($user)) {
+            $user = UserFactory::make()->getEntity();
+        }
+
+        return $this->with('Modifier', $user)->setField('modified_by', $user->get('id'));
+    }
+
+    public function withCreator(?User $user = null)
+    {
+        if (!isset($user)) {
+            $user = UserFactory::make()->getEntity();
+        }
+
+        return $this->with('Creator', $user)->setField('created_by', $user->get('id'));
     }
 }
