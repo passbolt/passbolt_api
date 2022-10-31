@@ -29,8 +29,6 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
 {
     public $Comments;
 
-    // public $fixtures = ['app.Base/Users', 'app.B ase/Roles', 'app.Base/Profiles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Permissions'];
-
     public function setUp(): void
     {
         parent::setUp();
@@ -39,7 +37,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
-    public function testCommentsUpdateSuccess()
+    public function testCommentsUpdateController_Success()
     {
         RoleFactory::make()->user()->persist();
         $user = UserFactory::make()->user()->persist();
@@ -63,11 +61,10 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertTrue($comment->modified->wasWithinLast('1 second'));
     }
 
-    public function testCommentsUpdateErrorCsrfToken()
+    public function testCommentsUpdateController_ErrorCsrfToken()
     {
         $this->disableCsrfToken();
 
-        RoleFactory::make()->user()->persist();
         $user = UserFactory::make()->user()->persist();
         $comment = CommentFactory::make()->withUser($user)->persist();
         $commentId = $comment->get('id');
@@ -77,17 +74,16 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testCommentsUpdateErrorNotAuthenticated()
+    public function testCommentsUpdateController_ErrorNotAuthenticated()
     {
-        $commentId = CommentFactory::make()->persist()->get('id');
+        $commentId = UuidFactory::uuid();
         $postData = [];
         $this->putJson("/comments/$commentId.json?api-version=v2", $postData);
         $this->assertAuthenticationError();
     }
 
-    public function testCommentsUpdateNotAccessibleFields()
+    public function testCommentsUpdateController_NotAccessibleFields()
     {
-        RoleFactory::make()->user()->persist();
         $commentatorId = UserFactory::make()->user()->persist()->get('id');
         $user = UserFactory::make()->user()->persist();
         $comment = CommentFactory::make()->withUser($user)->persist();

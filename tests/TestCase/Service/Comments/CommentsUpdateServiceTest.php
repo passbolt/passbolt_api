@@ -35,6 +35,8 @@ class CommentsUpdateServiceTest extends TestCase
     use TruncateDirtyTables;
     use UserAccessControlTrait;
 
+    private $service;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -56,9 +58,8 @@ class CommentsUpdateServiceTest extends TestCase
         $this->assertEquals($commentContent, $comment->content);
     }
 
-    public function testCommentsUpdateErrorInvalidCommentId()
+    public function testCommentsUpdateService_ErrorInvalidCommentId()
     {
-        RoleFactory::make()->user()->persist();
         $user = UserFactory::make()->user()->persist();
         $commentId = 'testBadUuid';
         $commentContent = 'updated comment content';
@@ -67,9 +68,8 @@ class CommentsUpdateServiceTest extends TestCase
         $this->service->update($user->get('id'), $commentId, $commentContent);
     }
 
-    public function testCommentsUpdateErrorContentEmpty()
+    public function testCommentsUpdateService_ErrorContentEmpty()
     {
-        RoleFactory::make()->user()->persist();
         $user = UserFactory::make()->user()->persist();
         $commentId = CommentFactory::make()->withUser($user)->persist()->get('id');
         $commentContent = '';
@@ -78,9 +78,8 @@ class CommentsUpdateServiceTest extends TestCase
         $this->service->update($user->get('id'), $commentId, $commentContent);
     }
 
-    public function testCommentsUpdateRuleValidationCommentDoesNotExist()
+    public function testCommentsUpdateService_RuleValidationCommentDoesNotExist()
     {
-        RoleFactory::make()->user()->persist();
         $user = UserFactory::make()->user()->persist();
         $commentId = UuidFactory::uuid();
         $commentContent = 'updated comment content';
@@ -89,9 +88,8 @@ class CommentsUpdateServiceTest extends TestCase
         $this->service->update($user->get('id'), $commentId, $commentContent);
     }
 
-    public function testCommentsUpdateRuleValidationCommentNotOwner()
+    public function testCommentsUpdateService_RuleValidationCommentNotOwner()
     {
-        RoleFactory::make()->user()->persist();
         $user = UserFactory::make()->user()->persist();
         $commentId = CommentFactory::make()->persist()->get('id');
         $commentContent = 'updated comment content';

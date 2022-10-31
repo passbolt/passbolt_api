@@ -33,6 +33,8 @@ class CommentsAddServiceTest extends TestCase
     use TruncateDirtyTables;
     use UserAccessControlTrait;
 
+    private $service;
+
     public function setUp(): void
     {
         parent::setUp();
