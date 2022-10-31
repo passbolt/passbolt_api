@@ -108,6 +108,7 @@ publish-debian-stable:
   extends: .publish-apt
   variables:
     DISTRIBUTION: focal
+    PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   needs:
     - job: "ubuntu-2004-runtime"
     - job: "ubuntu-2004-break"
@@ -123,6 +124,7 @@ publish-ubuntu-testing:
   extends: .publish-ubuntu
   variables:
     PASSBOLT_COMPONENT: testing
+    PREFIX: $PASSBOLT_FLAVOUR/ubuntu
     NIGHTLY: "true"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
