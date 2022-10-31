@@ -20,7 +20,6 @@ namespace App\Test\TestCase\Service\Comments;
 use App\Error\Exception\ValidationException;
 use App\Service\Comments\CommentsUpdateService;
 use App\Test\Factory\CommentFactory;
-use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UuidFactory;
