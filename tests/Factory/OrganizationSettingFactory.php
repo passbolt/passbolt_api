@@ -99,4 +99,17 @@ class OrganizationSettingFactory extends CakephpBaseFactory
 
         return $this->setField('value', $value);
     }
+
+    /**
+     * @param string $value Oragnization locale
+     * @return $this
+     */
+    public function locale(string $value)
+    {
+        if (empty($value)) {
+            $value = 'fr-FR';
+        }
+
+        return $this->setPropertyAndValue('locale', $value);
+    }
 }
