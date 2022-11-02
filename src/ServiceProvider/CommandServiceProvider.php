@@ -36,5 +36,6 @@ class CommandServiceProvider extends ServiceProvider
         $container
             ->add(SendTestEmailCommand::class)
             ->addArgument(SmtpSettingsSendTestEmailService::class);
+        $container->add(SmtpSettingsSendTestEmailService::class);
     }
 }
