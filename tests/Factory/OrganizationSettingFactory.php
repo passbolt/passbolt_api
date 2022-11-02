@@ -79,15 +79,6 @@ class OrganizationSettingFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param string $value
-     * @return $this
-     */
-    public function locale(string $value)
-    {
-        return $this->setPropertyAndValue('locale', $value);
-    }
-
-    /**
      * @param $value
      * @return $this
      */
@@ -101,7 +92,7 @@ class OrganizationSettingFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param string $value Oragnization locale
+     * @param string $value
      * @return $this
      */
     public function locale(string $value)
