@@ -22,7 +22,7 @@ use Cake\Core\Configure;
 use Cake\Database\Exception\MissingConnectionException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
-use Passbolt\WebInstaller\Form\EmailConfigurationForm;
+use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 
 class SmtpSettingsGetSettingsInDbService
 {

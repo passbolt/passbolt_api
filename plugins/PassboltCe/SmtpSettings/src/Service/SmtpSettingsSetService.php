@@ -22,7 +22,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Passbolt\WebInstaller\Form\EmailConfigurationForm;
+use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 
 class SmtpSettingsSetService
 {

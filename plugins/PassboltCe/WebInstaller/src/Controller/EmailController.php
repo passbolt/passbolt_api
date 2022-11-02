@@ -17,8 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Exception\Exception;
+use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
-use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
 {

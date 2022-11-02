@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\WebInstaller\Form;
+namespace Passbolt\SmtpSettings\Form;
 
 use Cake\Core\Configure;
 use Cake\Form\Form;

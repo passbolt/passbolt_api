@@ -19,7 +19,7 @@ namespace Passbolt\SmtpSettings\Service;
 use App\Error\Exception\FormValidationException;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
-use Passbolt\WebInstaller\Form\EmailConfigurationForm;
+use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 
 class SmtpSettingsGetService
 {

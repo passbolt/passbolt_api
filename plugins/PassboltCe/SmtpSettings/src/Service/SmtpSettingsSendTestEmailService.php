@@ -21,7 +21,7 @@ use App\Mailer\Transport\DebugSmtpTransport;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\TestEmailTransport;
-use Passbolt\WebInstaller\Form\EmailConfigurationForm;
+use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 
 class SmtpSettingsSendTestEmailService
 {

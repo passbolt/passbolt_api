@@ -14,18 +14,18 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.8.0
  */
-namespace Passbolt\WebInstaller\Test\TestCase\Form;
+namespace Passbolt\SmtpSettings\Test\TestCase\Form;
 
 use Cake\TestSuite\TestCase;
+use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
-use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailConfigurationFormTest extends TestCase
 {
     use SmtpSettingsTestTrait;
 
     /**
-     * @var \Passbolt\WebInstaller\Form\EmailConfigurationForm
+     * @var \Passbolt\SmtpSettings\Form\EmailConfigurationForm
      */
     private $form;
 
