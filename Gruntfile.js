@@ -130,6 +130,19 @@ module.exports = function(grunt) {
             'third_party/edge.svg',
             'third_party/brave.svg',
             'third_party/vivaldi.svg',
+
+            // Smtp provider 3rd party logo
+            'third_party/aws-ses.svg',
+            'third_party/azure.svg',
+            'third_party/elastic-email.svg',
+            'third_party/gmail.svg',
+            'third_party/mailgun.svg',
+            'third_party/mailjet.svg',
+            'third_party/mandrill.svg',
+            'third_party/sendgrid.svg',
+            'third_party/sendinblue.svg',
+            'third_party/zoho.svg',
+
             // Setup
             'illustrations/email.png',
             // Themes preview
@@ -148,6 +161,18 @@ module.exports = function(grunt) {
           cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
           src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
+          expand: true
+        }, {
+          // Solarized light css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/solarized_light',
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
+          dest: paths.webroot + 'css/themes/solarized_light',
+          expand: true
+        }, {
+          // Solarized dark css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/solarized_dark',
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
+          dest: paths.webroot + 'css/themes/solarized_dark',
           expand: true
         },{
           // Translation files

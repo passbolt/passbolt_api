@@ -229,6 +229,9 @@ return [
                     ],
                 ],
             ],
+            'smtpSettings' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true), FILTER_VALIDATE_BOOLEAN)
+            ],
         ],
 
         // Is public registration allowed.

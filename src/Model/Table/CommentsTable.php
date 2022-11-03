@@ -87,6 +87,11 @@ class CommentsTable extends Table
             'foreignKey' => 'foreign_key',
         ]);
 
+        $this->belongsTo('Parents', [
+            'className' => 'Comments',
+            'foreignKey' => 'parent_id',
+        ]);
+
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
         ]);

@@ -12,10 +12,10 @@
     </testsuite>
     <testsuite name="plugins">
       <directory>./plugins</directory>
-      <exclude>./plugins/Passbolt/WebInstaller</exclude>
+      <exclude>./plugins/PassboltCe/WebInstaller</exclude>
     </testsuite>
     <testsuite name="installers">
-      <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
+      <directory>./plugins/PassboltCe/WebInstaller/tests/TestCase</directory>
       <directory>./tests/TestCase/Command</directory>
     </testsuite>
   </testsuites>

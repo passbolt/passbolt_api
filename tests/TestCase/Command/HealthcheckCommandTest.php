@@ -20,13 +20,11 @@ use App\Command\HealthcheckCommand;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 class HealthcheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use PassboltCommandTestTrait;
-    use TruncateDirtyTables;
 
     /**
      * setUp method
@@ -49,6 +47,10 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertExitSuccess();
         $this->assertOutputContains('Check the configuration of this installation and associated environment.');
         $this->assertOutputContains('cake passbolt healthcheck');
+        // Ensure that all checks are displayed in the help
+        foreach (HealthcheckCommand::ALL_HEALTH_CHECKS as $check) {
+            $this->assertOutputContains($check);
+        }
     }
 
     /**
