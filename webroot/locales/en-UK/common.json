@@ -826,7 +826,7 @@
   "This is not a valid passphrase.": "This is not a valid passphrase.",
   "This is not a valid secret key.": "This is not a valid secret key.",
   "This is the email address users will see in their mail box when passbolt sends a notification.<1></1>It&apos;s a good practice to provide a working email address that users can reply to.": "This is the email address users will see in their mail box when passbolt sends a notification.<1></1>It&apos;s a good practice to provide a working email address that users can reply to.",
-  "this is the maximum size for this field, make sure your data was not truncated": "",
+  "this is the maximum size for this field, make sure your data was not truncated": "this is the maximum size for this field, make sure your data was not truncated.",
   "This is the name users will see in their mailbox when passbolt sends a notification.": "This is the name users will see in their mailbox when passbolt sends a notification.",
   "This passphrase is the only passphrase you will need to remember from now on, choose wisely!": "This passphrase is the only passphrase you will need to remember from now on, choose wisely!",
   "This secret key is not valid.": "This secret key is not valid.",
