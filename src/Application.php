@@ -31,6 +31,7 @@ use App\Notification\EmailDigest\DigestRegister\GroupDigests;
 use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Service\Avatars\AvatarsConfigurationService;
+use App\ServiceProvider\CommandServiceProvider;
 use App\ServiceProvider\SetupServiceProvider;
 use App\ServiceProvider\UserServiceProvider;
 use App\Utility\Application\FeaturePluginAwareTrait;
@@ -251,6 +252,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->addFeaturePluginIfEnabled($this, 'Mobile');
         $this->addFeaturePluginIfEnabled($this, 'JwtAuthentication');
         $this->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
+        $this->addFeaturePluginIfEnabled($this, 'SmtpSettings');
 
         if (!WebInstallerMiddleware::isConfigured()) {
             $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
@@ -292,6 +294,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $container->add(AuthenticationServiceInterface::class, SessionAuthenticationService::class);
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
+        $container->addServiceProvider(new CommandServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());
     }

@@ -39,6 +39,16 @@ class FindAllThemesTest extends TestCase
             'id' => '2e6d06eb-e417-5573-80ed-27b2182dc55b',
             'name' => 'midgar',
             'preview' => Configure::read('App.fullBaseUrl') . '/img/themes/midgar.png',
+        ],
+        [
+            'id' => '39fe32d0-aeaf-5f9a-aba5-dbf1df71dafc',
+            'name' => 'solarized_dark',
+            'preview' => Configure::read('App.fullBaseUrl') . '/img/themes/solarized_dark.png',
+        ],
+        [
+            'id' => 'd40ba3d7-aa8b-5fc8-a34e-2cbf9011acea',
+            'name' => 'solarized_light',
+            'preview' => Configure::read('App.fullBaseUrl') . '/img/themes/solarized_light.png',
         ]];
 
         $response = $table->findAllThemes();

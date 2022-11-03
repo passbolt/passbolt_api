@@ -29,6 +29,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsHealthcheckService;
 
 class Healthchecks
 {
@@ -39,7 +40,7 @@ class Healthchecks
      *
      * @return array
      */
-    public static function all()
+    public static function all(): array
     {
         $checks = [];
         $checks = Healthchecks::environment($checks);
@@ -49,6 +50,7 @@ class Healthchecks
         $checks = Healthchecks::database('default', $checks);
         $checks = Healthchecks::gpg($checks);
         $checks = Healthchecks::application($checks);
+        $checks = Healthchecks::smtpSettings($checks);
 
         return $checks;
     }
@@ -280,6 +282,28 @@ class Healthchecks
     public static function ssl(?array $checks = []): array
     {
         return SslHealthchecks::all($checks);
+    }
+
+    /**
+     * SmtpSettings check
+     * - PASS: SMTP settings are set in the DB and decryptable
+     * - WARN: SMTP settings are not set in the DB
+     * - FAIL: SMTP settings are set in the DB and not decryptable
+     *
+     * @param array|null $checks List of checks
+     * @return array
+     */
+    public static function smtpSettings(?array $checks = []): array
+    {
+        // Since the plugin might be removed from various passbolt solutions, we check
+        // the availability of the plugin before calling classes of the plugin
+        if (!(new self())->isFeaturePluginEnabled('SmtpSettings')) {
+            $checks['smtpSettings']['isEnabled'] = false;
+
+            return $checks;
+        }
+
+        return (new SmtpSettingsHealthcheckService())->check($checks);
     }
 
     /**

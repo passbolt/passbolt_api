@@ -221,8 +221,9 @@ class OrganizationSettingsTable extends Table
      *
      * @param string $property property name
      * @return string (uuid) property id
+     * @throws \Exception if cannot generate a random UUID
      */
-    protected function _getSettingPropertyId(string $property)
+    protected function _getSettingPropertyId(string $property): string
     {
         $settingNamespace = OrganizationSetting::UUID_NAMESPACE . $property;
 

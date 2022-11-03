@@ -86,35 +86,40 @@
     "autoload": {
         "psr-4": {
             "App\\": "src",
-            "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
-            "Passbolt\\InFormIntegration\\": "./plugins/Passbolt/InFormIntegration/src",
-            "Passbolt\\Locale\\": "./plugins/Passbolt/Locale/src",
-            "Passbolt\\PasswordGenerator\\": "./plugins/Passbolt/PasswordGenerator/src",
-            "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
-            "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
-            "Passbolt\\Log\\": "./plugins/Passbolt/Log/src",
-            "Passbolt\\EmailNotificationSettings\\": "./plugins/Passbolt/EmailNotificationSettings/src",
-            "Passbolt\\EmailDigest\\": "./plugins/Passbolt/EmailDigest/src",
-            "Passbolt\\Reports\\": "./plugins/Passbolt/Reports/src",
-            "Passbolt\\Mobile\\": "./plugins/Passbolt/Mobile/src",
-            "Passbolt\\JwtAuthentication\\": "./plugins/Passbolt/JwtAuthentication/src"
+            "Passbolt\\AccountSettings\\": "./plugins/PassboltCe/AccountSettings/src",
+            "Passbolt\\InFormIntegration\\": "./plugins/PassboltCe/InFormIntegration/src",
+            "Passbolt\\Locale\\": "./plugins/PassboltCe/Locale/src",
+            "Passbolt\\PasswordGenerator\\": "./plugins/PassboltCe/PasswordGenerator/src",
+            "Passbolt\\RememberMe\\": "./plugins/PassboltCe/RememberMe/src",
+            "Passbolt\\WebInstaller\\": "./plugins/PassboltCe/WebInstaller/src",
+            "Passbolt\\Log\\": "./plugins/PassboltCe/Log/src",
+            "Passbolt\\EmailNotificationSettings\\": "./plugins/PassboltCe/EmailNotificationSettings/src",
+            "Passbolt\\EmailDigest\\": "./plugins/PassboltCe/EmailDigest/src",
+            "Passbolt\\Reports\\": "./plugins/PassboltCe/Reports/src",
+            "Passbolt\\Mobile\\": "./plugins/PassboltCe/Mobile/src",
+            "Passbolt\\JwtAuthentication\\": "./plugins/PassboltCe/JwtAuthentication/src",
+            "Passbolt\\Import\\": "./plugins/PassboltCe/Import/src",
+            "Passbolt\\Export\\": "./plugins/PassboltCe/Export/src",
+            "Passbolt\\ResourceTypes\\": "./plugins/PassboltCe/ResourceTypes/src",
+            "Passbolt\\SmtpSettings\\": "./plugins/PassboltCe/SmtpSettings/src"
+
         }
     },
     "autoload-dev": {
         "psr-4": {
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
-            "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
-            "Passbolt\\InFormIntegration\\Test\\": "./plugins/Passbolt/InFormIntegration/tests",
-            "Passbolt\\Locale\\Test\\": "./plugins/Passbolt/Locale/tests",
-            "Passbolt\\PasswordGenerator\\Test\\": "./plugins/Passbolt/PasswordGenerator/tests",
-            "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests",
-            "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests",
-            "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/Passbolt/EmailNotificationSettings/tests",
-            "Passbolt\\EmailDigest\\Test\\": "./plugins/Passbolt/EmailDigest/tests",
-            "Passbolt\\Reports\\Test\\": "./plugins/Passbolt/Reports/tests",
-            "Passbolt\\Mobile\\Test\\": "./plugins/Passbolt/Mobile/tests",
-            "Passbolt\\JwtAuthentication\\Test\\": "./plugins/Passbolt/JwtAuthentication/tests"
+            "Passbolt\\AccountSettings\\Test\\": "./plugins/PassboltCe/AccountSettings/tests",
+            "Passbolt\\Locale\\Test\\": "./plugins/PassboltCe/Locale/tests",
+            "Passbolt\\PasswordGenerator\\Test\\": "./plugins/PassboltCe/PasswordGenerator/tests",
+            "Passbolt\\WebInstaller\\Test\\": "./plugins/PassboltCe/WebInstaller/tests",
+            "Passbolt\\Log\\Test\\": "./plugins/PassboltCe/Log/tests",
+            "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/PassboltCe/EmailNotificationSettings/tests",
+            "Passbolt\\EmailDigest\\Test\\": "./plugins/PassboltCe/EmailDigest/tests",
+            "Passbolt\\Reports\\Test\\": "./plugins/PassboltCe/Reports/tests",
+            "Passbolt\\Mobile\\Test\\": "./plugins/PassboltCe/Mobile/tests",
+            "Passbolt\\JwtAuthentication\\Test\\": "./plugins/PassboltCe/JwtAuthentication/tests",
+            "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests"
         }
     },
     "scripts": {

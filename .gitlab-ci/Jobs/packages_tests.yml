@@ -231,7 +231,6 @@ rockylinux-9-purge:
 
 opensuse-leap-15-purge:
   extends: .kitchen-test-suse
-  needs:
   variables:
     KITCHEN_JOB: purge-benchmarks-opensuse-leap-15
 

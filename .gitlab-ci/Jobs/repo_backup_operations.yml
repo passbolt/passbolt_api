@@ -1,0 +1,124 @@
+.package-repo-backup-operations:
+  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/gcloud
+
+.package-repo-restore:
+  extends: .package-repo-backup-operations
+  variables:
+    PIPELINE_URL: "https://gitlab.com/passbolt/$CI_PROJECT_NAME/-/pipelines/$CI_PIPELINE_ID"
+  stage: publish
+  script:
+    - |
+      gcloud auth activate-service-account --key-file "$PACKAGE_SVC_ACC"
+      gsutil rsync -r -d "gs://$PACKAGE_REPO_BACKUP_BUCKET/$PASSBOLT_FLAVOUR/$DISTRIBUTION" "gs://$PACKAGE_REPO_BUCKET/$PASSBOLT_FLAVOUR/$DISTRIBUTION"
+      gsutil -m setmeta -r -h "Content-Type:text/html" \
+        -h "Cache-Control:no-cache" \
+        "gs://$PACKAGE_REPO_BUCKET"
+  after_script:
+    - |
+      curl -X POST -H 'Content-type: application/json' $SLACK_WEBHOOK \
+      --data-binary @- <<EOF 
+      {
+        "channel": "$SLACK_CHANNEL_ID",
+        "text":"Restore repo job ran for $PASSBOLT_FLAVOUR/$DISTRIBUTION repository, so last publishing attempt failed.\n Check pipeline for more details.",
+        "attachments": [
+          {
+            "attachment_type":"default",
+            "actions":[
+              {
+                "name":"Check pipeline",
+                "text":"check pipeline",
+                "type":"button",
+                "style": "danger",
+                "url":"$PIPELINE_URL"
+              }
+            ]
+          }
+        ]
+      }
+      EOF
+
+.package-repo-restore-testing:
+  variables:
+    DISTRIBUTION: "debian"
+  extends: .package-repo-restore
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_failure
+
+.package-repo-restore-stable:
+  variables:
+    DISTRIBUTION: "debian"
+  extends: .package-repo-restore
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
+      when: on_failure
+
+package-repo-restore-debian-testing:
+  variables:
+    DISTRIBUTION: "debian"
+  extends: .package-repo-restore-testing
+  needs:
+    - publish-debian-testing
+
+package-repo-restore-ubuntu-testing:
+  variables:
+    DISTRIBUTION: "ubuntu"
+  extends: .package-repo-restore-testing
+  needs:
+    - publish-ubuntu-testing
+
+package-repo-restore-yum-el7-testing:
+  variables:
+    DISTRIBUTION: "rpm/el7"
+  extends: .package-repo-restore-testing
+  needs:
+    - publish-yum-el7-testing
+
+package-repo-restore-yum-el8-testing:
+  variables:
+    DISTRIBUTION: "rpm/el8"
+  extends: .package-repo-restore-testing
+  needs:
+    - publish-yum-el8-testing
+
+package-repo-restore-suse-testing:
+  variables:
+    DISTRIBUTION: "rpm/opensuse"
+  extends: .package-repo-restore-testing
+  needs:
+    - publish-suse-testing
+
+package-repo-restore-debian-stable:
+  variables:
+    DISTRIBUTION: "debian"
+  extends: .package-repo-restore-stable
+  needs:
+    - publish-debian-stable
+
+package-repo-restore-ubuntu-stable:
+  variables:
+    DISTRIBUTION: "ubuntu"
+  extends: .package-repo-restore-stable
+  needs:
+    - publish-ubuntu-stable
+
+package-repo-restore-yum-el7-stable:
+  variables:
+    DISTRIBUTION: "rpm/el7"
+  extends: .package-repo-restore-stable
+  needs:
+    - publish-yum-el7-stable
+
+package-repo-restore-yum-el8-stable:
+  variables:
+    DISTRIBUTION: "rpm/el8"
+  extends: .package-repo-restore-stable
+  needs:
+    - publish-yum-el8-stable
+
+package-repo-restore-suse-stable:
+  variables:
+    DISTRIBUTION: "rpm/opensuse"
+  extends: .package-repo-restore-stable
+  needs:
+    - publish-suse-stable

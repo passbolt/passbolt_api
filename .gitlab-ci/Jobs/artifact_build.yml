@@ -1,8 +1,8 @@
 .build-template:
   stage: publish-artifacts
   needs:
-    - debian-stable
-    - ubuntu-stable
+    - publish-debian-stable
+    - publish-ubuntu-stable
   variables:
     BRANCH: master
   script:
