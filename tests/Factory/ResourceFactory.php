@@ -103,6 +103,15 @@ class ResourceFactory extends CakephpBaseFactory
      * @param UserFactory $factory
      * @return ResourceFactory
      */
+    public function setDeleted(): self
+    {
+        return $this->setField('deleted', true);
+    }
+
+    /**
+     * @param UserFactory $factory
+     * @return ResourceFactory
+     */
     public function withCreator(UserFactory $factory): self
     {
         return $this->with('Creator', $factory);

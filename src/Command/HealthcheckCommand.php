@@ -32,6 +32,18 @@ class HealthcheckCommand extends PassboltCommand
     use DatabaseAwareCommandTrait;
     use FeaturePluginAwareTrait;
 
+    public const ALL_HEALTH_CHECKS = [
+        'environment',
+        'configFiles',
+        'core',
+        'ssl',
+        'database',
+        'gpg',
+        'application',
+        'jwt',
+        'smtpSettings',
+    ];
+
     /**
      * Total number of errors for that check
      *
@@ -119,6 +131,10 @@ class HealthcheckCommand extends PassboltCommand
             ->addOption('jwt', [
                 'help' => __d('cake_console', 'Run passbolt JWT tests only.'),
                 'boolean' => true,
+            ])
+            ->addOption('smtpSettings', [
+                'help' => __d('cake_console', 'Run SMTP Settings tests only.'),
+                'boolean' => true,
             ]);
 
         $this->addDatasourceOption($parser);
@@ -151,9 +167,7 @@ class HealthcheckCommand extends PassboltCommand
 
         // if user only want to run one check
         $paramChecks = [];
-        $checks = [
-            'environment', 'configFiles', 'core', 'ssl', 'database', 'gpg', 'application', 'jwt',
-        ];
+        $checks = self::ALL_HEALTH_CHECKS;
         foreach ($checks as $check) {
             if ($args->getOption($check)) {
                 $paramChecks[] = $check;
@@ -701,7 +715,7 @@ class HealthcheckCommand extends PassboltCommand
     }
 
     /**
-     * Assert config files exist
+     * Assert that JWT files exist, are writable and valid
      *
      * @param array $checks existing results
      * @return void
@@ -752,6 +766,54 @@ class HealthcheckCommand extends PassboltCommand
     }
 
     /**
+     * Assert that SMTP settings are defined in DB and valid
+     *
+     * @param array|null $checks existing results
+     * @return void
+     */
+    public function assertSmtpSettings(?array $checks = null): void
+    {
+        if (!isset($checks)) {
+            $checks = Healthchecks::smtpSettings();
+        }
+
+        $smtpSettingsCheck = $checks['smtpSettings'];
+        $isPluginEnabled = $smtpSettingsCheck['isEnabled'];
+        $pluginName = 'SMTP Settings';
+
+        $this->title($pluginName);
+        $this->warning(
+            $isPluginEnabled,
+            __('The {0} plugin is enabled.', $pluginName),
+            __('The {0} plugin is disabled.', $pluginName) . ' ' .
+            __('Enable the plugin in order to define SMTP settings in the database.')
+        );
+
+        if (!$isPluginEnabled) {
+            return;
+        }
+
+        $source = $smtpSettingsCheck['source'];
+        $isInDb = $smtpSettingsCheck['isInDb'];
+
+        $validationErrors = $smtpSettingsCheck['errorMessage'] ?? null;
+        $isSmtpSettingsValid = !is_string($validationErrors);
+        $this->assert(
+            $isSmtpSettingsValid,
+            __('SMTP Settings coherent. You may send a test email to validate them.'),
+            __('SMTP Setting errors: {0}', $validationErrors)
+        );
+
+        $msg = __('The SMTP Settings source is: {0}.', $source);
+        $this->warning(
+            $isInDb,
+            $msg,
+            $msg,
+            __('It is recommended to set the SMTP Settings in the database through the administration section.')
+        );
+    }
+
+    /**
      * Display a success or error message depending on given condition
      *
      * @param bool $condition to check
@@ -791,6 +853,16 @@ class HealthcheckCommand extends PassboltCommand
             $this->display($warning, 'warn');
             $this->help($help);
         }
+    }
+
+    /**
+     * @param string $msg message
+     * @return void
+     * @throws \Exception
+     */
+    protected function info(string $msg): void
+    {
+        $this->display($msg, 'info');
     }
 
     /**

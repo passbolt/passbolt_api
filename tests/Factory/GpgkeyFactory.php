@@ -55,7 +55,7 @@ class GpgkeyFactory extends CakephpBaseFactory
             return [
                 'armored_key' => $faker->text(),
                 'uid' => $faker->text(128),
-                'key_id' => $faker->text(16),
+                'key_id' => $faker->shuffle('0123456789ABCDEF'),
                 'fingerprint' => $faker->shuffle('ABCDE12345ABCDE12345ABCDE12345ABCDE12345'), // 40 character random upper case
             ];
         });

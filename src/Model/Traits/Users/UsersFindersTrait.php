@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Model\Traits\Users;
 
+use App\Error\Exception\NoAdminInDbException;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Event\TableFindIndexBefore;
@@ -424,6 +425,20 @@ trait UsersFindersTrait
             ->order(['Users.created' => 'ASC'])
             ->contain(['Roles'])
             ->first();
+
+        return $user;
+    }
+
+    /**
+     * @return \App\Model\Entity\User
+     * @throws \App\Error\Exception\NoAdminInDbException if no admin were found
+     */
+    public function findFirstAdminOrThrowNoAdminInDbException(): User
+    {
+        $user = $this->findFirstAdmin();
+        if (is_null($user)) {
+            throw new NoAdminInDbException();
+        }
 
         return $user;
     }

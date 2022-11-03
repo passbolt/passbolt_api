@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Mailer\Transport;
 
+use Cake\Mailer\Transport\SmtpTransport;
+
 /**
  * Smtp Transport class based on the CakePHP one, with tracing capabilities to help with debugging.
  */
-class DebugSmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
+class DebugSmtpTransport extends SmtpTransport
 {
     /**
      * Client / server communication trace.
