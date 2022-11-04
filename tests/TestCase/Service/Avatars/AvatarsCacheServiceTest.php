@@ -46,12 +46,13 @@ class AvatarsCacheServiceTest extends TestCase
     /**
      * @var string
      */
-    public $cachedFileLocation = TMP . 'tests' . DS . 'avatars' . DS;
+    public $cachedFileLocation;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
+        $this->cachedFileLocation = TMP . 'tests' . DS . 'avatars' . rand(0, 999) . DS;
         $this->Avatars->setFilesystem(new LocalFilesystemAdapter($this->cachedFileLocation));
         $this->avatarsCacheService = new AvatarsCacheService($this->Avatars);
     }
@@ -61,6 +62,7 @@ class AvatarsCacheServiceTest extends TestCase
         $this->Avatars->getFilesystem()->deleteDirectory('.');
         unset($this->Avatars);
         unset($this->avatarsCacheService);
+        unset($this->cachedFileLocation);
         parent::tearDown();
     }
 
