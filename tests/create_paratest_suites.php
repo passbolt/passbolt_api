@@ -7,7 +7,8 @@ declare(strict_types=1);
  * phpunit.xml split in a number of suites provided as parameter 2
  */
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+$dirname = dirname(__DIR__);
+require $dirname . '/vendor/autoload.php';
 
 $targetFile = $argv[1];
 $numberOfSuites =  $argv[2];
@@ -39,10 +40,11 @@ $count = 0;
 for($i=0;$i<$numberOfSuites;$i++) {
     $testSuites[] = '<testsuite name="'.($i+1).'">';
     for ($j=0; $j<$numberOfTestFilesPerSuite; $j++) {
-      $testFile = preg_replace('/.*tests/', '../../tests', $testFiles[$i*$numberOfTestFilesPerSuite + $j]) ?? null;
+      $testFile = $testFiles[$i*$numberOfTestFilesPerSuite + $j] ?? null;
         if (!isset($testFile)) {
             break;
         }
+        $testFile = str_replace($dirname, '../..', $testFile);
         $testSuites[] = '<file>' . $testFile . '</file>';
         $count++;
      }
