@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2022-08-09 10:26+0000\n"
+"POT-Creation-Date: 2022-11-04 15:45+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -15,6 +15,9 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 msgid "You need to login to access this location."
+msgstr ""
+
+msgid "The server verify token is missing or invalid."
 msgstr ""
 
 msgid "Decryption failed."
@@ -71,40 +74,16 @@ msgstr ""
 msgid "The operation was successful."
 msgstr ""
 
-msgid "The resource identifier should be a valid UUID."
-msgstr ""
-
-msgid "Could not save the comment, please try again later."
-msgstr ""
-
 msgid "The comment was successfully added."
-msgstr ""
-
-msgid "The resource does not exist."
-msgstr ""
-
-msgid "Could not validate comment data."
-msgstr ""
-
-msgid "The comment id is not valid."
-msgstr ""
-
-msgid "The comment does not exist."
 msgstr ""
 
 msgid "The comment was deleted."
 msgstr ""
 
-msgid "Could not delete comment."
+msgid "The comment id is not valid."
 msgstr ""
 
 msgid "The comment was successfully updated."
-msgstr ""
-
-msgid "You are not allowed to edit this comment."
-msgstr ""
-
-msgid "Could not find comments for the requested model."
 msgstr ""
 
 msgid "Invalid order. \"{0}\" is not in the list of allowed order."
@@ -191,7 +170,13 @@ msgstr ""
 msgid "This feature is not supported by your version of passbolt."
 msgstr ""
 
+msgid "The resource identifier should be a valid UUID."
+msgstr ""
+
 msgid "The resource was marked as favorite."
+msgstr ""
+
+msgid "The resource does not exist."
 msgstr ""
 
 msgid "This record is already marked as favorite."
@@ -372,6 +357,9 @@ msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr ""
 
 msgid "The user does not exist."
+msgstr ""
+
+msgid "No admin were found in the database."
 msgstr ""
 
 msgid "The identifier should not be empty."
@@ -1145,10 +1133,31 @@ msgstr ""
 msgid "The avatar id is not valid."
 msgstr ""
 
+msgid "Could not save the comment, please try again later."
+msgstr ""
+
+msgid "Could not validate comment data."
+msgstr ""
+
+msgid "The comment userId is not valid."
+msgstr ""
+
+msgid "The comment does not exist."
+msgstr ""
+
+msgid "Could not delete comment."
+msgstr ""
+
 msgid "Validation failed for comment {0}. {1}"
 msgstr ""
 
 msgid "Validation success for comment {0}"
+msgstr ""
+
+msgid "You are not allowed to edit this comment."
+msgstr ""
+
+msgid "Could not find comments for the requested model."
 msgstr ""
 
 msgid "Validation failed for favorite {0}. {1}"
@@ -1380,6 +1389,9 @@ msgid "Validation failed for user {0}. {1}"
 msgstr ""
 
 msgid "Validation success for user {0}"
+msgstr ""
+
+msgid "The directory {0} cannot be deleted"
 msgstr ""
 
 msgid "Could not connect to github repository"
@@ -1910,96 +1922,6 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-msgid "The data entered are not correct"
-msgstr ""
-
-msgid "A connection could not be established with the credentials provided."
-msgstr ""
-
-msgid "Please verify the settings."
-msgstr ""
-
-msgid "passbolt test email"
-msgstr ""
-
-msgid "Congratulations!"
-msgstr ""
-
-msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
-msgstr ""
-
-msgid "The data entered are not correct: {0}"
-msgstr ""
-
-msgid "The session has expired. Please start the configuration again."
-msgstr ""
-
-msgid "System check"
-msgstr ""
-
-msgid "Subscription key"
-msgstr ""
-
-msgid "Database"
-msgstr ""
-
-msgid "Server keys"
-msgstr ""
-
-msgid "Emails"
-msgstr ""
-
-msgid "Options"
-msgstr ""
-
-msgid "First user"
-msgstr ""
-
-msgid "Installation"
-msgstr ""
-
-msgid "That's it!"
-msgstr ""
-
-msgid "A host name is required."
-msgstr ""
-
-msgid "The host name should not be empty."
-msgstr ""
-
-msgid "The host name should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "A port number is required."
-msgstr ""
-
-msgid "The port number should be numeric."
-msgstr ""
-
-msgid "The port number should be between {0} and {1}."
-msgstr ""
-
-msgid "The username should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "The password should not contain quotes."
-msgstr ""
-
-msgid "The password should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "A database name is required."
-msgstr ""
-
-msgid "The database name should not be empty."
-msgstr ""
-
-msgid "The database name should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "The database name should not contain dashes."
-msgstr ""
-
 msgid "A sender name is required."
 msgstr ""
 
@@ -2021,16 +1943,133 @@ msgstr ""
 msgid "The sender email should be a valid email address."
 msgstr ""
 
+msgid "A host name is required."
+msgstr ""
+
+msgid "The host name should not be empty."
+msgstr ""
+
+msgid "The host name should be a valid BMP-UTF8 string."
+msgstr ""
+
 msgid "A TLS setting is required."
 msgstr ""
 
-msgid "The TLS setting should be a valid boolean."
+msgid "The TLS setting should be \"true\" or NULL."
+msgstr ""
+
+msgid "A port number is required."
+msgstr ""
+
+msgid "The port number should be numeric."
+msgstr ""
+
+msgid "The port number should be between {0} and {1}."
+msgstr ""
+
+msgid "The username should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "A password is required."
 msgstr ""
 
+msgid "The password should be a valid BMP-UTF8 string."
+msgstr ""
+
 msgid "The test email should be a valid email address."
+msgstr ""
+
+msgid "Could not validate the smtp settings."
+msgstr ""
+
+msgid "Could not validate the smtp settings found in database."
+msgstr ""
+
+msgid "The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database."
+msgstr ""
+
+msgid "To fix this problem, you need to configure the SMTP server again."
+msgstr ""
+
+msgid "not found"
+msgstr ""
+
+msgid "database"
+msgstr ""
+
+msgid "env variables"
+msgstr ""
+
+msgid "undefined"
+msgstr ""
+
+msgid "Passbolt test email"
+msgstr ""
+
+msgid "A test recipient is required."
+msgstr ""
+
+msgid "Congratulations!"
+msgstr ""
+
+msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
+msgstr ""
+
+msgid "The data entered are not correct"
+msgstr ""
+
+msgid "A connection could not be established with the credentials provided."
+msgstr ""
+
+msgid "Please verify the settings."
+msgstr ""
+
+msgid "The data entered are not correct: {0}"
+msgstr ""
+
+msgid "The session has expired. Please start the configuration again."
+msgstr ""
+
+msgid "System check"
+msgstr ""
+
+msgid "Subscription key"
+msgstr ""
+
+msgid "Database"
+msgstr ""
+
+msgid "Server keys"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Emails"
+msgstr ""
+
+msgid "First user"
+msgstr ""
+
+msgid "Installation"
+msgstr ""
+
+msgid "That's it!"
+msgstr ""
+
+msgid "The password should not contain quotes."
+msgstr ""
+
+msgid "A database name is required."
+msgstr ""
+
+msgid "The database name should not be empty."
+msgstr ""
+
+msgid "The database name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The database name should not contain dashes."
 msgstr ""
 
 msgid "An OpenPGP public key is required."

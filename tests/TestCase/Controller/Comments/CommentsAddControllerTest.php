@@ -17,194 +17,90 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Comments;
 
-use App\Model\Table\CommentsTable;
+use App\Test\Factory\CommentFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
+use App\Test\Lib\Model\EmailQueueTrait;
 
 class CommentsAddControllerTest extends AppIntegrationTestCase
 {
-    /**
-     * @var CommentsTable Comments
-     */
-    public $Comments;
+    use EmailQueueTrait;
 
-    /**
-     * @var ResourcesTable Resources
-     */
-    public $Resources;
-
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments',
-        'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Profiles',
-        'app.Base/Gpgkeys',
-    ];
-
-    public function setUp(): void
+    public function testCommentsAddController_Success()
     {
-        parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
-        $this->Comments = TableRegistry::getTableLocator()->get('Comments', $config);
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-    }
+        RoleFactory::make()->guest()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $this->logInAs($user);
 
-    public function testCommentsAddSuccess()
-    {
-        $this->authenticateAs('ada');
         $commentContent = 'this is a test';
         $postData = [
             'content' => $commentContent,
         ];
-        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $resourceId = $resource->get('id');
         $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
-        $comment = $this->Comments->find()
+        $comment = CommentFactory::find()
             ->where(['id' => $this->_responseJsonBody->id])
             ->first();
         $this->assertEquals($commentContent, $comment->content);
+
+        // Since the resource is not shared, no email are sent
+        $this->assertEmailQueueIsEmpty();
     }
 
-    public function testCommentsAddWithParentIdSuccess()
+    public function testCommentsAddController_SharedResourceSuccessEMail()
     {
-        $this->authenticateAs('ada');
-        $commentContent = 'this is a test with parent_id';
+        RoleFactory::make()->guest()->persist();
+        [$user1, $user2] = UserFactory::make(2)->user()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user1, $user2])->persist();
+        $this->logInAs($user1);
+
+        $commentContent = 'this is a test reply comment';
         $postData = [
             'content' => $commentContent,
-            'parent_id' => UuidFactory::uuid('comment.id.apache-1'),
         ];
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $resourceId = $resource->get('id');
         $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
-        $comment = $this->Comments->find()
+        $comment = CommentFactory::find()
             ->where(['id' => $this->_responseJsonBody->id])
             ->first();
         $this->assertEquals($commentContent, $comment->content);
+
+        // Since the resource is shared, check email is sent
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailInBatchContains("{$user1->profile->first_name} commented on {$resource->name}", $user2->username);
     }
 
-    public function testCommentsAddErrorCsrfToken()
+    public function testCommentsAddController_ErrorCsrfToken()
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $this->logInAs($user);
+        $resourceId = $resource->get('id');
+
         $this->post("/comments/resource/$resourceId.json?api-version=v2");
         $this->assertResponseCode(403);
     }
 
-    public function testCommentsAddErrorInvalidResourceId()
+    public function testCommentsAddController_ErrorNotAuthenticated()
     {
-        $this->authenticateAs('ada');
-        $commentContent = 'this is a test';
-        $postData = ['content' => $commentContent];
-        $resourceId = 'testBadUuid';
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
-        $this->assertError(400, 'The resource identifier should be a valid UUID.');
-        $this->assertEmpty($this->_responseJsonBody);
-    }
-
-    public function testCommentsAddRuleValidationResourceDoesNotExist()
-    {
-        $this->authenticateAs('ada');
-        $commentContent = 'this is a test';
-        $postData = ['content' => $commentContent];
-        $resourceId = UuidFactory::uuid('resource.id.notexist');
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
-        $this->assertError(404, 'The resource does not exist.');
-        $this->assertEmpty($this->_responseJsonBody);
-    }
-
-    public function testCommentsAddRuleValidationResourceIsSoftDeleted()
-    {
-        // Soft delete resource "cakephp".
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $resource = $this->Resources->find()
-            ->where(['id' => $resourceId])
-            ->first();
-        $resource->deleted = 1;
-        $this->Resources->save($resource);
-
-        // Now authenticate as Ada and try to access the soft deleted resource.
-        $this->authenticateAs('ada');
-        $commentContent = 'this is a test';
-        $postData = ['content' => $commentContent];
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
-        $this->assertError(404, 'The resource does not exist.');
-        $this->assertEmpty($this->_responseJsonBody);
-    }
-
-    public function testCommentsAddRuleValidationResourceAccessDenied()
-    {
-        $this->authenticateAs('ada');
-        $commentContent = 'this is a test';
-        $postData = ['content' => $commentContent];
-        $resourceId = UuidFactory::uuid('resource.id.chai');
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
-        $this->assertError(404, 'The resource does not exist.');
-        $this->assertEmpty($this->_responseJsonBody);
-    }
-
-    public function testCommentsAddErrorValidationParentIdDoesNotExist()
-    {
-        $this->authenticateAs('ada');
-        $commentContent = 'this is a test with parent_id';
-        $postData = [
-            'content' => $commentContent,
-            'parent_id' => UuidFactory::uuid('comment.id.doesNotExist'),
-        ];
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
-        $this->assertError(400, 'Could not validate comment data.');
-        $this->assertEmpty($this->_responseJsonBody);
-    }
-
-    public function testCommentsAddErrorValidationContentNotProvided()
-    {
-        $this->authenticateAs('ada');
-        $postData = ['content' => ''];
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
-        $this->assertError(400, 'Could not validate comment data.');
-        $this->assertEmpty($this->_responseJsonBody);
-    }
-
-    public function testCommentsAddCannotModifyNotAccessibleFields()
-    {
-        $this->authenticateAs('ada');
-        $createdDate = '2012-01-01 00:00:00';
-        $createdBy = UuidFactory::uuid('user.id.betty');
-        $commentContent = 'this is a test';
-        $postData = [
-            'content' => $commentContent,
-            'user_id' => $createdBy,
-            'created_by' => $createdBy,
-            'modified_by' => $createdBy,
-            'created' => $createdDate,
-            'modified' => $createdDate,
-        ];
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
-        $this->assertSuccess();
-
-        // Check that the groups and its sub-models are saved as expected.
-        $comment = $this->Comments->find()
-            ->where(['id' => $this->_responseJsonBody->id])
-            ->first();
-        $this->assertEquals($commentContent, $comment->content);
-        $this->assertNotEquals($createdDate, $comment->created);
-        $this->assertNotEquals($createdDate, $comment->modified);
-        $this->assertNotEquals($createdBy, $comment->created_by);
-        $this->assertNotEquals($createdBy, $comment->modified_by);
-        $this->assertNotEquals($createdBy, $comment->user_id);
-    }
-
-    public function testCommentsAddErrorNotAuthenticated()
-    {
+        $resource = ResourceFactory::make()->withCreator(UserFactory::make()->user())->persist();
+        $resourceId = $resource->get('id');
         $postData = [];
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+
         $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
         $this->assertAuthenticationError();
+
+        // Since the resource is not shared, no email are sent
+        $this->assertEmailQueueIsEmpty();
     }
 }
