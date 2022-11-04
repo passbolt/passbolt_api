@@ -39,7 +39,7 @@ $count = 0;
 for($i=0;$i<$numberOfSuites;$i++) {
     $testSuites[] = '<testsuite name="'.($i+1).'">';
     for ($j=0; $j<$numberOfTestFilesPerSuite; $j++) {
-      $testFile = preg_replace('/.*tests/', 'tests', $testFiles[$i*$numberOfTestFilesPerSuite + $j]) ?? null;
+      $testFile = preg_replace('/.*tests/', '../../tests', $testFiles[$i*$numberOfTestFilesPerSuite + $j]) ?? null;
         if (!isset($testFile)) {
             break;
         }
