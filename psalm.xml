@@ -16,10 +16,10 @@
             <directory name="vendor" />
             <directory name="templates" />
             <directory name="tests" />
-            <directory name="plugins/Passbolt/Reports/templates" />
-            <directory name="plugins/Passbolt/WebInstaller/templates" />
-            <directory name="plugins/Passbolt/JwtAuthentication/templates" />
-            <directory name="plugins/Passbolt/EmailDigest/tests/Fixture/templates/" />
+            <directory name="plugins/PassboltCe/Reports/templates" />
+            <directory name="plugins/PassboltCe/WebInstaller/templates" />
+            <directory name="plugins/PassboltCe/JwtAuthentication/templates" />
+            <directory name="plugins/PassboltCe/EmailDigest/tests/Fixture/templates/" />
         </ignoreFiles>
     </projectFiles>
 </psalm>

@@ -25,6 +25,7 @@ use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 
 class RecoverCompleteControllerTest extends AppIntegrationTestCase
@@ -66,8 +67,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
             ->active()
             ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
             ->persist();
-        $userAgent = 'FooAgent';
-        $this->mockUserAgent($userAgent);
+
         $t = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
         $url = '/setup/recover/complete/' . $user->id . '.json';
         $armoredKey = $user->gpgkey->armored_key;
@@ -79,6 +79,18 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
                 'armored_key' => $armoredKey,
             ],
         ];
+
+        $userAgent = 'FooAgent';
+        $clientIP = '1.2.3.4';
+
+        $mockrequest = $this->createMock(ServerRequest::class);
+        $mockrequest->method('getData')->willReturn($data);
+        $mockrequest->method('clientIp')->willReturn($clientIP);
+        $mockrequest->method('getEnv')->willReturn($userAgent);
+        $this->mockService(ServerRequest::class, function () use ($mockrequest) {
+            return $mockrequest;
+        });
+
         $this->postJson($url, $data);
         $this->assertSuccess();
 
@@ -93,7 +105,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
             $user->username,
         );
         $this->assertEmailInBatchContains(
-            "User Agent: <i>$userAgent</i><br/>User IP: <i></i>",
+            "User Agent: <i>$userAgent</i><br/>User IP: <i>$clientIP</i>",
             $user->username,
         );
         // Check that all admins got notified, as well as the user
@@ -103,7 +115,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
                 $admin->username,
             );
             $this->assertEmailInBatchContains(
-                "User Agent: <i>$userAgent</i><br/>User IP: <i></i>",
+                "User Agent: <i>$userAgent</i><br/>User IP: <i>$clientIP</i>",
                 $admin->username,
             );
         }

@@ -20,6 +20,7 @@ use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
+use App\Utility\UuidFactory;
 use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
@@ -169,7 +170,11 @@ class UserFactory extends CakephpBaseFactory
      */
     private function makeUserAccessControl(User $user): UserAccessControl
     {
-        return new UserAccessControl($user->role->name, $user->get('id'), $user->get('username'));
+        return new UserAccessControl(
+            $user->role->name,
+            $user->get('id') ?? UuidFactory::uuid(),
+            $user->get('username')
+        );
     }
 
     /**

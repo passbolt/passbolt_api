@@ -104,10 +104,16 @@ class QueryStringComponent extends Component
         // filters with is-* means we are expecting a boolean
         // we accept 'TRUE', 'true', '1' as true and the rest is set to false
         if (isset($query['filter'])) {
+            if ($query['filter'] == '[]') {
+                $query['filter'] = [];
+            }
             if (!is_array($query['filter'])) {
                 throw new BadRequestException(__('Invalid query string. The filter parameter should be an array.'));
             }
             foreach ($query['filter'] as $filterName => $filter) {
+                if (!is_string($filterName)) {
+                    continue;
+                }
                 if (in_array($filterName, self::mustBeArrayFilters())) {
                     // these should always be an array
                     $query['filter'][$filterName] = $filter = (array)$query['filter'][$filterName];

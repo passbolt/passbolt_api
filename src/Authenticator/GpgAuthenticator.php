@@ -35,6 +35,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class GpgAuthenticator extends SessionAuthenticator
 {
+    use GpgAuthenticatorTrait;
+
     public const HTTP_HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
         'X-GPGAuth-Authenticated, X-GPGAuth-Refer, X-GPGAuth-Debug, X-GPGAuth-Error, X-GPGAuth-Pubkey, ' .
         'X-GPGAuth-Logout-Url, X-GPGAuth-Version';
@@ -172,8 +174,17 @@ class GpgAuthenticator extends SessionAuthenticator
      */
     private function _stage0()
     {
+        // Sanity check
+        $serverVerifyToken = $this->_data['server_verify_token'] ?? '';
+        $this->assertGpgMessageIsValid(
+            $this->_gpg,
+            $serverVerifyToken,
+            __('The server verify token is missing or invalid.')
+        );
+
+        // Decrypt and verify nonce
         try {
-            $nonce = $this->_gpg->decrypt($this->_data['server_verify_token']);
+            $nonce = $this->_gpg->decrypt($serverVerifyToken);
             // check if the nonce is in valid format to avoid returning something sensitive decrypted
             if ($this->_checkNonce($nonce)) {
                 $this->addHeader('X-GPGAuth-Verify-Response', $nonce);

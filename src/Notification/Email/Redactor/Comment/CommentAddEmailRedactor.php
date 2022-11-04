@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace App\Notification\Email\Redactor\Comment;
 
-use App\Controller\Comments\CommentsAddController;
 use App\Model\Entity\Comment;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
@@ -28,6 +27,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Service\Comments\CommentsAddService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
@@ -73,7 +73,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents(): array
     {
         return [
-            CommentsAddController::ADD_SUCCESS_EVENT_NAME,
+            CommentsAddService::ADD_SUCCESS_EVENT_NAME,
         ];
     }
 
