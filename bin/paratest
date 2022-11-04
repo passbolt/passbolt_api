@@ -224,7 +224,7 @@ calculate_test_suites
 if [[ "$DATABASE_DOCKER_IMAGE" == *"mysql"* ]] || [[ "$DATABASE_DOCKER_IMAGE" == *"mariadb"* ]] ; then
   # Start the tests in background
   COUNT=0
-  for (( group=0; group<$NUMBER_OF_WORKERS; group++ )); do
+  for (( group=1; group<=$NUMBER_OF_WORKERS; group++ )); do
     start_test_mysql $COUNT $group &
     COUNT=$(($COUNT +1))
   done
@@ -233,7 +233,7 @@ fi
 if [[ "$DATABASE_DOCKER_IMAGE" == *"postgre"* ]]; then
   # Start the tests in background
   COUNT=0
-  for (( group=0; group<$NUMBER_OF_WORKERS; group++ )); do
+  for (( group=1; group<=$NUMBER_OF_WORKERS; group++ )); do
     start_test_postgres $COUNT $group &
     COUNT=$(($COUNT +1))
   done
