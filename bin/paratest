@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -exuo pipefail
+set -euo pipefail
 
 # PARAPASSBOLTTEST AKA PARAPA (I'm loving it, yes, sorry about the reference)
 #
@@ -147,7 +147,7 @@ start_test_mysql() {
       DATASOURCES_TEST_USERNAME=root \
       DATASOURCES_TEST_PASSWORD=test \
       DATASOURCES_TEST_HOST=${DATASOURCE_HOST} \
-      vendor/bin/phpunit -c '${PHPUNIT_XML_FILE}' --testsuite '${TEST_GROUP}" > tmp/paratest/phpunit_test_log$SERVER.txt &
+      vendor/bin/phpunit -c '${PHPUNIT_XML_FILE}' --testsuite '${TEST_GROUP}'" > tmp/paratest/phpunit_test_log$SERVER.txt &
 
   until docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER > /dev/null 2>&1; do
     sleep 1
@@ -199,7 +199,7 @@ start_test_postgres() {
       DATASOURCES_TEST_PORT=5432 \
       DATASOURCES_TEST_ENCODING=utf8 \
       DATASOURCES_TEST_HOST=${DATASOURCE_HOST} \
-      vendor/bin/phpunit -c '${PHPUNIT_XML_FILE}' --testsuite '${TEST_GROUP}" > tmp/paratest/phpunit_test_log$SERVER.txt &
+      vendor/bin/phpunit -c '${PHPUNIT_XML_FILE}' --testsuite '${TEST_GROUP}'" > tmp/paratest/phpunit_test_log$SERVER.txt &
 
   until docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER > /dev/null 2>&1; do
     sleep 1
@@ -225,7 +225,7 @@ if [[ "$DATABASE_DOCKER_IMAGE" == *"mysql"* ]] || [[ "$DATABASE_DOCKER_IMAGE" ==
   # Start the tests in background
   COUNT=0
   for (( group=0; group<$NUMBER_OF_WORKERS; group++ )); do
-    start_test_mysql $COUNT $group
+    start_test_mysql $COUNT $group &
     COUNT=$(($COUNT +1))
   done
 fi
