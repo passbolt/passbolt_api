@@ -1,20 +1,20 @@
 #!/bin/bash
 
-set -euo pipefail
+set -exuo pipefail
 
 # PARAPASSBOLTTEST AKA PARAPA (I'm loving it, yes, sorry about the reference)
 #
 # THIS SCRIPT IS EXPERIMENTAL
 # Adjust test size to your CPU CORES.
 # By default PHP version is 8
-# Around 200 or 300 in 8 cpu machine takes 1 minute to run all tests.
 # Test logs are stored in logfiles on the $LOG_PATH and showed to stdout at
 # the end of the execution
 #
 
-TEST_GROUP_SIZE=200
+NUMBER_OF_WORKERS=13
 DATABASE_DOCKER_IMAGE="mysql:5.7"
 PHP_UNIT_DOCKER_IMAGE="registry.gitlab.com/passbolt/php-test-base-images:8.1"
+PHPUNIT_XML_FILE="tmp/paratest/phpunit.xml"
 PIDS=()
 LOG_PATH="tmp/paratest"
 PROGNAME="$0"
@@ -31,7 +31,7 @@ usage() {
    -h this help message
    -d Relational database docker image (default mysql:5.7, intel)
    -p PHP base docker image (default php 8.1 image)
-   -t test group size (# of tests per group, default 200)
+   -w number of workers that execute the test in parallel
 
   EXAMPLES:
 
@@ -62,8 +62,8 @@ get_options() {
       p)
         PHP_UNIT_DOCKER_IMAGE="$OPTARG"
         ;;
-      t)
-        TEST_GROUP_SIZE="$OPTARG"
+      w)
+        NUMBER_OF_WORKERS="$OPTARG"
         ;;
       h)
         usage
@@ -98,27 +98,6 @@ cleanup_docker() {
   docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker kill
   docker ps -a | grep phpunitDataSource | awk '{print $1}' | xargs docker rm
   docker ps -a | grep passboltUnitTestGroup | awk '{print $1}' | xargs docker rm
-}
-
-calculate_test_groups() {
-
-  docker run -i \
-    --rm \
-    --workdir='/app' \
-    -v ${PWD}:/app \
-    $PHP_UNIT_DOCKER_IMAGE \
-    /bin/bash -c "
-      vendor/bin/phpunit --bootstrap config/bootstrap.php --list-tests" | \
-    awk -F '::' '{print $2}' | \
-    awk NF | \
-    awk -F '\"' '{print $1}' | \
-    awk -F '#' '{print $1}' | \
-    uniq | \
-    awk '{print $1".*|"}' | \
-    awk -v n=$TEST_GROUP_SIZE '1; NR % n == 0 {print ""}' | \
-    awk '{ORS = sub(/\|$/,"|") ? "" : "\n"} 1' | \
-    awk '{sub(/\|$/,"")}1' | \
-    awk '{print "/"$1"/"}'
 }
 
 start_test_mysql() {
@@ -168,7 +147,7 @@ start_test_mysql() {
       DATASOURCES_TEST_USERNAME=root \
       DATASOURCES_TEST_PASSWORD=test \
       DATASOURCES_TEST_HOST=${DATASOURCE_HOST} \
-      vendor/bin/phpunit --filter='${TEST_GROUP}'" > tmp/paratest/phpunit_test_log$SERVER.txt &
+      vendor/bin/phpunit -c '${PHPUNIT_XML_FILE}' --testsuite '${TEST_GROUP}" > tmp/paratest/phpunit_test_log$SERVER.txt &
 
   until docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER > /dev/null 2>&1; do
     sleep 1
@@ -220,7 +199,7 @@ start_test_postgres() {
       DATASOURCES_TEST_PORT=5432 \
       DATASOURCES_TEST_ENCODING=utf8 \
       DATASOURCES_TEST_HOST=${DATASOURCE_HOST} \
-      vendor/bin/phpunit --filter='${TEST_GROUP}'" > tmp/paratest/phpunit_test_log$SERVER.txt &
+      vendor/bin/phpunit -c '${PHPUNIT_XML_FILE}' --testsuite '${TEST_GROUP}" > tmp/paratest/phpunit_test_log$SERVER.txt &
 
   until docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER > /dev/null 2>&1; do
     sleep 1
@@ -229,17 +208,24 @@ start_test_postgres() {
   PIDS+=$(docker inspect -f '{{.State.Pid}}' passboltUnitTestGroup$SERVER)
 }
 
+calculate_test_suites() {
+
+  php ./tests/create_paratest_suites.php "$PHPUNIT_XML_FILE" "$NUMBER_OF_WORKERS"
+}
+
 get_options "$@"
 
 EXIT_STATUS=0
 mkdir -p $LOG_PATH
 rm $LOG_PATH/* || true
 
+calculate_test_suites
+
 if [[ "$DATABASE_DOCKER_IMAGE" == *"mysql"* ]] || [[ "$DATABASE_DOCKER_IMAGE" == *"mariadb"* ]] ; then
   # Start the tests in background
   COUNT=0
-  for group in $(calculate_test_groups); do
-    start_test_mysql $COUNT $group &
+  for (( group=0; group<$NUMBER_OF_WORKERS; group++ )); do
+    start_test_mysql $COUNT $group
     COUNT=$(($COUNT +1))
   done
 fi
@@ -247,7 +233,7 @@ fi
 if [[ "$DATABASE_DOCKER_IMAGE" == *"postgre"* ]]; then
   # Start the tests in background
   COUNT=0
-  for group in $(calculate_test_groups); do
+  for (( group=0; group<$NUMBER_OF_WORKERS; group++ )); do
     start_test_postgres $COUNT $group &
     COUNT=$(($COUNT +1))
   done
