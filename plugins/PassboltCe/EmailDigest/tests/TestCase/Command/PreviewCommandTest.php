@@ -25,6 +25,7 @@ use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
 /**
@@ -48,6 +49,7 @@ class PreviewCommandTest extends TestCase
         $this->useCommandRunner();
         $this->setDummyFrenchTranslator();
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
+        EmailNotificationSettings::flushCache();
     }
 
     /**
