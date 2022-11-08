@@ -10,6 +10,7 @@
     - composer cs-check
     - composer stan
     - composer psalm
+    - composer audit
 
 check-style-strict:
   extends: .cs-check
