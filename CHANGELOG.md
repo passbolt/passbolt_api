@@ -2,6 +2,31 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.8.0] - 2022-11-09
+### Added
+PB-19192: As an administrator, I want to manage SMTP settings in the administration workspace
+PB-19151: As a user, I want to use passbolt with the Solarized light theme
+PB-19151: As a user, I want to use passbolt with the Solarized dark theme
+
+### Improved
+PB-19200: GpgAuthenticator now asserts the message is a valid OpenPGP message prior to decryption on stage 0
+
+### Fixed
+PB-19312: As a logged-in user, I want to see my first name and last name correctly displayed in email headers
+PB-18718: As a logged-in user, I want my locale not to be overwritten by the server config on pages served by the server
+PB-19261: As a logged-in user, I should not get an internal error if no filter is passed to the get resource.json entry point
+
+### Security
+PB-19090: Protect forms from spell-jacking attack
+
+### Maintenance
+PB-19235: Migrate comments controllers logic into services
+PB-19603: Cover additional “add user to group” case: As group manager I can add a user to a group which have no resources shared with
+PB-6081: Move community plugins into plugins/PassboltCe
+PB-19621: Stop changing folders permissions in installation tests
+PB-19255 As an administrator I can trigger 500 errors on demand to test my logs
+
+
 ## [3.7.3] - 2022-09-27
 ### Security
 - PB-19090 Protect forms from spell-jacking attack
