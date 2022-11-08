@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\AvatarFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
@@ -163,8 +164,18 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $userId = $user->id;
         $armoredKey = $user->gpgkey->armored_key;
         $url = '/setup/recover/complete/' . $userId . '.json';
-        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'expired');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'inactive');
+
+        $tokenExpired = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->expired()
+            ->userId($userId)
+            ->active()
+            ->persist();
+        $tokenInactive = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->inactive()
+            ->userId($userId)
+            ->persist();
 
         $fails = [
             'empty array' => [
@@ -188,11 +199,11 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
                 'message' => 'The authentication token should be a valid UUID.',
             ],
             'expired token' => [
-                'data' => ['token' => $tokenExpired],
+                'data' => ['token' => $tokenExpired->token],
                 'message' => 'The authentication token is not valid.',
             ],
             'inactive token' => [
-                'data' => ['token' => $tokenInactive],
+                'data' => ['token' => $tokenInactive->token],
                 'message' => 'The authentication token is not valid.',
             ],
         ];
@@ -223,12 +234,16 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $userId = $user->id;
         $armoredKey = $user->gpgkey->armored_key;
         $url = '/setup/recover/complete/' . $userId . '.json';
-        $tokenWrongType = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_LOGIN);
+        $tokenWrongType = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_LOGIN)
+            ->userId($userId)
+            ->active()
+            ->persist();
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
         $fails = [
             'wrong type token' => [
-                'data' => ['token' => $tokenWrongType],
+                'data' => ['token' => $tokenWrongType->token],
                 'message' => 'The authentication token is not valid.',
             ],
         ];

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
@@ -101,8 +102,14 @@ class IsValidTest extends AppTestCase
     public function testAuthenticationTokensIsValidTokenInactiveFail()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_LOGIN, 'inactive');
-        $result = $this->AuthenticationTokens->isValid($tokenInactive, UuidFactory::uuid('user.id.ada'));
+        $tokenInactive = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_LOGIN)
+            ->userId($userId)
+            ->inactive()
+            ->persist();
+
+        $result = $this->AuthenticationTokens->isValid($tokenInactive->token, UuidFactory::uuid('user.id.ada'));
+
         $this->assertFalse($result);
     }
 
@@ -114,12 +121,19 @@ class IsValidTest extends AppTestCase
     public function testAuthenticationTokensIsValidTokenExpiredFail()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'expired');
-        $result = $this->AuthenticationTokens->isValid($tokenInactive, $userId);
+        $tokenInactive = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->userId($userId)
+            ->expired()
+            ->active()
+            ->persist();
+
+        $result = $this->AuthenticationTokens->isValid($tokenInactive->token, $userId);
+
         $this->assertFalse($result);
 
         // token should now be marked as inactive
-        $token = $this->AuthenticationTokens->find('all')->where(['token' => $tokenInactive])->first();
+        $token = $this->AuthenticationTokens->find('all')->where(['token' => $tokenInactive->token])->first();
         $this->assertFalse($token->active);
     }
 
