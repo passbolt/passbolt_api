@@ -519,10 +519,20 @@ class HealthcheckCommand extends PassboltCommand
             ]
         );
         $this->warning(
+            $checks['application']['hostAvailabilityCheckEnabled'],
+            __('Host availability will be checked.'),
+            __('Host availability checking is disabled.'),
+            [
+                __('Make sure this instance is not publicly available on the internet.'),
+                __('Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true.'),
+                __('Or set passbolt.email.validate.mx to true in config/passbolt.php.'),
+            ]
+        );
+        $this->warning(
             $checks['application']['jsProd'],
-            __('Serving the compiled version of the javascript app'),
+            __('Serving the compiled version of the javascript app.'),
             __('Using non-compiled Javascript. Passbolt will be slower.'),
-            __('Set passbolt.js.build to production in config/passbolt.php')
+            __('Set passbolt.js.build to production in config/passbolt.php.')
         );
         $this->warning(
             $checks['application']['emailNotificationEnabled'],

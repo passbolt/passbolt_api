@@ -91,6 +91,7 @@ class Healthchecks
         $checks['application']['sslFullBaseUrl'] = ($https !== false);
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
         $checks['application']['registrationClosed'] = !Configure::read('passbolt.registration.public');
+        $checks['application']['hostAvailabilityCheckEnabled'] = Configure::read('passbolt.email.validate.mx');
         $checks['application']['jsProd'] = (Configure::read('passbolt.js.build') === 'production');
         $sendEmailJson = json_encode(Configure::read('passbolt.email.send'));
         $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', $sendEmailJson) === 1);
