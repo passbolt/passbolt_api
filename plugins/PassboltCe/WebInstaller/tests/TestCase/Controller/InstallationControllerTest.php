@@ -18,6 +18,7 @@ namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\Filesystem\DirectoryUtility;
+use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
@@ -254,6 +255,7 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
     public function testWebInstallerInstallationDoInstallSuccess()
     {
         $this->skipTestIfNotWebInstallerFriendly();
+        Configure::write('passbolt.gpg.serverKey.fingerprint', null);
         $connection = ConnectionManager::get('default');
 
         $config = $this->getInstallSessionData();
