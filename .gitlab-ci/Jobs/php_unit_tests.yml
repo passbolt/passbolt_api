@@ -115,6 +115,7 @@ php7.4-mysql5.7:
 
 # TO BE REMOVED
 php7.4-postgres:
+  allow_failure: true
   variables:
     PHP_VERSION: "7.4"
   extends:
