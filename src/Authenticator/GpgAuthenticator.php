@@ -326,7 +326,7 @@ class GpgAuthenticator extends SessionAuthenticator
             } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg);
+                throw new InternalErrorException($msg, 500, $exception);
             }
         }
     }
@@ -349,7 +349,7 @@ class GpgAuthenticator extends SessionAuthenticator
                 $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
             } catch (Exception $exception) {
                 $msg = __('Could not import the user OpenPGP key.');
-                throw new InternalErrorException($msg);
+                throw new InternalErrorException($msg, 500, $exception);
             }
         }
     }

@@ -182,7 +182,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
                 $this->gpg->importKeyIntoKeyring($armored);
                 $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
             } catch (Exception $exception) {
-                throw new InternalErrorException('Could not import the user OpenPGP key.');
+                throw new InternalErrorException('Could not import the user OpenPGP key.', 500, $exception);
             }
         }
     }

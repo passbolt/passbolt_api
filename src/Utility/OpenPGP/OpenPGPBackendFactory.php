@@ -45,7 +45,7 @@ class OpenPGPBackendFactory
                 try {
                     return new Gnupg();
                 } catch (Exception $exception) {
-                    throw new InternalErrorException($exception->getMessage());
+                    throw new InternalErrorException($exception->getMessage(), 500, $exception);
                 }
                 // no break
             default:

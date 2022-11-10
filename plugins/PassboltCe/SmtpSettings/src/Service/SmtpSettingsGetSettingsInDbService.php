@@ -111,7 +111,7 @@ class SmtpSettingsGetSettingsInDbService
             $msg = __('The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database.');
             $msg .= ' ' . __('To fix this problem, you need to configure the SMTP server again.') . ' ';
             $msg .= $e->getMessage();
-            throw new InternalErrorException($msg);
+            throw new InternalErrorException($msg, 500, $e);
         }
     }
 }

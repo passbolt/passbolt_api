@@ -102,7 +102,7 @@ class ResourcesIndexController extends AppController
                 try {
                     $this->Resources->Secrets->SecretAccesses->create($secret, $this->User->getAccessControl());
                 } catch (\Exception $e) {
-                    throw new InternalErrorException('Could not log secret access entry.');
+                    throw new InternalErrorException('Could not log secret access entry.', 500, $e);
                 }
             }
         }
