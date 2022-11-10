@@ -19,7 +19,6 @@ namespace Passbolt\SmtpSettings\Service;
 use App\Error\Exception\FormValidationException;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
-use Cake\Database\Exception\MissingConnectionException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
@@ -68,7 +67,7 @@ class SmtpSettingsGetSettingsInDbService
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         try {
             $settings = $OrganizationSettings->getByProperty(self::SMTP_SETTINGS_PROPERTY_NAME);
-        } catch (MissingConnectionException $e) {
+        } catch (\Throwable $e) {
             // During installation, the connection might not be set yet
             return null;
         }

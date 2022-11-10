@@ -45,7 +45,7 @@ return [
 
     'passbolt' => [
         // GPG Configuration.
-        // The keyring must to be owned and accessible by the webserver user.
+        // The keyring must be owned and accessible by the webserver user.
         // Example: www-data user on Debian
         'gpg' => [
             // Main server key.
