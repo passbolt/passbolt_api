@@ -29,7 +29,7 @@
 
 .postgres-template:
   services:
-    - postgres:12.2-alpine # should be DATABASE_ENGINE_VERSION
+    - registry.gitlab.com/passbolt/passbolt-ci-docker-images/postgres:12.2-alpine # should be DATABASE_ENGINE_VERSION
   # Postgres services variables
   variables:
     POSTGRES_DB: test
