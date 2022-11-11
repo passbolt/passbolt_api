@@ -68,7 +68,11 @@
         "league/flysystem": "^2.4.5",
         "cakephp/authentication": "^2.9.0",
         "bcrowe/cakephp-api-pagination": "^2.1.1",
-        "firebase/php-jwt": "^6.2.0"
+        "firebase/php-jwt": "^6.2.0",
+        "spomky-labs/otphp": "^8.3.3",
+        "bacon/bacon-qr-code": "^2.0.7",
+        "enygma/yubikey": "^3.3",
+        "duosecurity/duo_php": "^1.0.1"
     },
     "require-dev": {
         "phpstan/phpstan": "0.12.81",
@@ -101,8 +105,8 @@
             "Passbolt\\Import\\": "./plugins/PassboltCe/Import/src",
             "Passbolt\\Export\\": "./plugins/PassboltCe/Export/src",
             "Passbolt\\ResourceTypes\\": "./plugins/PassboltCe/ResourceTypes/src",
-            "Passbolt\\SmtpSettings\\": "./plugins/PassboltCe/SmtpSettings/src"
-
+            "Passbolt\\SmtpSettings\\": "./plugins/PassboltCe/SmtpSettings/src",
+            "Passbolt\\MultiFactorAuthentication\\": "./plugins/PassboltCe/MultiFactorAuthentication/src"
         }
     },
     "autoload-dev": {
@@ -119,7 +123,8 @@
             "Passbolt\\Reports\\Test\\": "./plugins/PassboltCe/Reports/tests",
             "Passbolt\\Mobile\\Test\\": "./plugins/PassboltCe/Mobile/tests",
             "Passbolt\\JwtAuthentication\\Test\\": "./plugins/PassboltCe/JwtAuthentication/tests",
-            "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests"
+            "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests",
+            "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/PassboltCe/MultiFactorAuthentication/tests"
         }
     },
     "scripts": {

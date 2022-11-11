@@ -20,6 +20,7 @@
             <directory name="plugins/PassboltCe/WebInstaller/templates" />
             <directory name="plugins/PassboltCe/JwtAuthentication/templates" />
             <directory name="plugins/PassboltCe/EmailDigest/tests/Fixture/templates/" />
+            <directory name="plugins/PassboltCe/MultiFactorAuthentication/templates/" />
         </ignoreFiles>
     </projectFiles>
 </psalm>
