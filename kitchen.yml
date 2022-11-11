@@ -1,7 +1,8 @@
 ---
 driver:
   name: dokken
-  chef_image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/chef
+  chef_image: chef
+  docker_registry: registry.gitlab.com/passbolt/passbolt-ci-docker-images
   creds_file: './creds.json'
   volumes:
     - <%= ENV['PWD'] %>:/app/passbolt
@@ -25,74 +26,74 @@ verifier:
 platforms:
   - name: debian-buster
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/debian-buster-10:latest
+      image: debian-buster-10:latest
   - name: debian-bullseye
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/debian-bullseye-11:latest
+      image: debian-bullseye-11:latest
   - name: ubuntu-20.04
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/ubuntu-focal-2004:latest
+      image: ubuntu-focal-2004:latest
   - name: ubuntu-22.04
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/ubuntu-jammy-2204:latest
+      image: ubuntu-jammy-2204:latest
   - name: redhat-9
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-9:latest
+      image: rockylinux-9:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: redhat-8
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-8:latest
+      image: rockylinux-8:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: redhat-7
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/centos-7:latest
+      image: centos-7:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: rockylinux-8
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-8:latest
+      image: rockylinux-8:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: rockylinux-9
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/rockylinux-9:latest
+      image: rockylinux-9:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: almalinux-8
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/almalinux-8:latest
+      image: almalinux-8:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: centos-7
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/centos-7:latest
+      image: centos-7:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: oraclelinux-8
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/oraclelinux-8:latest
+      image: oraclelinux-8:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: oraclelinux-7
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/oraclelinux-7:latest
+      image: oraclelinux-7:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: fedora-34
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/fedora-34:latest
+      image: fedora-34:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: fedora-35
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/fedora-35:latest
+      image: fedora-35:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
   - name: opensuse-leap-15
     driver:
-      image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/opensuse-leap-15:latest
+      image: opensuse-leap-15:latest
       privileged: true
       pid_one_command: /usr/lib/systemd/systemd
 

@@ -35,7 +35,6 @@ use Cake\Cache\Cache;
 use Cake\Error\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
-use Cake\Database\Type;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
 use Cake\Log\Log;
@@ -161,6 +160,10 @@ unset($fullBaseUrl);
 
 Cache::setConfig(Configure::consume('Cache'));
 ConnectionManager::setConfig(Configure::consume('Datasources'));
+$isSmtpSettingsEnabled = Configure::read('passbolt.plugins.smtpSettings.enabled', true);
+if ($isSmtpSettingsEnabled) {
+    Configure::write('EmailTransport.default.className', \Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport::class);
+}
 TransportFactory::setConfig(Configure::consume('EmailTransport'));
 Mailer::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));

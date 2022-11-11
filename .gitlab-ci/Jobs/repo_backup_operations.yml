@@ -16,7 +16,7 @@
   after_script:
     - |
       curl -X POST -H 'Content-type: application/json' $SLACK_WEBHOOK \
-      --data-binary @- <<EOF 
+      --data-binary @- <<EOF
       {
         "channel": "$SLACK_CHANNEL_ID",
         "text":"Restore repo job ran for $PASSBOLT_FLAVOUR/$DISTRIBUTION repository, so last publishing attempt failed.\n Check pipeline for more details.",
@@ -44,8 +44,6 @@
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_failure
-  needs:
-    - debian-testing
 
 .package-repo-restore-stable:
   variables:
@@ -54,75 +52,73 @@
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_failure
-  needs:
-    - debian-testing
 
 package-repo-restore-debian-testing:
   variables:
     DISTRIBUTION: "debian"
   extends: .package-repo-restore-testing
   needs:
-    - debian-testing
+    - publish-debian-testing
 
 package-repo-restore-ubuntu-testing:
   variables:
     DISTRIBUTION: "ubuntu"
   extends: .package-repo-restore-testing
   needs:
-    - ubuntu-testing
+    - publish-ubuntu-testing
 
 package-repo-restore-yum-el7-testing:
   variables:
     DISTRIBUTION: "rpm/el7"
   extends: .package-repo-restore-testing
   needs:
-    - publish-passbolt-yum-el7-testing
+    - publish-yum-el7-testing
 
 package-repo-restore-yum-el8-testing:
   variables:
     DISTRIBUTION: "rpm/el8"
   extends: .package-repo-restore-testing
   needs:
-    - publish-passbolt-yum-el8-testing
+    - publish-yum-el8-testing
 
 package-repo-restore-suse-testing:
   variables:
     DISTRIBUTION: "rpm/opensuse"
   extends: .package-repo-restore-testing
   needs:
-    - publish-passbolt-suse-testing
+    - publish-suse-testing
 
 package-repo-restore-debian-stable:
   variables:
     DISTRIBUTION: "debian"
   extends: .package-repo-restore-stable
   needs:
-    - debian-stable
+    - publish-debian-stable
 
 package-repo-restore-ubuntu-stable:
   variables:
     DISTRIBUTION: "ubuntu"
   extends: .package-repo-restore-stable
   needs:
-    - ubuntu-stable
+    - publish-ubuntu-stable
 
 package-repo-restore-yum-el7-stable:
   variables:
     DISTRIBUTION: "rpm/el7"
   extends: .package-repo-restore-stable
   needs:
-    - publish-passbolt-yum-el7-stable
+    - publish-yum-el7-stable
 
 package-repo-restore-yum-el8-stable:
   variables:
     DISTRIBUTION: "rpm/el8"
   extends: .package-repo-restore-stable
   needs:
-    - publish-passbolt-yum-el8-stable
+    - publish-yum-el8-stable
 
 package-repo-restore-suse-stable:
   variables:
     DISTRIBUTION: "rpm/opensuse"
   extends: .package-repo-restore-stable
   needs:
-    - publish-passbolt-suse-stable
+    - publish-suse-stable

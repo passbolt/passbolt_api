@@ -168,6 +168,9 @@ $routes->scope('/healthcheck', function ($routes) {
 
     $routes->connect('/', ['prefix' => 'Healthcheck', 'controller' => 'HealthcheckIndex', 'action' => 'index'])
         ->setMethods(['GET']);
+
+    $routes->connect('/error', ['prefix' => 'Healthcheck', 'controller' => 'HealthcheckError', 'action' => 'internal'])
+        ->setMethods(['GET','POST', 'PUT', 'DELETE']);
 });
 
 /**

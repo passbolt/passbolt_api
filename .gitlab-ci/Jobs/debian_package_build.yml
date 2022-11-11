@@ -61,7 +61,7 @@ build-debian:
       cp ../*.buildinfo .
       cp ../*.changes .
 
-.publish:
+.publish-apt:
   image: registry.gitlab.com/passbolt/passbolt-ops/passbolt-aptly
   stage: publish
   dependencies:
@@ -71,31 +71,58 @@ build-debian:
   retry:
     max: 0
 
-debian-testing:
-  extends: .publish
+.publish-debian:
+  extends: .publish-apt
   variables:
     DISTRIBUTION: buster
-    PASSBOLT_COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/debian
+  needs:
+    - job: "debian-buster-runtime"
+    - job: "debian-buster-break"
+    - job: "debian-buster-purge"
+    - job: "debian-buster-fs"
+    - job: "debian-bullseye-runtime"
+    - job: "debian-bullseye-break"
+    - job: "debian-bullseye-purge"
+    - job: "debian-bullseye-fs"
+    - job: "build-debian"
+
+publish-debian-testing:
+  extends: .publish-debian
+  variables:
+    PASSBOLT_COMPONENT: testing
     NIGHTLY: "true"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
 
-debian-stable:
-  extends: .publish
+publish-debian-stable:
+  extends: .publish-debian
   variables:
-    DISTRIBUTION: buster
     PASSBOLT_COMPONENT: stable
-    PREFIX: $PASSBOLT_FLAVOUR/debian
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
 
-ubuntu-testing:
-  extends: .publish
+.publish-ubuntu:
+  extends: .publish-apt
   variables:
     DISTRIBUTION: focal
+    PREFIX: $PASSBOLT_FLAVOUR/ubuntu
+  needs:
+    - job: "ubuntu-2004-runtime"
+    - job: "ubuntu-2004-break"
+    - job: "ubuntu-2004-purge"
+    - job: "ubuntu-2004-fs"
+    - job: "ubuntu-2204-runtime"
+    - job: "ubuntu-2204-break"
+    - job: "ubuntu-2204-purge"
+    - job: "ubuntu-2204-fs"
+    - job: "build-debian"
+
+publish-ubuntu-testing:
+  extends: .publish-ubuntu
+  variables:
     PASSBOLT_COMPONENT: testing
     PREFIX: $PASSBOLT_FLAVOUR/ubuntu
     NIGHTLY: "true"
@@ -103,12 +130,10 @@ ubuntu-testing:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: on_success
 
-ubuntu-stable:
-  extends: .publish
+publish-ubuntu-stable:
+  extends: .publish-ubuntu
   variables:
-    DISTRIBUTION: focal
     PASSBOLT_COMPONENT: stable
-    PREFIX: $PASSBOLT_FLAVOUR/ubuntu
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /publish-package/ && $CI_COMMIT_BRANCH == "release"'
       when: on_success
