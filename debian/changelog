@@ -1,3 +1,8 @@
+passbolt-ce-server (3.8.0-2) buster; urgency=medium
+  * PB-21411 remove access_log configuration from location block    
+
+  -- Daniel Del Rio <daniel@passbolt.com>  Fri, 11 Nov 2022 14:05:00 +0000
+
 passbolt-ce-server (3.8.0-1) buster; urgency=medium
   * PB-19192: As an administrator, I want to manage SMTP settings in the administration workspace
   * PB-19151: As a user, I want to use passbolt with the Solarized light theme

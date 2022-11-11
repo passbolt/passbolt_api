@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* [3.8.0-2] Fri, 11 Nov 2022 Daniel Del Rio <daniel@passbolt.com>
+- PB-21411 remove access_log configuration from location block    
+
 * [3.8.0-1] Tue, 10 Nov 2022 Daniel Del Rio <daniel@passbolt.com>
 - PB-19192: As an administrator, I want to manage SMTP settings in the administration workspace
 - PB-19151: As a user, I want to use passbolt with the Solarized light theme
