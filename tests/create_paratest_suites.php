@@ -39,6 +39,7 @@ $testSuites = ['<testsuites>'];
 $count = 0;
 for ($i = 0; $i < $numberOfSuites; $i++) {
     $testSuites[] = '<testsuite name="' . ($i + 1) . '">';
+    $testSuites[] = '<file>../../tests/Lib/ParatestHelperTest.php</file>'; // Add a test not using static fixtures
     for ($j = 0; $j < $numberOfTestFilesPerSuite; $j++) {
         $testFile = $testFiles[$i * $numberOfTestFilesPerSuite + $j] ?? null;
         if (!isset($testFile)) {
