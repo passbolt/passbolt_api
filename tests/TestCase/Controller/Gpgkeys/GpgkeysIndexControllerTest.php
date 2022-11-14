@@ -35,7 +35,7 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 
     public function testGpgkeysIndexSuccess()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/gpgkeys.json');
         $this->assertSuccess();
         $this->assertGreaterThan(20, count($this->_responseJsonBody));
@@ -53,7 +53,7 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
         $Gpgkeys->save($gpgkey);
 
         // Find the keys modified since then
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/gpgkeys.json?filter[modified-after]=' . $t->toUnixString());
         $this->assertSuccess();
         $this->assertCount(1, $this->_responseJsonBody);
@@ -69,7 +69,7 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
         $Gpgkeys->save($gpgkey);
 
         // Find the keys deleted then
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/gpgkeys.json?filter[is-deleted]=1');
         $this->assertSuccess();
         $this->assertCount(1, $this->_responseJsonBody);
