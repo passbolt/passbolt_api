@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Log\Test\TestCase\Controller\Resources;
 
+use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
@@ -94,8 +95,11 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesUpdateSuccessWithoutSecrets()
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resourceId = $resource->get('id');
+        $this->logInAs($user);
+
         $resource = [
             'id' => $resourceId,
             'name' => 'updated name',
@@ -110,7 +114,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         $this->assertOneActionLog();
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('ResourcesUpdate.update'),
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->get('id'),
             'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
@@ -134,6 +138,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         $bettyId = UuidFactory::uuid('user.id.betty');
         $carolId = UuidFactory::uuid('user.id.carol');
         $dameId = UuidFactory::uuid('user.id.dame');
+
         $resource = [
             'id' => UuidFactory::uuid('resource.id.apache'),
             'name' => 'updated name',
@@ -184,8 +189,11 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesDeleteSuccess()
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resourceId = $resource->id;
+        $this->logInAs($user);
+
         $this->deleteJson("/resources/$resourceId.json");
         $this->assertSuccess();
 
@@ -194,7 +202,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('ResourcesDelete.delete'),
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Mobile\Test\TestCase\Controller\Transfers;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\AvatarsModelTrait;
@@ -56,14 +57,17 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
 
     public function testMobileTransfersUpdateController_Success()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = UserFactory::make()->user()->persist();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
             'current_page' => 1,
         ];
-        $this->authenticateAs('ada');
+        $this->logInAs($user);
+
         $this->postJson("/mobile/transfers/$id.json", $data);
+
         $this->assertSuccess();
         $this->assertTransferAttributes($this->_responseJsonBody);
         $this->assertFalse(isset($this->_responseJsonBody->authentication_token));
@@ -72,14 +76,17 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
 
     public function testMobileTransfersUpdateController_SuccessWithContainAvatar()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = UserFactory::make()->user()->persist();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
             'current_page' => 1,
         ];
-        $this->authenticateAs('ada');
+        $this->logInAs($user);
+
         $this->postJson("/mobile/transfers/$id.json?contain[user.profile]=1", $data);
+
         $this->assertSuccess();
         $this->assertTransferAttributes($this->_responseJsonBody);
         $this->assertFalse(isset($this->_responseJsonBody->authentication_token));
@@ -90,46 +97,58 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
 
     public function testMobileTransfersUpdateController_ErrorNoData()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = UserFactory::make()->user()->persist();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
-        $this->authenticateAs('ada');
+        $this->logInAs($user);
+
         $this->postJson("/mobile/transfers/$id.json", []);
+
         $this->assertError(400);
     }
 
     public function testMobileTransfersUpdateController_ErrorTransferDoesNotBelongToUser()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = UserFactory::make()->user()->persist();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
             'current_page' => 1,
         ];
-        $this->authenticateAs('betty');
+        $this->logInAsUser(); // Login with another user.
+
         $this->postJson("/mobile/transfers/$id.json", $data);
+
         $this->assertError(403);
     }
 
     public function testMobileTransfersUpdateController_ErrorAuthDoesNotBelongToUser()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = UserFactory::make()->user()->persist();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
             'current_page' => 1,
         ];
-        $this->authenticateAs('betty');
+        $this->logInAsUser(); // Login with another user.
+
         $this->postJson("/mobile/transfers/$id.json", $data);
+
         $this->assertError(403);
     }
 
     public function testMobileTransfersUpdateController_ErrorEmptyData()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = UserFactory::make()->user()->persist();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
         $data = [];
-        $this->authenticateAs('ada');
+        $this->logInAs($user);
+
         $this->postJson("/mobile/transfers/$id.json", $data);
+
         $this->assertError(400);
     }
 
@@ -171,14 +190,15 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
 
     public function testMobileTransfersUpdateController_ErrorTransferForbidden_TokenExpired()
     {
+        $user = UserFactory::make()->user()->persist();
         $transfer = $this->insertTransferFixture([
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'current_page' => 1,
             'status' => Transfer::TRANSFER_STATUS_IN_PROGRESS,
             'total_pages' => 2,
             'hash' => Security::hash('test', 'sha512', true),
             'authentication_token' => [
-                'user_id' => UuidFactory::uuid('user.id.ada'),
+                'user_id' => $user->id,
                 'token' => UuidFactory::uuid(),
                 'active' => true,
                 'type' => AuthenticationToken::TYPE_MOBILE_TRANSFER,
@@ -190,21 +210,24 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
             'current_page' => 1,
         ];
-        $this->authenticateAs('ada');
+        $this->logInAs($user);
+
         $this->postJson("/mobile/transfers/$id.json", $data);
+
         $this->assertError(403);
     }
 
     public function testMobileTransfersUpdateController_ErrorTransferForbidden_TokenWrongType()
     {
+        $user = UserFactory::make()->user()->persist();
         $transfer = $this->insertTransferFixture([
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'current_page' => 1,
             'status' => Transfer::TRANSFER_STATUS_IN_PROGRESS,
             'total_pages' => 2,
             'hash' => Security::hash('test', 'sha512', true),
             'authentication_token' => [
-                'user_id' => UuidFactory::uuid('user.id.ada'),
+                'user_id' => $user->id,
                 'token' => UuidFactory::uuid(),
                 'active' => true,
                 'type' => AuthenticationToken::TYPE_RECOVER,
@@ -216,24 +239,30 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
             'current_page' => 1,
         ];
-        $this->authenticateAs('ada');
+        $this->logInAs($user);
+
         $this->postJson("/mobile/transfers/$id.json", $data);
+
         $this->assertError(403);
     }
 
-    // No session but with auth token instead
-
+    /**
+     * No session but with auth token instead.
+     */
     public function testMobileTransfersUpdateController_NoSession_Success()
     {
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer());
+        $user = UserFactory::make()->user()->persist();
+        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
         $id = $transfer->id;
         $token = $transfer->authentication_token->token;
         $data = [
             'status' => Transfer::TRANSFER_STATUS_COMPLETE,
             'current_page' => 1,
         ];
-        $this->authenticateAs('ada');
+        $this->logInAs($user);
+
         $this->postJson("/mobile/transfers/$id/$token.json", $data);
+
         $this->assertSuccess();
         $this->assertTransferAttributes($this->_responseJsonBody);
         $this->assertTrue(!isset($this->_responseJsonBody->authentication_token));

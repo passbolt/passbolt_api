@@ -56,7 +56,7 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
      */
     public function testNotificationOrgSettingsPostControllerNotJson()
     {
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->post('/settings/emails/notifications', ['send.comment.add' => false]);
         $this->assertResponseError('This is not a valid Ajax/Json request.');
     }
@@ -68,7 +68,7 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
      */
     public function testNotificationOrgSettingsPostControllerNotAllowed()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->postJson('/settings/emails/notifications.json?api-version=v2', ['send.comment.add' => false]);
         $this->assertResponseError('You are not allowed to access this location.');
     }
@@ -81,7 +81,7 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
     public function testNotificationOrgSettingsPostControllerInvalidValue()
     {
         $config = 'send_comment_add';
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->postJson('/settings/emails/notifications.json?api-version=v2', [$config => 'non_boolean_value']);
         $this->assertBadRequestError('The supplied email notification settings are not valid');
         $responseBody = $this->_responseJsonBody;
@@ -100,7 +100,7 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
             'show_comment' => false,
         ];
         $this->disableCsrfToken();
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->post('/settings/emails/notifications.json?api-version=v2', $cases);
         $this->assertResponseCode(403);
     }
@@ -132,7 +132,7 @@ class NotificationOrgSettingsPostControllerTest extends AppIntegrationTestCase
             'send_group_manager_update' => false,
         ];
 
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->postJson('/settings/emails/notifications.json?api-version=v2', $cases);
         $this->assertResponseSuccess();
 

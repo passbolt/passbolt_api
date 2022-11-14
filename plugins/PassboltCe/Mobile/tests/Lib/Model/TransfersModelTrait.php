@@ -66,7 +66,7 @@ trait TransfersModelTrait
 
     /**
      * Create a transfer fixture
-     * The transfer data must passe a default validation.
+     * The transfer data must pass a default validation.
      *
      * @param array|null $data Custom data that will be merged with the default dummy comment.
      * @return Transfer transfer entity
