@@ -89,7 +89,7 @@ class EmailConfigurationFormTest extends TestCase
             ['password', "passwordwith'"],
             ['port', '123'],
             ['port', 123],
-            ['tls', 1],
+            ['tls', true],
             ['tls', null],
         ];
     }
@@ -97,15 +97,18 @@ class EmailConfigurationFormTest extends TestCase
     public function data_For_Tls_Mapping(): array
     {
         return [
-            [null, null],
-            [1, 1],
-            ['1', '1'],
+            [1, true],
+            ['1', true],
             [true, true],
             [false, null],
+            ['true', true],
+            [null, null],
             [0, null],
             ['0', null],
-            ['true', 'true'],
-            ['foo', 'foo'],
+            ['false', null],
+            ['foo', null],
+            [2, null],
+            [new \StdClass(), null],
         ];
     }
 
@@ -119,10 +122,6 @@ class EmailConfigurationFormTest extends TestCase
             ['port', 'abc'],
             ['port', 0],
             ['port', 1.2],
-            ['tls', 2],
-            ['tls', 'true'],
-            ['tls', 'false'],
-            ['tls', 'foo'],
         ];
     }
 }

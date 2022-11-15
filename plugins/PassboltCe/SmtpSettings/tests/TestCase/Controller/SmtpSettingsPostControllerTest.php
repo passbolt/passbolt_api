@@ -50,7 +50,7 @@ class SmtpSettingsPostControllerTest extends AppIntegrationTestCase
             ],
             ['source' => 'db']
         );
-        $expectedData['tls'] = '1';
+        $expectedData['tls'] = true;
 
         $this->assertSame($expectedData, $retrievedData);
     }
