@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.8.1] - 2022-11-16
+### Fixed
+- PB-21438 As an administrator using docker, I should be able to access the smtp settings of my organization
+
 ## [3.8.0] - 2022-11-09
 ### Added
 - PB-19192: As an administrator, I want to manage SMTP settings in the administration workspace
@@ -1014,7 +1018,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.7.3...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.8.1...HEAD
+[3.8.1]: https://github.com/passbolt/passbolt_api/compare/v3.8.0...v3.8.1
+[3.8.0]: https://github.com/passbolt/passbolt_api/compare/v3.7.3...v3.8.0
 [3.7.3]: https://github.com/passbolt/passbolt_api/compare/v3.7.2...v3.7.3
 [3.7.2]: https://github.com/passbolt/passbolt_api/compare/v3.7.1...v3.7.2
 [3.7.1]: https://github.com/passbolt/passbolt_api/compare/v3.7.0...v3.7.1
