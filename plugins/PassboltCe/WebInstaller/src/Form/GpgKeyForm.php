@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Form;
 
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Utility\Hash;
@@ -114,7 +114,7 @@ class GpgKeyForm extends Form
         }
         try {
             $gpg->getKeyInfo($check);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             return false;
         }
 
@@ -136,7 +136,7 @@ class GpgKeyForm extends Form
         }
         try {
             $gpg->getKeyInfo($check);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             return false;
         }
 
@@ -155,7 +155,7 @@ class GpgKeyForm extends Form
         $gpg = OpenPGPBackendFactory::get();
         try {
             $keyInfo = $gpg->getKeyInfo($check);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             return false;
         }
 
@@ -181,7 +181,7 @@ class GpgKeyForm extends Form
             $fingerprint = $gpg->importKeyIntoKeyring($check);
             $gpg->setEncryptKeyFromFingerprint($fingerprint);
             $encryptedMessage = $gpg->encrypt($messageToEncrypt);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             return false;
         }
 
@@ -207,7 +207,7 @@ class GpgKeyForm extends Form
             $encryptedMessage = $gpg->encrypt($messageToEncrypt, true);
             $gpg->setDecryptKeyFromFingerprint($fingerprint, '');
             $decryptedMessage = $gpg->decrypt($encryptedMessage, true);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             return false;
         }
 
