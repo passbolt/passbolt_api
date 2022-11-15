@@ -19,7 +19,7 @@ namespace App\Controller\ResourceTypes;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
@@ -49,7 +49,7 @@ class ResourceTypesViewController extends AppController
         try {
             $this->loadModel('ResourceTypes');
             $resourceType = $this->ResourceTypes->get($id);
-        } catch (Exception $exception) {
+        } catch (CakeException $exception) {
             throw new NotFoundException(__('The resource type does not exist.'));
         }
 

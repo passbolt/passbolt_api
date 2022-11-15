@@ -21,7 +21,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 
 class KeyringInitCommand extends PassboltCommand
 {
@@ -50,18 +50,18 @@ class KeyringInitCommand extends PassboltCommand
         try {
             $filePath = Configure::read('passbolt.gpg.serverKey.private');
             if (!file_exists($filePath)) {
-                throw new Exception(__('The file does not exist: {0}', $filePath));
+                throw new CakeException(__('The file does not exist: {0}', $filePath));
             }
             $armoredKey = file_get_contents($filePath);
             if ($armoredKey === false) {
-                throw new Exception(__('Could not read the file: {0}', $filePath));
+                throw new CakeException(__('Could not read the file: {0}', $filePath));
             }
             // Import the private key in the OpenPGP keyring
             $gpg = OpenPGPBackendFactory::get();
 
             $io->out('Importing ' . $filePath);
             $gpg->importKeyIntoKeyring($armoredKey);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->error($e->getMessage(), $io);
             $this->error('Could not import the server OpenPGP key into the keyring.', $io);
 

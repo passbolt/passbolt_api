@@ -19,7 +19,7 @@ namespace App\Model\Validation\Fingerprint;
 
 use App\Model\Validation\PassboltValidationRule;
 use App\Service\OpenPGP\PublicKeyValidationService;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 
 class IsMatchingKeyFingerprintValidationRule extends PassboltValidationRule
 {
@@ -45,7 +45,7 @@ class IsMatchingKeyFingerprintValidationRule extends PassboltValidationRule
         }
         try {
             $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->setErrorMessage($e->getMessage());
 
             return false;

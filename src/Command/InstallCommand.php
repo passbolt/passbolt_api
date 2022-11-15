@@ -23,7 +23,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
@@ -319,27 +319,27 @@ class InstallCommand extends PassboltCommand
             // Make sure the baseline config files are present
             $checks = Healthchecks::configFiles();
             if (!$checks['configFile']['app']) {
-                throw new Exception(__('The application config file is missing in {0}.', CONFIG));
+                throw new CakeException(__('The application config file is missing in {0}.', CONFIG));
             }
 
             // Check application url config
             $checks = Healthchecks::core();
             if (!$checks['core']['fullBaseUrl'] && !$checks['core']['validFullBaseUrl']) {
                 $msg = __('The fullBaseUrl is not set or not valid. {0}', $checks['core']['info']['fullBaseUrl']);
-                throw new Exception($msg);
+                throw new CakeException($msg);
             }
 
             // Check that a GPG configuration id is provided
             $checks = Healthchecks::gpg();
             if (!$checks['gpg']['gpgKey'] || !$checks['gpg']['gpgKeyPublic'] || !$checks['gpg']['gpgKeyPrivate']) {
-                throw new Exception(__('The GnuPG config for the server is not available or incomplete'));
+                throw new CakeException(__('The GnuPG config for the server is not available or incomplete'));
             }
             // Check if keyring is present and writable
             if (!$checks['gpg']['gpgHome']) {
-                throw new Exception(__('The OpenPGP keyring location is not set.'));
+                throw new CakeException(__('The OpenPGP keyring location is not set.'));
             }
             if (!$checks['gpg']['gpgHomeWritable']) {
-                throw new Exception(__('The OpenPGP keyring location is not writable.'));
+                throw new CakeException(__('The OpenPGP keyring location is not writable.'));
             }
 
             // In production don't accept default GPG server key
@@ -349,29 +349,29 @@ class InstallCommand extends PassboltCommand
                     $msg .= ' ' . __('Please change the values of passbolt.gpg.server in config/passbolt.php.');
                     $msg .= ' ' . __('If you do not have yet a server key, please generate one.');
                     $msg .= ' ' . __('Take a look at the install documentation for more information.');
-                    throw new Exception($msg);
+                    throw new CakeException($msg);
                 }
             }
 
             // Check that there is a public and private key found at the given path
             if (!$checks['gpg']['gpgKeyPublicReadable']) {
                 $msg = 'No public key found at the given path {0}';
-                throw new Exception(__($msg, Configure::read('GPG.serverKey.public')));
+                throw new CakeException(__($msg, Configure::read('GPG.serverKey.public')));
             }
             if (!$checks['gpg']['gpgKeyPrivateReadable']) {
                 $msg = 'No private key found at the given path {0}';
-                throw new Exception(__($msg, Configure::read('GPG.serverKey.private')));
+                throw new CakeException(__($msg, Configure::read('GPG.serverKey.private')));
             }
 
             // Check that the public and private key match the fingerprint
             if (!$checks['gpg']['gpgKeyPrivateFingerprint'] || !$checks['gpg']['gpgKeyPublicFingerprint']) {
                 $msg = __('The server key fingerprint does not match the fingerprint mentioned in config/passbolt.php');
-                throw new Exception($msg);
+                throw new CakeException($msg);
             }
             if (!$checks['gpg']['gpgKeyPublicEmail']) {
-                throw new Exception(__('The server public key should have an email id.'));
+                throw new CakeException(__('The server public key should have an email id.'));
             }
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->error($e->getMessage(), $io);
             $this->error(__('Please run ./bin/cake passbolt healthcheck for more information and help.'), $io);
 

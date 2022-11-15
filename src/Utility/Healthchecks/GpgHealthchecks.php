@@ -21,7 +21,7 @@ use App\Model\Rule\Gpgkeys\GopengpgFormatRule;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\InternalErrorException;
 
 class GpgHealthchecks
@@ -244,7 +244,7 @@ class GpgHealthchecks
                 $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
                 $_gpg->encrypt($messageToEncrypt);
                 $checks['gpg']['canEncrypt'] = true;
-            } catch (Exception $e) {
+            } catch (CakeException $e) {
                 $checks['gpg']['canEncrypt'] = false;
             }
         }
@@ -279,7 +279,7 @@ class GpgHealthchecks
                 $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
                 $_gpg->encrypt($messageToEncrypt, true);
                 $checks['gpg']['canEncryptSign'] = true;
-            } catch (Exception $e) {
+            } catch (CakeException $e) {
                 $checks['gpg']['canEncryptSign'] = false;
             }
         }
@@ -319,7 +319,7 @@ class GpgHealthchecks
                     if ($decryptedMessage === $messageToEncrypt) {
                         $checks['gpg']['canDecrypt'] = true;
                     }
-                } catch (Exception $e) {
+                } catch (CakeException $e) {
                 }
             }
         }
@@ -359,7 +359,7 @@ class GpgHealthchecks
                 if ($decryptedMessage2 === $messageToEncrypt) {
                     $checks['gpg']['canDecryptVerify'] = true;
                 }
-            } catch (Exception $e) {
+            } catch (CakeException $e) {
             }
         }
 
@@ -393,7 +393,7 @@ class GpgHealthchecks
             try {
                 $_gpg->sign($messageToEncrypt);
                 $checks['gpg']['canSign'] = true;
-            } catch (Exception $e) {
+            } catch (CakeException $e) {
                 $checks['gpg']['canSign'] = false;
             }
         }
@@ -432,9 +432,9 @@ class GpgHealthchecks
                     $_gpg->setVerifyKeyFromFingerprint($fingerprint);
                     $_gpg->verify($signedMessage);
                     $checks['gpg']['canVerify'] = true;
-                } catch (Exception $e) {
+                } catch (CakeException $e) {
                 }
-            } catch (Exception $e) {
+            } catch (CakeException $e) {
             }
         }
 

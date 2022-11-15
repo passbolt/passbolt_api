@@ -29,7 +29,7 @@ use App\Utility\Healthchecks\Healthcheck;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
 
 class DatacheckCommand extends PassboltCommand
@@ -174,7 +174,7 @@ class DatacheckCommand extends PassboltCommand
      * @param string $msg message
      * @param string $case pass or fail
      * @param int $padding how many space char in front
-     * @throws \Cake\Core\Exception\Exception case is not defined or missing
+     * @throws \Cake\Core\Exception\CakeException case is not defined or missing
      * @return void
      */
     protected function display(string $msg, string $case, int $padding = 0)
@@ -198,7 +198,7 @@ class DatacheckCommand extends PassboltCommand
                 $msg = $pad . ' <info>[' . __('HELP') . ']</info> ' . $msg;
                 break;
             default:
-                throw new Exception('Task output case not defined: ' . $case . ' ' . $msg);
+                throw new CakeException('Task output case not defined: ' . $case . ' ' . $msg);
         }
         $this->io->out($msg);
     }
