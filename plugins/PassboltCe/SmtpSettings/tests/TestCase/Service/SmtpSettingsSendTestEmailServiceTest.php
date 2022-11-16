@@ -64,6 +64,14 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         );
     }
 
+    public function testSmtpSettingsSendTestEmailService_TLS_String_True_Should_Map_To_Boolean_True()
+    {
+        $recipient = 'test@test.test';
+        $data = $this->getSmtpSettingsData('tls', 'true') + [$this->service::EMAIL_TEST_TO => $recipient];
+        $settings = $this->service->validateAndGetSmtpSettings($data);
+        $this->assertSame(true, $settings['tls']);
+    }
+
     public function testSmtpSettingsSendTestEmailService_Email_Test_To_Missing()
     {
         $data = $this->getSmtpSettingsData();
