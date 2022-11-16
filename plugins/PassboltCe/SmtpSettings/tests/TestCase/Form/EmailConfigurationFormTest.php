@@ -80,10 +80,23 @@ class EmailConfigurationFormTest extends TestCase
         $this->assertArrayHasKey($failingField, $this->form->getErrors());
     }
 
+    /**
+     * @dataProvider data_Invalid
+     * @dataProvider data_Invalid_On_Update
+     */
+    public function testEmailConfigurationForm_InvalidFields_On_Update(string $failingField, $value)
+    {
+        $data = $this->getSmtpSettingsData($failingField, $value);
+        $result = $this->form->execute($data, ['validate' => 'update']);
+        $this->assertFalse($result);
+        $this->assertArrayHasKey($failingField, $this->form->getErrors());
+    }
+
     public function data_Valid_Field(): array
     {
         return [
             ['username', null],
+            ['sender_email', 'foo'],
             ['password', null],
             ['password', 'passwordwith"'],
             ['password', "passwordwith'"],
@@ -116,12 +129,18 @@ class EmailConfigurationFormTest extends TestCase
     {
         return [
             ['sender_name', ''],
-            ['sender_email', 'foo'],
             ['sender_email', ''],
             ['host', ''],
             ['port', 'abc'],
             ['port', 0],
             ['port', 1.2],
+        ];
+    }
+
+    public function data_Invalid_On_Update(): array
+    {
+        return [
+            ['sender_email', 'foo'],
         ];
     }
 }
