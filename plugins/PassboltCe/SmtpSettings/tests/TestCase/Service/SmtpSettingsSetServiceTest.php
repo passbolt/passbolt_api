@@ -72,6 +72,19 @@ class SmtpSettingsSetServiceTest extends TestCase
         }
     }
 
+    public function testSmtpSettingsSetServiceTest_Valid_TLS_String_True_Should_Map_To_Boolean_True()
+    {
+        $this->gpgSetup();
+        $data = $this->getSmtpSettingsData('tls', 'true');
+
+        $settings = $this->service->saveSettings($data);
+
+        $this->assertInstanceOf(OrganizationSetting::class, $settings);
+        $this->assertSame(1, SmtpSettingFactory::count());
+        $decryptedSettings = $this->decryptSettings($settings);
+        $this->assertSame(true, $decryptedSettings['tls']);
+    }
+
     public function testSmtpSettingsSetServiceTest_Invalid()
     {
         $data = $this->getSmtpSettingsData('port', 'abc');

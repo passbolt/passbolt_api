@@ -54,7 +54,7 @@ class SmtpSettingsSendTestEmailService
      */
     public function sendTestEmail(array $smtpSettings): Mailer
     {
-        $this->validateSmtpSettings($smtpSettings);
+        $smtpSettings = $this->validateAndGetSmtpSettings($smtpSettings);
 
         $this->email = new Mailer('default');
         $this->setDebugTransport($smtpSettings);
@@ -98,10 +98,10 @@ class SmtpSettingsSendTestEmailService
 
     /**
      * @param array $data Data in the payload
-     * @return void
+     * @return array
      * @throws \App\Error\Exception\FormValidationException if the data passed do not validate the EmailConfigurationForm
      */
-    protected function validateSmtpSettings(array $data): void
+    public function validateAndGetSmtpSettings(array $data): array
     {
         $form = new EmailConfigurationForm();
         $form
@@ -111,6 +111,8 @@ class SmtpSettingsSendTestEmailService
         if (!$form->execute($data)) {
             throw new FormValidationException(__('Could not validate the smtp settings.'), $form);
         }
+
+        return (array)$form->getData();
     }
 
     /**
