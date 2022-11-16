@@ -104,11 +104,8 @@ class SmtpSettingsSendTestEmailService
     public function validateAndGetSmtpSettings(array $data): array
     {
         $form = new EmailConfigurationForm();
-        $form
-            ->getValidator()
-            ->requirePresence(self::EMAIL_TEST_TO, 'create', __('A test recipient is required.'));
 
-        if (!$form->execute($data)) {
+        if (!$form->execute($data, ['validate' => 'test'])) {
             throw new FormValidationException(__('Could not validate the smtp settings.'), $form);
         }
 
