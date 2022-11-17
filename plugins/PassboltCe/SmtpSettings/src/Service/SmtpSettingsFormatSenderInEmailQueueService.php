@@ -127,14 +127,18 @@ class SmtpSettingsFormatSenderInEmailQueueService
      */
     protected function isSenderConfigValid($fromEmail, $fromName): bool
     {
-        if (empty($fromEmail) || !is_string($fromEmail)) {
-            Log::error(__('Invalid sender email found in the SMTP settings in the database: {0}.', $fromEmail));
-
+        if (empty($fromEmail)) {
+            Log::error(__('The sender email should not be empty.'));
+            return false;
+        } else if (!is_string($fromEmail)) {
+            Log::error(__('The sender email should be a valid BMP-UTF8 string.'));
             return false;
         }
-        if (empty($fromName) || !is_string($fromName)) {
-            Log::error(__('Invalid sender name found in the SMTP settings in the database: {0}.', $fromName));
-
+        else if (empty($fromName)) {
+            Log::error(__('The sender name should not be empty.'));
+            return false;
+        } else if (!is_string($fromName)) {
+            Log::error(__('The sender name should be a valid BMP-UTF8 string.'));
             return false;
         }
 
