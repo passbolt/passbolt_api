@@ -20,6 +20,7 @@ use Cake\Core\Configure;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
 class EmailConfigurationForm extends Form
 {
@@ -58,12 +59,7 @@ class EmailConfigurationForm extends Form
         $validator
             ->requirePresence('sender_email', 'create', __('A sender email is required.'))
             ->notEmptyString('sender_email', __('The sender email should not be empty.'))
-            ->utf8('sender_email', __('The sender email should be a valid BMP-UTF8 string.'))
-            ->email(
-                'sender_email',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The sender email should be a valid email address.')
-            );
+            ->utf8('sender_email', __('The sender email should be a valid BMP-UTF8 string.'));
 
         $validator
             ->requirePresence('host', 'create', __('A host name is required.'))
@@ -102,6 +98,49 @@ class EmailConfigurationForm extends Form
                 Configure::read('passbolt.email.validate.mx'),
                 __('The test email should be a valid email address.')
             );
+
+        return $validator;
+    }
+
+    /**
+     * - Default validation rules
+     * - Sender email should be a valid email
+     *
+     * @see SmtpSettingsSetService
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
+     */
+    public function validationUpdate(Validator $validator): Validator
+    {
+        $this->validationDefault($validator);
+
+        $validator->email(
+            'sender_email',
+            Configure::read('passbolt.email.validate.mx'),
+            __('The sender email should be a valid email address.')
+        );
+
+        return $validator;
+    }
+
+    /**
+     * - Default validation rules
+     * - Sender email should be a valid email
+     * - Test email recipient should be a valid email
+     *
+     * @see SmtpSettingsSetService
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
+     */
+    public function validationSendTestEmail(Validator $validator): Validator
+    {
+        $this->validationUpdate($validator);
+
+        $validator->requirePresence(
+            SmtpSettingsSendTestEmailService::EMAIL_TEST_TO,
+            'create',
+            __('A test recipient is required.')
+        );
 
         return $validator;
     }

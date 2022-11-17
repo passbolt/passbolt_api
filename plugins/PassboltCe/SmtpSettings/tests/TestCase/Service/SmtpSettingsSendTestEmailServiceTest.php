@@ -64,9 +64,24 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         );
     }
 
+    public function testSmtpSettingsSendTestEmailService_TLS_String_True_Should_Map_To_Boolean_True()
+    {
+        $recipient = 'test@test.test';
+        $data = $this->getSmtpSettingsData('tls', 'true') + [$this->service::EMAIL_TEST_TO => $recipient];
+        $settings = $this->service->validateAndGetSmtpSettings($data);
+        $this->assertSame(true, $settings['tls']);
+    }
+
     public function testSmtpSettingsSendTestEmailService_Email_Test_To_Missing()
     {
         $data = $this->getSmtpSettingsData();
+        $this->expectException(FormValidationException::class);
+        $this->service->sendTestEmail($data);
+    }
+
+    public function testSmtpSettingsSendTestEmailService_Sender_Email_Not_Valid_Should_Fail()
+    {
+        $data = $this->getSmtpSettingsData('sender_email', 'foo@test') + ['email_test_to' => 'bar@test.test'];
         $this->expectException(FormValidationException::class);
         $this->service->sendTestEmail($data);
     }

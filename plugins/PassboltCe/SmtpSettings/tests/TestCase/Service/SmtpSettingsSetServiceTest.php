@@ -72,9 +72,34 @@ class SmtpSettingsSetServiceTest extends TestCase
         }
     }
 
+    public function testSmtpSettingsSetServiceTest_Valid_TLS_String_True_Should_Map_To_Boolean_True()
+    {
+        $this->gpgSetup();
+        $data = $this->getSmtpSettingsData('tls', 'true');
+
+        $settings = $this->service->saveSettings($data);
+
+        $this->assertInstanceOf(OrganizationSetting::class, $settings);
+        $this->assertSame(1, SmtpSettingFactory::count());
+        $decryptedSettings = $this->decryptSettings($settings);
+        $this->assertSame(true, $decryptedSettings['tls']);
+    }
+
     public function testSmtpSettingsSetServiceTest_Invalid()
     {
         $data = $this->getSmtpSettingsData('port', 'abc');
+
+        $this->expectException(FormValidationException::class);
+        $this->expectExceptionMessage('Could not validate the smtp settings.');
+        $this->service->saveSettings($data);
+    }
+
+    /**
+     * When setting the SMTP settings, the sender email should be valid
+     */
+    public function testSmtpSettingsSetServiceTest_Sender_Email_Invalid_Should_Fail()
+    {
+        $data = $this->getSmtpSettingsData('sender_email', 'abc');
 
         $this->expectException(FormValidationException::class);
         $this->expectExceptionMessage('Could not validate the smtp settings.');
