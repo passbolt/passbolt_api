@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.8.1] - 2022-11-17
+### Fixed
+- PB-21478 As an administrator, I should be able to edit SMTP settings having a sender email not being a valid email
+- PB-21438 As an administrator using docker, I should be able to access the SMTP settings of my organization
+- PB-21486 As an administrator, I can define the SMTP authentication method via the SMTP admin workspace
+- PB-21481 As an administrator, I want emails to be sent with the sender settings defined in database, if defined in the database
+
 ## [3.8.0] - 2022-11-09
 ### Added
 - PB-19192: As an administrator, I want to manage SMTP settings in the administration workspace
@@ -1014,7 +1021,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.7.3...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.8.1...HEAD
+[3.8.1]: https://github.com/passbolt/passbolt_api/compare/v3.8.0...v3.8.1
+[3.8.0]: https://github.com/passbolt/passbolt_api/compare/v3.7.3...v3.8.0
 [3.7.3]: https://github.com/passbolt/passbolt_api/compare/v3.7.2...v3.7.3
 [3.7.2]: https://github.com/passbolt/passbolt_api/compare/v3.7.1...v3.7.2
 [3.7.1]: https://github.com/passbolt/passbolt_api/compare/v3.7.0...v3.7.1

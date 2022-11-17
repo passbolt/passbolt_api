@@ -65,7 +65,7 @@ class SmtpSettingsSetService
         $data = $this->sanitizeData($data, self::SMTP_SETTINGS_ALLOWED_FIELDS);
 
         $form = new EmailConfigurationForm();
-        if (!$form->execute($data)) {
+        if (!$form->execute($data, ['validate' => 'update'])) {
             throw new FormValidationException(__('Could not validate the smtp settings.'), $form);
         }
 

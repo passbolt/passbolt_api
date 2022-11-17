@@ -107,6 +107,18 @@ class SmtpSettingsGetServiceTest extends TestCase
         $this->assertDBSettingsHaveTheRightKeys($settings);
     }
 
+    public function testSmtpSettingsGetServiceTest_Valid_DB_Source_With_Invalid_Sender_Email_Should_Not_Fail()
+    {
+        $data = $this->getSmtpSettingsData('sender_email', 'foo');
+        $this->encryptAndPersistSmtpSettings($data);
+
+        $settings = $this->service->getSettings();
+
+        $this->assertSame('db', $settings['source']);
+        unset($settings['source']);
+        $this->assertDBSettingsHaveTheRightKeys($settings);
+    }
+
     public function testSmtpSettingsGetServiceTest_Valid_Integration_With_SetService()
     {
         $this->gpgSetup();
