@@ -46,6 +46,6 @@ class Plugin extends BasePlugin
      */
     public function formatSenderInEmailQueue(): void
     {
-        (new SmtpSettingsFormatSenderInEmailQueueService())->formatSender();
+        (new SmtpSettingsFormatSenderInEmailQueueService())->attachBeforeFindOnEmailQueueTables();
     }
 }

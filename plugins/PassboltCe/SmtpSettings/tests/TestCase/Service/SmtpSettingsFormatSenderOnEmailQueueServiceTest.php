@@ -22,7 +22,6 @@ use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use EmailQueue\Model\Table\EmailQueueTable;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsFormatSenderInEmailQueueService;
@@ -64,10 +63,10 @@ class SmtpSettingsFormatSenderOnEmailQueueServiceTest extends TestCase
         ])->persist();
 
         $transport = new SmtpTransport();
-        $this->service->formatSender($transport);
+        $this->service->attachBeforeFindOnEmailQueueTables($transport);
 
         // Assert that no formatting is made when retrieving emails
-        $email = $this->service->getEmailQueueTable()->find()->firstOrFail();
+        $email = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue')->find()->firstOrFail();
         $this->assertSame($fromEmail, $email->get('from_email'));
         $this->assertSame($fromName, $email->get('from_name'));
     }
@@ -85,10 +84,13 @@ class SmtpSettingsFormatSenderOnEmailQueueServiceTest extends TestCase
         $this->assertSame(1, OrganizationSettingFactory::count());
 
         $transport = new SmtpTransport();
-        $this->service->formatSender($transport);
+        $this->service->attachBeforeFindOnEmailQueueTables($transport);
 
         // Assert that the settings in the DB are mapped onto the email "from" fields
-        $email = $this->service->getEmailQueueTable()->find()->firstOrFail();
+        $email = TableRegistry::getTableLocator()->get('EmailQueue')->find()->firstOrFail();
+        $this->assertSame($fromEmail, $email->get('from_email'));
+        $this->assertSame($fromName, $email->get('from_name'));
+        $email = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue')->find()->firstOrFail();
         $this->assertSame($fromEmail, $email->get('from_email'));
         $this->assertSame($fromName, $email->get('from_name'));
 
@@ -97,17 +99,5 @@ class SmtpSettingsFormatSenderOnEmailQueueServiceTest extends TestCase
         $user = TableRegistry::getTableLocator()->get('Users')->find()->firstOrFail();
         $this->assertNull($user->get('from_email'));
         $this->assertNull($user->get('from_name'));
-    }
-
-    /**
-     * This is for documentation-sake: the service should apply the beforeFind on
-     * the correct table in the registry
-     */
-    public function testSmtpSettingsFormatSenderOnEmailQueueService_Target_Correct_Table()
-    {
-        $this->assertSame(
-            TableRegistry::getTableLocator()->get('EmailQueue', ['className' => EmailQueueTable::class]),
-            $this->service->getEmailQueueTable()
-        );
     }
 }

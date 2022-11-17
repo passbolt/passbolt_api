@@ -22,6 +22,7 @@ use Cake\Log\Log;
 use Cake\Mailer\AbstractTransport;
 use Cake\Mailer\TransportFactory;
 use Cake\ORM\Query;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use EmailQueue\Model\Table\EmailQueueTable;
 use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
@@ -35,13 +36,32 @@ class SmtpSettingsFormatSenderInEmailQueueService
      * database settings.
      * Otherwise, the sender is defined by the file/env configuration
      *
+     * We attach the event to both EmailQueue tables in the registry, as it is used
+     * by the vendor, and in Passbolt under different aliases
+     *
      * @param ?\Cake\Mailer\AbstractTransport $transport Transport
      * @return void
      */
-    public function formatSender(?AbstractTransport $transport = null): void
+    public function attachBeforeFindOnEmailQueueTables(?AbstractTransport $transport = null): void
     {
-        $this->getEmailQueueTable()
-            ->getEventManager()
+        $this->attachBeforeFind(
+            TableRegistry::getTableLocator()->get('EmailQueue', ['className' => EmailQueueTable::class]),
+            $transport
+        );
+        $this->attachBeforeFind(
+            TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue'),
+            $transport
+        );
+    }
+
+    /**
+     * @param \Cake\ORM\Table $table Table to attach the event on
+     * @param \Cake\Mailer\AbstractTransport|null $transport Transport
+     * @return void
+     */
+    protected function attachBeforeFind(Table $table, ?AbstractTransport $transport = null): void
+    {
+        $table->getEventManager()
             ->on('Model.beforeFind', function (EventInterface $event, Query $query) use ($transport) {
                 if (is_null($transport)) {
                     $transport = TransportFactory::get('default');
@@ -73,19 +93,6 @@ class SmtpSettingsFormatSenderInEmailQueueService
         $this->formatEmailSender($query, $fromEmail, $fromName);
 
         return $query;
-    }
-
-    /**
-     * Ensure that we target the same table as the one in the EmailQueue vendor.
-     *
-     * @return \EmailQueue\Model\Table\EmailQueueTable
-     */
-    public function getEmailQueueTable(): EmailQueueTable
-    {
-        /** @var \EmailQueue\Model\Table\EmailQueueTable $table */
-        $table = TableRegistry::getTableLocator()->get('EmailQueue', ['className' => EmailQueueTable::class]);
-
-        return $table;
     }
 
     /**
@@ -129,16 +136,19 @@ class SmtpSettingsFormatSenderInEmailQueueService
     {
         if (empty($fromEmail)) {
             Log::error(__('The sender email should not be empty.'));
+
             return false;
-        } else if (!is_string($fromEmail)) {
+        } elseif (!is_string($fromEmail)) {
             Log::error(__('The sender email should be a valid BMP-UTF8 string.'));
+
             return false;
-        }
-        else if (empty($fromName)) {
+        } elseif (empty($fromName)) {
             Log::error(__('The sender name should not be empty.'));
+
             return false;
-        } else if (!is_string($fromName)) {
+        } elseif (!is_string($fromName)) {
             Log::error(__('The sender name should be a valid BMP-UTF8 string.'));
+
             return false;
         }
 
