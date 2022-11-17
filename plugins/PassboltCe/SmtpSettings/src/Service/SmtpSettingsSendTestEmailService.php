@@ -105,7 +105,7 @@ class SmtpSettingsSendTestEmailService
     {
         $form = new EmailConfigurationForm();
 
-        if (!$form->execute($data, ['validate' => 'test'])) {
+        if (!$form->execute($data, ['validate' => 'sendTestEmail'])) {
             throw new FormValidationException(__('Could not validate the smtp settings.'), $form);
         }
 

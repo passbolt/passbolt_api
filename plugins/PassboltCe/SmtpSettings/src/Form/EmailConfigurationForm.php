@@ -132,7 +132,7 @@ class EmailConfigurationForm extends Form
      * @param \Cake\Validation\Validator $validator validator
      * @return \Cake\Validation\Validator
      */
-    public function validationTest(Validator $validator): Validator
+    public function validationSendTestEmail(Validator $validator): Validator
     {
         $this->validationUpdate($validator);
 
