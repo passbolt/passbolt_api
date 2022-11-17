@@ -2,9 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.8.1] - 2022-11-16
+## [3.8.1] - 2022-11-17
 ### Fixed
-- PB-21438 As an administrator using docker, I should be able to access the smtp settings of my organization
+- PB-21478 As an administrator, I should be able to edit SMTP settings having a sender email not being a valid email
+- PB-21438 As an administrator using docker, I should be able to access the SMTP settings of my organization
+- PB-21486 As an administrator, I can define the SMTP authentication method via the SMTP admin workspace
+- PB-21481 As an administrator, I want emails to be sent with the sender settings defined in database, if defined in the database
 
 ## [3.8.0] - 2022-11-09
 ### Added
