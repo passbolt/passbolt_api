@@ -20,6 +20,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
@@ -29,7 +30,10 @@ class HealthchecksTest extends AppIntegrationTestCase
     public function tearDown(): void
     {
         parent::tearDown();
+
         $this->disableFeaturePlugin('JwtAuthentication');
+
+        ConnectionManager::drop('healthcheck');
     }
 
     public function testHealthcheckApplication()
@@ -140,5 +144,45 @@ class HealthchecksTest extends AppIntegrationTestCase
         $check = Healthchecks::jwt();
         $attributes = ['isEnabled', 'keyPairValid',];
         $this->assertArrayHasAttributes($attributes, $check['jwt']);
+    }
+
+    public function testDatabase_DummyConnectionFails()
+    {
+        /** Create a dummy database connection in config. Make sure details are invalid. */
+        ConnectionManager::setConfig(
+            'healthcheck',
+            ['url' => 'mysql://foo:bar@localhost/invalid_database']
+        );
+
+        $check = Healthchecks::database('healthcheck');
+
+        $result = $check['database'];
+        $attributes = ['connect', 'supportedBackend', 'tablesCount', 'defaultContent'];
+        $this->assertArrayHasAttributes($attributes, $result);
+        /**
+         * Here in `connection` key we get connection error message.
+         * Example: "SQLSTATE[HY000] [2002] No such file or directory"
+         */
+        $this->assertTextContains('No such file or directory', $result['info']['connection']);
+        $this->assertFalse($result['connect']);
+        $this->assertTrue($result['supportedBackend']);
+        $this->assertFalse($result['defaultContent']);
+    }
+
+    public function testDatabase_NotSupportedBackend()
+    {
+        /** Create a database connection with invalid database driver. */
+        ConnectionManager::setConfig(
+            'healthcheck',
+            ['url' => 'sqlite://./tmp/healthcheck.sqlite']
+        );
+
+        $check = Healthchecks::database('healthcheck');
+
+        $result = $check['database'];
+        $attributes = ['connect', 'supportedBackend', 'tablesCount', 'defaultContent'];
+        $this->assertArrayHasAttributes($attributes, $result);
+        $this->assertFalse($result['supportedBackend']);
+        $this->assertFalse($result['defaultContent']);
     }
 }

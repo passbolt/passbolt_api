@@ -82,7 +82,7 @@ class Healthchecks
             $checks['application']['schema'] = !Migration::needMigration();
         } catch (\Exception $e) {
             // Cannot connect to the database
-            $checks['application']['schema'] = null;
+            $checks['application']['schema'] = false;
         }
         $robots = strpos(Configure::read('passbolt.meta.robots'), 'noindex');
         $checks['application']['robotsIndexDisabled'] = ($robots !== false);

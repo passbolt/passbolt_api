@@ -48,7 +48,7 @@ class DatabaseHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function canConnect(string $datasource, ?array $checks = []): array
+    private static function canConnect(string $datasource, ?array $checks = []): array
     {
         $checks = array_replace_recursive(
             [
@@ -65,11 +65,13 @@ class DatabaseHealthchecks
             $connection->connect();
             $checks['database']['connect'] = true;
         } catch (MissingConnectionException $connectionError) {
-            $errorMsg = $connectionError->getMessage();
+            $checks['database']['info']['connection'] = __('Database connection failed');
+
             if (method_exists($connectionError, 'getAttributes')) {
                 $attributes = $connectionError->getAttributes();
-                if (!empty($errorMsg)) {
-                    $checks['database']['info']['connection'] = $attributes['message'];
+
+                if (isset($attributes['reason'])) {
+                    $checks['database']['info']['connection'] = $attributes['reason'];
                 }
             }
         }
@@ -84,7 +86,7 @@ class DatabaseHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function supportedBackend(string $datasource, ?array $checks = []): array
+    private static function supportedBackend(string $datasource, ?array $checks = []): array
     {
         $checks['database']['supportedBackend'] = false;
         $connection = ConnectionManager::get($datasource);
@@ -103,7 +105,7 @@ class DatabaseHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function tableCount(string $datasource, ?array $checks = []): array
+    private static function tableCount(string $datasource, ?array $checks = []): array
     {
         $checks = array_replace_recursive(
             [
@@ -124,7 +126,7 @@ class DatabaseHealthchecks
                 $checks['database']['tablesCount'] = true;
                 $checks['database']['info']['tablesCount'] = count($tables);
             }
-        } catch (DatabaseException $connectionError) {
+        } catch (DatabaseException | MissingConnectionException $connectionError) {
         }
 
         return $checks;
@@ -137,14 +139,14 @@ class DatabaseHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function defaultContent(?array $checks = []): array
+    private static function defaultContent(?array $checks = []): array
     {
         $checks['database']['defaultContent'] = false;
         try {
             $roles = TableRegistry::getTableLocator()->get('Roles');
             $i = $roles->find('all')->count();
             $checks['database']['defaultContent'] = ($i > 3);
-        } catch (DatabaseException | \PDOException $e) {
+        } catch (DatabaseException | MissingConnectionException | \PDOException $e) {
         }
 
         return $checks;
