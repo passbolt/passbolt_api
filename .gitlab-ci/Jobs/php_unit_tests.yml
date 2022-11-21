@@ -29,7 +29,7 @@
 
 .postgres-template:
   services:
-    - registry.gitlab.com/passbolt/passbolt-ci-docker-images/postgres-12-alpine # should be DATABASE_ENGINE_VERSION
+    - $DATABASE_ENGINE_VERSION # should be DATABASE_ENGINE_VERSION
   # Postgres services variables
   variables:
     POSTGRES_DB: test
@@ -43,7 +43,7 @@
     DATASOURCES_TEST_DATABASE: $POSTGRES_DB
     DATASOURCES_TEST_USERNAME: $POSTGRES_USER
     DATASOURCES_TEST_PASSWORD: $POSTGRES_PASSWORD
-    DATASOURCES_TEST_HOST: postgres
+    DATASOURCES_TEST_HOST: 127.0.0.1
     DATASOURCES_DRIVER: Cake\Database\Driver\Postgres
     DATASOURCES_TEST_DRIVER: Cake\Database\Driver\Postgres
     DATASOURCES_DEFAULT_DRIVER: Cake\Database\Driver\Postgres
@@ -115,9 +115,9 @@ php7.4-mysql5.7:
 
 # TO BE REMOVED
 php7.4-postgres:
-  allow_failure: true
   variables:
     PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-12-alpine'
   extends:
     - .postgres-template
     - .test-template
@@ -125,7 +125,7 @@ php7.4-postgres:
 #php7.4-postgres12.11:
 #  variables:
 #    PHP_VERSION: "7.4"
-#    DATABASE_ENGINE_VERSION: "postgres:12.11"
+#    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-12-alpine'
 #  extends:
 #    - .postgres-template
 #    - .test-template
@@ -149,7 +149,7 @@ php7.3-mariadb10.3:
 #php7.4-postgres11.16:
 #  variables:
 #    PHP_VERSION: "7.4"
-#    DATABASE_ENGINE_VERSION: "postgres:11.16"
+#    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-11-alpine'
 #  extends:
 #    - .postgres-template
 #    - .test-template
@@ -171,7 +171,7 @@ php7.4-mariadb10.5:
 #php7.4-postgres13.7:
 #  variables:
 #    PHP_VERSION: "7.4"
-#    DATABASE_ENGINE_VERSION: "postgres:13.7"
+#    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-13-alpine'
 #  extends:
 #    - .postgres-template
 #    - .test-template
@@ -193,7 +193,7 @@ php7.4-mysql8:
 #php7.4-postgres12.11:
 #  variables:
 #    PHP_VERSION: "7.4"
-#    DATABASE_ENGINE_VERSION: "postgres:12.11"
+#    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-12-alpine'
 #  extends:
 #    - .postgres-template
 #    - .test-template
@@ -214,7 +214,7 @@ php8.1-mysql8:
 #php8.1-postgres14.3:
 #  variables:
 #    PHP_VERSION: "8.1"
-#    DATABASE_ENGINE_VERSION: "postgres:14.3"
+#    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-14-alpine'
 #  extends:
 #    - .postgres-template
 #    - .test-template
@@ -263,7 +263,7 @@ php8.0-mariadb8.0:
 #php8.0-postgres13.7:
 #  variables:
 #    PHP_VERSION: "8.0"
-#    DATABASE_ENGINE_VERSION: "postgres:13.7"
+#    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-13-alpine'
 #  extends:
 #    - .postgres-template
 #    - .test-template
