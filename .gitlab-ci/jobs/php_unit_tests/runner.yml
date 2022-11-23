@@ -16,6 +16,7 @@
     KUBERNETES_SERVICE_MEMORY_REQUEST: 3Gi
   services:
     - $CI_REGISTRY/dind:latest
+  allow_failure: true
   script:
     - apt-get update
     - apt-get install -y ca-certificates curl gnupg lsb-release
