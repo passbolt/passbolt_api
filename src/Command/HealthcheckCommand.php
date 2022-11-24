@@ -824,6 +824,18 @@ class HealthcheckCommand extends PassboltCommand
             $msg,
             __('It is recommended to set the SMTP Settings in the database through the administration section.')
         );
+
+        $arePluginEndpointsDisabled = $smtpSettingsCheck['areEndpointsDisabled'];
+        $this->warning(
+            $arePluginEndpointsDisabled,
+            __('The {0} plugin endpoints are disabled.', $pluginName),
+            __('The {0} plugin endpoints are enabled.', $pluginName),
+            [
+                __('It is recommended to disable the plugin endpoints.'),
+                __('Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true.'),
+                __('Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}.', CONFIG . 'passbolt.php'),
+            ]
+        );
     }
 
     /**

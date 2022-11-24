@@ -20,6 +20,7 @@ namespace Passbolt\SmtpSettings\Test\Lib;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\Filesystem\DirectoryUtility;
+use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Mailer\TransportFactory;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
@@ -118,5 +119,25 @@ trait SmtpSettingsTestTrait
         asort($expectedKeys);
 
         $this->assertEquals(array_values($expectedKeys), array_values($keys));
+    }
+
+    /**
+     * Sets the SMTP settings security flag to false
+     *
+     * @return void
+     */
+    public function enableSmtpSettingsEndpoints()
+    {
+        Configure::write('passbolt.security.smtpSettings.endpointsDisabled', false);
+    }
+
+    /**
+     * Sets the SMTP settings security flag to true
+     *
+     * @return void
+     */
+    public function disableSmtpSettingsEndpoints()
+    {
+        Configure::write('passbolt.security.smtpSettings.endpointsDisabled', true);
     }
 }
