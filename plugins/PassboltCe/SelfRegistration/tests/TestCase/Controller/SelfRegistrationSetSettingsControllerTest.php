@@ -41,7 +41,7 @@ class SelfRegistrationSetSettingsControllerTest extends AppIntegrationTestCase
         $this->postJson('/self-registration/settings.json', $data);
         $this->assertResponseError();
         $this->assertResponseContains('Could not validate the self registration settings.');
-        $this->assertSame('This field cannot be left empty', $this->_responseJsonBody->data->allowed_domains->_empty);
+        $this->assertSame('The list of allowed domains should not be empty.', $this->_responseJsonBody->data->allowed_domains->_empty);
         $this->assertSame(0, OrganizationSettingFactory::count());
     }
 

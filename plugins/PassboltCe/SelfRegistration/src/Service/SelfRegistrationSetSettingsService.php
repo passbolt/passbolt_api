@@ -17,9 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Service;
 
 use App\Error\Exception\FormValidationException;
-use App\Model\Entity\OrganizationSetting;
 use App\Utility\UserAccessControl;
-use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm;
 use Passbolt\SelfRegistration\Form\SelfRegistrationEmailDomainsSettingsForm;
@@ -43,9 +41,9 @@ class SelfRegistrationSetSettingsService
 
     /**
      * @param array $data data in the payload
-     * @return \App\Model\Entity\OrganizationSetting
+     * @return array
      */
-    public function saveSettings(array $data): OrganizationSetting
+    public function saveSettings(array $data): array
     {
         $form = $this->getFormFromData($data);
 
@@ -61,29 +59,39 @@ class SelfRegistrationSetSettingsService
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
 
-        return $OrganizationSettings->createOrUpdateSetting(
+        $setting = $OrganizationSettings->createOrUpdateSetting(
             self::USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME,
             $value,
             $this->uac
+        );
+
+        return array_merge(
+            [
+                'id' => $setting->id,
+            ],
+            $form->getData(),
+            [
+                'created' => $setting->modified,
+                'modified' => $setting->modified,
+                'created_by' => $setting->created_by,
+                'modified_by' => $setting->modified_by,
+            ]
         );
     }
 
     /**
      * @param array $data data in the payload
      * @return \Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm
-     * @throws \Cake\Http\Exception\BadRequestException if the provider in the payload is not supported.
      */
     protected function getFormFromData(array $data): SelfRegistrationBaseSettingsForm
     {
-        if (!isset($data['provider'])) {
-            throw new BadRequestException(__('The provider is not defined'));
-        }
-        $provider = $data['provider'];
+        $provider = $data['provider'] ?? null;
         switch ($provider) {
             // This is a placeholder for additional providers
-            case 'email_domains':
-            default:
+            case SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS:
                 return new SelfRegistrationEmailDomainsSettingsForm();
+            default:
+                return new SelfRegistrationBaseSettingsForm();
         }
     }
 }

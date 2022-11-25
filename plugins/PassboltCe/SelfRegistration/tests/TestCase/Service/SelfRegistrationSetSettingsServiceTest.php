@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
-use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use Cake\TestSuite\TestCase;
@@ -56,11 +55,22 @@ class SelfRegistrationSetSettingsServiceTest extends TestCase
     public function testSelfRegistrationSetSettingsService_Valid()
     {
         $data = $this->getSelfRegistrationSettingsData();
-        $setting = $this->service->saveSettings($data);
+        $result = $this->service->saveSettings($data);
 
-        $this->assertInstanceOf(OrganizationSetting::class, $setting);
         $this->assertSame(1, OrganizationSettingFactory::count());
-        $this->assertSame($data, json_decode($setting->value, true));
+        $organizationSetting = OrganizationSettingFactory::find()->firstOrFail();
+
+        $expectedKeys = [
+            'id',
+            'provider',
+            'data',
+            'created',
+            'modified',
+            'created_by',
+            'modified_by',
+        ];
+        $this->assertSame($expectedKeys, array_keys($result));
+        $this->assertSame($data, json_decode($organizationSetting->get('value'), true));
     }
 
     public function testSelfRegistrationSetSettingsService_Non_Supported_Provider()

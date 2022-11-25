@@ -34,7 +34,7 @@ class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSetti
 
         $dataValidator = new Validator();
         $dataValidator
-            ->notEmptyArray('allowed_domains')
+            ->notEmptyArray('allowed_domains', __('The list of allowed domains should not be empty.'))
             ->add('allowed_domains', 'areEmailDomainsValid', [
                 'rule' => [$this, 'areEmailDomainsValidRule'],
             ]);
@@ -56,14 +56,17 @@ class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSetti
     /**
      * Check that all the domains are valid.
      *
-     * @param string[] $domains Value to check
+     * @param mixed $domains Value to check
      * @return bool|string True if the validation succeed. Return the error message otherwise.
      */
-    public function areEmailDomainsValidRule(array $domains)
+    public function areEmailDomainsValidRule($domains)
     {
-        foreach ($domains as $domain) {
+        if (!is_array($domains)) {
+            return __('The list of allowed domains should be an array of strings.');
+        }
+        foreach ($domains as $k => $domain) {
             if (!Validation::email("noreply@$domain", Configure::read('passbolt.email.validate.mx'))) {
-                return __('The domain is not valid: {0}.', $domain);
+                return __('The domain #{0} should be a valid domain.', $k);
             }
         }
 
