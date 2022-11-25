@@ -1,5 +1,5 @@
 .test-template:
-  stage: unit-test
+  stage: unit-test-parallel
   image: $CI_REGISTRY_IMAGE_TEST:8.1
   variables:
     DOCKER_HOST: tcp://localhost:2376/
