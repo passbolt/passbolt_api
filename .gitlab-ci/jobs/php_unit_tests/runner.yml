@@ -1,6 +1,7 @@
 .test-template-parallel:
   stage: unit-test-parallel
   image: $CI_REGISTRY_IMAGE_TEST:8.1
+  timeout: 10m
   variables:
     DOCKER_HOST: tcp://localhost:2376/
     DOCKER_TLS_CERTDIR: "/certs"
@@ -36,6 +37,7 @@
 .test-template-parallel-scheduled:
   stage: unit-test-parallel
   image: $CI_REGISTRY_IMAGE_TEST:8.1
+  timeout: 10m
   variables:
     DOCKER_HOST: tcp://localhost:2376/
     DOCKER_TLS_CERTDIR: "/certs"
