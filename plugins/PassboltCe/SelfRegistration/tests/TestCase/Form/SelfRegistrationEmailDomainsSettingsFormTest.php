@@ -1,0 +1,116 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.9.0
+ */
+
+namespace Passbolt\SelfRegistration\Test\TestCase\Form;
+
+use Cake\Core\Configure;
+use Cake\TestSuite\TestCase;
+use Passbolt\SelfRegistration\Form\SelfRegistrationEmailDomainsSettingsForm;
+
+class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
+{
+    /**
+     * @var \Passbolt\SelfRegistration\Form\SelfRegistrationEmailDomainsSettingsForm
+     */
+    protected $form;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->form = new SelfRegistrationEmailDomainsSettingsForm();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->form);
+        Configure::write('passbolt.email.validate.mx', false);
+    }
+
+    public function testSelfRegistrationEmailDomainsSettingsForm_With_Valid_Provider_And_Data_Valid_Should_Succeed()
+    {
+        Configure::write('passbolt.email.validate.mx', true);
+        $this->assertTrue($this->form->execute([
+            'provider' => 'email_domains',
+            'data' => ['allowed_domains' => [
+                'passbolt.com',
+                'blog.passbolt.com',
+            ]],
+        ]));
+    }
+
+    public function testSelfRegistrationEmailDomainsSettingsForm_Sanitize_Data()
+    {
+        Configure::write('passbolt.email.validate.mx', true);
+        $this->assertTrue($this->form->execute([
+            'provider' => 'email_domains',
+            'foo' => 'bar',
+            'data' => ['allowed_domains' => [
+                'passbolt.com',
+            ], 'foo' => 'baz'],
+        ]));
+        $this->assertSame([
+            'provider' => 'email_domains',
+            'data' => ['allowed_domains' => [
+                'passbolt.com',
+            ],],
+        ], $this->form->getData());
+    }
+
+    public function testSelfRegistrationEmailDomainsSettingsForm_With_Valid_Provider_And_Empty_Domains_Should_Fail()
+    {
+        $this->assertFalse($this->form->execute([
+            'provider' => 'email_domains',
+            'data' => ['allowed_domains' => ''],
+        ]));
+        $this->assertSame(
+            'This field cannot be left empty',
+            $this->form->getErrors()['data']['allowed_domains']['_empty']
+        );
+    }
+
+    public function testSelfRegistrationEmailDomainsSettingsForm_With_Invalid_Provider_And_Data_Valid_Should_Fail()
+    {
+        Configure::write('passbolt.email.validate.mx', true);
+        $domain = 'passbolt-' . rand(999, 9999) . '.com';
+        $this->assertFalse($this->form->execute([
+            'provider' => 'email_domains',
+            'data' => ['allowed_domains' => [
+                'passbolt.com',
+                $domain,
+            ]],
+        ]));
+
+        $this->assertSame(
+            "The domain is not valid: $domain.",
+            $this->form->getErrors()['data']['allowed_domains']['areEmailDomainsValid']
+        );
+    }
+
+    public function testSelfRegistrationEmailDomainsSettingsForm_With_Invalid_Provider_And_Data_Valid_And_MX_Check_Off_Should_Not_Fail()
+    {
+        Configure::write('passbolt.email.validate.mx', false);
+        $domain = 'passbolt-' . rand(999, 9999) . '.com';
+        $this->assertTrue($this->form->execute([
+            'provider' => 'email_domains',
+            'data' => ['allowed_domains' => [
+                'passbolt.com',
+                $domain,
+            ]],
+        ]));
+    }
+}
