@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Command;
 use App\Command\HealthcheckCommand;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
+use Cake\Core\Configure;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 
 class HealthcheckCommandTest extends AppTestCase
@@ -77,5 +78,61 @@ class HealthcheckCommandTest extends AppTestCase
         $this->exec('passbolt healthcheck -d test --environment');
         $this->assertExitSuccess();
         $this->assertOutputContains('No error found. Nice one sparky!');
+    }
+
+    public function testHealthcheckCommand_Application_Happy_Path()
+    {
+        Configure::write('passbolt.version', '9.9.9');
+        Configure::write('passbolt.remote.version', '9.9.9');
+        Configure::write('passbolt.ssl.force', true);
+        Configure::write('App.fullBaseUrl', 'https://passbolt.local');
+        Configure::write('passbolt.selenium.active', false);
+        Configure::write('passbolt.meta.robots', 'noindex');
+        Configure::write('passbolt.registration.public', false);
+        Configure::write('passbolt.email.validate.mx', true);
+        Configure::write('passbolt.js.build', 'production');
+        Configure::write('passbolt.email.send', '');
+
+        $this->exec('passbolt healthcheck -d test --application');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Using latest passbolt version');
+        $this->assertOutputContains('Passbolt is configured to force SSL use.');
+        $this->assertOutputContains('App.fullBaseUrl is set to HTTPS.');
+        $this->assertOutputContains('Selenium API endpoints are disabled.');
+        $this->assertOutputContains('Search engine robots are told not to index content.');
+        $this->assertOutputContains('Registration is closed, only administrators can add users.');
+        $this->assertOutputContains('Host availability will be checked.');
+        $this->assertOutputContains('Serving the compiled version of the javascript app.');
+        $this->assertOutputContains('All email notifications will be sent.');
+        $this->assertOutputContains('No error found. Nice one sparky!');
+    }
+
+    public function testHealthcheckCommand_Application_Unhappy_Path()
+    {
+        Configure::write('passbolt.version', '1.0.0');
+        Configure::write('passbolt.remote.version', '9.9.9');
+        Configure::write('passbolt.ssl.force', false);
+        Configure::write('App.fullBaseUrl', 'http://passbolt.local');
+        Configure::write('passbolt.selenium.active', true);
+        Configure::write('passbolt.meta.robots', '');
+        Configure::write('passbolt.registration.public', true);
+        Configure::write('passbolt.email.validate.mx', false);
+        Configure::write('passbolt.js.build', 'test');
+        Configure::write('passbolt.email.send', 'false');
+
+        $this->exec('passbolt healthcheck -d test --application');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('This installation is not up to date');
+        $this->assertOutputContains('Passbolt is not configured to force SSL use.');
+        $this->assertOutputContains('App.fullBaseUrl is not set to HTTPS.');
+        $this->assertOutputContains('Selenium API endpoints are active.');
+        $this->assertOutputContains('Search engine robots are not told not to index content.');
+        $this->assertOutputContains('Registration is open to everyone.');
+        $this->assertOutputContains('Host availability checking is disabled.');
+        $this->assertOutputContains('Using non-compiled Javascript.');
+        $this->assertOutputContains('Some email notifications are disabled by the administrator.');
+        $this->assertOutputContains('error(s) found');
     }
 }

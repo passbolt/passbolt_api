@@ -45,6 +45,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->assertResponseCode(302);
         $this->assertRedirectContains('install/options');
         $this->assertSession($postData, 'webinstaller.gpg');
+        $this->assertSession(false, 'webinstaller.hasSmtpSettings');
     }
 
     public function testWebInstallerGpgKeyImportPostError_InvalidData()

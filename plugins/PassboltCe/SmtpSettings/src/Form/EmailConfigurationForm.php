@@ -128,9 +128,8 @@ class EmailConfigurationForm extends Form
             return $data;
         }
 
-        if ($data['tls'] == false) {
-            $data['tls'] = null;
-        }
+        $tls = filter_var($data['tls'], FILTER_VALIDATE_BOOLEAN);
+        $data['tls'] = $tls ? true : null;
 
         return $data;
     }

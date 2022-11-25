@@ -16,9 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
+use Cake\Log\Log;
 use Cake\Utility\Hash;
+use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 use Passbolt\WebInstaller\Form\GpgKeyForm;
+use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
 class GpgKeyImportController extends WebInstallerController
 {
@@ -61,13 +65,17 @@ class GpgKeyImportController extends WebInstallerController
         $data = $this->request->getData();
         try {
             $this->validateData($data);
+            $fingerprint = $data['fingerprint'];
+            $hasSmtpSettings = $this->hasValidSmtpSettingsInDB($fingerprint);
         } catch (Exception $e) {
             $this->_error($e->getMessage());
 
             return;
         }
 
-        $this->webInstaller->setSettingsAndSave('gpg', $data);
+        $this->webInstaller->setSettings('gpg', $data);
+        $this->webInstaller->setSettings('hasSmtpSettings', $hasSmtpSettings);
+        $this->webInstaller->saveSettings();
         $this->goToNextStep();
     }
 
@@ -88,5 +96,25 @@ class GpgKeyImportController extends WebInstallerController
             $errorMessage = implode('; ', $errors);
             throw new Exception(__('The data entered are not correct: {0}', $errorMessage));
         }
+    }
+
+    /**
+     * @param string $fingerprint Fingerprint of the server key
+     * @return bool
+     */
+    protected function hasValidSmtpSettingsInDB(string $fingerprint): bool
+    {
+        $dbSettings = $this->webInstaller->getSettings('database');
+        Configure::write('passbolt.gpg.serverKey.fingerprint', $fingerprint);
+        try {
+            DatabaseConfiguration::setDefaultConfig($dbSettings);
+            $smtpSettingsInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+
+            return false;
+        }
+
+        return !is_null($smtpSettingsInDb);
     }
 }

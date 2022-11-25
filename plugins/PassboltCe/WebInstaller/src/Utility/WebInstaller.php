@@ -195,8 +195,9 @@ class WebInstaller
         $gpg->importKeyIntoKeyring($gpgSettings['private_key_armored']);
         file_put_contents(Configure::read('passbolt.gpg.serverKey.public'), $gpgSettings['public_key_armored']);
         file_put_contents(Configure::read('passbolt.gpg.serverKey.private'), $gpgSettings['private_key_armored']);
+        Configure::write('passbolt.gpg.serverKey.fingerprint', $gpgSettings['fingerprint']);
         $gpgSettings += [
-            'fingerprint' => $gpgSettings['fingerprint'],
+            'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'),
             'public' => Configure::read('passbolt.gpg.serverKey.public'),
             'private' => Configure::read('passbolt.gpg.serverKey.private'),
         ];
