@@ -17,6 +17,7 @@
 use App\Model\Entity\User;
 use App\Notification\Email\Redactor\AdminUserSetupCompleteEmailRedactor;
 use App\Utility\Purifier;
+use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
 
 if (PHP_SAPI === 'cli') {
@@ -33,10 +34,8 @@ $invitedWhen = $body['invitedWhen'];
 /** @var bool $invitedByYou */
 $invitedByYou = $body['invitedByYou'];
 
-$avatar = 'img/avatar/user.png';
-
-echo $this->element('Email/module/avatar',[
-    'url' => Router::url($avatar, true),
+echo $this->element('Email/module/avatar', [
+    'url' => AvatarHelper::getAvatarUrl(),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => $user['modified'],
