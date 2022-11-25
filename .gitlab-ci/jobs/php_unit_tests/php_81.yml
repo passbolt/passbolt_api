@@ -7,14 +7,14 @@ php8.1-postgres11:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-11-alpine"
   extends:
-    - .test-template-scheduled
+    - .test-template-parallel-scheduled
 
 php8.1-postgres12:
   variables:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-12-alpine"
   extends:
-    - .test-template-scheduled
+    - .test-template-parallel-scheduled
 
 # Supported on:
 # - RHEL8
@@ -23,7 +23,7 @@ php8.1-postgres13:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-13-alpine"
   extends:
-    - .test-template
+    - .test-template-parallel
 
 # Supported on:
 # - Ubuntu Jammy (22.04)
@@ -32,7 +32,7 @@ php8.1-postgres14:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-14-alpine"
   extends:
-    - .test-template
+    - .test-template-parallel
 
 ###################
 # PHP 8.1 MariaDB #
@@ -43,7 +43,7 @@ php8.1-mariadb10.3:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.3"
   extends:
-    - .test-template-scheduled
+    - .test-template-parallel-scheduled
 
 # Supported on:
 # - RHEL8
@@ -52,7 +52,7 @@ php8.1-mariadb10.5:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.5"
   extends:
-    - .test-template
+    - .test-template-parallel
 
 # Supported on:
 # - Ubuntu Jammy (22.04)
@@ -61,7 +61,7 @@ php8.1-mariadb10.6:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.6"
   extends:
-    - .test-template
+    - .test-template-parallel
 
 #################
 # PHP 8.1 MySQL #
@@ -72,7 +72,7 @@ php8.1-mysql5.7:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-5.7"
   extends:
-    - .test-template-scheduled
+    - .test-template-parallel-scheduled
 
 # Supported on:
 # - Ubuntu Jammy (22.04)
@@ -82,4 +82,4 @@ php8.1-mysql8:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-8.0"
   extends:
-    - .test-template
+    - .test-template-parallel

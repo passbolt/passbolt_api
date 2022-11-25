@@ -1,4 +1,4 @@
-.test-template:
+.test-template-parallel:
   stage: unit-test-parallel
   image: $CI_REGISTRY_IMAGE_TEST:8.1
   variables:
@@ -33,7 +33,7 @@
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - bin/paratest -p "$CI_REGISTRY_IMAGE_TEST:$PHP_VERSION" -d "$DATABASE_ENGINE_VERSION"
 
-.test-template-scheduled:
+.test-template-parallel-scheduled:
   stage: unit-test
   image: $CI_REGISTRY_IMAGE_TEST:8.1
   variables:

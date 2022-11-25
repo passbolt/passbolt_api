@@ -7,7 +7,7 @@ php7.4-postgres11:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-11-alpine"
   extends:
-    - .test-template-scheduled
+    - .test-template-parallel-scheduled
 
 # Supported on:
 # - Ubuntu focal (20.04)
@@ -16,7 +16,7 @@ php7.4-postgres12:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-12-alpine"
   extends:
-    - .test-template
+    - .test-template-parallel
 
 # Supported on:
 # - Debian bullseye
@@ -25,14 +25,14 @@ php7.4-postgres13:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-13-alpine"
   extends:
-    - .test-template-scheduled
+    - .test-template-parallel-scheduled
 
 php7.4-postgres14:
   variables:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-14-alpine"
   extends:
-    - .test-template-scheduled
+    - .test-template-parallel-scheduled
 
 ###################
 # PHP 7.4 MariaDB #
@@ -43,7 +43,7 @@ php7.4-mariadb10.3:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.3"
   extends:
-    - .test-template-scheduled
+    - .test-template-parallel-scheduled
 
 # Supported on:
 # - Debian bullseye
@@ -52,14 +52,14 @@ php7.4-mariadb10.5:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.5"
   extends:
-    - .test-template
+    - .test-template-parallel
 
 php7.4-mariadb10.6:
   variables:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.6"
   extends:
-    - .test-template-scheduled
+    - .test-template-parallel-scheduled
 
 #################
 # PHP 7.4 MySQL #
@@ -72,7 +72,7 @@ php7.4-mysql5.7:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-5.7"
   extends:
-    - .test-template
+    - .test-template-parallel
 
 # Supported on:
 # - Debian bullseye
@@ -81,4 +81,4 @@ php7.4-mysql8:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-8.0"
   extends:
-    - .test-template
+    - .test-template-parallel
