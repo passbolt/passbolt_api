@@ -37,26 +37,14 @@ abstract class SelfRegistrationBaseSettingsForm extends Form
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->allowEmptyString(
-                'provider',
-                __('The provider should not be empty if data is set.'),
-                function ($context): bool {
-                    return empty($context['data']['data']);
-                }
-            )
+            ->notEmptyString('provider', __('This field cannot be left empty.'))
             ->inList(
                 'provider',
                 self::USER_SELF_REGISTRATION_PROVIDERS,
-                __('The provider should be one of the following: {0}.', $this->getReadableListOfProviders())
+                __('The provider should be part of the supported list: {0}.', $this->getReadableListOfProviders())
             );
 
-        $validator->allowEmptyString(
-            'data',
-            __('The data should not be empty if the provider is set.'),
-            function ($context): bool {
-                return empty($context['data']['provider']);
-            }
-        );
+        $validator->notEmptyArray('data', __('This field cannot be left empty.'));
 
         return $validator;
     }
