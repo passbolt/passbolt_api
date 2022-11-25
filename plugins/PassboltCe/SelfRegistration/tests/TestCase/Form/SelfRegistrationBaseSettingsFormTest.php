@@ -39,12 +39,21 @@ class SelfRegistrationBaseSettingsFormTest extends TestCase
         unset($this->form);
     }
 
-    public function testSelfRegistrationBaseSettingsForm_With_Provider_Null_And_Data_Null_Should_Succeed()
+    public function testSelfRegistrationBaseSettingsForm_With_Provider_Null_And_Data_Null_Should_Fail()
     {
-        $this->assertTrue($this->form->execute([
+        $this->assertFalse($this->form->execute([
             'provider' => '',
             'data' => '',
         ]));
+
+        $this->assertSame([
+            'provider' => [
+                '_empty' => 'This field cannot be left empty.'
+            ],
+            'data' => [
+                '_empty' => 'This field cannot be left empty.'
+            ]
+        ], $this->form->getErrors());
     }
 
     public function testSelfRegistrationBaseSettingsForm_With_Provider_In_List_And_Data_Not_Null_Should_Succeed()
@@ -61,6 +70,11 @@ class SelfRegistrationBaseSettingsFormTest extends TestCase
             'provider' => 'foo',
             'data' => 'bar',
         ]));
+        $this->assertSame([
+            'provider' => [
+                'inList' => 'The provider should be part of the supported list: email_domains.'
+            ],
+        ], $this->form->getErrors());
     }
 
     public function testSelfRegistrationBaseSettingsForm_With_Provider_Not_Null_And_Data_Null_Should_Fail()
@@ -69,14 +83,11 @@ class SelfRegistrationBaseSettingsFormTest extends TestCase
             'provider' => $this->form::USER_SELF_REGISTRATION_PROVIDERS[0],
             'data' => '',
         ]));
-    }
-
-    public function testSelfRegistrationBaseSettingsForm_With_Provider_Null_And_Data_Not_Null_Should_Fail()
-    {
-        $this->assertFalse($this->form->execute([
-            'provider' => '',
-            'data' => 'blah',
-        ]));
+        $this->assertSame([
+            'data' => [
+                '_empty' => 'This field cannot be left empty.'
+            ],
+        ], $this->form->getErrors());
     }
 
     public function testSelfRegistrationBaseSettingsForm_Sanitized_Data()
