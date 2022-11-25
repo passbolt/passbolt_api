@@ -19,6 +19,7 @@ namespace Passbolt\SelfRegistration\Test\TestCase\Form;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm;
 use Passbolt\SelfRegistration\Form\SelfRegistrationEmailDomainsSettingsForm;
 
 class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
@@ -45,7 +46,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
     {
         Configure::write('passbolt.email.validate.mx', true);
         $this->assertTrue($this->form->execute([
-            'provider' => 'email_domains',
+            'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
             'data' => ['allowed_domains' => [
                 'passbolt.com',
                 'blog.passbolt.com',
@@ -57,14 +58,14 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
     {
         Configure::write('passbolt.email.validate.mx', true);
         $this->assertTrue($this->form->execute([
-            'provider' => 'email_domains',
+            'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
             'foo' => 'bar',
             'data' => ['allowed_domains' => [
                 'passbolt.com',
             ], 'foo' => 'baz'],
         ]));
         $this->assertSame([
-            'provider' => 'email_domains',
+            'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
             'data' => ['allowed_domains' => [
                 'passbolt.com',
             ],],
@@ -74,12 +75,30 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
     public function testSelfRegistrationEmailDomainsSettingsForm_With_Valid_Provider_And_Empty_Domains_Should_Fail()
     {
         $this->assertFalse($this->form->execute([
-            'provider' => 'email_domains',
+            'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
             'data' => ['allowed_domains' => ''],
         ]));
         $this->assertSame(
-            'This field cannot be left empty',
+            'The list of allowed domains should not be empty.',
             $this->form->getErrors()['data']['allowed_domains']['_empty']
+        );
+    }
+
+    public function testSelfRegistrationEmailDomainsSettingsForm_With_Valid_Provider_And_Non_String_Domains_Should_Fail()
+    {
+        $this->assertFalse($this->form->execute([
+            'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
+            'data' => ['allowed_domains' => 'foo'],
+        ]));
+        $this->assertSame(
+            [
+                'data' => [
+                    'allowed_domains' => [
+                        'areEmailDomainsValid' => 'The list of allowed domains should be an array of strings.',
+                    ],
+                ],
+            ],
+            $this->form->getErrors()
         );
     }
 
@@ -88,7 +107,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
         Configure::write('passbolt.email.validate.mx', true);
         $domain = 'passbolt-' . rand(999, 9999) . '.com';
         $this->assertFalse($this->form->execute([
-            'provider' => 'email_domains',
+            'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
             'data' => ['allowed_domains' => [
                 'passbolt.com',
                 $domain,
@@ -96,7 +115,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
         ]));
 
         $this->assertSame(
-            "The domain is not valid: $domain.",
+            'The domain #1 should be a valid domain.',
             $this->form->getErrors()['data']['allowed_domains']['areEmailDomainsValid']
         );
     }
@@ -106,7 +125,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
         Configure::write('passbolt.email.validate.mx', false);
         $domain = 'passbolt-' . rand(999, 9999) . '.com';
         $this->assertTrue($this->form->execute([
-            'provider' => 'email_domains',
+            'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
             'data' => ['allowed_domains' => [
                 'passbolt.com',
                 $domain,

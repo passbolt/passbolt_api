@@ -19,13 +19,14 @@ namespace Passbolt\SelfRegistration\Form;
 use Cake\Form\Form;
 use Cake\Validation\Validator;
 
-abstract class SelfRegistrationBaseSettingsForm extends Form
+class SelfRegistrationBaseSettingsForm extends Form
 {
+    public const SELF_REGISTRATION_EMAIL_DOMAINS = 'email_domains';
     /**
      * Providers allowed for self registration
      */
     public const USER_SELF_REGISTRATION_PROVIDERS = [
-        'email_domains',
+        self::SELF_REGISTRATION_EMAIL_DOMAINS,
     ];
 
     /**
@@ -37,14 +38,14 @@ abstract class SelfRegistrationBaseSettingsForm extends Form
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->notEmptyString('provider', __('This field cannot be left empty.'))
+            ->notEmptyString('provider', __('The provider should not be empty.'))
             ->inList(
                 'provider',
                 self::USER_SELF_REGISTRATION_PROVIDERS,
                 __('The provider should be part of the supported list: {0}.', $this->getReadableListOfProviders())
             );
 
-        $validator->notEmptyArray('data', __('This field cannot be left empty.'));
+        $validator->notEmptyArray('data', __('The data should not be empty.'));
 
         return $validator;
     }
@@ -55,8 +56,8 @@ abstract class SelfRegistrationBaseSettingsForm extends Form
     public function execute(array $data, array $options = []): bool
     {
         $sanitizedData = [];
-        $sanitizedData['provider'] = $data['provider'];
-        $sanitizedData['data'] = $data['data'];
+        $sanitizedData['provider'] = $data['provider'] ?? '';
+        $sanitizedData['data'] = $data['data'] ?? [];
 
         return parent::execute($sanitizedData, $options);
     }
