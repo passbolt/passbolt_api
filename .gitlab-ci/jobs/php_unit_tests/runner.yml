@@ -34,7 +34,7 @@
     - bin/paratest -p "$CI_REGISTRY_IMAGE_TEST:$PHP_VERSION" -d "$DATABASE_ENGINE_VERSION"
 
 .test-template-parallel-scheduled:
-  stage: unit-test
+  stage: unit-test-parallel
   image: $CI_REGISTRY_IMAGE_TEST:8.1
   variables:
     DOCKER_HOST: tcp://localhost:2376/
