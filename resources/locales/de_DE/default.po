@@ -2356,8 +2356,8 @@ msgstr "SSL erzwingen?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Das Erzwingen von SSL bedeutet, dass Passbolt keine Verbindungen akzeptiert, die von einem nicht sicheren Protokoll kommen. Wenn SSL erzwungen wird, muss Ihr Server für HTTPS konfiguriert werden. Dies wird dringend empfohlen."
 
-msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
-msgstr "Willkommen bei Passbolt Pro! Lassen Sie uns mit der Konfiguration beginnen."
+msgid "Welcome to Passbolt! Let's get started with the configuration."
+msgstr "Willkommen bei Passbolt! Lassen Sie uns mit der Konfiguration beginnen."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Sehr schön! Ihr System ist bereit für Passbolt."
