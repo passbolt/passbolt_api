@@ -105,6 +105,7 @@ module.exports = function(grunt) {
             'controls/check_white.svg',
             'controls/chevron-down_black.svg',
             'controls/chevron-down_white.svg',
+            'controls/chevron-down_blue.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
             'controls/dot_black.svg',
@@ -147,6 +148,11 @@ module.exports = function(grunt) {
             'illustrations/email.png',
             // Themes preview
             'themes/*.png',
+            // Totp images
+            'diagrams/totp.svg',
+            'third_party/duo.svg',
+            'third_party/google-authenticator.svg',
+            'third_party/yubikey.svg',
           ],
           dest: paths.webroot + 'img',
           expand: true
@@ -205,5 +211,5 @@ module.exports = function(grunt) {
         tasks: ['styleguide-update']
       }
     }
-   });
+  });
 };
