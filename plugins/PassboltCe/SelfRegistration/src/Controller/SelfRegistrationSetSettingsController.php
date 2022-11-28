@@ -30,7 +30,7 @@ class SelfRegistrationSetSettingsController extends AppController
     {
         $this->User->assertIsAdmin();
 
-        $service = (new SelfRegistrationSetSettingsService($this->User->getAccessControl()));
+        $service = new SelfRegistrationSetSettingsService($this->User->getAccessControl());
         $settings = $service->saveSettings($this->getRequest()->getData());
 
         $this->success(__('The operation was successful.'), $settings);
