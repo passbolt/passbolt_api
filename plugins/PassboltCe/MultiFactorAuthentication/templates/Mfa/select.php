@@ -34,7 +34,7 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
                     <?php $start = !$body[MfaSettings::ACCOUNT_SETTINGS]['totp'] ? 'start' : ''; ?>
                     <a href="<?= Router::url("/mfa/setup/totp/$start", true); ?>">
                         <img src="<?= Router::url('/img/third_party/google-authenticator.svg', true); ?>" />
-                        <span>Google Authenticator</span>
+                        <span>TOTP Authenticator</span>
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['totp']) : ?>
                     <div class="mfa-provider-status enabled">

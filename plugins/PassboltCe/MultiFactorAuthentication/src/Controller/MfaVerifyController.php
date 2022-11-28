@@ -131,6 +131,10 @@ abstract class MfaVerifyController extends MfaController
             $this->success(__('The multi-factor authentication was a success.'));
         } else {
             $redirect = $this->SanitizeUrl->sanitizeRedirect();
+            $redirectLoop = '/mfa/verify';
+            if (empty($redirect) || substr($redirect, 0, strlen($redirectLoop)) === $redirectLoop) {
+                $redirect = '/';
+            }
             $this->redirect(Router::url($redirect, true));
         }
     }
