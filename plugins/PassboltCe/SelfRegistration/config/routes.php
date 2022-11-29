@@ -27,5 +27,13 @@ $routes->plugin(
 
         $routes->connect('/settings', ['controller' => 'SelfRegistrationSetSettings', 'action' => 'setSettings'])
             ->setMethods(['POST', 'PUT']);
+
+        $routes
+            ->connect(
+                '/settings/{id}',
+                ['controller' => 'SelfRegistrationDeleteSettings', 'action' => 'deleteSettings']
+            )
+            ->setPass(['id'])
+            ->setMethods(['DELETE']);
     }
 );

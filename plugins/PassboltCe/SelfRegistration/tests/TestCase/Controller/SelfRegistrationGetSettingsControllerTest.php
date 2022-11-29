@@ -40,7 +40,7 @@ class SelfRegistrationGetSettingsControllerTest extends AppIntegrationTestCase
         ]);
     }
 
-    public function testSelfRegistrationSetSettingsControllerTest_Error()
+    public function testSelfRegistrationGetSettingsControllerTest_Error()
     {
         $this->logInAsAdmin();
         $this->setSelfRegistrationSettingsData('data', 'blah');
@@ -48,13 +48,13 @@ class SelfRegistrationGetSettingsControllerTest extends AppIntegrationTestCase
         $this->assertInternalError('Could not validate the self registration settings found in database.');
     }
 
-    public function testSelfRegistrationSetSettingsControllerTest_Guest_Have_No_Access()
+    public function testSelfRegistrationGetSettingsControllerTest_Guest_Have_No_Access()
     {
         $this->getJson('/self-registration/settings.json');
         $this->assertAuthenticationError();
     }
 
-    public function testSelfRegistrationSetSettingsControllerTest_Admin_Access_Only()
+    public function testSelfRegistrationGetSettingsControllerTest_Admin_Access_Only()
     {
         $this->logInAsUser();
         $this->getJson('/self-registration/settings.json');
