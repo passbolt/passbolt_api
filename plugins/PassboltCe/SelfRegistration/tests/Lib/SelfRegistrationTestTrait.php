@@ -17,6 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\SelfRegistration\Test\Lib;
 
+use App\Model\Entity\OrganizationSetting;
+use App\Test\Factory\OrganizationSettingFactory;
+use Passbolt\SelfRegistration\Service\SelfRegistrationBaseSettingsService;
+
 trait SelfRegistrationTestTrait
 {
     private function getSelfRegistrationSettingsData(?string $field = null, $value = null): array
@@ -33,5 +37,32 @@ trait SelfRegistrationTestTrait
         }
 
         return $validData;
+    }
+
+    private function setSelfRegistrationSettingsData(?string $field = null, $value = null): OrganizationSetting
+    {
+        $data = $this->getSelfRegistrationSettingsData($field, $value);
+
+        /** @var \App\Model\Entity\OrganizationSetting $setting */
+        $setting = OrganizationSettingFactory::make()
+            ->setPropertyAndValue(
+                SelfRegistrationBaseSettingsService::USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME,
+                $data
+            )->persist();
+
+        return $setting;
+    }
+
+    private function getExpectedKeys(): array
+    {
+        return [
+            'id',
+            'provider',
+            'data',
+            'created',
+            'modified',
+            'created_by',
+            'modified_by',
+        ];
     }
 }

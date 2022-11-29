@@ -19,13 +19,9 @@ namespace Passbolt\SelfRegistration\Service;
 use App\Error\Exception\FormValidationException;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
-use Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm;
-use Passbolt\SelfRegistration\Form\SelfRegistrationEmailDomainsSettingsForm;
 
-class SelfRegistrationSetSettingsService
+class SelfRegistrationSetSettingsService extends SelfRegistrationBaseSettingsService
 {
-    public const USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME = 'selfRegistration';
-
     /**
      * @var \App\Utility\UserAccessControl
      */
@@ -65,33 +61,6 @@ class SelfRegistrationSetSettingsService
             $this->uac
         );
 
-        return array_merge(
-            [
-                'id' => $setting->id,
-            ],
-            $form->getData(),
-            [
-                'created' => $setting->modified,
-                'modified' => $setting->modified,
-                'created_by' => $setting->created_by,
-                'modified_by' => $setting->modified_by,
-            ]
-        );
-    }
-
-    /**
-     * @param array $data data in the payload
-     * @return \Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm
-     */
-    protected function getFormFromData(array $data): SelfRegistrationBaseSettingsForm
-    {
-        $provider = $data['provider'] ?? null;
-        switch ($provider) {
-            // This is a placeholder for additional providers
-            case SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS:
-                return new SelfRegistrationEmailDomainsSettingsForm();
-            default:
-                return new SelfRegistrationBaseSettingsForm();
-        }
+        return $this->getRenderedValue($setting, $form);
     }
 }
