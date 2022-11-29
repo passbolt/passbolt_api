@@ -61,7 +61,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
             'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
             'foo' => 'bar',
             'data' => ['allowed_domains' => [
-                'passbolt.com',
+                'some key to be sanitized' => 'passbolt.com',
             ], 'foo' => 'baz'],
         ]));
         $this->assertSame([

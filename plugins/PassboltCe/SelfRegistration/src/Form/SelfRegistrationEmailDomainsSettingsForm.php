@@ -47,8 +47,7 @@ class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSetti
      */
     public function execute(array $data, array $options = []): bool
     {
-        $domains = $data['data']['allowed_domains'] ?? [];
-        $data['data'] = ['allowed_domains' => $domains];
+        $data = $this->sanitizeData($data);
 
         return parent::execute($data, $options);
     }
@@ -71,5 +70,20 @@ class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSetti
         }
 
         return true;
+    }
+
+    /**
+     * @param array $data data to sanitize
+     * @return array
+     */
+    protected function sanitizeData(array $data): array
+    {
+        $domains = $data['data']['allowed_domains'] ?? [];
+        if (is_array($domains)) {
+            $domains = array_values($domains);
+        }
+        $data['data'] = ['allowed_domains' => $domains];
+
+        return $data;
     }
 }
