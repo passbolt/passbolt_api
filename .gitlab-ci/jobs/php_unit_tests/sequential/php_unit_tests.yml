@@ -103,7 +103,7 @@
 ##
 ## CUSTOM COMBINATIONS
 ##
-php7.4-mysql5.7:
+seq-php7.4-mysql5.7:
   variables:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-5.7'
@@ -114,7 +114,8 @@ php7.4-mysql5.7:
     - if: '$TEST_DISABLED == null'
 
 # TO BE REMOVED
-php7.4-postgres:
+seq-php7.4-postgres:
+  allow_failure: true
   variables:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-12-alpine'
@@ -122,7 +123,7 @@ php7.4-postgres:
     - .postgres-template
     - .test-template
 
-#php7.4-postgres12.11:
+#seq-php7.4-postgres12.11:
 #  variables:
 #    PHP_VERSION: "7.4"
 #    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-12-alpine'
@@ -136,7 +137,7 @@ php7.4-postgres:
 ## DEBIAN COMBINATIONS
 ##
 ## DEBIAN 10 BUSTER
-php7.3-mariadb10.3:
+seq-php7.3-mariadb10.3:
   variables:
     PHP_VERSION: "7.3"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.3'
@@ -146,7 +147,7 @@ php7.3-mariadb10.3:
   rules:
     - if: '$TEST_DISABLED == null'
 
-#php7.4-postgres11.16:
+#seq-php7.4-postgres11.16:
 #  variables:
 #    PHP_VERSION: "7.4"
 #    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-11-alpine'
@@ -157,7 +158,7 @@ php7.3-mariadb10.3:
 #    - if: '$TEST_DISABLED == null'
 
 ## DEBIAN 11 BULLSEYE
-php7.4-mariadb10.5:
+seq-php7.4-mariadb10.5:
   variables:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.5'
@@ -168,7 +169,7 @@ php7.4-mariadb10.5:
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
-#php7.4-postgres13.7:
+#seq-php7.4-postgres13.7:
 #  variables:
 #    PHP_VERSION: "7.4"
 #    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-13-alpine'
@@ -180,7 +181,7 @@ php7.4-mariadb10.5:
 #    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
 ## UBUNTU 20.04 LTS FOCAL
-php7.4-mysql8:
+seq-php7.4-mysql8:
   variables:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
@@ -190,7 +191,7 @@ php7.4-mysql8:
   rules:
     - if: '$TEST_DISABLED == null'
 
-#php7.4-postgres12.11:
+#seq-php7.4-postgres12.11:
 #  variables:
 #    PHP_VERSION: "7.4"
 #    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-12-alpine'
@@ -201,7 +202,7 @@ php7.4-mysql8:
 #    - if: '$TEST_DISABLED == null'
 
 ## UBUNTU 22.04 LTS JAMMY
-php8.1-mysql8:
+seq-php8.1-mysql8:
   variables:
     PHP_VERSION: "8.1"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
@@ -211,7 +212,7 @@ php8.1-mysql8:
   rules:
     - if: '$TEST_DISABLED == null'
 
-#php8.1-postgres14.3:
+#seq-php8.1-postgres14.3:
 #  variables:
 #    PHP_VERSION: "8.1"
 #    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-14-alpine'
@@ -225,7 +226,7 @@ php8.1-mysql8:
 ## RPM COMBINATIONS
 ##
 ## CENTOS 7 - with remi and mariadb repos
-php7.4-mariadb10.3:
+seq-php7.4-mariadb10.3:
   variables:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.3'
@@ -237,7 +238,7 @@ php7.4-mariadb10.3:
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
 ## ROCKY LINUX 8.6
-php8.0-mariadb10.5:
+seq-php8.0-mariadb10.5:
   variables:
     PHP_VERSION: "8.0"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.5'
@@ -249,7 +250,7 @@ php8.0-mariadb10.5:
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
 ## RHEL 9
-php8.0-mariadb8.0:
+seq-php8.0-mariadb8.0:
   variables:
     PHP_VERSION: "8.0"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
@@ -260,7 +261,7 @@ php8.0-mariadb8.0:
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
-#php8.0-postgres13.7:
+#seq-php8.0-postgres13.7:
 #  variables:
 #    PHP_VERSION: "8.0"
 #    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-13-alpine'
@@ -270,3 +271,4 @@ php8.0-mariadb8.0:
 #  rules:
 #    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
 #    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+

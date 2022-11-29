@@ -132,7 +132,7 @@ hcciUFw5
         }
     }
 
-    public function testErrorValidation()
+    public function dataForTestErrorValidation(): array
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
@@ -140,71 +140,77 @@ hcciUFw5
         $userEId = UuidFactory::uuid('user.id.edith');
         $userRId = UuidFactory::uuid('user.id.ruth');
         $userSId = UuidFactory::uuid('user.id.sofia');
-        $testCases = [
-            'cannot a permission that does not exist' => [
+
+        return [
+            ['cannot a permission that does not exist', [
                 'errorField' => 'permissions.0.id.exists',
                 'data' => ['permissions' => [
                     ['id' => UuidFactory::uuid()],
                 ]],
-            ],
-            'cannot delete a permission of another resource' => [
+            ]],
+            ['cannot delete a permission of another resource', [
                 'errorField' => 'permissions.0.id.exists',
                 'data' => ['permissions' => [
                     ['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"), 'delete' => true],
                 ]],
-            ],
-            'cannot add a permission with invalid data' => [
+            ]],
+            ['cannot add a permission with invalid data', [
                 'errorField' => 'permissions.0.aro_foreign_key._empty',
                 'data' => ['permissions' => [
                     ['aro' => 'User', 'type' => Permission::OWNER],
                 ]],
-            ],
-            'cannot add a permission for a soft deleted user' => [
+            ]],
+            ['cannot add a permission for a soft deleted user', [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => ['permissions' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => $userSId,
                     'type' => Permission::OWNER],
                 ]],
-            ],
-            'cannot add a permission for an inactive user' => [
+            ]],
+            ['cannot add a permission for an inactive user', [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => ['permissions' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => $userRId,
                     'type' => Permission::OWNER],
                 ]],
-            ],
-            'cannot remove the latest owner' => [
+            ]],
+            ['cannot remove the latest owner', [
                 'errorField' => 'permissions.at_least_one_owner',
                 'data' => ['permissions' => [
                     ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'delete' => true],
                 ]],
-            ],
+            ]],
             // Test on secrets.
-            'cannot add a permission for a user and forget to send its secret' => [
+            ['cannot add a permission for a user and forget to send its secret', [
                 'errorField' => 'secrets.secrets_provided',
                 'data' => ['permissions' => [
                     ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::READ],
                 ]],
-            ],
-            'cannot add a secret for a user who do not have access to the resource' => [
+            ]],
+            ['cannot add a secret for a user who do not have access to the resource', [
                 'errorField' => 'secrets.0.resource_id.has_resource_access',
                 'data' => ['secrets' => [
                     ['user_id' => $userEId, 'data' => $this->getValidSecret()],
                 ]],
-            ],
+            ]],
         ];
+    }
 
+    /**
+     * @dataProvider dataForTestErrorValidation
+     */
+    public function testErrorValidation($caseLabel, $case)
+    {
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
-        foreach ($testCases as $caseLabel => $case) {
-            $this->putJson("/share/resource/$resourceId.json?api-version=2", $case['data']);
-            $this->assertError();
-            $errors = json_decode(json_encode($this->_responseJsonBody), true);
-            $this->assertNotEmpty($errors);
-            $error = Hash::get($errors, $case['errorField']);
-            $this->assertNotNull($error, "Expected error not found ({$case['errorField']}) for the case {$caseLabel}. Errors: " . json_encode($errors));
-        }
+        $this->putJson("/share/resource/$resourceId.json?api-version=2", $case['data']);
+        $this->assertError();
+        $errors = json_decode(json_encode($this->_responseJsonBody), true);
+        $this->assertNotEmpty($errors);
+        $error = Hash::get($errors, $case['errorField']);
+        $this->assertNotNull($error, "Expected error not found ({$case['errorField']}) for the case {$caseLabel}. Errors: " . json_encode($errors));
     }
 
     public function testErrorNotValidResourceId()
