@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '3.8.1',
-        'name' => 'Nana'
+        'version' => '3.8.3',
+        'name' => 'Up Down Jumper'
     ]
 ];
