@@ -34,7 +34,7 @@ class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSetti
 
         $dataValidator = new Validator();
         $dataValidator
-            ->notEmptyArray('allowed_domains')
+            ->notEmptyArray('allowed_domains', __('The list of allowed domains should not be empty.'))
             ->add('allowed_domains', 'areEmailDomainsValid', [
                 'rule' => [$this, 'areEmailDomainsValidRule'],
             ]);
@@ -47,8 +47,7 @@ class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSetti
      */
     public function execute(array $data, array $options = []): bool
     {
-        $domains = $data['data']['allowed_domains'] ?? [];
-        $data['data'] = ['allowed_domains' => $domains];
+        $data = $this->sanitizeData($data);
 
         return parent::execute($data, $options);
     }
@@ -56,17 +55,35 @@ class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSetti
     /**
      * Check that all the domains are valid.
      *
-     * @param string[] $domains Value to check
+     * @param mixed $domains Value to check
      * @return bool|string True if the validation succeed. Return the error message otherwise.
      */
-    public function areEmailDomainsValidRule(array $domains)
+    public function areEmailDomainsValidRule($domains)
     {
-        foreach ($domains as $domain) {
+        if (!is_array($domains)) {
+            return __('The list of allowed domains should be an array of strings.');
+        }
+        foreach ($domains as $k => $domain) {
             if (!Validation::email("noreply@$domain", Configure::read('passbolt.email.validate.mx'))) {
-                return __('The domain is not valid: {0}.', $domain);
+                return __('The domain #{0} should be a valid domain.', $k);
             }
         }
 
         return true;
+    }
+
+    /**
+     * @param array $data data to sanitize
+     * @return array
+     */
+    protected function sanitizeData(array $data): array
+    {
+        $domains = $data['data']['allowed_domains'] ?? [];
+        if (is_array($domains)) {
+            $domains = array_values($domains);
+        }
+        $data['data'] = ['allowed_domains' => $domains];
+
+        return $data;
     }
 }

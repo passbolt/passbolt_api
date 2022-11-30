@@ -48,11 +48,11 @@ class SelfRegistrationBaseSettingsFormTest extends TestCase
 
         $this->assertSame([
             'provider' => [
-                '_empty' => 'This field cannot be left empty.'
+                '_empty' => 'The provider should not be empty.',
             ],
             'data' => [
-                '_empty' => 'This field cannot be left empty.'
-            ]
+                '_empty' => 'The data should not be empty.',
+            ],
         ], $this->form->getErrors());
     }
 
@@ -72,7 +72,7 @@ class SelfRegistrationBaseSettingsFormTest extends TestCase
         ]));
         $this->assertSame([
             'provider' => [
-                'inList' => 'The provider should be part of the supported list: email_domains.'
+                'inList' => 'The provider should be part of the supported list: email_domains.',
             ],
         ], $this->form->getErrors());
     }
@@ -85,7 +85,7 @@ class SelfRegistrationBaseSettingsFormTest extends TestCase
         ]));
         $this->assertSame([
             'data' => [
-                '_empty' => 'This field cannot be left empty.'
+                '_empty' => 'The data should not be empty.',
             ],
         ], $this->form->getErrors());
     }
