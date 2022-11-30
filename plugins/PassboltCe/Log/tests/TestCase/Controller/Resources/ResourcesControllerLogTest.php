@@ -92,10 +92,10 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesUpdateSuccessWithoutSecrets()
     {
-        $user = UserFactory::make()->user()->persist();
-        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
-        $resourceId = $resource->get('id');
-        $this->logInAs($user);
+        $user = $this->logInAsUser();
+        ResourceTypeFactory::make()->default()->persist();
+        RoleFactory::make()->guest()->persist();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$user])->persist()->id;
 
         $resource = [
             'id' => $resourceId,
@@ -191,6 +191,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesDeleteSuccess()
     {
+        RoleFactory::make()->guest()->persist();
         $user = UserFactory::make()->user()->persist();
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
         $resourceId = $resource->id;
