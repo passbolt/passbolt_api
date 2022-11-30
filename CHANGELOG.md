@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.8.3] - 2022-11-30
+### Fixed
+- PB-21631 Ensure the OpenPGP server key is in the keyring prior to sending any emails
+
 ## [3.8.1] - 2022-11-17
 ### Fixed
 - PB-21478 As an administrator, I should be able to edit SMTP settings having a sender email not being a valid email
