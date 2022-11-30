@@ -22,6 +22,7 @@ use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\SelfRegistration\Service\SelfRegistrationBaseSettingsService;
 use Passbolt\SelfRegistration\Service\SelfRegistrationSetSettingsService;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
@@ -60,17 +61,12 @@ class SelfRegistrationSetSettingsServiceTest extends TestCase
         $this->assertSame(1, OrganizationSettingFactory::count());
         $organizationSetting = OrganizationSettingFactory::find()->firstOrFail();
 
-        $expectedKeys = [
-            'id',
-            'provider',
-            'data',
-            'created',
-            'modified',
-            'created_by',
-            'modified_by',
-        ];
-        $this->assertSame($expectedKeys, array_keys($result));
+        $this->assertSame($this->getExpectedKeys(), array_keys($result));
         $this->assertSame($data, json_decode($organizationSetting->get('value'), true));
+        $this->assertSame(
+            SelfRegistrationBaseSettingsService::USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME,
+            $organizationSetting->get('property')
+        );
     }
 
     public function testSelfRegistrationSetSettingsService_Non_Supported_Provider()

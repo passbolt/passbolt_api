@@ -141,9 +141,9 @@ class OrganizationSettingsTable extends Table
      * Get an entry for a given user and property
      *
      * @param string $property user property
-     * @return \Cake\Datasource\EntityInterface|array|null The first result from the ResultSet.
+     * @return \App\Model\Entity\OrganizationSetting|null The first result from the ResultSet.
      */
-    public function getByProperty(string $property)
+    public function getByProperty(string $property): ?OrganizationSetting
     {
         try {
             return $this->getFirstSettingOrFail($property);

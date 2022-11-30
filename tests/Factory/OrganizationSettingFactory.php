@@ -68,14 +68,15 @@ class OrganizationSettingFactory extends CakephpBaseFactory
 
     /**
      * @param string $property
-     * @param string $value
+     * @param mixed $value
      * @return $this
      */
-    public function setPropertyAndValue(string $property, string $value)
+    public function setPropertyAndValue(string $property, $value)
     {
         $property_id = UuidFactory::uuid(OrganizationSetting::UUID_NAMESPACE . $property);
+        $this->value($value);
 
-        return $this->patchData(compact('property', 'property_id', 'value'));
+        return $this->patchData(compact('property', 'property_id'));
     }
 
     /**
