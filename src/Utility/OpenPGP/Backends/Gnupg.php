@@ -89,7 +89,8 @@ class Gnupg extends OpenPGPBackend
                 $this->_gpg->addencryptkey($fingerprint);
                 $this->_encryptKeyFingerprint = $fingerprint;
             } catch (\Exception $e) {
-                throw new Exception(__('The key {0} cannot be used to encrypt.', $fingerprint));
+                $msg = __('The key {0} cannot be used to encrypt.', $fingerprint) . ' ' . $e->getMessage();
+                throw new Exception($msg, null, $e);
             }
         }
 
@@ -112,7 +113,8 @@ class Gnupg extends OpenPGPBackend
             $this->_gpg->addencryptkey($fingerprint);
             $this->_encryptKeyFingerprint = $fingerprint;
         } catch (\Exception $e) {
-            throw new Exception(__('The key {0} cannot be used to encrypt.', $fingerprint));
+            $msg = __('The key {0} cannot be used to encrypt.', $fingerprint) . ' ' . $e->getMessage();
+            throw new Exception($msg, null, $e);
         }
 
         return true;
@@ -148,7 +150,7 @@ class Gnupg extends OpenPGPBackend
                 $this->_decryptKeyFingerprint = $fingerprint;
             } catch (\Exception $e) {
                 $msg = __('The key {0} cannot be used to decrypt.', $fingerprint);
-                throw new Exception($msg . ' ' . $e->getMessage());
+                throw new Exception($msg . ' ' . $e->getMessage(), null, $e);
             }
         }
 
@@ -173,7 +175,8 @@ class Gnupg extends OpenPGPBackend
             $this->_gpg->adddecryptkey($fingerprint, $passphrase);
             $this->_decryptKeyFingerprint = $fingerprint;
         } catch (\Exception $e) {
-            throw new Exception(__('The key {0} cannot be used to decrypt.', $fingerprint));
+            $msg = __('The key {0} cannot be used to decrypt.', $fingerprint) . ' ' . $e->getMessage();
+            throw new Exception($msg, null, $e);
         }
 
         return true;
@@ -210,7 +213,7 @@ class Gnupg extends OpenPGPBackend
                 $this->_signKeyFingerprint = $fingerprint;
             } catch (\Exception $e) {
                 $msg = __('Could not use key {0} for signing.', $fingerprint);
-                throw new Exception($msg . ' ' . $e->getMessage());
+                throw new Exception($msg . ' ' . $e->getMessage(), null, $e);
             }
         }
 
@@ -236,7 +239,7 @@ class Gnupg extends OpenPGPBackend
             $this->_signKeyFingerprint = $fingerprint;
         } catch (\Exception $e) {
             $msg = __('Could not use key {0} for signing.', $fingerprint);
-            throw new Exception($msg . ' ' . $e->getMessage());
+            throw new Exception($msg . ' ' . $e->getMessage(), null, $e);
         }
 
         return true;
@@ -294,7 +297,7 @@ class Gnupg extends OpenPGPBackend
         try {
             $import = $this->_gpg->import($armoredKey);
         } catch (\Exception $e) {
-            throw new Exception($msg);
+            throw new Exception($msg . ' ' . $e->getMessage(), null, $e);
         }
         if (!is_array($import)) {
             throw new Exception($msg);
@@ -326,7 +329,7 @@ class Gnupg extends OpenPGPBackend
                 /** @var string|false $encryptedText */
                 $encryptedText = $this->_gpg->encryptsign($text);
             } catch (\Exception $e) {
-                throw new Exception($msg . $e->getMessage());
+                throw new Exception($msg . ' ' . $e->getMessage(), null, $e);
             }
             if ($encryptedText === false) {
                 throw new Exception($msg);
@@ -339,7 +342,7 @@ class Gnupg extends OpenPGPBackend
                 /** @var string|false $encryptedText */
                 $encryptedText = $this->_gpg->encrypt($text);
             } catch (\Exception $e) {
-                throw new Exception($msg . ' ' . $e->getMessage());
+                throw new Exception($msg . ' ' . $e->getMessage(), null, $e);
             }
             if ($encryptedText === false) {
                 throw new Exception($msg);
@@ -392,7 +395,7 @@ class Gnupg extends OpenPGPBackend
             }
         } catch (\Exception $e) {
             $this->clearDecryptKeys();
-            throw new Exception(__('Decryption failed.'));
+            throw new Exception(__('Decryption failed.') . ' ' . $e->getMessage(), null, $e);
         }
         $this->clearDecryptKeys();
 
@@ -431,7 +434,7 @@ class Gnupg extends OpenPGPBackend
 
             return $signature;
         } catch (\Exception $e) {
-            throw new Exception($msg);
+            throw new Exception($msg . ' ' . $e->getMessage(), null, $e);
         }
     }
 
@@ -453,7 +456,7 @@ class Gnupg extends OpenPGPBackend
             $this->clearSignKeys();
         } catch (\Exception $e) {
             $this->clearSignKeys();
-            throw new Exception($msg . $e->getMessage());
+            throw new Exception($msg . ' ' . $e->getMessage(), null, $e);
         }
         if ($signedText === false) {
             throw new Exception($msg);
