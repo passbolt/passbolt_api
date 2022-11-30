@@ -1,0 +1,80 @@
+####################
+# PHP 7.3 postgres #
+####################
+
+# Supported on:
+# - Debian buster
+php7.3-postgres11:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-11-alpine"
+  extends:
+    - .test-template-parallel
+
+php7.3-postgres12:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-12-alpine"
+  extends:
+    - .test-template-parallel-scheduled
+
+php7.3-postgres13:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-13-alpine"
+  extends:
+    - .test-template-parallel-scheduled
+
+php7.3-postgres14:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-14-alpine"
+  extends:
+    - .test-template-parallel-scheduled
+
+###################
+# PHP 7.3 MariaDB #
+###################
+
+# Supported on:
+# - Debian buster
+php7.3-mariadb10.3:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.3"
+  extends:
+    - .test-template-parallel
+
+php7.3-mariadb10.5:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.3"
+  extends:
+    - .test-template-parallel-scheduled
+
+php7.3-mariadb10.6:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.6"
+  extends:
+    - .test-template-parallel-scheduled
+
+#################
+# PHP 7.3 MySQL #
+#################
+
+# Supported on:
+# - Debian buster
+php7.3-mysql5.7:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-5.7"
+  extends:
+    - .test-template-parallel
+
+php7.3-mysql8:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-8.0"
+  extends:
+    - .test-template-parallel-scheduled

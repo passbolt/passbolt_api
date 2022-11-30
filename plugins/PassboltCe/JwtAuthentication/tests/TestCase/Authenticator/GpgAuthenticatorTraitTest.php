@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.3.0
  */
-namespace App\Authenticator;
+namespace Passbolt\JwtAuthentication\Test\TestCase\Authenticator;
 
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Http\Exception\BadRequestException;

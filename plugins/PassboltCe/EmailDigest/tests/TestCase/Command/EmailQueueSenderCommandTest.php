@@ -18,6 +18,7 @@ namespace Passbolt\EmailDigest\Test\TestCase\Command;
 
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 /**
  * @uses \EmailQueue\Shell\SenderShell
@@ -35,6 +36,7 @@ class EmailQueueSenderCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+        EmailNotificationSettings::flushCache();
     }
 
     /**

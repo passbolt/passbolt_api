@@ -270,7 +270,7 @@ class SendTestEmailCommand extends PassboltCommand
         if (empty($from)) {
             $this->error(__('Your email configuration doesn\'t define a default "from"'), $io);
             $msg = __('To fix this, edit Email.default.from property in /config/passbolt.php') . ' ';
-            $msg .= _('And add \'from\' => [\'passbolt@your_organization.com\' => \'Passbolt\']');
+            $msg .= __('And add \'from\' => [\'passbolt@your_organization.com\' => \'Passbolt\']');
             $this->error($msg, $io);
             $this->abort();
         }

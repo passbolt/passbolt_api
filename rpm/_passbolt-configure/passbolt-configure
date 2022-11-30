@@ -652,7 +652,7 @@ setup_fpm(){
 
   if [ -f /usr/bin/zypper ]
   then
-    #cp /etc/php7/fpm/php-fpm.conf.default /etc/php7/fpm/php-fpm.conf
+    cp /etc/php7/fpm/php-fpm.conf.default /etc/php7/fpm/php-fpm.conf
     # fix buggy and shity opensuse php-gnupg package
     echo "extension=gnupg.so" > /etc/php7/conf.d/gnupg.ini
     cat /etc/php7/conf.d/gnupg.ini

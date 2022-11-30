@@ -79,6 +79,13 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         $this->service->sendTestEmail($data);
     }
 
+    public function testSmtpSettingsSendTestEmailService_Sender_Email_Not_Valid_Should_Fail()
+    {
+        $data = $this->getSmtpSettingsData('sender_email', 'foo@test') + ['email_test_to' => 'bar@test.test'];
+        $this->expectException(FormValidationException::class);
+        $this->service->sendTestEmail($data);
+    }
+
     public function testSmtpSettingsSendTestEmailService_Email_Test_To_Not_Email()
     {
         $data = $this->getSmtpSettingsData() + ['email_test_to' => 'foo'];

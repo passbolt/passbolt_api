@@ -16,6 +16,7 @@ variables:
 
 stages:
   - unit-test
+  - unit-test-parallel
   - package-deps
   - package-build
   - package-tests
@@ -24,13 +25,21 @@ stages:
 
 include:
   - template: Code-Quality.gitlab-ci.yml
-  - local: '/.gitlab-ci/Jobs/php_unit_tests.yml'
-  - local: '/.gitlab-ci/Jobs/artifact_build.yml'
-  - local: '/.gitlab-ci/Jobs/debian_package_build.yml'
-  - local: '/.gitlab-ci/Jobs/packages_tests.yml'
-  - local: '/.gitlab-ci/Jobs/style_check.yml'
-  - local: '/.gitlab-ci/Jobs/rpm_package_build.yml'
-  - local: '/.gitlab-ci/Jobs/repo_backup_operations.yml'
+  - local: '/.gitlab-ci/jobs/php_unit_tests/runner.yml'
+  - local: '/.gitlab-ci/jobs/php_unit_tests/sequential/php_unit_tests.yml'
+  - local: '/.gitlab-ci/jobs/artifact_build.yml'
+  - local: '/.gitlab-ci/jobs/debian_package_build.yml'
+  - local: '/.gitlab-ci/jobs/packages_tests.yml'
+  - local: '/.gitlab-ci/jobs/style_check.yml'
+  - local: '/.gitlab-ci/jobs/rpm_package_build.yml'
+  - local: '/.gitlab-ci/jobs/repo_backup_operations.yml'
 
 code_quality:
   stage: unit-test
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH

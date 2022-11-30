@@ -24,6 +24,11 @@ use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
 {
     /**
+     * @var bool
+     */
+    private $isSourceDb = false;
+
+    /**
      * @inheritDoc
      */
     public function __construct(array $config = [])
@@ -42,6 +47,8 @@ class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
         $configInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
 
         if (isset($configInDb)) {
+            $this->isSourceDb = true;
+
             return [
                 'className' => self::class,
                 'sender_name' => $configInDb['sender_name'],
@@ -55,5 +62,13 @@ class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
         }
 
         return $fallbackConfig;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSourceDb(): bool
+    {
+        return $this->isSourceDb;
     }
 }

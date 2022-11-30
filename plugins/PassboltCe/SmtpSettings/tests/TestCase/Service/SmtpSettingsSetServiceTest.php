@@ -94,6 +94,18 @@ class SmtpSettingsSetServiceTest extends TestCase
         $this->service->saveSettings($data);
     }
 
+    /**
+     * When setting the SMTP settings, the sender email should be valid
+     */
+    public function testSmtpSettingsSetServiceTest_Sender_Email_Invalid_Should_Fail()
+    {
+        $data = $this->getSmtpSettingsData('sender_email', 'abc');
+
+        $this->expectException(FormValidationException::class);
+        $this->expectExceptionMessage('Could not validate the smtp settings.');
+        $this->service->saveSettings($data);
+    }
+
     public function testSmtpSettingsSetServiceTest_Valid_But_Too_Many_Fields()
     {
         $this->gpgSetup();

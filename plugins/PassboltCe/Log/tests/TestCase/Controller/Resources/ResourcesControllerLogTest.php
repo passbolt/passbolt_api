@@ -18,6 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\Log\Test\TestCase\Controller\Resources;
 
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\ResourceTypeFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
@@ -26,18 +29,13 @@ use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
 class ResourcesControllerLogTest extends LogIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/ResourceTypes', 'app.Base/Permissions',
-        'app.Base/Secrets', 'app.Base/Favorites',
-    ];
-
     /**
      * @dataProvider dataProviderForLoginType
      */
     public function testLogResourcesAddSuccessWithSecrets(string $loginType)
     {
         $user = UserFactory::make()->user()->persist();
+        ResourceTypeFactory::make()->default()->persist();
         $this->loginWithDataProviderLoginTypeValue($loginType, $user);
         $data = [
             'name' => 'new resource name',
@@ -45,7 +43,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
             'uri' => 'https://www.domain.com',
             'description' => 'new resource description',
             'secrets' => [[
-                'data' => Hash::get(self::getDummySecretData(), 'data'),
+                'data' => SecretFactory::make()->getEntity()->data,//Hash::get(self::getDummySecretData(), 'data'),
             ]],
         ];
         $this->postJson('/resources.json?api-version=v2', $data);
@@ -76,8 +74,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesAddSuccessWithSecretsErrorShouldHaveNoLogs()
     {
-        $user = UserFactory::make()->user()->persist();
-        $this->logInAs($user);
+        $this->logInAsUser();
         $data = [
             'name' => 'new resource name',
             'username' => 'username@domain.com',
@@ -132,35 +129,40 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesUpdateSuccessWithSecrets()
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $adaId = UuidFactory::uuid('user.id.ada');
-        $bettyId = UuidFactory::uuid('user.id.betty');
-        $carolId = UuidFactory::uuid('user.id.carol');
-        $dameId = UuidFactory::uuid('user.id.dame');
+        ResourceTypeFactory::make()->default()->persist();
+        RoleFactory::make()->guest()->persist();
+        /** @var \App\Model\Entity\User[] $users */
+        $users = UserFactory::make(4)->persist();
+        $this->logInAs($users[0]);
+
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor($users)
+            ->withSecretsFor($users)
+            ->persist();
+        $resourceId = $resource->id;
 
         $resource = [
-            'id' => UuidFactory::uuid('resource.id.apache'),
+            'id' => $resourceId,
             'name' => 'updated name',
             'username' => 'www-data',
             'uri' => 'http://www.apache.org/',
             'description' => 'Apache description udpated.',
             'secrets' => [[
-                'id' => UuidFactory::uuid("secret.id.$resourceId-$adaId"),
+                'id' => $resource->secrets[0]->id,
                 'data' => Hash::get(self::getDummySecretData(), 'data'),
-                'user_id' => $adaId,
+                'user_id' => $users[0]->id,
             ], [
-                'id' => UuidFactory::uuid("secret.id.$resourceId-$bettyId"),
+                'id' => $resource->secrets[1]->id,
                 'data' => Hash::get(self::getDummySecretData(), 'data'),
-                'user_id' => $bettyId,
+                'user_id' => $users[1]->id,
             ], [
-                'id' => UuidFactory::uuid("secret.id.$resourceId-$carolId"),
+                'id' => $resource->secrets[2]->id,
                 'data' => Hash::get(self::getDummySecretData(), 'data'),
-                'user_id' => $carolId,
+                'user_id' => $users[2]->id,
             ], [
-                'id' => UuidFactory::uuid("secret.id.$resourceId-$dameId"),
+                'id' => $resource->secrets[3]->id,
                 'data' => Hash::get(self::getDummySecretData(), 'data'),
-                'user_id' => $dameId,
+                'user_id' => $users[3]->id,
             ]],
         ];
         $this->putJson("/resources/$resourceId.json?api-version=2", $resource);
@@ -170,7 +172,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         $this->assertOneActionLog();
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('ResourcesUpdate.update'),
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $users[0]->id,
             'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
