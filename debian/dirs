@@ -1,5 +1,0 @@
-/var/log/passbolt
-/var/lib/passbolt/.gnupg
-/etc/passbolt/gpg
-/etc/passbolt/jwt
-/var/lib/passbolt/tmp

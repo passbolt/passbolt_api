@@ -1,8 +1,0 @@
-name: filesystem-benchmarks
-title: Passbolt Filesystem benchmarks
-maintainer: Diego Lendoiro
-copyright: Passbolt SA
-copyright_email: diego@passbolt.com
-license: Apache-2.0
-summary: An InSpec Compliance Profile
-version: 0.1.0
