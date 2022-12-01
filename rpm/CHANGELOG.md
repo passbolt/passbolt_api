@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* [3.8.3-1] Thu, 1 Dec 2022 Daniel Del Rio <daniel@passbolt.com>
+- PB-21631 Ensure the OpenPGP server key is in the keyring prior to sending any emails
+
 * [3.8.1-1] Thu, 17 Nov 2022 Daniel Del Rio <daniel@passbolt.com>
 - PB-21478 As an administrator, I should be able to edit SMTP settings having a sender email not being a valid email
 - PB-21438 As an administrator using docker, I should be able to access the SMTP settings of my organization
