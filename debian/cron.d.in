@@ -8,5 +8,6 @@
 
 PATH=/bin:/usr/local/bin:/usr/bin
 PASSBOLT_BASE_DIR=/usr/share/php/passbolt
+PASSBOLT_LOG_DIR=/var/log/passbolt
 
-* * * * * www-data $PASSBOLT_BASE_DIR/bin/cron
+* * * * * www-data $PASSBOLT_BASE_DIR/bin/cron > $PASSBOLT_LOG_DIR/cron.log 2> $PASSBOLT_LOG_DIR/cron-error.log
