@@ -1,5 +1,0 @@
-activate-noawait nginx-reload
-# This restarts php-fpm
-# php-gnupg does not trigger php-fpm restarts so we do it in order to have a working installation
-# TODO version of php should be loaded dynamically 
-activate-noawait /etc/php/7.3/fpm/conf.d
