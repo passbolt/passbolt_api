@@ -19,10 +19,12 @@ namespace App\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Cake\Core\Configure;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\TestEmailTransport;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
@@ -55,6 +57,7 @@ class SendTestEmailCommand extends PassboltCommand
         $parser->addOption('recipient', [
             'short' => 'r',
             'help' => __('The recipient whom to send the test email to'),
+            'required' => true,
         ]);
 
         return $parser;
@@ -70,6 +73,14 @@ class SendTestEmailCommand extends PassboltCommand
         $io->out(' Debug email shell');
         $io->hr();
 
+        $recipient = $args->getOption('recipient');
+
+        /** Validate recipient email. */
+        if (! Validation::email($recipient, Configure::read('passbolt.email.validate.mx'))) {
+            $this->error(__('The recipient should be a valid email address.', $recipient), $io);
+            $this->abort();
+        }
+
         $this->checkSmtpIsSet($io);
 
         try {
@@ -79,11 +90,11 @@ class SendTestEmailCommand extends PassboltCommand
             $this->abort();
         }
 
-        $transportConfig[SmtpSettingsSendTestEmailService::EMAIL_TEST_TO] = $this->getRecipient($args);
+        $transportConfig[SmtpSettingsSendTestEmailService::EMAIL_TEST_TO] = $recipient;
 
         $this->checkFromIsSet($transportConfig, $io);
 
-        $this->displayConfiguration($transportConfig, $args, $io);
+        $this->displayConfiguration($transportConfig, $recipient, $io);
         $this->sendEmail($transportConfig, $args, $io);
         $this->displayTrace($this->sendTestEmailService->getTrace(), $io);
 
@@ -119,11 +130,11 @@ class SendTestEmailCommand extends PassboltCommand
      * Display configuration options.
      *
      * @param array $transportConfig Transport configuration.
-     * @param \Cake\Console\Arguments $args Arguments.
+     * @param string $recipient Recipient email address.
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayConfiguration(array $transportConfig, Arguments $args, ConsoleIo $io): void
+    protected function displayConfiguration(array $transportConfig, string $recipient, ConsoleIo $io): void
     {
         $io->nl(0);
         $io->out('<info>Email configuration</info>');
@@ -135,7 +146,7 @@ class SendTestEmailCommand extends PassboltCommand
         $io->out(__('TLS: {0}', $transportConfig['tls'] == null ? 'false' : 'true'));
         $io->nl(0);
         $io->out(__('Sending email from: {0}', $this->getEmailFromAsString($transportConfig)));
-        $io->out(__('Sending email to: {0}', $this->getRecipient($args)));
+        $io->out(__('Sending email to: {0}', $recipient));
         $io->hr();
     }
 
