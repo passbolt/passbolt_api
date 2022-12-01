@@ -85,7 +85,7 @@ class ResourcesViewController extends AppController
                 $SecretAccesses = $Secrets->getAssociation('SecretAccesses');
                 $SecretAccesses->create($secret, $this->User->getAccessControl());
             } catch (Exception $e) {
-                throw new InternalErrorException('Could not log secret access entry.');
+                throw new InternalErrorException('Could not log secret access entry.', 500, $e);
             }
         }
     }

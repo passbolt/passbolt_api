@@ -75,24 +75,34 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 
     public function testCommentsViewController_ErrorNotFound()
     {
-        $this->authenticateAs('ada');
-        // jquery is soft deleted. Hence, not reachable.
-        $resourceId = UuidFactory::uuid('Resource.id.jquery');
+        $user = UserFactory::make()->user()->persist();
+        // Resource is soft-deleted. Hence, not reachable.
+        $resourceId = ResourceFactory::make()
+            ->withCreatorAndPermission($user)
+            ->setDeleted()
+            ->persist()
+            ->get('id');
+        $this->logInAs($user);
+
         $this->getJson("/comments/resource/$resourceId.json?api-version=v2");
+
         $this->assertError(404, 'Could not find comments for the requested model');
     }
 
     public function testCommentsViewController_ErrorWrongModelNameParameter()
     {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->authenticateAs('ada');
+        $user = UserFactory::make()->user()->persist();
+        $resourceId = ResourceFactory::make()->withCreatorAndPermission($user)->persist()->get('id');
+        $this->logInAs($user);
+
         $this->getJson("/comments/WrongModelName/$resourceId.json?api-version=v2");
+
         $this->assertBadRequestError('Invalid model name');
     }
 
     public function testCommentsViewController_ErrorWrongUuidParameter()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/comments/resource/wrong-uuid.json?api-version=v2');
         $this->assertBadRequestError('Invalid id');
     }

@@ -27,7 +27,7 @@ use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Model\Validation\GpgkeyType\IsValidGpgkeyTypeValidationRule;
 use App\Model\Validation\KeyId\IsValidKeyIdValidationRule;
 use App\Service\OpenPGP\PublicKeyValidationService;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -170,7 +170,7 @@ class GpgkeysTable extends Table
      *
      * @param \Cake\ORM\Query $query a query instance
      * @param array $options options
-     * @throws \Cake\Core\Exception\Exception if no role is specified
+     * @throws \Cake\Core\Exception\CakeException if no role is specified
      * @return \Cake\ORM\Query
      */
     public function findIndex(Query $query, array $options): Query
@@ -190,14 +190,14 @@ class GpgkeysTable extends Table
      *
      * @param \Cake\ORM\Query $query a query instance
      * @param array $options options
-     * @throws \Cake\Core\Exception\Exception if no id is specified
+     * @throws \Cake\Core\Exception\CakeException if no id is specified
      * @return \Cake\ORM\Query
      */
     public function findView(Query $query, array $options): Query
     {
         // Options must contain an id
         if (!isset($options['id'])) {
-            throw new Exception('Gpgkey table findView should have an id set in options.');
+            throw new CakeException('Gpgkey table findView should have an id set in options.');
         }
         // Same rule than index apply
         // with a specific id requested

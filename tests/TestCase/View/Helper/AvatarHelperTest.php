@@ -98,4 +98,46 @@ class AvatarHelperTest extends AppIntegrationTestCase
         $expected = ['medium.jpg', 'small.jpg'];
         $this->assertSame($expected, AvatarHelper::getValidImageFormats());
     }
+
+    public function testDefaultAvatarUrlIsNotBrokenWhenAppBaseIsSet()
+    {
+        Configure::write('App.base', '/subdir');
+        /**
+         * `AvatarHelper::getAvatarUrl` depends on configuration that is set by the `AvatarsConfigurationService` class.
+         */
+        (new AvatarsConfigurationService())->loadConfiguration();
+
+        $result = AvatarHelper::getAvatarUrl();
+
+        $this->assertSame("{$this->fullBaseUrl}/subdir/img/avatar/user.png", $result);
+
+        // Clean up
+        Configure::write('App.base', false);
+    }
+
+    public function testUserAvatarUrlWhenAppBaseIsSet()
+    {
+        Configure::write('App.base', '/subdir');
+        /**
+         * `AvatarHelper::getAvatarUrl` depends on configuration that is set by the `AvatarsConfigurationService` class.
+         */
+        (new AvatarsConfigurationService())->loadConfiguration();
+        $avatar = $this->createAvatar();
+
+        $result = AvatarHelper::getAvatarUrl(['id' => $avatar->id]);
+
+        $this->assertSame(
+            sprintf(
+                '%s/subdir/avatars/view/%s/%s%s',
+                $this->fullBaseUrl,
+                $avatar->id,
+                AvatarsConfigurationService::FORMAT_SMALL,
+                AvatarHelper::IMAGE_EXTENSION
+            ),
+            $result
+        );
+
+        // Clean up
+        Configure::write('App.base', false);
+    }
 }

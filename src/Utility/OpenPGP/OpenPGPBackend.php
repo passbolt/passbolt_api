@@ -22,7 +22,7 @@ use App\Utility\OpenPGP\Traits\OpenPGPBackendGetKeyInfoTrait;
 use App\Utility\OpenPGP\Traits\OpenPGPBackendGetMessageInfoTrait;
 use App\Utility\OpenPGP\Traits\OpenPGPCommonAssertsTrait;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\InternalErrorException;
 
 abstract class OpenPGPBackend implements OpenPGPBackendInterface
@@ -56,7 +56,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
     /**
      * Constructor.
      *
-     * @throws \Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\CakeException
      */
     public function __construct()
     {
@@ -126,7 +126,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
     {
         try {
             $this->assertGpgMarker($armored, self::MESSAGE_MARKER);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             return false;
         }
 

@@ -18,15 +18,10 @@ declare(strict_types=1);
 namespace App\Controller\Favorites;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationException;
-use App\Model\Entity\Favorite;
+use App\Service\Favorites\FavoritesAddService;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
-/**
- * @property \App\Model\Table\FavoritesTable $Favorites
- */
 class FavoritesAddController extends AppController
 {
     /**
@@ -45,73 +40,9 @@ class FavoritesAddController extends AppController
         if (!Validation::uuid($foreignKey)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
-        $this->loadModel('Favorites');
 
-        // Build and validate the favorite entity.
-        $favorite = $this->_buildAndValidateFavorite($foreignKey);
-
-        // Save the favorite
-        $result = $this->Favorites->save($favorite);
-        $this->_handleValidationError($favorite);
+        $result = (new FavoritesAddService())->add($this->User->getAccessControl(), $foreignKey);
 
         $this->success(__('The resource was marked as favorite.'), $result);
-    }
-
-    /**
-     * Build and validate favorite entity from user input.
-     *
-     * @param string $foreignKey The identifier of the instance to mark as favorite.
-     * @return \App\Model\Entity\Favorite $favorite favorite entity
-     */
-    protected function _buildAndValidateFavorite(string $foreignKey)
-    {
-        // Build entity and perform basic check.
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => $this->User->id(),
-                'foreign_key' => $foreignKey,
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_key' => true,
-                    'foreign_model' => true,
-                ],
-            ]
-        );
-
-        // Handle validation errors if any at this stage.
-        $this->_handleValidationError($favorite);
-
-        return $favorite;
-    }
-
-    /**
-     * Manage validation errors.
-     *
-     * @param \App\Model\Entity\Favorite $favorite favorite
-     * @throws \Cake\Http\Exception\BadRequestException if the record is already marked as favorite
-     * @throws \Cake\Http\Exception\NotFoundException if the resource does not exist
-     * @throws \App\Error\Exception\ValidationException if validation failed
-     * @return void
-     */
-    protected function _handleValidationError(Favorite $favorite)
-    {
-        $errors = $favorite->getErrors();
-        if (!empty($errors)) {
-            if (
-                isset($errors['foreign_key']['resource_exists'])
-                || isset($errors['foreign_key']['resource_is_not_soft_deleted'])
-                || isset($errors['foreign_key']['has_resource_access'])
-            ) {
-                throw new NotFoundException(__('The resource does not exist.'));
-            }
-            if (isset($errors['user_id']['favorite_unique'])) {
-                throw new BadRequestException(__('This record is already marked as favorite.'));
-            }
-
-            throw new ValidationException(__('Could not validate favorite data.'));
-        }
     }
 }

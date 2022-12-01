@@ -64,14 +64,14 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
     {
         $slug = 'sample-report';
         $this->addSampleReport($slug);
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/reports/' . $slug . '.json');
         $this->assertError(403, 'Only administrators can view reports.');
     }
 
     public function testReportsViewControllerError_BadRequestWhenSlugIsNotSupported()
     {
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->getJson('/reports/this-report-does-not-exist.json');
         $this->assertBadRequestError('The requested report `this-report-does-not-exist` does not exist.');
     }
@@ -80,7 +80,7 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
     {
         $slug = 'sample-report';
         $this->addSampleReport($slug);
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->getJson('/reports/' . $slug . '.json?api-version=2');
         $this->assertResponseSuccess();
     }
@@ -89,7 +89,7 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
     {
         $slug = 'sample-report-with-argument';
         $this->addSampleReportWithArgument($slug);
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->getJson('/reports/' . $slug . '/arg1.json?api-version=2');
         $this->assertResponseSuccess();
     }

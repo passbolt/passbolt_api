@@ -17,64 +17,62 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Favorites;
 
+use App\Test\Factory\FavoriteFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 
 class FavoritesDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
-    ];
-
-    public function testFavoritesDeleteSuccess()
+    public function testFavoritesDeleteController_Success()
     {
-        $this->authenticateAs('dame');
-        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $favorite = FavoriteFactory::make()->setUser($user)->setResource($resource)->persist();
+        $favoriteId = $favorite->get('id');
+        $this->logInAs($user);
+
         $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
+
         $this->assertSuccess();
-        $Favorites = TableRegistry::getTableLocator()->get('Favorites');
-        $deletedFavorite = $Favorites->find('all')->where(['Favorites.id' => $favoriteId])->first();
+        $deletedFavorite = FavoriteFactory::find()->where(['Favorites.id' => $favoriteId])->first();
         $this->assertempty($deletedFavorite);
     }
 
-    public function testFavoritesDeleteErrorCsrfToken()
+    public function testFavoritesDeleteController_ErrorCsrfToken()
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('dame');
-        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $favorite = FavoriteFactory::make()->setUser($user)->setResource($resource)->persist();
+        $favoriteId = $favorite->get('id');
+        $this->logInAs($user);
+
         $this->delete("/favorites/$favoriteId.json");
+
         $this->assertResponseCode(403);
     }
 
-    public function testFavoritesDeleteErrorNotValidId()
+    public function testFavoritesDeleteController_ErrorNotValidId()
     {
-        $this->authenticateAs('dame');
+        $user = UserFactory::make()->user()->persist();
         $favoriteId = 'invalid-id';
+        $this->logInAs($user);
+
         $this->deleteJson("/favorites/$favoriteId.json");
+
         $this->assertError(400, 'The favorite id is not valid.');
     }
 
-    public function testFavoritesDeleteErrorFavoritesNotFound()
+    public function testFavoritesDeleteController_ErrorNotAuthenticated()
     {
-        $this->authenticateAs('dame');
-        $favoriteId = UuidFactory::uuid();
-        $this->deleteJson("/favorites/$favoriteId.json");
-        $this->assertError(404, 'The favorite does not exist.');
-    }
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $favorite = FavoriteFactory::make()->setUser($user)->setResource($resource)->persist();
+        $favoriteId = $favorite->get('id');
 
-    public function testFavoritesDeleteErrorFavoritesOfSomeoneElse()
-    {
-        $this->authenticateAs('ada');
-        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $this->deleteJson("/favorites/$favoriteId.json");
-        $this->assertError(404, 'The favorite does not exist.');
-    }
 
-    public function testFavoritesDeleteErrorNotAuthenticated()
-    {
-        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
-        $this->deleteJson("/favorites/$favoriteId.json");
         $this->assertAuthenticationError();
     }
 }

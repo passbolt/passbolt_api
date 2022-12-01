@@ -20,6 +20,8 @@ use App\Command\HealthcheckCommand;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 
 class HealthcheckCommandTest extends AppTestCase
@@ -37,6 +39,16 @@ class HealthcheckCommandTest extends AppTestCase
         parent::setUp();
         $this->useCommandRunner();
         HealthcheckCommand::$isUserRoot = false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        TableRegistry::getTableLocator()->clear();
     }
 
     /**
@@ -134,5 +146,32 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('Using non-compiled Javascript.');
         $this->assertOutputContains('Some email notifications are disabled by the administrator.');
         $this->assertOutputContains('error(s) found');
+    }
+
+    public function testHealthcheckCommand_Database_ConnectionError()
+    {
+        /**
+         * Create a dummy database connection, so we can get error.
+         *
+         * Here we have to use alias since we are only allowing 'default' and 'test' connection to run healthcheck on.
+         */
+        ConnectionManager::setConfig('invalid', ['url' => 'mysql://foo:bar@localhost/invalid_database']);
+        ConnectionManager::alias('invalid', 'default');
+
+        $this->exec('passbolt healthcheck -d default --database');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('not able to connect to the database');
+        $this->assertOutputContains('No table found');
+        $this->assertOutputContains('No default content found');
+        $this->assertOutputContains('database schema is not up to date');
+        $this->assertOutputContains('4 error(s) found. Hang in there');
+        /**
+         * Clean up: Drop connection created for testing and reinstate default alias to 'test'.
+         *
+         * @see https://book.cakephp.org/4/en/development/testing.html#test-connections
+         */
+        ConnectionManager::alias('test', 'default');
+        ConnectionManager::drop('invalid');
     }
 }

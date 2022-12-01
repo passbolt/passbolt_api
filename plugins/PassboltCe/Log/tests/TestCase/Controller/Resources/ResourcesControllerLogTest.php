@@ -96,6 +96,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         ResourceTypeFactory::make()->default()->persist();
         RoleFactory::make()->guest()->persist();
         $resourceId = ResourceFactory::make()->withPermissionsFor([$user])->persist()->id;
+
         $resource = [
             'id' => $resourceId,
             'name' => 'updated name',
@@ -110,7 +111,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         $this->assertOneActionLog();
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('ResourcesUpdate.update'),
-            'user_id' => $user->id,
+            'user_id' => $user->get('id'),
             'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
@@ -190,9 +191,12 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
 
     public function testLogResourcesDeleteSuccess()
     {
-        $user = $this->logInAsUser();
         RoleFactory::make()->guest()->persist();
-        $resourceId = ResourceFactory::make()->withPermissionsFor([$user])->persist()->id;
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resourceId = $resource->id;
+        $this->logInAs($user);
+
         $this->deleteJson("/resources/$resourceId.json");
         $this->assertSuccess();
 

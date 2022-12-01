@@ -24,7 +24,7 @@ use App\Utility\Healthchecks\GpgHealthchecks;
 use App\Utility\Healthchecks\SslHealthchecks;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
@@ -82,7 +82,7 @@ class Healthchecks
             $checks['application']['schema'] = !Migration::needMigration();
         } catch (\Exception $e) {
             // Cannot connect to the database
-            $checks['application']['schema'] = null;
+            $checks['application']['schema'] = false;
         }
         $robots = strpos(Configure::read('passbolt.meta.robots'), 'noindex');
         $checks['application']['robotsIndexDisabled'] = ($robots !== false);
@@ -126,7 +126,7 @@ class Healthchecks
                 ->count();
 
             $checks['application']['adminCount'] = ($i > 0);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
         }
 
         return $checks;
@@ -189,7 +189,7 @@ class Healthchecks
                     $checks['core']['fullBaseUrlReachable'] = ($json->body === 'OK');
                 }
             }
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
         }
 
         return $checks;

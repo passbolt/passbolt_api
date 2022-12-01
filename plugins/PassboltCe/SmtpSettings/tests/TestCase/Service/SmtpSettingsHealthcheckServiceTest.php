@@ -58,6 +58,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
         $checks = $this->service->check($otherChecks);
         $expected = $otherChecks + ['smtpSettings' => [
             'isEnabled' => true,
+            'areEndpointsDisabled' => false,
             'errorMessage' => false,
             'source' => 'database',
             'isInDb' => true,
@@ -75,6 +76,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
         $checks = $this->service->check($otherChecks);
         $expected = $otherChecks + ['smtpSettings' => [
             'isEnabled' => true,
+            'areEndpointsDisabled' => false,
             'errorMessage' => '{"port":{"range":"The port number should be between 1 and 65535."}}',
             'source' => 'database',
             'isInDb' => true,
@@ -94,6 +96,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
         $checks = $this->service->check();
         $expected = ['smtpSettings' => [
             'isEnabled' => true,
+            'areEndpointsDisabled' => false,
             'errorMessage' => false,
             'source' => CONFIG . 'passbolt.php',
             'isInDb' => false,
@@ -113,6 +116,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
         $checks = $this->service->check();
         $expected = ['smtpSettings' => [
             'isEnabled' => true,
+            'areEndpointsDisabled' => false,
             'errorMessage' => '{"port":{"range":"The port number should be between 1 and 65535."}}',
             'source' => CONFIG . 'passbolt.php',
             'isInDb' => false,
@@ -128,6 +132,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
         $checks = $this->service->check();
         $expected = ['smtpSettings' => [
             'isEnabled' => true,
+            'areEndpointsDisabled' => false,
             'errorMessage' => false,
             'source' => 'env variables',
             'isInDb' => false,
@@ -143,6 +148,7 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
         $checks = $this->service->check();
         $expected = ['smtpSettings' => [
             'isEnabled' => true,
+            'areEndpointsDisabled' => false,
             'errorMessage' => '{"port":{"range":"The port number should be between 1 and 65535."}}',
             'source' => 'env variables',
             'isInDb' => false,
@@ -168,5 +174,26 @@ class SmtpSettingsHealthcheckServiceTest extends TestCase
             'To fix this problem, you need to configure the SMTP server again.',
             $checks['errorMessage']
         );
+    }
+
+    public function testSmtpSettingsHealthcheckServiceTest_Security_Enabled()
+    {
+        $this->disableSmtpSettingsEndpoints();
+
+        $data = $this->getSmtpSettingsData();
+        $this->encryptAndPersistSmtpSettings($data);
+        $checks = $this->service->check()['smtpSettings'];
+
+        $expected = [
+            'isEnabled' => true,
+            'areEndpointsDisabled' => true,
+            'errorMessage' => false,
+            'source' => 'database',
+            'isInDb' => true,
+        ];
+
+        $this->assertSame($expected, $checks);
+
+        $this->enableSmtpSettingsEndpoints();
     }
 }

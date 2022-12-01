@@ -25,7 +25,7 @@ use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
@@ -113,11 +113,11 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
             $gpgkeyData = $gpgkey->toArray();
             unset($gpgkeyData['user']);
             if (count(array_diff($copy->toArray(), $gpgkeyData))) {
-                new Exception('Parse data does not match data in database.');
+                new CakeException('Parse data does not match data in database.');
             }
             $this->checks[self::CHECK_DATA_MATCHES]
                 ->addDetail(__('Validation success for key {0}', $gpgkey->fingerprint), Healthcheck::STATUS_SUCCESS);
-        } catch (Exception $exception) {
+        } catch (CakeException $exception) {
             $msg = __('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage());
             $this->checks[self::CHECK_DATA_MATCHES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         }
@@ -158,7 +158,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
             $this->gpg->encrypt('test');
             $msg = __('Encryption success for key {0}', $gpgkey->fingerprint);
             $this->checks[self::CHECK_CAN_ENCRYPT]->addDetail($msg, Healthcheck::STATUS_SUCCESS);
-        } catch (Exception $exception) {
+        } catch (CakeException $exception) {
             $msg = __('Failed to encrypt with key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage());
             $this->checks[self::CHECK_CAN_ENCRYPT]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         }
@@ -176,13 +176,13 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     {
         try {
             $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
-        } catch (Exception $exception) {
+        } catch (CakeException $exception) {
             // Try to import the key in keyring again
             try {
                 $this->gpg->importKeyIntoKeyring($armored);
                 $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
-            } catch (Exception $exception) {
-                throw new InternalErrorException('Could not import the user OpenPGP key.');
+            } catch (CakeException $exception) {
+                throw new InternalErrorException('Could not import the user OpenPGP key.', 500, $exception);
             }
         }
     }

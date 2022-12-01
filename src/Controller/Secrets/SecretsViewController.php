@@ -72,7 +72,7 @@ class SecretsViewController extends AppController
                 $this->Secrets->SecretAccesses->create($secret, $uac);
             }
         } catch (Exception $e) {
-            throw new InternalErrorException('Could not log secret access entry.');
+            throw new InternalErrorException('Could not log secret access entry.', 500, $e);
         }
     }
 }
