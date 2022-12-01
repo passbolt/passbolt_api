@@ -7,3 +7,21 @@
   notifempty
   create 0640 www-data www-data
 }
+/var/log/passbolt/cron-error.log {
+  daily
+  missingok
+  rotate 14
+  compress
+  delaycompress
+  notifempty
+  create 0640 www-data www-data
+}
+/var/log/passbolt/cron.log {
+  daily
+  missingok
+  rotate 14
+  compress
+  delaycompress
+  notifempty
+  create 0640 www-data www-data
+}
