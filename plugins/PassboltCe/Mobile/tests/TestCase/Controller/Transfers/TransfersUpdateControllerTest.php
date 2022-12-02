@@ -123,22 +123,6 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $this->assertError(403);
     }
 
-    public function testMobileTransfersUpdateController_ErrorAuthDoesNotBelongToUser()
-    {
-        $user = UserFactory::make()->user()->persist();
-        $transfer = $this->insertTransferFixture($this->getDummyTransfer($user->id));
-        $id = $transfer->id;
-        $data = [
-            'status' => Transfer::TRANSFER_STATUS_COMPLETE,
-            'current_page' => 1,
-        ];
-        $this->logInAsUser(); // Login with another user.
-
-        $this->postJson("/mobile/transfers/$id.json", $data);
-
-        $this->assertError(403);
-    }
-
     public function testMobileTransfersUpdateController_ErrorEmptyData()
     {
         $user = UserFactory::make()->user()->persist();
