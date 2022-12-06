@@ -15,15 +15,15 @@ declare(strict_types=1);
  * @since         3.9.0
  */
 
-namespace Passbolt\SelfRegistration\Test\TestCase\Form;
+namespace Passbolt\SelfRegistration\Test\TestCase\Form\Settings;
 
 use Cake\TestSuite\TestCase;
-use Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm;
+use Passbolt\SelfRegistration\Form\Settings\SelfRegistrationBaseSettingsForm;
 
 class SelfRegistrationBaseSettingsFormTest extends TestCase
 {
     /**
-     * @var \Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm
+     * @var \Passbolt\SelfRegistration\Form\Settings\SelfRegistrationBaseSettingsForm
      */
     protected $form;
 
