@@ -17,26 +17,14 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Comments;
 
-use App\Model\Table\CommentsTable;
 use App\Test\Factory\CommentFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 
 class CommentsUpdateControllerTest extends AppIntegrationTestCase
 {
-    public $Comments;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
-        $this->Comments = TableRegistry::getTableLocator()->get('Comments', $config);
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-    }
-
     public function testCommentsUpdateController_Success()
     {
         RoleFactory::make()->user()->persist();

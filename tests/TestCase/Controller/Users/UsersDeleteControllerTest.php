@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Permission;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
@@ -28,27 +29,28 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
 
-    public $Users;
-    public $GroupsUsers;
-    public $Permissions;
-
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Resources', 'app.Base/Secrets',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Favorites',
     ];
 
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    public $Permissions;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    public $Resources;
+
     public function setUp(): void
     {
             parent::setUp();
-            $this->Users = TableRegistry::getTableLocator()->get('Users');
-            $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+
             $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
             $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-            $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
-            $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
-            $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-            $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
     public function testUsersDeleteDryRunSuccess()
@@ -57,7 +59,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $userFId = UuidFactory::uuid('user.id.frances');
             $this->deleteJson('/users/' . $userFId . '/dry-run.json?api-version=v2');
             $this->assertSuccess();
-            $frances = $this->Users->get($userFId);
+            $frances = UserFactory::get($userFId);
             $this->assertFalse($frances->deleted);
     }
 
@@ -88,7 +90,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $userFId = UuidFactory::uuid('user.id.frances');
             $this->deleteJson("/users/$userFId.json?api-version=v2");
             $this->assertSuccess();
-            $frances = $this->Users->get($userFId);
+            $frances = UserFactory::get($userFId);
             $this->assertTrue($frances->deleted);
     }
 

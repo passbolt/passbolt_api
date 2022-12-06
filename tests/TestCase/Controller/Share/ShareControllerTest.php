@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Controller\Share;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Test\Factory\ResourceFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
@@ -32,11 +33,20 @@ class ShareControllerTest extends AppIntegrationTestCase
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
+    /**
+     * @var \App\Model\Table\UsersTable|null
+     */
+    public $Users = null;
+
+    /**
+     * @var \App\Utility\OpenPGP\Backends\Gnupg|null
+     */
+    public $gpg = null;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->gpg = OpenPGPBackendFactory::get();
     }
@@ -111,7 +121,7 @@ hcciUFw5
         $this->assertSuccess();
 
         // Load the resource.
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
+        $resource = ResourceFactory::get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
