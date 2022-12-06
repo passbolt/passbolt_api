@@ -27,6 +27,11 @@ trait PaginationTestTrait
     public $defaultSortField;
 
     /**
+     * @var string|null
+     */
+    public $defaultSortDirection = null;
+
+    /**
      * @param int $expected Number of entities expected in the response
      */
     private function assertCountPaginatedEntitiesEquals(int $expected)

@@ -28,19 +28,56 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
 
-    public $Users;
-    public $GroupsUsers;
-    public $Permissions;
-
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Resources', 'app.Base/Secrets',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Favorites',
     ];
 
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    public $Users;
+
+    /**
+     * @var \App\Model\Table\GroupsUsersTable
+     */
+    public $GroupsUsers;
+
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    public $Permissions;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    public $Resources;
+
+    /**
+     * @var \App\Model\Table\SecretsTable
+     */
+    public $Secrets;
+
+    /**
+     * @var \App\Model\Table\FavoritesTable
+     */
+    public $Favorites;
+
+    /**
+     * @var \App\Model\Table\GroupsTable
+     */
+    public $Groups;
+
+    /**
+     * @var \App\Model\Table\GpgkeysTable
+     */
+    public $Gpgkeys;
+
     public function setUp(): void
     {
             parent::setUp();
+
             $this->Users = TableRegistry::getTableLocator()->get('Users');
             $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
             $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');

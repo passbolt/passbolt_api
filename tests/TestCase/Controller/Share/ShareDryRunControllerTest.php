@@ -19,22 +19,21 @@ namespace App\Test\TestCase\Controller\Share;
 
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class ShareDryRunControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions'];
-
-    public function setUp(): void
-    {
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-        $this->gpg = OpenPGPBackendFactory::get();
-        parent::setUp();
-    }
+    public $fixtures = [
+        'app.Base/Users',
+        'app.Base/Gpgkeys',
+        'app.Base/Profiles',
+        'app.Base/Roles',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/Resources',
+        'app.Base/Permissions',
+    ];
 
     public function testSuccess()
     {

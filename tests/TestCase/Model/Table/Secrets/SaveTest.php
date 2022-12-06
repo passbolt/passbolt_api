@@ -29,22 +29,32 @@ class SaveTest extends AppTestCase
     use FormatValidationTrait;
     use PermissionsModelTrait;
 
-    public $Secrets;
-
     public $fixtures = [
         'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers',
     ];
 
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    public $Permissions;
+
+    /**
+     * @var \App\Model\Table\SecretsTable
+     */
+    public $Secrets;
+
     public function setUp(): void
     {
         parent::setUp();
+
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
     }
 
     public function tearDown(): void
     {
+        unset($this->Permissions);
         unset($this->Secrets);
 
         parent::tearDown();

@@ -31,6 +31,16 @@ class SoftDeleteTest extends AppTestCase
     public $Users;
     public $Secrets;
 
+    /**
+     * @var \App\Model\Table\FavoritesTable
+     */
+    public $Favorites;
+
+    /**
+     * @var \App\Model\Table\GpgkeysTable
+     */
+    public $Gpgkeys;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
         'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources', 'app.Base/Secrets',

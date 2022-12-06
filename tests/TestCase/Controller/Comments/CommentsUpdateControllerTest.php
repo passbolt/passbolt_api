@@ -27,7 +27,15 @@ use Cake\ORM\TableRegistry;
 
 class CommentsUpdateControllerTest extends AppIntegrationTestCase
 {
+    /**
+     * @var \App\Model\Table\CommentsTable
+     */
     public $Comments;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    public $Resources;
 
     public function setUp(): void
     {

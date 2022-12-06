@@ -42,6 +42,26 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
         'app.Base/Favorites',
     ];
 
+    /**
+     * @var \App\Model\Table\FavoritesTable|null
+     */
+    public $Favorites = null;
+
+    /**
+     * @var \App\Model\Table\GroupsTable|null
+     */
+    public $Groups = null;
+
+    /**
+     * @var \App\Model\Table\GroupsUsersTable|null
+     */
+    public $GroupsUsers = null;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable|null
+     */
+    public $Resources = null;
+
     public function setUp(): void
     {
         parent::setUp();

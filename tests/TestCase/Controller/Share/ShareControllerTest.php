@@ -32,6 +32,26 @@ class ShareControllerTest extends AppIntegrationTestCase
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
+    /**
+     * @var \App\Model\Table\PermissionsTable|null
+     */
+    public $Permissions = null;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable|null
+     */
+    public $Resources = null;
+
+    /**
+     * @var \App\Model\Table\UsersTable|null
+     */
+    public $Users = null;
+
+    /**
+     * @var \App\Utility\OpenPGP\Backends\Gnupg|null
+     */
+    public $gpg = null;
+
     public function setUp(): void
     {
         parent::setUp();
