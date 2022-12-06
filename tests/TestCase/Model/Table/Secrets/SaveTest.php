@@ -35,11 +35,6 @@ class SaveTest extends AppTestCase
     ];
 
     /**
-     * @var \App\Model\Table\PermissionsTable
-     */
-    public $Permissions;
-
-    /**
      * @var \App\Model\Table\SecretsTable
      */
     public $Secrets;
@@ -48,13 +43,11 @@ class SaveTest extends AppTestCase
     {
         parent::setUp();
 
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
     }
 
     public function tearDown(): void
     {
-        unset($this->Permissions);
         unset($this->Secrets);
 
         parent::tearDown();
