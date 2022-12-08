@@ -2356,8 +2356,8 @@ msgstr "SSL afdwingen?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Het afdwingen van SSL betekent dat Passbolt geen verbindingen accepteert die afkomstig zijn van een onbeveiligd protocol. Als SSL wordt afgedwongen, moet je server geconfigureerd worden voor HTTPS. Het wordt sterk aanbevolen om dit te doen."
 
-msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
-msgstr "Welkom bij Passbolt Pro! Laten we aan de slag gaan met de configuratie."
+msgid "Welcome to Passbolt! Let's get started with the configuration."
+msgstr "Welkom bij Passbolt! Laten we aan de slag gaan met de configuratie."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Mooi zo! Jouw omgeving is klaar voor Passbolt."

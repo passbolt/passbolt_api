@@ -2356,7 +2356,7 @@ msgstr "SSLを強制しますか？"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "SSLを強制するということは、パスボルトが、安全でないプロトコルからの接続を受け付けないということです。SSLを強制する場合は、サーバーをHTTPSに設定する必要があります。そうすることを強くお勧めします。"
 
-msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgid "Welcome to Passbolt! Let's get started with the configuration."
 msgstr "パスボルトPro へようこそ！　では設定から始めましょう。"
 
 msgid "Nice one! Your environment is ready for passbolt."

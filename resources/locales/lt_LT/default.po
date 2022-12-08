@@ -2356,8 +2356,8 @@ msgstr "Priversti SSL?"
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr "Priverstinis SSL reiškia, kad „passbolt“ nepriims ryšių, gaunamų iš nesaugaus protokolo. Jei SSL yra priverstinis, jūsų serveris turi būti sukonfigūruotas HTTPS. Labai rekomenduojama tai padaryti."
 
-msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
-msgstr "Sveiki atvykę į Passbolt Pro! Pradėkime nuo konfigūracijos."
+msgid "Welcome to Passbolt! Let's get started with the configuration."
+msgstr "Sveiki atvykę į Passbolt! Pradėkime nuo konfigūracijos."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Geras! Jūsų aplinka paruošta slaptažodžiui."
