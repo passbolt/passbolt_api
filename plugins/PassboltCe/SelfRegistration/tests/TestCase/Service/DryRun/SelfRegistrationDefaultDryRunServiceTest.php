@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\SelfRegistration\Test\TestCase\Service\DryRun;
 
+use Cake\Http\Exception\NotFoundException;
 use Cake\TestSuite\TestCase;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
@@ -45,8 +46,10 @@ class SelfRegistrationDefaultDryRunServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSelfRegistrationDefaultDryService_canGuestSelfRegister_Should_Always_Return_False()
+    public function testSelfRegistrationDefaultDryService_canGuestSelfRegister_Should_Throw_A_Not_Found_Exception()
     {
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage(' The self registration plugin is not enabled.');
         $this->assertFalse($this->service->canGuestSelfRegister([]));
     }
 

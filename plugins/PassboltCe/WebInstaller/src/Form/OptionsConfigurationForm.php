@@ -28,11 +28,10 @@ class OptionsConfigurationForm extends Form
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('full_base_url', 'string')
-            ->addField('public_registration', ['type' => 'string'])
             ->addField('force_ssl', ['type' => 'string']);
     }
 
@@ -50,24 +49,9 @@ class OptionsConfigurationForm extends Form
             ->utf8('full_base_url', __('The full base url should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->requirePresence('public_registration', 'create', __('A public registration setting is required.'))
-            ->boolean('public_registration', __('The public registration setting should be a valid boolean.'));
-
-        $validator
             ->requirePresence('force_ssl', 'create', __('A force ssl status is required.'))
             ->boolean('force_ssl', __('The force ssl setting should be a valid boolean.'));
 
         return $validator;
-    }
-
-    /**
-     * Execute implementation.
-     *
-     * @param array $data form data
-     * @return bool
-     */
-    protected function _execute(array $data): bool
-    {
-        return true;
     }
 }

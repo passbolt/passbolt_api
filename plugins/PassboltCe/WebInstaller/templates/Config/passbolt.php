@@ -56,9 +56,6 @@ return [
                 'private' => CONFIG . DS . 'gpg' . DS . 'serverkey_private.asc',
             ],
         ],
-        'registration' => [
-            'public' => <?= $config['options']['public_registration'] ? 'true' : 'false' ?>,
-        ],
         'ssl' => [
             'force' => <?= $config['options']['force_ssl'] ? 'true' : 'false' ?>,
         ]

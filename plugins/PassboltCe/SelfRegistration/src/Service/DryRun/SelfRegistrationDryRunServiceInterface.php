@@ -27,6 +27,7 @@ interface SelfRegistrationDryRunServiceInterface
     /**
      * @param array $data Data for identification
      * @return bool
+     * @throws \Cake\Http\Exception\HttpException if the user cannot self register
      */
     public function canGuestSelfRegister(array $data): bool;
 }

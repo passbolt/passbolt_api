@@ -22,15 +22,16 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
-use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\HttpException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
 use Cake\Validation\Validation;
 use Cake\View\ViewBuilder;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -44,14 +45,23 @@ class UserRecoverService implements UserRecoverServiceInterface
     /**
      * @var \Cake\Http\ServerRequest
      */
-    public $request;
+    protected $request;
+
+    /**
+     * @var \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface
+     */
+    protected $selfRegistrationDryRunService;
 
     /**
      * @param \Cake\Http\ServerRequest $serverRequest Server request
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $selfRegistrationDryRunService Service to detect if a guest can self register
      */
-    public function __construct(ServerRequest $serverRequest)
-    {
+    public function __construct(
+        ServerRequest $serverRequest,
+        SelfRegistrationDryRunServiceInterface $selfRegistrationDryRunService
+    ) {
         $this->request = $serverRequest;
+        $this->selfRegistrationDryRunService = $selfRegistrationDryRunService;
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('Users');
     }
@@ -160,8 +170,13 @@ class UserRecoverService implements UserRecoverServiceInterface
         $user = $this->Users->findByUsername($username)->first();
 
         if (empty($user)) {
+            try {
+                $canSelfRegister = $this->selfRegistrationDryRunService->canGuestSelfRegister(['email' => $username]);
+            } catch (HttpException $e) {
+                $canSelfRegister = false;
+            }
             $msg = __('This user does not exist or has been deleted.') . ' ';
-            if (Configure::read('passbolt.registration.public')) {
+            if ($canSelfRegister) {
                 $msg .= __('Please register and complete the setup first.');
             } else {
                 $msg .= __('Please contact your administrator.');

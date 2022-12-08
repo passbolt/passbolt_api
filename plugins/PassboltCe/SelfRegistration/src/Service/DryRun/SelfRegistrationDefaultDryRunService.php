@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\SelfRegistration\Service\DryRun;
 
+use Cake\Http\Exception\NotFoundException;
+
 class SelfRegistrationDefaultDryRunService implements SelfRegistrationDryRunServiceInterface
 {
     /**
@@ -31,6 +33,6 @@ class SelfRegistrationDefaultDryRunService implements SelfRegistrationDryRunServ
      */
     public function canGuestSelfRegister(array $data): bool
     {
-        return false;
+        throw new NotFoundException(__(' The self registration plugin is not enabled.'));
     }
 }
