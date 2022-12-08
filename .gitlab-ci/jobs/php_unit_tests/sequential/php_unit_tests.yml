@@ -272,3 +272,12 @@ seq-php8.0-mariadb8.0:
 #    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
 #    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
 
+seq-php8.2-mysql8:
+  variables:
+    PHP_VERSION: "8.2"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mysql-8.0'
+  extends:
+    - .mysql-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null'
