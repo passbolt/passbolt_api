@@ -16,11 +16,28 @@ declare(strict_types=1);
  */
 namespace Passbolt\SelfRegistration\Service;
 
+use App\Utility\UserAccessControl;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
 class SelfRegistrationDeleteSettingsService
 {
+    use EventDispatcherTrait;
+
+    /**
+     * @var \App\Utility\UserAccessControl
+     */
+    private $uac;
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac UAC
+     */
+    public function __construct(UserAccessControl $uac)
+    {
+        $this->uac = $uac;
+    }
+
     /**
      * Delete the self registration settings in the DB
      * If not found, return a NotFoundException
@@ -40,6 +57,18 @@ class SelfRegistrationDeleteSettingsService
             throw new NotFoundException('The self registration setting does not exist.');
         }
 
-        return $OrganizationSettings->deleteOrFail($settings);
+        $result = $OrganizationSettings->deleteOrFail($settings);
+        $eventData = [
+            'provider' => null,
+            'data' => null,
+            'modified_by' => $this->uac->getId(),
+        ];
+
+        $this->dispatchEvent(
+            SelfRegistrationSetSettingsService::SELF_REGISTRATION_SETTINGS_UPDATE_EVENT_NAME,
+            $eventData
+        );
+
+        return $result;
     }
 }

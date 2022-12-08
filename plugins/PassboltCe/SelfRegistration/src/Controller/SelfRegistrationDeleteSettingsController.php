@@ -38,7 +38,7 @@ class SelfRegistrationDeleteSettingsController extends AppController
             throw new BadRequestException(__('The self registration setting id should be a valid UUID.'));
         }
 
-        $service = new SelfRegistrationDeleteSettingsService();
+        $service = new SelfRegistrationDeleteSettingsService($this->User->getAccessControl());
         $service->deleteSettings($id);
         $this->success(__('The operation was successful.'));
     }

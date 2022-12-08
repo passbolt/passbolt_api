@@ -53,6 +53,7 @@ class SelfRegistrationUsersRegisterControllerTest extends AppIntegrationTestCase
 
     public function testSelfRegistrationUsersRegisterController_SelfRegistrationOpen_DataValid()
     {
+        $admins = UserFactory::make()->persist();
         RoleFactory::make()->user()->persist();
         $username = 'johndoe@passbolt.com';
         $this->setSelfRegistrationSettingsData();

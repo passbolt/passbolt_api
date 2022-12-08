@@ -15,33 +15,34 @@ declare(strict_types=1);
  * @since         2.13.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace Passbolt\SelfRegistration\Notification\Email\Redactor\User;
 
-use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
-use App\Model\Table\AvatarsTable;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
 
-class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
+class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    public const TEMPLATE_REGISTER_ADMIN = 'AN/user_register_admin';
+    public const EMAIL_TEMPLATE = 'AD/user_register_self';
 
     /**
-     * @inheritDoc
+     * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
+     *
+     * @return array
      */
     public function getSubscribedEvents(): array
     {
         return [
-            UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME,
+            UsersTable::AFTER_SELF_REGISTER_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -55,54 +56,57 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
 
         $user = $event->getData('user');
         $uac = $event->getData('token');
-        $adminId = $event->getData('adminId');
 
-        $email = $this->createEmailAdminRegister($user, $uac, $adminId);
+        /** @var \App\Model\Table\UsersTable $UsersTable */
+        $UsersTable = TableRegistry::getTableLocator()->get('Users');
+        $admins = $UsersTable
+            ->findAdmins()
+            ->find('locale');
 
-        return $emailCollection->addEmail($email);
+        foreach ($admins as $recipient) {
+            $email = $this->createEmailForAdminSelfRegister($recipient, $user);
+            $emailCollection->addEmail($email);
+        }
+
+        return $emailCollection;
     }
 
     /**
+     * @param \App\Model\Entity\User $recipient Recipient of the email
      * @param \App\Model\Entity\User $user User to include in the subject
      * @return string
      */
-    private function getSubject(User $user): string
+    private function getSubject(User $recipient, User $user): string
     {
+        $userFirstName = Purifier::clean($user['profile']['first_name']);
+
         return (new LocaleService())->translateString(
-            $user->locale,
-            function () use ($user) {
-                return __('Welcome to passbolt, {0}!', $user->profile->first_name);
+            $recipient->locale,
+            function () use ($userFirstName) {
+                return __('{0} just created an account on passbolt!', $userFirstName);
             }
         );
     }
 
     /**
+     * @param \App\Model\Entity\User $recipient User
      * @param \App\Model\Entity\User $user User
-     * @param \App\Model\Entity\AuthenticationToken $uac UAC
-     * @param string $adminId Admin user ID
      * @return \App\Notification\Email\Email
      */
-    private function createEmailAdminRegister(User $user, AuthenticationToken $uac, string $adminId): Email
+    private function createEmailForAdminSelfRegister(User $recipient, User $user): Email
     {
         /** @var \App\Model\Table\UsersTable $UsersTable */
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
-        $admin = $UsersTable->findFirstForEmail($adminId);
         $user = $UsersTable->findFirstForEmail($user->id);
 
-        $UsersTable->loadInto($user, [
-            'Profiles' => AvatarsTable::addContainAvatar(),
-        ]);
-
         return new Email(
-            $user->username,
-            $this->getSubject($user),
+            $recipient->username,
+            $this->getSubject($recipient, $user),
             [
-                'body' => [
-                    'user' => $user, 'token' => $uac, 'admin' => $admin,
-                ],
-                'title' => $this->getSubject($user),
+                'body' => compact('user', 'recipient'),
+                'title' => $this->getSubject($recipient, $user),
             ],
-            static::TEMPLATE_REGISTER_ADMIN
+            static::EMAIL_TEMPLATE
         );
     }
 }

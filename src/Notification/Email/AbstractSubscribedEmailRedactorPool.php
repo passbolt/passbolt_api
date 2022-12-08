@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Notification\Email;
 
 use Cake\Event\EventListenerInterface;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInterface
 {
@@ -39,6 +40,17 @@ abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInter
         return [
             CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this,
         ];
+    }
+
+    /**
+     * Return true if the redactor is enabled
+     *
+     * @param string $notificationSettingPath Notification Settings path with dot notation
+     * @return mixed
+     */
+    protected function isRedactorEnabled(string $notificationSettingPath)
+    {
+        return EmailNotificationSettings::get($notificationSettingPath);
     }
 
     /**

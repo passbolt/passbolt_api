@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Test\TestCase\Service;
 
 use App\Test\Factory\OrganizationSettingFactory;
+use App\Test\Factory\UserFactory;
 use Cake\Http\Exception\NotFoundException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -40,7 +41,9 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new SelfRegistrationDeleteSettingsService();
+        $this->service = new SelfRegistrationDeleteSettingsService(
+            UserFactory::make()->admin()->nonPersistedUAC()
+        );
     }
 
     public function tearDown(): void

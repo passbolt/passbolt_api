@@ -18,10 +18,15 @@ namespace Passbolt\SelfRegistration\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Utility\UserAccessControl;
+use Cake\Event\EventDispatcherTrait;
 use Cake\ORM\TableRegistry;
 
 class SelfRegistrationSetSettingsService extends SelfRegistrationBaseSettingsService
 {
+    use EventDispatcherTrait;
+
+    public const SELF_REGISTRATION_SETTINGS_UPDATE_EVENT_NAME = 'self_registration_settings_update_event_name';
+
     /**
      * @var \App\Utility\UserAccessControl
      */
@@ -60,7 +65,13 @@ class SelfRegistrationSetSettingsService extends SelfRegistrationBaseSettingsSer
             $value,
             $this->uac
         );
+        $renderedSettings = $this->getRenderedValue($setting, $form);
 
-        return $this->getRenderedValue($setting, $form);
+        $this->dispatchEvent(
+            self::SELF_REGISTRATION_SETTINGS_UPDATE_EVENT_NAME,
+            $renderedSettings,
+        );
+
+        return $renderedSettings;
     }
 }
