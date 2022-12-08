@@ -18,6 +18,8 @@ namespace Passbolt\SmtpSettings;
 
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
+use Cake\Core\PluginApplicationInterface;
+use Passbolt\SmtpSettings\Service\SmtpSettingsFormatSenderInEmailQueueService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
 class Plugin extends BasePlugin
@@ -25,8 +27,25 @@ class Plugin extends BasePlugin
     /**
      * @inheritDoc
      */
+    public function bootstrap(PluginApplicationInterface $app): void
+    {
+        parent::bootstrap($app);
+        $this->formatSenderInEmailQueue();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function services(ContainerInterface $container): void
     {
         $container->add(SmtpSettingsSendTestEmailService::class);
+    }
+
+    /**
+     * @return void
+     */
+    public function formatSenderInEmailQueue(): void
+    {
+        (new SmtpSettingsFormatSenderInEmailQueueService())->attachBeforeFindOnEmailQueueTables();
     }
 }

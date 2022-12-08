@@ -18,6 +18,7 @@ namespace Passbolt\JwtAuthentication\Test\TestCase\Authenticator;
 
 use App\Middleware\ContainerInjectorMiddleware;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\TokenIdentifier;
@@ -50,6 +51,7 @@ class GpgJwtAuthenticatorTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        OpenPGPBackendFactory::reset();
         $this->sut = new GpgJwtAuthenticator(new TokenIdentifier());
         (new JwtKeyPairService())->createKeyPair();
         EventManager::instance()->setEventList(new EventList());
