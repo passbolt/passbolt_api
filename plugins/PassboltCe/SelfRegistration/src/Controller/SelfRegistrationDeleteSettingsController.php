@@ -35,7 +35,7 @@ class SelfRegistrationDeleteSettingsController extends AppController
 
         // Check request sanity
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The self registration setting id is not valid.'));
+            throw new BadRequestException(__('The self registration setting id should be a valid UUID.'));
         }
 
         $service = new SelfRegistrationDeleteSettingsService();

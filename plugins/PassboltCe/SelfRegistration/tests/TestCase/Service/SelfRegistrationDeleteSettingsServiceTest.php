@@ -61,7 +61,7 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
     {
         $this->setSelfRegistrationSettingsData();
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Self registration setting not found.');
+        $this->expectExceptionMessage('The self registration setting does not exist.');
         $this->service->deleteSettings('foo');
     }
 
@@ -69,7 +69,7 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
     {
         $this->setSelfRegistrationSettingsData();
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Self registration setting not found.');
+        $this->expectExceptionMessage('The self registration setting does not exist.');
         $this->service->deleteSettings('');
     }
 }

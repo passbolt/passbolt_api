@@ -37,7 +37,7 @@ class SelfRegistrationDeleteSettingsService
             SelfRegistrationBaseSettingsService::USER_SELF_REGISTRATION_SETTINGS_PROPERTY_NAME
         );
         if (is_null($settings) || $settings->get('id') !== $id) {
-            throw new NotFoundException('Self registration setting not found.');
+            throw new NotFoundException('The self registration setting does not exist.');
         }
 
         return $OrganizationSettings->deleteOrFail($settings);

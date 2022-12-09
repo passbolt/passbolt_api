@@ -43,7 +43,7 @@ class SelfRegistrationDeleteSettingsControllerTest extends AppIntegrationTestCas
         $this->logInAsAdmin();
         $id = UuidFactory::uuid();
         $this->deleteJson("/self-registration/settings/$id.json");
-        $this->assertNotFoundError('Self registration setting not found.');
+        $this->assertNotFoundError('The self registration setting does not exist.');
     }
 
     public function testSelfRegistrationDeleteSettingsControllerTest_No_UUID()
@@ -51,7 +51,7 @@ class SelfRegistrationDeleteSettingsControllerTest extends AppIntegrationTestCas
         $this->logInAsAdmin();
         $id = 'not-a-uuid';
         $this->deleteJson("/self-registration/settings/$id.json");
-        $this->assertBadRequestError('The self registration setting id is not valid.');
+        $this->assertBadRequestError('The self registration setting id should be a valid UUID.');
     }
 
     public function testSelfRegistrationDeleteSettingsControllerTest_Guest_Have_No_Access()
