@@ -43,9 +43,7 @@ class KeyringInitCommand extends PassboltCommand
         parent::execute($args, $io);
 
         // Root user is not allowed to execute this command.
-        if (!$this->assertNotRoot($io)) {
-            return $this->errorCode();
-        }
+        $this->assertCurrentProcessUser($io);
 
         try {
             $filePath = Configure::read('passbolt.gpg.serverKey.private');
