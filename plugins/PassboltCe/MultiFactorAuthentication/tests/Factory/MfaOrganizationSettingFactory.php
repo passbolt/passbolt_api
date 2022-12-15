@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         3.9.0
  */
 namespace Passbolt\MultiFactorAuthentication\Test\Factory;
 
@@ -99,13 +99,45 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
         ?string $secretKey = null
     ) {
         $value = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => $isActive]];
-        $value[MfaSettings::PROVIDER_DUO] = [
+        $value[MfaSettings::PROVIDER_DUO] = $this->getDuoDefaultSettings($hostName, $salt, $integrationKey, $secretKey);
+
+        return $this->value($value);
+    }
+
+    /**
+     * @param bool $isActive
+     * @param string|null $hostName
+     * @param string|null $salt
+     * @param string|null $integrationKey
+     * @param string|null $secretKey
+     * @return MfaOrganizationSettingFactory
+     */
+    public function duoWithTotp()
+    {
+        $value = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => true, MfaSettings::PROVIDER_TOTP => true]];
+        $value[MfaSettings::PROVIDER_DUO] = $this->getDuoDefaultSettings();
+
+        return $this->value($value);
+    }
+
+    /**
+     * @param string|null $hostName
+     * @param string|null $salt
+     * @param string|null $integrationKey
+     * @param string|null $secretKey
+     * @return array
+     */
+    protected function getDuoDefaultSettings(
+        ?string $hostName = null,
+        ?string $salt = null,
+        ?string $integrationKey = null,
+        ?string $secretKey = null
+    ) {
+        return [
             MfaOrgSettings::DUO_SALT => $salt ?? 'qwertyuiopasdfghjklzxcvbnm12345678901234567890',
             MfaOrgSettings::DUO_INTEGRATION_KEY => $integrationKey ?? 'DICPIC33F13IWF1FR52J',
             MfaOrgSettings::DUO_SECRET_KEY => $secretKey ?? '7TkYNgK8AGAuv3KW12qhsJLeIc1mJjHDHC1siNYX',
             MfaOrgSettings::DUO_HOSTNAME => $hostName ?? 'api-42e9f2fe.duosecurity.com',
         ];
-
-        return $this->value($value);
     }
 }

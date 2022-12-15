@@ -92,4 +92,26 @@ class MfaAccountSettingFactory extends AccountSettingFactory
 
         return $this->patchData(compact('value'));
     }
+
+    /**
+     * @param FrozenTime|null $verified Date of verification
+     * @return self
+     */
+    public function duoWithTotp(string $uri = 'Foo', ?FrozenTime $verified = null): self
+    {
+        $settings = [MfaSettings::PROVIDERS => [
+            MfaSettings::PROVIDER_DUO,
+            MfaSettings::PROVIDER_TOTP,
+        ]];
+        $settings[MfaSettings::PROVIDER_DUO] = [
+            MfaAccountSettings::VERIFIED => $verified ?? FrozenTime::now(),
+        ];
+        $settings[MfaSettings::PROVIDER_TOTP] = [
+            MfaAccountSettings::VERIFIED => $verified ?? FrozenTime::now(),
+            MfaAccountSettings::OTP_PROVISIONING_URI => $uri,
+        ];
+        $value = json_encode($settings);
+
+        return $this->patchData(compact('value'));
+    }
 }

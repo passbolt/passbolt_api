@@ -29,6 +29,6 @@
         <input type="checkbox" name="remember" value="remember" id="remember">
         <label for="remember" ><?= __('Remember this device for a month.'); ?></label>
     </div>
-    <?= $this->element('formActions', ['providers' => $providers, 'currentProvider' => MfaSettings::PROVIDER_YUBIKEY]); ?>
+    <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_YUBIKEY]); ?>
     <?= $this->Form->end(); ?>
 </div>

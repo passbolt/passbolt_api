@@ -28,5 +28,5 @@
             data-sig-request="<?= $sigRequest; ?>"
     ></iframe>
     <?= $this->Form->create($verifyForm, $formContext); ?><?= $this->Form->end(); ?>
-    <?= $this->element('formActions', ['providers' => $providers, 'currentProvider' => MfaSettings::PROVIDER_DUO]); ?>
+    <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_DUO]); ?>
 </div>

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers;
 
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Multi\MfaTotpDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpUserOnlyScenario;
 
 class MfaVerifyControllerTest extends MfaIntegrationTestCase
@@ -62,5 +63,18 @@ class MfaVerifyControllerTest extends MfaIntegrationTestCase
 
         $this->get('/mfa/verify/totp.json');
         $this->assertResponseError('No valid multi-factor authentication settings found for this provider.');
+    }
+
+    public function testMfaVerifyControllerTest_testMultipleProviers()
+    {
+        $redirect = '/app/users';
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpDuoScenario::class, $user, true);
+
+        $this->get('/mfa/verify/duo?api-version=v2&redirect=' . $redirect);
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('mfa/verify/duo?redirect=' . $redirect);
+        $this->assertResponseContains('Or try with another provider');
+        $this->assertResponseContains('mfa/verify/totp?redirect=' . $redirect);
     }
 }
