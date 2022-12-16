@@ -33,6 +33,11 @@ class EmailDigest implements EmailDigestInterface
     public const DEFAULT_TEMPLATE = 'Passbolt/EmailDigest.LU/email_digest';
 
     /**
+     * The default layout used for the digest email.
+     */
+    public const DEFAULT_LAYOUT = 'Passbolt/EmailDigest.default';
+
+    /**
      * The var name containing the digest of the email
      */
     public const TPL_VAR_DIGEST_CONTENT = 'digest_content';
