@@ -47,7 +47,7 @@ abstract class MfaVerifyController extends MfaController
     public function beforeRender(\Cake\Event\EventInterface $event): void
     {
         parent::beforeRender($event);
-        $redirect = $this->SanitizeUrl->sanitizeRedirect();
+        $redirect = $this->SanitizeUrl->sanitizeRedirect('/mfa/verify');
         $this->set('redirect', $redirect);
     }
 
@@ -130,11 +130,7 @@ abstract class MfaVerifyController extends MfaController
         if ($this->request->is('json')) {
             $this->success(__('The multi-factor authentication was a success.'));
         } else {
-            $redirect = $this->SanitizeUrl->sanitizeRedirect();
-            $redirectLoop = '/mfa/verify';
-            if (empty($redirect) || substr($redirect, 0, strlen($redirectLoop)) === $redirectLoop) {
-                $redirect = '/';
-            }
+            $redirect = $this->SanitizeUrl->sanitizeRedirect('/mfa/verify');
             $this->redirect(Router::url($redirect, true));
         }
     }

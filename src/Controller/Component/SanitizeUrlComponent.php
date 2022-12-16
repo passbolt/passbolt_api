@@ -23,13 +23,14 @@ class SanitizeUrlComponent extends Component
     /**
      * Sanitize redirect URL
      *
+     * @param string $redirectLoopStop Prevent redirecting if this string is found in the redirect parameter
      * @return string
      */
-    public function sanitizeRedirect(): string
+    public function sanitizeRedirect(string $redirectLoopStop = ''): string
     {
         $redirectUrl = $this->_extractFirstParameter('redirect');
-        $redirectLoopBlocker = $this->getController()->getRequest()->getPath();
-        $sanitizedRedirectUrl = $this->sanitize($redirectUrl, [$redirectLoopBlocker]);
+        $loopStop = empty($redirectLoopStop) ? $this->getController()->getRequest()->getPath() : $redirectLoopStop;
+        $sanitizedRedirectUrl = $this->sanitize($redirectUrl, [$loopStop]);
 
         return $sanitizedRedirectUrl;
     }
@@ -50,7 +51,7 @@ class SanitizeUrlComponent extends Component
         bool $escapeSpecialChars = true
     ): string {
         if (empty($url)) {
-            return '';
+            return '/';
         }
         if ($ensureStartsWithSlash && substr($url, 0, 1) !== '/') {
             return '/';
