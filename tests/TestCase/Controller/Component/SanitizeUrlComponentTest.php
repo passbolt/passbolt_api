@@ -25,24 +25,22 @@ use Cake\TestSuite\TestCase;
 class SanitizeUrlComponentTest extends TestCase
 {
     /**
-     * @dataProvider dataForTestSanitize
-     * @param string $url
-     * @param string $expectedSort
+     * @dataProvider dataForTestSanitizeUrlComponent_Sanitize
      */
-    public function testSanitize(string $url, array $blacklist, bool $ensureStartsWithSlash, bool $escapeSpecialChars, string $expectedResult): void
+    public function testSanitizeUrlComponent_Sanitize(string $url, array $blacklist, bool $ensureStartsWithSlash, bool $escapeSpecialChars, string $expectedResult): void
     {
         $registry = new ComponentRegistry();
         $component = new SanitizeUrlComponent($registry);
 
         $result = $component->sanitize($url, $blacklist, $ensureStartsWithSlash, $escapeSpecialChars);
 
-        $this->assertSame($result, $expectedResult);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function dataForTestSanitize(): array
+    public function dataForTestSanitizeUrlComponent_Sanitize(): array
     {
         return [
-            ['', [], false, true, ''],
+            ['', [], false, true, '/'],
             ['app/users', [], true, true, '/'],
             ['/app/users', [], true, true, '/app/users'],
             ['/app/users', ['/user'], true, true, '/'],
@@ -53,33 +51,24 @@ class SanitizeUrlComponentTest extends TestCase
     }
 
     /**
-     * @dataProvider dataForTestSanitizeRedirect
+     * @dataProvider dataForTestSanitizeUrlComponent_SanitizeRedirect
      * @param string $url
-     * @param string $expectedSort
+     * @param string $expectedResult
      */
-    public function testSanitizeRedirect(string $url, string $expectedResult): void
+    public function testSanitizeUrlComponent_SanitizeRedirect(string $url, string $expectedResult): void
     {
-        $request = new ServerRequest(compact('url'));
-        $controller = $this->getMockBuilder('Cake\Controller\Controller')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $controller->method('getRequest')->willReturn($request);
-        $registry = new ComponentRegistry($controller);
-        $component = new SanitizeUrlComponent($registry);
-
-        $result = $component->sanitizeRedirect();
-
-        $this->assertSame($result, $expectedResult);
+        $result = $this->getComponent($url)->sanitizeRedirect();
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function dataForTestSanitizeRedirect(): array
+    public function dataForTestSanitizeUrlComponent_SanitizeRedirect(): array
     {
-        $baseUrl = '/mfa/verify/provider';
+        $baseUrl = '/foo';
 
         return [
-            [$baseUrl, ''],
-            [$baseUrl . '?redirect', ''],
-            [$baseUrl . '?redirect=', ''],
+            [$baseUrl, '/'],
+            [$baseUrl . '?redirect', '/'],
+            [$baseUrl . '?redirect=', '/'],
             [$baseUrl . '?redirect=/', '/'],
             [$baseUrl . '?redirect=test', '/'],
             [$baseUrl . '?redirect=http://evil.com', '/'],
@@ -91,6 +80,52 @@ class SanitizeUrlComponentTest extends TestCase
             [$baseUrl . '?redirect=/../../root', '/'],
             [$baseUrl . '?redirect=/<script>', '/&lt;script&gt;'],
             [$baseUrl . '?redirect=' . $baseUrl, '/'],
+            [$baseUrl . '?redirect=/mfa', '/mfa'],
         ];
+    }
+
+    /**
+     * @dataProvider dataForTestSanitizeUrlComponent_SanitizeRedirect_With_LoopStop
+     */
+    public function testSanitizeUrlComponent_SanitizeRedirect_With_LoopStop(
+        ?string $stopper,
+        string $redirect,
+        string $expectedRedirect
+    ) {
+        $url = "/foo?redirect=$redirect";
+        $result = $this->getComponent($url)->sanitizeRedirect($stopper);
+
+        $this->assertSame($expectedRedirect, $result);
+    }
+
+    public function dataForTestSanitizeUrlComponent_SanitizeRedirect_With_LoopStop(): array
+    {
+        return [
+            ['', '', '/'],
+            ['', '/bar', '/bar'],
+            ['/', '/bar', '/'],
+            ['stop', '/bar', '/bar'],
+            ['stop', '/stop', '/'],
+            ['stop', '/stop/deep', '/'],
+            ['stop/deep', '/stop/deep', '/'],
+            ['stop/deeper', '/stop/deep', '/stop/deep'],
+            ['stop/deeper', '/stop/deeper/even-deeper', '/'],
+        ];
+    }
+
+    /**
+     * @param string $url
+     * @return SanitizeUrlComponent
+     */
+    protected function getComponent(string $url): SanitizeUrlComponent
+    {
+        $request = new ServerRequest(compact('url'));
+        $controller = $this->getMockBuilder('Cake\Controller\Controller')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $controller->method('getRequest')->willReturn($request);
+        $registry = new ComponentRegistry($controller);
+
+        return new SanitizeUrlComponent($registry);
     }
 }
