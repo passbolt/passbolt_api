@@ -45,8 +45,7 @@ class DuoVerifyGetController extends MfaVerifyController
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
 
         /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm $verifyForm */
-        $this->set('sigRequest', $verifyForm->getSigRequest());
-        $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
+        $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoApiHostname());
         $this->set('verifyForm', $verifyForm);
         $this->set('providers', $this->mfaSettings->getEnabledProviders());
         $this->set('theme', $this->User->theme());

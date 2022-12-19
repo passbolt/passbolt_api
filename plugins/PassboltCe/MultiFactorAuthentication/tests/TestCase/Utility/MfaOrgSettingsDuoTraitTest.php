@@ -35,10 +35,9 @@ class MfaOrgSettingsDuoTraitTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_DUO => true,
         ],
         MfaSettings::PROVIDER_DUO => [
-            'salt' => '__CHANGE_ME__THIS_MUST_BE_AT_LEAST_FOURTY_CHARACTERS_____',
-            'integrationKey' => 'UICPIC93F14RWR5F55SJ',
-            'secretKey' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
-            'hostName' => 'api-45e9f2ca.duosecurity.com',
+            'clientId' => 'UICPIC93F14RWR5F55SJ',
+            'clientSecret' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
+            'apiHostName' => 'api-45e9f2ca.duosecurity.com',
         ],
     ];
 
@@ -59,22 +58,9 @@ class MfaOrgSettingsDuoTraitTest extends MfaIntegrationTestCase
     {
         Configure::write('passbolt.plugins.multiFactorAuthentication', $this->defaultConfig);
         $settings = MfaOrgSettings::get();
-        $this->assertNotEmpty($settings->getDuoSalt());
-        $this->assertNotEmpty($settings->getDuoHostname());
-        $this->assertNotEmpty($settings->getDuoSecretKey());
-    }
-
-    /**
-     * @group mfa
-     * @group mfaOrgSettings
-     */
-    public function testMfaOrgSettingsGetDuoIncompletePropsSalt()
-    {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
-        $this->mockMfaOrgSettings($config, 'configure');
-        $settings = MfaOrgSettings::get();
-        $this->expectException(RecordNotFoundException::class);
-        $this->assertNotEmpty($settings->getDuoSalt());
+        $this->assertNotEmpty($settings->getDuoApiHostname());
+        $this->assertNotEmpty($settings->getDuoClientId());
+        $this->assertNotEmpty($settings->getDuoClientSecret());
     }
 
     /**
@@ -87,32 +73,32 @@ class MfaOrgSettingsDuoTraitTest extends MfaIntegrationTestCase
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
-        $this->assertNotEmpty($settings->getDuoHostname());
+        $this->assertNotEmpty($settings->getDuoApiHostname());
     }
 
     /**
      * @group mfa
      * @group mfaOrgSettings
      */
-    public function testMfaOrgSettingsGetDuoIncompletePropsSeckey()
+    public function testMfaOrgSettingsGetDuoIncompletePropsSecretKey()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
-        $this->assertNotEmpty($settings->getDuoSecretKey());
+        $this->assertNotEmpty($settings->getDuoClientSecret());
     }
 
     /**
      * @group mfa
      * @group mfaOrgSettings
      */
-    public function testMfaOrgSettingsGetDuoIncompletePropsIKey()
+    public function testMfaOrgSettingsGetDuoIncompletePropsClientId()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
-        $this->assertNotEmpty($settings->getDuoIntegrationKey());
+        $this->assertNotEmpty($settings->getDuoClientId());
     }
 }

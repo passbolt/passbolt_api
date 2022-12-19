@@ -48,8 +48,7 @@ class DuoSetupPostController extends MfaSetupController
         } catch (CustomValidationException $exception) {
             $this->set('setupForm', $setupForm);
             $this->set('theme', $this->User->theme());
-            $this->set('sigRequest', $setupForm->getSigRequest());
-            $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
+            $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoApiHostname());
             $this->viewBuilder()
                 ->setLayout('mfa_setup')
                 ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_DUO))

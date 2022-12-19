@@ -36,7 +36,7 @@ class MfaOrgSettingsSetService
 
         // Allow some flexibility in inputs names
         $provider = MfaSettings::PROVIDER_DUO;
-        $hostname = MfaOrgSettings::DUO_HOSTNAME;
+        $hostname = MfaOrgSettings::DUO_API_HOSTNAME;
         if (isset($data[$provider]['hostname'])) {
             $data[$provider][$hostname] = $data[$provider]['hostname'];
         }

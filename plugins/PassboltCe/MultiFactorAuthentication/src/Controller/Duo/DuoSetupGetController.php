@@ -55,8 +55,7 @@ class DuoSetupGetController extends MfaSetupController
     {
         /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm $setupForm */
         try {
-            $this->set('sigRequest', $setupForm->getSigRequest());
-            $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
+            $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoApiHostname());
         } catch (RecordNotFoundException $exception) {
             throw new InternalErrorException('MFA Duo organization settings are not complete.', 500, $exception);
         }

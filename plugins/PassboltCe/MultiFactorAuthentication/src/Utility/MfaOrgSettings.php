@@ -31,10 +31,10 @@ class MfaOrgSettings
     /**
      * Duo constants
      */
-    public const DUO_SECRET_KEY = 'secretKey';
-    public const DUO_HOSTNAME = 'hostName';
-    public const DUO_INTEGRATION_KEY = 'integrationKey';
-    public const DUO_SALT = 'salt';
+    public const DUO_HEALTH_CHECK = 'healthCheck';
+    public const DUO_CLIENT_ID = 'clientId';
+    public const DUO_CLIENT_SECRET = 'clientSecret';
+    public const DUO_API_HOSTNAME = 'apiHostName';
 
     /**
      * Yubikey constants
@@ -198,10 +198,9 @@ class MfaOrgSettings
                 break;
             case MfaSettings::PROVIDER_DUO:
                 try {
-                    $this->getDuoIntegrationKey();
-                    $this->getDuoSecretKey();
-                    $this->getDuoHostname();
-                    $this->getDuoSalt();
+                    $this->getDuoClientId();
+                    $this->getDuoClientSecret();
+                    $this->getDuoApiHostname();
                     $result = true;
                 } catch (RecordNotFoundException $exception) {
                 }
@@ -224,10 +223,9 @@ class MfaOrgSettings
             switch ($provider) {
                 case MfaSettings::PROVIDER_DUO:
                     $results[MfaSettings::PROVIDER_DUO] = [
-                        self::DUO_SALT => $this->getDuoSalt(),
-                        self::DUO_SECRET_KEY => $this->getDuoSecretKey(),
-                        self::DUO_HOSTNAME => $this->getDuoHostname(),
-                        self::DUO_INTEGRATION_KEY => $this->getDuoIntegrationKey(),
+                        self::DUO_CLIENT_SECRET => $this->getDuoClientSecret(),
+                        self::DUO_API_HOSTNAME => $this->getDuoApiHostname(),
+                        self::DUO_CLIENT_ID => $this->getDuoClientId(),
                     ];
                     break;
                 case MfaSettings::PROVIDER_YUBIKEY:

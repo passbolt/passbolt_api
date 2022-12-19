@@ -59,13 +59,12 @@ class DuoSetupPostControllerTest extends MfaIntegrationTestCase
     {
         $user = $this->logInAsUser();
         $sessionID = 'Foo';
-        $hostName = 'Bar';
-        $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class, true, $hostName);
+        $apiHostName = 'Bar';
+        $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class, true, $apiHostName);
         $this->mockInvalidMfaFormInterface(DuoSetupForm::class, $this->makeUac($user));
         $this->mockSessionId($sessionID);
         $this->post('/mfa/setup/duo?api-version=v2');
         $this->assertResponseSuccess();
-        $this->assertResponseContains('data-host="' . $hostName . '"');
         $this->assertSame(0, AuthenticationTokenFactory::count());
     }
 }
