@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Passbolt\WebInstaller\Form\AccountCreationForm;
 
 class AccountCreationController extends WebInstallerController
@@ -57,7 +57,7 @@ class AccountCreationController extends WebInstallerController
     {
         try {
             $data = $this->getAndValidateData();
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->_error($e->getMessage());
 
             return;
@@ -70,7 +70,7 @@ class AccountCreationController extends WebInstallerController
     /**
      * Get and validate the posted data.
      *
-     * @throws \Cake\Core\Exception\Exception If the user is not valid
+     * @throws \Cake\Core\Exception\CakeException If the user is not valid
      * @return array
      */
     protected function getAndValidateData()
@@ -81,7 +81,7 @@ class AccountCreationController extends WebInstallerController
         $this->set('formExecuteResult', $accountCreationForm);
 
         if (!$isValid) {
-            throw new Exception(__('The data entered are not correct'));
+            throw new CakeException(__('The data entered are not correct'));
         }
 
         return [

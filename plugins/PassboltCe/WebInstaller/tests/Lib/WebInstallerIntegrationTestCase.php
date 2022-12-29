@@ -66,7 +66,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
         try {
             $appValues = $engine->read('app');
         } catch (\Exception $exception) {
-            throw new InternalErrorException('config/app.php is missing an needed for this test.');
+            throw new InternalErrorException('config/app.php is missing an needed for this test.', 500, $exception);
         }
 
         $passboltValues = [];

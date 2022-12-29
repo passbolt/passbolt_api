@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
 use Passbolt\WebInstaller\Form\GpgKeyForm;
 
@@ -61,7 +61,7 @@ class GpgKeyGenerateController extends WebInstallerController
         $data = $this->request->getData();
         try {
             $this->validateData($data);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->_error($e->getMessage());
 
             return;
@@ -75,7 +75,7 @@ class GpgKeyGenerateController extends WebInstallerController
      * Validate data.
      *
      * @param array $data request data
-     * @throws \Cake\Core\Exception\Exception The data does not validate
+     * @throws \Cake\Core\Exception\CakeException The data does not validate
      * @return void
      */
     protected function validateData($data)
@@ -85,7 +85,7 @@ class GpgKeyGenerateController extends WebInstallerController
             $this->set('formExecuteResult', $form);
             $errors = Hash::flatten($form->getErrors());
             $errorMessage = implode('; ', $errors);
-            throw new Exception(__('The data entered are not correct: {0}', $errorMessage));
+            throw new CakeException(__('The data entered are not correct: {0}', $errorMessage));
         }
     }
 }

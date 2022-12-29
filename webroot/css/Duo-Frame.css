@@ -1,0 +1,8 @@
+#duo_iframe {
+    width: 100%;
+    min-width: 304px;
+    max-width: 620px;
+    height: 330px;
+    background: transparent;
+    border:0;
+}

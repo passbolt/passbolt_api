@@ -72,10 +72,11 @@ class JwtTokenCreateService extends JwtAbstractService
         try {
             return (int)(new FrozenTime('+' . $expiryPeriod))->toUnixString();
         } catch (\Throwable $e) {
-            throw new InternalErrorException(__(
-                'The configuration {0} is not correctly set.',
-                JwtTokenCreateService::JWT_EXPIRY_CONFIG_KEY
-            ));
+            throw new InternalErrorException(
+                __('The configuration {0} is not correctly set.', JwtTokenCreateService::JWT_EXPIRY_CONFIG_KEY),
+                500,
+                $e
+            );
         }
     }
 }

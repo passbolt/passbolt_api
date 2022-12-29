@@ -17,6 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\Log\Test\TestCase\Controller\Share;
 
 use App\Model\Entity\Permission;
+use App\Test\Factory\PermissionFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Utility\Hash;
@@ -54,54 +57,48 @@ class ShareControllerLogTest extends LogIntegrationTestCase
 
     public function testLogShareAddSuccess()
     {
-        // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        // Udd Edith in the list of permissions.
-        $userEId = UuidFactory::uuid('user.id.edith');
-
-        // Expected results.
-        $expectedAddedUsersIds = [];
-
-        // Build the changes.
-        $data = ['permissions' => []];
-
-        // Users permissions changes.
+        $user = UserFactory::make()->user()->persist();
+        $edith = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resourceId = $resource->id;
         // Add an owner permission for the user Edith
-        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userEId, 'data' => Hash::get(self::getDummySecretData(), 'data')];
-        $expectedAddedUsersIds[] = $userEId;
+        $data = [
+            'permissions' => [
+                ['aro' => 'User', 'aro_foreign_key' => $edith->id, 'type' => Permission::OWNER],
+            ],
+            'secrets' => [
+                ['user_id' => $edith->id, 'data' => Hash::get(self::getDummySecretData(), 'data')],
+            ],
+        ];
+        $this->logInAs($user);
 
-        $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $data);
+
         $this->assertSuccess();
         /** @var \App\Model\Entity\Secret $secret */
-        $secret = $this->Secrets->findByResourceIdAndUserId($resourceId, $userEId)->first();
-
+        $secret = $this->Secrets->findByResourceIdAndUserId($resourceId, $edith->id)->first();
         // Assert action log is correct.
         $this->assertOneActionLog();
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
-
         // Assert permissionHistory is correct.
         $this->assertPermissionsHistoryCount(1);
         $permissionHistory = $this->assertPermissionHistoryExists([
             'aco_foreign_key' => $resourceId,
-            'aro_foreign_key' => $userEId,
+            'aro_foreign_key' => $edith->id,
             'type' => Permission::OWNER,
         ]);
-
         // Assert secretHistory is correct.
         $this->assertSecretsHistoryCount(1);
         $this->assertSecretHistoryExists([
             'id' => $secret->id,
             'resource_id' => $resourceId,
-            'user_id' => $userEId,
+            'user_id' => $edith->id,
         ]);
-
         // Assert entityHistory is correct.
         $this->assertEntitiesHistoryCount(2);
         $this->assertEntityHistoryExists([
@@ -120,40 +117,42 @@ class ShareControllerLogTest extends LogIntegrationTestCase
 
     public function testLogShareRemoveSuccess()
     {
-        // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        // Udd Edith in the list of permissions.
-        $userBId = UuidFactory::uuid('user.id.betty');
-
-        // Build the changes.
-        $data = ['permissions' => []];
+        $user = UserFactory::make()->user()->persist();
+        $betty = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withCreatorAndPermission($user)
+            ->withPermissionsFor([$user], Permission::OWNER)
+            ->withSecretsFor([$user, $betty])
+            ->persist();
+        $resourceId = $resource->id;
+        $permission = PermissionFactory::make()->acoResource($resource)->aroUser($betty)->typeUpdate()->persist();
+        $this->logInAs($user);
         // Delete the permission of the user Betty.
-        $data['permissions'][] = [
-            'id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true,
+        $data = [
+            'permissions' => [
+                ['id' => $permission->id, 'delete' => true],
+            ],
         ];
 
-        $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $data);
-        $this->assertSuccess();
 
+        $this->assertSuccess();
         // Assert action log is correct.
         $this->assertOneActionLog();
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
-
         // Assert permissionHistory is correct.
         $this->assertOnePermissionHistory();
         $permissionHistory = $this->assertPermissionHistoryExists([
-            'id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"),
+            'id' => $permission->id,
             'aco_foreign_key' => $resourceId,
-            'aro_foreign_key' => $userBId,
+            'aro_foreign_key' => $betty->id,
             'type' => Permission::UPDATE,
         ]);
-
         // Assert entityHistory is correct.
         $this->assertOneEntityHistory();
         $this->assertEntityHistoryExists([
@@ -166,38 +165,42 @@ class ShareControllerLogTest extends LogIntegrationTestCase
 
     public function testLogShareUpdateSuccess()
     {
-        // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        // Udd Edith in the list of permissions.
-        $userBId = UuidFactory::uuid('user.id.betty');
+        $user = UserFactory::make()->user()->persist();
+        $betty = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withCreatorAndPermission($user)
+            ->withPermissionsFor([$user], Permission::OWNER)
+            ->withSecretsFor([$user, $betty])
+            ->persist();
+        $resourceId = $resource->id;
+        $permission = PermissionFactory::make()->acoResource($resource)->aroUser($betty)->typeUpdate()->persist();
+        $this->logInAs($user);
+        // Update the permission of the user Betty from Update to Owner.
+        $data = [
+            'permissions' => [
+                ['id' => $permission->id, 'type' => Permission::OWNER],
+            ],
+        ];
 
-        // Build the changes.
-        $data = ['permissions' => []];
-        // Delete the permission of the user Betty.
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'type' => Permission::OWNER];
-
-        $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $data);
-        $this->assertSuccess();
 
+        $this->assertSuccess();
         // Assert action log is correct.
         $this->assertOneActionLog();
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
-
         // Assert permissionHistory is correct.
         $this->assertOnePermissionHistory();
         $permissionHistory = $this->assertPermissionHistoryExists([
-            'id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"),
+            'id' => $permission->id,
             'aco_foreign_key' => $resourceId,
-            'aro_foreign_key' => $userBId,
+            'aro_foreign_key' => $betty->id,
             'type' => Permission::OWNER,
         ]);
-
         // Assert entityHistory is correct.
         $this->assertOneEntityHistory();
         $this->assertEntityHistoryExists([
@@ -210,35 +213,33 @@ class ShareControllerLogTest extends LogIntegrationTestCase
 
     public function testLogShareAddDryRun()
     {
-        // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        // Udd Edith in the list of permissions.
-        $userEId = UuidFactory::uuid('user.id.edith');
+        $user = UserFactory::make()->user()->persist();
+        $edith = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withCreatorAndPermission($user)
+            ->withPermissionsFor([$user], Permission::OWNER)
+            ->withSecretsFor([$user])
+            ->persist();
+        $resourceId = $resource->id;
+        $this->logInAs($user);
+        // Add an owner permission for the user Edith.
+        $data = [
+            'permissions' => [
+                ['aro' => 'User', 'aro_foreign_key' => $edith->id, 'type' => Permission::OWNER],
+            ],
+        ];
 
-        // Expected results.
-        $expectedAddedUsersIds = [];
-
-        // Build the changes.
-        $data = ['permissions' => []];
-
-        // Users permissions changes.
-        // Add an owner permission for the user Edith
-        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $expectedAddedUsersIds[] = $userEId;
-
-        $this->authenticateAs('ada');
         $this->postJson("/share/simulate/resource/$resourceId.json", $data);
-        $this->assertSuccess();
 
+        $this->assertSuccess();
         // Assert that actionLog is correct
         $this->assertOneActionLog();
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.dryRun'),
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
-
         // Assert that no entry has been done.
         $this->assertPermissionsHistoryEmpty();
         $this->assertEntitiesHistoryEmpty();
@@ -246,31 +247,32 @@ class ShareControllerLogTest extends LogIntegrationTestCase
 
     public function testLogShareFailure()
     {
-        // Define actors of this tests
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        // Add a non existing user in the list of permissions.
-        $userEId = UuidFactory::uuid('user.id.dontexist');
+        $user = UserFactory::make()->user()->persist();
+        $alienId = UuidFactory::uuid();
+        $resource = ResourceFactory::make()
+            ->withCreatorAndPermission($user)
+            ->withPermissionsFor([$user], Permission::OWNER)
+            ->withSecretsFor([$user])
+            ->persist();
+        $resourceId = $resource->id;
+        $this->logInAs($user);
+        // Add an owner permission to alien user who doesn't exist.
+        $data = [
+            'permissions' => [
+                ['aro' => 'User', 'aro_foreign_key' => $alienId, 'type' => Permission::OWNER],
+            ],
+            'secrets' => [
+                ['user_id' => $alienId, 'data' => Hash::get(self::getDummySecretData(), 'data')],
+            ],
+        ];
 
-        // Expected results.
-        $expectedAddedUsersIds = [];
-
-        // Build the changes.
-        $data = ['permissions' => []];
-
-        // Users permissions changes.
-        // Add an owner permission for the user Edith
-        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userEId, 'data' => Hash::get(self::getDummySecretData(), 'data')];
-        $expectedAddedUsersIds[] = $userEId;
-
-        $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json", $data);
-        $this->assertError();
 
+        $this->assertError();
         $this->assertOneActionLog();
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'status' => 0,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);

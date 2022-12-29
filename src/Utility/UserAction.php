@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Utility;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\ServerRequest;
 
 /**
@@ -95,7 +95,7 @@ class UserAction
         }
 
         if (!isset(self::$instance)) {
-            throw new Exception('UserAction has not been initialized yet.');
+            throw new CakeException('UserAction has not been initialized yet.');
         }
 
         return self::$instance;

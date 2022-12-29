@@ -24,12 +24,9 @@ use Cake\ORM\TableRegistry;
 
 class SoftDeleteTest extends AppTestCase
 {
-    public $Groups;
     public $GroupsUsers;
     public $Permissions;
-    public $Resources;
     public $Users;
-    public $Secrets;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
@@ -43,11 +40,6 @@ class SoftDeleteTest extends AppTestCase
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-        $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
-        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
-        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
     public function testUsersSoftDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_DelUserCase0()

@@ -18,7 +18,7 @@ namespace App\Utility\OpenPGP;
 
 use App\Utility\OpenPGP\Backends\Gnupg;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\InternalErrorException;
 
 class OpenPGPBackendFactory
@@ -44,8 +44,8 @@ class OpenPGPBackendFactory
             case self::GNUPG:
                 try {
                     return new Gnupg();
-                } catch (Exception $exception) {
-                    throw new InternalErrorException($exception->getMessage());
+                } catch (CakeException $exception) {
+                    throw new InternalErrorException($exception->getMessage(), 500, $exception);
                 }
                 // no break
             default:

@@ -15,7 +15,7 @@
 /**
  * PASSBOLT CONFIGURATION FILE TEMPLATE
  *
- * By default passbolt try to use the environment variables or fallback on the default values as
+ * By default passbolt tries to use the environment variables or falls back to the default values as
  * defined in default.php. You can use passbolt.default.php as a basis to set your own configuration
  * without using environment variables.
  *
@@ -36,7 +36,7 @@ return [
      * DEFAULT APP CONFIGURATION
      *
      * All the information in this section must be provided in order for passbolt to work
-     * This configuration overrides the CakePHP defaults locating in app.php
+     * This configuration overrides the CakePHP defaults located in app.php
      * Do not edit app.php as it may break your upgrade process
      */
     'App' => [
@@ -45,8 +45,9 @@ return [
         // e.g. where the passbolt instance will be reachable to your end users.
         // This information is need to render images in emails for example.
         'fullBaseUrl' => 'https://www.passbolt.test',
-        // OPTIONAL you can specify the base directory the app resides in
-        // usefull for example if you are running passbolt in a subdirectory like localhost/passbolt
+        // OPTIONAL
+        // You can specify the base directory the app resides in.
+        // Useful if you are running passbolt in a subdirectory like example.com/passbolt
         // Ensure your string starts with a / and does NOT end with a /
         // 'base' => '/subdir'
     ],

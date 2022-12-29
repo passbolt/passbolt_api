@@ -35,20 +35,32 @@ use Cake\Utility\Hash;
  */
 class SecretsUpdateSecretsServiceTest extends AppTestCase
 {
+    public $fixtures = [
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/Permissions',
+        'app.Base/Resources',
+        'app.Base/Secrets',
+        'app.Base/Users',
+        'app.Base/Gpgkeys',
+        'app.Base/Roles',
+        'app.Base/Profiles',
+    ];
+
     /**
-     * @var SecretsTable
+     * @var \App\Model\Table\SecretsTable
      */
     public $Secrets;
+
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    public $Permissions;
 
     /**
      * @var SecretsUpdateSecretsService
      */
     public $service;
-
-    public $fixtures = [
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets',
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles',
-    ];
 
     public function setUp(): void
     {

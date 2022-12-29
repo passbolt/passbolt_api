@@ -28,7 +28,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 
     public function testResourceTypesIndex_Success()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/resource-types.json?api-version=2');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));

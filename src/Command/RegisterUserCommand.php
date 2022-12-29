@@ -99,9 +99,7 @@ class RegisterUserCommand extends PassboltCommand
         parent::execute($args, $io);
 
         // Root user is not allowed to execute this command.
-        if (!$this->assertNotRoot($io)) {
-            return $this->errorCode();
-        }
+        $this->assertCurrentProcessUser($io);
 
         // Who is creating the user?
         // use the oldest admin or temporary non existing one

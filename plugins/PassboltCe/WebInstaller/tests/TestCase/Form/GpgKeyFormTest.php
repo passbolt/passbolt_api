@@ -19,6 +19,7 @@ namespace Passbolt\WebInstaller\Test\TestCase\Form;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Event\EventDispatcherTrait;
 use Passbolt\WebInstaller\Form\GpgKeyForm;
 
@@ -28,16 +29,28 @@ class GpgKeyFormTest extends AppTestCase
     use FormatValidationTrait;
     use GpgkeysModelTrait;
 
-    public function testGpgKeyFormTestFieldPublicKeyArmored()
+    /**
+     * @dataProvider dataForTestGpgKeyFormTestFieldFingerprint
+     */
+    public function testGpgKeyFormTestFieldFingerprint(string $testName, $testCase)
     {
-        $testCases = [
-            'requirePresence' => self::getRequirePresenceTestCases(),
-            'notEmpty' => self::getNotEmptyTestCases(),
-            'isPublicKey' => $this->getServerKeyPublicArmoredTestCases(),
-            'hasNoExpiry' => $this->getServerKeyPublicArmoredHasNoExpiryTestCases(),
-            'canEncrypt' => $this->getServerKeyPublicArmoredCanEncryptTestCases(),
+        OpenPGPBackendFactory::reset();
+        $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'fingerprint', $this->getDummyGpgkey(), [$testName => $testCase]);
+    }
+
+    public function dataForTestGpgKeyFormTestFieldFingerprint(): array
+    {
+        return [
+            ['requirePresence', self::getRequirePresenceTestCases()],
+            ['notEmpty', self::getNotEmptyTestCases()],
+            ['match_public_private_fingerprint', [
+                'rule_name' => 'match_public_private_fingerprints',
+                'test_cases' => [
+                    $this->getDummyGpgkey()['fingerprint'] => true,
+                    '2FC8945833C51946E937F9FED47B0811573EE67E' => false,
+                ],
+            ]],
         ];
-        $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'public_key_armored', $this->getDummyGpgkey(), $testCases);
     }
 
     public function testGpgKeyFormTestFieldPrivateKeyArmored()
@@ -53,20 +66,24 @@ class GpgKeyFormTest extends AppTestCase
         $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'private_key_armored', $this->getDummyGpgkey(), $testCases);
     }
 
-    public function testGpgKeyFormTestFieldFingerprint()
+    /**
+     * @dataProvider dataForTestGpgKeyFormTestFieldPublicKeyArmored
+     */
+    public function testGpgKeyFormTestFieldPublicKeyArmored(string $testName, $testCase)
     {
-        $testCases = [
-            'requirePresence' => self::getRequirePresenceTestCases(),
-            'notEmpty' => self::getNotEmptyTestCases(),
-            'match_public_private_fingerprint' => [
-                'rule_name' => 'match_public_private_fingerprints',
-                'test_cases' => [
-                    '2FC8945833C51946E937F9FED47B0811573EE67E' => false,
-                    $this->getDummyGpgkey()['fingerprint'] => true,
-                ],
-            ],
+        OpenPGPBackendFactory::reset();
+        $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'public_key_armored', $this->getDummyGpgkey(), [$testName => $testCase]);
+    }
+
+    public function dataForTestGpgKeyFormTestFieldPublicKeyArmored(): array
+    {
+        return [
+            ['requirePresence', self::getRequirePresenceTestCases()],
+            ['notEmpty', self::getNotEmptyTestCases()],
+            ['isPublicKey', $this->getServerKeyPublicArmoredTestCases()],
+            ['canEncrypt', $this->getServerKeyPublicArmoredCanEncryptTestCases()],
+            ['hasNoExpiry', $this->getServerKeyPublicArmoredHasNoExpiryTestCases()],
         ];
-        $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'fingerprint', $this->getDummyGpgkey(), $testCases);
     }
 
     /**
@@ -266,6 +283,7 @@ ybBiqwayCLB4UXGcUFHffj0mdjk8s/SvQyhZhA==
         return [
             'rule_name' => 'has_no_expiry',
             'test_cases' => [
+                $this->getDummyGpgkey()['public_key_armored'] => true,
                 // Key with expiry date are not accepted
                 '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
@@ -320,7 +338,6 @@ jobTYGzEZb9omwDvejOmnuveJM2ZC2xjMvhddmCNQ1+E/vCUgdnk33EDxvk+LStE
 GkkO+pcgU1wQ
 =Zopv
 -----END PGP PUBLIC KEY BLOCK-----' => false,
-                $this->getDummyGpgkey()['public_key_armored'] => true,
             ],
         ];
     }

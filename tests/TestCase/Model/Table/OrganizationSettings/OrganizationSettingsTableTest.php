@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         2.0.0
  */
 
-namespace Passbolt\OrganizationSettings\Test\TestCase\Model\Table;
+namespace App\Test\TestCase\Model\Table\OrganizationSettings;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;

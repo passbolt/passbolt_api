@@ -178,7 +178,7 @@ class ResourcesAddService
     protected function handleAttemptsExceededError(int $attempts): void
     {
         if ($attempts > self::ATTEMPTS_ALLOWED) {
-            $msg = __('An unexpected error occured, please contact an administrator.') . ' ';
+            $msg = __('An unexpected error occurred, please contact an administrator.') . ' ';
             $msg .= __('The server returned the following error:') . ' ';
             $msg .= 'Deadlock error while saving resource: attempts limit exceeded.';
             throw new ServiceUnavailableException($msg);

@@ -29,7 +29,7 @@ class ResourceTypesViewControllerTest extends AppIntegrationTestCase
 
     public function testResourceTypesView_Success()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $resourceType = UuidFactory::uuid('resource-types.id.password-string');
         $this->getJson("/resource-types/$resourceType.json?api-version=2");
         $this->assertSuccess();
@@ -38,7 +38,7 @@ class ResourceTypesViewControllerTest extends AppIntegrationTestCase
 
     public function testResourceTypesView_ErrorNotValidId()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $resourceId = 'invalid-id';
         $this->getJson("/resource-types/$resourceId.json");
         $this->assertError(400, 'The resource identifier should be a valid UUID.');
@@ -46,7 +46,7 @@ class ResourceTypesViewControllerTest extends AppIntegrationTestCase
 
     public function testResourceTypesView_ErrorNotFound()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $resourceId = UuidFactory::uuid();
         $this->getJson("/resource-types/$resourceId.json");
         $this->assertError(404, 'The resource type does not exist.');

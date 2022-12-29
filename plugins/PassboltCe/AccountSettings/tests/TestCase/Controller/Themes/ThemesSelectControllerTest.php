@@ -17,9 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Datasource\ModelAwareTrait;
+use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 
 /**
  * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesSelectController
@@ -29,11 +31,6 @@ class ThemesSelectControllerTest extends AppIntegrationTestCase
 {
     use ModelAwareTrait;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
-        'plugin.Passbolt/AccountSettings.AccountSettings',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
@@ -42,27 +39,21 @@ class ThemesSelectControllerTest extends AppIntegrationTestCase
 
     public function testThemesSelectSuccess()
     {
-        // Check that there is no prior setting is set
-        $setting = $this->AccountSettings->find()
-            ->where([
-                'user_id' => UuidFactory::uuid('user.id.ada'),
-                'property_id' => UuidFactory::uuid('account.settings.property.id.theme'),
-            ])
-            ->first();
-        $this->assertNotEmpty($setting);
+        $user = UserFactory::make()->user()->persist();
+        AccountSettingFactory::make()->theme('midgar')->withUser($user)->persist();
 
-        // Authenticate as ada and change the theme setting
-        $this->authenticateAs('ada');
+        /** Authenticate as ada and change the theme setting. */
+        $this->logInAs($user);
         $postData = ['value' => 'midgar'];
         $this->postJson('/account/settings/themes.json?api-version=v2', $postData);
         $this->assertSuccess();
 
         // Check that the setting is set
         $themeSettingFindConditions = [
-            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'user_id' => $user->id,
             'property_id' => UuidFactory::uuid('account.settings.property.id.theme'),
         ];
-        $setting = $this->AccountSettings->find()->where($themeSettingFindConditions)->first();
+        $setting = AccountSettingFactory::find()->where($themeSettingFindConditions)->first();
         $this->assertNotEmpty($setting);
         $this->assertEquals($setting['value'], 'midgar');
 
@@ -72,14 +63,14 @@ class ThemesSelectControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // Check that the setting is set to default
-        $setting = $this->AccountSettings->find()->where($themeSettingFindConditions)->first();
+        $setting = AccountSettingFactory::find()->where($themeSettingFindConditions)->first();
         $this->assertNotEmpty($setting);
         $this->assertEquals($setting['value'], 'default');
     }
 
     public function testThemesSelectErrorThemeDoesNotExist()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $postData = ['value' => 'costa-del-sol'];
         $this->postJson('/account/settings/themes.json?api-version=2', $postData);
         $this->assertError(400, 'This is not a valid theme.');
@@ -87,7 +78,7 @@ class ThemesSelectControllerTest extends AppIntegrationTestCase
 
     public function testThemesSelectErrorThemeEmpty()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $postData = ['value' => ''];
         $this->postJson('/account/settings/themes.json', $postData);
         $this->assertError(400, 'A value for the theme should be provided.');

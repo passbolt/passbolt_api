@@ -41,7 +41,7 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
     public function testThemesIndexSuccess()
     {
         // Authenticate as ada and list the themes
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->get('/account/settings/themes.json?api-version=v2');
         $this->assertResponseOk();
     }

@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace App\Utility\OpenPGP\Traits;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 
 trait OpenPGPBackendGetKeyInfoTrait
 {
@@ -51,25 +51,25 @@ trait OpenPGPBackendGetKeyInfoTrait
 
         $keyUnarmored = $this->unarmor($armoredKey, $this->getGpgMarker($armoredKey));
         if ($keyUnarmored === false) {
-            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
+            throw new CakeException(__('Invalid key. No OpenPGP public key package found.'));
         }
 
         // Get the message.
         $msg = @\OpenPGP_Message::parse($keyUnarmored); // phpcs:ignore
         if (empty($msg->packets)) {
-            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
+            throw new CakeException(__('Invalid key. No OpenPGP public key package found.'));
         }
 
         // Parse public key.
         $publicKey = @\OpenPGP_PublicKeyPacket::parse($keyUnarmored); // phpcs:ignore
         if ($publicKey === null) {
-            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
+            throw new CakeException(__('Invalid key. No OpenPGP public key package found.'));
         }
 
         // Get first packet for public key information.
         $publicKeyPacket = $msg->packets[0];
         if (!$publicKeyPacket instanceof \OpenPGP_PublicKeyPacket) {
-            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
+            throw new CakeException(__('Invalid key. No OpenPGP public key package found.'));
         }
         $results['fingerprint'] = @$publicKeyPacket->fingerprint(); // phpcs:ignore
         // will throw an exception if fingerprint is not readable or valid
@@ -123,7 +123,7 @@ trait OpenPGPBackendGetKeyInfoTrait
 
         // A user id is mandatory
         if (!isset($results['uid'])) {
-            throw new Exception(__('Invalid key. No user ID found.'));
+            throw new CakeException(__('Invalid key. No user ID found.'));
         }
 
         $results['armored'] = $armoredKey;
@@ -159,7 +159,7 @@ trait OpenPGPBackendGetKeyInfoTrait
     private function getKeyAlgorithm(\OpenPGP_PublicKeyPacket $firstKeyPacket): string
     {
         if (!isset(\OpenPGP_PublicKeyPacket::$key_fields[$firstKeyPacket->algorithm])) {
-            throw new Exception(__('Unsupported algorithm.'));
+            throw new CakeException(__('Unsupported algorithm.'));
         }
 
         return \OpenPGP_PublicKeyPacket::$algorithms[$firstKeyPacket->algorithm];

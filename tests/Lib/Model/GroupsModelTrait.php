@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Lib\Model;
 
 use App\Model\Entity\Group;
+use App\Test\Factory\GroupFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -134,7 +135,7 @@ trait GroupsModelTrait
      */
     protected function assertGroupIsNotSoftDeleted($id)
     {
-        $group = $this->Groups->get($id);
+        $group = GroupFactory::get($id);
         $this->assertFalse($group->deleted);
     }
 }
