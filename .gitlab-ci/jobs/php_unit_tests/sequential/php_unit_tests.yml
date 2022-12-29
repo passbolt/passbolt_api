@@ -29,11 +29,7 @@
 
 .postgres-template:
   services:
-<<<<<<< HEAD:.gitlab-ci/Jobs/php_unit_tests.yml
-    - registry.gitlab.com/passbolt/passbolt-ci-docker-images/postgres-12-alpine # should be DATABASE_ENGINE_VERSION
-=======
     - $DATABASE_ENGINE_VERSION # should be DATABASE_ENGINE_VERSION
->>>>>>> common:.gitlab-ci/jobs/php_unit_tests/sequential/php_unit_tests.yml
   # Postgres services variables
   variables:
     POSTGRES_DB: test
@@ -118,11 +114,7 @@ seq-php7.4-mysql5.7:
     - if: '$TEST_DISABLED == null'
 
 # TO BE REMOVED
-<<<<<<< HEAD:.gitlab-ci/Jobs/php_unit_tests.yml
-php7.4-postgres:
-=======
 seq-php7.4-postgres:
->>>>>>> common:.gitlab-ci/jobs/php_unit_tests/sequential/php_unit_tests.yml
   allow_failure: true
   variables:
     PHP_VERSION: "7.4"
