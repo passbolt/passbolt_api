@@ -12,20 +12,20 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.9.0
+ * @since         3.10.0
  */
 
-return [
-    'passbolt' => [
-        'plugins' => [
-            'selfRegistration' => [
-                'version' => '1.0.0',
-                'settingsVisibility' => [
-                    'whiteListPublic' => [
-                        'enabled',
-                    ],
-                ],
-            ],
-        ],
-    ],
-];
+namespace Passbolt\SelRegistration\Test\TestCase\Controller\Settings;
+
+use App\Test\Lib\AppIntegrationTestCase;
+
+class SettingsIndexControllerTest extends AppIntegrationTestCase
+{
+    public function testSettingsIndexController_publicPluginSettings()
+    {
+        $url = '/settings.json?api-version=2';
+        $this->getJson($url);
+        $this->assertSuccess();
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->selfRegistration->enabled));
+    }
+}
