@@ -87,7 +87,9 @@ trait SmtpSettingsTestTrait
     private function makeDummyPassboltFile(array $data)
     {
         $phpConfig = new PhpConfig(TMP . 'tests' . DS);
-        $phpConfig->dump('passbolt', $data);
+        if (!$phpConfig->dump('passbolt', $data)) {
+            $this->markTestSkipped(TMP . 'tests' . DS . 'passbolt not writable, skipping test');
+        }
     }
 
     private function deletePassboltDummyFile(): void
