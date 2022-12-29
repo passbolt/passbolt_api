@@ -18,7 +18,7 @@ namespace Passbolt\WebInstaller\Controller;
 
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
@@ -136,7 +136,7 @@ class DatabaseController extends WebInstallerController
             $this->testConnection($data);
             DatabaseConfiguration::setDefaultConfig($data);
             $hasAdmin = $this->hasAdmin();
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->_error($e->getMessage());
 
             return;
@@ -152,7 +152,7 @@ class DatabaseController extends WebInstallerController
     /**
      * Check if the database has already administrator.
      *
-     * @throws \Cake\Core\Exception\Exception If the database schema does not validate
+     * @throws \Cake\Core\Exception\CakeException If the database schema does not validate
      * @return bool
      */
     protected function hasAdmin(): bool
@@ -176,7 +176,7 @@ class DatabaseController extends WebInstallerController
      * Test the connection to the database
      *
      * @param array $data The database configuration to test
-     * @throws \Cake\Core\Exception\Exception A connection could not be established with the provided data
+     * @throws \Cake\Core\Exception\CakeException A connection could not be established with the provided data
      * @return void
      */
     protected function testConnection(array $data): void
@@ -187,7 +187,7 @@ class DatabaseController extends WebInstallerController
         if (!DatabaseConfiguration::testConnection()) {
             $msg = __('A connection could not be established with the credentials provided.') . ' ';
             $msg .= __('Please verify the settings.');
-            throw new Exception($msg);
+            throw new CakeException($msg);
         }
     }
 
@@ -195,7 +195,7 @@ class DatabaseController extends WebInstallerController
      * Validate data.
      *
      * @param array $data request data
-     * @throws \Cake\Core\Exception\Exception The data does not validate
+     * @throws \Cake\Core\Exception\CakeException The data does not validate
      * @return void
      */
     protected function validateData(array $data): void
@@ -203,7 +203,7 @@ class DatabaseController extends WebInstallerController
         $form = new DatabaseConfigurationForm();
         $this->set('formExecuteResult', $form);
         if (!$form->execute($data)) {
-            throw new Exception(__('The data entered are not correct'));
+            throw new CakeException(__('The data entered are not correct'));
         }
     }
 }

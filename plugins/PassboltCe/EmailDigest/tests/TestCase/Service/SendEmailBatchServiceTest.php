@@ -205,9 +205,15 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
             $config['className'] = self::class;
             $instance = new class ([], $exception) extends TestEmailTransport
             {
+                /**
+                 * @var mixed
+                 */
+                private $exception;
+
                 public function __construct($config, $exception)
                 {
                     $this->exception = $exception;
+
                     parent::__construct($config);
                 }
 

@@ -68,15 +68,14 @@ class SendTestEmailCommandTest extends AppTestCase
     }
 
     /**
-     * Basic test without recipient
+     * Basic test without recipient should fail.
      */
     public function testSendTestEmailCommandWithoutRecipient()
     {
         $this->exec('passbolt send_test_email');
-        $this->assertExitSuccess();
-        $this->assertMailSentTo('no-reply@passbolt.com');
-        $this->assertMailSubjectContains('Passbolt test email');
-        $this->assertMailCount(1);
+
+        $this->assertExitError();
+        $this->assertErrorContains('The `recipient` option is required and has no default value');
     }
 
     /**
@@ -100,6 +99,7 @@ class SendTestEmailCommandTest extends AppTestCase
         $recipient = 'this is not a valid recipient';
         $this->exec('passbolt send_test_email -r ' . $recipient);
         $this->assertExitError();
+        $this->assertOutputContains('The recipient should be a valid email address.');
     }
 
     /**
@@ -111,7 +111,9 @@ class SendTestEmailCommandTest extends AppTestCase
         $config['className'] = 'notSmtp';
         TransportFactory::drop('default');
         TransportFactory::setConfig('default', $config);
-        $this->exec('passbolt send_test_email');
+
+        $this->exec('passbolt send_test_email -r test@passbolt.test');
+
         $this->assertExitError();
         $this->assertOutputContains('Your email transport configuration is not set to use "Smtp"');
         $this->assertMailCount(0);

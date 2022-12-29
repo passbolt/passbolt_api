@@ -73,7 +73,7 @@ class UsersEditController extends AppController
             $user = $this->Users->findView($id, $this->User->role())->first();
         } catch (Exception $exception) {
             $msg = __('Could not find the user data after save. Maybe it has been deleted in the meantime.');
-            throw new InternalErrorException($msg);
+            throw new InternalErrorException($msg, 500, $exception);
         }
 
         $this->success(__('The user has been updated successfully.'), $user);

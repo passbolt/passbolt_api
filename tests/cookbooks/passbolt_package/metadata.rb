@@ -1,7 +1,0 @@
-name 'passbolt_package'
-maintainer 'Passbolt SA'
-maintainer_email 'contact@passbolt.com'
-license 'All Rights Reserved'
-description 'Installs/Configures passbolt in a variety of environments'
-version '0.1.0'
-chef_version '>= 14.0'

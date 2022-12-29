@@ -54,9 +54,7 @@ class MigratePostgresCommand extends PassboltCommand
 
         // Root user is not allowed to execute this command.
         // This command needs to be executed with the same user as the webserver.
-        if (!$this->assertNotRoot($io)) {
-            return $this->errorCode();
-        }
+        $this->assertCurrentProcessUser($io);
 
         /** @var \Cake\Database\Connection $connection */
         $connection = ConnectionManager::get($args->getOption('datasource'));

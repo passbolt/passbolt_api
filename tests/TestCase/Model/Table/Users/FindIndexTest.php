@@ -27,9 +27,21 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
 {
-    public $Resources;
+    public $fixtures = [
+        'app.Base/Users',
+        'app.Base/Profiles',
+        'app.Base/Gpgkeys',
+        'app.Base/Roles',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/Resources',
+        'app.Base/Permissions',
+    ];
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions'];
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    public $Users;
 
     public function setUp(): void
     {

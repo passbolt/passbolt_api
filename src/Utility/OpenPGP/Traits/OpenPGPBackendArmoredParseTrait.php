@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Utility\OpenPGP\Traits;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 
 trait OpenPGPBackendArmoredParseTrait
 {
@@ -25,13 +25,13 @@ trait OpenPGPBackendArmoredParseTrait
      *
      * @param string $armored ASCII armored gpg data
      * @return mixed
-     * @throws \Cake\Core\Exception\Exception
+     * @throws \Cake\Core\Exception\CakeException
      */
     protected function getGpgMarker(string $armored)
     {
         $isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $armored, $values);
         if (!$isMarker || !isset($values[2])) {
-            throw new Exception(__('No OpenPGP marker found.'));
+            throw new CakeException(__('No OpenPGP marker found.'));
         }
 
         return $values[2];
@@ -80,7 +80,7 @@ trait OpenPGPBackendArmoredParseTrait
     {
         try {
             $this->assertGpgMarker($armoredKey, self::PUBLIC_KEY_MARKER);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             return false;
         }
 
@@ -114,7 +114,7 @@ trait OpenPGPBackendArmoredParseTrait
     {
         try {
             $this->assertGpgMarker($armoredKey, self::PRIVATE_KEY_MARKER);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             return false;
         }
 
@@ -145,7 +145,7 @@ trait OpenPGPBackendArmoredParseTrait
     {
         try {
             $marker = $this->getGpgMarker($armored);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             return false;
         }
         if ($marker !== self::SIGNED_MESSAGE_MARKER) {

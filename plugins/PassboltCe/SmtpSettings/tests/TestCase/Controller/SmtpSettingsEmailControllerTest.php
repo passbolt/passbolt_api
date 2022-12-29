@@ -94,4 +94,14 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
         $this->getJson('/smtp/settings.json');
         $this->assertAuthenticationError();
     }
+
+    public function testSmtpSettingsEmailController_Should_Be_Forbidden_If_Security_Enabled()
+    {
+        $this->disableSmtpSettingsEndpoints();
+
+        $this->postJson('/smtp/email.json');
+        $this->assertForbiddenError('SMTP settings endpoints disabled.');
+
+        $this->enableSmtpSettingsEndpoints();
+    }
 }

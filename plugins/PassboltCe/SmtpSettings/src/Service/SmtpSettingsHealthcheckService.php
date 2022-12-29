@@ -18,7 +18,9 @@ namespace Passbolt\SmtpSettings\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
+use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
 
 class SmtpSettingsHealthcheckService
 {
@@ -50,6 +52,9 @@ class SmtpSettingsHealthcheckService
     {
         $check = [];
         $check['isEnabled'] = $this->isFeaturePluginEnabled('SmtpSettings');
+        $check['areEndpointsDisabled'] = Configure::read(
+            SmtpSettingsSecurityMiddleware::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED
+        );
         $getService = new SmtpSettingsGetService($this->passboltFileName);
         $check['errorMessage'] = false;
 

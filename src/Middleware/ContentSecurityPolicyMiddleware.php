@@ -49,7 +49,7 @@ class ContentSecurityPolicyMiddleware implements MiddlewareInterface
         $defaultCsp .= "script-src 'self'; "; // eval needed by canjs for templates
         $defaultCsp .= "style-src 'self' 'unsafe-inline'; "; // inline needed to perform extension iframe resizing
         $defaultCsp .= "img-src 'self';";
-        $defaultCsp .= "frame-src 'self';";
+        $defaultCsp .= "frame-src 'self' https://*.duosecurity.com;";
 
         if ($cspFromConfig === null || $cspFromConfig === true) {
             $csp = $defaultCsp;

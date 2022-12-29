@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace App\Utility\OpenPGP\Traits;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 
 trait OpenPGPBackendGetMessageInfoTrait
 {
@@ -36,13 +36,13 @@ trait OpenPGPBackendGetMessageInfoTrait
     {
         $messageUnarmored = $this->unarmor($armoredMessage, $this->getGpgMarker($armoredMessage));
         if ($messageUnarmored === false) {
-            throw new Exception(__('Invalid key. No OpenPGP package found.'));
+            throw new CakeException(__('Invalid key. No OpenPGP package found.'));
         }
 
         // Get the message.
         $msg = @\OpenPGP_Message::parse($messageUnarmored); // phpcs:ignore
         if (empty($msg->packets)) {
-            throw new Exception(__('Invalid key. No OpenPGP public key package found.'));
+            throw new CakeException(__('Invalid key. No OpenPGP public key package found.'));
         }
 
         $packets = $msg->packets;
@@ -60,10 +60,10 @@ trait OpenPGPBackendGetMessageInfoTrait
         }
 
         if (!$asymmetric && !$symmetric) {
-            throw new Exception('Not enough session key packet found.');
+            throw new CakeException('Not enough session key packet found.');
         }
         if ($asymmetric && $symmetric) {
-            throw new Exception('Too many types of session key packet found.');
+            throw new CakeException('Too many types of session key packet found.');
         }
 
         return [

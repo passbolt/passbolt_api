@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Groups;
 
+use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
 use App\Test\Factory\UserFactory;
@@ -42,12 +43,14 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
         'app.Base/Favorites',
     ];
 
+    /**
+     * @var \App\Model\Table\ResourcesTable|null
+     */
+    public $Resources = null;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
@@ -396,7 +399,7 @@ hcciUFw5
         $this->assertSuccess();
 
         // The name of the group should be updated
-        $group = $this->Groups->get($groupId);
+        $group = GroupFactory::get($groupId);
         $this->assertNotEquals($data['name'], $group->name);
         $this->assertEquals('Freelancer', $group->name);
     }
@@ -422,7 +425,7 @@ hcciUFw5
         $this->assertSuccess();
 
         // The name of the group should be updated
-        $group = $this->Groups->get($groupId);
+        $group = GroupFactory::get($groupId);
         $this->assertEquals($data['name'], $group->name);
     }
 
@@ -552,7 +555,7 @@ hcciUFw5
         $this->assertSuccess();
 
         // The name of the group should be updated
-        $group = $this->Groups->get($groupId);
+        $group = GroupFactory::get($groupId);
         $this->assertEquals($data['name'], $group->name);
 
         // Jean and Nancy should still have access to the resources.
@@ -585,7 +588,7 @@ hcciUFw5
         $this->assertSuccess();
 
         // The user carol shouldn't be member of the group
-        $groupUser = $this->GroupsUsers->find()->where(['user_id' => $userCId, 'group_id' => $groupId])->first();
+        $groupUser = GroupsUserFactory::find()->where(['user_id' => $userCId, 'group_id' => $groupId])->first();
         $this->assertEmpty($groupUser);
     }
 
@@ -608,7 +611,7 @@ hcciUFw5
         $this->assertSuccess();
 
         // As Irene is also member of the group ergonom, the favorite for cakephp shouldn't be removed.
-        $resources = $this->Favorites->find()
+        $resources = FavoriteFactory::find()
             ->where(['user_id' => $userLId])
             ->all();
         $resourcesId = Hash::extract($resources->toArray(), '{n}.foreign_key');
@@ -633,7 +636,7 @@ hcciUFw5
         $this->assertSuccess();
 
         // The user Kathleen should still be member of the group
-        $groupUser = $this->GroupsUsers->find()->where(['user_id' => $userKId, 'group_id' => $groupId])->first();
+        $groupUser = GroupsUserFactory::find()->where(['user_id' => $userKId, 'group_id' => $groupId])->first();
         $this->assertnotEmpty($groupUser);
     }
 

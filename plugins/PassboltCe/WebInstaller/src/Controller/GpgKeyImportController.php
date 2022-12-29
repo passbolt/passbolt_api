@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Log\Log;
 use Cake\Utility\Hash;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
@@ -67,7 +67,7 @@ class GpgKeyImportController extends WebInstallerController
             $this->validateData($data);
             $fingerprint = $data['fingerprint'];
             $hasSmtpSettings = $this->hasValidSmtpSettingsInDB($fingerprint);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->_error($e->getMessage());
 
             return;
@@ -83,7 +83,7 @@ class GpgKeyImportController extends WebInstallerController
      * Validate data.
      *
      * @param array $data request data
-     * @throws \Cake\Core\Exception\Exception The key is not valid
+     * @throws \Cake\Core\Exception\CakeException The key is not valid
      * @return void
      */
     protected function validateData($data)
@@ -94,7 +94,7 @@ class GpgKeyImportController extends WebInstallerController
         if (!$confIsValid) {
             $errors = Hash::flatten($form->getErrors());
             $errorMessage = implode('; ', $errors);
-            throw new Exception(__('The data entered are not correct: {0}', $errorMessage));
+            throw new CakeException(__('The data entered are not correct: {0}', $errorMessage));
         }
     }
 

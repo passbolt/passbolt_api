@@ -24,7 +24,7 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
     public function testSettingsIndexController_SuccessAsLU()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/settings.json?api-version=2');
         $this->assertSuccess();
         $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));

@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Utility;
 
 use App\Utility\Healthchecks;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
 use Cake\Datasource\ConnectionManager;
@@ -71,7 +71,7 @@ class DatabaseConfiguration
     /**
      * Test database connection.
      *
-     * @throws \Cake\Core\Exception\Exception when a connection cannot be established
+     * @throws \Cake\Core\Exception\CakeException when a connection cannot be established
      * @return bool
      */
     public static function testConnection()
@@ -105,7 +105,7 @@ class DatabaseConfiguration
     /**
      * Validate the database schema.
      *
-     * @throws \Cake\Core\Exception\Exception If the database schema does not validate
+     * @throws \Cake\Core\Exception\CakeException If the database schema does not validate
      * @return void
      */
     public static function validateSchema()
@@ -114,7 +114,7 @@ class DatabaseConfiguration
         $expectedTables = Healthchecks::getSchemaTables(1);
         foreach ($expectedTables as $expectedTable) {
             if (!in_array($expectedTable, $tables)) {
-                throw new Exception(__('The database schema does not match the one expected'));
+                throw new CakeException(__('The database schema does not match the one expected'));
             }
         }
     }

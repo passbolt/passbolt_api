@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
@@ -75,7 +75,7 @@ class EmailController extends WebInstallerController
         $data = $this->getRequest()->getData();
         try {
             $this->validateData($data);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->_error($e->getMessage());
 
             return;
@@ -94,7 +94,7 @@ class EmailController extends WebInstallerController
      * Validate data.
      *
      * @param array $data request data
-     * @throws \Cake\Core\Exception\Exception The data does not validate
+     * @throws \Cake\Core\Exception\CakeException The data does not validate
      * @return void
      */
     protected function validateData($data)
@@ -102,7 +102,7 @@ class EmailController extends WebInstallerController
         $form = new EmailConfigurationForm();
         $this->set('formExecuteResult', $form);
         if (!$form->execute($data)) {
-            throw new Exception(__('The data entered are not correct'));
+            throw new CakeException(__('The data entered are not correct'));
         }
     }
 

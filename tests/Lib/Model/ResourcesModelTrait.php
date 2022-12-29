@@ -18,6 +18,7 @@ namespace App\Test\Lib\Model;
 
 use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\ResourceFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
@@ -215,7 +216,7 @@ trait ResourcesModelTrait
      */
     protected function assertResourceIsSoftDeleted($id)
     {
-        $resource = $this->Resources->get($id);
+        $resource = ResourceFactory::get($id);
         $this->assertTrue($resource->deleted);
     }
 
@@ -226,7 +227,7 @@ trait ResourcesModelTrait
      */
     protected function assertResourceIsNotSoftDeleted($id)
     {
-        $resource = $this->Resources->get($id);
+        $resource = ResourceFactory::get($id);
         $this->assertFalse($resource->deleted);
     }
 
