@@ -23,7 +23,8 @@
     <?= $this->Form->control('hotp', [
         'label' => 'Yubikey OTP',
         'type' => 'password',
-        'autofocus' => 'autofocus'
+        'autofocus' => 'autofocus',
+        'autocomplete' => 'off'
     ]); ?>
     <div class="input checkbox">
         <input type="checkbox" name="remember" value="remember" id="remember">

@@ -23,6 +23,7 @@
                 <?= $this->Form->control('hotp', [
                     'label' => 'Yubikey OTP',
                     'type' => 'password',
+                    'autocomplete' => 'off'
                 ]); ?>
                 <div class="helptext">
                     <?= __('Plug in the yubikey and put your finger on it.'); ?>
