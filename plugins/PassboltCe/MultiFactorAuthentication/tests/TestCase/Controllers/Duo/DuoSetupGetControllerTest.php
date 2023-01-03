@@ -97,7 +97,6 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
         $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
         $this->get('/mfa/setup/duo');
         $this->assertResponseOk();
-        $this->assertResponseContains('<iframe');
     }
 
     public function testMfaSetupGetDuo_Valid_Form()

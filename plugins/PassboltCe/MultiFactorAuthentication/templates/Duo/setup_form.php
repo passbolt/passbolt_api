@@ -1,19 +1,16 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var string $hostName
  * @var mixed $setupForm
- * @var string $sigRequest
  */
-    use Cake\Core\Configure;
     use Cake\Routing\Router;
 
     $title = __('Duo multi-factor authentication');
     $this->assign('title', $title);
-    $this->Html->css('Duo-Frame.css', ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'iframe mfa');
     $formContext = [
-        'url' => Router::url('/mfa/setup/duo', true),
+        'url' => Router::url('/mfa/setup/duo/prompt', true),
+        'target' => '_top',
         'id' => 'duo_form',
     ];
     ?>
@@ -21,14 +18,12 @@
     <div class="row">
         <div class="col7 main-column">
             <h3><?= $title; ?></h3>
-            <script type="text/javascript" src="<?= Router::url('js/app/Duo-Web-v2.js', true); ?>"></script>
-            <iframe id="duo_iframe"
-                    data-host="<?= $hostName; ?>"
-            ></iframe>
-            <?= $this->Form->create($setupForm, $formContext); ?><?= $this->Form->end(); ?>
-            <div class="actions-wrapper">
-                <a href="<?= Router::url('/mfa/setup/select', true); ?>" class="button cancel">Cancel</a>
-            </div>
+            <?= $this->Form->create($setupForm, $formContext); ?>
+                <div class="actions-wrapper">
+                    <a href="<?= Router::url('/mfa/setup/select', true); ?>" class="button cancel">Cancel</a>
+                    <button type="submit" class="button primary">Sign-in with Duo</button>
+                </div>
+            <?= $this->Form->end(); ?>
         </div>
     </div>
 </div>
