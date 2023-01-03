@@ -126,6 +126,8 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $config['providers'] = [MfaSettings::PROVIDER_TOTP => true];
         $this->mockMfaOrgSettings($config, 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
         $this->authenticateAs('admin');
+
+        $this->mockDuoHealthCheck();
         $this->putJson('/mfa/settings.json?api-version=v2', $this->getDefaultMfaOrgSettings());
         $this->assertResponseSuccess();
     }
@@ -140,11 +142,13 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $config['providers'] = [MfaSettings::PROVIDER_TOTP => true];
         $this->mockMfaOrgSettings($config, 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
         $this->authenticateAs('admin');
+
         $this->putJson('/mfa/settings.json?api-version=v2', [
             'providers' => ['duo', 'nope', 'yubikey'],
             'duo' => ['wrong' => 'config'],
             'yubikey' => ['clientId' => 'aaa', 'secretKey' => '123'],
         ]);
+
         $result = json_decode($this->_getBodyAsString(), true);
         $this->assertTrue(isset($result['body']['duo']['clientSecret']['notEmpty']));
         $this->assertTrue(isset($result['body']['duo']['apiHostName']['notEmpty']));

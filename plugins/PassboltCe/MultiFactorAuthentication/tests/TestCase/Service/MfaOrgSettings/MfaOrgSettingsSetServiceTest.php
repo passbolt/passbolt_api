@@ -20,11 +20,11 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\MfaOrgSetting
 use App\Test\Factory\UserFactory;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsSetService;
+use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use PHPUnit\Framework\TestCase;
 
-class MfaOrgSettingsSetServiceTest extends TestCase
+class MfaOrgSettingsSetServiceTest extends MfaIntegrationTestCase
 {
     use MfaOrgSettingsTestTrait;
     use TruncateDirtyTables;
@@ -40,6 +40,7 @@ class MfaOrgSettingsSetServiceTest extends TestCase
         $uacAdmin = UserFactory::make()->admin()->persistedUAC();
         $data = $this->getDefaultMfaOrgSettings();
 
+        $this->mockDuoHealthCheck();
         $service = new MfaOrgSettingsSetService();
         $returnedSettings = $service->setOrgSettings($data, $uacAdmin);
 

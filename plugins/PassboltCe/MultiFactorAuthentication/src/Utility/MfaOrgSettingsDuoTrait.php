@@ -21,6 +21,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
+use Duo\DuoUniversal\DuoException;
 
 trait MfaOrgSettingsDuoTrait
 {
@@ -35,7 +36,6 @@ trait MfaOrgSettingsDuoTrait
     public function getDuoSdkClient(?array $data = null)
     {
         $duoCallbackURL = Router::url('/mfa/setup/duo/callback');
-
         $duoClient = new Client(
             $this->getDuoClientId($data),
             $this->getDuoClientSecret($data),
@@ -129,6 +129,16 @@ trait MfaOrgSettingsDuoTrait
         } catch (RecordNotFoundException $e) {
             $msg = __('No configuration set for Duo client ID.');
             $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_CLIENT_ID]['notEmpty'] = $msg;
+        }
+
+        if (empty($errors[MfaSettings::PROVIDER_DUO])) {
+            $duoClient = $this->getDuoSdkClient($data);
+            try {
+                $duoClient->healthCheck();
+            } catch (DuoException $e) {
+                $msg = __("Cannot verify Duo settings. {$e->getMessage()}");
+                $errors[MfaSettings::PROVIDER_DUO]['healthCheck'] = $msg;
+            }
         }
 
         if (count($errors) !== 0) {

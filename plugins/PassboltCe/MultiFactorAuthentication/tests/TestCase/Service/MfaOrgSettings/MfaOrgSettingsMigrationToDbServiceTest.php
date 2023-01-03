@@ -19,14 +19,14 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\MfaOrgSetting
 
 use App\Error\Exception\CustomValidationException;
 use App\Test\Factory\UserFactory;
-use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsMigrationToDbService;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
+use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
+class MfaOrgSettingsMigrationToDbServiceTest extends MfaIntegrationTestCase
 {
     use MfaOrgSettingsTestTrait;
     use TruncateDirtyTables;
@@ -130,6 +130,7 @@ class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
         $settings = $this->getDefaultMfaOrgSettings();
         $this->mockMfaOrgSettings($settings);
 
+        $this->mockDuoHealthCheck();
         $this->service->migrate();
 
         $settingsInDB = $this->getMfaOrganizationSettingValue();

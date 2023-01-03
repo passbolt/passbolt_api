@@ -305,6 +305,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsValidateDuoSettings_Success()
     {
+        $this->mockDuoHealthCheck();
         $settings = new MfaOrgSettings([MfaSettings::PROVIDERS => []]);
         $settings->validateDuoSettings([
             MfaSettings::PROVIDER_DUO => [

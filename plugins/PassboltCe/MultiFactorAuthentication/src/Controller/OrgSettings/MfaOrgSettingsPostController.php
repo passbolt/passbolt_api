@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\OrgSettings;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaController;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsSetService;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettingsDuoBackwardCompatible;
 
 class MfaOrgSettingsPostController extends MfaController
 {
@@ -38,8 +39,11 @@ class MfaOrgSettingsPostController extends MfaController
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
         }
 
+        /** TODO: Remove this line and its class once the frontend has been updated to use the new format/names */
+        $data = MfaOrgSettingsDuoBackwardCompatible::remapSetDuoSettings((array)$this->getRequest()->getData());
+
         $config = (new MfaOrgSettingsSetService())->setOrgSettings(
-            (array)$this->getRequest()->getData(),
+            $data,
             $this->User->getAccessControl()
         );
         $this->success(__('The multi factor authentication settings for the organization were updated.'), $config);

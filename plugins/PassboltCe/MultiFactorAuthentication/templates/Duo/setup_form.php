@@ -24,7 +24,6 @@
             <script type="text/javascript" src="<?= Router::url('js/app/Duo-Web-v2.js', true); ?>"></script>
             <iframe id="duo_iframe"
                     data-host="<?= $hostName; ?>"
-                    data-sig-request="<?= $sigRequest; ?>"
             ></iframe>
             <?= $this->Form->create($setupForm, $formContext); ?><?= $this->Form->end(); ?>
             <div class="actions-wrapper">
