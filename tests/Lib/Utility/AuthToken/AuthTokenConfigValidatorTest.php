@@ -22,7 +22,7 @@ class AuthTokenConfigValidatorTest extends TestCase
     /**
      * @dataProvider provideIncorrectValues
      */
-    public function testThatAuthTokenConfigValidatorReturnNullIfValidationFailed($value)
+    public function testAuthTokenConfigValidatorReturnNullIfValidationFailed($value)
     {
         $this->assertNull(call_user_func($this->sut, $value));
     }
@@ -30,7 +30,7 @@ class AuthTokenConfigValidatorTest extends TestCase
     /**
      * @dataProvider provideCorrectValues
      */
-    public function testThatAuthTokenConfigValidatorReturnTrueIfValidationFailed($value)
+    public function testAuthTokenConfigValidatorReturnTrueIfValidationFailed($value)
     {
         $this->assertSame($value, call_user_func($this->sut, $value));
     }
@@ -38,7 +38,7 @@ class AuthTokenConfigValidatorTest extends TestCase
     /**
      * @dataProvider provideCorrectValues
      */
-    public function testThaReturnValueWhenUsedWithFilterVarWithCorrectValues($value)
+    public function testAuthTokenConfigValidatorReturnValueWhenUsedWithFilterVarWithCorrectValues($value)
     {
         $this->assertEquals($value, filter_var($value, FILTER_CALLBACK, ['options' => $this->sut]));
     }
@@ -46,7 +46,7 @@ class AuthTokenConfigValidatorTest extends TestCase
     /**
      * @dataProvider provideIncorrectValues
      */
-    public function testThaReturnNullWhenUsedWithFilterVarWithIncorrectValues($value)
+    public function testAuthTokenConfigValidatorReturnNullWhenUsedWithFilterVarWithIncorrectValues($value)
     {
         $this->assertNull(filter_var($value, FILTER_CALLBACK, ['options' => $this->sut]));
     }

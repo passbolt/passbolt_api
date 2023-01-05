@@ -58,7 +58,7 @@ class DuoSetupGetController extends MfaSetupController
             $this->set('sigRequest', $setupForm->getSigRequest());
             $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
         } catch (RecordNotFoundException $exception) {
-            throw new InternalErrorException('MFA Duo organization settings are not complete.');
+            throw new InternalErrorException('MFA Duo organization settings are not complete.', 500, $exception);
         }
         $this->set('setupForm', $setupForm);
         $this->set('theme', $this->User->theme());

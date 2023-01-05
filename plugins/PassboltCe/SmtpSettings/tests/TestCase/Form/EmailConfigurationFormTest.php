@@ -121,7 +121,7 @@ class EmailConfigurationFormTest extends TestCase
             ['false', null],
             ['foo', null],
             [2, null],
-            [new \StdClass(), null],
+            [new \stdClass(), null],
         ];
     }
 

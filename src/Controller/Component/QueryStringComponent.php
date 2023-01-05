@@ -265,6 +265,7 @@ class QueryStringComponent extends Component
      * - has-users: an array of user uuids
      * - has-manager: an array of user uuids
      * - has-groups: an array of group uuids
+     * - has-parent: an array of folder uuids
      * - is-shared-with-group: a group uuid
      * - modified-after: timestamp
      * - is-active: bool
@@ -298,6 +299,9 @@ class QueryStringComponent extends Component
                     case 'has-groups':
                         self::validateFilterGroups($values, $filterName);
                         break;
+                    case 'has-parent':
+                        self::validateFilterParentFolders($values, $filterName);
+                        break;
                     case 'is-shared-with-group':
                         self::validateFilterGroup($values, $filterName);
                         break;
@@ -311,6 +315,9 @@ class QueryStringComponent extends Component
                     case 'is-shared-with-me':
                     case 'is-deleted':
                         self::validateFilterBoolean($values, $filterName);
+                        break;
+                    case 'has-tag':
+                        self::validateFilterString($values, $filterName);
                         break;
                     case 'frequency':
                         self::validateFilterInteger($values, $filterName);
@@ -475,6 +482,32 @@ class QueryStringComponent extends Component
     }
 
     /**
+     * Validate a filter that is an array of parent id
+     * Examples:
+     * - Bueno: [0 => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08']
+     * - No Bueno: ['this' => 'no']
+     *
+     * @param array $values array of group id to check
+     * @param string|bool $filtername for error message display
+     * @throw Exception if the filter is not valid
+     * @return bool true if validate
+     */
+    public static function validateFilterParentFolders(array $values, $filtername)
+    {
+        foreach ($values as $i => $parentId) {
+            if (!is_int($i)) {
+                throw new CakeException(__('"{0}" is not a valid parent filter.', $i, $filtername));
+            }
+            if (!is_string($parentId) && $parentId !== false) {
+                throw new CakeException(__('"{0}" is not a valid parent filter.', $i));
+            }
+            self::validateFilterParentFolder($parentId, $filtername);
+        }
+
+        return true;
+    }
+
+    /**
      * Validate a filter that is a single resource id
      * Examples:
      * - Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
@@ -520,6 +553,27 @@ class QueryStringComponent extends Component
             throw new CakeException(
                 __('"{0}" is not a valid group id for filter {1}.', $groupId, $filterName)
             );
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate a filter that is a single parent id
+     * Examples:
+     * - Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
+     * - Bueno: false
+     * - No Bueno: 'no-bueno'
+     *
+     * @param string|false $parentId uuid
+     * @param string $filtername name of filters
+     * @throw Exception if the filter is not valid
+     * @return bool if validate
+     */
+    public static function validateFilterParentFolder($parentId, string $filtername)
+    {
+        if (!Validation::uuid($parentId) && $parentId != false) {
+            throw new CakeException(__('"{0}" is not a valid parent id for filter {1}.', $parentId, $filtername));
         }
 
         return true;

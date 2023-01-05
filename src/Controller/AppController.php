@@ -21,6 +21,7 @@ use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
@@ -203,5 +204,16 @@ class AppController extends Controller
         $this->loadComponent('Authentication.Authentication', [
             'logoutRedirect' => $loginUrl,
         ]);
+    }
+
+    /**
+     * @throws \Cake\Http\Exception\BadRequestException if request is not JSON
+     * @return void
+     */
+    protected function assertJson(): void
+    {
+        if (!$this->request->is('json')) {
+            throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
+        }
     }
 }

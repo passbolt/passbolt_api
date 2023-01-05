@@ -19,7 +19,7 @@ namespace App\Test\Lib\Utility;
 use App\Error\Exception\ValidationException;
 use Cake\Utility\Hash;
 
-trait ErrorTrait
+trait ErrorTestTrait
 {
     /**
      * Asserts a validation exception.

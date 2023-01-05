@@ -69,12 +69,7 @@ class GroupFactory extends CakephpBaseFactory
      */
     public function withGroupsManagersFor(array $users): GroupFactory
     {
-        foreach ($users as $user) {
-            $groupUserMeta = ['user_id' => $user->id, 'is_admin' => true];
-            $this->with('GroupsUsers', $groupUserMeta);
-        }
-
-        return $this;
+        return $this->withGroupsFor($users, true);
     }
 
     /**
@@ -85,8 +80,20 @@ class GroupFactory extends CakephpBaseFactory
      */
     public function withGroupsUsersFor(array $users): GroupFactory
     {
+        return $this->withGroupsFor($users, false);
+    }
+
+    /**
+     * Define the associated groups with a provided admin attribute to create for a given list of users.
+     *
+     * @param array $users Array of users to add a group user for.
+     * @param bool $isAdmin if the provided users should be admins
+     * @return GroupFactory
+     */
+    protected function withGroupsFor(array $users, bool $isAdmin): GroupFactory
+    {
         foreach ($users as $user) {
-            $groupUserMeta = ['user_id' => $user->id, 'is_admin' => false];
+            $groupUserMeta = ['user_id' => $user->id, 'is_admin' => $isAdmin];
             $this->with('GroupsUsers', $groupUserMeta);
         }
 

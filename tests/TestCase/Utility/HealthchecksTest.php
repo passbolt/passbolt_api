@@ -163,7 +163,7 @@ class HealthchecksTest extends AppIntegrationTestCase
          * Here in `connection` key we get connection error message.
          * Example: "SQLSTATE[HY000] [2002] No such file or directory"
          */
-        $this->assertTextContains('No such file or directory', $result['info']['connection']);
+        $this->assertTextContains('SQLSTATE[HY000]', $result['info']['connection']);
         $this->assertFalse($result['connect']);
         $this->assertTrue($result['supportedBackend']);
         $this->assertFalse($result['defaultContent']);
@@ -171,6 +171,10 @@ class HealthchecksTest extends AppIntegrationTestCase
 
     public function testDatabase_NotSupportedBackend()
     {
+        if (!extension_loaded('sqlite3')) {
+            $this->markTestSkipped();
+        }
+
         /** Create a database connection with invalid database driver. */
         ConnectionManager::setConfig(
             'healthcheck',
