@@ -16,46 +16,22 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
-use App\Authenticator\SessionIdentificationServiceInterface;
-use App\Error\Exception\CustomValidationException;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\GoneException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupPostController extends MfaSetupController
 {
     /**
-     * Handle Duo setup POST request
-     *
-     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID service
-     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
-     * @return void
+     * @deprecated Inform that the Duo POST setup endpoint is not available anymore
+     * @return \Cake\Http\Response
      */
-    public function post(
-        SessionIdentificationServiceInterface $sessionIdentificationService,
-        MfaFormInterface $setupForm
-    ) {
+    public function post()
+    {
         if ($this->request->is('json')) {
             throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
         }
-        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_DUO);
-        $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_DUO);
 
-        /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm $setupForm */
-        try {
-            $setupForm->execute($this->request->getData());
-        } catch (CustomValidationException $exception) {
-            $this->set('setupForm', $setupForm);
-            $this->set('theme', $this->User->theme());
-            $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoApiHostname());
-            $this->viewBuilder()
-                ->setLayout('mfa_setup')
-                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_DUO))
-                ->setTemplate('setupForm');
-
-            return;
-        }
-        $this->_handlePostSuccess(MfaSettings::PROVIDER_DUO, $sessionIdentificationService);
+        throw new GoneException(__('This entrypoint is not available anymore.'));
     }
 }
