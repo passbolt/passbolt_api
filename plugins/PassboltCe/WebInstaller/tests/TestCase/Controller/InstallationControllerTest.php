@@ -38,9 +38,9 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         $this->restoreConfiguration();
         TableRegistry::getTableLocator()->clear();
+        parent::tearDown();
     }
 
     protected function getInstallSessionData()
