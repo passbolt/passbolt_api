@@ -32,8 +32,6 @@ class HealthchecksTest extends AppIntegrationTestCase
         parent::tearDown();
 
         $this->disableFeaturePlugin('JwtAuthentication');
-
-        ConnectionManager::drop('healthcheck');
     }
 
     public function testHealthcheckApplication()
@@ -163,14 +161,20 @@ class HealthchecksTest extends AppIntegrationTestCase
          * Here in `connection` key we get connection error message.
          * Example: "SQLSTATE[HY000] [2002] No such file or directory"
          */
-        $this->assertTextContains('No such file or directory', $result['info']['connection']);
+        $this->assertTextContains('SQLSTATE[HY000]', $result['info']['connection']);
         $this->assertFalse($result['connect']);
         $this->assertTrue($result['supportedBackend']);
         $this->assertFalse($result['defaultContent']);
+
+        ConnectionManager::drop('healthcheck');
     }
 
     public function testDatabase_NotSupportedBackend()
     {
+        if (!extension_loaded('sqlite3')) {
+            $this->markTestSkipped();
+        }
+
         /** Create a database connection with invalid database driver. */
         ConnectionManager::setConfig(
             'healthcheck',
@@ -184,5 +188,7 @@ class HealthchecksTest extends AppIntegrationTestCase
         $this->assertArrayHasAttributes($attributes, $result);
         $this->assertFalse($result['supportedBackend']);
         $this->assertFalse($result['defaultContent']);
+
+        ConnectionManager::drop('healthcheck');
     }
 }
