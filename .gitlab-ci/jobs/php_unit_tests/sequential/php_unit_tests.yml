@@ -115,7 +115,6 @@ seq-php7.4-mysql5.7:
 
 # TO BE REMOVED
 seq-php7.4-postgres:
-  allow_failure: true
   variables:
     PHP_VERSION: "7.4"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-12-alpine'

@@ -58,12 +58,16 @@ class YubikeySetupForm extends YubikeyVerifyForm
     {
         try {
             // Save yubikey id to ensure next time use
-            // see. https://developers.yubico.com/OTP/OTPs_Explained.html
+            // @see https://developers.yubico.com/OTP/OTPs_Explained.html
             $keyid = substr($data['hotp'], 0, 12);
             $data = [MfaAccountSettings::YUBIKEY_ID => $keyid];
             MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_YUBIKEY, $data);
         } catch (ValidationException $e) {
-            throw new InternalErrorException('Could not save the Yubikey OTP settings. Please try again later.');
+            throw new InternalErrorException(
+                'Could not save the Yubikey OTP settings. Please try again later.',
+                500,
+                $e
+            );
         }
 
         return true;

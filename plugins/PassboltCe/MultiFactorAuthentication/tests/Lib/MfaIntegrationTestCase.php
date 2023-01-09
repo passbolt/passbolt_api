@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Test\Lib;
 
+use App\Authenticator\AbstractSessionIdentificationService;
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UserAccessControl;
@@ -103,5 +105,24 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
     public function mockInvalidMfaFormInterface(string $className, UserAccessControl $uac): void
     {
         $this->mockMfaFormInterface($className, $uac, false);
+    }
+
+    /**
+     * Injects in the DIC a session identification Interface with the provided ID.
+     * In Session, will return the session ID
+     * In JWT, will return the access token
+     * In JWT refresh token, will return the hashed access token associated to the refresh token
+     *
+     * @param string $sessionId Session Id to mock
+     * @return void
+     */
+    public function mockSessionId(string $sessionId)
+    {
+        $this->mockService(SessionIdentificationServiceInterface::class, function () use ($sessionId) {
+            $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
+            $stubSessionIdentifier->method('getSessionIdentifier')->willReturn($sessionId);
+
+            return $stubSessionIdentifier;
+        });
     }
 }

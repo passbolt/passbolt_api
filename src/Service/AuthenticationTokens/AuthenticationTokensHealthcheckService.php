@@ -51,7 +51,10 @@ class AuthenticationTokensHealthcheckService extends AbstractHealthcheckService
      */
     public function check(): array
     {
-        $records = $this->AuthenticationTokens->find()->all();
+        $records = $this->AuthenticationTokens
+            ->find()
+            ->where(['type IN ' => AuthenticationTokensTable::ALLOWED_TYPES])
+            ->all();
 
         foreach ($records as $i => $record) {
             $this->canValidate($record);

@@ -18,15 +18,16 @@ namespace App\Utility\AuthToken;
 
 use App\Model\Table\AuthenticationTokensTable;
 use Cake\Core\Configure;
+use Cake\Http\Exception\InternalErrorException;
 use InvalidArgumentException;
 
 class AuthTokenExpiry
 {
     /**
      * @param string $tokenType Token type
-     * @return string|null
+     * @return string
      */
-    public function getExpiryForTokenType(string $tokenType)
+    public function getExpiryForTokenType(string $tokenType): string
     {
         if (!in_array($tokenType, AuthenticationTokensTable::ALLOWED_TYPES)) {
             throw new InvalidArgumentException(
@@ -40,6 +41,15 @@ class AuthTokenExpiry
 
         $tokenTypeExpiry = Configure::read(sprintf('passbolt.auth.token.%s.expiry', $tokenType));
 
-        return $tokenTypeExpiry ?? Configure::read('passbolt.auth.tokenExpiry');
+        if (!is_string($tokenTypeExpiry)) {
+            $tokenTypeExpiry = Configure::read('passbolt.auth.tokenExpiry');
+        }
+
+        if (!is_string($tokenTypeExpiry)) {
+            $msg = 'No default expiry or expiry for token type ' . $tokenTypeExpiry;
+            throw new InternalErrorException($msg);
+        }
+
+        return $tokenTypeExpiry;
     }
 }

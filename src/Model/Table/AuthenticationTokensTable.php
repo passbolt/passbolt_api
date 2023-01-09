@@ -21,7 +21,6 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Utility\AuthToken\AuthTokenExpiry;
 use App\Utility\UuidFactory;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -66,6 +65,22 @@ class AuthenticationTokensTable extends Table
     private $authTokenExpiry;
 
     /**
+     * @return array self::ALLOWED_TYPES
+     */
+    public function getAllowedTypes(): array
+    {
+        return self::ALLOWED_TYPES;
+    }
+
+    /**
+     * @return \App\Utility\AuthToken\AuthTokenExpiry
+     */
+    public function tokenExpiryFactory(): AuthTokenExpiry
+    {
+        return new AuthTokenExpiry();
+    }
+
+    /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -75,7 +90,7 @@ class AuthenticationTokensTable extends Table
     {
         parent::initialize($config);
 
-        $this->authTokenExpiry = new AuthTokenExpiry();
+        $this->authTokenExpiry = $this->tokenExpiryFactory();
 
         $this->setTable('authentication_tokens');
         $this->setDisplayField('id');
@@ -111,7 +126,7 @@ class AuthenticationTokensTable extends Table
                 'rule' => [$this, 'isValidAuthenticationTokenType'],
                 'message' => __(
                     'The type should be one of the following: {0}.',
-                    implode(', ', self::ALLOWED_TYPES)
+                    implode(', ', $this->getAllowedTypes())
                 ),
             ]])
             ->requirePresence('type', 'create', __('A type is required.'))
@@ -138,7 +153,7 @@ class AuthenticationTokensTable extends Table
      */
     public function isValidAuthenticationTokenType($check, array $context)
     {
-        return is_string($check) && (in_array($check, self::ALLOWED_TYPES));
+        return is_string($check) && (in_array($check, $this->getAllowedTypes()));
     }
 
     /**
@@ -207,12 +222,11 @@ class AuthenticationTokensTable extends Table
             ]]
         );
         $errors = $token->getErrors();
+        $msg = __('It is not possible to create an authentication token for this user.');
         if (!empty($errors)) {
-            $msg = __('It is not possible to create an authentication token for this user.');
             throw new ValidationException($msg);
         }
         if (!$this->save($token)) {
-            $msg = __('It is not possible to create an authentication token for this user.');
             throw new ValidationException($msg);
         }
 
@@ -343,10 +357,6 @@ class AuthenticationTokensTable extends Table
     private function getExpiryDate(string $type)
     {
         $expiryPeriod = $this->authTokenExpiry->getExpiryForTokenType($type);
-        if (!isset($expiryPeriod) || empty($expiryPeriod)) {
-            $msg = 'AuthenticationTokensTable::findExpiredByType no expiry in config for token type ' . $type;
-            throw new InternalErrorException($msg);
-        }
 
         return new FrozenTime($expiryPeriod . ' ago');
     }

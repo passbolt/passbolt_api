@@ -34,7 +34,7 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
                     <?php $start = !$body[MfaSettings::ACCOUNT_SETTINGS]['totp'] ? 'start' : ''; ?>
                     <a href="<?= Router::url("/mfa/setup/totp/$start", true); ?>">
                         <img src="<?= Router::url('/img/third_party/google-authenticator.svg', true); ?>" />
-                        <span>TOTP Authenticator</span>
+                        <span>TOTP authenticator</span>
                     </a>
                     <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['totp']) : ?>
                     <div class="mfa-provider-status enabled">
@@ -86,7 +86,7 @@ foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
         </div>
         <div class="col4 last">
             <div class="sidebar-help">
-                <h3><?= __('What is multi-factor authentication?'); ?></h4>
+                <h3><?= __('What is multi-factor authentication?'); ?></h3>
                 <p>
                     <?= __('Multi-factor authentication (MFA) is a method of confirming a user\'s identity that requires presenting two or more pieces of evidence (or factor).'); ?>
                 </p>
