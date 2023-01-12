@@ -52,22 +52,22 @@ trait FormatValidationTrait
      * FIELD_EMPTY and FIELD_NOT_SCALAR and replace the value with what it should be.
      * for instance, FIELD_NOT_PROVIDED will be unset from the data array.
      *
-     * @param $entityData
-     * @return mixed
+     * @param string $fieldName Field name, dot notation is supported (e.g. 'data.username')
+     * @param array $data data
+     * @return array
      */
-    private function _adjustEntityData($entityData)
+    private function _adjustEntityData(string $fieldName, array $data): array
     {
-        foreach ($entityData as $fieldName => $value) {
-            if ($value === self::$FIELD_NOT_SCALAR) {
-                $entityData[$fieldName] = ['array'];
-            } elseif ($value === self::$FIELD_EMPTY) {
-                $entityData[$fieldName] = '';
-            } elseif ($value === self::$FIELD_NOT_PROVIDED) {
-                unset($entityData[$fieldName]);
-            }
+        $value = Hash::get($data, $fieldName);
+        if ($value === self::$FIELD_NOT_SCALAR) {
+            $data = Hash::insert($data, $fieldName, ['array']);
+        } elseif ($value === self::$FIELD_EMPTY) {
+            $data = Hash::insert($data, $fieldName, '');
+        } elseif ($value === self::$FIELD_NOT_PROVIDED) {
+            $data = Hash::remove($data, $fieldName);
         }
 
-        return $entityData;
+        return $data;
     }
 
     /**
@@ -104,12 +104,12 @@ trait FormatValidationTrait
                 if ($context == 'create') {
                     // Update entity data with the input we want to test.
                     $entityData = array_merge($entityData, [$fieldName => $testCaseData]);
-                    $entityData = $this->_adjustEntityData($entityData);
+                    $entityData = $this->_adjustEntityData($fieldName, $entityData);
                     $entity = $entityTable->newEntity($entityData, $entityOptions);
                 } else {
                     $entity = $entityTable->get($entityData['id']);
                     $entityData = array_merge($entityData, [$fieldName => $testCaseData]);
-                    $entityData = $this->_adjustEntityData($entityData);
+                    $entityData = $this->_adjustEntityData($fieldName, $entityData);
                     $entity = $entityTable->patchEntity($entity, $entityData, $entityOptions);
                 }
 
@@ -160,8 +160,8 @@ trait FormatValidationTrait
     {
         foreach ($testCases as $testCaseName => $testCase) {
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
-                $formData = array_merge($formData, [$fieldName => $testCaseData]);
-                $formData = $this->_adjustEntityData($formData);
+                $formData = Hash::insert($formData, $fieldName, $testCaseData);
+                $formData = $this->_adjustEntityData($fieldName, $formData);
                 $form = new $FormClass($this->getEventManager());
                 $validate = $form->validate($formData);
 
@@ -186,7 +186,7 @@ trait FormatValidationTrait
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
                 // Patch the entity with the input we want to test.
                 $entityData = [$fieldName => $testCaseData];
-                $entityData = $this->_adjustEntityData($entityData);
+                $entityData = $this->_adjustEntityData($fieldName, $entityData);
                 $entity = $entityTable->patchEntity($entity, $entityData, $entityOptions);
 
                 $result = count($entity->getErrors()) === 0;

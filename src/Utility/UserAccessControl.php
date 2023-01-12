@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use App\Model\Entity\Role;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
@@ -135,5 +136,18 @@ class UserAccessControl
             'userId' => $this->userId,
             'rolename' => $this->roleName,
         ];
+    }
+
+    /**
+     * Allow admins only.
+     *
+     * @throws \Cake\Http\Exception\ForbiddenException
+     * @return void
+     */
+    public function assertIsAdmin(): void
+    {
+        if (!$this->isAdmin()) {
+            throw new ForbiddenException(__('Access restricted to administrators.'));
+        }
     }
 }

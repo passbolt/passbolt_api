@@ -116,7 +116,7 @@ class TotpSetupForm extends MfaForm
             $data = ['otpProvisioningUri' => $data['otpProvisioningUri']];
             MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_TOTP, $data);
         } catch (ValidationException $e) {
-            throw new InternalErrorException('Could not save the OTP settings. Please try again later.');
+            throw new InternalErrorException('Could not save the OTP settings. Please try again later.', 500, $e);
         }
 
         return true;

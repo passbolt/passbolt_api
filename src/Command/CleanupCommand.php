@@ -174,7 +174,10 @@ class CleanupCommand extends PassboltCommand
         foreach (self::$cleanups as $tableName => $tableCleanup) {
             $table = TableRegistry::getTableLocator()->get($tableName);
             foreach ($tableCleanup as $i => $cleanupName) {
+                $timeStart = microtime(true);
                 $cleanupMethod = 'cleanup' . str_replace(' ', '', $cleanupName);
+
+                $io->verbose("Clean up start: $tableName:$cleanupMethod");
                 $recordCount = $table->{$cleanupMethod}($dryRun);
                 $totalErrorCount += $recordCount;
                 if ($recordCount) {
@@ -185,6 +188,10 @@ class CleanupCommand extends PassboltCommand
                         $io->out(__('{0} issues fixed in table {1} ({2})', $recordCount, $tableName, $cleanupName));
                     }
                 }
+
+                $timeEnd = microtime(true);
+                $timeExecuted = round($timeEnd - $timeStart, 2);
+                $io->verbose("Cleanup up end ({$timeExecuted}s): $tableName:$cleanupMethod");
             }
         }
 

@@ -127,7 +127,7 @@ class YubikeyVerifyForm extends MfaForm
             $secretKey = $this->settings->getOrganizationSettings()->getYubikeyOTPSecretKey();
             $clientId = $this->settings->getOrganizationSettings()->getYubikeyOTPClientId();
         } catch (RecordNotFoundException $exception) {
-            throw new InternalErrorException($exception->getMessage());
+            throw new InternalErrorException($exception->getMessage(), 500, $exception);
         }
 
         return $this->checkYubikey($value, $secretKey, $clientId);

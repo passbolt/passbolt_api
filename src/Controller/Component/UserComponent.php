@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller\Component;
 
 use App\Model\Entity\Role;
+use App\Utility\ExtendedUserAccessControl;
 use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
@@ -61,6 +62,22 @@ class UserComponent extends Component
     }
 
     /**
+     * @return string client ip
+     */
+    public function ip(): string
+    {
+        return $this->getController()->getRequest()->clientIp();
+    }
+
+    /**
+     * @return string user agent
+     */
+    public function userAgent(): string
+    {
+        return $this->getController()->getRequest()->getEnv('HTTP_USER_AGENT') ?? 'undefined';
+    }
+
+    /**
      * Return the current user role or GUEST if the user is not identified
      *
      * @return string|null
@@ -83,9 +100,23 @@ class UserComponent extends Component
     /**
      * @return \App\Utility\UserAccessControl
      */
-    public function getAccessControl()
+    public function getAccessControl(): UserAccessControl
     {
         return new UserAccessControl($this->role(), $this->id(), $this->username());
+    }
+
+    /**
+     * @return \App\Utility\ExtendedUserAccessControl
+     */
+    public function getExtendAccessControl(): ExtendedUserAccessControl
+    {
+        return new ExtendedUserAccessControl(
+            $this->role(),
+            $this->id(),
+            $this->username(),
+            $this->ip(),
+            $this->userAgent()
+        );
     }
 
     /**
@@ -173,6 +204,17 @@ class UserComponent extends Component
     {
         if (!$this->isAdmin()) {
             throw new ForbiddenException(__('Access restricted to administrators.'));
+        }
+    }
+
+    /**
+     * @throws \Cake\Http\Exception\BadRequestException if user is not guest
+     * @return void
+     */
+    public function assertNotLoggedIn(): void
+    {
+        if ($this->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('The user should not be logged in.'));
         }
     }
 }

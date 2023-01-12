@@ -14,6 +14,8 @@
 /config/gpg/*.key
 /config/license
 /config/subscription_key.txt
+/config/ldap.php
+/config/DirectorySync/schema/*
 /config/jwt/jwt.key
 /config/jwt/jwt.pem
 
@@ -122,9 +124,11 @@ atlassian-ide-plugin.xml
 .buildpath
 *.iml
 
+# Tilt
+tilt_modules*
 ## File-based project format:
 *.ipr
 *.iws
 
-# Tilt
-tilt_modules*
+# PHPUNIT generated file
+.phpunit.result.cache
