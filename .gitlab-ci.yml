@@ -16,7 +16,6 @@ variables:
 
 stages:
   - unit-test
-#  - unit-test-parallel
 
 include:
   - template: Code-Quality.gitlab-ci.yml
