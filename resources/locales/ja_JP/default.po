@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2022-11-04 15:45+0000\n"
-"PO-Revision-Date: 2022-11-04 17:14\n"
+"POT-Creation-Date: 2023-01-17 15:05+0000\n"
+"PO-Revision-Date: 2023-01-17 15:28\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -142,11 +142,17 @@ msgstr "\"{0}\" はフィルター {1} の有効なユーザーIDではありま
 msgid "\"{0}\" is not a valid group filter."
 msgstr "\"{0}\" は有効なグループフィルターではありません。"
 
+msgid "\"{0}\" is not a valid parent filter."
+msgstr "\"{0}\" は有効な親フィルターではありません。"
+
 msgid "\"{0}\" is not a valid resource id for filter {1}."
 msgstr "\"{0}\" はフィルター {1} の有効なリソースIDではありません。"
 
 msgid "\"{0}\" is not a valid group id for filter {1}."
 msgstr "\"{0}\" はフィルター {1} の有効なグループIDではありません。"
+
+msgid "\"{0}\" is not a valid parent id for filter {1}."
+msgstr "\"{0}\" はフィルター {1} の有効な親IDではありません。"
 
 msgid "\"{0}\" is not a valid timestamp for filter {1}."
 msgstr "\"{0}\" は、フィルター {1} の有効なタイムスタンプではありません。"
@@ -169,6 +175,9 @@ msgstr "未定義のユーザーエージェント"
 msgid "Access restricted to administrators."
 msgstr "アクセスは管理者に制限されています。"
 
+msgid "The user should not be logged in."
+msgstr ""
+
 msgid "This feature is not supported by your version of passbolt."
 msgstr "この機能は、お使いのバージョンのパスボルトではサポートされていません。"
 
@@ -178,26 +187,11 @@ msgstr "リソース識別子は有効なUUIDでなければなりません。"
 msgid "The resource was marked as favorite."
 msgstr "リソースはお気に入りとしてマークされました。"
 
-msgid "The resource does not exist."
-msgstr "リソースが存在しません。"
-
-msgid "This record is already marked as favorite."
-msgstr "このレコードはすでにお気に入りとしてマークされています。"
-
-msgid "Could not validate favorite data."
-msgstr "お気に入りのデータを検証できませんでした。"
-
 msgid "The favorite id is not valid."
 msgstr "お気に入りIDが無効です。"
 
-msgid "The favorite does not exist."
-msgstr "お気に入りは存在しません。"
-
 msgid "The favorite was deleted."
 msgstr "お気に入りは削除されました。"
-
-msgid "Could not delete favorite."
-msgstr "お気に入りを削除できませんでした。"
 
 msgid "The OpenPGP key identifier should be a valid UUID."
 msgstr "OpenPGP の鍵識別子は、有効な UUID である必要があります。"
@@ -243,6 +237,9 @@ msgstr "OK"
 
 msgid "The identifier should be a valid UUID."
 msgstr "識別子は有効な UUID である必要があります。"
+
+msgid "The resource does not exist."
+msgstr "リソースが存在しません。"
 
 msgid "The resource type does not exist."
 msgstr "リソース型が存在しません。"
@@ -362,6 +359,9 @@ msgid "The user does not exist."
 msgstr "ユーザーは存在しません。"
 
 msgid "No admin were found in the database."
+msgstr ""
+
+msgid "Invalid expiry time {0}."
 msgstr ""
 
 msgid "The identifier should not be empty."
@@ -1162,6 +1162,18 @@ msgstr "このコメントを編集することはできません。"
 msgid "Could not find comments for the requested model."
 msgstr "リクエストされたモデルのコメントを見つけることができませんでした。"
 
+msgid "This record is already marked as favorite."
+msgstr "このレコードはすでにお気に入りとしてマークされています。"
+
+msgid "Could not validate favorite data."
+msgstr "お気に入りのデータを検証できませんでした。"
+
+msgid "The favorite does not exist."
+msgstr "お気に入りは存在しません。"
+
+msgid "Could not delete favorite."
+msgstr "お気に入りを削除できませんでした。"
+
 msgid "Validation failed for favorite {0}. {1}"
 msgstr "お気に入り {0} の検証に失敗しました。 {1}"
 
@@ -1288,8 +1300,8 @@ msgstr "プロフィール {0} の検証に成功しました"
 msgid "Could not validate resource data."
 msgstr "リソースデータを検証できませんでした。"
 
-msgid "An unexpected error occured, please contact an administrator."
-msgstr "予期しないエラーが発生しました。管理者に連絡してください。"
+msgid "An unexpected error occurred, please contact an administrator."
+msgstr ""
 
 msgid "The server returned the following error:"
 msgstr "サーバーは次のエラーを返しました:"
@@ -1394,6 +1406,9 @@ msgid "Validation success for user {0}"
 msgstr "ユーザー {0} の検証に成功しました"
 
 msgid "The directory {0} cannot be deleted"
+msgstr ""
+
+msgid "Database connection failed"
 msgstr ""
 
 msgid "Could not connect to github repository"
@@ -1864,6 +1879,291 @@ msgstr "認証トークンがアクティブではありません。"
 msgid "The authentication token is expired."
 msgstr "認証トークンが期限切れです。"
 
+msgid "This functionality is not available using AJAX/JSON."
+msgstr "この機能は、AJAX/JSONでは使用できません。"
+
+msgid "This authentication provider is not enabled for your organization."
+msgstr "この認証プロバイダーはあなたの組織では有効になっていません。"
+
+msgid "This authentication provider is already setup. Disable it first"
+msgstr "この認証プロバイダーはすでに設定されています。 まず無効にしてください。"
+
+msgid "Multi Factor Authentication is configured!"
+msgstr "多要素認証が設定されています！"
+
+msgid "MFA authentication is required."
+msgstr "MFA認証が必要です。"
+
+msgid "The multi-factor authentication is not required."
+msgstr "多要素認証は必要ありません。"
+
+msgid "No valid multi-factor authentication settings found for this provider."
+msgstr "このプロバイダーに有効な多要素認証設定が見つかりません。"
+
+msgid "The multi-factor authentication was a success."
+msgstr "多要素認証は成功しました。"
+
+msgid "The multi factor authentication settings for the organization were updated."
+msgstr "組織の多要素認証設定が更新されました。"
+
+msgid "Please setup the TOTP application."
+msgstr "TOTPアプリケーションをセットアップしてください。"
+
+msgid "Please provide the one-time password."
+msgstr "ワンタイムパスワードを入力してください。"
+
+msgid "The user id is not valid."
+msgstr "ユーザーIDが有効ではありません。"
+
+msgid "No multi-factor authentication settings defined for the user."
+msgstr "ユーザーに定義されている多要素認証設定はありません。"
+
+msgid "The multi-factor authentication settings for the user were deleted."
+msgstr "ユーザーの多要素認証設定を削除しました。"
+
+msgid "Please setup the Yubikey settings."
+msgstr "YubiKey設定を設定してください。"
+
+msgid "A signature is required."
+msgstr "署名が必要です。"
+
+msgid "The signature should not be empty."
+msgstr "署名は空にできません。"
+
+msgid "This is not a valid signature response."
+msgstr "これは有効な署名応答ではありません。"
+
+msgid "Something went wrong when validating the one-time password."
+msgstr "ワンタイムパスワードの検証中に問題が発生しました。"
+
+msgid "This OTP provision uri is not valid."
+msgstr "このOTPプロビジョニングuriは有効ではありません。"
+
+msgid "An OTP is required."
+msgstr "OTPが必要です。"
+
+msgid "The OTP should not be empty."
+msgstr "OTPは空にしないでください。"
+
+msgid "This OTP is not valid."
+msgstr "このOTPは有効ではありません。"
+
+msgid "The OTP should be composed of numbers only."
+msgstr "OTPは数字のみで構成する必要があります。"
+
+msgid "The OTP should be at least {0} characters long."
+msgstr "OTPは少なくとも{0} 文字である必要があります。"
+
+msgid "This yubikey is not associated with this user."
+msgstr "このyubikeyはこのユーザーに関連付けられていません。"
+
+msgid "Your multi-factor authentication settings were reset by you."
+msgstr "あなたの多要素認証の設定はあなたによってリセットされました。"
+
+msgid "Multi-factor authentication settings were reset."
+msgstr "多要素認証の設定がリセットされました。"
+
+msgid "Your multi-factor authentication settings were reset by an administrator."
+msgstr "あなたの多要素認証設定は管理者によってリセットされました。"
+
+msgid "The MFA token provided does not exist or is inactive."
+msgstr "指定されたMFAトークンが存在しないか、非アクティブです。"
+
+msgid "No MFA provider set."
+msgstr "MFAプロバイダーが設定されていません。"
+
+msgid "MFA verification date is not set for this provider."
+msgstr "MFA検証日がこのプロバイダーに設定されていません。"
+
+msgid "MFA setting OTP provisioning uri is not set."
+msgstr "MFA設定OTPプロビジョニングURIが設定されていません。"
+
+msgid "MFA setting Yubikey Id is not set."
+msgstr "MFA設定Yubikey IDが設定されていません。"
+
+msgid "The multi-factor authentication settings data should not be empty."
+msgstr "多要素認証設定データは空にしないでください。"
+
+msgid "The multi-factor authentication providers list is missing."
+msgstr "多要素認証プロバイダーリストがありません。"
+
+msgid "Unknown MFA provider: {0}."
+msgstr "MFAプロバイダーが不明です: {0}。"
+
+msgid "Could not validate multi-factor authentication provider configuration."
+msgstr "多要素認証プロバイダーの設定を検証できませんでした。"
+
+msgid "No configuration set for Duo integration key."
+msgstr "Duo統合キーに設定が設定されていません。"
+
+msgid "No configuration set for Duo host name."
+msgstr "Duoホスト名に設定されている設定はありません。"
+
+msgid "No configuration set for Duo secret key."
+msgstr "Duo秘密鍵に設定されている設定がありません。"
+
+msgid "No configuration set for Duo salt."
+msgstr "Duoソルトの設定がありません。"
+
+msgid "Duo salt should be between 40 and 128 characters in length."
+msgstr "Duoソルトの長さは40文字以上128文字以下でなければなりません。"
+
+msgid "This is not a valid Duo secret key."
+msgstr "これは有効なDuo秘密鍵ではありません。"
+
+msgid "This is not a valid Duo host name."
+msgstr "これは有効なDuoホスト名ではありません。"
+
+msgid "This is not a valid Duo integration key."
+msgstr "これは有効なDuo統合キーではありません。"
+
+msgid "Could not validate Duo configuration"
+msgstr "Duoの設定を検証できませんでした"
+
+msgid "No configuration set for Yubikey OTP secret key."
+msgstr "Yubikey OTP秘密鍵の設定は設定されていません。"
+
+msgid "No configuration set for Yubikey OTP clientId."
+msgstr "Yubikey OTP clientIdの設定は設定されていません。"
+
+msgid "Yubikey OTP clientId should be an integer."
+msgstr "Yubikey OTP clientId は整数でなければなりません。"
+
+msgid "Yubikey OTP secret key is not valid."
+msgstr "YubiKey OTP秘密鍵が有効ではありません。"
+
+msgid "Could not validate Yubikey configuration."
+msgstr "Yubikey設定を検証できませんでした。"
+
+msgid "Duo multi-factor authentication"
+msgstr "Duo多要素認証"
+
+msgid "Duo multi-factor authentication is enabled!"
+msgstr "Duo多要素認証が有効になっています！"
+
+msgid "When logging in you will be asked to perform Duo Authentication."
+msgstr "ログイン時に、Duo認証の実行を求められます。"
+
+msgid "Since"
+msgstr "以下以降："
+
+msgid "Multi factor authentication"
+msgstr "多要素認証"
+
+msgid "Sorry no multi factor authentication is enabled for this organization."
+msgstr "申し訳ありませんが、この組織では多要素認証が有効になっていません。"
+
+msgid "Please contact your administrator to enable multi-factor authentication."
+msgstr "多要素認証を有効にするには管理者に問い合わせてください。"
+
+msgid "Please select a provider"
+msgstr "プロバイダーを選択してください"
+
+msgid "Enabled"
+msgstr "有効になっています"
+
+msgid "Disabled"
+msgstr "無効になっています"
+
+msgid "What is multi-factor authentication?"
+msgstr "多要素認証とは何ですか?"
+
+msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
+msgstr "多要素認証(MFA) は、2つ以上の証拠(または要素) を提示する必要があるユーザーの身元を確認する方法です。"
+
+msgid "learn more"
+msgstr "もっと詳しく"
+
+msgid "Time based One Time Password (TOTP)"
+msgstr "時間ベースのワンタイムパスワード (TOTP)"
+
+msgid "Scan this bar code"
+msgstr "このバーコードをスキャン"
+
+msgid "Enter the six digit number as presented on your phone or tablet."
+msgstr "携帯電話またはタブレットに表示されている6桁の数字を入力します。"
+
+msgid "Requirements"
+msgstr "要件"
+
+msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
+msgstr "続行するには、次のようなスマートフォンやタブレットで、時間ベースのワンタイムパスワード(TOTP) をサポートするアプリケーションをインストールする必要があります:"
+
+msgid "or"
+msgstr "または"
+
+msgid "Getting started with Time based One Time Password (TOTP)"
+msgstr "時間ベースのワンタイムパスワード (TOTP) の使用開始"
+
+msgid "How does it work?"
+msgstr "仕組みは？"
+
+msgid "diagram showing how it works"
+msgstr "仕組みの説明図"
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr "普段と同じようにパスボルトにサインインします。"
+
+msgid "When using a new browser, you need an additional code from your phone."
+msgstr "新しいブラウザを使用する場合、携帯電話からの追加コードが必要です。"
+
+msgid "Once you enter this code, you can log in."
+msgstr "このコードを入力すると、ログインできます。"
+
+msgid "cancel"
+msgstr "キャンセル"
+
+msgid "get started!"
+msgstr "始めましょう！"
+
+msgid "Time based One Time Password (TOTP) is enabled!"
+msgstr "時間ベースのワンタイムパスワード (TOTP) が有効になっています！"
+
+msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
+msgstr "新しい端末からログインする際には、モバイル上のアプリで生成された一意の認証コードを入力する必要があります。"
+
+msgid "Multi factor authentication verification"
+msgstr "多要素認証の検証"
+
+msgid "Remember this device for a month."
+msgstr "この端末を1か月間記憶しておきます。"
+
+msgid "Yubikey One Time Password"
+msgstr "Yubikey ワンタイムパスワード"
+
+msgid "Plug in the yubikey and put your finger on it."
+msgstr "yubikeyを接続して指を当てます。"
+
+msgid "Yubikey One Time Password is enabled!"
+msgstr "YubiKey ワンタイムパスワードが有効になっています！"
+
+msgid "When logging in from a new device you will need a unique code generated by your yubikey."
+msgstr "新しい端末からログインする際には、yubikeyで生成された一意のコードが必要です。"
+
+msgid "verify"
+msgstr "検証"
+
+msgid "Or try with another provider"
+msgstr "または別のプロバイダを試してみてください"
+
+msgid "Manage providers"
+msgstr "プロバイダーの管理"
+
+msgid "Turn off"
+msgstr "オフにする"
+
+msgid "Your multi-factor authentication is disabled."
+msgstr "多要素認証が無効になっています。"
+
+msgid "Multi-factor authentication settings were reset for your account by an administrator."
+msgstr "管理者により、アカウントの多要素認証設定がリセットされました。"
+
+msgid "Please contact your administrator if you didn't request this action."
+msgstr "この操作をリクエストしていない場合は、管理者に問い合わせてください。"
+
+msgid "Log in passbolt"
+msgstr "パスボルトにログイン"
+
 msgid "The password generator value \"{0}\" is not valid."
 msgstr "パスワードジェネレータの値 \"{0}\" は有効ではありません。"
 
@@ -1942,9 +2242,6 @@ msgstr "送信者のメールは空にできません。"
 msgid "The sender email should be a valid BMP-UTF8 string."
 msgstr "送信者のメールアドレスは有効なBMP-UTF8文字列である必要があります。"
 
-msgid "The sender email should be a valid email address."
-msgstr "送信者のメールアドレスは有効なメールアドレスでなければなりません。"
-
 msgid "A host name is required."
 msgstr "ホスト名が必要です。"
 
@@ -1981,6 +2278,15 @@ msgstr "パスワードは有効なBMP-UTF8文字列である必要がありま�
 msgid "The test email should be a valid email address."
 msgstr "テストメールアドレスは有効なメールアドレスである必要があります。"
 
+msgid "The sender email should be a valid email address."
+msgstr "送信者のメールアドレスは有効なメールアドレスでなければなりません。"
+
+msgid "A test recipient is required."
+msgstr ""
+
+msgid "SMTP settings endpoints disabled."
+msgstr ""
+
 msgid "Could not validate the smtp settings."
 msgstr ""
 
@@ -2006,9 +2312,6 @@ msgid "undefined"
 msgstr ""
 
 msgid "Passbolt test email"
-msgstr ""
-
-msgid "A test recipient is required."
 msgstr ""
 
 msgid "Congratulations!"
@@ -2175,6 +2478,9 @@ msgstr "サーバーのOpenPGP公開鍵ファイルは書き込み可能です�
 
 msgid "The server OpenPGP public key file is not writable."
 msgstr "サーバーのOpenPGP公開鍵ファイルは書き込みできません。"
+
+msgid "Ensure the file {0} is writable by the webserver user."
+msgstr "ファイル {0} がウェブサーバーユーザーによって書き込み可能であることを確認します。"
 
 msgid "The server OpenPGP private key file is writable."
 msgstr "サーバーのOpenPGP秘密鍵ファイルは書き込み可能です。"
@@ -2357,7 +2663,7 @@ msgid "Forcing SSL means that passbolt will not accept connections coming from a
 msgstr "SSLを強制するということは、パスボルトが、安全でないプロトコルからの接続を受け付けないということです。SSLを強制する場合は、サーバーをHTTPSに設定する必要があります。そうすることを強くお勧めします。"
 
 msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "パスボルトPro へようこそ！　では設定から始めましょう。"
+msgstr ""
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "いいですね！　あなたの環境はパスボルトの準備ができています。"
