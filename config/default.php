@@ -28,7 +28,6 @@ return [
      * - Javascript application config
      * - Meta HTML tags
      * - Gpg
-     * - Registration settings
      * - Selenium mode
      * - Security settings
      * - SSL
@@ -235,11 +234,6 @@ return [
             'selfRegistration' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
-        ],
-
-        // Is public registration allowed.
-        'registration' => [
-            'public' => filter_var(env('PASSBOLT_REGISTRATION_PUBLIC', false), FILTER_VALIDATE_BOOLEAN)
         ],
 
         // Activate specific entry points for selenium testing.

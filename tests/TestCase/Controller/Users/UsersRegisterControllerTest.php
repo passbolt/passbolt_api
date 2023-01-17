@@ -24,15 +24,26 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\GetUserLocaleService;
+use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
+/**
+ * @covers \App\Controller\Users\UsersRegisterController
+ */
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
+    use SelfRegistrationTestTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
         'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
     ];
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->setSelfRegistrationSettingsData();
+    }
 
     public function testUsersRegisterGetSuccess()
     {
@@ -147,13 +158,6 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
                     'last_name' => 'valid_last_name',
                 ],
             ],
-            'email already in use' => [
-                'username' => 'ada@passbolt.com',
-                'profile' => [
-                    'first_name' => 'ada',
-                    'last_name' => 'lovelace',
-                ],
-            ],
         ];
         foreach ($fails as $case => $data) {
             $this->post('/users/register.json', $data);
@@ -170,36 +174,6 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
         $result = $this->_getBodyAsString();
         $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
-    }
-
-    public function testUsersRegisterPostExistingDeletedUserWithSameUsername()
-    {
-        // 1) Try to create a user with same username as an existing one.
-        $data = [
-            'username' => 'ping@passbolt.com',
-            'profile' => [
-                'first_name' => 'Ping',
-                'last_name' => 'Duplicate',
-            ],
-        ];
-
-        $this->post('/users/register.json', $data);
-        $result = json_decode($this->_getBodyAsString());
-        $this->assertEquals('400', $result->header->code, 'Validation should fail when the username already exists in db');
-        $this->assertResponseError();
-
-        // 2) Soft delete the existing user.
-        $users = TableRegistry::getTableLocator()->get('Users');
-        $user = $users->find()
-            ->where(['username' => 'ping@passbolt.com'])
-            ->first();
-        $users->softDelete($user, ['checkRules' => false]);
-
-        // 3) Try again with same data, it should be successful.
-        $this->post('/users/register.json', $data);
-        $result = json_decode($this->_getBodyAsString());
-        $this->assertEquals('200', $result->header->code, 'Validation should be successful when a similar username exists but is soft deleted');
-        $this->assertResponseSuccess();
     }
 
     public function testUsersRegisterCannotModifyNotAccessibleFields()

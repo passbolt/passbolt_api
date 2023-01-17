@@ -27,6 +27,9 @@ interface SelfRegistrationDryRunServiceInterface
     /**
      * @param array $data Data for identification
      * @return bool
+     * @throws \Cake\Http\Exception\ForbiddenException if the user cannot self register.
+     * @throws \App\Error\Exception\CustomValidationException if the domain of the user is not allowed by the settings.
+     * @throws \Cake\Http\Exception\InternalErrorException if the settings in DB are not valid.
      */
     public function canGuestSelfRegister(array $data): bool;
 }

@@ -221,7 +221,6 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
             ],
             'options' => [
                 'full_base_url' => 'http://127.0.0.1:8081',
-                'public_registration' => 0,
                 'force_ssl' => 0,
             ],
             'first_user' => [

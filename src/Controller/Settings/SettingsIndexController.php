@@ -99,9 +99,6 @@ class SettingsIndexController extends AppController
             'passbolt' => [
                 'legal' => Configure::read('passbolt.legal'),
                 'edition' => Configure::read('passbolt.edition'),
-                'registration' => [
-                    'public' => Configure::read('passbolt.registration.public'),
-                ],
             ],
         ];
         if ($role !== Role::GUEST) {

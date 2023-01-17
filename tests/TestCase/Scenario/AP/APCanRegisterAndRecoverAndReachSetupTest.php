@@ -21,10 +21,12 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
+    use SelfRegistrationTestTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
@@ -64,6 +66,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
      */
     public function testAPCanRegisterAndRecoverAndReachSetup()
     {
+        $this->setSelfRegistrationSettingsData();
         // Register using signup form
         $email = 'integration@passbolt.com';
         $data = ['username' => $email, 'profile' => ['first_name' => 'integration', 'last_name' => 'test']];
