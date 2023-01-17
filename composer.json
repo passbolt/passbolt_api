@@ -124,8 +124,8 @@
             "Passbolt\\Reports\\Test\\": "./plugins/PassboltCe/Reports/tests",
             "Passbolt\\Mobile\\Test\\": "./plugins/PassboltCe/Mobile/tests",
             "Passbolt\\JwtAuthentication\\Test\\": "./plugins/PassboltCe/JwtAuthentication/tests",
-            "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests",
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/PassboltCe/MultiFactorAuthentication/tests",
+            "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests",
             "Passbolt\\SelfRegistration\\Test\\": "./plugins/PassboltCe/SelfRegistration/tests"
         }
     },
