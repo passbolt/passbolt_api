@@ -268,7 +268,14 @@ return [
             'userIp' => filter_var(env('PASSBOLT_SECURITY_USER_IP', true), FILTER_VALIDATE_BOOLEAN),
             'smtpSettings' => [
                 'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
-            ]
+            ],
+            // Enables trusting of HTTP_X headers set by most load balancers.
+            // Only set to true if your instance runs behind load balancers/proxies that you control.
+            'proxies' => [
+                'active' => filter_var(env('PASSBOLT_SECURITY_PROXIES_ACTIVE', false), FILTER_VALIDATE_BOOLEAN),
+                // If your instance is behind multiple proxies, redefine the list of IP addresses of proxies in your control in passbolt.php
+                'trustedProxies' => [],
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.

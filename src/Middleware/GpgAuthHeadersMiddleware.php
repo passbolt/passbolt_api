@@ -50,7 +50,7 @@ class GpgAuthHeadersMiddleware implements MiddlewareInterface
             ->withHeader('X-GPGAuth-Logout-URL', '/auth/logout')
             ->withHeader('X-GPGAuth-Verify-URL', '/auth/verify')
             ->withHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json')
-            ->withHeader('Access-Control-Expose-Headers', $allowedHeaders);
+            ->withAddedHeader('Access-Control-Expose-Headers', $allowedHeaders);
 
         $authenticationHeaders = $request->getAttribute('authenticationResult')->getErrors() ?? [];
         foreach ($authenticationHeaders as $header => $msg) {

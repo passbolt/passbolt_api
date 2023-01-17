@@ -37,9 +37,18 @@ class GpgAuthenticator extends SessionAuthenticator
 {
     use GpgAuthenticatorTrait;
 
-    public const HTTP_HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
-        'X-GPGAuth-Authenticated, X-GPGAuth-Refer, X-GPGAuth-Debug, X-GPGAuth-Error, X-GPGAuth-Pubkey, ' .
-        'X-GPGAuth-Logout-Url, X-GPGAuth-Version';
+    public const HTTP_HEADERS_WHITELIST = [
+        'X-GPGAuth-Verify-Response',
+        'X-GPGAuth-Progress',
+        'X-GPGAuth-User-Auth-Token',
+        'X-GPGAuth-Authenticated',
+        'X-GPGAuth-Refer',
+        'X-GPGAuth-Debug',
+        'X-GPGAuth-Error',
+        'X-GPGAuth-Pubkey',
+        'X-GPGAuth-Logout-Url',
+        'X-GPGAuth-Version',
+    ];
 
     public const AUTHENTICATION_REQUIRED_MESSAGE = 'You need to login to access this location.';
 
