@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2022-11-04 15:45+0000\n"
-"PO-Revision-Date: 2022-11-04 17:14\n"
+"POT-Creation-Date: 2023-01-17 15:05+0000\n"
+"PO-Revision-Date: 2023-01-17 15:28\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgid "You need to login to access this location."
 msgstr "Necesita iniciar sesión para acceder a esta ubicación."
 
 msgid "The server verify token is missing or invalid."
-msgstr ""
+msgstr "No se ha encontrado el token de verificación del servidor o no es válido."
 
 msgid "Decryption failed."
 msgstr "Fallo al descifrar."
@@ -142,11 +142,17 @@ msgstr "\"{0}\" no es un id de usuario válido para el filtro {1}."
 msgid "\"{0}\" is not a valid group filter."
 msgstr "\"{0}\" no es un filtro de grupo válido."
 
+msgid "\"{0}\" is not a valid parent filter."
+msgstr "\"{0}\" no es un filtro padre válido."
+
 msgid "\"{0}\" is not a valid resource id for filter {1}."
 msgstr "\"{0}\" no es un id de recurso válido para el filtro {1}."
 
 msgid "\"{0}\" is not a valid group id for filter {1}."
 msgstr "\"{0}\" no es un id de grupo válido para el filtro {1}."
+
+msgid "\"{0}\" is not a valid parent id for filter {1}."
+msgstr "\"{0}\" no es un id padre válido para el filtro {1}."
 
 msgid "\"{0}\" is not a valid timestamp for filter {1}."
 msgstr "\"{0}\" no es un timestamp válido para el filtro {1}."
@@ -169,6 +175,9 @@ msgstr "agente de usuario no definido"
 msgid "Access restricted to administrators."
 msgstr "Acceso restringido a administradores."
 
+msgid "The user should not be logged in."
+msgstr ""
+
 msgid "This feature is not supported by your version of passbolt."
 msgstr "Esta característica no está soportada por su versión de passbolt."
 
@@ -178,26 +187,11 @@ msgstr "El identificador de recurso debe ser un UUID válido."
 msgid "The resource was marked as favorite."
 msgstr "Se ha marcado el recurso como favorito."
 
-msgid "The resource does not exist."
-msgstr "El recurso no existe."
-
-msgid "This record is already marked as favorite."
-msgstr "Este registro ya está marcado como favorito."
-
-msgid "Could not validate favorite data."
-msgstr "No se pueden validar los datos favoritos."
-
 msgid "The favorite id is not valid."
 msgstr "El id favorito no es válido."
 
-msgid "The favorite does not exist."
-msgstr "El favorito no existe."
-
 msgid "The favorite was deleted."
 msgstr "El favorito ha sido eliminado."
-
-msgid "Could not delete favorite."
-msgstr "No se puede eliminar el favorito."
 
 msgid "The OpenPGP key identifier should be a valid UUID."
 msgstr "El identificador OpenPGP debe ser un UUID válido."
@@ -243,6 +237,9 @@ msgstr "OK"
 
 msgid "The identifier should be a valid UUID."
 msgstr "El identificador debe ser un UUID válido."
+
+msgid "The resource does not exist."
+msgstr "El recurso no existe."
 
 msgid "The resource type does not exist."
 msgstr "El tipo de recurso no existe."
@@ -362,6 +359,9 @@ msgid "The user does not exist."
 msgstr "El usuario no existe."
 
 msgid "No admin were found in the database."
+msgstr "No se ha encontrado ningún administrador en la base de datos."
+
+msgid "Invalid expiry time {0}."
 msgstr ""
 
 msgid "The identifier should not be empty."
@@ -1142,7 +1142,7 @@ msgid "Could not validate comment data."
 msgstr "No se pudo validar los datos del comentario."
 
 msgid "The comment userId is not valid."
-msgstr ""
+msgstr "El ID de usuario del comentario no es válido."
 
 msgid "The comment does not exist."
 msgstr "El comentario no existe."
@@ -1161,6 +1161,18 @@ msgstr "No tiene permisos para editar este comentario."
 
 msgid "Could not find comments for the requested model."
 msgstr "No se han podido encontrar comentarios para el modelo solicitado."
+
+msgid "This record is already marked as favorite."
+msgstr "Este registro ya está marcado como favorito."
+
+msgid "Could not validate favorite data."
+msgstr "No se pueden validar los datos favoritos."
+
+msgid "The favorite does not exist."
+msgstr "El favorito no existe."
+
+msgid "Could not delete favorite."
+msgstr "No se puede eliminar el favorito."
 
 msgid "Validation failed for favorite {0}. {1}"
 msgstr "La validación falló para el favorito {0}. {1}"
@@ -1288,8 +1300,8 @@ msgstr "Éxito en la validación para el perfil {0}"
 msgid "Could not validate resource data."
 msgstr "No se pudo validar los datos del recurso."
 
-msgid "An unexpected error occured, please contact an administrator."
-msgstr "Se ha producido un error inesperado, por favor póngase en contacto con un administrador."
+msgid "An unexpected error occurred, please contact an administrator."
+msgstr ""
 
 msgid "The server returned the following error:"
 msgstr "El servidor devolvió el siguiente error:"
@@ -1394,6 +1406,9 @@ msgid "Validation success for user {0}"
 msgstr "Validación correcta para el usuario {0}"
 
 msgid "The directory {0} cannot be deleted"
+msgstr "No se puede eliminar el directorio {0}"
+
+msgid "Database connection failed"
 msgstr ""
 
 msgid "Could not connect to github repository"
@@ -1864,6 +1879,291 @@ msgstr "El token de autenticación no está activo."
 msgid "The authentication token is expired."
 msgstr "El token de autenticación ha caducado."
 
+msgid "This functionality is not available using AJAX/JSON."
+msgstr "Esta funcionalidad no está disponible usando AJAX/JSON."
+
+msgid "This authentication provider is not enabled for your organization."
+msgstr "Este proveedor de autenticación no está habilitado para su organización."
+
+msgid "This authentication provider is already setup. Disable it first"
+msgstr "Este proveedor de autenticación ya está configurado. Desactívalo primero"
+
+msgid "Multi Factor Authentication is configured!"
+msgstr "¡La autenticación de múltiples factores está configurada!"
+
+msgid "MFA authentication is required."
+msgstr "Se requiere autenticación MFA."
+
+msgid "The multi-factor authentication is not required."
+msgstr "La autenticación de múltiples factores no es necesaria."
+
+msgid "No valid multi-factor authentication settings found for this provider."
+msgstr "No se han encontrado configuraciones de autenticación de múltiples factores válidas para este proveedor."
+
+msgid "The multi-factor authentication was a success."
+msgstr "La autenticación de múltiples factores fue un éxito."
+
+msgid "The multi factor authentication settings for the organization were updated."
+msgstr "Se actualizaron las opciones de autenticación de múltiples factores en la organización."
+
+msgid "Please setup the TOTP application."
+msgstr "Por favor, configure la aplicación TOTP."
+
+msgid "Please provide the one-time password."
+msgstr "Por favor, proporcione la contraseña de un solo uso."
+
+msgid "The user id is not valid."
+msgstr "El id de usuario no es válido."
+
+msgid "No multi-factor authentication settings defined for the user."
+msgstr "No hay ajustes de autenticación multifactor definidos para el usuario."
+
+msgid "The multi-factor authentication settings for the user were deleted."
+msgstr "Se eliminaron los ajustes de autenticación de múltiples factores para el usuario."
+
+msgid "Please setup the Yubikey settings."
+msgstr "Por favor, configure los ajustes de Yubikey."
+
+msgid "A signature is required."
+msgstr "Se requiere una firma."
+
+msgid "The signature should not be empty."
+msgstr "La firma no debe estar vacía."
+
+msgid "This is not a valid signature response."
+msgstr "Esta no es una respuesta de firma válida."
+
+msgid "Something went wrong when validating the one-time password."
+msgstr "Algo salió mal al validar la contraseña de un solo uso."
+
+msgid "This OTP provision uri is not valid."
+msgstr "Este uri de provisión de OTP no es válido."
+
+msgid "An OTP is required."
+msgstr "Se requiere un OTP."
+
+msgid "The OTP should not be empty."
+msgstr "El OTP no debe estar vacío."
+
+msgid "This OTP is not valid."
+msgstr "Este OTP no es válido."
+
+msgid "The OTP should be composed of numbers only."
+msgstr "El OTP debe estar compuesto únicamente de números."
+
+msgid "The OTP should be at least {0} characters long."
+msgstr "El OTP debe tener al menos {0} caracteres."
+
+msgid "This yubikey is not associated with this user."
+msgstr "Esta yubikey no está asociada con este usuario."
+
+msgid "Your multi-factor authentication settings were reset by you."
+msgstr "Tu configuración de autenticación de múltiples factores ha sido restablecida."
+
+msgid "Multi-factor authentication settings were reset."
+msgstr "Se restablecieron los ajustes de autenticación de múltiples factores."
+
+msgid "Your multi-factor authentication settings were reset by an administrator."
+msgstr "Tu configuración de autenticación de múltiples factores fue restablecida por un administrador."
+
+msgid "The MFA token provided does not exist or is inactive."
+msgstr "El token MFA proporcionado no existe o no está activo."
+
+msgid "No MFA provider set."
+msgstr "Ningún proveedor MFA establecido."
+
+msgid "MFA verification date is not set for this provider."
+msgstr "La fecha de verificación de MFA no está establecida para este proveedor."
+
+msgid "MFA setting OTP provisioning uri is not set."
+msgstr "La configuración de uri de aprovisionamiento de OTP no está definida."
+
+msgid "MFA setting Yubikey Id is not set."
+msgstr "La configuración id MFA de la Yubikey Id no está configurada."
+
+msgid "The multi-factor authentication settings data should not be empty."
+msgstr "Los datos de configuración de autenticación de múltiples factores no deben estar vacíos."
+
+msgid "The multi-factor authentication providers list is missing."
+msgstr "Falta la lista de proveedores de autenticación de múltiples factores."
+
+msgid "Unknown MFA provider: {0}."
+msgstr "Proveedor MFA desconocido: {0}."
+
+msgid "Could not validate multi-factor authentication provider configuration."
+msgstr "No se pudo validar la configuración del proveedor de autenticación de múltiples factores."
+
+msgid "No configuration set for Duo integration key."
+msgstr "No hay configuración definida para la clave de integración Duo."
+
+msgid "No configuration set for Duo host name."
+msgstr "No se ha establecido ninguna configuración para el nombre de host Duo."
+
+msgid "No configuration set for Duo secret key."
+msgstr "No se ha establecido ninguna configuración para la clave secreta de Duo."
+
+msgid "No configuration set for Duo salt."
+msgstr "No hay configuración definida para Duo Salt."
+
+msgid "Duo salt should be between 40 and 128 characters in length."
+msgstr "Duo Salt debe tener entre 40 y 128 caracteres."
+
+msgid "This is not a valid Duo secret key."
+msgstr "Esta no es una clave secreta de Duo válida."
+
+msgid "This is not a valid Duo host name."
+msgstr "Este no es un nombre de host Duo válido."
+
+msgid "This is not a valid Duo integration key."
+msgstr "Esta no es una clave de integración válida de Duo."
+
+msgid "Could not validate Duo configuration"
+msgstr "No se pudo validar la configuración de Dúo"
+
+msgid "No configuration set for Yubikey OTP secret key."
+msgstr "No hay configuración establecida para la clave secreta Yubikey OTP."
+
+msgid "No configuration set for Yubikey OTP clientId."
+msgstr "No hay configuración definida para el clienteId de la Yubikey OTP."
+
+msgid "Yubikey OTP clientId should be an integer."
+msgstr "Yubikey OTP clientId debe ser un entero."
+
+msgid "Yubikey OTP secret key is not valid."
+msgstr "La clave secreta Yubikey OTP no es válida."
+
+msgid "Could not validate Yubikey configuration."
+msgstr "No se pudo validar la configuración de la Yubikey."
+
+msgid "Duo multi-factor authentication"
+msgstr "Autenticación Duo de múltiples factores"
+
+msgid "Duo multi-factor authentication is enabled!"
+msgstr "¡La autenticación Duo de múltiples factores está habilitada!"
+
+msgid "When logging in you will be asked to perform Duo Authentication."
+msgstr "Al iniciar sesión se le pedirá que realice la autenticación de Duo."
+
+msgid "Since"
+msgstr "Desde"
+
+msgid "Multi factor authentication"
+msgstr "Autenticación de múltiples factores"
+
+msgid "Sorry no multi factor authentication is enabled for this organization."
+msgstr "Lo sentimos, la autenticación de múltiples factores no está habilitada para esta organización."
+
+msgid "Please contact your administrator to enable multi-factor authentication."
+msgstr "Póngase en contacto con su administrador para habilitar la autenticación de múltiples factores."
+
+msgid "Please select a provider"
+msgstr "Por favor, seleccione un proveedor"
+
+msgid "Enabled"
+msgstr "Activado"
+
+msgid "Disabled"
+msgstr "Desactivado"
+
+msgid "What is multi-factor authentication?"
+msgstr "¿Qué es la autenticación de múltiples factores?"
+
+msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
+msgstr "La autenticación de múltiples factores (MFA) es un método para confirmar la identidad de un usuario que requiere presentar dos o más evidencias (o factor)."
+
+msgid "learn more"
+msgstr "saber más"
+
+msgid "Time based One Time Password (TOTP)"
+msgstr "Contraseña de un solo uso basada en el tiempo (TOTP)"
+
+msgid "Scan this bar code"
+msgstr "Escanear este código de barras"
+
+msgid "Enter the six digit number as presented on your phone or tablet."
+msgstr "Introduzca el número de seis dígitos tal y como aparece en su teléfono o tableta."
+
+msgid "Requirements"
+msgstr "Requisitos"
+
+msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
+msgstr "Para continuar, debe instalar una aplicación que admita contraseñas de un solo uso basadas en el tiempo (TOTP) en su teléfono o tableta, como:"
+
+msgid "or"
+msgstr "o"
+
+msgid "Getting started with Time based One Time Password (TOTP)"
+msgstr "Primeros pasos con la contraseña de un solo uso basada en el tiempo (TOTP)"
+
+msgid "How does it work?"
+msgstr "¿Cómo funciona?"
+
+msgid "diagram showing how it works"
+msgstr "diagrama que muestra cómo funciona"
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr "Inicie sesión en passbolt como lo hace normalmente."
+
+msgid "When using a new browser, you need an additional code from your phone."
+msgstr "Cuando utilice un nuevo navegador, necesitará un código adicional de su teléfono."
+
+msgid "Once you enter this code, you can log in."
+msgstr "Una vez ingresado este código, podrás iniciar sesión."
+
+msgid "cancel"
+msgstr "cancelar"
+
+msgid "get started!"
+msgstr "¡empezar!"
+
+msgid "Time based One Time Password (TOTP) is enabled!"
+msgstr "¡La contraseña de un solo uso basada en el tiempo (TOTP) está habilitada!"
+
+msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
+msgstr "Al iniciar sesión desde un nuevo dispositivo tendrás que introducir un código de verificación único generado por una aplicación en tu móvil."
+
+msgid "Multi factor authentication verification"
+msgstr "Verificación de autenticación de múltiples factores"
+
+msgid "Remember this device for a month."
+msgstr "Recordar este dispositivo durante un mes."
+
+msgid "Yubikey One Time Password"
+msgstr "Contraseña de un solo uso de Yubikey"
+
+msgid "Plug in the yubikey and put your finger on it."
+msgstr "Conecta el yubikey y pon tu dedo sobre él."
+
+msgid "Yubikey One Time Password is enabled!"
+msgstr "¡La contraseña de un solo uso de la Yubikey está habilitada!"
+
+msgid "When logging in from a new device you will need a unique code generated by your yubikey."
+msgstr "Al iniciar sesión desde un nuevo dispositivo necesitarás un código único generado por tu yubikey."
+
+msgid "verify"
+msgstr "verificar"
+
+msgid "Or try with another provider"
+msgstr "O pruebe con otro proveedor"
+
+msgid "Manage providers"
+msgstr "Administrar proveedores"
+
+msgid "Turn off"
+msgstr "Desactivar"
+
+msgid "Your multi-factor authentication is disabled."
+msgstr "Su autenticación de múltiples factores está deshabilitada."
+
+msgid "Multi-factor authentication settings were reset for your account by an administrator."
+msgstr "Tu configuración de autenticación de múltiples factores fue restablecida por un administrador."
+
+msgid "Please contact your administrator if you didn't request this action."
+msgstr "Póngase en contacto con su administrador si no solicitó esta acción."
+
+msgid "Log in passbolt"
+msgstr "Iniciar sesión passbolt"
+
 msgid "The password generator value \"{0}\" is not valid."
 msgstr "El valor del generador de contraseñas \"{0}\" no es válido."
 
@@ -1942,9 +2242,6 @@ msgstr "El correo electrónico del remitente no debe estar vacío."
 msgid "The sender email should be a valid BMP-UTF8 string."
 msgstr "El correo electrónico del remitente debe ser una cadena BMP-UTF8 válida."
 
-msgid "The sender email should be a valid email address."
-msgstr "El correo electrónico del remitente debe ser una dirección de correo válida."
-
 msgid "A host name is required."
 msgstr "Se requiere un nombre de host."
 
@@ -1958,7 +2255,7 @@ msgid "A TLS setting is required."
 msgstr "Se requiere una configuración TLS."
 
 msgid "The TLS setting should be \"true\" or NULL."
-msgstr ""
+msgstr "La configuración de TLS debe ser \"true\" o NULL."
 
 msgid "A port number is required."
 msgstr "Un número de puerto es necesario."
@@ -1981,35 +2278,41 @@ msgstr "La contraseña debe ser una cadena BMP-UTF8 válida."
 msgid "The test email should be a valid email address."
 msgstr "El correo electrónico de prueba debe ser una dirección de correo electrónico válida."
 
-msgid "Could not validate the smtp settings."
+msgid "The sender email should be a valid email address."
+msgstr "El correo electrónico del remitente debe ser una dirección de correo válida."
+
+msgid "A test recipient is required."
+msgstr "El destinatario de la prueba es obligatorio."
+
+msgid "SMTP settings endpoints disabled."
 msgstr ""
+
+msgid "Could not validate the smtp settings."
+msgstr "No se ha podido validar la configuración SMTP."
 
 msgid "Could not validate the smtp settings found in database."
-msgstr ""
+msgstr "No se han podido validar los ajustes SMTP encontrados en la base de datos."
 
 msgid "The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database."
-msgstr ""
+msgstr "La clave de servidor OpenPGP no puede utilizarse para descifrar la configuración SMTP almacenada en la base de datos."
 
 msgid "To fix this problem, you need to configure the SMTP server again."
-msgstr ""
+msgstr "Para solucionar este problema, necesita configurar el servidor SMTP de nuevo."
 
 msgid "not found"
-msgstr ""
+msgstr "no se ha encontrado"
 
 msgid "database"
 msgstr "base de datos"
 
 msgid "env variables"
-msgstr ""
+msgstr "variables de entorno"
 
 msgid "undefined"
-msgstr ""
+msgstr "sin definir"
 
 msgid "Passbolt test email"
-msgstr ""
-
-msgid "A test recipient is required."
-msgstr ""
+msgstr "Correo electrónico de prueba de Passbolt"
 
 msgid "Congratulations!"
 msgstr "¡Felicidades!"
@@ -2175,6 +2478,9 @@ msgstr "El archivo de clave pública OpenPGP del servidor tiene permisos de escr
 
 msgid "The server OpenPGP public key file is not writable."
 msgstr "El archivo de clave pública OpenPGP del servidor no tiene permisos de escritura."
+
+msgid "Ensure the file {0} is writable by the webserver user."
+msgstr "Asegúrese de que el archivo {0} tiene permisos de escritura para el usuario del servidor web."
 
 msgid "The server OpenPGP private key file is writable."
 msgstr "El archivo de clave privada OpenPGP del servidor tiene permisos de escritura."
@@ -2357,7 +2663,7 @@ msgid "Forcing SSL means that passbolt will not accept connections coming from a
 msgstr "Forzar SSL significa que passbolt no aceptará conexiones provenientes de un protocolo no seguro. Si SSL es forzado, su servidor tiene que ser configurado para HTTPS. Es altamente recomendable que lo haga."
 
 msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr "¡Bienvenido a Passbolt! Comencemos con la configuración."
+msgstr ""
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "¡Perfecto! Su entorno está listo para la aprobación."
