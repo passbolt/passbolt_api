@@ -18,8 +18,8 @@ use Cake\I18n\FrozenTime;
 
 $recipient = $body['recipient'];
 $modifier = $body['modifier'];
-$status = $body['status'];
-$info = $body['info'] ?? null;
+$status = Purifier::clean($body['status']);
+$info = Purifier::clean($body['info']) ?? null;
 $modifierFullName = Purifier::clean($modifier['profile']['first_name']) . ' ' . Purifier::clean($modifier['profile']['last_name']);
 
 echo $this->element('Email/module/avatar',[
