@@ -512,7 +512,7 @@
   "Please wait...": "Por favor espere...",
   "port": "puerto",
   "Port": "Puerto",
-  "Port must be a number between 1 and 65535": "Port must be a number between 1 and 65535",
+  "Port must be a number between 1 and 65535": "El puerto debe ser un número entre 1 y 65535",
   "Port must be a valid number": "El puerto debe ser un número válido",
   "Port number": "Número del puerto",
   "Previous recovery": "Recuperación anterior",
