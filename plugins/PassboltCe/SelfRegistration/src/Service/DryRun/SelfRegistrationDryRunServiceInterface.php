@@ -20,6 +20,7 @@ interface SelfRegistrationDryRunServiceInterface
 {
     /**
      * @return bool
+     * @throws \Cake\Http\Exception\InternalErrorException if the settings in DB are not valid
      */
     public function isSelfRegistrationOpen(): bool;
 

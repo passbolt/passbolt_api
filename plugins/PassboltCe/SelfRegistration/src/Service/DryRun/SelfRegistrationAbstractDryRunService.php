@@ -31,6 +31,7 @@ abstract class SelfRegistrationAbstractDryRunService implements SelfRegistration
      * Read settings in the DB. Avoid multiple DB queries.
      *
      * @return array
+     * @throws \Cake\Http\Exception\InternalErrorException if the data in the DB is invalid.
      */
     protected function getSelfRegistrationSettingsInDB(): array
     {

@@ -38,6 +38,7 @@ class SelfRegistrationDryRunController extends AppController
      *
      * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to detect if the user can self register
      * @return void
+     * @throws \Cake\Http\Exception\InternalErrorException if the settings in the DB are not valid
      */
     public function dryRun(SelfRegistrationDryRunServiceInterface $dryRunService): void
     {

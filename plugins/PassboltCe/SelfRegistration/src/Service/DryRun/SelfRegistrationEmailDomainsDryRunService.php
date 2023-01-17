@@ -29,6 +29,7 @@ class SelfRegistrationEmailDomainsDryRunService extends SelfRegistrationAbstract
      * @throws \Cake\Http\Exception\ForbiddenException if no allowed domains are found in the settings.
      * @throws \Cake\Http\Exception\ForbiddenException if the email is already registered.
      * @throws \App\Error\Exception\FormValidationException if no valid email is provided in the payload.
+     * @throws \Cake\Http\Exception\InternalErrorException if the data in the DB is invalid.
      */
     public function canGuestSelfRegister(array $data): bool
     {
@@ -52,6 +53,7 @@ class SelfRegistrationEmailDomainsDryRunService extends SelfRegistrationAbstract
     /**
      * @return array
      * @throws \Cake\Http\Exception\ForbiddenException if no allowed domains are found in the settings.
+     * @throws \Cake\Http\Exception\InternalErrorException if the settings in DB are not valid.
      */
     protected function getAllowedDomainsInSettings(): array
     {
@@ -80,8 +82,8 @@ class SelfRegistrationEmailDomainsDryRunService extends SelfRegistrationAbstract
         if (!$isDomainAllowed) {
             throw new CustomValidationException(__('The self registration data could not be validated.'), [
                 'email' => [
-                    'checkEmailDomainIsAllowed' => __('The domain is not supported for self-registration.')
-                ]
+                    'checkEmailDomainIsAllowed' => __('The domain is not supported for self-registration.'),
+                ],
             ]);
         }
     }

@@ -46,10 +46,17 @@ class SelfRegistrationEmailDomainsDryRunFormTest extends TestCase
         ]));
     }
 
-    public function testSelfRegistrationEmailDomainsDryRunFormTest_Invalid()
+    public function testSelfRegistrationEmailDomainsDryRunFormTest_Invalid_Email()
     {
         $this->assertFalse($this->form->execute([
             'email' => 'john@passbolt',
+        ]));
+    }
+
+    public function testSelfRegistrationEmailDomainsDryRunFormTest_Invalid_Type()
+    {
+        $this->assertFalse($this->form->execute([
+            'email' => [],
         ]));
     }
 }

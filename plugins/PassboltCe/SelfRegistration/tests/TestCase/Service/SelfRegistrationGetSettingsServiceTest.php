@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\SelfRegistration\Test\TestCase\Service;
 
-use App\Error\Exception\FormValidationException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SelfRegistration\Service\SelfRegistrationGetSettingsService;
@@ -68,7 +68,7 @@ class SelfRegistrationGetSettingsServiceTest extends TestCase
     public function testSelfRegistrationGetSettingsService_Non_Supported_Provider()
     {
         $this->setSelfRegistrationSettingsData('provider', 'foo');
-        $this->expectException(FormValidationException::class);
+        $this->expectException(InternalErrorException::class);
         $this->expectExceptionMessage('Could not validate the self registration settings found in database.');
         $this->service->getSettings();
     }

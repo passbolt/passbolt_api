@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Service;
 
 use App\Error\Exception\FormValidationException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 class SelfRegistrationGetSettingsService extends SelfRegistrationBaseSettingsService
@@ -27,7 +28,7 @@ class SelfRegistrationGetSettingsService extends SelfRegistrationBaseSettingsSer
      * A validation error is thrown if the settings in the DB are not valid
      *
      * @return array
-     * @throws \App\Error\Exception\FormValidationException if the data in the DB is not valid
+     * @throws \Cake\Http\Exception\InternalErrorException if the data in the DB is not valid
      */
     public function getSettings(): array
     {
@@ -41,10 +42,12 @@ class SelfRegistrationGetSettingsService extends SelfRegistrationBaseSettingsSer
         $value = json_decode($settings->get('value'), true);
         $form = $this->getFormFromData($value);
         if (!$form->execute($value)) {
-            throw new FormValidationException(
+            $validationException = new FormValidationException(
                 __('Could not validate the self registration settings found in database.'),
                 $form
             );
+
+            throw new InternalErrorException($validationException->getMessage(), 500, $validationException);
         }
 
         return $this->getRenderedValue($settings, $form);

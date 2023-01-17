@@ -17,8 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Controller;
 
 use App\Controller\AppController;
-use App\Error\Exception\FormValidationException;
-use Cake\Http\Exception\InternalErrorException;
 use Passbolt\SelfRegistration\Service\SelfRegistrationGetSettingsService;
 
 class SelfRegistrationGetSettingsController extends AppController
@@ -27,17 +25,13 @@ class SelfRegistrationGetSettingsController extends AppController
      * Self Registration GET action
      *
      * @return void
+     * @throws \Cake\Http\Exception\InternalErrorException if the settings in the DB are not valid
      */
     public function getSettings(): void
     {
         $this->User->assertIsAdmin();
 
-        $service = new SelfRegistrationGetSettingsService();
-        try {
-            $settings = $service->getSettings();
-        } catch (FormValidationException $e) {
-            throw new InternalErrorException($e->getMessage(), 500, $e);
-        }
+        $settings = (new SelfRegistrationGetSettingsService())->getSettings();
 
         $this->success(__('The operation was successful.'), $settings);
     }

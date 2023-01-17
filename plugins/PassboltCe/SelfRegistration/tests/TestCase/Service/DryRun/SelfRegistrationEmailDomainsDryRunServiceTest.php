@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\FormValidationException;
 use App\Test\Factory\UserFactory;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationEmailDomainsDryRunService;
@@ -65,7 +66,7 @@ class SelfRegistrationEmailDomainsDryRunServiceTest extends TestCase
     public function testSelfRegistrationEmailDomainsDryRunService_isSelfRegistrationOpen_Invalid_Settings_In_DB_Should_ThrowException()
     {
         $this->setSelfRegistrationSettingsData('provider', 'foo');
-        $this->expectException(FormValidationException::class);
+        $this->expectException(InternalErrorException::class);
         $this->expectExceptionMessage('Could not validate the self registration settings found in database.');
         $this->service->isSelfRegistrationOpen();
     }
@@ -129,6 +130,15 @@ class SelfRegistrationEmailDomainsDryRunServiceTest extends TestCase
         UserFactory::make()->setField('username', $email)->persist();
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage('The email is already registered.');
+        $this->service->canGuestSelfRegister(compact('email'));
+    }
+
+    public function testSelfRegistrationEmailDomainsDryRunService_Invalid_Data_In_DB_Should_Throw_An_Internal_Error()
+    {
+        $email = 'johndoe@passbolt.com';
+        $this->setSelfRegistrationSettingsData('provider', 'invalid data');
+        $this->expectException(InternalErrorException::class);
+        $this->expectExceptionMessage('Could not validate the self registration settings found in database.');
         $this->service->canGuestSelfRegister(compact('email'));
     }
 }
