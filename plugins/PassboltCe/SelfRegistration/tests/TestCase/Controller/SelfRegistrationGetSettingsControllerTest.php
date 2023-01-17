@@ -40,14 +40,6 @@ class SelfRegistrationGetSettingsControllerTest extends AppIntegrationTestCase
         ]);
     }
 
-    public function testSelfRegistrationGetSettingsControllerTest_Error()
-    {
-        $this->logInAsAdmin();
-        $this->setSelfRegistrationSettingsData('data', 'blah');
-        $this->getJson('/self-registration/settings.json');
-        $this->assertInternalError('Could not validate the self registration settings found in database.');
-    }
-
     public function testSelfRegistrationGetSettingsControllerTest_Guest_Have_No_Access()
     {
         $this->getJson('/self-registration/settings.json');

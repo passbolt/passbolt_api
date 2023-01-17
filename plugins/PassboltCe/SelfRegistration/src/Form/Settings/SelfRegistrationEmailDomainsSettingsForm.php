@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.9.0
  */
-namespace Passbolt\SelfRegistration\Form;
+namespace Passbolt\SelfRegistration\Form\Settings;
 
 use Cake\Core\Configure;
 use Cake\Validation\Validation;

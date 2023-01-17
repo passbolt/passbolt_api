@@ -17,8 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Service;
 
 use App\Model\Entity\OrganizationSetting;
-use Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm;
-use Passbolt\SelfRegistration\Form\SelfRegistrationEmailDomainsSettingsForm;
+use Passbolt\SelfRegistration\Form\Settings\SelfRegistrationBaseSettingsForm;
+use Passbolt\SelfRegistration\Form\Settings\SelfRegistrationEmailDomainsSettingsForm;
 
 abstract class SelfRegistrationBaseSettingsService
 {
@@ -26,7 +26,7 @@ abstract class SelfRegistrationBaseSettingsService
 
     /**
      * @param array $data data in the payload
-     * @return \Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm
+     * @return \Passbolt\SelfRegistration\Form\Settings\SelfRegistrationBaseSettingsForm
      */
     protected function getFormFromData(array $data): SelfRegistrationBaseSettingsForm
     {
@@ -47,7 +47,7 @@ abstract class SelfRegistrationBaseSettingsService
      * The form is passed in order to ensure that the data returned is sanitized
      *
      * @param \App\Model\Entity\OrganizationSetting $setting Setting in the DB
-     * @param \Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm $form Form validating the value of the setting
+     * @param \Passbolt\SelfRegistration\Form\Settings\SelfRegistrationBaseSettingsForm $form Form validating the value of the setting
      * @return array
      */
     protected function getRenderedValue(OrganizationSetting $setting, SelfRegistrationBaseSettingsForm $form): array

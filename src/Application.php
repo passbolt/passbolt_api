@@ -50,6 +50,8 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -302,6 +304,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $container->add(AuthenticationServiceInterface::class, SessionAuthenticationService::class);
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
+        $container->add(SelfRegistrationDryRunServiceInterface::class, SelfRegistrationDefaultDryRunService::class);
         $container->addServiceProvider(new CommandServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());

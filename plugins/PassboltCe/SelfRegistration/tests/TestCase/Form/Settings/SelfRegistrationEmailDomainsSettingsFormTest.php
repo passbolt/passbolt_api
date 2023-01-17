@@ -15,17 +15,17 @@ declare(strict_types=1);
  * @since         3.9.0
  */
 
-namespace Passbolt\SelfRegistration\Test\TestCase\Form;
+namespace Passbolt\SelfRegistration\Test\TestCase\Form\Settings;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
-use Passbolt\SelfRegistration\Form\SelfRegistrationBaseSettingsForm;
-use Passbolt\SelfRegistration\Form\SelfRegistrationEmailDomainsSettingsForm;
+use Passbolt\SelfRegistration\Form\Settings\SelfRegistrationBaseSettingsForm;
+use Passbolt\SelfRegistration\Form\Settings\SelfRegistrationEmailDomainsSettingsForm;
 
 class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
 {
     /**
-     * @var \Passbolt\SelfRegistration\Form\SelfRegistrationEmailDomainsSettingsForm
+     * @var \Passbolt\SelfRegistration\Form\Settings\SelfRegistrationEmailDomainsSettingsForm
      */
     protected $form;
 

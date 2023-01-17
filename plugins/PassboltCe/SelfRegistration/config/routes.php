@@ -35,5 +35,8 @@ $routes->plugin(
             )
             ->setPass(['id'])
             ->setMethods(['DELETE']);
+
+        $routes->connect('/dry-run', ['controller' => 'SelfRegistrationDryRun', 'action' => 'dryRun'])
+            ->setMethods(['POST', 'PUT']);
     }
 );

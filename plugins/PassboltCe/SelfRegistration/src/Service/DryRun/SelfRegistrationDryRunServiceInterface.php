@@ -14,22 +14,19 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.9.0
  */
-namespace Passbolt\SelfRegistration;
+namespace Passbolt\SelfRegistration\Service\DryRun;
 
-use Cake\Core\BasePlugin;
-use Cake\Core\ContainerInterface;
-use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
-use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationEmailDomainsDryRunService;
-
-class Plugin extends BasePlugin
+interface SelfRegistrationDryRunServiceInterface
 {
     /**
-     * @inheritDoc
+     * @return bool
+     * @throws \Cake\Http\Exception\InternalErrorException if the settings in DB are not valid
      */
-    public function services(ContainerInterface $container): void
-    {
-        $container
-            ->extend(SelfRegistrationDryRunServiceInterface::class)
-            ->setConcrete(SelfRegistrationEmailDomainsDryRunService::class);
-    }
+    public function isSelfRegistrationOpen(): bool;
+
+    /**
+     * @param array $data Data for identification
+     * @return bool
+     */
+    public function canGuestSelfRegister(array $data): bool;
 }
