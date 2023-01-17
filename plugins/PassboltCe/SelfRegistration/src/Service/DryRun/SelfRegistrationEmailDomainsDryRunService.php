@@ -61,7 +61,7 @@ class SelfRegistrationEmailDomainsDryRunService extends SelfRegistrationAbstract
         $settings = $this->getSelfRegistrationSettingsInDB();
         $allowedDomains = $settings['data']['allowed_domains'] ?? null;
         if (is_null($allowedDomains)) {
-            throw new ForbiddenException(__('The self registration is disable'));
+            throw new ForbiddenException(__('The self registration is disabled.'));
         }
 
         return $allowedDomains;

@@ -36,6 +36,7 @@ interface UserRecoverServiceInterface
     /**
      * @param \App\Utility\UserAccessControl $uac UAC performing the recovery
      * @return \App\Model\Entity\User
+     * @throws \Cake\Http\Exception\InternalErrorException if the self registration settings in the DB are not valid
      */
     public function recover(UserAccessControl $uac): User;
 

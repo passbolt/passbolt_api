@@ -39,4 +39,11 @@ class SelfRegistrationUsersRecoverControllerTest extends AppIntegrationTestCase
         $this->postJson('/users/recover.json', ['username' => 'john@passbolt.com']);
         $this->assertNotFoundError('This user does not exist or has been deleted. Please register and complete the setup first.');
     }
+
+    public function testSelfRegistrationUsersRecoverController_SelfRegistrationOpen_Settings_In_DB_Invalid()
+    {
+        $this->setSelfRegistrationSettingsData('provider', 'invalid');
+        $this->postJson('/users/recover.json', ['username' => 'john@passbolt.com']);
+        $this->assertInternalError('Could not validate the self registration settings found in database.');
+    }
 }

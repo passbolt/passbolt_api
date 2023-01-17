@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Service\Users;
 
 use App\Controller\Users\UsersRecoverController;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
@@ -26,7 +27,7 @@ use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\HttpException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
 use Cake\Validation\Validation;
@@ -160,7 +161,8 @@ class UserRecoverService implements UserRecoverServiceInterface
      * Assert the user can actually perform a recovery on their account
      *
      * @return \App\Model\Entity\User
-     * @throws \Cake\Http\Exception\BadRequestException if the user does not exist or has been deleted
+     * @throws \Cake\Http\Exception\NotFoundException if the user does not exist or has been deleted
+     * @throws \Cake\Http\Exception\InternalErrorException if the settings in the DB are not valid
      */
     protected function getUserOrFail(): User
     {
@@ -172,7 +174,7 @@ class UserRecoverService implements UserRecoverServiceInterface
         if (empty($user)) {
             try {
                 $canSelfRegister = $this->selfRegistrationDryRunService->canGuestSelfRegister(['email' => $username]);
-            } catch (HttpException $e) {
+            } catch (CustomValidationException | ForbiddenException $e) {
                 $canSelfRegister = false;
             }
             $msg = __('This user does not exist or has been deleted.') . ' ';

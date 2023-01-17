@@ -94,7 +94,7 @@ class SelfRegistrationEmailDomainsDryRunServiceTest extends TestCase
     {
         $email = 'johndoe@not-passbolt.com';
         $this->expectException(ForbiddenException::class);
-        $this->expectExceptionMessage('The self registration is disable');
+        $this->expectExceptionMessage('The self registration is disabled.');
         $this->service->canGuestSelfRegister(compact('email'));
     }
 
