@@ -2,6 +2,40 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.9.0] - 2023-01-17
+### Added
+- PB-20539 As a user I can protect the authentication to passbolt with a second factor method
+
+### Fixed
+- PB-19601 As an admin running the healthcheck I should not see an unmanaged error if DB connection fails
+- PB-21497 GITHUB-437 As an administrator I should see default user avatar in the email I receive when a user complete the setup
+- PB-21501 GITHUB-411 As an administrator I should see the correct path relative to config tips in the health check report
+- PB-21551 As an administrator I should be able to update with the web installer without getting an error due the subscription
+- PB-21756 As an anonymous user switching MFA provider I should be redirected to the original target
+- PB-21756 As an anonymous user verifying my second factor I should not get a 500 error due to an improperly sanitized redirect parameter
+
+### Improved
+- PB-19653 Rename Google authenticator into Totp authenticator
+- PB-19807 As an administrator I want to know if email hostname availability is enabled in the health check report
+- PB-20985 As an administrator I shouldn't be able to send a test email in command line without defining the recipient
+- PB-21502 As an administrator I want to know if I run a passbolt command without using the webserver user
+- PB-21635 As an administrator I want to the cron events to be logged
+- PB-21751 As anonymous user I don't want to see the TOTP field auto-completed when I verify my second factor authentication
+- PB-19715 As an administrator I want to lock the SMTP settings entry points
+
+### Maintenance
+- PB-19212 Improve PHPUNIT performances
+- PB-19541 Add composer audit job on development pipelines
+- PB-19594 Avoid duplicated pipelines
+- PB-19583 Remove deprecated usage of dummy auth token generation in tests
+- PB-19594 Improve phpunit pipelines environment matrix
+- PB-19706 Refactor favorites add controller into service
+- PB-19707 Refactor favorites delete controller into service
+- PB-20512 Ease debug by attaching original exception to InternalErrorException when missing
+- PB-20541 Replace usage of Cake core Exception with CakeException when not done yet
+- PB-21361 Remove deprecated usage of authenticateAs in tests
+- PB-21658 Add support to PHP 8.2
+
 ## [3.8.3] - 2022-11-30
 ### Fixed
 - PB-21631 Ensure the OpenPGP server key is in the keyring prior to sending any emails
