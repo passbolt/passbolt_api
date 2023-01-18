@@ -22,6 +22,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
@@ -81,11 +82,7 @@ class SmtpTransportTest extends TestCase
 
     private function assertSettingsHaveTheRightKeyValues(array $configExpected, array $configInTransport)
     {
-        $settingKeys = [
-            'host', 'port', 'username', 'password', 'tls', 'sender_email', 'sender_name',
-        ];
-
-        foreach ($settingKeys as $v) {
+        foreach (SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS as $v) {
             $this->assertSame($configExpected[$v], $configInTransport[$v]);
         }
 

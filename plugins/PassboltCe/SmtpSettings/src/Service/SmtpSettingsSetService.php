@@ -34,6 +34,7 @@ class SmtpSettingsSetService
         'host',
         'tls',
         'port',
+        'client',
         'username',
         'password',
     ];
