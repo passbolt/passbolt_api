@@ -41,9 +41,7 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new SelfRegistrationDeleteSettingsService(
-            UserFactory::make()->admin()->nonPersistedUAC()
-        );
+        $this->service = new SelfRegistrationDeleteSettingsService();
     }
 
     public function tearDown(): void
@@ -55,7 +53,10 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
     public function testSelfRegistrationDeleteSettingsService_Valid()
     {
         $settingInDB = $this->setSelfRegistrationSettingsData();
-        $result = $this->service->deleteSettings($settingInDB->get('id'));
+        $result = $this->service->deleteSettings(
+            UserFactory::make()->admin()->nonPersistedUAC(),
+            $settingInDB->get('id')
+        );
         $this->assertTrue($result);
         $this->assertSame(0, OrganizationSettingFactory::count());
     }
@@ -65,7 +66,10 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
         $this->setSelfRegistrationSettingsData();
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('The self registration setting does not exist.');
-        $this->service->deleteSettings('foo');
+        $this->service->deleteSettings(
+            UserFactory::make()->admin()->nonPersistedUAC(),
+            'foo'
+        );
     }
 
     public function testSelfRegistrationDeleteSettingsService_Empty_ID()
@@ -73,6 +77,9 @@ class SelfRegistrationDeleteSettingsServiceTest extends TestCase
         $this->setSelfRegistrationSettingsData();
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('The self registration setting does not exist.');
-        $this->service->deleteSettings('');
+        $this->service->deleteSettings(
+            UserFactory::make()->admin()->nonPersistedUAC(),
+            ''
+        );
     }
 }
