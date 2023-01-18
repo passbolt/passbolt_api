@@ -53,8 +53,19 @@ class SelfRegistrationSetSettingsServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSelfRegistrationSetSettingsService_Valid()
+    public function isInvalidDataInDb(): array
     {
+        return [[true], [false]];
+    }
+
+    /**
+     * @dataProvider isInvalidDataInDb
+     */
+    public function testSelfRegistrationSetSettingsService_Valid(bool $isInvalidDataInDb)
+    {
+        if ($isInvalidDataInDb) {
+            $this->setSelfRegistrationSettingsData('provider', 'foo');
+        }
         $data = $this->getSelfRegistrationSettingsData();
         $result = $this->service->saveSettings($data);
 
