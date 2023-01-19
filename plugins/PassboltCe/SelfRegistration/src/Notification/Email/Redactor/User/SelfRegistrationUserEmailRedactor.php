@@ -12,36 +12,39 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.13.0
+ * @since         3.10.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace Passbolt\SelfRegistration\Notification\Email\Redactor\User;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
-use App\Model\Table\AvatarsTable;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Service\Users\UserRecoverService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
 
-class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
+class SelfRegistrationUserEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    public const TEMPLATE_REGISTER_ADMIN = 'AN/user_register_admin';
+    public const EMAIL_TEMPLATE = 'AN/user_register_self';
 
     /**
-     * @inheritDoc
+     * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
+     *
+     * @return array
      */
     public function getSubscribedEvents(): array
     {
         return [
-            UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME,
+            UsersTable::AFTER_SELF_REGISTER_SUCCESS_EVENT_NAME,
+            UserRecoverService::AFTER_RECOVER_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -55,9 +58,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
 
         $user = $event->getData('user');
         $uac = $event->getData('token');
-        $adminId = $event->getData('adminId');
-
-        $email = $this->createEmailAdminRegister($user, $uac, $adminId);
+        $email = $this->createEmailSelfRegister($user, $uac);
 
         return $emailCollection->addEmail($email);
     }
@@ -79,30 +80,24 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \App\Model\Entity\User $user User
      * @param \App\Model\Entity\AuthenticationToken $uac UAC
-     * @param string $adminId Admin user ID
      * @return \App\Notification\Email\Email
      */
-    private function createEmailAdminRegister(User $user, AuthenticationToken $uac, string $adminId): Email
+    private function createEmailSelfRegister(User $user, AuthenticationToken $uac): Email
     {
         /** @var \App\Model\Table\UsersTable $UsersTable */
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
-        $admin = $UsersTable->findFirstForEmail($adminId);
         $user = $UsersTable->findFirstForEmail($user->id);
-
-        $UsersTable->loadInto($user, [
-            'Profiles' => AvatarsTable::addContainAvatar(),
-        ]);
 
         return new Email(
             $user->username,
             $this->getSubject($user),
             [
                 'body' => [
-                    'user' => $user, 'token' => $uac, 'admin' => $admin,
+                    'user' => $user, 'token' => $uac,
                 ],
                 'title' => $this->getSubject($user),
             ],
-            static::TEMPLATE_REGISTER_ADMIN
+            static::EMAIL_TEMPLATE
         );
     }
 }

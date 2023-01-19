@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         3.10.0
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
@@ -19,33 +19,27 @@ if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
 $user = $body['user'];
-$admin = $body['admin'];
-$token = $body['token'];
+$recipient = $body['recipient'];
+$userFirstName = Purifier::clean($user['profile']['first_name']);
+$userFullName = $userFirstName . ' ' . Purifier::clean($user['profile']['last_name']);
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
+    'url' => AvatarHelper::getAvatarUrl($recipient['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'user' => $user,
+        'user' => $recipient,
         'datetime' => $user['created'],
-        'text' => __('{0} just created an account for you on passbolt!', Purifier::clean($admin['profile']['first_name']))
+        'text' => __('{0} just created an account on passbolt!', $userFirstName)
     ])
 ]);
 
-$text = '<h3>' . __('Welcome {0}', Purifier::clean($user['profile']['first_name'])) . ',</h3><br/>';
-$text .= __('{0} just invited you to join passbolt at {1}',
-        ucfirst(Purifier::clean($admin['profile']['first_name'])),
-        '<a href="' . Router::url('/',true) . '">' . Router::url('/',true) . '</a>'
-        );
-$text .= ' ' . __('Passbolt is an open source password manager.');
-$text .= ' ' . __('It is designed to allow sharing credentials securely with your team!');
-$text .= '<br/><br/>';
-$text .= __('Let\'s take the next five minutes to get you started!');
-$text .= '<br/>';
+$text = '<h3>' . __('Welcome to {0}!', $userFirstName) . '</h3><br/>';
+$text .= __('{0} used the self registration feature to create an account on passbolt.', $userFullName);
+
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/setup/install/' . $user['id'] . '/' . $token['token'], true),
-    'text' => __('get started')
+    'url' => Router::url('/app/users/view/' . $user['id'] , true),
+    'text' => __('View user in passbolt')
 ]);

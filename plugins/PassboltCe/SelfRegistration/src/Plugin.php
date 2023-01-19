@@ -18,6 +18,9 @@ namespace Passbolt\SelfRegistration;
 
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
+use Cake\Core\PluginApplicationInterface;
+use Passbolt\SelfRegistration\Notification\Email\Redactor\SelfRegistrationEmailRedactorPool;
+use Passbolt\SelfRegistration\Notification\Email\Redactor\SelfRegistrationNotificationSettingsDefinition;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationEmailDomainsDryRunService;
 
@@ -26,10 +29,32 @@ class Plugin extends BasePlugin
     /**
      * @inheritDoc
      */
+    public function bootstrap(PluginApplicationInterface $app): void
+    {
+        parent::bootstrap($app);
+        $this->registerListeners($app);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function services(ContainerInterface $container): void
     {
         $container
             ->extend(SelfRegistrationDryRunServiceInterface::class)
             ->setConcrete(SelfRegistrationEmailDomainsDryRunService::class);
+    }
+
+    /**
+     * Register Self Registration related listeners.
+     *
+     * @param \Cake\Core\PluginApplicationInterface $app App
+     * @return void
+     */
+    public function registerListeners(PluginApplicationInterface $app): void
+    {
+        $app->getEventManager()
+            ->on(new SelfRegistrationEmailRedactorPool())
+            ->on(new SelfRegistrationNotificationSettingsDefinition());
     }
 }

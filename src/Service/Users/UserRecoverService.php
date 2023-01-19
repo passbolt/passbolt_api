@@ -43,6 +43,8 @@ class UserRecoverService implements UserRecoverServiceInterface
     use EventDispatcherTrait;
     use ModelAwareTrait;
 
+    public const AFTER_RECOVER_SUCCESS_EVENT_NAME = 'after_recover_success_event_name';
+
     /**
      * @var \Cake\Http\ServerRequest
      */
@@ -83,9 +85,11 @@ class UserRecoverService implements UserRecoverServiceInterface
             // The user has not completed the setup, restart setup
             // Fixes https://github.com/passbolt/passbolt_api/issues/73
             $options['token'] = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
-            $eventName = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
             if ($uac->isAdmin()) {
+                $eventName = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
                 $options['adminId'] = $uac->getId();
+            } else {
+                $eventName = self::AFTER_RECOVER_SUCCESS_EVENT_NAME;
             }
         }
 
