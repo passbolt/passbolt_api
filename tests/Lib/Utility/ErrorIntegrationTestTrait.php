@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Utility;
 
-trait ErrorIntegrationTrait
+trait ErrorIntegrationTestTrait
 {
     /**
      * Asserts that the latest json request failed.

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Entity;
 
+use App\Error\Exception\AuthenticationTokenDataPropertyException;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Utility\UuidFactory;
@@ -99,5 +100,22 @@ class AuthenticationTokenTest extends TestCase
             ->getEntity();
 
         $this->assertSame([], $entity->getJsonDecodedData());
+    }
+
+    public function testAuthenticationToken_getDataProperty()
+    {
+        /** @var AuthenticationToken $entity */
+        $entity = AuthenticationTokenFactory::make()
+            ->patchData(['data' => json_encode(['property' => 'value'])])
+            ->getEntity();
+
+        $this->assertEquals('value', $entity->getDataProperty('property'));
+
+        try {
+            $entity->getDataProperty('blah');
+            $this->fail();
+        } catch (AuthenticationTokenDataPropertyException $exception) {
+            $this->assertTrue(true);
+        }
     }
 }

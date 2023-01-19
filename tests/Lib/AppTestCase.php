@@ -27,7 +27,7 @@ use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
-use App\Test\Lib\Utility\ErrorTrait;
+use App\Test\Lib\Utility\ErrorTestTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
@@ -42,7 +42,7 @@ abstract class AppTestCase extends TestCase
     use ArrayTrait;
     use CommentsModelTrait;
     use EntityTrait;
-    use ErrorTrait;
+    use ErrorTestTrait;
     use FavoritesModelTrait;
     use FeaturePluginAwareTrait;
     use GroupsModelTrait;

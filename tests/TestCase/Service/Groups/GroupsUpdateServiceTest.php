@@ -458,23 +458,19 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     private function insertFixture_AddGroupUser_HavingMultipleResourceSharedWith(): array
     {
-        $u1 = UserFactory::make()->persist();
-        $u2 = UserFactory::make()->persist();
-        $u3 = UserFactory::make()->persist();
-        $u4 = UserFactory::make()->persist();
+        [$u1, $u2, $u3, $u4] = UserFactory::make(4)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2, $u3])->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2, $u3])->persist();
-        $r2 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2, $u3])->persist();
+        [$r1, $r2] = ResourceFactory::make(2)
+            ->withPermissionsFor([$u1, $g1])
+            ->withSecretsFor([$u1, $u2, $u3])
+            ->persist();
 
         return [$r1, $r2, $g1, $u1, $u2, $u3, $u4];
     }
 
     private function insertFixture_AddGroupUser_HavingOneResourceSharedWith(): array
     {
-        $u1 = UserFactory::make()->persist();
-        $u2 = UserFactory::make()->persist();
-        $u3 = UserFactory::make()->persist();
-        $u4 = UserFactory::make()->persist();
+        [$u1, $u2, $u3, $u4] = UserFactory::make(4)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
         $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
 
@@ -483,19 +479,16 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     private function insertFixture_AddGroupUser_HavingMultipleResourcesSharedWith()
     {
-        $u1 = UserFactory::make()->persist();
-        $u2 = UserFactory::make()->persist();
+        [$u1, $u2] = UserFactory::make(2)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
-        $r2 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
+        [$r1, $r2] = ResourceFactory::make(2)->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
 
         return [$r1, $r2, $g1, $u1, $u2];
     }
 
     private function insertFixture_AddGroupUser_UserHasAlreadyAccessToTheResource()
     {
-        $u1 = UserFactory::make()->persist();
-        $u2 = UserFactory::make()->persist();
+        [$u1, $u2] = UserFactory::make(2)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->persist();
         $r1 = ResourceFactory::make()->withPermissionsFor([$u2, $g1])->withSecretsFor([$u1, $u2])->persist();
 
@@ -504,8 +497,7 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     private function insertFixture_AddGroupUser_SecretValidation_SecretForAResourceTheGroupHasNoAccess()
     {
-        $u1 = UserFactory::make()->persist();
-        $u2 = UserFactory::make()->persist();
+        [$u1, $u2] = UserFactory::make(2)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
         $r1 = ResourceFactory::make()->withPermissionsFor([$u1, $g1])->withSecretsFor([$u1, $u2])->persist();
         $r2 = ResourceFactory::make()->withPermissionsFor([$u1])->withSecretsFor([$u1])->persist();
@@ -515,8 +507,7 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     private function insertFixture_GroupWithOneManagerAndOneMember(): array
     {
-        $u1 = UserFactory::make()->persist();
-        $u2 = UserFactory::make()->persist();
+        [$u1, $u2] = UserFactory::make(2)->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
 
         return [$u1, $u2, $g1];
@@ -524,10 +515,8 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     private function insertFixture_TwoGroupsWithTwoMembers()
     {
-        $u1 = UserFactory::make()->persist();
-        $u2 = UserFactory::make()->persist();
-        $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
-        $g2 = GroupFactory::make()->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
+        [$u1, $u2] = UserFactory::make(2)->persist();
+        [$g1, $g2] = GroupFactory::make(2)->withGroupsManagersFor([$u1])->withGroupsUsersFor([$u2])->persist();
 
         return [$g1, $g2, $u1, $u2];
     }

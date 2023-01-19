@@ -30,6 +30,7 @@
                     <?= $this->Form->control('totp', [
                         'label' => 'One Time Password (OTP)',
                         'placeholder' => '123456',
+                        'autocomplete' => 'off'
                     ]); ?>
                     <div class="helptext">
                         <?= __('Enter the six digit number as presented on your phone or tablet.'); ?>

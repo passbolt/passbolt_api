@@ -16,8 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Model\Entity;
 
+use App\Error\Exception\AuthenticationTokenDataPropertyException;
 use App\Service\AuthenticationTokens\AuthenticationTokensSessionService;
 use App\Utility\AuthToken\AuthTokenExpiry;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
@@ -81,17 +84,42 @@ class AuthenticationToken extends Entity
     }
 
     /**
-     * @param string|null $expiry Expiry in word format.
+     * @param string|null $expiryDuration Expiry duration in word format, ex. "one year"
      * @return bool
      */
-    public function isExpired(?string $expiry = null): bool
+    public function isExpired(?string $expiryDuration = null): bool
     {
-        if (empty($expiry)) {
-            $expiry = (new AuthTokenExpiry())->getExpiryForTokenType($this->type);
+        // Consider no expiration provided for this input
+        if ($expiryDuration === '') {
+            $expiryDuration = null;
         }
-        $isNotExpired = $this->created->wasWithinLast($expiry);
+        $interval = $expiryDuration ?? $this->getExpiryDuration();
 
-        return !$isNotExpired;
+        return !$this->created->wasWithinLast($interval);
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpiryDuration(): string
+    {
+        return (new AuthTokenExpiry())->getExpiryForTokenType($this->type);
+    }
+
+    /**
+     * @return \Cake\I18n\FrozenTime
+     */
+    public function getExpiryTime(): FrozenTime
+    {
+        $expiryTime = (new FrozenTime($this->created))
+            ->modify('+' . $this->getExpiryDuration());
+
+        /** @phpstan-ignore-next-line */
+        if ($expiryTime === false) {
+            throw new InternalErrorException(__('Invalid expiry time {0}.', $this->getExpiryDuration()));
+        }
+
+        return $expiryTime;
     }
 
     /**
@@ -156,5 +184,20 @@ class AuthenticationToken extends Entity
     public function checkSessionId($sessionIdentifier): bool
     {
         return (new AuthenticationTokensSessionService())->checkSession($this, $sessionIdentifier);
+    }
+
+    /**
+     * @param string $propertyName name
+     * @throws \App\Error\Exception\AuthenticationTokenDataPropertyException if property is not found or not a string
+     * @return string
+     */
+    public function getDataProperty(string $propertyName): string
+    {
+        $data = $this->getJsonDecodedData();
+        if (empty($data) || !isset($data[$propertyName]) || !is_string($data[$propertyName])) {
+            throw new AuthenticationTokenDataPropertyException('Authentication token data property not found.');
+        }
+
+        return $data[$propertyName];
     }
 }

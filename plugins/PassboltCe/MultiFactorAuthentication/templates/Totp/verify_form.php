@@ -23,12 +23,13 @@
     <?= $this->Form->control('totp', [
         'label' => 'One Time Password (OTP)',
         'placeholder' => '123456',
-        'autofocus' => 'autofocus'
+        'autofocus' => 'autofocus',
+        'autocomplete' => 'off'
     ]); ?>
     <div class="input checkbox">
         <input type="checkbox" name="remember" value="remember" id="remember">
         <label for="remember" ><?= __('Remember this device for a month.'); ?></label>
     </div>
-    <?= $this->element('formActions', ['providers' => $providers, 'currentProvider' => MfaSettings::PROVIDER_TOTP]); ?>
+    <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_TOTP]); ?>
     <?= $this->Form->end(); ?>
 </div>

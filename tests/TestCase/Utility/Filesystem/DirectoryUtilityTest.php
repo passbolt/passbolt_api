@@ -48,6 +48,8 @@ class DirectoryUtilityTest extends TestCase
 
     public function testDirectoryUtilityRemoveRecursively_Directory_Is_Not_Executable()
     {
+        $this->markTestSkipped('Not working on virtualized environments.');
+
         $folderToDelete = TMP . 'test_folder';
 
         // Create a non-executable folder

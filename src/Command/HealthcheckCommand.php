@@ -153,9 +153,7 @@ class HealthcheckCommand extends PassboltCommand
         $this->args = $args;
 
         // Root user is not allowed to execute this command.
-        if (!$this->assertNotRoot($io)) {
-            return $this->errorCode();
-        }
+        $this->assertCurrentProcessUser($io);
 
         $results = [];
 

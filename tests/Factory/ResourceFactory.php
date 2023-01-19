@@ -86,7 +86,7 @@ class ResourceFactory extends CakephpBaseFactory
     /**
      * Define the secrets for the given users
      *
-     * @param array $aros Array of users to create a secret for
+     * @param array $users Array of users to create a secret for
      * @return ResourceFactory
      */
     public function withSecretsFor(array $users): ResourceFactory

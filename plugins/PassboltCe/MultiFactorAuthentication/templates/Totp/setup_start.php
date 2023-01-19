@@ -31,7 +31,7 @@
         </div>
         <div class="col4 last">
             <div class="sidebar-help">
-                <h3><?= __('Requirements') ?></h4>
+                <h3><?= __('Requirements') ?></h3>
                 <p>
                     <?= __('To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:'); ?>
                     <a href="https://support.google.com/accounts/answer/1066447" target="_blank" rel="noopener">Google Authenticator</a> <?= __('or'); ?>

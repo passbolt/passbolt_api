@@ -20,9 +20,9 @@ namespace App\Service\AuthenticationTokens;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 
 /**
@@ -33,14 +33,19 @@ use Cake\Validation\Validation;
  */
 class AuthenticationTokenGetService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \Cake\ORM\Table $AuthenticationTokens
+     */
+    protected $AuthenticationTokens;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->loadModel('AuthenticationTokens');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
     /**

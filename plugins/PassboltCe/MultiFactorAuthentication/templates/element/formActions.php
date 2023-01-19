@@ -19,7 +19,7 @@
         } else {
             $i++;
         } ?>
-    <a href="<?= Router::url("/mfa/verify/$providers[$i]", true); ?>">
+    <a href="<?= Router::url("/mfa/verify/" . $providers[$i] . "?redirect=" . $redirect, true); ?>">
         <?= __('Or try with another provider'); ?>
     </a>
     <?php endif;

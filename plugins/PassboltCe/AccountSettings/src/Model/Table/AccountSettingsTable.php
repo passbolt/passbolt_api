@@ -164,6 +164,7 @@ class AccountSettingsTable extends Table
      * @param string $property The name of the property to get
      * @return \Passbolt\AccountSettings\Model\Entity\AccountSetting The first result from the ResultSet.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
+     * @throws \Cake\Http\Exception\BadRequestException When the user ID is not valid.
      */
     public function getFirstPropertyOrFail(string $userId, string $property): AccountSetting
     {

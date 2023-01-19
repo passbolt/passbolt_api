@@ -51,6 +51,7 @@ class IsExpiredTest extends AppTestCase
      */
     public function testAuthenticationTokensIsExpired($expiry, bool $isExpired)
     {
+        /** @var AuthenticationToken $token */
         $token = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_REGISTER)
             ->created(FrozenDate::yesterday())
