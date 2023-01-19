@@ -20,6 +20,7 @@ use Cake\Core\Configure;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
+use Passbolt\SmtpSettings\Model\Validation\SmtpSettingsClientValidationRule;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
 class EmailConfigurationForm extends Form
@@ -38,6 +39,7 @@ class EmailConfigurationForm extends Form
             ->addField('host', ['type' => 'string'])
             ->addField('tls', ['type' => 'integer'])
             ->addField('port', ['type' => 'string'])
+            ->addField('client', ['type' => 'string'])
             ->addField('username', ['type' => 'string'])
             ->addField('password', ['type' => 'string'])
             ->addField('email_test_to', ['type' => 'string']);
@@ -80,6 +82,10 @@ class EmailConfigurationForm extends Form
             ->requirePresence('port', 'create', __('A port number is required.'))
             ->integer('port', __('The port number should be numeric.'))
             ->range('port', [1, 65535], __('The port number should be between {0} and {1}.', '1', '65535'));
+
+        $validator
+            ->allowEmptyString('client')
+            ->add('client', 'isClientValid', new SmtpSettingsClientValidationRule());
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
@@ -151,6 +157,7 @@ class EmailConfigurationForm extends Form
     public function execute(array $data, array $options = []): bool
     {
         $data = $this->mapTlsToTrueOrNull($data);
+        $data = $this->setClient($data);
 
         return parent::execute($data, $options);
     }
@@ -169,6 +176,22 @@ class EmailConfigurationForm extends Form
 
         $tls = filter_var($data['tls'], FILTER_VALIDATE_BOOLEAN);
         $data['tls'] = $tls ? true : null;
+
+        return $data;
+    }
+
+    /**
+     * In order to avoid empty strings passed to client,
+     * we ensure that the client is well set to null is empty
+     *
+     * @param array $data Form data
+     * @return array
+     */
+    protected function setClient(array $data): array
+    {
+        if (!isset($data['client']) || empty($data['client'])) {
+            $data['client'] = null;
+        }
 
         return $data;
     }

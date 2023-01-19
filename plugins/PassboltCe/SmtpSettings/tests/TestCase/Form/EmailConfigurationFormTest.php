@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Form;
 
 use Cake\TestSuite\TestCase;
+use Faker\Factory;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
@@ -92,6 +93,48 @@ class EmailConfigurationFormTest extends TestCase
         $this->assertArrayHasKey($failingField, $this->form->getErrors());
     }
 
+    /**
+     * @dataProvider dataForClientFieldValidUnchanged
+     */
+    public function testEmailConfigurationForm_Client_Success($value)
+    {
+        $data = $this->getSmtpSettingsData('client', $value);
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
+        $this->assertSame($value, $this->form->getData('client'));
+    }
+
+    /**
+     * @dataProvider dataForClientFieldValidMappedToNull
+     */
+    public function testEmailConfigurationForm_Client_Success_Mapped_To_Null($value)
+    {
+        $data = $this->getSmtpSettingsData('client', $value);
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
+        $this->assertSame(null, $this->form->getData('client'));
+    }
+
+    /**
+     * @dataProvider dataForClientFieldInvalid
+     */
+    public function testEmailConfigurationForm_Client_Invalid($value, string $errorMessage)
+    {
+        $data = $this->getSmtpSettingsData('client', $value);
+        $result = $this->form->execute($data);
+        $this->assertFalse($result);
+        $this->assertSame(['client' => ['isClientValid' => $errorMessage]], $this->form->getErrors());
+    }
+
+    public function testEmailConfigurationForm_Client_Is_Optional()
+    {
+        $data = $this->getSmtpSettingsData();
+        unset($data['client']);
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
+        $this->assertSame(null, $this->form->getData('client'));
+    }
+
     public function data_Valid_Field(): array
     {
         return [
@@ -141,6 +184,38 @@ class EmailConfigurationFormTest extends TestCase
     {
         return [
             ['sender_email', 'foo'],
+        ];
+    }
+
+    public function dataForClientFieldValidUnchanged(): array
+    {
+        $faker = Factory::create();
+
+        return [
+            ['passbolt.com'],
+            [null],
+            [$faker->ipv4()],
+            [$faker->localIpv4()],
+            [$faker->ipv6()],
+        ];
+    }
+
+    public function dataForClientFieldValidMappedToNull(): array
+    {
+        return [
+            [''],
+            [0],
+            [[]],
+            [false],
+        ];
+    }
+
+    public function dataForClientFieldInvalid(): array
+    {
+        return [
+            ['passbolt', 'The client should be a valid IP or a valid domain.'],
+            [1, 'The client should be a valid IP or a valid domain.'],
+            [$this, 'The client should be a valid IP or a valid domain.'],
         ];
     }
 }

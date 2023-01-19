@@ -130,7 +130,8 @@ class SmtpSettingsSendTestEmailService
         $transportConfig['port'] = $data['port'];
         $transportConfig['username'] = empty($data['username']) ? null : $data['username'];
         $transportConfig['password'] = empty($data['password']) ? null : $data['password'];
-        $transportConfig['tls'] = ($data['tls'] == '1' ? true : null);
+        $transportConfig['tls'] = $data['tls'];
+        $transportConfig['client'] = $data['client'];
         TransportFactory::setConfig(self::TRANSPORT_CONFIG_NAME_DEBUG_EMAIL, $transportConfig);
         $this->email->setTransport(self::TRANSPORT_CONFIG_NAME_DEBUG_EMAIL);
     }

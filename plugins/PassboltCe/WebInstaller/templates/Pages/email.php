@@ -71,6 +71,12 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                                 'class' => 'fluid',
                                 'type' => 'password',
                             ]); ?>
+                            <?= $this->Form->control('client', [
+                                'placeholder' => __('client'),
+                                'label' => __('Client'),
+                                'class' => 'fluid',
+                                'type' => 'text',
+                            ]); ?>
                         </div>
                     </div>
                 </div>
