@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.9.0
+ * @since         3.10.0
  */
 namespace Passbolt\SelfRegistration\Controller;
 
@@ -38,8 +38,8 @@ class SelfRegistrationDeleteSettingsController extends AppController
             throw new BadRequestException(__('The self registration setting id should be a valid UUID.'));
         }
 
-        $service = new SelfRegistrationDeleteSettingsService($this->User->getAccessControl());
-        $service->deleteSettings($id);
+        $service = new SelfRegistrationDeleteSettingsService();
+        $service->deleteSettings($this->User->getAccessControl(), $id);
         $this->success(__('The operation was successful.'));
     }
 }

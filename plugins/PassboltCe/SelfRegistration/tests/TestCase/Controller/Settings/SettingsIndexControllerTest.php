@@ -14,25 +14,18 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.10.0
  */
-namespace Passbolt\SelfRegistration\Service\DryRun;
 
-use Cake\Http\Exception\NotFoundException;
+namespace Passbolt\SelRegistration\Test\TestCase\Controller\Settings;
 
-class SelfRegistrationDefaultDryRunService implements SelfRegistrationDryRunServiceInterface
+use App\Test\Lib\AppIntegrationTestCase;
+
+class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
-    /**
-     * @inheritDoc
-     */
-    public function isSelfRegistrationOpen(): bool
+    public function testSettingsIndexController_publicPluginSettings()
     {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function canGuestSelfRegister(array $data): bool
-    {
-        throw new NotFoundException(__(' The self registration plugin is not enabled.'));
+        $url = '/settings.json?api-version=2';
+        $this->getJson($url);
+        $this->assertSuccess();
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->selfRegistration->enabled));
     }
 }

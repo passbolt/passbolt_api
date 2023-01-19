@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.9.0
+ * @since         3.10.0
  */
 namespace Passbolt\SelfRegistration\Service;
 
@@ -26,27 +26,15 @@ class SelfRegistrationDeleteSettingsService
     use EventDispatcherTrait;
 
     /**
-     * @var \App\Utility\UserAccessControl
-     */
-    private $uac;
-
-    /**
-     * @param \App\Utility\UserAccessControl $uac UAC
-     */
-    public function __construct(UserAccessControl $uac)
-    {
-        $this->uac = $uac;
-    }
-
-    /**
      * Delete the self registration settings in the DB
      * If not found, return a NotFoundException
      *
+     * @param \App\Utility\UserAccessControl $uac User access control
      * @param string $id ID of the setting to delete
      * @return bool
      * @throws \Cake\Http\Exception\NotFoundException if no self registration settings were found for the provided ID
      */
-    public function deleteSettings(string $id): bool
+    public function deleteSettings(UserAccessControl $uac, string $id): bool
     {
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
@@ -61,7 +49,7 @@ class SelfRegistrationDeleteSettingsService
         $eventData = [
             'provider' => null,
             'data' => null,
-            'modified_by' => $this->uac->getId(),
+            'modified_by' => $uac->getId(),
         ];
 
         $this->dispatchEvent(
