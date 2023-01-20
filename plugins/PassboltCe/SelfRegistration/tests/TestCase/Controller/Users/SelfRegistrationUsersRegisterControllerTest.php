@@ -53,27 +53,32 @@ class SelfRegistrationUsersRegisterControllerTest extends AppIntegrationTestCase
 
     public function testSelfRegistrationUsersRegisterController_SelfRegistrationOpen_DataValid()
     {
-        $admins = UserFactory::make()->persist();
+        $nAdmins = 2;
+        $admins = UserFactory::make($nAdmins)->admin()->persist();
         RoleFactory::make()->user()->persist();
         $username = 'johndoe@passbolt.com';
         $this->setSelfRegistrationSettingsData();
+        $firstName = 'John';
+        $lastName = 'Doe';
         $data = [
             'username' => $username,
             'profile' => [
-                'first_name' => 'John',
-                'last_name' => 'Doe',
+                'first_name' => $firstName,
+                'last_name' => $lastName,
             ],
         ];
         $this->postJson('/users/register.json', $data);
         $this->assertResponseOk();
         $this->assertSame(1, UserFactory::find()->where(compact('username'))->count());
 
-        // Check that an email was sent
-        $this->assertEmailIsInQueue([
-            'email' => $username,
-            'subject' => "Welcome to passbolt, {$data['profile']['first_name']}!",
-            'template' => 'AN/user_register_self',
-        ]);
+        $this->assertEmailQueueCount($nAdmins + 1);
+        $emailSubject = "$firstName just created an account on passbolt!";
+        $emailContent = "$firstName $lastName used the self registration feature to create an account on passbolt.";
+        foreach ($admins as $otherAdmin) {
+            $this->assertEmailInBatchContains($emailSubject, $otherAdmin->username);
+            $this->assertEmailInBatchContains($emailContent, $otherAdmin->username);
+        }
+        $this->assertEmailInBatchContains('You just created your account on passbolt!', $username);
     }
 
     public function testSelfRegistrationUsersRegisterController_ExistingDeletedUserWithSameUsername()

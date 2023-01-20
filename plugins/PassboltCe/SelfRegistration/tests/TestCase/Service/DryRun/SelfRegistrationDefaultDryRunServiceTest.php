@@ -49,7 +49,7 @@ class SelfRegistrationDefaultDryRunServiceTest extends TestCase
     public function testSelfRegistrationDefaultDryService_canGuestSelfRegister_Should_Throw_A_Not_Found_Exception()
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage(' The self registration plugin is not enabled.');
+        $this->expectExceptionMessage('The self registration plugin is not enabled.');
         $this->assertFalse($this->service->canGuestSelfRegister([]));
     }
 

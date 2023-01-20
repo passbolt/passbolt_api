@@ -18,20 +18,32 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Test\TestCase\Controller;
 
 use App\Test\Factory\OrganizationSettingFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class SelfRegistrationSetSettingsControllerTest extends AppIntegrationTestCase
 {
+    use EmailQueueTrait;
     use SelfRegistrationTestTrait;
 
     public function testSelfRegistrationSetSettingsControllerTest_Success()
     {
-        $this->logInAsAdmin();
+        $admin = $this->logInAsAdmin();
+        $nOtherAdmins = rand(2, 3);
+        $otherAdmins = UserFactory::make($nOtherAdmins)->admin()->persist();
         $data = $this->getSelfRegistrationSettingsData();
         $this->postJson('/self-registration/settings.json', $data);
         $this->assertResponseOk();
         $this->assertSame(1, OrganizationSettingFactory::count());
+
+        $this->assertEmailQueueCount($nOtherAdmins + 1);
+        $emailSubject = $admin->profile->first_name . ' edited the self registration settings';
+        foreach ($otherAdmins as $otherAdmin) {
+            $this->assertEmailInBatchContains($emailSubject, $otherAdmin->username);
+        }
+        $this->assertEmailInBatchContains('You edited the self registration settings', $admin->username);
     }
 
     public function testSelfRegistrationSetSettingsControllerTest_Error()

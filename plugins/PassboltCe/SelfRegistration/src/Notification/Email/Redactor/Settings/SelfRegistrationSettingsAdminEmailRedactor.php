@@ -18,10 +18,12 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Notification\Email\Redactor\Settings;
 
 use App\Model\Entity\User;
+use App\Model\Table\AvatarsTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
@@ -70,8 +72,8 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
 
         $admins = $UsersTable
             ->findAdmins()
-            ->find('locale')
-            ->where(['Users.id !=' => $modifier->id]);
+            ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
+            ->find('locale');
 
         foreach ($admins as $recipient) {
             $email = $this->createEmailAdminSettingsUpdate($recipient, $modifier, $status, $info);
@@ -83,14 +85,31 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
 
     /**
      * @param \App\Model\Entity\User $recipient User to include in the subject
+     * @param \App\Model\Entity\User $modifier User performing the action
      * @return string
      */
-    private function getSubject(User $recipient): string
+    private function getSubjectForOtherAdmin(User $recipient, User $modifier): string
+    {
+        $modifierFirstName = Purifier::clean($modifier['profile']['first_name']);
+
+        return (new LocaleService())->translateString(
+            $recipient->locale,
+            function () use ($modifierFirstName) {
+                return __('{0} edited the self registration settings', $modifierFirstName);
+            }
+        );
+    }
+
+    /**
+     * @param \App\Model\Entity\User $recipient User performing the setting change
+     * @return string
+     */
+    private function getSubjectForModifier(User $recipient): string
     {
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () {
-                return __('Self registration settings update');
+                return __('You edited the self registration settings');
             }
         );
     }
@@ -108,12 +127,18 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
         string $status,
         ?string $info
     ): Email {
+        if ($recipient->id === $modifier->id) {
+            $subject = $this->getSubjectForModifier($recipient);
+        } else {
+            $subject = $this->getSubjectForOtherAdmin($recipient, $modifier);
+        }
+
         return new Email(
             $recipient->username,
-            $this->getSubject($recipient),
+            $subject,
             [
-                'body' => compact('recipient', 'modifier', 'info', 'status'),
-                'title' => $this->getSubject($recipient),
+                'body' => compact('recipient', 'modifier', 'info', 'status', 'subject'),
+                'title' => $subject,
             ],
             static::EMAIL_TEMPLATE
         );

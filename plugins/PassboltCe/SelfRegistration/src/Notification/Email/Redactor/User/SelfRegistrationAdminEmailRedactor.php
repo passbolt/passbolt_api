@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Notification\Email\Redactor\User;
 
 use App\Model\Entity\User;
+use App\Model\Table\AvatarsTable;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
@@ -61,6 +62,7 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
         $admins = $UsersTable
             ->findAdmins()
+            ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
             ->find('locale');
 
         foreach ($admins as $recipient) {

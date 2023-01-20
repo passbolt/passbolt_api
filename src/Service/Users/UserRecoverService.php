@@ -85,6 +85,8 @@ class UserRecoverService implements UserRecoverServiceInterface
             // The user has not completed the setup, restart setup
             // Fixes https://github.com/passbolt/passbolt_api/issues/73
             $options['token'] = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
+            // Detect if the user is being added by an administrator
+            // or if the user is performing a recovery. The email sent will be different.
             if ($uac->isAdmin()) {
                 $eventName = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
                 $options['adminId'] = $uac->getId();

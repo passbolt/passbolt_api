@@ -26,7 +26,7 @@ $userFullName = $userFirstName . ' ' . Purifier::clean($user['profile']['last_na
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($recipient['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'user' => $recipient,
+        'user' => $user,
         'datetime' => $user['created'],
         'text' => __('{0} just created an account on passbolt!', $userFirstName)
     ])

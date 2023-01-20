@@ -33,6 +33,6 @@ class SelfRegistrationDefaultDryRunService implements SelfRegistrationDryRunServ
      */
     public function canGuestSelfRegister(array $data): bool
     {
-        throw new NotFoundException(__(' The self registration plugin is not enabled.'));
+        throw new NotFoundException(__('The self registration plugin is not enabled.'));
     }
 }

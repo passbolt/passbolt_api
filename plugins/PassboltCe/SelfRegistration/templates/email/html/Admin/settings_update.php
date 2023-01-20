@@ -18,20 +18,25 @@ use Cake\I18n\FrozenTime;
 
 $recipient = $body['recipient'];
 $modifier = $body['modifier'];
+$subject = $body['subject'];
 $status = Purifier::clean($body['status']);
 $info = Purifier::clean($body['info']) ?? null;
-$modifierFullName = Purifier::clean($modifier['profile']['first_name']) . ' ' . Purifier::clean($modifier['profile']['last_name']);
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($recipient['profile']['avatar']),
+    'url' => AvatarHelper::getAvatarUrl($modifier['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'user' => $recipient,
+        'user' => $modifier,
         'datetime' => FrozenTime::now(),
-        'text' => __('Self registration settings update')
+        'text' => $subject
     ])
 ]);
-
-$text = '<h3>' . __('{0} updated the self registration settings', $modifierFullName) . '</h3><br/>';
+if ($recipient['id'] === $modifier['id']) {
+    $text = $subject;
+} else {
+    $modifierFullName = Purifier::clean($modifier['profile']['first_name']) . ' ' . Purifier::clean($modifier['profile']['last_name']);
+    $text = __('{0} updated the self registration settings', $modifierFullName);
+}
+$text = '<h3>' . $text . '</h3>';
 $text .= 'Status: ' . $status . '<br/>';
 if (isset($info)) {
     $text .= $info;
