@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b042d71933ba50897aadd378def63491",
+    "content-hash": "81e7aee6a7d9f24bd026e5dcd512bfcc",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -310,16 +310,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "4.3.7",
+            "version": "4.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "f20f6df934dac17ff15b044bf369efdc0356fe37"
+                "reference": "47177366fc9131a58a518e99f732e98a8a4854ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/f20f6df934dac17ff15b044bf369efdc0356fe37",
-                "reference": "f20f6df934dac17ff15b044bf369efdc0356fe37",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/47177366fc9131a58a518e99f732e98a8a4854ac",
+                "reference": "47177366fc9131a58a518e99f732e98a8a4854ac",
                 "shasum": ""
             },
             "require": {
@@ -410,7 +410,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2022-03-26T02:09:46+00:00"
+            "time": "2023-01-06T03:05:28+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -581,16 +581,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.3.4",
+            "version": "1.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "69098eca243998b53eed7a48d82dedd28b447cd5"
+                "reference": "74780ccf8c19d6acb8d65c5f39cd72110e132bbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/69098eca243998b53eed7a48d82dedd28b447cd5",
-                "reference": "69098eca243998b53eed7a48d82dedd28b447cd5",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/74780ccf8c19d6acb8d65c5f39cd72110e132bbd",
+                "reference": "74780ccf8c19d6acb8d65c5f39cd72110e132bbd",
                 "shasum": ""
             },
             "require": {
@@ -637,7 +637,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.3.4"
+                "source": "https://github.com/composer/ca-bundle/tree/1.3.5"
             },
             "funding": [
                 {
@@ -653,7 +653,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-12T12:08:29+00:00"
+            "time": "2023-01-11T08:27:00+00:00"
         },
         {
             "name": "dasprid/enum",
