@@ -27,7 +27,7 @@ class DuoSetupPostControllerTest extends MfaIntegrationTestCase
     public function testMfaSetupPostDuo_NotAuthenticated()
     {
         $this->post('/mfa/setup/duo.json?api-version=v2', []);
-        $this->assertResponseError('You need to login to access this location.');
+        $this->assertResponseCode(401);
     }
 
     /**
@@ -35,7 +35,7 @@ class DuoSetupPostControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaSetupPostDuo_Success()
     {
-        $user = $this->logInAsUser();
+        $this->logInAsUser();
         $this->post('/mfa/setup/duo?api-version=v2');
         $this->assertResponseCode(410);
     }

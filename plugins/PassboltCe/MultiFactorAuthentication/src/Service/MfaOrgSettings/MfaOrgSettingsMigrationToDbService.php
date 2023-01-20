@@ -20,6 +20,8 @@ namespace Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
+use Duo\DuoUniversal\Client;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettingsDuoBackwardCompatible;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 final class MfaOrgSettingsMigrationToDbService
@@ -27,9 +29,10 @@ final class MfaOrgSettingsMigrationToDbService
     /**
      * Saves the MFA Organization settings in the DB, if not previously found in the DbB
      *
+     * @param \Duo\DuoUniversal\Client|null $duoClient Duo SDK Client
      * @return void
      */
-    public function migrate(): void
+    public function migrate(?Client $duoClient = null): void
     {
         // Skip if some settings are found in the DB
         if ($this->isMfaOrgSettingsInDb()) {
@@ -42,7 +45,7 @@ final class MfaOrgSettingsMigrationToDbService
         }
 
         $mfaOrgSettings = $this->getMfaOrgSettings($uac);
-        $this->storeMfaSettingsInDb($uac, $mfaOrgSettings);
+        $this->storeMfaSettingsInDb($uac, $mfaOrgSettings, $duoClient);
     }
 
     /**
@@ -72,17 +75,22 @@ final class MfaOrgSettingsMigrationToDbService
 
         $mfaOrgSettings['providers'] = $providersInConfig;
 
-        return $mfaOrgSettings;
+        // Migrate the DUO settings to v4 to have the validation passing
+        return MfaOrgSettingsDuoBackwardCompatible::remapSetDuoSettings($mfaOrgSettings);
     }
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC
      * @param array $mfaOrgSettings Settings to store
+     * @param \Duo\DuoUniversal\Client $duoClient Duo SDK Client
      * @return void
      */
-    protected function storeMfaSettingsInDb(UserAccessControl $uac, array $mfaOrgSettings): void
-    {
-        (new MfaOrgSettingsSetService())->setOrgSettings($mfaOrgSettings, $uac);
+    protected function storeMfaSettingsInDb(
+        UserAccessControl $uac,
+        array $mfaOrgSettings,
+        ?Client $duoClient = null
+    ): void {
+        (new MfaOrgSettingsSetService())->setOrgSettings($mfaOrgSettings, $uac, $duoClient);
     }
 
     /**

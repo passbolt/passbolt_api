@@ -34,7 +34,6 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
     use MfaAccountSettingsTestTrait;
     use MfaOrgSettingsTestTrait;
     use UserAccessControlTrait;
-    use \phpmock\phpunit\PHPMock;
 
     /**
      * Setup.
@@ -125,23 +124,5 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
 
             return $stubSessionIdentifier;
         });
-    }
-
-    public function mockDuoHealthCheck(): void
-    {
-        // Mock the healthcheck request that will be made by the Duo SDK object
-        $curlExec = $this->getFunctionMock('\Duo\DuoUniversal', 'curl_exec');
-        $curlExec->expects($this->once())->willReturnCallback(
-            function () {
-                return json_encode([
-                    'stat' => 'OK',
-                    'response' => [
-                        'timestamp' => 1234567890,
-                    ],
-                ]);
-            }
-        );
-        $curlExec = $this->getFunctionMock('\Duo\DuoUniversal', 'curl_getinfo');
-        $curlExec->expects($this->once())->willReturn(200);
     }
 }

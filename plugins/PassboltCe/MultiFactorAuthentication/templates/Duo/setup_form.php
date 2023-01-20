@@ -8,8 +8,9 @@
     $title = __('Duo multi-factor authentication');
     $this->assign('title', $title);
     $this->assign('pageClass', 'iframe mfa');
+    $redirect = '/app/settings/mfa';
     $formContext = [
-        'url' => Router::url('/mfa/setup/duo/prompt', true),
+        'url' => Router::url('/mfa/setup/duo/prompt?redirect=' . $redirect, true),
         'target' => '_top',
         'id' => 'duo_form',
     ];

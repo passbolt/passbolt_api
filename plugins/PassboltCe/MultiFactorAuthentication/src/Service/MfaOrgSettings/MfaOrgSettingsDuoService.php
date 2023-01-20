@@ -14,92 +14,82 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
  */
-namespace Passbolt\MultiFactorAuthentication\Utility;
+namespace Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings;
 
 use App\Error\Exception\CustomValidationException;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Routing\Router;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Duo\DuoUniversal\DuoException;
+use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoGetSdkClientService;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-trait MfaOrgSettingsDuoTrait
+class MfaOrgSettingsDuoService
 {
     /**
-     * Get an instance of Duo SDK Client object. This object is used to perform various operations,
-     * like validating settings, getting an authentication URL, or exchanging an authorization code
-     * for an MFA result payload.
+     * Duo organisation settings array
      *
-     * @param array $data user provider data, otherwise settings if no data provided
-     * @return \Duo\DuoUniversal\Client
+     * @var array
      */
-    public function getDuoSdkClient(?array $data = null)
-    {
-        $duoCallbackURL = Router::url('/mfa/setup/duo/callback');
-        $duoClient = new Client(
-            $this->getDuoClientId($data),
-            $this->getDuoClientSecret($data),
-            $this->getDuoApiHostname($data),
-            $duoCallbackURL,
-            true,
-        );
+    private $settings;
 
-        return $duoClient;
+    /**
+     * @param array $data user provider data
+     */
+    public function __construct(array $data)
+    {
+        $this->settings = $data;
     }
 
     /**
-     * @throw RecordNotFoundException if config is missing
-     * @param array $data user provider data, otherwise settings if no data provided
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException if config is missing
      * @return string
      */
-    public function getDuoClientId(?array $data = null)
+    public function getDuoClientId(): string
     {
         return $this->getSetting(
             MfaOrgSettings::DUO_CLIENT_ID,
-            __('No configuration set for Duo client ID.'),
-            $data,
+            __('No configuration set for Duo client ID.')
         );
     }
 
     /**
-     * @throw RecordNotFoundException if config is missing
-     * @param array $data user provider data, otherwise settings if no data provided
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException if config is missing
      * @return string
      */
-    public function getDuoApiHostname(?array $data = null)
+    public function getDuoApiHostname(): string
     {
         return $this->getSetting(
             MfaOrgSettings::DUO_API_HOSTNAME,
-            __('No configuration set for Duo API hostname.'),
-            $data,
+            __('No configuration set for Duo API hostname.')
         );
     }
 
     /**
-     * @throw RecordNotFoundException if config is missing
-     * @param array $data user provider data, otherwise settings if no data provided
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException if config is missing
      * @return string
      */
-    public function getDuoClientSecret(?array $data = null)
+    public function getDuoClientSecret(): string
     {
         return $this->getSetting(
             MfaOrgSettings::DUO_CLIENT_SECRET,
-            __('No configuration set for Duo client secret.'),
-            $data,
+            __('No configuration set for Duo client secret.')
         );
     }
 
     /**
-     * @throw CustomValidationException if there is an issue
-     * @param array $data user provider data
+     * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
      * @return void
+     * @throws \App\Error\Exception\CustomValidationException if there is an issue
      */
-    public function validateDuoSettings(array $data)
+    public function validateDuoSettings(?Client $client = null): void
     {
         $errors = [];
 
         try {
-            $clientSecret = $this->getDuoClientSecret($data);
+            $clientSecret = $this->getDuoClientSecret();
             if (!Validation::custom($clientSecret, '/^[a-zA-Z0-9]{32,128}$/')) {
                 $msg = __('This is not a valid Duo client secret.');
                 $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_CLIENT_SECRET]['isValidClientSecret'] = $msg;
@@ -110,7 +100,7 @@ trait MfaOrgSettingsDuoTrait
         }
 
         try {
-            $hostname = $this->getDuoApiHostname($data);
+            $hostname = $this->getDuoApiHostname();
             if (!Validation::custom($hostname, '/^api-[a-fA-F0-9]{8,16}\.duosecurity\.com$/')) {
                 $msg = __('This is not a valid Duo API hostname.');
                 $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_API_HOSTNAME]['isValidApiHostname'] = $msg;
@@ -121,7 +111,7 @@ trait MfaOrgSettingsDuoTrait
         }
 
         try {
-            $clientId = $this->getDuoClientId($data);
+            $clientId = $this->getDuoClientId();
             if (!Validation::custom($clientId, '/^[a-zA-Z0-9]{16,32}$/')) {
                 $msg = __('This is not a valid Duo client ID.');
                 $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_CLIENT_ID]['isValidClientId'] = $msg;
@@ -132,12 +122,12 @@ trait MfaOrgSettingsDuoTrait
         }
 
         if (empty($errors[MfaSettings::PROVIDER_DUO])) {
-            $duoClient = $this->getDuoSdkClient($data);
             try {
+                $duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail($this);
                 $duoClient->healthCheck();
-            } catch (DuoException $e) {
-                $msg = __("Cannot verify Duo settings. {$e->getMessage()}");
-                $errors[MfaSettings::PROVIDER_DUO]['healthCheck'] = $msg;
+            } catch (DuoException | InternalErrorException $e) {
+                $msg = __('Cannot verify Duo settings.') . ' ' . $e->getMessage();
+                $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HEALTH_CHECK] = $msg;
             }
         }
 
@@ -148,20 +138,19 @@ trait MfaOrgSettingsDuoTrait
     }
 
     /**
-     * @throw RecordNotFoundException if setting is missing
+     * Get Duo provider setting.
+     *
      * @param string $settingKey organization settings key
      * @param string $errorMessage error message if organization settings key is not found
-     * @param array|null $data user provider data, otherwise settings if no data provided
      * @return string
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException if setting is missing
      */
-    private function getSetting(string $settingKey, string $errorMessage, ?array $data = null)
+    private function getSetting(string $settingKey, string $errorMessage): string
     {
-        $conf = $data ?? $this->settings;
-
-        if (!isset($conf[MfaSettings::PROVIDER_DUO][$settingKey])) {
+        if (!isset($this->settings[MfaSettings::PROVIDER_DUO][$settingKey])) {
             throw new RecordNotFoundException($errorMessage);
         }
 
-        return $conf[MfaSettings::PROVIDER_DUO][$settingKey];
+        return $this->settings[MfaSettings::PROVIDER_DUO][$settingKey];
     }
 }

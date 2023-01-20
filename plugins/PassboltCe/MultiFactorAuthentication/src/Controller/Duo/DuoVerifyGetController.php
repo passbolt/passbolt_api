@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
-use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -38,14 +37,12 @@ class DuoVerifyGetController extends MfaVerifyController
         SessionIdentificationServiceInterface $sessionIdentificationService,
         MfaFormInterface $verifyForm
     ) {
-        if ($this->request->is('json')) {
-            throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
-        }
+        $this->_assertRequestNotJson();
         $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
 
         /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm $verifyForm */
-        $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoApiHostname());
+        $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoOrgSettings()->getDuoApiHostname());
         $this->set('verifyForm', $verifyForm);
         $this->set('providers', $this->mfaSettings->getEnabledProviders());
         $this->set('theme', $this->User->theme());

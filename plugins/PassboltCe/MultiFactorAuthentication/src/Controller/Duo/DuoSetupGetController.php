@@ -33,9 +33,7 @@ class DuoSetupGetController extends MfaSetupController
      */
     public function get(MfaFormInterface $setupForm)
     {
-        if ($this->request->is('json')) {
-            throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
-        }
+        $this->_assertRequestNotJson();
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_DUO);
         try {
             $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_DUO);
@@ -53,9 +51,10 @@ class DuoSetupGetController extends MfaSetupController
      */
     protected function _handleGetNewSettings(MfaFormInterface $setupForm)
     {
-        /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm $setupForm */
+        /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoCallbackForm $setupForm */
         try {
-            $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoApiHostname());
+            $duoOrgSettings = $this->mfaSettings->getOrganizationSettings()->getDuoOrgSettings();
+            $this->set('hostName', $duoOrgSettings->getDuoApiHostname());
         } catch (RecordNotFoundException $exception) {
             throw new InternalErrorException('MFA Duo organization settings are not complete.', 500, $exception);
         }

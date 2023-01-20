@@ -127,7 +127,7 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
         return [
             MfaOrgSettings::DUO_CLIENT_ID => $clientId ?? 'DICPIC33F13IWF1FR52J',
             MfaOrgSettings::DUO_CLIENT_SECRET => $clientSecret ?? '7TkYNgK8AGAuv3KW12qhsJLeIc1mJjHDHC1siNYX',
-            MfaOrgSettings::DUO_API_HOSTNAME => $apiHostName ?? 'api-42e9f2fe.duosecurity.com',
+            MfaOrgSettings::DUO_API_HOSTNAME => $apiHostName ?? 'api-45e9f2ca.duosecurity.com',
         ];
     }
 }

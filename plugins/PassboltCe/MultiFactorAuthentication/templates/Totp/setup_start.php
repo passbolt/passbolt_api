@@ -2,7 +2,6 @@
 /**
  * @var \App\View\AppView $this
  */
-    use Cake\Core\Configure;
     use Cake\Routing\Router;
 
     $title = __('Getting started with Time based One Time Password (TOTP)');

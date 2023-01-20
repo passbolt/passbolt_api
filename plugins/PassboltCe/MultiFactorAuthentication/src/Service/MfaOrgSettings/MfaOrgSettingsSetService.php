@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings;
 
 use App\Utility\UserAccessControl;
+use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
@@ -26,11 +27,12 @@ class MfaOrgSettingsSetService
     /**
      * @param array $data data in the payload
      * @param \App\Utility\UserAccessControl $uac UAC
+     * @param \Duo\DuoUniversal\Client $duoClient Duo SDK Client
      * @return array Organization Settings configs
      * @throws \Cake\Http\Exception\InternalErrorException if the UAC changed during the request (improbable)
      * @throws \App\Error\Exception\CustomValidationException in case of validation error
      */
-    public function setOrgSettings(array $data, UserAccessControl $uac): array
+    public function setOrgSettings(array $data, UserAccessControl $uac, ?Client $duoClient = null): array
     {
         $mfaSettings = MfaSettings::get($uac);
 
@@ -42,7 +44,7 @@ class MfaOrgSettingsSetService
         }
 
         $orgSettings = $mfaSettings->getOrganizationSettings();
-        $orgSettings->save($data, $uac);
+        $orgSettings->save($data, $uac, $duoClient);
 
         return $mfaSettings->getOrganizationSettings()->getConfig();
     }

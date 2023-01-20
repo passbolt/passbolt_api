@@ -18,7 +18,7 @@ return [
                     'secretKey' => env('PASSBOLT_PLUGINS_MFA_YUBIKEY_SECRETKEY', null),
                 ],
                 'duo' => [
-                    // @deprecated since v3.10 with Duo v4 support PASSBOLT_PLUGINS_MFA_DUO_INTEGRATIONKEY, PASSBOLT_PLUGINS_MFA_DUO_SECRETKEY, PASSBOLT_PLUGINS_MFA_DUO_HOST
+                    // @deprecated since v3.10 with Duo v4 support: PASSBOLT_PLUGINS_MFA_DUO_INTEGRATIONKEY, PASSBOLT_PLUGINS_MFA_DUO_SECRETKEY, PASSBOLT_PLUGINS_MFA_DUO_HOST
                     'clientId' => env(
                         'PASSBOLT_PLUGINS_MFA_DUO_CLIENT_ID',
                         env('PASSBOLT_PLUGINS_MFA_DUO_INTEGRATIONKEY', null)

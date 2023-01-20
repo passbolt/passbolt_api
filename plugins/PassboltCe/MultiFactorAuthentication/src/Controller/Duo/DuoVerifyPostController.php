@@ -18,7 +18,6 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
-use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
@@ -41,9 +40,7 @@ class DuoVerifyPostController extends MfaVerifyController
         MfaFormInterface $verifyForm,
         RememberAMonthSettingInterface $rememberMeForAMonthSetting
     ) {
-        if ($this->request->is('json')) {
-            throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
-        }
+        $this->_assertRequestNotJson();
         $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
 

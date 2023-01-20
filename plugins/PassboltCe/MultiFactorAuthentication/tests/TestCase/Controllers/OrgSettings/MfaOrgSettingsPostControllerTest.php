@@ -17,7 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettings;
 
 use App\Model\Entity\Role;
+use App\Test\Factory\UserFactory;
+use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
@@ -94,7 +97,7 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsPostControllerSuccess_TotpConfigureBeforeNoConfigAfter()
     {
         $config['providers'] = [MfaSettings::PROVIDER_TOTP => true];
-        $this->mockMfaOrgSettings($config, 'configure');
+        $this->mockMfaOrgSettings($config);
         $this->authenticateAs('admin');
         $this->postJson('/mfa/settings.json?api-version=v2', ['providers' => []]);
         $this->assertResponseSuccess();
@@ -124,10 +127,13 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsPutControllerSuccess_TotpDbConfigureAllAfter()
     {
         $config['providers'] = [MfaSettings::PROVIDER_TOTP => true];
-        $this->mockMfaOrgSettings($config, 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
+        $user = UserFactory::make()->admin()->persist();
+        $this->mockMfaOrgSettings($config, 'database', $this->makeUac($user));
         $this->authenticateAs('admin');
+        $this->mockService(Client::class, function () use ($user) {
+            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+        });
 
-        $this->mockDuoHealthCheck();
         $this->putJson('/mfa/settings.json?api-version=v2', $this->getDefaultMfaOrgSettings());
         $this->assertResponseSuccess();
     }

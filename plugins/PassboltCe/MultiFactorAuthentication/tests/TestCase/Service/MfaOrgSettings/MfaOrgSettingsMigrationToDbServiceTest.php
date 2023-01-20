@@ -19,14 +19,15 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\MfaOrgSetting
 
 use App\Error\Exception\CustomValidationException;
 use App\Test\Factory\UserFactory;
+use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsMigrationToDbService;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaOrganizationSettingFactory;
-use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
+use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class MfaOrgSettingsMigrationToDbServiceTest extends MfaIntegrationTestCase
+class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
 {
     use MfaOrgSettingsTestTrait;
     use TruncateDirtyTables;
@@ -125,13 +126,13 @@ class MfaOrgSettingsMigrationToDbServiceTest extends MfaIntegrationTestCase
 
     public function testMfaOrgSettingsMigrationToDbService_With_Complete_Settings()
     {
-        UserFactory::make()->admin()->persist();
+        $user = UserFactory::make()->admin()->persist();
 
         $settings = $this->getDefaultMfaOrgSettings();
         $this->mockMfaOrgSettings($settings);
 
-        $this->mockDuoHealthCheck();
-        $this->service->migrate();
+        $duoSdkClientMock = DuoSdkClientMock::createDefault($this, $user);
+        $this->service->migrate($duoSdkClientMock->getClient());
 
         $settingsInDB = $this->getMfaOrganizationSettingValue();
         $settings['providers'] = ['totp', 'duo', 'yubikey'];
@@ -140,14 +141,15 @@ class MfaOrgSettingsMigrationToDbServiceTest extends MfaIntegrationTestCase
 
     public function testMfaOrgSettingsMigrationToDbService_With_Invalid_Settings()
     {
-        UserFactory::make()->admin()->persist();
+        $user = UserFactory::make()->admin()->persist();
 
         $settings = $this->getDefaultMfaOrgSettings();
         $settings['yubikey']['clientId'] = 'invalid ';
         $this->mockMfaOrgSettings($settings);
+        $duoSdkClientMock = DuoSdkClientMock::createDefault($this, $user);
 
         $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('Could not validate multi-factor authentication provider configuration.');
-        $this->service->migrate();
+        $this->service->migrate($duoSdkClientMock->getClient());
     }
 }

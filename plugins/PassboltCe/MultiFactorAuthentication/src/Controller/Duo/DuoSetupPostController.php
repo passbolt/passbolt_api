@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
-use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\GoneException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 
@@ -28,9 +27,7 @@ class DuoSetupPostController extends MfaSetupController
      */
     public function post()
     {
-        if ($this->request->is('json')) {
-            throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
-        }
+        $this->_assertRequestNotJson();
 
         throw new GoneException(__('This entrypoint is not available anymore.'));
     }
