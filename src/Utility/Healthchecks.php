@@ -29,6 +29,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsHealthcheckService;
 
 class Healthchecks
@@ -62,7 +63,7 @@ class Healthchecks
      * - info.remoteVersion
      * - sslForce: enforcing the use of SSL
      * - seleniumDisabled: true if selenium API is disabled
-     * - registrationClosed: true if registration is not open
+     * - registrationClosed: info on the self registration
      * - jsProd: true if using minified/concatenated javascript
      *
      * @param array|null $checks List of checks
@@ -90,7 +91,7 @@ class Healthchecks
         $https = strpos(Configure::read('App.fullBaseUrl'), 'https') === 0;
         $checks['application']['sslFullBaseUrl'] = ($https !== false);
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
-        $checks['application']['registrationClosed'] = !Configure::read('passbolt.registration.public');
+        $checks['application']['registrationClosed'] = (new SelfRegistrationHealthcheckService())->getHealthcheck();
         $checks['application']['hostAvailabilityCheckEnabled'] = Configure::read('passbolt.email.validate.mx');
         $checks['application']['jsProd'] = (Configure::read('passbolt.js.build') === 'production');
         $sendEmailJson = json_encode(Configure::read('passbolt.email.send'));

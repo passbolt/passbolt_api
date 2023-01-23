@@ -36,21 +36,10 @@ use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\User\UserRegisterEmailRedactor;
 use Cake\Core\Configure;
-use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+use Passbolt\SelfRegistration\Notification\Email\Redactor\User\SelfRegistrationUserEmailRedactor;
 
 class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
-    /**
-     * Return true if the redactor is enabled
-     *
-     * @param string $notificationSettingPath Notification Settings path with dot notation
-     * @return mixed
-     */
-    private function isRedactorEnabled(string $notificationSettingPath)
-    {
-        return EmailNotificationSettings::get($notificationSettingPath);
-    }
-
     /**
      * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
      */
@@ -60,6 +49,7 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 
         if ($this->isRedactorEnabled('send.user.create')) {
             $redactors[] = new UserRegisterEmailRedactor();
+            $redactors[] = new SelfRegistrationUserEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.group.user.delete')) {
             $redactors[] = new UserDeleteEmailRedactor();

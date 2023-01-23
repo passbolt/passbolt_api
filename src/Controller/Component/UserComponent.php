@@ -98,6 +98,16 @@ class UserComponent extends Component
     }
 
     /**
+     * Return true if the current user is a guest
+     *
+     * @return bool
+     */
+    public function isGuest(): bool
+    {
+        return $this->role() == Role::GUEST;
+    }
+
+    /**
      * @return \App\Utility\UserAccessControl
      */
     public function getAccessControl(): UserAccessControl
@@ -204,6 +214,19 @@ class UserComponent extends Component
     {
         if (!$this->isAdmin()) {
             throw new ForbiddenException(__('Access restricted to administrators.'));
+        }
+    }
+
+    /**
+     * Allow guests only.
+     *
+     * @throws \Cake\Http\Exception\ForbiddenException
+     * @return void
+     */
+    public function assertIsGuest(): void
+    {
+        if (!$this->isGuest()) {
+            throw new ForbiddenException(__('Access restricted to unauthenticated users.'));
         }
     }
 

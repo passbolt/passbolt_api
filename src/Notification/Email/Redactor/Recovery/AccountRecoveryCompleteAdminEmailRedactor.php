@@ -61,10 +61,13 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
 
         /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get(UsersTable::class);
-        $admins = $Users->findAdmins()
+        $admins = $Users
+            ->findAdmins()
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
-            ]);
+            ])
+            ->find('locale')
+            ->where(['Users.id !=' => $user->id]);
         foreach ($admins as $admin) {
             $emailCollection->addEmail($this->createAccountRecoveryAdminEmail($admin, $user, $clientIp, $userAgent));
         }

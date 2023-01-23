@@ -25,7 +25,7 @@ $token = $body['token'];
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'user' => $admin,
+        'user' => $user,
         'datetime' => $user['created'],
         'text' => __('{0} just created an account for you on passbolt!', Purifier::clean($admin['profile']['first_name']))
     ])

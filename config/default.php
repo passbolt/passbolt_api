@@ -28,7 +28,6 @@ return [
      * - Javascript application config
      * - Meta HTML tags
      * - Gpg
-     * - Registration settings
      * - Selenium mode
      * - Security settings
      * - SSL
@@ -115,7 +114,10 @@ return [
                         'recover' => [
                             'abort' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_ABORT', true), FILTER_VALIDATE_BOOLEAN),
                             'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
-                        ]
+                        ],
+                        'register' => [
+                            'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_REGISTER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
                     ]
                 ],
                 'group' => [
@@ -232,11 +234,9 @@ return [
             'smtpSettings' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true), FILTER_VALIDATE_BOOLEAN)
             ],
-        ],
-
-        // Is public registration allowed.
-        'registration' => [
-            'public' => filter_var(env('PASSBOLT_REGISTRATION_PUBLIC', false), FILTER_VALIDATE_BOOLEAN)
+            'selfRegistration' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
         ],
 
         // Activate specific entry points for selenium testing.

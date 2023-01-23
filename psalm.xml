@@ -21,6 +21,7 @@
             <directory name="plugins/PassboltCe/JwtAuthentication/templates" />
             <directory name="plugins/PassboltCe/EmailDigest/tests/Fixture/templates/" />
             <directory name="plugins/PassboltCe/MultiFactorAuthentication/templates/" />
+            <directory name="plugins/PassboltCe/SelfRegistration/templates/" />
         </ignoreFiles>
     </projectFiles>
 </psalm>

@@ -19,16 +19,19 @@ namespace App\Test\TestCase\Controller\Notifications;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class UsersRecoverNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
+    use SelfRegistrationTestTrait;
 
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
 
     public function testUsersRecoverNotificationSuccess()
     {
+        $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.recover', true);
 
         // setup
