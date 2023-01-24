@@ -232,7 +232,8 @@ return [
                 ],
             ],
             'smtpSettings' => [
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true), FILTER_VALIDATE_BOOLEAN)
+                // A typo is here covered for backward compatibility
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true)), FILTER_VALIDATE_BOOLEAN)
             ],
             'selfRegistration' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
