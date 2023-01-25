@@ -22,6 +22,7 @@ use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
+use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
 use OTPHP\TOTP;
@@ -29,6 +30,10 @@ use ParagonIE\ConstantTime\Base32;
 
 class MfaOtpFactory
 {
+    public const PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH = 'passbolt.plugins.multiFactorAuthentication.totp.secretLength'; //phpcs:ignore
+    public const PASSBOLT_PLUGINS_MFA_TOTP_DEFAULT_SECRET_LENGTH = 32;
+    public const PASSBOLT_PLUGINS_MFA_TOTP_MINIMUM_SECRET_LENGTH = 16;
+
     /**
      * Return Issuer
      * The domain name without http(s):// and trailing /
@@ -56,8 +61,9 @@ class MfaOtpFactory
      */
     public static function generateTOTP(UserAccessControl $uac): string
     {
+        $secretLength = self::getAndSanitizeSecretLengthFromConfig();
         try {
-            $secret = trim(Base32::encode(random_bytes(256)), '='); // 256 random bytes Base32 without padding
+            $secret = trim(Base32::encode(random_bytes($secretLength)), '='); // some random bytes Base32 without padding
         } catch (\TypeError $exception) {
             throw new InternalErrorException(
                 'Could not generate TOTP secret, please try again later.',
@@ -78,6 +84,29 @@ class MfaOtpFactory
         $totp->setIssuer(self::getIssuer()); //issuer: string shown above the code digits
 
         return $totp->getProvisioningUri();
+    }
+
+    /**
+     * @return int
+     */
+    public static function getAndSanitizeSecretLengthFromConfig(): int
+    {
+        $default = self::PASSBOLT_PLUGINS_MFA_TOTP_DEFAULT_SECRET_LENGTH;
+        $secretLength = Configure::read(self::PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH, $default);
+        if (is_object($secretLength) || is_array($secretLength)) {
+            return $default;
+        }
+        $min = self::PASSBOLT_PLUGINS_MFA_TOTP_MINIMUM_SECRET_LENGTH;
+        // catches wrong types like booleans, float, etc...
+        $secretLength = intval($secretLength);
+        if ($secretLength === 0) {
+            return $default;
+        }
+        if ($secretLength < $min) {
+            return $min;
+        }
+
+        return $secretLength;
     }
 
     /**

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
 use App\Test\Factory\UserFactory;
+use Cake\Core\Configure;
 use OTPHP\Factory;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
@@ -34,7 +35,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpNotAuthenticated()
+    public function testTotpSetupPostController_NotAuthenticated()
     {
         $this->post('/mfa/setup/totp.json?api-version=v2');
         $this->assertResponseError('You need to login to access this location.');
@@ -46,7 +47,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpProviderNotSupportedByOrg()
+    public function testTotpSetupPostController_ProviderNotSupportedByOrg()
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class, false);
@@ -65,7 +66,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpProviderAlreadySetJson()
+    public function testTotpSetupPostController_ProviderAlreadySetJson()
     {
         $user = $this->logInAsUser();
         $uac = $this->makeUac($user);
@@ -86,7 +87,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpInvalidOTP()
+    public function testTotpSetupPostController_InvalidOTP()
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
@@ -105,7 +106,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpEmptyOTP()
+    public function testTotpSetupPostController_EmptyOTP()
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
@@ -124,7 +125,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpInvalidUri()
+    public function testTotpSetupPostController_InvalidUri()
     {
         $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
@@ -142,7 +143,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpEmptyUri()
+    public function testTotpSetupPostController_EmptyUri()
     {
         $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
@@ -160,7 +161,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpSuccessSelfGeneratedUriSuccess()
+    public function testTotpSetupPostController_SuccessSelfGeneratedUriSuccess()
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
@@ -186,7 +187,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpSuccessSelfGeneratedUriSuccess_JWT_Auth()
+    public function testTotpSetupPostController_SuccessSelfGeneratedUriSuccess_JWT_Auth()
     {
         $user = UserFactory::make()->user()->persist();
         $accessToken = $this->createJwtTokenAndSetInHeader($user->id);
@@ -211,7 +212,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpUriFromGetSuccess()
+    public function testTotpSetupPostController_UriFromGetSuccess()
     {
         $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
@@ -235,7 +236,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupPost
      * @group mfaSetupPostTotp
      */
-    public function testMfaSetupPostTotpSuccessContainDisableLink()
+    public function testTotpSetupPostController_SuccessContainDisableLink()
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
@@ -248,5 +249,31 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $this->assertResponseOk();
         $this->assertResponseContains('success');
         $this->assertResponseContains('js_mfa_provider_disable');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupPost
+     * @group mfaSetupPostTotp
+     */
+    public function testTotpSetupPostController_Success_With_Legacy_Secret_Length()
+    {
+        $originalSecretLength = Configure::read(MfaOtpFactory::PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH);
+        $secretLength = 256;
+        Configure::write(MfaOtpFactory::PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH, $secretLength);
+
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
+        $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
+        $otp = Factory::loadFromProvisioningUri($uri);
+        $this->post('/mfa/setup/totp', [
+            'otpProvisioningUri' => $uri,
+            'totp' => $otp->now(),
+        ]);
+        $this->assertResponseOk();
+        $this->assertResponseContains('success');
+
+        Configure::write(MfaOtpFactory::PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH, $originalSecretLength);
     }
 }
