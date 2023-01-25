@@ -39,6 +39,7 @@ return [
     'passbolt' => [
         // Edition.
         'edition' => 'ce',
+        'featurePluginAdder' => \App\BaseSolutionBootstrapper::class,
 
         // Authentication & Authorisation.
         'auth' => [
