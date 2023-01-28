@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\Lib;
 
+use App\Mailer\Transport\DebugTransport;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\Filesystem\DirectoryUtility;
@@ -37,6 +38,29 @@ trait SmtpSettingsTestTrait
      * @var string
      */
     protected $dummyPassboltFile = TMP . 'tests' . DS . 'passbolt.php';
+
+    public function setPassboltDebugSmtpTransport()
+    {
+        $configuredTransports = TransportFactory::configured();
+
+        foreach ($configuredTransports as $configuredTransport) {
+            $config = TransportFactory::getConfig($configuredTransport);
+            $config['className'] = DebugTransport::class;
+            TransportFactory::drop($configuredTransport);
+            TransportFactory::setConfig($configuredTransport, $config);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSentMessages(): array
+    {
+        /** @var \App\Mailer\Transport\DebugTransport $transport */
+        $transport = TransportFactory::get('default');
+
+        return $transport->getMessages();
+    }
 
     private function getSmtpSettingsData(?string $field = null, $value = null): array
     {

@@ -16,60 +16,34 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Mailer\Transport;
 
-use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
+use Cake\Event\EventDispatcherTrait;
+use Cake\Mailer\Message;
 
 /**
  * Send mail using SMTP protocol
  */
 class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
 {
-    /**
-     * @var bool
-     */
-    private $isSourceDb = false;
+    use EventDispatcherTrait;
+
+    public const SMTP_TRANSPORT_BEFORE_SEND_EVENT = 'smtp_transport_before_send_event';
 
     /**
      * @inheritDoc
      */
-    public function __construct(array $config = [])
+    public function send(Message $message): array
     {
-        $config = $this->readConfigInDb($config);
+        $this->dispatchSmtpTransportSendEvent($message);
 
-        parent::__construct($config);
+        return parent::send($message);
     }
 
     /**
-     * @param array $fallbackConfig config in File
-     * @return string[]
+     * @param \Cake\Mailer\Message $message Message
+     * @return void
      */
-    protected function readConfigInDb(array $fallbackConfig): array
+    protected function dispatchSmtpTransportSendEvent(Message $message): void
     {
-        $configInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
-
-        if (isset($configInDb)) {
-            $this->isSourceDb = true;
-
-            return [
-                'className' => self::class,
-                'sender_name' => $configInDb['sender_name'],
-                'sender_email' => $configInDb['sender_email'],
-                'host' => $configInDb['host'],
-                'port' => $configInDb['port'],
-                'tls' => $configInDb['tls'] ?? null,
-                'client' => $configInDb['client'],
-                'username' => $configInDb['username'],
-                'password' => $configInDb['password'],
-            ];
-        }
-
-        return $fallbackConfig;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSourceDb(): bool
-    {
-        return $this->isSourceDb;
+        $this->dispatchEvent(self::SMTP_TRANSPORT_BEFORE_SEND_EVENT, [], $message);
     }
 }

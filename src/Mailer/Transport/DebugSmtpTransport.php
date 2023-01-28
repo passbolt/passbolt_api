@@ -35,11 +35,11 @@ class DebugSmtpTransport extends SmtpTransport
     /**
      * Add trace in buffer.
      *
-     * @param string $data data sent
+     * @param ?string $data data sent
      * @param array $response response received
      * @return array
      */
-    protected function _bufferTrace($data, $response)
+    protected function _bufferTrace(?string $data, array $response): array
     {
         $entry = [
             'cmd' => $data,
@@ -55,7 +55,7 @@ class DebugSmtpTransport extends SmtpTransport
      *
      * @return array
      */
-    public function getTrace()
+    public function getTrace(): array
     {
         return $this->trace;
     }
