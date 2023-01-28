@@ -18,24 +18,17 @@ namespace Passbolt\SmtpSettings\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Mailer\Transport\DebugSmtpTransport;
+use App\Mailer\Transport\DebugTransport;
+use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventManager;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
-use Cake\TestSuite\TestEmailTransport;
+use Passbolt\SmtpSettings\Event\SmtpTransportSendTestEmailEventListener;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 
 class SmtpSettingsSendTestEmailService
 {
-    /**
-     * Transport class to be used for testing.
-     * We use our own DebugSmtp that will get the server communication trace.
-     */
-    public const TRANSPORT_CLASS_NAME_DEBUG_SMTP = 'DebugSmtp';
-
-    /**
-     * Name of the transport configuration that we'll use.
-     * (will be created on the fly).
-     */
-    public const TRANSPORT_CONFIG_NAME_DEBUG_EMAIL = 'debugEmail';
+    use EventDispatcherTrait;
 
     /**
      * Name of the field in the form defining the recipient of the test email
@@ -58,6 +51,9 @@ class SmtpSettingsSendTestEmailService
 
         $this->email = new Mailer('default');
         $this->setDebugTransport($smtpSettings);
+        // Do not assign the sender as found in the DB settings
+        // as we use the one provided in the $smtpSettings
+        EventManager::instance()->on(new SmtpTransportSendTestEmailEventListener());
         $this->sendEmail($smtpSettings);
 
         return $this->email;
@@ -121,19 +117,21 @@ class SmtpSettingsSendTestEmailService
      */
     protected function setDebugTransport(array $data): void
     {
-        if ($this->isRunningOnTestEnvironment()) {
-            return;
+        $defaultTransport = TransportFactory::get('default');
+        $defaultTransport->setConfig([
+            'host' => $data['host'],
+            'username' => empty($data['username']) ? null : $data['username'],
+            'password' => $data['password'],
+            'tls' => $data['tls'],
+            'client' => $data['client'],
+        ], null, true);
+        // This check can be removed when an after send email event
+        // is implemented. Info on the trace of the email may be
+        // fetched from the data of the event
+        if (!$this->isRunningOnTestEnvironment()) {
+            $debugTransport = new DebugSmtpTransport($defaultTransport->getConfig());
+            $this->email->setTransport($debugTransport);
         }
-        $transportConfig = TransportFactory::getConfig('default');
-        $transportConfig['className'] = self::TRANSPORT_CLASS_NAME_DEBUG_SMTP;
-        $transportConfig['host'] = $data['host'];
-        $transportConfig['port'] = $data['port'];
-        $transportConfig['username'] = empty($data['username']) ? null : $data['username'];
-        $transportConfig['password'] = empty($data['password']) ? null : $data['password'];
-        $transportConfig['tls'] = $data['tls'];
-        $transportConfig['client'] = $data['client'];
-        TransportFactory::setConfig(self::TRANSPORT_CONFIG_NAME_DEBUG_EMAIL, $transportConfig);
-        $this->email->setTransport(self::TRANSPORT_CONFIG_NAME_DEBUG_EMAIL);
     }
 
     /**
@@ -155,6 +153,6 @@ class SmtpSettingsSendTestEmailService
      */
     public function isRunningOnTestEnvironment(): bool
     {
-        return TransportFactory::getConfig('default')['className'] === TestEmailTransport::class;
+        return TransportFactory::get('default') instanceof DebugTransport;
     }
 }

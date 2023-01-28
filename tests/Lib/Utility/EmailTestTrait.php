@@ -120,6 +120,18 @@ trait EmailTestTrait
      */
     public function assertMailContainsAt(int $at, string $contents, string $message = ''): void
     {
-        $this->assertTextContains($contents, $this->getMailAt($at)->getBodyHtml(), $message);
+        $this->assertTextContains($contents, $this->getMailAt($at)->getBodyString(), $message);
+    }
+
+    /**
+     * Asserts an email subject contains expected contents
+     *
+     * @param string $contents Contents
+     * @param string $message Message
+     * @return void
+     */
+    public function assertMailSubjectContainsAt(int $at, string $contents, string $message = ''): void
+    {
+        $this->assertTextContains($contents, $this->getMailAt($at)->getOriginalSubject(), $message);
     }
 }

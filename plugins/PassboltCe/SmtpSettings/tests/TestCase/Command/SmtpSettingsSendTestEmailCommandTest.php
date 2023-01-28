@@ -16,8 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
+use App\Test\Lib\Utility\EmailTestTrait;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
@@ -27,7 +29,7 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 class SmtpSettingsSendTestEmailCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
-    use EmailTrait;
+    use EmailTestTrait;
     use SmtpSettingsIntegrationTestTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
@@ -41,6 +43,7 @@ class SmtpSettingsSendTestEmailCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+        EventManager::instance()->setEventList(new EventList());
     }
 
     /**
@@ -87,6 +90,8 @@ class SmtpSettingsSendTestEmailCommandTest extends TestCase
         $this->exec('passbolt send_test_email -r test@test.test');
 
         $this->assertExitSuccess();
+        $this->assertMailCount(1);
+        $this->assertMailSentToAt(0, ['test@test.test' => 'test@test.test']);
         $this->assertOutputContains('<info>Trace</info>');
         $this->assertOutputContains('<info> bar</info>');
     }
