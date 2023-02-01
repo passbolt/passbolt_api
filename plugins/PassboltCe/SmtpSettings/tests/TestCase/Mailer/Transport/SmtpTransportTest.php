@@ -19,19 +19,19 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Mailer\Transport;
 
 use App\Error\Exception\FormValidationException;
 use App\Mailer\Transport\DebugTransport;
+use App\Mailer\Transport\SmtpTransport;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Mailer\Message;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**
- * @covers \Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport
+ * @covers \App\Mailer\Transport\SmtpTransport
  */
 class SmtpTransportTest extends TestCase
 {

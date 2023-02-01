@@ -16,9 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Event;
 
+use App\Mailer\Transport\SmtpTransport;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 
 class SmtpTransportSendTestEmailEventListener implements EventListenerInterface
 {

@@ -17,12 +17,12 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\TestCase\Event;
 
+use App\Mailer\Transport\SmtpTransport;
 use Cake\Event\Event;
 use Cake\Mailer\Message;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Event\SmtpTransportBeforeSendEventListener;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**

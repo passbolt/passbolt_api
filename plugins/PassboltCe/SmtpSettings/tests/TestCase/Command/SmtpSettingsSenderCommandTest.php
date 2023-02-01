@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
+use App\Mailer\Transport\SmtpTransport;
 use App\Test\Lib\Utility\EmailTestTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Event\EventList;
@@ -26,7 +27,6 @@ use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**

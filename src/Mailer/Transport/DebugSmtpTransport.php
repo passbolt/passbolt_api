@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Mailer\Transport;
 
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
-
 /**
  * Smtp Transport class based on the CakePHP one, with tracing capabilities to help with debugging.
  */

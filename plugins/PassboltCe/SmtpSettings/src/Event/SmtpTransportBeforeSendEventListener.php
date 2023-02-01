@@ -16,9 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Event;
 
+use App\Mailer\Transport\SmtpTransport;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 
 class SmtpTransportBeforeSendEventListener implements EventListenerInterface
@@ -65,7 +65,7 @@ class SmtpTransportBeforeSendEventListener implements EventListenerInterface
         if (is_null($this->configInDB)) {
             return;
         }
-        /** @var \Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport $transport */
+        /** @var \App\Mailer\Transport\SmtpTransport $transport */
         $transport = $event->getSubject();
         $defaultConfig = $event->getData();
         $configToMerge = [

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Mailer\Transport\DebugTransport;
+use App\Mailer\Transport\SmtpTransport;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -25,7 +26,6 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 

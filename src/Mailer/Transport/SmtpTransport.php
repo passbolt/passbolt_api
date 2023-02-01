@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @since         3.8.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Passbolt\SmtpSettings\Mailer\Transport;
+namespace App\Mailer\Transport;
 
 use Cake\Event\EventDispatcherTrait;
 use Cake\Mailer\Message;

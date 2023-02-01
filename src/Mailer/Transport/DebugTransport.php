@@ -18,7 +18,6 @@ namespace App\Mailer\Transport;
 
 use Cake\Mailer\Message;
 use Cake\Mailer\Transport\DebugTransport as CakeDebugTransport;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 
 /**
  * Debug Smtp Transport class based on the CakePHP one,
