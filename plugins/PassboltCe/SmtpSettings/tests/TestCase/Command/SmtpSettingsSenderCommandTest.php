@@ -73,6 +73,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $this->assertExitSuccess();
 
         $this->assertTransportConfigMatches($smtpSettingsInDB);
+        $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_INITIALIZE_EVENT);
         $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT);
 
         foreach ($mails as $i => $mail) {
@@ -99,6 +100,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $this->assertExitSuccess();
 
         $this->assertTransportConfigMatches($fileConfig);
+        $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_INITIALIZE_EVENT);
         $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT);
 
         foreach ($mails as $i => $mail) {
@@ -115,10 +117,10 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $this->disableFeaturePlugin('SmtpSettings');
         $senderEmail = 'phpunit@passbolt.com';
         $senderName = 'phpunit';
-        $data = $this->getSmtpSettingsData();
-        $data['sender_email'] = $senderEmail;
-        $data['sender_name'] = $senderName;
-        $this->encryptAndPersistSmtpSettings($data);
+        $settingsInDB = $this->getSmtpSettingsData();
+        $settingsInDB['sender_email'] = $senderEmail;
+        $settingsInDB['sender_name'] = $senderName;
+        $this->encryptAndPersistSmtpSettings($settingsInDB);
 
         // Read the sender in the config files
         $sender = Mailer::getConfig('default')['from'];
@@ -132,6 +134,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $this->assertExitSuccess();
 
         $this->assertTransportConfigMatches($fileConfig);
+        $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_INITIALIZE_EVENT);
         $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT);
 
         foreach ($mails as $i => $mail) {

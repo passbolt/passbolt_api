@@ -22,6 +22,7 @@ use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Cake\Mailer\Mailer;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -49,6 +50,7 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+        $this->clearPlugins();
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
         EmailNotificationSettings::flushCache();
         EventManager::instance()->setEventList(new EventList());
@@ -58,7 +60,7 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
     /**
      * Basic Preview test.
      */
-    public function testSmtpSettingsEmailDigestPreviewCommand_Without_Body(): void
+    public function testSmtpSettingsEmailDigestPreviewCommand_Without_Body_On_DB_Settings(): void
     {
         $senderEmail = 'phpunit@passbolt.com';
         $senderName = 'phpunit';
@@ -67,7 +69,7 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
         $data['sender_name'] = $senderName;
         $this->encryptAndPersistSmtpSettings($data);
 
-        $nMails = 3;
+        $nMails = 2;
         EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
@@ -80,6 +82,37 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
             $this->assertOutputContains('To: ' . $mail->get('email'));
             $this->assertOutputContains('Subject: ' . $mail->get('subject'));
         }
+    }
+
+    /**
+     * Basic Preview test.
+     */
+    public function testSmtpSettingsEmailDigestPreviewCommand_Without_Body_On_File__Plugin_Disabled(): void
+    {
+        $this->disableFeaturePlugin('SmtpSettings');
+        $dataInDB = $this->getSmtpSettingsData();
+        $dataInDB['sender_email'] = 'phpunit@passbolt.com';
+        $dataInDB['sender_name'] = 'phpunit';
+        $this->encryptAndPersistSmtpSettings($dataInDB);
+
+        $sender = Mailer::getConfig('default')['from'];
+        $senderEmail = array_keys($sender)[0];
+        $senderName = $sender[$senderEmail];
+
+        $nMails = 2;
+        EmailQueueFactory::make($nMails)->persist();
+        $mails = EmailQueueFactory::find()->orderAsc('created');
+
+        $this->exec('passbolt email_digest preview');
+        $this->assertExitSuccess();
+
+        foreach ($mails as $mail) {
+            $this->assertOutputContains("From: $senderName <$senderEmail>");
+            $this->assertOutputContains("Return-Path: $senderName <$senderEmail>");
+            $this->assertOutputContains('To: ' . $mail->get('email'));
+            $this->assertOutputContains('Subject: ' . $mail->get('subject'));
+        }
+        $this->enableFeaturePlugin('SmtpSettings');
     }
 
     /**

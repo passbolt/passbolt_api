@@ -21,6 +21,7 @@ use App\Test\Lib\Utility\EmailTestTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Cake\Mailer\Mailer;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -48,17 +49,17 @@ class SmtpSettingsEmailDigestSenderCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
         EmailNotificationSettings::flushCache();
-        $this->enableFeaturePlugin('SmtpSettings');
         EventManager::instance()->setEventList(new EventList());
+        $this->clearPlugins();
     }
 
     /**
-     * Basic Sender test.
+     * Basic Sender test on DB settings
      */
-    public function testSmtpSettingsEmailDigestSenderCommandSender()
+    public function testSmtpSettingsEmailDigestSenderCommand_Success_Path_On_DB_Settings()
     {
+        $this->enableFeaturePlugin('SmtpSettings');
         $senderEmail = 'phpunit@passbolt.com';
         $senderName = 'phpunit';
         $data = $this->getSmtpSettingsData();
@@ -67,13 +68,14 @@ class SmtpSettingsEmailDigestSenderCommandTest extends TestCase
         $sender = [$senderEmail => $senderName];
         $this->encryptAndPersistSmtpSettings($data);
 
-        $nMails = 3;
+        $nMails = 2;
         EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
         $this->exec('passbolt email_digest send');
         $this->assertExitSuccess();
 
+        $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_INITIALIZE_EVENT);
         $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT);
 
         $this->assertMailCount($nMails);
@@ -82,5 +84,37 @@ class SmtpSettingsEmailDigestSenderCommandTest extends TestCase
             $this->assertMailSentToAt($i, [$mail->get('email') => $mail->get('email')]);
             $this->assertMailContainsAt($i, 'Sending email to: ' . $mail->get('email'));
         }
+    }
+
+    /**
+     * Basic Sender test on DB settings
+     */
+    public function testSmtpSettingsEmailDigestSenderCommand_With_DB_Settings_Plugin_Unload_Should_Rely_On_File()
+    {
+        $SettingsInDB = $this->getSmtpSettingsData();
+        $SettingsInDB['sender_email'] = 'phpunit@passbolt.com';
+        $SettingsInDB['sender_name'] = 'phpunit';
+        $this->encryptAndPersistSmtpSettings($SettingsInDB);
+
+        $sender = Mailer::getConfig('default')['from'];
+
+        $nMails = 2;
+        EmailQueueFactory::make($nMails)->persist();
+        $mails = EmailQueueFactory::find()->orderAsc('created');
+
+        $this->disableFeaturePlugin('SmtpSettings');
+        $this->exec('passbolt email_digest send');
+        $this->assertExitSuccess();
+
+        $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_INITIALIZE_EVENT);
+        $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT);
+
+        $this->assertMailCount($nMails);
+        foreach ($mails as $i => $mail) {
+            $this->assertMailSentFromAt($i, $sender);
+            $this->assertMailSentToAt($i, [$mail->get('email') => $mail->get('email')]);
+            $this->assertMailContainsAt($i, 'Sending email to: ' . $mail->get('email'));
+        }
+        $this->enableFeaturePlugin('SmtpSettings');
     }
 }

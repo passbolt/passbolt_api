@@ -17,10 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings;
 
 use Cake\Core\BasePlugin;
-use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\SmtpSettings\Event\SmtpTransportBeforeSendEventListener;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
 class Plugin extends BasePlugin
 {
@@ -33,13 +31,5 @@ class Plugin extends BasePlugin
 
         // Before sending an email, apply the SMTP settings found in DB (or fallback on file).
         $app->getEventManager()->on(new SmtpTransportBeforeSendEventListener());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function services(ContainerInterface $container): void
-    {
-        $container->add(SmtpSettingsSendTestEmailService::class);
     }
 }

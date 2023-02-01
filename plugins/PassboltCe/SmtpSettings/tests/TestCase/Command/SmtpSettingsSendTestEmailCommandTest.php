@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
 use App\Test\Lib\Utility\EmailTestTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
@@ -30,6 +31,7 @@ class SmtpSettingsSendTestEmailCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
     use EmailTestTrait;
+    use FeaturePluginAwareTrait;
     use SmtpSettingsIntegrationTestTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
@@ -44,6 +46,7 @@ class SmtpSettingsSendTestEmailCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         EventManager::instance()->setEventList(new EventList());
+        $this->enableFeaturePlugin('SmtpSettings');
     }
 
     /**

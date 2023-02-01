@@ -51,6 +51,14 @@ class DebugTransport extends SmtpTransport
     }
 
     /**
+     * @return void
+     */
+    public function clearMessages(): void
+    {
+        $this->messages = [];
+    }
+
+    /**
      * @return \Cake\Mailer\Message|null
      */
     public function getLastMessage(): ?Message

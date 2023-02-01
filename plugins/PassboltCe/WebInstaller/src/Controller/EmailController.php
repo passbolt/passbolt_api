@@ -46,12 +46,13 @@ class EmailController extends WebInstallerController
     /**
      * Index
      *
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @return void|mixed
      */
-    public function index()
+    public function index(SmtpSettingsSendTestEmailService $sendTestEmailService)
     {
         if ($this->request->is('post')) {
-            return $this->indexPost();
+            return $this->indexPost($sendTestEmailService);
         }
 
         $databaseSettings = $this->webInstaller->getSettings('email');
@@ -68,9 +69,10 @@ class EmailController extends WebInstallerController
     /**
      * Index post
      *
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @return void|mixed
      */
-    protected function indexPost()
+    protected function indexPost(SmtpSettingsSendTestEmailService $sendTestEmailService)
     {
         $data = $this->getRequest()->getData();
         try {
@@ -82,7 +84,7 @@ class EmailController extends WebInstallerController
         }
 
         if (isset($data['send_test_email'])) {
-            $this->sendTestEmail($data);
+            $this->sendTestEmail($sendTestEmailService, $data);
             $this->render($this->stepInfo['template']);
         } else {
             $this->webInstaller->setSettingsAndSave('email', $data);
@@ -109,20 +111,20 @@ class EmailController extends WebInstallerController
     /**
      * Send test email.
      *
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @param array $data request data
      * @return void
      */
-    protected function sendTestEmail(array $data)
+    protected function sendTestEmail(SmtpSettingsSendTestEmailService $sendTestEmailService, array $data)
     {
-        $service = new SmtpSettingsSendTestEmailService();
         try {
-            $service->sendTestEmail($data);
+            $sendTestEmailService->sendTestEmail($data);
             $result = ['test_email_status' => true];
         } catch (\Throwable $e) {
             $result = [
                 'test_email_status' => false,
                 'test_email_error' => $e->getMessage(),
-                'test_email_trace' => $service->getTrace(),
+                'test_email_trace' => $sendTestEmailService->getTrace(),
             ];
         }
         $this->set($result);

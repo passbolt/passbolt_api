@@ -17,11 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
 use App\Test\Lib\Utility\EmailTestTrait;
+use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class EmailControllerTest extends WebInstallerIntegrationTestCase
 {
     use EmailTestTrait;
+    use SmtpSettingsIntegrationTestTrait;
 
     public function setUp(): void
     {
@@ -72,6 +74,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
 
         $this->post('/install/email', $postData);
         $this->assertResponseOk();
+        $this->assertResponseContains('The test email has been sent successfully!');
         $this->assertMailSentFromAt(0, ['sender@passbolt.com' => 'Passbolt Test']);
         $this->assertMailSentToAt(0, [$recipient => $recipient]);
         $this->assertMailCount(1);
@@ -131,10 +134,17 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
             'send_test_email' => true,
             'email_test_to' => 'test@passbolt.com',
         ];
+        $trace = [['cmd' => 'bar']];
+        $errorMessage = 'Error message';
+        $this->mockSmtpSettingsSendTestEmailServiceFail($trace, $errorMessage);
+
         $this->post('/install/email', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
+        $this->assertResponseContains('Email could not be sent:');
+        $this->assertResponseContains($errorMessage, $data);
+        $this->assertResponseContains('bar', $data);
         $this->assertStringContainsString('Enter your SMTP server settings.', $data);
-        $this->assertMailCount(1);
+        $this->assertMailCount(0);
     }
 }
