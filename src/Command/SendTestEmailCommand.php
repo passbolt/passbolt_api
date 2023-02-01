@@ -82,7 +82,6 @@ class SendTestEmailCommand extends PassboltCommand
         }
 
         $this->checkSmtpIsSet($io);
-
         try {
             $transportConfig = (new SmtpSettingsGetService())->getSettings();
         } catch (\Throwable $e) {

@@ -56,7 +56,7 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSmtpSettingsSendTestEmailService_Valid_Settings_In_DB()
+    public function testSmtpSettingsSendTestEmailService_Valid_With_InvalidSettings_In_DB()
     {
         $this->loadPlugins(['Passbolt/SmtpSettings' => []]);
         // Insert some dummy SMTP settings in the DB to ensure that these are ignored by the DebugSmtpTransport

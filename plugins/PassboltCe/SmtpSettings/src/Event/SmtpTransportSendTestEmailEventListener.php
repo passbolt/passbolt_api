@@ -32,6 +32,10 @@ class SmtpTransportSendTestEmailEventListener implements EventListenerInterface
                 'callable' => 'stopPropagation',
                 'priority' => 1,
             ],
+            SmtpTransport::SMTP_TRANSPORT_INITIALIZE_EVENT => [
+                'callable' => 'stopPropagation',
+                'priority' => 1,
+            ],
         ];
     }
 

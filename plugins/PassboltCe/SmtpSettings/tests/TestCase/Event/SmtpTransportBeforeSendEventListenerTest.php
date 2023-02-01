@@ -21,27 +21,27 @@ use Cake\Event\Event;
 use Cake\Mailer\Message;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\SmtpSettings\Event\SmtpTransportSendEventListener;
+use Passbolt\SmtpSettings\Event\SmtpTransportBeforeSendEventListener;
 use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**
- * @covers \Passbolt\SmtpSettings\Event\SmtpTransportSendEventListener
+ * @covers \Passbolt\SmtpSettings\Event\SmtpTransportBeforeSendEventListener
  */
-class SmtpTransportSendEventListenerTest extends TestCase
+class SmtpTransportBeforeSendEventListenerTest extends TestCase
 {
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
 
     /**
-     * @var SmtpTransportSendEventListener
+     * @var SmtpTransportBeforeSendEventListener
      */
     protected $listener;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->listener = new SmtpTransportSendEventListener();
+        $this->listener = new SmtpTransportBeforeSendEventListener();
     }
 
     public function tearDown(): void
@@ -53,6 +53,7 @@ class SmtpTransportSendEventListenerTest extends TestCase
     public function testSmtpTransportSendEventListener_implementedEvents(): void
     {
         $expectedListeners = [
+            SmtpTransport::SMTP_TRANSPORT_INITIALIZE_EVENT => 'initializeTransport',
             SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT => 'setEmailFromIfDefinedInDB',
         ];
         $this->assertSame($expectedListeners, $this->listener->implementedEvents());
@@ -77,6 +78,7 @@ class SmtpTransportSendEventListenerTest extends TestCase
         $message->setReturnPath($senderOnFileConfig);
         $event = new Event('foo', $message);
 
+        $this->listener->initializeTransport($event);
         $this->listener->setEmailFromIfDefinedInDB($event);
 
         $this->assertIsArray($this->listener->getConfigInDB());
@@ -101,6 +103,7 @@ class SmtpTransportSendEventListenerTest extends TestCase
         $message->setReturnPath($from);
         $event = new Event('foo', $message);
 
+        $this->listener->initializeTransport($event);
         $this->listener->setEmailFromIfDefinedInDB($event);
 
         $this->assertNull($this->listener->getConfigInDB());

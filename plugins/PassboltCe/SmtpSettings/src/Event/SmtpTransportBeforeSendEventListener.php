@@ -21,7 +21,7 @@ use Cake\Event\EventListenerInterface;
 use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 
-class SmtpTransportSendEventListener implements EventListenerInterface
+class SmtpTransportBeforeSendEventListener implements EventListenerInterface
 {
     /**
      * @var array|null
@@ -29,16 +29,12 @@ class SmtpTransportSendEventListener implements EventListenerInterface
     private $configInDB;
 
     /**
-     * @var bool
-     */
-    private $isInitialized = false;
-
-    /**
      * @inheritDoc
      */
     public function implementedEvents(): array
     {
         return [
+            SmtpTransport::SMTP_TRANSPORT_INITIALIZE_EVENT => 'initializeTransport',
             SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT => 'setEmailFromIfDefinedInDB',
         ];
     }
@@ -63,15 +59,37 @@ class SmtpTransportSendEventListener implements EventListenerInterface
      * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
+    public function initializeTransport(EventInterface $event): void
+    {
+        $this->configInDB = (new SmtpSettingsGetSettingsInDbService())->getSettings();
+        if (is_null($this->configInDB)) {
+            return;
+        }
+        /** @var \Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport $transport */
+        $transport = $event->getSubject();
+        $defaultConfig = $event->getData();
+        $configToMerge = [
+            'className' => self::class,
+            'sender_name' => $this->configInDB['sender_name'],
+            'sender_email' => $this->configInDB['sender_email'],
+            'host' => $this->configInDB['host'],
+            'port' => $this->configInDB['port'],
+            'tls' => $this->configInDB['tls'] ?? null,
+            'client' => $this->configInDB['client'],
+            'username' => $this->configInDB['username'],
+            'password' => $this->configInDB['password'],
+        ];
+        $transport->setConfig(array_merge($defaultConfig, $configToMerge));
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface $event Event
+     * @return void
+     */
     public function setEmailFromIfDefinedInDB(EventInterface $event): void
     {
-        if (!$this->isInitialized) {
-            $this->configInDB = (new SmtpSettingsGetSettingsInDbService())->getSettings();
-            $this->isInitialized = true;
-        }
-
         // If the config was not defined in DB, do not set the sender
-        // as it will rely on the setting on file
+        // as it will rely on the settings on file
         if (!$this->isSourceDB()) {
             return;
         }

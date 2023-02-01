@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Test\Lib;
 
-use App\Mailer\Transport\DebugTransport;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\Filesystem\DirectoryUtility;
@@ -39,20 +38,8 @@ trait SmtpSettingsTestTrait
      */
     protected $dummyPassboltFile = TMP . 'tests' . DS . 'passbolt.php';
 
-    public function setPassboltDebugSmtpTransport()
-    {
-        $configuredTransports = TransportFactory::configured();
-
-        foreach ($configuredTransports as $configuredTransport) {
-            $config = TransportFactory::getConfig($configuredTransport);
-            $config['className'] = DebugTransport::class;
-            TransportFactory::drop($configuredTransport);
-            TransportFactory::setConfig($configuredTransport, $config);
-        }
-    }
-
     /**
-     * @return array
+     * @return \Cake\Mailer\Message[]
      */
     protected function getSentMessages(): array
     {
@@ -92,6 +79,13 @@ trait SmtpSettingsTestTrait
         $setting = SmtpSettingFactory::make()->value($encryptedSettings)->persist();
 
         return $setting;
+    }
+
+    protected function assertTransportConfigMatches(array $expectedConfig): void
+    {
+        foreach ($expectedConfig as $k => $v) {
+            $this->assertSame($v, TransportFactory::get('default')->getConfig($k));
+        }
     }
 
     private function setTransportConfig(?string $field = null, $value = null): void

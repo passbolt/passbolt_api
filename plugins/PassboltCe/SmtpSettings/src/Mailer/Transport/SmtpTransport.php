@@ -26,7 +26,20 @@ class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
 {
     use EventDispatcherTrait;
 
+    public const SMTP_TRANSPORT_INITIALIZE_EVENT = 'smtp_transport_initialize_event';
     public const SMTP_TRANSPORT_BEFORE_SEND_EVENT = 'smtp_transport_before_send_event';
+
+    /**
+     * Triggers the initialize event
+     *
+     * @param array $config default configs
+     */
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        $this->dispatchEvent(self::SMTP_TRANSPORT_INITIALIZE_EVENT, $config, $this);
+    }
 
     /**
      * @inheritDoc

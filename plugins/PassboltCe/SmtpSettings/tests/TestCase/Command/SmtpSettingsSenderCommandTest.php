@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
+use App\Test\Lib\Utility\EmailTestTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Mailer\Mailer;
+use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -33,6 +35,7 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 class SmtpSettingsSenderCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
+    use EmailTestTrait;
     use FeaturePluginAwareTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
@@ -49,7 +52,6 @@ class SmtpSettingsSenderCommandTest extends TestCase
 
         $this->useCommandRunner();
         EventManager::instance()->setEventList(new EventList());
-        $this->setPassboltDebugSmtpTransport();
     }
 
     public function testSmtpSettingsSenderCommand_Success_Path_On_DB_Settings()
@@ -57,19 +59,20 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $this->enableFeaturePlugin('SmtpSettings');
         $senderEmail = 'phpunit@passbolt.com';
         $senderName = 'phpunit';
-        $data = $this->getSmtpSettingsData();
-        $data['sender_email'] = $senderEmail;
-        $data['sender_name'] = $senderName;
+        $smtpSettingsInDB = $this->getSmtpSettingsData();
+        $smtpSettingsInDB['sender_email'] = $senderEmail;
+        $smtpSettingsInDB['sender_name'] = $senderName;
         $sender = [$senderEmail => $senderName];
-        $this->encryptAndPersistSmtpSettings($data);
+        $this->encryptAndPersistSmtpSettings($smtpSettingsInDB);
 
-        $nMails = 3;
+        $nMails = 2;
         EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
         $this->exec('sender');
         $this->assertExitSuccess();
 
+        $this->assertTransportConfigMatches($smtpSettingsInDB);
         $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT);
 
         foreach ($mails as $i => $mail) {
@@ -86,6 +89,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
     {
         // Read the sender in the config files
         $sender = Mailer::getConfig('default')['from'];
+        $fileConfig = TransportFactory::get('default')->getConfig();
 
         $nMails = 3;
         EmailQueueFactory::make($nMails)->persist();
@@ -94,6 +98,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $this->exec('sender');
         $this->assertExitSuccess();
 
+        $this->assertTransportConfigMatches($fileConfig);
         $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT);
 
         foreach ($mails as $i => $mail) {
@@ -117,6 +122,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
 
         // Read the sender in the config files
         $sender = Mailer::getConfig('default')['from'];
+        $fileConfig = TransportFactory::get('default')->getConfig();
 
         $nMails = 3;
         EmailQueueFactory::make($nMails)->persist();
@@ -125,6 +131,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $this->exec('sender');
         $this->assertExitSuccess();
 
+        $this->assertTransportConfigMatches($fileConfig);
         $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT);
 
         foreach ($mails as $i => $mail) {

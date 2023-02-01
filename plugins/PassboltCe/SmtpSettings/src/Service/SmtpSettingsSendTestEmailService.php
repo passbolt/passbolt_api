@@ -49,11 +49,10 @@ class SmtpSettingsSendTestEmailService
     {
         $smtpSettings = $this->validateAndGetSmtpSettings($smtpSettings);
 
-        $this->email = new Mailer('default');
-        $this->setDebugTransport($smtpSettings);
         // Do not assign the sender as found in the DB settings
         // as we use the one provided in the $smtpSettings
         EventManager::instance()->on(new SmtpTransportSendTestEmailEventListener());
+        $this->email = $this->getDebugEmail($smtpSettings);
         $this->sendEmail($smtpSettings);
 
         return $this->email;
@@ -68,13 +67,10 @@ class SmtpSettingsSendTestEmailService
             return [];
         }
 
+        /** @var \App\Mailer\Transport\DebugSmtpTransport $transport */
         $transport = $this->email->getTransport();
 
-        if ($transport instanceof DebugSmtpTransport) {
-            return $transport->getTrace();
-        }
-
-        return [];
+        return $transport->getTrace();
     }
 
     /**
@@ -109,29 +105,32 @@ class SmtpSettingsSendTestEmailService
     }
 
     /**
-     * Set a custom transport class name.
+     * Get an email with custom transport class name.
      * In the context of this debugger, we'll use our own class name.
      *
      * @param array $data request data
-     * @return void
+     * @return \Cake\Mailer\Mailer
      */
-    protected function setDebugTransport(array $data): void
+    protected function getDebugEmail(array $data): Mailer
     {
-        $defaultTransport = TransportFactory::get('default');
-        $defaultTransport->setConfig([
+        $config = [
+            'className' => DebugSmtpTransport::class,
             'host' => $data['host'],
+            'port' => $data['port'],
             'username' => empty($data['username']) ? null : $data['username'],
             'password' => $data['password'],
             'tls' => $data['tls'],
             'client' => $data['client'],
-        ], null, true);
-        // This check can be removed when an after send email event
-        // is implemented. Info on the trace of the email may be
-        // fetched from the data of the event
-        if (!$this->isRunningOnTestEnvironment()) {
-            $debugTransport = new DebugSmtpTransport($defaultTransport->getConfig());
-            $this->email->setTransport($debugTransport);
+        ];
+        if ($this->isRunningOnTestEnvironment()) {
+            $debugTransport = TransportFactory::get('default');
+        } else {
+            $debugTransport = new DebugSmtpTransport($config);
         }
+
+        return new Mailer([
+            'transport' => $debugTransport,
+        ]);
     }
 
     /**
