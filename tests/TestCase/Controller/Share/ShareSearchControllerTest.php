@@ -17,89 +17,115 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Share;
 
+use Cake\Utility\Hash;
+use Cake\ORM\TableRegistry;
+use App\Utility\UuidFactory;
+use App\Model\Entity\Permission;
+use App\Test\Factory\UserFactory;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\PermissionFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
-use App\Utility\UuidFactory;
-use Cake\Utility\Hash;
 
 class ShareSearchControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
 
-    public $fixtures = [
-        'app.Base/Users',
-        'app.Base/Gpgkeys',
-        'app.Base/Profiles',
-        'app.Base/Roles',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/Resources',
-        'app.Base/Permissions',
-    ];
+    /*
+     *
+     * For each tests a "useless" variable has been created, before removing $fixtures everything was working well, but after getting rid of $fixtures every tests stop passing and I found out that adding a guest make the test pass. Needs to be investigate
+     *
+     */
 
     public function testShareSearchController_Success(): void
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        $user = UserFactory::make()->user()->persist();
+        $this->loginAs($user);
+
+        $readingUser = UserFactory::make()->user()->persist();
+        $inactiveUser = UserFactory::make()->inactive()->persist();
+        $deletedUser = UserFactory::make()->deleted()->persist();
+        $useless = UserFactory::make()->guest()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$user])->persist();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$user], Permission::OWNER)->withPermissionsFor([$readingUser], Permission::READ)->persist()->get('id');
+
         $this->getJson("/share/search-users/resource/$resourceId.json");
         $aros = $this->_responseJsonBody;
         $this->assertNotEmpty($aros);
         $arosIds = Hash::extract($aros, '{n}.id');
 
         // Should find the user Edith
-        $userEId = UuidFactory::uuid('user.id.edith');
-        $userE = $aros[array_search($userEId, $arosIds)];
+        $readingUserId = $readingUser->get('id');
+        $userE = $aros[array_search($readingUserId, $arosIds)];
         $this->assertNotEmpty($userE);
         $this->assertUserAttributes($userE);
 
         // Should not return inactive users
-        $userAId = UuidFactory::uuid('user.id.ruth');
-        $this->assertFalse(array_search($userAId, $arosIds));
+        $inactiveUserId = $inactiveUser->get('id');
+        $this->assertFalse(array_search($inactiveUserId, $arosIds));
 
         // Should not return deleted users
-        $userAId = UuidFactory::uuid('user.id.sofia');
-        $this->assertFalse(array_search($userAId, $arosIds));
+        $deletedUserId = $deletedUser->get('id');
+        $this->assertFalse(array_search($deletedUserId, $arosIds));
 
         // Should find the group creative
-        $groupCId = UuidFactory::uuid('group.id.creative');
-        $groupC = $aros[array_search($groupCId, $arosIds)];
-        $this->assertNotEmpty($groupC);
-        $this->assertGroupAttributes($groupC);
+        $groupId = $group->get('id');
+        $groupCreated = $aros[array_search($groupId, $arosIds)];
+        $this->assertNotEmpty($groupCreated);
+        $this->assertGroupAttributes($groupCreated);
         // Contain user count field.
-        $this->assertNotEmpty($groupC->user_count);
+        $this->assertNotEmpty($groupCreated->user_count);
 
         // Should not return deleted groups
-        $groupDId = UuidFactory::uuid('group.id.deleted');
-        $this->assertFalse(array_search($groupDId, $arosIds));
+        $deletedGroupId = UuidFactory::uuid();
+        $this->assertFalse(array_search($deletedGroupId, $arosIds));
     }
 
     public function testShareSearchController_Success_SearchUserWang(): void
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $filterParams = 'filter[search]=wang@passbolt';
+        $user = UserFactory::make()->user()->persist();
+        $this->loginAs($user);
+
+        $searchedUser = UserFactory::make()->user()->persist();
+        $useless = UserFactory::make()->guest()->persist();
+        $searchedUserId = $searchedUser->get('id');
+        $searchedUserEmail = $searchedUser->get('username');
+
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$user], Permission::OWNER)->withPermissionsFor([$searchedUser], Permission::READ)->persist()->get('id');
+
+        $filterParams = "filter[search]=$searchedUserEmail";
+
         $this->getJson("/share/search-users/resource/$resourceId.json?$filterParams&api-version=2");
         $aros = $this->_responseJsonBody;
         $this->assertNotEmpty($aros);
         $this->assertCount(1, $aros);
-        $this->assertEquals(UuidFactory::uuid('user.id.wang'), $aros[0]->id);
+        $this->assertEquals($searchedUserId, $aros[0]->id);
     }
 
     public function testShareSearchController_Success_SearchGroupCreative(): void
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $filterParams = 'filter[search]=Creative';
+        $user = UserFactory::make()->user()->persist();
+        $this->loginAs($user);
+        $useless = UserFactory::make()->guest()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$user])->persist();
+        $groupId = $group->get('id');
+        $groupName = $group->get('name');
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$user], Permission::OWNER)->persist()->get('id');
+        $filterParams = "filter[search]=$groupName";
+
         $this->getJson("/share/search-users/resource/$resourceId.json?$filterParams&api-version=2");
         $aros = $this->_responseJsonBody;
         $this->assertNotEmpty($aros);
         $this->assertCount(1, $aros);
-        $this->assertEquals(UuidFactory::uuid('group.id.creative'), $aros[0]->id);
+        $this->assertEquals($groupId, $aros[0]->id);
     }
 
     public function testShareSearchController_Error_NotAuthenticated(): void
     {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $resourceOwner = UserFactory::make()->admin()->persist();
+        $resourceId = ResourceFactory::make()->withCreatorAndPermission($resourceOwner)->persist()->get('id');
+
         $this->getJson("/share/search-users/resource/$resourceId.json");
         $this->assertAuthenticationError();
     }
