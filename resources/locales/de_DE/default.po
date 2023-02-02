@@ -59,7 +59,7 @@ msgid "wrong token data length."
 msgstr "falsche Token-Datenlänge."
 
 msgid "There is no user associated with this key."
-msgstr "Es ist kein*e Benutzer*in mit diesem Schlüssel verknüpft."
+msgstr "Es ist kein:e Benutzer:in mit diesem Schlüssel verknüpft."
 
 msgid "Page not found."
 msgstr "Seite nicht gefunden."
@@ -137,7 +137,7 @@ msgid "\"{0}\" is not a valid user filter."
 msgstr "\"{0}\" ist kein gültiger Benutzerfilter."
 
 msgid "\"{0}\" is not a valid user id for filter {1}."
-msgstr "\"{0}\" ist keine gültige Benutzer*innen-ID für Filter {1}."
+msgstr "\"{0}\" ist keine gültige Benutzer:innen-ID für Filter {1}."
 
 msgid "\"{0}\" is not a valid group filter."
 msgstr "\"{0}\" ist kein gültiger Gruppenfilter."
@@ -974,7 +974,7 @@ msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Der Schlüssel Identifikator muss eine Zeichenkette aus 8 Hexadezimalzeichen sein."
 
 msgid "{0} just activated their account on passbolt"
-msgstr "{0} hat gerade ihr*sein Konto bei Passwort aktiviert"
+msgstr "{0} hat gerade ihr:sein Konto bei Passwort aktiviert"
 
 msgid "{0} commented on {1}"
 msgstr "{0} kommentierte {1}"
@@ -1022,7 +1022,7 @@ msgid "{0} shared the password {1}"
 msgstr "{0} hat das Passwort {1} geteilt"
 
 msgid "{0} deleted user {1}"
-msgstr "{0} hat Benutzer*in {1} gelöscht"
+msgstr "{0} hat Benutzer:in {1} gelöscht"
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Willkommen bei passbolt, {0}!"
@@ -1067,10 +1067,10 @@ msgid "The show uri setting should be a boolean."
 msgstr "Die Einstellung \"URI anzeigen\" sollte ein Boolean sein."
 
 msgid "The show username setting should be a boolean."
-msgstr "Die Einstellung \"Benutzer*in anzeigen\" sollte ein Boolean sein."
+msgstr "Die Einstellung \"Benutzer:in anzeigen\" sollte ein Boolean sein."
 
 msgid "The send on user setup completed setting should be a boolean."
-msgstr "Die Einstellung \"Senden bei erfolgreicher Benutzer*innen-Registrierung\" sollte ein Boolean sein."
+msgstr "Die Einstellung \"Senden bei erfolgreicher Benutzer:innen-Registrierung\" sollte ein Boolean sein."
 
 msgid "The send on user recover abort setting should be a boolean."
 msgstr "Die Einstellung \"Senden, wenn eine Kontowiederherstellung abgebrochen wurde\" sollte ein Boolean sein."
@@ -1088,10 +1088,10 @@ msgid "The send on group user deleted setting should be a boolean."
 msgstr "Die Einstellung \"Senden beim Entfernen einer Person aus einer Gruppe\" sollte ein Boolean sein."
 
 msgid "The send on group user updated setting should be a boolean."
-msgstr "Die Einstellung \"Senden bei Aktualisierung der Gruppen-Benutzer*innen\" sollte ein Boolean sein."
+msgstr "Die Einstellung \"Senden bei Aktualisierung der Gruppen-Benutzer:innen\" sollte ein Boolean sein."
 
 msgid "The send on group manager updated setting should be a boolean."
-msgstr "Die Einstellung \"Senden bei Aktualisierung der Gruppenmanager*in\" sollte ein Boolean sein."
+msgstr "Die Einstellung \"Senden bei Aktualisierung der Gruppenmanager:in\" sollte ein Boolean sein."
 
 msgid "The send on password created setting should be a boolean."
 msgstr "Die Einstellung \"Senden beim Anlegen eines neuen Passworts\" sollte ein Boolean sein."
@@ -1106,10 +1106,10 @@ msgid "The send on password deleted setting should be a boolean."
 msgstr "Die Einstellung \"Senden, wenn ein Passwort gelöscht wird\" sollte ein Boolean sein."
 
 msgid "The send on user created setting should be a boolean."
-msgstr "Die Einstellung \"Senden wenn ein*e Benutzer*in angelegt wird\" sollte ein Boolean sein."
+msgstr "Die Einstellung \"Senden wenn ein:e Benutzer:in angelegt wird\" sollte ein Boolean sein."
 
 msgid "The send on user recovered setting should be a boolean."
-msgstr "Die Einstellung \"Senden, wenn ein*e Benutzer*in wiederhergestellt wird\" sollte ein Boolean sein."
+msgstr "Die Einstellung \"Senden, wenn ein:e Benutzer:in wiederhergestellt wird\" sollte ein Boolean sein."
 
 msgid "The token is expired."
 msgstr "Der Token ist abgelaufen."
@@ -1205,7 +1205,7 @@ msgid "Validation success for group {0}"
 msgstr "Validierung erfolgreich für Gruppe {0}"
 
 msgid "Could not validate group user data."
-msgstr "Konnte die Gruppenbenutzer*innen-Daten nicht validieren."
+msgstr "Konnte die Gruppenbenutzer:innen-Daten nicht validieren."
 
 msgid "Could not validate sub key data."
 msgstr "Sub-Key Data konnte nicht validiert werden."
@@ -1340,7 +1340,7 @@ msgid "Could not validate secrets data."
 msgstr "Secret Daten konnten nicht validiert werden."
 
 msgid "The secrets of all the users having access to the resource are required."
-msgstr "Es werden die Secrets aller Benutzer*innen, welche Zugriff auf diese Ressource haben, benötigt."
+msgstr "Es werden die Secrets aller Benutzer:innen, welche Zugriff auf diese Ressource haben, benötigt."
 
 msgid "An authentication token should be provided."
 msgstr "Es sollte ein Authentifizierungstoken angegeben werden."
@@ -1400,10 +1400,10 @@ msgid "Please contact your administrator."
 msgstr "Bitte kontaktieren Sie Ihren Administrator."
 
 msgid "Validation failed for user {0}. {1}"
-msgstr "Validierung fehlgeschlagen für Benutzer*in {0}. {1}"
+msgstr "Validierung fehlgeschlagen für Benutzer:in {0}. {1}"
 
 msgid "Validation success for user {0}"
-msgstr "Validierung erfolgreich für Benutzer*in {0}"
+msgstr "Validierung erfolgreich für Benutzer:in {0}"
 
 msgid "The directory {0} cannot be deleted"
 msgstr "Das Verzeichnis {0} kann nicht gelöscht werden"
@@ -1472,7 +1472,7 @@ msgid "Invalid key. No OpenPGP public key package found."
 msgstr "Ungültiger Schlüssel. Kein OpenPGP öffentliches Schlüssel-Paket gefunden."
 
 msgid "Invalid key. No user ID found."
-msgstr "Ungültiger Schlüssel. Keine Benutzer*innen-ID gefunden."
+msgstr "Ungültiger Schlüssel. Keine Benutzer:innen-ID gefunden."
 
 msgid "Unsupported algorithm."
 msgstr "Nicht unterstützter Algorithmus."
@@ -2525,7 +2525,7 @@ msgid "host name or ip address"
 msgstr "Hostname oder IP-Adresse"
 
 msgid "username"
-msgstr "Benutzer*innenname"
+msgstr "Benutzer:innenname"
 
 msgid "password"
 msgstr "Passwort"
@@ -2792,10 +2792,10 @@ msgid "Updated roles"
 msgstr "Aktualisierte Rollen"
 
 msgid "is now group manager"
-msgstr "ist jetzt Gruppen-Manager*in"
+msgstr "ist jetzt Gruppen-Manager:in"
 
 msgid "is not anymore group manager"
-msgstr "ist nicht mehr Gruppen-Manager*in"
+msgstr "ist nicht mehr Gruppen-Manager:in"
 
 msgid "Terms"
 msgstr "Bedingungen"
@@ -2900,13 +2900,13 @@ msgid "log in passbolt"
 msgstr "in Passbolt einloggen"
 
 msgid "{0} deleted the user {1}"
-msgstr "{0} hat Benutzer*in {1} gelöscht"
+msgstr "{0} hat Benutzer:in {1} gelöscht"
 
 msgid "The user {0} {1} ({2}) is now deleted from your organisation in passbolt."
-msgstr "Benutzer*in {0} {1} ({2}) wurde in Passbolt aus Ihrer Organisation gelöscht."
+msgstr "Benutzer:in {0} {1} ({2}) wurde in Passbolt aus Ihrer Organisation gelöscht."
 
 msgid "This user was a member of the following group(s) you manage:"
-msgstr "Diese*r Benutzer* war Mitglied der folgenden Gruppe(n) die Sie verwalten:"
+msgstr "Diese:r Benutzer: war Mitglied der folgenden Gruppe(n) die Sie verwalten:"
 
 msgid "view it in passbolt"
 msgstr "in Passbolt anzeigen"
@@ -2924,7 +2924,7 @@ msgid "As member of the group you now have access to all the passwords that are 
 msgstr "Als Mitglied der Gruppe haben Sie nun Zugriff auf alle Passwörter, die mit dieser Gruppe geteilt sind."
 
 msgid "And as group manager you are also authorized to edit the members of the group."
-msgstr "Und als Gruppen-Manager*in sind Sie auch berechtigt, die Mitglieder der Gruppe zu bearbeiten."
+msgstr "Und als Gruppen-Manager:in sind Sie auch berechtigt, die Mitglieder der Gruppe zu bearbeiten."
 
 msgid "You are no longer a member of this group."
 msgstr "Sie sind nicht mehr Mitglied dieser Gruppe."
@@ -2933,19 +2933,19 @@ msgid "You are no longer authorized to access the passwords shared with this gro
 msgstr "Sie sind nicht mehr berechtigt, auf die mit dieser Gruppe geteilten Passwörter zuzugreifen."
 
 msgid "Please contact {0} or another group manager if this is a mistake."
-msgstr "Bitte kontaktieren Sie {0} oder eine*n andere*n Gruppen-Manager*in, falls dies ein Fehler ist."
+msgstr "Bitte kontaktieren Sie {0} oder eine:n andere:n Gruppen-Manager:in, falls dies ein Fehler ist."
 
 msgid "You are now a group manager of this group."
-msgstr "Sie sind jetzt ein*e Gruppen-Manager*in dieser Gruppe."
+msgstr "Sie sind jetzt ein:e Gruppen-Manager:in dieser Gruppe."
 
 msgid "As group manager you are now authorized to edit the members of this group."
-msgstr "Als Gruppen-Manager*in sind Sie nun berechtigt, die Mitglieder dieser Gruppe zu bearbeiten."
+msgstr "Als Gruppen-Manager:in sind Sie nun berechtigt, die Mitglieder dieser Gruppe zu bearbeiten."
 
 msgid "As member of the group you still have access to all the passwords that are shared with this group."
 msgstr "Als Mitglied der Gruppe haben Sie weiterhin Zugriff auf alle Passwörter, die mit dieser Gruppe geteilt werden."
 
 msgid "You are no longer a group manager of this group."
-msgstr "Sie sind kein*e Manager*in dieser Gruppe mehr."
+msgstr "Sie sind kein:e Manager:in dieser Gruppe mehr."
 
 msgid "You are no longer authorized to edit the members of this group."
 msgstr "Sie sind nicht mehr berechtigt, die Mitglieder dieser Gruppe zu bearbeiten."
@@ -2975,7 +2975,7 @@ msgid "Name: {0}"
 msgstr "Name: {0}"
 
 msgid "Username: {0}"
-msgstr "Benutzer*innennamen: {0}"
+msgstr "Benutzer:innennamen: {0}"
 
 msgid "URL: {0}"
 msgstr "URL: {0}"
@@ -3008,22 +3008,22 @@ msgid "{0} resources were shared with you."
 msgstr "{0} Ressourcen wurden mit Ihnen geteilt."
 
 msgid "{0} just activated their account on passbolt!"
-msgstr "{0} hat gerade ihr*sein Konto bei Passwort aktiviert!"
+msgstr "{0} hat gerade ihr:sein Konto bei Passwort aktiviert!"
 
 msgid "The user is now active on passbolt and you can share passwords with them."
-msgstr "Benutzer*in ist jetzt auf Passbolt aktiv und Sie können Passwörter mit ihr*ihm teilen."
+msgstr "Benutzer:in ist jetzt auf Passbolt aktiv und Sie können Passwörter mit ihr:ihm teilen."
 
 msgid "This user was invited by you {0}."
-msgstr "Benutzer*in wurde durch Sie {0} eingeladen."
+msgstr "Benutzer:in wurde durch Sie {0} eingeladen."
 
 msgid "This user signed up themselves, since the public registration is enabled."
-msgstr "Diese*r Benutzer*in hat sich selber registriert, da die öffentliche Registrierung aktiv ist."
+msgstr "Diese:r Benutzer:in hat sich selber registriert, da die öffentliche Registrierung aktiv ist."
 
 msgid "This user was invited by {0} {1}."
-msgstr "Benutzer*in wurde durch {0} {1} eingeladen."
+msgstr "Benutzer:in wurde durch {0} {1} eingeladen."
 
 msgid "view users"
-msgstr "Benutzer*innen anzeigen"
+msgstr "Benutzer:innen anzeigen"
 
 msgid "This email is an automatic notification sent by"
 msgstr "Diese E-Mail ist eine automatische Benachrichtigung gesendet von"
