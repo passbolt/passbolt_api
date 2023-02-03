@@ -74,7 +74,7 @@ Follow the instructions on the website here: https://help.passbolt.com/hosting/u
 
 ## Contributing to passbolt
 
-Please check out CONTRIBUTING.md for more information on how to get involved!
+Please check out the [contributing guide](./CONTRIBUTING.md) for more information on how to get involved!
 
 ## Reporting a security issue
 
