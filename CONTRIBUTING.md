@@ -62,3 +62,8 @@ Listen to the appjs change and refresh the browser
 ```
 grunt appjs-watch-browser-sync
 ```
+
+## How do I contribute to the translation
+
+For contributing to the translations of this repository, you will need to create an account and propose changes at https://passbolt.crowdin.com/.
+
