@@ -9,17 +9,17 @@ composer install --dev
 - Configure your test database in app.php datasources section.
 - Run phpunit:
 ```
-composer run-script test
+composer test
 ```
 
 ## How do I check the code standards
 - To display the error and warning
 ```
-composer run-script cs-check
+composer cs-check
 ```
 - To autofix what is fixable
 ```
-composer run-script cs-fix
+composer cs-fix
 ```
 
 ## How to regenerate the fixtures
