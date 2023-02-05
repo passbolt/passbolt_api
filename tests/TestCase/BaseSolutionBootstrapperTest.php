@@ -12,18 +12,14 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.10.0
+ * @since         3.11.0
  */
 namespace App\Test\TestCase;
 
 use App\BaseSolutionBootstrapper;
-use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Test\Lib\SolutionBootstrapperTestCase;
 use Cake\Core\Configure;
 use Cake\Core\PluginCollection;
-use Cake\TestSuite\IntegrationTestTrait;
-use Cake\TestSuite\TestCase;
-use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
-use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 /**
  * BasePluginAdderTest class
@@ -31,15 +27,9 @@ use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
  * @covers \App\BaseSolutionBootstrapper
  * @group SolutionBootstrapper
  */
-class BaseSolutionBootstrapperTest extends TestCase
+class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 {
-    use FeaturePluginAwareTrait;
-    use IntegrationTestTrait;
-
     public const EXPECTED_CE_PLUGINS = [
-        'Passbolt/JwtAuthentication',
-        'PassboltSeleniumApi',
-        'PassboltTestData',
         'Passbolt/AccountSettings',
         'Passbolt/Import',
         'Passbolt/InFormIntegration',
@@ -51,73 +41,47 @@ class BaseSolutionBootstrapperTest extends TestCase
         'Passbolt/EmailDigest',
         'Passbolt/Reports',
         'Passbolt/Mobile',
+        'Passbolt/JwtAuthentication',
         'Passbolt/SelfRegistration',
         'Passbolt/PasswordGenerator',
         'Passbolt/SmtpSettings',
         'Passbolt/MultiFactorAuthentication',
-        'Passbolt/Log',
     ];
-
-    /**
-     * @var \App\Application
-     */
-    public $app;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->app = $this->createApp();
-        $this->clearPlugins();
-        DigestsPool::clearInstance();
-        EmailNotificationSettings::flushCache();
-    }
-
-    public function tearDown(): void
-    {
-        $this->clearPlugins();
-        unset($this->app);
-        parent::tearDown();
-    }
 
     public function testBaseSolutionBootstrapper_Application_Bootstrap(): void
     {
         $plugins = $this->arrangeAndGetPlugins();
-        $expectedPluginList = array_merge(
-            [
-            'Migrations',
-            'Authentication',
-            'EmailQueue',
-            'BryanCrowe/ApiPagination',
-            ],
-            self::EXPECTED_CE_PLUGINS,
-            [
-            'Bake',
-            'CakephpFixtureFactories',
-            ]
-        );
-        foreach ($expectedPluginList as $pluginName) {
-            $this->assertSame($pluginName, $plugins->current()->getName());
-            $plugins->next();
-        }
+        $this->assertPluginList($plugins, $this->getExpectedPlugins());
     }
 
     public function testBaseSolutionBootstrapper_Application_Bootstrap_WebInstaller_Required(): void
     {
         Configure::write('passbolt.webInstaller.configured', false);
         $plugins = $this->arrangeAndGetPlugins();
-        $expectedPluginList = [
+        $this->assertPluginList($plugins, $this->getExpectedPlugins(true));
+    }
+
+    protected function getExpectedPlugins(bool $withWebInstaller = false): array
+    {
+        $extraPlugin = $withWebInstaller ? 'Passbolt/WebInstaller' : 'Passbolt/Log';
+
+        return array_merge(
+            [
             'Migrations',
             'Authentication',
             'EmailQueue',
             'BryanCrowe/ApiPagination',
-            'Passbolt/WebInstaller',
+            'PassboltSeleniumApi',
+            'PassboltTestData',
+            ],
+            self::EXPECTED_CE_PLUGINS,
+            [$extraPlugin],
+            [
             'Bake',
             'CakephpFixtureFactories',
-        ];
-        foreach ($expectedPluginList as $pluginName) {
-            $this->assertSame($pluginName, $plugins->current()->getName());
-            $plugins->next();
-        }
+            'Cake/TwigView',
+            ]
+        );
     }
 
     protected function arrangeAndGetPlugins(): PluginCollection
@@ -133,10 +97,8 @@ class BaseSolutionBootstrapperTest extends TestCase
         $this->app->setSolutionBootstrapper(new BaseSolutionBootstrapper());
         $this->app->bootstrap();
         $this->app->pluginBootstrap();
-        $plugins = $this->app->getPlugins();
-        $plugins->rewind();
 
-        return $plugins;
+        return $this->app->getPlugins();
     }
 
     public function testBaseSolutionBootstrapper_AddFeaturePlugin_On_Enabled_Plugin()

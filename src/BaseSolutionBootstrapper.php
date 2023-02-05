@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.10.0
+ * @since         3.11.0
  */
 namespace App;
 
@@ -38,14 +38,6 @@ class BaseSolutionBootstrapper
      */
     public function addFeaturePlugins(Application $app): void
     {
-        if ($this->isWebInstallerConfigurationMissing()) {
-            $app->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
-
-            return;
-        }
-
-        $this->addFeaturePluginIfEnabled($app, 'JwtAuthentication');
-
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
             $app->addPlugin('PassboltSeleniumApi', ['bootstrap' => true, 'routes' => true]);
             $app->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
@@ -63,6 +55,7 @@ class BaseSolutionBootstrapper
         $app->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
         $this->addFeaturePluginIfEnabled($app, 'Mobile');
+        $this->addFeaturePluginIfEnabled($app, 'JwtAuthentication');
         $this->addFeaturePluginIfEnabled($app, 'SelfRegistration');
         $app->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
         $this->addFeaturePluginIfEnabled($app, 'SmtpSettings');
@@ -74,26 +67,14 @@ class BaseSolutionBootstrapper
             true
         );
 
-        $this->addFeaturePluginIfEnabled(
-            $app,
-            'Log',
-            ['bootstrap' => true, 'routes' => false],
-            true
-        );
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isWebInstallerConfigurationMissing(): bool
-    {
-        if (!$this->isFeaturePluginEnabled('WebInstaller', true)) {
-            return false;
-        } elseif (class_exists(WebInstallerMiddleware::class)) {
-            return !WebInstallerMiddleware::isConfigured();
+        if (!WebInstallerMiddleware::isConfigured()) {
+            $app->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+        } else {
+            $logEnabled = Configure::read('passbolt.plugins.log.enabled');
+            if (!isset($logEnabled) || $logEnabled) {
+                $app->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
+            }
         }
-
-        return false;
     }
 
     /**
