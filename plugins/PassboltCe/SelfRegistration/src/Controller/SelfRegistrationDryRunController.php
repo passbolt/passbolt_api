@@ -43,6 +43,7 @@ class SelfRegistrationDryRunController extends AppController
     public function dryRun(SelfRegistrationDryRunServiceInterface $dryRunService): void
     {
         $this->User->assertIsGuest();
+        // @todo assert the data is an array
         $dryRunService->canGuestSelfRegister($this->getRequest()->getData());
 
         $this->success(__('The operation was successful.'));

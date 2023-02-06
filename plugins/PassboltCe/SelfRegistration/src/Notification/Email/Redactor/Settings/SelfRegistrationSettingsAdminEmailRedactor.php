@@ -52,6 +52,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
      * @param \Cake\Event\Event $event User register event
      * @return \App\Notification\Email\EmailCollection
      */
+    // @todo [COULD] make another email for clarity when the settings are disabled.
     public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
@@ -59,9 +60,10 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
         $modifiedById = $event->getData('modified_by');
         $provider = $event->getData('provider');
         $data = $event->getData('data');
-        $status = 'Disabled';
+        $status = 'Disabled'; // @todo missing translation
         $info = null;
         if ($provider === SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS) {
+            // @todo missing translation
             $status = 'Enabled';
             $info = 'Allowed domains: ' . implode(', ', $data['allowed_domains']);
         }
@@ -95,7 +97,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($modifierFirstName) {
-                return __('{0} edited the self registration settings', $modifierFirstName);
+                return __('{0} edited the self registration settings.', $modifierFirstName); // @todo . added to form a sentence
             }
         );
     }
@@ -109,7 +111,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () {
-                return __('You edited the self registration settings');
+                return __('You edited the self registration settings.'); // @todo . added to form a sentence
             }
         );
     }

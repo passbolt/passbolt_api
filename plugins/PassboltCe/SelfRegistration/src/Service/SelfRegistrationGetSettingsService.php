@@ -39,7 +39,7 @@ class SelfRegistrationGetSettingsService extends SelfRegistrationBaseSettingsSer
             return $this->getDefaultSettings();
         }
 
-        $value = json_decode($settings->get('value'), true);
+        $value = json_decode($settings->get('value'), true); // @todo throw an InternalErrorException if it cannot decode the json: 'Could not parse the self registration settings found in database.'
         $form = $this->getFormFromData($value);
         if (!$form->execute($value)) {
             $validationException = new FormValidationException(
