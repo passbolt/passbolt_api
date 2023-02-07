@@ -55,6 +55,7 @@
         "ext-gnupg" : "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
+        "ext-curl" : "*",
         "cakephp/cakephp": "^4.3.11",
         "cakephp/migrations": "^3.5.2",
         "robmorgan/phinx":"^0.12.10",
