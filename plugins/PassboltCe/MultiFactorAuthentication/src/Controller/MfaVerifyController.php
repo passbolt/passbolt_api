@@ -21,6 +21,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenDate;
 use Cake\Routing\Router;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
@@ -105,18 +106,29 @@ abstract class MfaVerifyController extends MfaController
      *
      * @param string $provider name of the provider
      * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
+     * @param \Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface $rememberMeForAMonthSetting Remember a month setting.
      * @return void
      */
     protected function _generateMFaToken(
         string $provider,
-        SessionIdentificationServiceInterface $sessionIdentificationService
+        SessionIdentificationServiceInterface $sessionIdentificationService,
+        RememberAMonthSettingInterface $rememberMeForAMonthSetting
     ) {
         $uac = $this->User->getAccessControl();
         $sessionId = $sessionIdentificationService->getSessionIdentifier($this->getRequest());
         $token = MfaVerifiedToken::get($uac, $provider, $sessionId, (bool)$this->request->getData('remember'));
-        $expiryAt = $this->request->getData('remember') ?
-            (new FrozenDate())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
-            null;
+
+        /**
+         * Set expiry to null(Session) by default, i.e. setting is disabled.
+         * Only check for remember request data field if "remember me for a month" setting is enabled.
+         */
+        $expiryAt = null;
+        if ($rememberMeForAMonthSetting->isEnabled()) {
+            $expiryAt = $this->request->getData('remember') ?
+                (new FrozenDate())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
+                null;
+        }
+
         $cookie = MfaVerifiedCookie::get($this->getRequest(), $token, $expiryAt);
         $this->response = $this->response->withCookie($cookie);
     }

@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoVerifyPostController extends MfaVerifyController
@@ -30,13 +31,15 @@ class DuoVerifyPostController extends MfaVerifyController
      *
      * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID service
      * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $verifyForm MFA Form
+     * @param \Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface $rememberMeForAMonthSetting Remember a month setting.
      * @throws \Cake\Http\Exception\InternalErrorException
      * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
     public function post(
         SessionIdentificationServiceInterface $sessionIdentificationService,
-        MfaFormInterface $verifyForm
+        MfaFormInterface $verifyForm,
+        RememberAMonthSettingInterface $rememberMeForAMonthSetting
     ) {
         if ($this->request->is('json')) {
             throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
@@ -54,7 +57,11 @@ class DuoVerifyPostController extends MfaVerifyController
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $this->_generateMfaToken(MfaSettings::PROVIDER_DUO, $sessionIdentificationService);
+        $this->_generateMfaToken(
+            MfaSettings::PROVIDER_DUO,
+            $sessionIdentificationService,
+            $rememberMeForAMonthSetting
+        );
         $this->_handleVerifySuccess();
     }
 }

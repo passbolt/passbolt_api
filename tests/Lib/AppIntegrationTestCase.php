@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib;
 
+use App\Authenticator\AbstractSessionIdentificationService;
+use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\AvatarsModelTrait;
@@ -149,5 +151,60 @@ abstract class AppIntegrationTestCase extends TestCase
     public function disableCsrfToken()
     {
         $this->_csrfToken = false;
+    }
+
+    /**
+     * Injects in the DIC a session identification Interface with the provided ID.
+     * In Session, will return the session ID
+     * In JWT, will return the access token
+     * In JWT refresh token, will return the hashed access token associated to the refresh token
+     *
+     * @param string $sessionId Session Id to mock
+     * @return void
+     */
+    public function mockSessionId(string $sessionId)
+    {
+        $this->mockService(SessionIdentificationServiceInterface::class, function () use ($sessionId) {
+            $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
+            $stubSessionIdentifier->method('getSessionIdentifier')->willReturn($sessionId);
+
+            return $stubSessionIdentifier;
+        });
+    }
+
+    /**
+     * @param mixed $expected Expected value
+     * @param string $name Cookie name
+     */
+    public function assertCookieIsSecure($expected, string $name): void
+    {
+        $this->assertCookie($expected, $name);
+        /** @var Response $response */
+        $response = $this->_response;
+        $cookie = $response->getCookieCollection()->get($name);
+        $this->assertTrue($cookie->isSecure());
+        $this->assertTrue($cookie->isHttpOnly());
+    }
+
+    /**
+     * @param string $agent User agent
+     * @return void
+     */
+    public function mockUserAgent(string $agent = 'foo')
+    {
+        $this->_request['headers']['USER_AGENT'] = $agent;
+    }
+
+    /**
+     * Sets given IP address to server request object.
+     *
+     * @param string $ip IP address to mock.
+     * @return void
+     */
+    public function mockUserIp(string $ip = '127.0.0.1')
+    {
+        $this->configRequest([
+            'environment' => ['REMOTE_ADDR' => $ip],
+        ]);
     }
 }
