@@ -32,6 +32,8 @@ use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
 use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 
 class Plugin extends BasePlugin
 {
@@ -96,5 +98,9 @@ class Plugin extends BasePlugin
                 ->extend(JwtArmoredChallengeInterface::class)
                 ->setConcrete(MfaJwtArmoredChallengeService::class);
         }
+
+        $container
+            ->add(RememberAMonthSettingInterface::class)
+            ->setConcrete(DefaultRememberAMonthSettingService::class);
     }
 }

@@ -81,6 +81,7 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->assertResponseContains('<input type="text" name="totp"');
         $this->assertResponseContains('<input type="checkbox" name="remember"');
         $this->assertResponseContains('/app/users');
+        $this->assertResponseContains('Remember this device for a month');
     }
 
     /**

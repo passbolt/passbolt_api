@@ -20,6 +20,7 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeyVerifyPostController extends MfaVerifyController
@@ -29,13 +30,15 @@ class YubikeyVerifyPostController extends MfaVerifyController
      *
      * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
      * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $verifyForm MFA Form
+     * @param \Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface $rememberMeForAMonthSetting Remember a month setting.
      * @throws \Cake\Http\Exception\InternalErrorException
      * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
     public function post(
         SessionIdentificationServiceInterface $sessionIdentificationService,
-        MfaFormInterface $verifyForm
+        MfaFormInterface $verifyForm,
+        RememberAMonthSettingInterface $rememberMeForAMonthSetting
     ) {
         $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);
@@ -53,6 +56,7 @@ class YubikeyVerifyPostController extends MfaVerifyController
             // Display form with error msg
             $this->set('providers', $this->mfaSettings->getEnabledProviders());
             $this->set('verifyForm', $verifyForm);
+            $this->set('isRememberMeForAMonthEnabled', $rememberMeForAMonthSetting->isEnabled());
             $this->viewBuilder()
                 ->setLayout('mfa_verify')
                 ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))
@@ -62,7 +66,11 @@ class YubikeyVerifyPostController extends MfaVerifyController
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $this->_generateMfaToken(MfaSettings::PROVIDER_YUBIKEY, $sessionIdentificationService);
+        $this->_generateMfaToken(
+            MfaSettings::PROVIDER_YUBIKEY,
+            $sessionIdentificationService,
+            $rememberMeForAMonthSetting
+        );
         $this->_handleVerifySuccess();
     }
 }

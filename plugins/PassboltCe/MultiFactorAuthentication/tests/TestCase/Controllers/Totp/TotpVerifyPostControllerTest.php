@@ -71,6 +71,8 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         ]);
         $this->assertResponseOk();
         $this->assertResponseContains('The OTP should be composed of numbers only.');
+        $this->assertResponseContains('<input type="checkbox" name="remember"');
+        $this->assertResponseContains('Remember this device for a month');
     }
 
     /**

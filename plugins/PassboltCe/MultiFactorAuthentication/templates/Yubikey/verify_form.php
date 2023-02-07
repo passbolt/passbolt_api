@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var mixed $providers
  * @var mixed $verifyForm
+ * @var bool $isRememberMeForAMonthEnabled
  */
     use Cake\Routing\Router;
     use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -26,10 +27,14 @@
         'autofocus' => 'autofocus',
         'autocomplete' => 'off'
     ]); ?>
+
+    <?php if ($isRememberMeForAMonthEnabled): ?>
     <div class="input checkbox">
         <input type="checkbox" name="remember" value="remember" id="remember">
         <label for="remember" ><?= __('Remember this device for a month.'); ?></label>
     </div>
+    <?php endif; ?>
+
     <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_YUBIKEY]); ?>
     <?= $this->Form->end(); ?>
 </div>
