@@ -23,6 +23,7 @@ use App\Utility\Filesystem\DirectoryUtility;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Mailer\TransportFactory;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 
 /**
@@ -45,6 +46,7 @@ trait SmtpSettingsTestTrait
             'host' => 'some host',
             'tls' => true,
             'port' => (string)rand(1, 999),
+            'client' => 'passbolt.com',
             'username' => 'test-user',
             'password' => 'test-secret',
         ];
@@ -101,9 +103,7 @@ trait SmtpSettingsTestTrait
     private function assertFileSettingsHaveTheRightKeys(array $settings)
     {
         $keys = array_keys($settings);
-        $expectedKeys = [
-            'host', 'port', 'username', 'password', 'tls', 'sender_email', 'sender_name',
-        ];
+        $expectedKeys = SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS;
         asort($keys);
         asort($expectedKeys);
 
@@ -113,10 +113,10 @@ trait SmtpSettingsTestTrait
     private function assertDBSettingsHaveTheRightKeys(array $settings)
     {
         $keys = array_keys($settings);
-        $expectedKeys = [
-            'id', 'host', 'port', 'username', 'password', 'tls', 'sender_email', 'sender_name',
-            'created', 'modified', 'created_by', 'modified_by',
-        ];
+        $expectedKeys = array_merge(
+            SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS,
+            ['id', 'created', 'modified', 'created_by', 'modified_by',]
+        );
         asort($keys);
         asort($expectedKeys);
 

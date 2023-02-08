@@ -56,6 +56,7 @@ class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
                 'host' => $configInDb['host'],
                 'port' => $configInDb['port'],
                 'tls' => $configInDb['tls'] ?? null,
+                'client' => $configInDb['client'],
                 'username' => $configInDb['username'],
                 'password' => $configInDb['password'],
             ];

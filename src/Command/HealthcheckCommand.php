@@ -510,14 +510,24 @@ class HealthcheckCommand extends PassboltCommand
             __('Search engine robots are not told not to index content.'),
             __('Set passbolt.meta.robots to false in {0}.', CONFIG . 'passbolt.php')
         );
+        $selfRegistrationPluginName = 'Self Registration';
+        $selfRegistrationChecks = $checks['application']['registrationClosed'];
         $this->warning(
-            $checks['application']['registrationClosed'],
+            $selfRegistrationChecks['isSelfRegistrationPluginEnabled'],
+            __('The {0} plugin is enabled.', $selfRegistrationPluginName),
+            __('The {0} plugin is disabled.', $selfRegistrationPluginName) . ' ' .
+            __('Enable the plugin in order to define self registration settings.')
+        );
+        $this->warning(
+            is_null($selfRegistrationChecks['selfRegistrationProvider']),
             __('Registration is closed, only administrators can add users.'),
-            __('Registration is open to everyone.'),
-            [
-                __('Make sure this instance is not publicly available on the internet.'),
-                __('Or set passbolt.registration.public to false in {0}.', CONFIG . 'passbolt.php'),
-            ]
+            __('The self registration provider is: {0}.', $selfRegistrationChecks['selfRegistrationProvider'])
+        );
+        $this->warning(
+            $selfRegistrationChecks['isRegistrationPublicRemovedFromPassbolt'],
+            __('The deprecated self registration public setting was not found in {0}.', CONFIG . 'passbolt.php'),
+            __('The deprecated self registration public setting was found in {0}.', CONFIG . 'passbolt.php'),
+            __('You may remove the "passbolt.registration.public" setting.')
         );
         $this->warning(
             $checks['application']['hostAvailabilityCheckEnabled'],

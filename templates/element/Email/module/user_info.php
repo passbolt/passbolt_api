@@ -11,6 +11,9 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.6.0
+ *
+ * @var string $userAgent
+ * @var string $clientIp
  */
 
 use App\Utility\Purifier;
@@ -34,5 +37,3 @@ if ($canSeeUserIp) {
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
-
-?>

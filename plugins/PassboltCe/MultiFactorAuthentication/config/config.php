@@ -10,6 +10,9 @@ return [
                     'duo' => filter_var(env('PASSBOLT_PLUGINS_MFA_PROVIDERS_DUO', false), FILTER_VALIDATE_BOOLEAN),
                     'yubikey' => filter_var(env('PASSBOLT_PLUGINS_MFA_PROVIDERS_YUBIKEY', false), FILTER_VALIDATE_BOOLEAN), //phpcs:ignore
                 ],
+                'totp' => [
+                    'secretLength' => env('PASSBOLT_PLUGINS_MFA_TOTP_SECRET_LENGTH', null),
+                ],
                 'yubikey' => [
                     'clientId' => env('PASSBOLT_PLUGINS_MFA_YUBIKEY_CLIENTID', null),
                     'secretKey' => env('PASSBOLT_PLUGINS_MFA_YUBIKEY_SECRETKEY', null),

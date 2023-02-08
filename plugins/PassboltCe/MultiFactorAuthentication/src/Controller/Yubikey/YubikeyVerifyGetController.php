@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
+use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeyVerifyGetController extends MfaVerifyController
@@ -28,6 +29,7 @@ class YubikeyVerifyGetController extends MfaVerifyController
      *
      * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
      * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $verifyForm MFA Form
+     * @param \Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface $rememberMeForAMonthSetting Remember a month setting.
      * @throws \Cake\Http\Exception\InternalErrorException if there is no MFA settings for the user
      * @throws \Cake\Http\Exception\BadRequestException if valid Verification token is already present in cookie
      * @throws \Cake\Http\Exception\BadRequestException if there is no MFA settings for this provider
@@ -35,7 +37,8 @@ class YubikeyVerifyGetController extends MfaVerifyController
      */
     public function get(
         SessionIdentificationServiceInterface $sessionIdentificationService,
-        MfaFormInterface $verifyForm
+        MfaFormInterface $verifyForm,
+        RememberAMonthSettingInterface $rememberMeForAMonthSetting
     ) {
         $this->_handleVerifiedNotRequired($sessionIdentificationService);
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);
@@ -46,6 +49,7 @@ class YubikeyVerifyGetController extends MfaVerifyController
             $this->set('providers', $this->mfaSettings->getEnabledProviders());
             $this->set('verifyForm', $verifyForm);
             $this->set('theme', $this->User->theme());
+            $this->set('isRememberMeForAMonthEnabled', $rememberMeForAMonthSetting->isEnabled());
             $this->viewBuilder()
                 ->setLayout('mfa_verify')
                 ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))

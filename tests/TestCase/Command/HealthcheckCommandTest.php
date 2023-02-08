@@ -23,11 +23,13 @@ use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
+use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class HealthcheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use PassboltCommandTestTrait;
+    use SelfRegistrationTestTrait;
 
     /**
      * setUp method
@@ -100,7 +102,6 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('App.fullBaseUrl', 'https://passbolt.local');
         Configure::write('passbolt.selenium.active', false);
         Configure::write('passbolt.meta.robots', 'noindex');
-        Configure::write('passbolt.registration.public', false);
         Configure::write('passbolt.email.validate.mx', true);
         Configure::write('passbolt.js.build', 'production');
         Configure::write('passbolt.email.send', '');
@@ -113,6 +114,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('App.fullBaseUrl is set to HTTPS.');
         $this->assertOutputContains('Selenium API endpoints are disabled.');
         $this->assertOutputContains('Search engine robots are told not to index content.');
+        $this->assertOutputContains('The Self Registration plugin is enabled.');
         $this->assertOutputContains('Registration is closed, only administrators can add users.');
         $this->assertOutputContains('Host availability will be checked.');
         $this->assertOutputContains('Serving the compiled version of the javascript app.');
@@ -129,6 +131,7 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('passbolt.selenium.active', true);
         Configure::write('passbolt.meta.robots', '');
         Configure::write('passbolt.registration.public', true);
+        $this->setSelfRegistrationSettingsData();
         Configure::write('passbolt.email.validate.mx', false);
         Configure::write('passbolt.js.build', 'test');
         Configure::write('passbolt.email.send', 'false');
@@ -141,7 +144,8 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('App.fullBaseUrl is not set to HTTPS.');
         $this->assertOutputContains('Selenium API endpoints are active.');
         $this->assertOutputContains('Search engine robots are not told not to index content.');
-        $this->assertOutputContains('Registration is open to everyone.');
+        $this->assertOutputContains('The self registration provider is: Email domain safe list.');
+        $this->assertOutputContains('You may remove the "passbolt.registration.public" setting.');
         $this->assertOutputContains('Host availability checking is disabled.');
         $this->assertOutputContains('Using non-compiled Javascript.');
         $this->assertOutputContains('Some email notifications are disabled by the administrator.');
