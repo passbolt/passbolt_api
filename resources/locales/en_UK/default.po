@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2023-01-17 15:05+0000\n"
+"POT-Creation-Date: 2023-02-08 11:44+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -171,6 +171,9 @@ msgid "undefined user agent"
 msgstr ""
 
 msgid "Access restricted to administrators."
+msgstr ""
+
+msgid "Access restricted to unauthenticated users."
 msgstr ""
 
 msgid "The user should not be logged in."
@@ -344,10 +347,10 @@ msgstr ""
 msgid "Recovery process started, check your email."
 msgstr ""
 
-msgid "Registration is not opened to public. Please contact your administrator."
+msgid "Only guests are allowed to register."
 msgstr ""
 
-msgid "Only guests are allowed to register."
+msgid "Registration is not opened to public. Please contact your administrator."
 msgstr ""
 
 msgid "The user identifier should be a valid UUID or \"me\"."
@@ -2222,6 +2225,81 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "The self registration setting id should be a valid UUID."
+msgstr ""
+
+msgid "An email is required."
+msgstr ""
+
+msgid "The email should be a valid email address."
+msgstr ""
+
+msgid "The provider should not be empty."
+msgstr ""
+
+msgid "The provider should be part of the supported list: {0}."
+msgstr ""
+
+msgid "The data should not be empty."
+msgstr ""
+
+msgid "The list of allowed domains should not be empty."
+msgstr ""
+
+msgid "The list of allowed domains should be an array of strings."
+msgstr ""
+
+msgid "The domain #{0} should be a valid domain."
+msgstr ""
+
+msgid "An email notification setting should be a boolean."
+msgstr ""
+
+msgid "Allowed domains: {0}"
+msgstr ""
+
+msgid "{0} edited the self registration settings."
+msgstr ""
+
+msgid "You edited the self registration settings."
+msgstr ""
+
+msgid "{0} just created an account on passbolt!"
+msgstr ""
+
+msgid "The email is already registered."
+msgstr ""
+
+msgid "The self registration plugin is not enabled."
+msgstr ""
+
+msgid "The self registration data could not be validated."
+msgstr ""
+
+msgid "The self registration is disabled."
+msgstr ""
+
+msgid "The domain is not supported for self-registration."
+msgstr ""
+
+msgid "Email domain safe list"
+msgstr ""
+
+msgid "Could not parse the self registration settings found in database."
+msgstr ""
+
+msgid "Could not validate the self registration settings found in database."
+msgstr ""
+
+msgid "Could not validate the self registration settings."
+msgstr ""
+
+msgid "{0} updated the self registration settings"
+msgstr ""
+
+msgid "Status: {0}"
+msgstr ""
+
 msgid "A sender name is required."
 msgstr ""
 
@@ -2283,6 +2361,9 @@ msgid "A test recipient is required."
 msgstr ""
 
 msgid "SMTP settings endpoints disabled."
+msgstr ""
+
+msgid "The client should be a valid IP or a valid domain."
 msgstr ""
 
 msgid "Could not validate the smtp settings."
@@ -2435,12 +2516,6 @@ msgstr ""
 msgid "The full base url should be a valid BMP-UTF8 string."
 msgstr ""
 
-msgid "A public registration setting is required."
-msgstr ""
-
-msgid "The public registration setting should be a valid boolean."
-msgstr ""
-
 msgid "A force ssl status is required."
 msgstr ""
 
@@ -2573,6 +2648,12 @@ msgstr ""
 msgid "Port"
 msgstr ""
 
+msgid "client"
+msgstr ""
+
+msgid "Client"
+msgstr ""
+
 msgid "Passbolt is not configured."
 msgstr ""
 
@@ -2646,12 +2727,6 @@ msgid "Full base url"
 msgstr ""
 
 msgid "This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash."
-msgstr ""
-
-msgid "Allow public registration?"
-msgstr ""
-
-msgid "Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea."
 msgstr ""
 
 msgid "Force SSL?"
@@ -2813,9 +2888,6 @@ msgstr ""
 msgid "login"
 msgstr ""
 
-msgid "register"
-msgstr ""
-
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""
 
@@ -2832,6 +2904,12 @@ msgid "Unfortunately, they will need your help to delete their account and resta
 msgstr ""
 
 msgid "Please check with them first to confirm."
+msgstr ""
+
+msgid "Welcome to {0}!"
+msgstr ""
+
+msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr ""
 
 msgid "You have initiated an account recovery!"
