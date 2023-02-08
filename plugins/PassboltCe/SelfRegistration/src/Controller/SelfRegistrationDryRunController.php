@@ -18,6 +18,7 @@ namespace Passbolt\SelfRegistration\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\BadRequestException;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 
 class SelfRegistrationDryRunController extends AppController
@@ -43,7 +44,11 @@ class SelfRegistrationDryRunController extends AppController
     public function dryRun(SelfRegistrationDryRunServiceInterface $dryRunService): void
     {
         $this->User->assertIsGuest();
-        $dryRunService->canGuestSelfRegister($this->getRequest()->getData());
+        $data = $this->getRequest()->getData();
+        if (!is_array($data)) {
+            throw new BadRequestException(_('The data should be an array.'));
+        }
+        $dryRunService->canGuestSelfRegister($data);
 
         $this->success(__('The operation was successful.'));
     }

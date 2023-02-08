@@ -18,7 +18,7 @@ use Cake\I18n\FrozenTime;
 
 $recipient = $body['recipient'];
 $modifier = $body['modifier'];
-$subject = $body['subject'];
+$subject = Purifier::clean($body['subject']);
 $status = Purifier::clean($body['status']);
 $info = Purifier::clean($body['info']) ?? null;
 
@@ -37,7 +37,7 @@ if ($recipient['id'] === $modifier['id']) {
     $text = __('{0} updated the self registration settings', $modifierFullName);
 }
 $text = '<h3>' . $text . '</h3>';
-$text .= 'Status: ' . $status . '<br/>';
+$text .= __('Status: {0}', $status) . '<br/>';
 if (isset($info)) {
     $text .= $info;
 }
