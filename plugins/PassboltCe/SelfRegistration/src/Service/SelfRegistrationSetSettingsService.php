@@ -55,7 +55,8 @@ class SelfRegistrationSetSettingsService extends SelfRegistrationBaseSettingsSer
             );
         }
 
-        $value = json_encode($form->getData()); // @todo [FYI] see how the json content is handled by MfaPolicies and schedule a ticket to take care of it.
+        // @todo [FYI] see how the json content is handled by MfaPolicies and schedule a ticket to take care of it.
+        $value = json_encode($form->getData());
 
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');

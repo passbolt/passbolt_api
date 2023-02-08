@@ -52,7 +52,8 @@ abstract class SelfRegistrationAbstractDryRunService implements SelfRegistration
      */
     protected function checkEmailNotPreviouslyRegistered(string $email): void
     {
-        $nonDeletedUserExists = TableRegistry::getTableLocator() // @todo [NICE TO HAVE] move it into UsersFinderTrait with other similar finders.
+        // @todo [NICE TO HAVE] move it into UsersFinderTrait with other similar finders.
+        $nonDeletedUserExists = TableRegistry::getTableLocator()
                 ->get('Users')
                 ->find()
                 ->where([
