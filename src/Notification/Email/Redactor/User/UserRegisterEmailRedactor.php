@@ -33,21 +33,16 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
-    public const TEMPLATE_REGISTER_SELF = 'AN/user_register_self';
     public const TEMPLATE_REGISTER_ADMIN = 'AN/user_register_admin';
 
     /**
-     * @var \App\Model\Table\UsersTable
+     * @inheritDoc
      */
-    private $usersTable;
-
-    /**
-     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
-     */
-    public function __construct(?UsersTable $usersTable = null)
+    public function getSubscribedEvents(): array
     {
-        /** @phpstan-ignore-next-line */
-        $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
+        return [
+            UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME,
+        ];
     }
 
     /**
@@ -62,11 +57,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
         $uac = $event->getData('token');
         $adminId = $event->getData('adminId');
 
-        if ($adminId) {
-            $email = $this->createEmailAdminRegister($user, $uac, $adminId);
-        } else {
-            $email = $this->createEmailSelfRegister($user, $uac);
-        }
+        $email = $this->createEmailAdminRegister($user, $uac, $adminId);
 
         return $emailCollection->addEmail($email);
     }
@@ -88,37 +79,17 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \App\Model\Entity\User $user User
      * @param \App\Model\Entity\AuthenticationToken $uac UAC
-     * @return \App\Notification\Email\Email
-     */
-    private function createEmailSelfRegister(User $user, AuthenticationToken $uac): Email
-    {
-        $user = $this->usersTable->findFirstForEmail($user->id);
-
-        return new Email(
-            $user->username,
-            $this->getSubject($user),
-            [
-                'body' => [
-                    'user' => $user, 'token' => $uac,
-                ],
-                'title' => $this->getSubject($user),
-            ],
-            static::TEMPLATE_REGISTER_SELF
-        );
-    }
-
-    /**
-     * @param \App\Model\Entity\User $user User
-     * @param \App\Model\Entity\AuthenticationToken $uac UAC
      * @param string $adminId Admin user ID
      * @return \App\Notification\Email\Email
      */
     private function createEmailAdminRegister(User $user, AuthenticationToken $uac, string $adminId): Email
     {
-        $admin = $this->usersTable->findFirstForEmail($adminId);
-        $user = $this->usersTable->findFirstForEmail($user->id);
+        /** @var \App\Model\Table\UsersTable $UsersTable */
+        $UsersTable = TableRegistry::getTableLocator()->get('Users');
+        $admin = $UsersTable->findFirstForEmail($adminId);
+        $user = $UsersTable->findFirstForEmail($user->id);
 
-        $this->usersTable->loadInto($user, [
+        $UsersTable->loadInto($user, [
             'Profiles' => AvatarsTable::addContainAvatar(),
         ]);
 
@@ -133,17 +104,5 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
             ],
             static::TEMPLATE_REGISTER_ADMIN
         );
-    }
-
-    /**
-     * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
-     *
-     * @return array
-     */
-    public function getSubscribedEvents(): array
-    {
-        return [
-            UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME,
-        ];
     }
 }

@@ -115,7 +115,6 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         // Add the options configuration.
         $optionsSettings = [
             'full_base_url' => Configure::read('app.full_base_url'),
-            'public_registration' => 0,
             'force_ssl' => 0,
         ];
         $webInstaller->setSettings('options', $optionsSettings);

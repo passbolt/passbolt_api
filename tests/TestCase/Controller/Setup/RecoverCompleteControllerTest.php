@@ -62,9 +62,10 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
             ->inactive()
             ->persist();
 
+        // The user performing the recovery is an admin to make sure that he does not receive two emails.
         $user = UserFactory::make()
             ->with('Profiles.Avatars', AvatarFactory::make()->setDataWithFileContent())
-            ->user()
+            ->admin()
             ->active()
             ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
             ->persist();

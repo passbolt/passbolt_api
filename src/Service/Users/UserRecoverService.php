@@ -18,19 +18,21 @@ declare(strict_types=1);
 namespace App\Service\Users;
 
 use App\Controller\Users\UsersRecoverController;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
-use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
 use Cake\Validation\Validation;
 use Cake\View\ViewBuilder;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 
 /**
  * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
@@ -41,17 +43,28 @@ class UserRecoverService implements UserRecoverServiceInterface
     use EventDispatcherTrait;
     use ModelAwareTrait;
 
+    public const AFTER_RECOVER_SUCCESS_EVENT_NAME = 'after_recover_success_event_name';
+
     /**
      * @var \Cake\Http\ServerRequest
      */
-    public $request;
+    protected $request;
+
+    /**
+     * @var \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface
+     */
+    protected $selfRegistrationDryRunService;
 
     /**
      * @param \Cake\Http\ServerRequest $serverRequest Server request
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $selfRegistrationDryRunService Service to detect if a guest can self register
      */
-    public function __construct(ServerRequest $serverRequest)
-    {
+    public function __construct(
+        ServerRequest $serverRequest,
+        SelfRegistrationDryRunServiceInterface $selfRegistrationDryRunService
+    ) {
         $this->request = $serverRequest;
+        $this->selfRegistrationDryRunService = $selfRegistrationDryRunService;
         $this->loadModel('AuthenticationTokens');
         $this->loadModel('Users');
     }
@@ -72,9 +85,13 @@ class UserRecoverService implements UserRecoverServiceInterface
             // The user has not completed the setup, restart setup
             // Fixes https://github.com/passbolt/passbolt_api/issues/73
             $options['token'] = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
-            $eventName = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
+            // Detect if the user is being added by an administrator
+            // or if the user is performing a recovery. The email sent will be different.
             if ($uac->isAdmin()) {
+                $eventName = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
                 $options['adminId'] = $uac->getId();
+            } else {
+                $eventName = self::AFTER_RECOVER_SUCCESS_EVENT_NAME;
             }
         }
 
@@ -150,7 +167,8 @@ class UserRecoverService implements UserRecoverServiceInterface
      * Assert the user can actually perform a recovery on their account
      *
      * @return \App\Model\Entity\User
-     * @throws \Cake\Http\Exception\BadRequestException if the user does not exist or has been deleted
+     * @throws \Cake\Http\Exception\NotFoundException if the user does not exist or has been deleted
+     * @throws \Cake\Http\Exception\InternalErrorException if the settings in the DB are not valid
      */
     protected function getUserOrFail(): User
     {
@@ -160,8 +178,13 @@ class UserRecoverService implements UserRecoverServiceInterface
         $user = $this->Users->findByUsername($username)->first();
 
         if (empty($user)) {
+            try {
+                $canSelfRegister = $this->selfRegistrationDryRunService->canGuestSelfRegister(['email' => $username]);
+            } catch (CustomValidationException | ForbiddenException $e) {
+                $canSelfRegister = false;
+            }
             $msg = __('This user does not exist or has been deleted.') . ' ';
-            if (Configure::read('passbolt.registration.public')) {
+            if ($canSelfRegister) {
                 $msg .= __('Please register and complete the setup first.');
             } else {
                 $msg .= __('Please contact your administrator.');

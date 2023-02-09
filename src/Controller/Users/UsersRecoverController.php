@@ -68,6 +68,7 @@ class UsersRecoverController extends AppController
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the username is not valid
      * @throws \Cake\Http\Exception\BadRequestException if the username is not provided
+     * @throws \Cake\Http\Exception\InternalErrorException if the self registration settings in the DB are not valid
      */
     public function recoverPost(UserRecoverServiceInterface $userRecoverService)
     {
@@ -75,7 +76,7 @@ class UsersRecoverController extends AppController
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
         }
 
-        // Do not allow logged in user to recover
+        // Do not allow logged-in user to recover
         if (!in_array($this->User->role(), [Role::GUEST, Role::ADMIN])) {
             throw new ForbiddenException(__('Only guests are allowed to recover an account. Please logout first.'));
         }

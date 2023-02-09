@@ -32,6 +32,8 @@ require __DIR__ . '/paths.php';
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
 use Cake\Cache\Cache;
+use Cake\Database\Type\JsonType;
+use Cake\Database\TypeFactory;
 use Cake\Error\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
@@ -180,6 +182,17 @@ Security::setSalt(Configure::consume('Security.salt'));
 //    $detector = new \Detection\MobileDetect();
 //    return $detector->isTablet();
 //});
+
+/**
+ * Add custom Json type to be used for any database field.
+ *
+ * This is helpful because we are storing json value inside database column. This class handles converting array to json
+ * and vice versa, so we can directly set array value to particular field, and it will handle converting the value to
+ * valid type for us.
+ *
+ * @see https://book.cakephp.org/4/en/orm/database-basics.html#adding-custom-types
+ */
+TypeFactory::map('json', JsonType::class);
 
 /*
  * Set process user constant

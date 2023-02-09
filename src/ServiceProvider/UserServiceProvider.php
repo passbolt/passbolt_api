@@ -24,6 +24,7 @@ use App\Service\Users\UserRegisterServiceInterface;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Cake\Http\ServerRequest;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -42,6 +43,7 @@ class UserServiceProvider extends ServiceProvider
             ->addArgument(ServerRequest::class);
         $container
             ->add(UserRecoverServiceInterface::class, UserRecoverService::class)
-            ->addArgument(ServerRequest::class);
+            ->addArgument(ServerRequest::class)
+            ->addArgument(SelfRegistrationDryRunServiceInterface::class);
     }
 }

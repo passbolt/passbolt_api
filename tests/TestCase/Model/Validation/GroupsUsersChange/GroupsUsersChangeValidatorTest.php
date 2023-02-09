@@ -18,11 +18,11 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Model\Validation\GroupsUsersChange;
 
 use App\Model\Validation\GroupsUsersChange\GroupsUsersChangeValidator;
-use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
+use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 
-class GroupsUsersChangeValidatorTest extends AppTestCase
+class GroupsUsersChangeValidatorTest extends TestCase
 {
     /**
      * @var GroupsUsersChangeValidator

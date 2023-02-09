@@ -28,7 +28,6 @@ return [
      * - Javascript application config
      * - Meta HTML tags
      * - Gpg
-     * - Registration settings
      * - Selenium mode
      * - Security settings
      * - SSL
@@ -115,7 +114,10 @@ return [
                         'recover' => [
                             'abort' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_ABORT', true), FILTER_VALIDATE_BOOLEAN),
                             'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
-                        ]
+                        ],
+                        'register' => [
+                            'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_REGISTER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
                     ]
                 ],
                 'group' => [
@@ -230,13 +232,12 @@ return [
                 ],
             ],
             'smtpSettings' => [
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true), FILTER_VALIDATE_BOOLEAN)
+                // A typo is here covered for backward compatibility
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true)), FILTER_VALIDATE_BOOLEAN)
             ],
-        ],
-
-        // Is public registration allowed.
-        'registration' => [
-            'public' => filter_var(env('PASSBOLT_REGISTRATION_PUBLIC', false), FILTER_VALIDATE_BOOLEAN)
+            'selfRegistration' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
         ],
 
         // Activate specific entry points for selenium testing.
@@ -268,7 +269,14 @@ return [
             'userIp' => filter_var(env('PASSBOLT_SECURITY_USER_IP', true), FILTER_VALIDATE_BOOLEAN),
             'smtpSettings' => [
                 'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
-            ]
+            ],
+            // Enables trusting of HTTP_X headers set by most load balancers.
+            // Only set to true if your instance runs behind load balancers/proxies that you control.
+            'proxies' => [
+                'active' => filter_var(env('PASSBOLT_SECURITY_PROXIES_ACTIVE', false), FILTER_VALIDATE_BOOLEAN),
+                // If your instance is behind multiple proxies, redefine the list of IP addresses of proxies in your control in passbolt.php
+                'trustedProxies' => [],
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.

@@ -23,6 +23,7 @@ use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
+use App\Middleware\HttpProxyMiddleware;
 use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
@@ -50,6 +51,8 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -93,7 +96,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(SessionAuthPreventDeletedUsersMiddleware::class)
             ->insertAfter(SessionAuthPreventDeletedUsersMiddleware::class, new AuthenticationMiddleware($this))
             ->add(new GpgAuthHeadersMiddleware())
-            ->add($csrf);
+            ->add($csrf)
+            ->add(new HttpProxyMiddleware());
 
         /*
          * Additional security headers
@@ -251,6 +255,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
         $this->addFeaturePluginIfEnabled($this, 'Mobile');
         $this->addFeaturePluginIfEnabled($this, 'JwtAuthentication');
+        $this->addFeaturePluginIfEnabled($this, 'SelfRegistration');
         $this->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
         $this->addFeaturePluginIfEnabled($this, 'SmtpSettings');
 
@@ -301,6 +306,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $container->add(AuthenticationServiceInterface::class, SessionAuthenticationService::class);
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
+        $container->add(SelfRegistrationDryRunServiceInterface::class, SelfRegistrationDefaultDryRunService::class);
         $container->addServiceProvider(new CommandServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());
