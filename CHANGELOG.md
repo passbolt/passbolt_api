@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.10.0] - 2023-02-09
+### Added
+- PB-19784 As a user I can self register if my email domain matches the policy defined by the administrators
+
+### Improved
+- PB-21485 As a server administrator I want to configure the list of active proxies the instance is behind in order to get client IP when necessary
+- PB-21682 As an administrator I want to configure the client option of the SMTP settings
+- PB-22019 As a server administrator I want to configure TOTP MFA secret length
+
+### Maintenance
+- PB-22327 env variable PASSBOLT_PLUGINS_SMTP_SETTINGS renamed in PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED (backward compatible)
+- PB-22406 curl and openssl extensions requirements added
+- PB-22413 bump CakePHP to ^4.3.11
+
 ## [3.9.0] - 2023-01-17
 ### Added
 - PB-20539 As a user I can protect the authentication to passbolt with a second factor method
@@ -1059,7 +1073,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.8.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.10.0...HEAD
+[3.10.0]: https://github.com/passbolt/passbolt_api/compare/v3.9.0...v3.10.0
+[3.9.0]: https://github.com/passbolt/passbolt_api/compare/v3.8.3...v3.9.0
+[3.8.3]: https://github.com/passbolt/passbolt_api/compare/v3.8.1...v3.8.3
 [3.8.1]: https://github.com/passbolt/passbolt_api/compare/v3.8.0...v3.8.1
 [3.8.0]: https://github.com/passbolt/passbolt_api/compare/v3.7.3...v3.8.0
 [3.7.3]: https://github.com/passbolt/passbolt_api/compare/v3.7.2...v3.7.3
