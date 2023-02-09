@@ -23,7 +23,6 @@ use App\Utility\UserAccessControl;
 use Cake\Http\Cookie\Cookie;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Http\Response;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
@@ -43,12 +42,12 @@ class DuoSetupCallbackGetController extends MfaSetupController
      *
      * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
      * @param \Duo\DuoUniversal\Client|null $duoSdkClient Duo SDK Client
-     * @return \Cake\Http\Response
+     * @return void
      */
     public function get(
         SessionIdentificationServiceInterface $sessionIdentificationService,
         ?Client $duoSdkClient = null
-    ): Response {
+    ): void {
         $this->_assertRequestNotJson();
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_DUO);
         $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_DUO);
@@ -64,7 +63,8 @@ class DuoSetupCallbackGetController extends MfaSetupController
         );
         $this->addMfaVerifiedCookieToResponse($uac, $sessionIdentificationService);
 
-        return $this->respondOrRedirect($authenticationToken);
+        $this->disableAutoRender();
+        $this->redirectIfDefinedInToken($authenticationToken);
     }
 
     /**
@@ -150,17 +150,13 @@ class DuoSetupCallbackGetController extends MfaSetupController
      * Redirect the user if the authentication token contains a redirect path.
      *
      * @param \App\Model\Entity\AuthenticationToken $authenticationToken The authentication token
-     * @return \Cake\Http\Response
+     * @return void
      */
-    private function respondOrRedirect(AuthenticationToken $authenticationToken): Response
+    private function redirectIfDefinedInToken(AuthenticationToken $authenticationToken): void
     {
         $redirect = $authenticationToken->getDataValue('redirect');
-        if (empty($redirect)) {
-            $this->success(__('The operation was successful.'));
-        } else {
+        if (!empty($redirect)) {
             $this->redirect($redirect);
         }
-
-        return $this->getResponse();
     }
 }
