@@ -51,7 +51,8 @@ class MfaDuoStartDuoAuthenticationService
     {
         try {
             $this->duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
-                new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings())
+                new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
+                AuthenticationToken::TYPE_MFA_SETUP
             );
         } catch (\Throwable $th) {
             throw new InternalErrorException(__('Could not enable Duo MFA provider.'), null, $th);
@@ -120,7 +121,7 @@ class MfaDuoStartDuoAuthenticationService
         );
         if (!$isValid) {
             $readableAllowedTokenTypes = implode(', ', MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES);
-            $msg = __('The authentication token type should be one of the following: {0}.', $readableAllowedTokenTypes);
+            $msg = 'The authentication token type should be one of the following: ' . $readableAllowedTokenTypes . '.';
             throw new \InvalidArgumentException($msg);
         }
     }

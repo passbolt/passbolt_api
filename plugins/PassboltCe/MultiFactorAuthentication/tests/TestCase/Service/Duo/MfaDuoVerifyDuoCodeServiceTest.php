@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\Duo;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
@@ -42,7 +43,7 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
         $duoCode = 'not-so-random-duo-code';
 
         $duoSdkClientMock = DuoSdkClientMock::createDefault($this, $user)->getClient();
-        $service = new MfaDuoVerifyDuoCodeService($duoSdkClientMock);
+        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock);
         $verified = $service->verify($uac, $duoCode);
 
         $this->assertTrue($verified);
@@ -57,7 +58,7 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
         $duoCode = 'not-so-random-duo-code';
 
         $duoSdkClientMock = DuoSdkClientMock::createWithExchangeAuthorizationCodeFor2FAResultThrowingException($this);
-        $service = new MfaDuoVerifyDuoCodeService($duoSdkClientMock->getClient());
+        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock->getClient());
 
         try {
             $service->verify($uac, $duoCode);
@@ -77,7 +78,7 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
         $duoCode = 'not-so-random-duo-code';
 
         $duoSdkClientMock = (new DuoSdkClientMock($this))->mockInvalidExchangeAuthorizationCodeFor2FAResult();
-        $service = new MfaDuoVerifyDuoCodeService($duoSdkClientMock->getClient());
+        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock->getClient());
 
         try {
             $service->verify($uac, $duoCode);
@@ -97,7 +98,7 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
         $duoCode = 'not-so-random-duo-code';
 
         $duoSdkClientMock = (new DuoSdkClientMock($this))->mockInvalidExchangeAuthorizationCodeFor2FAResult();
-        $service = new MfaDuoVerifyDuoCodeService($duoSdkClientMock->getClient());
+        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock->getClient());
 
         try {
             $service->verify($uac, $duoCode);
@@ -117,7 +118,7 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
         $duoCode = 'not-so-random-duo-code';
 
         $mock = DuoSdkClientMock::createWithWrongExchangeAuthorizationCodeFor2FAResultIss($this, $user);
-        $service = new MfaDuoVerifyDuoCodeService($mock->getClient());
+        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $mock->getClient());
 
         try {
             $service->verify($uac, $duoCode);
@@ -137,7 +138,7 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
         $duoCode = 'not-so-random-duo-code';
 
         $duoSdkClientMock = DuoSdkClientMock::createWithWrongExchangeAuthorizationCodeFor2FAResultSub($this);
-        $service = new MfaDuoVerifyDuoCodeService($duoSdkClientMock->getClient());
+        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock->getClient());
 
         try {
             $service->verify($uac, $duoCode);

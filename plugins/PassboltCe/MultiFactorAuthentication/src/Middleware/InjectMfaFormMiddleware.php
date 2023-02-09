@@ -105,6 +105,7 @@ class InjectMfaFormMiddleware implements MiddlewareInterface
                 $concrete = DuoSetupForm::class;
                 break;
             case 'setup/duo/callback':
+            case 'verify/duo/callback':
                 $concrete = DuoCallbackForm::class;
                 break;
             case 'verify/duo':

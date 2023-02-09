@@ -56,12 +56,12 @@ class MfaDuoCallbackAuthenticationTokenService
         string $duoState
     ): AuthenticationToken {
         if (!Validation::uuid($token)) {
-            throw new \InvalidArgumentException(__('The authentication token should be a valid UUID.'));
+            throw new \InvalidArgumentException('The authentication token should be a valid UUID.');
         }
         if (!Validation::inList($tokenType, MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES)) {
             $readableAllowedTokenTypes = implode(', ', MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES);
-            $msg = __('The authentication token type should be one of the following: {0}.', $readableAllowedTokenTypes);
-             throw new \InvalidArgumentException($msg);
+            $msg = 'The authentication token type should be one of the following: ' . $readableAllowedTokenTypes . '.';
+            throw new \InvalidArgumentException($msg);
         }
 
         $authToken = $this->consumeAuthenticationTokenOrFail($uac, $tokenType, $token);

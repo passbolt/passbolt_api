@@ -24,14 +24,12 @@ use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoCallbackDto;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
-use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 /**
- * Class MfaDuoEnableService
+ * Class MfaDuoLoginService
  */
-class MfaDuoEnableService
+class MfaDuoLoginService
 {
     /**
      * @var \Duo\DuoUniversal\Client
@@ -39,7 +37,7 @@ class MfaDuoEnableService
     protected $duoClient;
 
     /**
-     * MfaDuoEnableService constructor.
+     * MfaDuoLoginService constructor.
      *
      * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
      * @return void
@@ -50,16 +48,16 @@ class MfaDuoEnableService
         try {
             $this->duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
                 new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
-                AuthenticationToken::TYPE_MFA_SETUP
+                AuthenticationToken::TYPE_MFA_VERIFY
             );
         } catch (\Throwable $th) {
-            $msg = __('Could not enable Duo MFA provider.');
+            $msg = __('Could not login using Duo MFA provider.');
             throw new InternalErrorException($msg, null, $th);
         }
     }
 
     /**
-     * Enable Duo for the operator.
+     * Login using Duo for the operator.
      *
      * @param \App\Utility\UserAccessControl $uac The user access control
      * @param \Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoCallbackDto $duoCallbackDto The Duo callback data
@@ -69,9 +67,8 @@ class MfaDuoEnableService
      * @throws \Cake\Http\Exception\UnauthorizedException If no active Duo callback authentication can be found.
      * @throws \Cake\Http\Exception\UnauthorizedException If the duo state cannot be verified.
      * @throws \Cake\Http\Exception\UnauthorizedException If the Duo code cannot be verified.
-     * @throws \Cake\Http\Exception\InternalErrorException if the Duo provider cannot be enabled for the user.
      */
-    public function enable(
+    public function login(
         UserAccessControl $uac,
         MfaDuoCallbackDto $duoCallbackDto,
         string $token
@@ -79,7 +76,7 @@ class MfaDuoEnableService
         if (!Validation::uuid($token)) {
             throw new \InvalidArgumentException('The authentication token should be a valid UUID.');
         }
-        $authenticationTokenType = AuthenticationToken::TYPE_MFA_SETUP;
+        $authenticationTokenType = AuthenticationToken::TYPE_MFA_VERIFY;
         $authenticationToken = (new MfaDuoCallbackAuthenticationTokenService())
             ->consumeAndVerifyAuthenticationToken(
                 $uac,
@@ -89,24 +86,7 @@ class MfaDuoEnableService
             );
         (new MfaDuoVerifyDuoCodeService($authenticationTokenType, $this->duoClient))
             ->verify($uac, $duoCallbackDto->duoCode);
-        $this->enableProvider($uac);
 
         return $authenticationToken;
-    }
-
-    /**
-     * Enable the provider for the operator.
-     *
-     * @param \App\Utility\UserAccessControl $uac The user access control
-     * @return void
-     * @throw InternalErrorException If it could not enable the Duo MFA provider.
-     */
-    private function enableProvider(UserAccessControl $uac): void
-    {
-        try {
-            MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_DUO);
-        } catch (\Throwable $th) {
-            throw new InternalErrorException(__('Could not enable Duo MFA provider.'), null, $th);
-        }
     }
 }

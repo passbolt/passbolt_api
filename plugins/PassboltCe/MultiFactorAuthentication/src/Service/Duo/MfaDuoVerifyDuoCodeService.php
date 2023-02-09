@@ -39,14 +39,16 @@ class MfaDuoVerifyDuoCodeService
     /**
      * MfaDuoVerifyService constructor.
      *
+     * @param string $authTokenType The authentication token type, which determines which flow this is for
      * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
      * @throws \Cake\Http\Exception\InternalErrorException If it cannot create the Duo Sdk Client
      */
-    public function __construct(?Client $client = null)
+    public function __construct(string $authTokenType, ?Client $client = null)
     {
         try {
             $this->duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
-                new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings())
+                new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
+                $authTokenType
             );
         } catch (\Throwable $th) {
             throw new InternalErrorException(__('Could not enable Duo MFA provider.'), null, $th);

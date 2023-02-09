@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Entity\AuthenticationToken;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
@@ -123,7 +124,10 @@ class MfaOrgSettingsDuoService
 
         if (empty($errors[MfaSettings::PROVIDER_DUO])) {
             try {
-                $duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail($this);
+                $duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
+                    $this,
+                    AuthenticationToken::TYPE_MFA_SETUP
+                );
                 $duoClient->healthCheck();
             } catch (DuoException | InternalErrorException $e) {
                 $msg = __('Cannot verify Duo settings.') . ' ' . $e->getMessage();
