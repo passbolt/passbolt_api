@@ -22,58 +22,56 @@ use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
-use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoOrganizationOnlyScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class DuoSetupPromptPostControllerTest extends MfaIntegrationTestCase
+class DuoVerifyPromptPostControllerTest extends MfaIntegrationTestCase
 {
-    public function testDuoSetupPromptPostController_Error_NotAuthenticated()
+    public function testDuoVerifyPromptPostController_Error_NotAuthenticated()
     {
-        $this->post('/mfa/setup/duo/prompt');
+        $this->post('/mfa/verify/duo/prompt');
         $this->assertRedirect();
-        $this->assertRedirectContains('/auth/login?redirect=%2Fmfa%2Fsetup%2Fduo%2Fprompt');
+        $this->assertRedirectContains('/auth/login?redirect=%2Fmfa%2Fverify%2Fduo%2Fprompt');
     }
 
-    public function testDuoSetupPromptPostController_Error_JsonNotAllowed()
+    public function testDuoVerifyPromptPostController_Error_JsonNotAllowed()
     {
         $user = $this->logInAsUser();
         $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_DUO);
-        $this->postJson('/mfa/setup/duo/prompt.json');
+        $this->postJson('/mfa/verify/duo/prompt.json');
         $errorMessageRegex = 'This functionality is not available using AJAX\/JSON.';
         $this->assertError(400, $errorMessageRegex);
     }
 
-    public function testDuoSetupPromptPostController_Error_AlreadyConfigured()
+    public function testDuoVerifyPromptPostController_Error_VerifiedNotRequired()
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaDuoScenario::class, $user);
         $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_DUO);
-        $this->post('/mfa/setup/duo/prompt');
-        $this->assertResponseError('This authentication provider is already setup. Disable it first');
+        $this->post('/mfa/verify/duo/prompt');
+        $this->assertResponseError('This authentication provider is already verify. Disable it first');
         $this->assertSame(1, OrganizationSettingFactory::count());
     }
 
-    public function testDuoSetupPromptPostController_Error_OrgSettingsNotEnabled()
+    public function testDuoVerifyPromptPostController_Error_InvalidOrgSettings()
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpScenario::class, $user);
-        $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_TOTP);
-        $this->post('/mfa/setup/duo/prompt');
-        $this->assertResponseError();
-        $this->assertResponseContains('This authentication provider is not enabled for your organization.');
+        $this->post('/mfa/verify/duo/prompt');
+        $this->assertRedirect();
+        $this->assertRedirectContains('/');
     }
 
-    public function testDuoSetupPromptPostController_Success()
+    public function testDuoVerifyPromptPostController_Success()
     {
         $user = $this->logInAsUser();
-        $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user, true, 'Bar');
         $this->mockService(Client::class, function () use ($user) {
             return DuoSdkClientMock::createDefault($this, $user)->getClient();
         });
 
-        $this->post('/mfa/setup/duo/prompt');
+        $this->post('/mfa/verify/duo/prompt');
 
         $this->assertResponseCode(302);
         $this->assertRedirectContains('https://api-45e9f2ca.duosecurity.com/oauth/v1/authorize?sate=duo-not-so-random-state');

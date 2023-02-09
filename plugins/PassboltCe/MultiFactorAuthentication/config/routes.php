@@ -98,6 +98,11 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
     $routes->connect('/verify/duo', ['prefix' => 'Duo', 'controller' => 'DuoVerifyPost', 'action' => 'post'])
         ->setMethods(['POST']);
 
+    $routes->connect('/verify/duo/prompt', [
+            'prefix' => 'Duo', 'controller' => 'DuoVerifyPromptPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
     $routes->connect('/verify/error', ['controller' => 'MfaVerifyAjaxError', 'action' => 'get'])
         ->setMethods(['GET', 'POST', 'PUT', 'DELETE']);
 

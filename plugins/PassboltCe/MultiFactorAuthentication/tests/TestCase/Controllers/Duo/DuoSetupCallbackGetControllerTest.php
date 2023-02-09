@@ -43,8 +43,9 @@ class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
     {
         $user = $this->logInAsUser();
         $this->mockMfaCookieValid($this->makeUac($user), MfaSettings::PROVIDER_DUO);
-        $this->get('/mfa/setup/duo/callback.json');
-        $this->assertResponseError('You need to login to access this location.');
+        $this->getJson('/mfa/setup/duo/callback.json');
+        $errorMessageRegex = 'This functionality is not available using AJAX\/JSON.';
+        $this->assertError(400, $errorMessageRegex);
     }
 
     public function testDuoSetupCallbackGetController_Error_AlreadyConfigured()

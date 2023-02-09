@@ -31,7 +31,7 @@ class DuoVerifyGetController extends MfaVerifyController
      * @throws \Cake\Http\Exception\InternalErrorException if there is no MFA settings for the user
      * @throws \Cake\Http\Exception\BadRequestException if valid Verification token is already present in cookie
      * @throws \Cake\Http\Exception\BadRequestException if there is no MFA settings for this provider
-     * @return void
+     * @return \Cake\Http\Response|void
      */
     public function get(
         SessionIdentificationServiceInterface $sessionIdentificationService,
@@ -39,7 +39,10 @@ class DuoVerifyGetController extends MfaVerifyController
     ) {
         $this->_assertRequestNotJson();
         $this->_handleVerifiedNotRequired($sessionIdentificationService);
-        $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
+        $redirect = $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
+        if ($redirect) {
+            return $redirect;
+        }
 
         /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm $verifyForm */
         $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoOrgSettings()->getDuoApiHostname());
