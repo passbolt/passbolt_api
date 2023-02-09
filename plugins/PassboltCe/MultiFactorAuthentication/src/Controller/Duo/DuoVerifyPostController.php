@@ -16,49 +16,19 @@ declare(strict_types=1);
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
-use App\Authenticator\SessionIdentificationServiceInterface;
-use App\Error\Exception\CustomValidationException;
+use Cake\Http\Exception\GoneException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
-use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoVerifyPostController extends MfaVerifyController
 {
     /**
-     * Duo Verify Post
-     *
-     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID service
-     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $verifyForm MFA Form
-     * @param \Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface $rememberMeForAMonthSetting Remember a month setting.
-     * @throws \Cake\Http\Exception\InternalErrorException
-     * @throws \Cake\Http\Exception\BadRequestException
-     * @return void
+     * @deprecated Inform that the Duo POST verify endpoint is not available anymore
+     * @return \Cake\Http\Response
      */
-    public function post(
-        SessionIdentificationServiceInterface $sessionIdentificationService,
-        MfaFormInterface $verifyForm,
-        RememberAMonthSettingInterface $rememberMeForAMonthSetting
-    ) {
+    public function post()
+    {
         $this->_assertRequestNotJson();
-        $this->_handleVerifiedNotRequired($sessionIdentificationService);
-        $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
 
-        // Verify totp
-        try {
-            $verifyForm->execute($this->request->getData());
-        } catch (CustomValidationException $exception) {
-            $this->redirect('/mfa/verify/duo');
-
-            return;
-        }
-
-        // Build verified proof token and associated cookie and add it to request
-        $this->_generateMfaToken(
-            MfaSettings::PROVIDER_DUO,
-            $sessionIdentificationService,
-            $rememberMeForAMonthSetting
-        );
-        $this->_handleVerifySuccess();
+        throw new GoneException(__('This entrypoint is not available anymore.'));
     }
 }

@@ -92,6 +92,7 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
         ])
         ->setMethods(['GET']);
 
+    /** @deprecated Now using /verify/duo/prompt endpoint instead, redirecting to Duo instead of displaying a iFrame */
     $routes->connect('/verify/duo', ['prefix' => 'Duo', 'controller' => 'DuoVerifyGet', 'action' => 'get'])
         ->setMethods(['GET']);
 
