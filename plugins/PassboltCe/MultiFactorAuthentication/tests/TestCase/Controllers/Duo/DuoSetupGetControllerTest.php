@@ -106,6 +106,10 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
         $this->mockValidMfaFormInterface(DuoSetupForm::class, $this->makeUac($user));
         $this->get('/mfa/setup/duo?api-version=v2');
         $this->assertResponseSuccess();
+        $this->assertResponseContains('/mfa/setup/duo/prompt?redirect=/app/settings/mfa');
+        $this->assertResponseContains('How does it work?');
+        $this->assertResponseContains('sidebar-help');
+        $this->assertResponseContains('Learn more');
         $this->assertSame(0, AuthenticationTokenFactory::count());
     }
 
