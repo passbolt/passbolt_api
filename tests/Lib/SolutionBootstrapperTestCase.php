@@ -20,6 +20,7 @@ use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\PluginCollection;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
+use Cake\Utility\Hash;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
@@ -58,4 +59,16 @@ abstract class SolutionBootstrapperTestCase extends TestCase
         }
         $this->assertSame(count($expectedPlugins), $plugins->count());
     }
+
+    protected function removePluginFromList(array $list, string $pluginName): array
+    {
+        return Hash::filter($list, function ($v) use ($pluginName) {
+            if ($v == $pluginName) {
+                return false;
+            }
+
+            return true;
+        });
+    }
+
 }
