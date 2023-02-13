@@ -70,5 +70,4 @@ abstract class SolutionBootstrapperTestCase extends TestCase
             return true;
         });
     }
-
 }
