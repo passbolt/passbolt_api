@@ -90,8 +90,14 @@ class HealthcheckCommandTest extends AppTestCase
     public function testHealthcheckCommand_Environment()
     {
         $this->exec('passbolt healthcheck -d test --environment');
+
         $this->assertExitSuccess();
-        $this->assertOutputContains('No error found. Nice one sparky!');
+
+        $expectedOutput = 'No error found. Nice one sparky!';
+        if (version_compare(PHP_VERSION, '7.4', '<')) {
+            $expectedOutput = 'error(s) found. Hang in there!';
+        }
+        $this->assertOutputContains($expectedOutput);
     }
 
     public function testHealthcheckCommand_Application_Happy_Path()
