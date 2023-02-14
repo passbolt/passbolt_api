@@ -112,14 +112,13 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $this->assertBodyContentIsSorted($path ?? 'name', $direction);
     }
 
-    public function testResourcesIndexWithLegacyOrderPagination()
+    public function testResourcesIndexPaginationWithLegacyOrder()
     {
         $numberOfResources = 11;
         $limit = 10;
-        $expectedCurrent = $limit;
 
         $user = UserFactory::make()->user()->persist();
-        ResourceFactory::make($numberOfResources)
+        ResourceFactory::make($this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'))
             ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();
@@ -135,18 +134,17 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $this->getJson("/resources.json?$paginationParameter&api-version=2");
 
         $this->assertSuccess();
-        $this->assertCountPaginatedEntitiesEquals($expectedCurrent);
+        $this->assertCountPaginatedEntitiesEquals($limit);
         $this->assertBodyContentIsSorted('modified', 'desc');
     }
 
-    public function testResourcesIndexWithLegacyOrderAndApiComponentPagination()
+    public function testResourcesIndexPaginationWithLegacyOrderAndApiComponent()
     {
         $numberOfResources = 11;
         $limit = 10;
-        $expectedCurrent = $limit;
 
         $user = UserFactory::make()->user()->persist();
-        ResourceFactory::make($numberOfResources)
+        ResourceFactory::make($this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'))
             ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();
@@ -164,7 +162,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $this->getJson("/resources.json?$paginationParameter&api-version=2");
 
         $this->assertSuccess();
-        $this->assertCountPaginatedEntitiesEquals($expectedCurrent);
+        $this->assertCountPaginatedEntitiesEquals($limit);
         $this->assertBodyContentIsSorted('modified');
     }
 }
