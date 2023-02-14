@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Test\Lib\Utility;
 
+use Cake\Chronos\Chronos;
 use Cake\Utility\Hash;
 
 trait PaginationTestTrait
@@ -37,6 +38,19 @@ trait PaginationTestTrait
     private function assertCountPaginatedEntitiesEquals(int $expected)
     {
         $this->assertSame($expected, count($this->_responseJsonBody));
+    }
+
+    private function getArrayOfDistinctRandomPastDates(int $n, string $field): array
+    {
+        $randomNumberArray = range(1, $n);
+        shuffle($randomNumberArray);
+        $randomNumberArrayDistinct = array_slice($randomNumberArray, 0, $n);
+        $data = [];
+        foreach ($randomNumberArrayDistinct as $randomValue) {
+            $data[] = [$field => Chronos::now()->subMonth($randomValue)];
+        }
+
+        return $data;
     }
 
     /**
