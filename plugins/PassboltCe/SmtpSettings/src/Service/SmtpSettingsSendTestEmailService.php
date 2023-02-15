@@ -18,24 +18,17 @@ namespace Passbolt\SmtpSettings\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Mailer\Transport\DebugSmtpTransport;
+use App\Mailer\Transport\DebugTransport;
+use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventManager;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
-use Cake\TestSuite\TestEmailTransport;
+use Passbolt\SmtpSettings\Event\SmtpTransportSendTestEmailEventListener;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 
 class SmtpSettingsSendTestEmailService
 {
-    /**
-     * Transport class to be used for testing.
-     * We use our own DebugSmtp that will get the server communication trace.
-     */
-    public const TRANSPORT_CLASS_NAME_DEBUG_SMTP = 'DebugSmtp';
-
-    /**
-     * Name of the transport configuration that we'll use.
-     * (will be created on the fly).
-     */
-    public const TRANSPORT_CONFIG_NAME_DEBUG_EMAIL = 'debugEmail';
+    use EventDispatcherTrait;
 
     /**
      * Name of the field in the form defining the recipient of the test email
@@ -56,8 +49,10 @@ class SmtpSettingsSendTestEmailService
     {
         $smtpSettings = $this->validateAndGetSmtpSettings($smtpSettings);
 
-        $this->email = new Mailer('default');
-        $this->setDebugTransport($smtpSettings);
+        // Do not assign the sender as found in the DB settings
+        // as we use the one provided in the $smtpSettings
+        EventManager::instance()->on(new SmtpTransportSendTestEmailEventListener());
+        $this->email = $this->getDebugEmail($smtpSettings);
         $this->sendEmail($smtpSettings);
 
         return $this->email;
@@ -72,13 +67,10 @@ class SmtpSettingsSendTestEmailService
             return [];
         }
 
+        /** @var \App\Mailer\Transport\DebugSmtpTransport $transport */
         $transport = $this->email->getTransport();
 
-        if ($transport instanceof DebugSmtpTransport) {
-            return $transport->getTrace();
-        }
-
-        return [];
+        return $transport->getTrace();
     }
 
     /**
@@ -113,27 +105,32 @@ class SmtpSettingsSendTestEmailService
     }
 
     /**
-     * Set a custom transport class name.
+     * Get an email with custom transport class name.
      * In the context of this debugger, we'll use our own class name.
      *
      * @param array $data request data
-     * @return void
+     * @return \Cake\Mailer\Mailer
      */
-    protected function setDebugTransport(array $data): void
+    protected function getDebugEmail(array $data): Mailer
     {
+        $config = [
+            'className' => DebugSmtpTransport::class,
+            'host' => $data['host'],
+            'port' => $data['port'],
+            'username' => empty($data['username']) ? null : $data['username'],
+            'password' => $data['password'],
+            'tls' => $data['tls'],
+            'client' => $data['client'],
+        ];
         if ($this->isRunningOnTestEnvironment()) {
-            return;
+            $debugTransport = TransportFactory::get('default');
+        } else {
+            $debugTransport = new DebugSmtpTransport($config);
         }
-        $transportConfig = TransportFactory::getConfig('default');
-        $transportConfig['className'] = self::TRANSPORT_CLASS_NAME_DEBUG_SMTP;
-        $transportConfig['host'] = $data['host'];
-        $transportConfig['port'] = $data['port'];
-        $transportConfig['username'] = empty($data['username']) ? null : $data['username'];
-        $transportConfig['password'] = empty($data['password']) ? null : $data['password'];
-        $transportConfig['tls'] = $data['tls'];
-        $transportConfig['client'] = $data['client'];
-        TransportFactory::setConfig(self::TRANSPORT_CONFIG_NAME_DEBUG_EMAIL, $transportConfig);
-        $this->email->setTransport(self::TRANSPORT_CONFIG_NAME_DEBUG_EMAIL);
+
+        return new Mailer([
+            'transport' => $debugTransport,
+        ]);
     }
 
     /**
@@ -155,6 +152,6 @@ class SmtpSettingsSendTestEmailService
      */
     public function isRunningOnTestEnvironment(): bool
     {
-        return TransportFactory::getConfig('default')['className'] === TestEmailTransport::class;
+        return TransportFactory::get('default') instanceof DebugTransport;
     }
 }

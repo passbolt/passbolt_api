@@ -18,10 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
+use App\Test\Lib\Utility\EmailTestTrait;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\Mailer\TransportFactory;
-use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**
@@ -29,8 +33,9 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
  */
 class SmtpSettingsSendTestEmailServiceTest extends TestCase
 {
-    use EmailTrait;
+    use EmailTestTrait;
     use SmtpSettingsTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var SmtpSettingsSendTestEmailService
@@ -40,8 +45,9 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        EventManager::instance()->setEventList(new EventList());
         $this->service = new SmtpSettingsSendTestEmailService();
-        $this->loadPlugins(['Passbolt/SmtpSettings' => []]);
+        $this->clearPlugins();
     }
 
     public function tearDown(): void
@@ -50,16 +56,30 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSmtpSettingsSendTestEmailService_Valid()
+    public function testSmtpSettingsSendTestEmailService_Valid_With_InvalidSettings_In_DB()
     {
+        $this->loadPlugins(['Passbolt/SmtpSettings' => []]);
+        // Insert some dummy SMTP settings in the DB to ensure that these are ignored by the DebugSmtpTransport
+        SmtpSettingFactory::make()->persist();
+
         $recipient = 'test@test.test';
-        $data = $this->getSmtpSettingsData() + [$this->service::EMAIL_TEST_TO => $recipient];
-        $this->service->sendTestEmail($data);
-        $this->assertMailSentFrom('johndoe@passbolt.test');
-        $this->assertMailSentTo($recipient);
+        $senderEmailInPayload = 'inPayload@test.test';
+        $senderNameInPayload = 'inPayload';
+        $senderInPayload = [$senderEmailInPayload => $senderNameInPayload];
+        $configPassedToService = $this->getSmtpSettingsData();
+        $configPassedToService[$this->service::EMAIL_TEST_TO] = $recipient;
+        $configPassedToService['sender_email'] = $senderEmailInPayload;
+        $configPassedToService['sender_name'] = $senderNameInPayload;
+
+        $this->service->sendTestEmail($configPassedToService);
+
         $this->assertMailCount(1);
-        $this->assertMailContains('Congratulations!');
-        $this->assertMailContains(
+        $this->assertMailSentFromAt(0, $senderInPayload);
+        $this->assertMailSentToAt(0, [$recipient => $recipient]);
+        $this->assertMailCount(1);
+        $this->assertMailContainsAt(0, 'Congratulations!');
+        $this->assertMailContainsAt(
+            0,
             'If you receive this email, it means that your passbolt smtp configuration is working fine.'
         );
     }

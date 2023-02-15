@@ -86,7 +86,12 @@ class EmailPreviewFactory
      */
     private function renderEmailContent(Mailer $email): EmailPreview
     {
+        # @todo remove the usage of the Debug transport for rendering here
         $email->setTransport('Debug');
+        /** @var \App\Mailer\Transport\DebugTransport $transport */
+        $transport = $email->getTransport();
+        // Debug keeps in memory pas emails. This is here not required nor wanted to avoid memory limit issues
+        $transport->clearMessages();
 
         $contents = $email->send();
 

@@ -20,8 +20,8 @@ use App\Test\Factory\UserFactory;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
 use Cake\I18n\I18n;
+use Cake\Mailer\Mailer;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
@@ -35,7 +35,6 @@ class PreviewCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
     use DummyTranslationTestTrait;
-    use EmailTrait;
     use TruncateDirtyTables;
 
     /**
@@ -65,20 +64,36 @@ class PreviewCommandTest extends TestCase
 
     /**
      * Basic Preview test.
+     */
+    public function testPreviewCommand_Without_Body(): void
+    {
+        $sender = Mailer::getConfig('default')['from'];
+        $senderEmail = array_keys($sender)[0];
+        $senderName = $sender[$senderEmail];
+
+        $email = EmailQueueFactory::make()->persist();
+        $this->exec('passbolt email_digest preview');
+        $this->assertExitSuccess();
+        $this->assertOutputContains("From: {$senderName} <{$senderEmail}>");
+        $this->assertOutputContains("Return-Path: {$senderName} <{$senderEmail}>");
+        $this->assertOutputContains('To: ' . $email->get('email'));
+        $this->assertOutputContains('Subject: ' . $email->get('subject'));
+    }
+
+    /**
+     * Basic Preview test with body.
      *
      * @covers \App\Service\Avatars\AvatarsConfigurationService::loadConfiguration
      */
-    public function testPreviewCommandPreview(): void
+    public function testPreviewCommand_With_Body(): void
     {
         // Ensure that avatar image configs are null and
         // will be correctly loaded by the command.
         Configure::delete('FileStorage');
 
-        /** @var \Cake\Datasource\EntityInterface $email */
         $email = EmailQueueFactory::make()->persist();
-        $this->exec('passbolt email_digest preview --body true');
+        $this->exec('passbolt email_digest preview --body');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Sending email from: ' . $email->get('from_email'));
         $this->assertOutputContains('Sending email to: ' . $email->get('email'));
         $this->assertOutputContains(AvatarHelper::getAvatarFallBackUrl());
     }
@@ -98,7 +113,7 @@ class PreviewCommandTest extends TestCase
         EmailQueueFactory::make()->listeningToBeforeSave()->persist();
         EmailQueueFactory::make()->listeningToBeforeSave()->setRecipient($frenchSpeakingUser->username)->persist();
 
-        $this->exec('passbolt email_digest preview --body true');
+        $this->exec('passbolt email_digest preview --body');
 
         $this->assertExitSuccess();
 
