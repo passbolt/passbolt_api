@@ -18,11 +18,12 @@ namespace App\Mailer\Transport;
 
 use Cake\Event\EventDispatcherTrait;
 use Cake\Mailer\Message;
+use Cake\Mailer\Transport\SmtpTransport as CakeSmtpTransport;
 
 /**
  * Send mail using SMTP protocol
  */
-class SmtpTransport extends \Cake\Mailer\Transport\SmtpTransport
+class SmtpTransport extends CakeSmtpTransport
 {
     use EventDispatcherTrait;
 
