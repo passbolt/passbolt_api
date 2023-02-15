@@ -74,8 +74,8 @@ class PreviewCommandTest extends TestCase
         $email = EmailQueueFactory::make()->persist();
         $this->exec('passbolt email_digest preview');
         $this->assertExitSuccess();
-        $this->assertOutputContains("From: $senderName <$senderEmail>");
-        $this->assertOutputContains("Return-Path: $senderName <$senderEmail>");
+        $this->assertOutputContains("From: {$senderName} <{$senderEmail}>");
+        $this->assertOutputContains("Return-Path: {$senderName} <{$senderEmail}>");
         $this->assertOutputContains('To: ' . $email->get('email'));
         $this->assertOutputContains('Subject: ' . $email->get('subject'));
     }

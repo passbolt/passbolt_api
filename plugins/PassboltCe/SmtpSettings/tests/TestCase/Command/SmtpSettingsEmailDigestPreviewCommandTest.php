@@ -77,8 +77,8 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
         $this->assertExitSuccess();
 
         foreach ($mails as $mail) {
-            $this->assertOutputContains("From: $senderName <$senderEmail>");
-            $this->assertOutputContains("Return-Path: $senderName <$senderEmail>");
+            $this->assertOutputContains("From: {$senderName} <{$senderEmail}>");
+            $this->assertOutputContains("Return-Path: {$senderName} <{$senderEmail}>");
             $this->assertOutputContains('To: ' . $mail->get('email'));
             $this->assertOutputContains('Subject: ' . $mail->get('subject'));
         }
@@ -87,7 +87,7 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
     /**
      * Basic Preview test.
      */
-    public function testSmtpSettingsEmailDigestPreviewCommand_Without_Body_On_File__Plugin_Disabled(): void
+    public function testSmtpSettingsEmailDigestPreviewCommand_Without_Body_On_File_Plugin_Disabled(): void
     {
         $this->disableFeaturePlugin('SmtpSettings');
         $dataInDB = $this->getSmtpSettingsData();
