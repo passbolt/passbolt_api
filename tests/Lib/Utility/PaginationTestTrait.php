@@ -42,15 +42,30 @@ trait PaginationTestTrait
 
     private function getArrayOfDistinctRandomPastDates(int $n, string $field): array
     {
-        $randomNumberArray = range(1, $n);
-        shuffle($randomNumberArray);
-        $randomNumberArrayDistinct = array_slice($randomNumberArray, 0, $n);
         $data = [];
-        foreach ($randomNumberArrayDistinct as $randomValue) {
+        foreach ($this->getRandomArray($n) as $randomValue) {
             $data[] = [$field => Chronos::now()->subMonth($randomValue)];
         }
 
         return $data;
+    }
+
+    private function getArrayOfDistinctRandomStrings(int $n, string $field): array
+    {
+        $data = [];
+        foreach ($this->getRandomArray($n) as $randomValue) {
+            $data[] = [$field => 'RandomString_#' . $randomValue];
+        }
+
+        return $data;
+    }
+
+    private function getRandomArray(int $n): array
+    {
+        $randomNumberArray = range(1, $n);
+        shuffle($randomNumberArray);
+
+        return array_slice($randomNumberArray, 0, $n);
     }
 
     /**
