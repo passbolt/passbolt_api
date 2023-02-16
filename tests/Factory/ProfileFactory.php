@@ -22,6 +22,11 @@ use Faker\Generator;
 
 /**
  * ProfileFactory
+ *
+ * @method \App\Model\Entity\Profile|\App\Model\Entity\Profile[] persist()
+ * @method \App\Model\Entity\Profile getEntity()
+ * @method \App\Model\Entity\Profile[] getEntities()
+ * @method static \App\Model\Entity\Profile get($primaryKey, array $options = [])
  */
 class ProfileFactory extends CakephpBaseFactory
 {
