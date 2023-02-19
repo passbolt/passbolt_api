@@ -30,8 +30,16 @@ return [
                         'label' => 'Français',
                     ],
                     [
+                        'locale' => 'it-IT',
+                        'label' => 'Italiano (beta)',
+                    ],
+                    [
                         'locale' => 'ja-JP',
                         'label' => '日本語',
+                    ],
+                    [
+                        'locale' => 'ko-KR',
+                        'label' => '한국어 (beta)',
                     ],
                     [
                         'locale' => 'lt-LT',
@@ -44,6 +52,14 @@ return [
                     [
                         'locale' => 'pl-PL',
                         'label' => 'Polski',
+                    ],
+                    [
+                        'locale' => 'pt-BR',
+                        'label' => 'Português Brasil (beta)',
+                    ],
+                    [
+                        'locale' => 'ro-RO',
+                        'label' => 'Română (beta)',
                     ],
                     [
                         'locale' => 'sv-SE',
