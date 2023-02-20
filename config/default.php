@@ -83,11 +83,11 @@ return [
             // WARNING: make sure you have backups in place if you disable these.
             // See. https://www.passbolt.com/help/tech/backup
             'show' => [
-                'comment' => filter_var(env('PASSBOLT_EMAIL_SHOW_COMMENT', true), FILTER_VALIDATE_BOOLEAN),
-                'description' => filter_var(env('PASSBOLT_EMAIL_SHOW_DESCRIPTION', true), FILTER_VALIDATE_BOOLEAN),
-                'secret' => filter_var(env('PASSBOLT_EMAIL_SHOW_SECRET', true), FILTER_VALIDATE_BOOLEAN),
-                'uri' => filter_var(env('PASSBOLT_EMAIL_SHOW_URI', true), FILTER_VALIDATE_BOOLEAN),
-                'username' => filter_var(env('PASSBOLT_EMAIL_SHOW_USERNAME', true), FILTER_VALIDATE_BOOLEAN),
+                'comment' => filter_var(env('PASSBOLT_EMAIL_SHOW_COMMENT', false), FILTER_VALIDATE_BOOLEAN),
+                'description' => filter_var(env('PASSBOLT_EMAIL_SHOW_DESCRIPTION', false), FILTER_VALIDATE_BOOLEAN),
+                'secret' => filter_var(env('PASSBOLT_EMAIL_SHOW_SECRET', false), FILTER_VALIDATE_BOOLEAN),
+                'uri' => filter_var(env('PASSBOLT_EMAIL_SHOW_URI', false), FILTER_VALIDATE_BOOLEAN),
+                'username' => filter_var(env('PASSBOLT_EMAIL_SHOW_USERNAME', false), FILTER_VALIDATE_BOOLEAN),
             ],
             // Choose which emails are sent system wide.
             'send' => [
@@ -95,7 +95,7 @@ return [
                     'add' => filter_var(env('PASSBOLT_EMAIL_SEND_COMMENT_ADD', true), FILTER_VALIDATE_BOOLEAN)
                 ],
                 'password' => [
-                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_CREATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_CREATE', false), FILTER_VALIDATE_BOOLEAN),
                     'share' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_SHARE', true), FILTER_VALIDATE_BOOLEAN),
                     'update' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true), FILTER_VALIDATE_BOOLEAN),
