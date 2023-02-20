@@ -86,7 +86,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $expectedCurrent = 9;
 
         $user = UserFactory::make()->user()->persist();
-        ResourceFactory::make($numberOfResources)
+        ResourceFactory::make($this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'))
             ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();
