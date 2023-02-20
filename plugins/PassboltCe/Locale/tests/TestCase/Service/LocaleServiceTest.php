@@ -45,10 +45,14 @@ class LocaleServiceTest extends TestCase
             'en-UK',
             'es-ES',
             'fr-FR',
+            'it-IT',
             'ja-JP',
+            'ko-KR',
             'lt-LT',
             'nl-NL',
             'pl-PL',
+            'pt-BR',
+            'ro-RO',
             'sv-SE',
         ], LocaleService::getSystemLocales());
     }
