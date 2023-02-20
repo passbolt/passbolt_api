@@ -53,11 +53,36 @@ trait MfaOrgSettingsTestTrait
                 'clientId' => '12345',
                 'secretKey' => 'i2/j3jIQBO/axOl3ah4mlgXlXUY=',
             ],
-            MfaSettings::PROVIDER_DUO => [
-                'clientId' => 'UICPIC93F14RWR5F55SJ',
-                'clientSecret' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
-                'apiHostName' => 'api-45e9f2ca.duosecurity.com',
-            ],
+            MfaSettings::PROVIDER_DUO => $this->getDefaultDuoV4OrgSettings(),
+        ];
+    }
+
+    /**
+     * This function returns dummy org settings for the old Duo version (v2)
+     *
+     * @return array
+     */
+    public function getDefaultDuoV2OrgSettings(): array
+    {
+        return [
+            'salt' => 'pG2y71Uu0wx3PsnWvtGom2CK9AGouV5oW84VHtwQ',
+            'integrationKey' => 'UICPIC93F14RWR5F55SJ',
+            'secretKey' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
+            'hostName' => 'api-45e9f2ca.duosecurity.com',
+        ];
+    }
+
+    /**
+     * This function returns dummy org settings for the new Duo version (v4)
+     *
+     * @return array
+     */
+    public function getDefaultDuoV4OrgSettings(): array
+    {
+        return [
+            'clientId' => 'UICPIC93F14RWR5F55SJ',
+            'clientSecret' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
+            'apiHostName' => 'api-45e9f2ca.duosecurity.com',
         ];
     }
 

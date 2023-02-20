@@ -27,13 +27,18 @@ class MfaOrgSettingsSetService
     /**
      * @param array $data data in the payload
      * @param \App\Utility\UserAccessControl $uac UAC
-     * @param \Duo\DuoUniversal\Client $duoClient Duo SDK Client
+     * @param \Duo\DuoUniversal\Client|null $duoClient Duo SDK Client
+     * @param array $options Options used to save & validate organisation settings
      * @return array Organization Settings configs
      * @throws \Cake\Http\Exception\InternalErrorException if the UAC changed during the request (improbable)
      * @throws \App\Error\Exception\CustomValidationException in case of validation error
      */
-    public function setOrgSettings(array $data, UserAccessControl $uac, ?Client $duoClient = null): array
-    {
+    public function setOrgSettings(
+        array $data,
+        UserAccessControl $uac,
+        ?Client $duoClient = null,
+        array $options = []
+    ): array {
         $mfaSettings = MfaSettings::get($uac);
 
         // Allow some flexibility in inputs names
@@ -44,7 +49,7 @@ class MfaOrgSettingsSetService
         }
 
         $orgSettings = $mfaSettings->getOrganizationSettings();
-        $orgSettings->save($data, $uac, $duoClient);
+        $orgSettings->save($data, $uac, $duoClient, $options);
 
         return $mfaSettings->getOrganizationSettings()->getConfig();
     }

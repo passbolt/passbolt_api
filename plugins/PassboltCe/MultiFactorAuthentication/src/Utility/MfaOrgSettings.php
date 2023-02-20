@@ -268,10 +268,11 @@ class MfaOrgSettings
      *
      * @param array $data user provided data
      * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
+     * @param array $options Options used to save & validate organisation settings
      * @throws \App\Error\Exception\CustomValidationException if the data does not validate
      * @return bool if data validates
      */
-    public function validate(array $data, ?Client $client = null): bool
+    public function validate(array $data, ?Client $client = null, array $options = []): bool
     {
         if (empty($data)) {
             $msg = __('The multi-factor authentication settings data should not be empty.');
@@ -292,8 +293,9 @@ class MfaOrgSettings
                     }
                     break;
                 case MfaSettings::PROVIDER_DUO:
+                    $skipHealthcheck = $options['skipDuoHealtcheck'] ?? false;
                     try {
-                        (new MfaOrgSettingsDuoService($data))->validateDuoSettings($client);
+                        (new MfaOrgSettingsDuoService($data))->validateDuoSettings($client, $skipHealthcheck === false);
                     } catch (CustomValidationException $exception) {
                         $errors = $exception->getErrors();
                     }
@@ -325,14 +327,15 @@ class MfaOrgSettings
      * @param array $data user provided input
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
+     * @param array $options Options used to save & validate organisation settings
      * @return void
      */
-    public function save(array $data, UserAccessControl $uac, ?Client $client = null)
+    public function save(array $data, UserAccessControl $uac, ?Client $client = null, array $options = []): void
     {
         if (isset($data[MfaSettings::PROVIDERS])) {
             $data[MfaSettings::PROVIDERS] = $this->formatProviders($data[MfaSettings::PROVIDERS]);
         }
-        $this->validate($data, $client);
+        $this->validate($data, $client, $options);
         $this->settings = $data;
         $json = json_encode($data);
         $this->OrganizationSettings->createOrUpdateSetting(MfaSettings::MFA, $json, $uac);

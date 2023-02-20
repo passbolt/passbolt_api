@@ -92,6 +92,18 @@ class DuoSdkClientMock
      * @param \PHPUnit\Framework\TestCase $testCase Test case
      * @return static
      */
+    public static function createWithSuccessHealthcheck(\PHPUnit\Framework\TestCase $testCase): self
+    {
+        $mock = new self($testCase);
+        $mock->mockSuccessHealthCheck();
+
+        return $mock;
+    }
+
+    /**
+     * @param \PHPUnit\Framework\TestCase $testCase Test case
+     * @return static
+     */
     public static function createWithExchangeAuthorizationCodeFor2FAResultThrowingException(\PHPUnit\Framework\TestCase $testCase): self
     {
         $mock = new self($testCase);

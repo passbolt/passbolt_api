@@ -82,10 +82,11 @@ class MfaOrgSettingsDuoService
 
     /**
      * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
+     * @param bool $performHealthcheck Whether to perform the Duo Healthcheck or not
      * @return void
      * @throws \App\Error\Exception\CustomValidationException if there is an issue
      */
-    public function validateDuoSettings(?Client $client = null): void
+    public function validateDuoSettings(?Client $client = null, bool $performHealthcheck = true): void
     {
         $errors = [];
 
@@ -122,7 +123,7 @@ class MfaOrgSettingsDuoService
             $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_CLIENT_ID]['notEmpty'] = $msg;
         }
 
-        if (empty($errors[MfaSettings::PROVIDER_DUO])) {
+        if ($performHealthcheck && empty($errors[MfaSettings::PROVIDER_DUO])) {
             try {
                 $duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
                     $this,
