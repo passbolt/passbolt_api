@@ -17,9 +17,14 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Notifications;
 
+use App\Test\Factory\CommentFactory;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Utility\UuidFactory;
+use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class CommentsAddNotificationTest extends AppIntegrationTestCase
@@ -29,74 +34,104 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
 
     public $Comments;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Profiles',
-        'app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Roles',
-          'app.Base/Gpgkeys',
-    ];
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->loadNotificationSettings();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->unloadNotificationSettings();
+    }
 
     public function testCommentsAddNotificationGroupSuccess()
     {
-        $this->setEmailNotificationSetting('send.comment.add', true);
+        RoleFactory::make()->guest()->persist();
+        [$u0, $u1, $u2, $u4] = UserFactory::make(4)->user()->active()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$u0])->withGroupsUsersFor([$u1, $u2])->persist();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$g1])->persist()->id;
 
-        $this->authenticateAs('dame');
+        $this->setEmailNotificationSetting('send.comment.add', true);
+        $this->setEmailNotificationSetting('show.comment', true);
+
+        $this->loginAs($u0);
         $postData = ['content' => 'this is a test'];
-        $resourceId = UuidFactory::uuid('resource.id.docker');
-        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
+        $this->postJson('/comments/resource/' . $resourceId . '.json', $postData);
         $this->assertSuccess();
 
-        // Every member of the group should get notification
-        $this->assertEmailInBatchContains('commented on Docker', 'edith@passbolt.com');
-        $this->assertEmailInBatchContains('this is a test', 'edith@passbolt.com');
-        $this->assertEmailWithRecipientIsInQueue('frances@passbolt.com');
-        $this->assertEmailWithRecipientIsInQueue('grace@passbolt.com');
+        $this->assertEquals(CommentFactory::count(), 1);
+        $this->assertEquals(EmailQueueFactory::count(), 2);
 
-        // except Dame
-        $this->assertEmailWithRecipientIsInNotQueue('dame@passbolt.com');
+        // Every member of the group should get notification
+        $this->assertEmailInBatchContains('commented on', $u1->username);
+        $this->assertEmailInBatchContains('this is a test', $u1->username);
+        $this->assertEmailWithRecipientIsInQueue($u1->username);
+        $this->assertEmailWithRecipientIsInQueue($u2->username);
+
+        // except sender and of course user without permission
+        $this->assertEmailWithRecipientIsInNotQueue($u0->username);
+        $this->assertEmailWithRecipientIsInNotQueue($u4->username);
     }
 
     public function testCommentsAddNotificationUserSuccess()
     {
-        $this->setEmailNotificationSetting('send.comment.add', true);
+        RoleFactory::make()->guest()->persist();
+        [$u0, $u1, $u2] = UserFactory::make(3)->user()->active()->persist();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$u0, $u1])->persist()->id;
 
-        $this->authenticateAs('betty');
+        $this->setEmailNotificationSetting('send.comment.add', true);
+        $this->setEmailNotificationSetting('show.comment', true);
+
+        $this->loginAs($u0);
         $postData = ['content' => 'this is a test'];
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
+        $this->postJson('/comments/resource/' . $resourceId . '.json', $postData);
         $this->assertSuccess();
 
-        // Every users with direct permissions should get notified
-        $this->assertEmailWithRecipientIsInQueue('dame@passbolt.com');
-        $this->assertEmailWithRecipientIsInQueue('ada@passbolt.com');
-        $this->assertEmailWithRecipientIsInQueue('frances@passbolt.com');
+        $this->assertEquals(CommentFactory::count(), 1);
+        $this->assertEquals(EmailQueueFactory::count(), 1);
 
-        // except Dame
-        $this->assertEmailWithRecipientIsInNotQueue('betty@passbolt.com');
+        // Every user should get notification
+        $this->assertEmailInBatchContains('commented on', $u1->username);
+        $this->assertEmailInBatchContains('this is a test', $u1->username);
+        $this->assertEmailWithRecipientIsInQueue($u1->username);
+
+        // except sender and user without permissions
+        $this->assertEmailWithRecipientIsInNotQueue($u0->username);
+        $this->assertEmailWithRecipientIsInNotQueue($u2->username);
     }
 
     public function testCommentsAddNotificationDoNotShowContent()
     {
+        RoleFactory::make()->guest()->persist();
+        [$u0, $u1] = UserFactory::make(2)->user()->active()->persist();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$u0, $u1])->persist()->id;
+
+        $this->setEmailNotificationSetting('send.comment.add', true);
         $this->setEmailNotificationSetting('show.comment', false);
 
-        $this->authenticateAs('betty');
+        $this->loginAs($u0);
         $postData = ['content' => 'this is a test'];
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
+        $this->postJson('/comments/resource/' . $resourceId . '.json', $postData);
         $this->assertSuccess();
 
-        // Every users with direct permissions should get notified
-        $this->assertEmailWithRecipientIsInQueue('dame@passbolt.com');
-        $this->assertEmailInBatchNotContains('this is a test', 'dame@passbolt.com');
+        $this->assertEquals(CommentFactory::count(), 1);
+        $this->assertEquals(EmailQueueFactory::count(), 1);
+        $this->assertEmailInBatchNotContains('this is a test', $u1->username);
     }
 
     public function testCommentsAddNotificationDisabled()
     {
+        RoleFactory::make()->guest()->persist();
+        [$u0, $u1] = UserFactory::make(2)->user()->active()->persist();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$u0, $u1])->persist()->id;
+
         $this->setEmailNotificationSetting('send.comment.add', false);
 
-        $this->authenticateAs('betty');
+        $this->loginAs($u0);
         $postData = ['content' => 'this is a test'];
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson('/comments/resource/' . $resourceId . '.json?api-version=v2', $postData);
+        $this->postJson('/comments/resource/' . $resourceId . '.json', $postData);
         $this->assertSuccess();
 
         // Nobody should get notifications
