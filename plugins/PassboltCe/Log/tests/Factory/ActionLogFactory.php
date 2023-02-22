@@ -19,6 +19,7 @@ namespace Passbolt\Log\Test\Factory;
 
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
+use Cake\I18n\FrozenTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -77,7 +78,7 @@ class ActionLogFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
-    public function active()
+    public function success()
     {
         return $this->setField('status', 1);
     }
@@ -85,8 +86,30 @@ class ActionLogFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
-    public function inactive()
+    public function error()
     {
         return $this->setField('status', 0);
+    }
+
+    /**
+     * @param string $userId User ID
+     * @return $this
+     */
+    public function userId(string $userId)
+    {
+        return $this->setField('user_id', $userId);
+    }
+
+    /**
+     * @param string|FrozenTime $userId User ID
+     * @return $this
+     */
+    public function created($created)
+    {
+        if (is_string($created)) {
+            $created = FrozenTime::parse($created);
+        }
+
+        return $this->setField('created', $created);
     }
 }
