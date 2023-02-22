@@ -24,6 +24,7 @@ use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Users\UsersFindersTrait;
+use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
@@ -137,11 +138,9 @@ class UsersTable extends Table
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum {0} characters.', 255))
-            ->email(
-                'username',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The username should be a valid email address.')
-            );
+            ->add('username', 'email', new EmailValidationRule([
+                'message' => __('The username should be a valid email address.'),
+            ]));
 
         $validator
             ->boolean('active', __('The active status should be a valid boolean.'));
@@ -167,7 +166,7 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRegister(Validator $validator)
+    public function validationRegister(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }
@@ -178,7 +177,7 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationUpdate(Validator $validator)
+    public function validationUpdate(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }
@@ -189,17 +188,15 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRecover(Validator $validator)
+    public function validationRecover(Validator $validator): Validator
     {
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->notEmptyString('username', __('The username should not be empty.'))
             ->maxLength('username', 255, __('The username length should be maximum 255 characters.'))
-            ->email(
-                'username',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The username should be a valid email address.')
-            );
+            ->add('username', 'email', new EmailValidationRule([
+                'message' => __('The username should be a valid email address.'),
+            ]));
 
         return $validator;
     }

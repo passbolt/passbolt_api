@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\HealthcheckCommand;
+use App\Model\Validation\EmailValidationRule;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Core\Configure;
@@ -108,7 +109,7 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('App.fullBaseUrl', 'https://passbolt.local');
         Configure::write('passbolt.selenium.active', false);
         Configure::write('passbolt.meta.robots', 'noindex');
-        Configure::write('passbolt.email.validate.mx', true);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, true);
         Configure::write('passbolt.js.build', 'production');
         Configure::write('passbolt.email.send', '');
 
@@ -138,7 +139,7 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('passbolt.meta.robots', '');
         Configure::write('passbolt.registration.public', true);
         $this->setSelfRegistrationSettingsData();
-        Configure::write('passbolt.email.validate.mx', false);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, false);
         Configure::write('passbolt.js.build', 'test');
         Configure::write('passbolt.email.send', 'false');
 

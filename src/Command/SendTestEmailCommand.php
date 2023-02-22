@@ -18,14 +18,13 @@ namespace App\Command;
 
 use App\Mailer\Transport\DebugTransport;
 use App\Mailer\Transport\SmtpTransport;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Cake\Core\Configure;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Utility\Hash;
-use Cake\Validation\Validation;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
@@ -76,7 +75,7 @@ class SendTestEmailCommand extends PassboltCommand
         $recipient = $args->getOption('recipient');
 
         /** Validate recipient email. */
-        if (! Validation::email($recipient, Configure::read('passbolt.email.validate.mx'))) {
+        if (!EmailValidationRule::check($recipient)) {
             $this->error(__('The recipient should be a valid email address.', $recipient), $io);
             $this->abort();
         }

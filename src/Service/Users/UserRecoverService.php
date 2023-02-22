@@ -22,6 +22,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
+use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
@@ -30,7 +31,6 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
-use Cake\Validation\Validation;
 use Cake\View\ViewBuilder;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 
@@ -143,7 +143,7 @@ class UserRecoverService implements UserRecoverServiceInterface
     protected function assertUsername(): string
     {
         $username = $this->request->getData('username') ?? null;
-        if (!isset($username) || !is_string($username) || !Validation::email($username)) {
+        if (!isset($username) || !is_string($username) || !EmailValidationRule::check($username)) {
             throw new BadRequestException(__('Please provide a valid email address.'));
         }
 
