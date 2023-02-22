@@ -23,6 +23,7 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -130,8 +131,8 @@ class MfaDuoEnableServiceTest extends TestCase
         } catch (\Throwable $th) {
         }
 
-        $this->assertInstanceOf(UnauthorizedException::class, $th);
-        $this->assertTextContains('Unable to verify Duo code against Duo service.', $th->getMessage());
+        $this->assertInstanceOf(BadRequestException::class, $th);
+        $this->assertTextContains('Unable to verify Duo authentication.', $th->getMessage());
 
         // Assert the good token was consumed.
         $this->assertEquals(1, AuthenticationTokenFactory::count());

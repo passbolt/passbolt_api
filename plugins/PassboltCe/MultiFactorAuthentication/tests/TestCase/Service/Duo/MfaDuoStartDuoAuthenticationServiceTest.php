@@ -23,6 +23,7 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStartDuoAuthenticationService;
@@ -38,8 +39,8 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
         $uac = new UserAccessControl(Role::USER, $user->id);
 
         $mock = DuoSdkClientMock::createDefault($this, $user);
-        $service = new MfaDuoStartDuoAuthenticationService($mock->getClient());
-        $mfaDuoAuthenticationRequestDto = $service->start($uac, AuthenticationToken::TYPE_MFA_SETUP);
+        $service = new MfaDuoStartDuoAuthenticationService(AuthenticationToken::TYPE_MFA_SETUP, $mock->getClient());
+        $mfaDuoAuthenticationRequestDto = $service->start($uac);
 
         $this->assertEquals(1, AuthenticationTokenFactory::count());
         $this->assertNotNull($mfaDuoAuthenticationRequestDto->authenticationToken);
@@ -56,8 +57,8 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
         $uac = new UserAccessControl(Role::USER, $user->id);
         $redirectPath = '/redirect/path';
         $duoSdkClientMock = DuoSdkClientMock::createDefault($this, $user)->getClient();
-        $service = new MfaDuoStartDuoAuthenticationService($duoSdkClientMock);
-        $mfaDuoAuthenticationRequestDto = $service->start($uac, AuthenticationToken::TYPE_MFA_SETUP, $redirectPath);
+        $service = new MfaDuoStartDuoAuthenticationService(AuthenticationToken::TYPE_MFA_SETUP, $duoSdkClientMock);
+        $mfaDuoAuthenticationRequestDto = $service->start($uac, $redirectPath);
 
         $this->assertEquals(1, AuthenticationTokenFactory::count());
         $this->assertNotNull($mfaDuoAuthenticationRequestDto->authenticationToken);
@@ -71,11 +72,11 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
     public function testMfaDuoStartDuoAuthenticationService_Error_MisconfiguredDuoProvider()
     {
         try {
-            new MfaDuoStartDuoAuthenticationService();
+            new MfaDuoStartDuoAuthenticationService(AuthenticationToken::TYPE_MFA_SETUP);
         } catch (\Throwable $th) {
         }
 
-        $this->assertInstanceOf(InternalErrorException::class, $th);
+        $this->assertInstanceOf(ServiceUnavailableException::class, $th);
         $this->assertTextContains('Could not enable Duo MFA provider.', $th->getMessage());
     }
 
@@ -84,13 +85,13 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
         $user = UserFactory::make()->persist();
         $uac = new UserAccessControl(Role::USER, $user->id);
         $duoSdkClientMock = (new DuoSdkClientMock($this))->mockErrorHealthCheck()->getClient();
-        $service = new MfaDuoStartDuoAuthenticationService($duoSdkClientMock);
+        $service = new MfaDuoStartDuoAuthenticationService(AuthenticationToken::TYPE_MFA_SETUP, $duoSdkClientMock);
         try {
-            $service->start($uac, AuthenticationToken::TYPE_MFA_SETUP);
+            $service->start($uac);
         } catch (\Throwable $th) {
         }
 
-        $this->assertInstanceOf(InternalErrorException::class, $th);
+        $this->assertInstanceOf(ServiceUnavailableException::class, $th);
         $this->assertTextContains('Unable to connect to Duo services.', $th->getMessage());
     }
 
@@ -99,10 +100,10 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
         $user = UserFactory::make()->persist();
         $uac = new UserAccessControl(Role::USER, $user->id);
         $duoSdkClientMock = DuoSdkClientMock::createDefault($this, $user)->getClient();
-        $service = new MfaDuoStartDuoAuthenticationService($duoSdkClientMock);
+        $service = new MfaDuoStartDuoAuthenticationService('invalid-token-type', $duoSdkClientMock);
 
         try {
-            $service->start($uac, 'invalid-token-type');
+            $service->start($uac);
         } catch (\Throwable $th) {
         }
 
@@ -115,10 +116,10 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
         $user = UserFactory::make()->persist();
         $uac = new UserAccessControl(Role::USER, $user->id);
         $duoSdkClientMock = (new DuoSdkClientMock($this))->mockErrorCreateAuthUrl()->getClient();
-        $service = new MfaDuoStartDuoAuthenticationService($duoSdkClientMock);
+        $service = new MfaDuoStartDuoAuthenticationService(AuthenticationToken::TYPE_MFA_SETUP, $duoSdkClientMock);
 
         try {
-            $service->start($uac, AuthenticationToken::TYPE_MFA_SETUP);
+            $service->start($uac);
         } catch (\Throwable $th) {
         }
 

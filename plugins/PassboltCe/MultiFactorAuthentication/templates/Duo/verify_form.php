@@ -21,6 +21,7 @@
     <h1>
         <?= __('Duo Multi Factor Authentication'); ?>
     </h1>
+    <?= $this->Flash->render() ?>
     <?= $this->Form->create($verifyForm, $formContext); ?>
         <button type="submit" class="button primary big full-width" style="margin-top:3.2rem;" role="button"><?= __('Sign-in with Duo'); ?></button>
         <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_DUO]); ?>

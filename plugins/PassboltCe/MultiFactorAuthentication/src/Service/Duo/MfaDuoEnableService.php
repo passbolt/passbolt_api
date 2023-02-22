@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Service\Duo;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
@@ -87,8 +88,12 @@ class MfaDuoEnableService
                 $token,
                 $duoCallbackDto->state
             );
-        (new MfaDuoVerifyDuoCodeService($authenticationTokenType, $this->duoClient))
-            ->verify($uac, $duoCallbackDto->duoCode);
+        try {
+            (new MfaDuoVerifyDuoCodeService($authenticationTokenType, $this->duoClient))
+                ->verify($uac, $duoCallbackDto->duoCode);
+        } catch (\Throwable $th) {
+            throw new BadRequestException(__('Unable to verify Duo authentication.'), null, $th);
+        }
         $this->enableProvider($uac);
 
         return $authenticationToken;

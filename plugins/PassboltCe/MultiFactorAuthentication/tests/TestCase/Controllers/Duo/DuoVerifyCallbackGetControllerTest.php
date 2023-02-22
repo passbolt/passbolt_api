@@ -21,6 +21,7 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
 use Duo\DuoUniversal\Client;
+use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupGetController;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
@@ -103,7 +104,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
             'state' => $duoState,
             'redirect' => '',
             'user_agent' => 'PassboltUA',
-        ])->userId($userId)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
+        ])->userId($userId)->type(AuthenticationToken::TYPE_MFA_VERIFY)->persist();
         $token = $authToken->token;
 
         $this->cookie(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE, $token);
@@ -111,6 +112,38 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $this->get('/mfa/verify/duo/callback?error=DuoCallbackError&DuoCallbackErrorDescription');
         $this->assertResponseCode(400);
         $this->assertResponseContains('Unable to authenticate to Duo.');
+
+        $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
+    }
+
+    public function testDuoSetupCallbackGetController_Error_With_Redirect()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
+        $duoState = UuidFactory::uuid();
+        $redirect = '/app';
+        $userId = $user->get('id');
+        $error = 'DuoCallbackError';
+        $errorDesc = 'DuoCallbackErrorDescription';
+        $this->mockService(Client::class, function () use ($user) {
+            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+        });
+
+        $authToken = AuthenticationTokenFactory::make()->active()->data([
+            'provider' => 'duo',
+            'state' => $duoState,
+            'redirect' => $redirect,
+            'user_agent' => 'PassboltUA',
+        ])->userId($userId)->type(AuthenticationToken::TYPE_MFA_VERIFY)->persist();
+        $token = $authToken->token;
+
+        $this->cookie(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE, $token);
+
+        $this->get("/mfa/verify/duo/callback?error={$error}&error_description={$errorDesc}");
+        $this->assertRedirect($redirect);
+        $flashElement = $this->getSession()->read('Flash')['flash'][0];
+        $this->assertEquals($flashElement['message'], "Unable to authenticate to Duo. {$error}: {$errorDesc}");
 
         $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
@@ -175,7 +208,6 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
     {
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaDuoScenario::class, $user);
-        $redirectPath = '/app/settings/mfa';
         $duoState = UuidFactory::uuid();
         $userId = $user->get('id');
         $this->mockService(Client::class, function () use ($user) {
@@ -185,7 +217,7 @@ class DuoVerifyCallbackGetControllerTest extends MfaIntegrationTestCase
         $authToken = AuthenticationTokenFactory::make()->active()->data([
             'provider' => 'duo',
             'state' => $duoState,
-            'redirect' => $redirectPath,
+            'redirect' => DuoSetupGetController::DUO_SETUP_REDIRECT_PATH,
             'user_agent' => 'PassboltUA',
         ])->userId($userId)->type(AuthenticationToken::TYPE_MFA_VERIFY)->persist();
 

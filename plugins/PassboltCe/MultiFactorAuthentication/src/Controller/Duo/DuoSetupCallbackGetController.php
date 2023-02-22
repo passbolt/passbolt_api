@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\FormValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Cookie\Cookie;
 use Cake\Http\Exception\BadRequestException;
@@ -36,32 +37,57 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class DuoSetupCallbackGetController extends MfaSetupController
 {
     /**
-     * Handle Duo setup callback GET request. We return a Response to avoid using templates to respond:
-     * - 200 OK (for mobile)
-     * - 302 FOUND (otherwise)
+     * @return void
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('Flash');
+    }
+
+    /**
+     * Handle Duo setup callback GET request. Redirect the user if the auth token associated to the callback
+     * contains a redirect property. It is usually the case when a user authenticates to duo on the web application.
      *
      * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService session ID service
      * @param \Duo\DuoUniversal\Client|null $duoSdkClient Duo SDK Client
-     * @return void
+     * @return \Cake\Http\Response|void
      */
     public function get(
         SessionIdentificationServiceInterface $sessionIdentificationService,
         ?Client $duoSdkClient = null
-    ): void {
+    ) {
         $this->_assertRequestNotJson();
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_DUO);
         $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_DUO);
 
         $uac = $this->User->getAccessControl();
-        $mfaDuoCallbackDto = $this->getAndAssertMfaDuoCallbackData();
         $cookieToken = $this->consumeAndAssertCookieToken();
 
-        $authenticationToken = (new MfaDuoEnableService($duoSdkClient))->enable(
-            $uac,
-            $mfaDuoCallbackDto,
-            $cookieToken
-        );
-        $this->addMfaVerifiedCookieToResponse($uac, $sessionIdentificationService);
+        try {
+            $mfaDuoCallbackDto = $this->getAndAssertMfaDuoCallbackData();
+            $authenticationToken = (new MfaDuoEnableService($duoSdkClient))->enable(
+                $uac,
+                $mfaDuoCallbackDto,
+                $cookieToken
+            );
+            $this->addMfaVerifiedCookieToResponse($uac, $sessionIdentificationService);
+        } catch (BadRequestException | FormValidationException $e) {
+            if (!isset($authenticationToken)) {
+                $authenticationToken = (new AuthenticationTokenGetService())
+                    ->get($cookieToken, $uac->getId(), AuthenticationToken::TYPE_MFA_SETUP);
+            }
+            if (isset($authenticationToken)) {
+                $redirect = $authenticationToken->getDataValue('redirect');
+                if (!empty($redirect)) {
+                    $this->Flash->error($e->getMessage());
+
+                    return $this->redirect($redirect);
+                }
+            }
+
+            throw $e;
+        }
 
         $this->disableAutoRender();
         $this->redirectIfDefinedInToken($authenticationToken);

@@ -20,6 +20,7 @@ namespace Passbolt\MultiFactorAuthentication\Service\Duo;
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
@@ -41,21 +42,28 @@ class MfaDuoStartDuoAuthenticationService
     protected $duoClient;
 
     /**
+     * @var string
+     */
+    protected $authTokenType;
+
+    /**
      * Constructor.
      *
-     * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
+     * @param string $authenticationTokenType Authentication token type
+     * @param \Duo\DuoUniversal\Client $client Duo SDK Client
      * @return void
-     * @throws \Cake\Http\Exception\InternalErrorException If it cannot create the Duo Sdk Client
+     * @throws \Cake\Http\Exception\ServiceUnavailableException If it cannot create the Duo Sdk Client
      */
-    public function __construct(?Client $client = null)
+    public function __construct(string $authenticationTokenType, ?Client $client = null)
     {
+        $this->authTokenType = $authenticationTokenType;
         try {
             $this->duoClient = $client ?? (new MfaDuoGetSdkClientService())->getOrFail(
                 new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
-                AuthenticationToken::TYPE_MFA_SETUP
+                $authenticationTokenType
             );
         } catch (\Throwable $th) {
-            throw new InternalErrorException(__('Could not enable Duo MFA provider.'), null, $th);
+            throw new ServiceUnavailableException(__('Could not enable Duo MFA provider.'), null, $th);
         }
     }
 
@@ -65,7 +73,6 @@ class MfaDuoStartDuoAuthenticationService
      * - Create a callback authentication token that will be used to authenticate the user when Duo will respond with a callback.
      *
      * @param \App\Utility\UserAccessControl $uac The user access control
-     * @param string $authenticationTokenType The authentication token type to create
      * @param string|null $redirect The redirect path to store along the token. The user will be redirected to this
      * path after authenticating to Duo with success.
      * @return \Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoAuthenticationRequestDto
@@ -75,15 +82,13 @@ class MfaDuoStartDuoAuthenticationService
      */
     public function start(
         UserAccessControl $uac,
-        string $authenticationTokenType,
         ?string $redirect = '/'
     ): MfaDuoAuthenticationRequestDto {
         $this->assertDuoHealthcheck();
-        $this->assertDuoCallbackAuthenticationTokenType($authenticationTokenType);
+        $this->assertDuoCallbackAuthenticationTokenType();
 
         $duoCallbackAuthenticationToken = $this->createDuoCallbackAuthenticationToken(
             $uac,
-            $authenticationTokenType,
             $redirect
         );
         $duoAuthenticationUrl = $this->createDuoAuthenticationUrl($uac, $duoCallbackAuthenticationToken);
@@ -95,28 +100,27 @@ class MfaDuoStartDuoAuthenticationService
      * Assert that Duo services are reachable.
      *
      * @return void
-     * @throws \Cake\Http\Exception\InternalErrorException If it cannot connect to Duo services
+     * @throws \Cake\Http\Exception\ServiceUnavailableException If it cannot connect to Duo services
      */
     private function assertDuoHealthcheck(): void
     {
         try {
             $this->duoClient->healthCheck();
         } catch (\Throwable $th) {
-            throw new InternalErrorException(__('Unable to connect to Duo services.'), null, $th);
+            throw new ServiceUnavailableException(__('Unable to connect to Duo services.'), null, $th);
         }
     }
 
     /**
      * Assert that the authentication token type is supported.
      *
-     * @param string $authenticationTokenType The authentication token type
      * @return void
      * @throws \InvalidArgumentException If the authentication token type is not supported
      */
-    private function assertDuoCallbackAuthenticationTokenType(string $authenticationTokenType): void
+    private function assertDuoCallbackAuthenticationTokenType(): void
     {
         $isValid = Validation::inList(
-            $authenticationTokenType,
+            $this->authTokenType,
             MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES
         );
         if (!$isValid) {
@@ -131,7 +135,6 @@ class MfaDuoStartDuoAuthenticationService
      * user to passbolt.
      *
      * @param \App\Utility\UserAccessControl $uac The user access control.
-     * @param string $authenticationTokenType The authentication token type, can be used to create setup or verify auth token.
      * @param string|null $redirect The redirect path to store along the token. The user will be redirected to this
      * path after authenticating to Duo with success.
      * @return \App\Model\Entity\AuthenticationToken
@@ -139,7 +142,6 @@ class MfaDuoStartDuoAuthenticationService
      */
     private function createDuoCallbackAuthenticationToken(
         UserAccessControl $uac,
-        string $authenticationTokenType,
         ?string $redirect
     ): AuthenticationToken {
         /** @var \App\Model\Table\AuthenticationTokensTable $authenticationTable */
@@ -152,7 +154,7 @@ class MfaDuoStartDuoAuthenticationService
         ];
 
         try {
-            return $authenticationTable->generate($uac->getId(), $authenticationTokenType, null, $data);
+            return $authenticationTable->generate($uac->getId(), $this->authTokenType, null, $data);
         } catch (\Throwable $th) {
             $msg = 'Unable to create the Duo callback authentication token.';
             throw new InternalErrorException($msg, null, $th);

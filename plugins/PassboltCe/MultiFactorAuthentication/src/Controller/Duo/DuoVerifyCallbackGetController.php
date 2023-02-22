@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\FormValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Cookie\Cookie;
 use Cake\Http\Exception\BadRequestException;
@@ -35,6 +36,16 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoVerifyCallbackGetController extends MfaVerifyController
 {
+    /**
+     * @return void
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('Flash');
+        $this->loadComponent('SanitizeUrl');
+    }
+
     /**
      * Handle Duo setup callback GET request. Redirect the user if the auth token associated to the callback
      * contains a redirect property. It is usually the case when a user authenticates to duo on the web application.
@@ -55,15 +66,32 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
         }
 
         $uac = $this->User->getAccessControl();
-        $mfaDuoCallbackDto = $this->getAndAssertMfaDuoCallbackData();
         $cookieToken = $this->consumeAndAssertCookieToken();
 
-        $authenticationToken = (new MfaDuoLoginService($duoSdkClient))->login(
-            $uac,
-            $mfaDuoCallbackDto,
-            $cookieToken
-        );
-        $this->addMfaVerifiedCookieToResponse($uac, $sessionIdentificationService);
+        try {
+            $mfaDuoCallbackDto = $this->getAndAssertMfaDuoCallbackData();
+            $authenticationToken = (new MfaDuoLoginService($duoSdkClient))->login(
+                $uac,
+                $mfaDuoCallbackDto,
+                $cookieToken
+            );
+            $this->addMfaVerifiedCookieToResponse($uac, $sessionIdentificationService);
+        } catch (BadRequestException | FormValidationException $e) {
+            if (!isset($authenticationToken)) {
+                $authenticationToken = (new AuthenticationTokenGetService())
+                    ->get($cookieToken, $uac->getId(), AuthenticationToken::TYPE_MFA_VERIFY);
+            }
+            if (isset($authenticationToken)) {
+                $redirect = $authenticationToken->getDataValue('redirect');
+                if (!empty($redirect)) {
+                    $this->Flash->error($e->getMessage());
+
+                    return $this->redirect($redirect);
+                }
+            }
+
+            throw $e;
+        }
 
         $this->disableAutoRender();
         $this->redirectIfDefinedInToken($authenticationToken);

@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Model\Entity\AuthenticationToken;
+use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Http\Response;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
@@ -58,11 +59,21 @@ class DuoVerifyPromptPostController extends MfaVerifyController
             return $redirect;
         }
 
-        $duoAuthenticationRequest = (new MfaDuoStartDuoAuthenticationService($duoSdkClient))->start(
-            $this->User->getAccessControl(),
+        $redirectParam = $this->SanitizeUrl->sanitizeRedirect();
+        $startAuthService = new MfaDuoStartDuoAuthenticationService(
             AuthenticationToken::TYPE_MFA_VERIFY,
-            $this->SanitizeUrl->sanitizeRedirect()
+            $duoSdkClient
         );
+        try {
+            $duoAuthenticationRequest = $startAuthService->start(
+                $this->User->getAccessControl(),
+                $redirectParam
+            );
+        } catch (ServiceUnavailableException $e) {
+            $this->Flash->error($e->getMessage());
+
+            return $this->redirect($redirectParam);
+        }
         $cookie = (new MfaDuoStateCookieService())->createDuoStateCookie(
             $duoAuthenticationRequest->authenticationToken->token,
             $this->_isSslRequired()
