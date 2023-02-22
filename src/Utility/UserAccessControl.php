@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use App\Model\Entity\Role;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
@@ -58,7 +59,7 @@ class UserAccessControl
         if (isset($userId) && !Validation::uuid($userId)) {
             throw new InternalErrorException('Invalid UserControl user id.');
         }
-        if (isset($username) && !Validation::email($username)) {
+        if (isset($username) && !EmailValidationRule::check($username)) {
             throw new InternalErrorException('Invalid UserControl username.');
         }
         $this->userId = $userId;

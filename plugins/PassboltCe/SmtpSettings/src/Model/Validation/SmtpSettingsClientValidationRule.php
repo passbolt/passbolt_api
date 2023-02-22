@@ -17,8 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\SmtpSettings\Model\Validation;
 
+use App\Model\Validation\EmailValidationRule;
 use App\Model\Validation\PassboltValidationRule;
-use Cake\Core\Configure;
 use Cake\Validation\Validation;
 
 class SmtpSettingsClientValidationRule extends PassboltValidationRule
@@ -57,7 +57,7 @@ class SmtpSettingsClientValidationRule extends PassboltValidationRule
      */
     private function isEmailValid(string $client): bool
     {
-        return Validation::email('no-reply@' . $client, Configure::read('passbolt.email.validate.mx'));
+        return EmailValidationRule::check('no-reply@' . $client);
     }
 
     /**

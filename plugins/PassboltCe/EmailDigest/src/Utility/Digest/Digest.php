@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Utility\Digest;
 
+use App\Model\Validation\EmailValidationRule;
 use Cake\ORM\Entity;
-use Cake\Validation\Validation;
 use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
@@ -115,7 +115,7 @@ class Digest extends AbstractDigest implements DigestInterface
         }
 
         $operator = $this->getOperatorFromEmail($emailQueueEntity);
-        if (!isset($operator['username']) || !Validation::email($operator['username'])) {
+        if (!isset($operator['username']) || !EmailValidationRule::check($operator['username'])) {
             throw new UnsupportedEmailDigestDataException($emailQueueEntity);
         }
 

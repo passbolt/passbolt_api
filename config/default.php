@@ -73,6 +73,7 @@ return [
             // Additional email validation settings
             'validate' => [
                 'mx' => filter_var(env('PASSBOLT_EMAIL_VALIDATE_MX', false), FILTER_VALIDATE_BOOLEAN),
+                'regex' => env('PASSBOLT_EMAIL_VALIDATE_REGEX'),
             ],
             'purify' => [
                 'subject' => filter_var(env('PASSBOLT_EMAIL_PURIFY_SUBJECT', false), FILTER_VALIDATE_BOOLEAN),

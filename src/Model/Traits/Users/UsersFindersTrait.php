@@ -22,8 +22,8 @@ use App\Model\Entity\User;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
+use App\Model\Validation\EmailValidationRule;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
@@ -369,7 +369,7 @@ trait UsersFindersTrait
      */
     public function findByUsername(string $username, ?array $options = [])
     {
-        if (!Validation::email($username, Configure::read('passbolt.email.validate.mx'))) {
+        if (!EmailValidationRule::check($username)) {
             throw new InvalidArgumentException('The username should be a valid email.');
         }
 

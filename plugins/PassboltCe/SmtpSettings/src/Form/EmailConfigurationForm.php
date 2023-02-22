@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Form;
 
-use Cake\Core\Configure;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
@@ -99,11 +99,9 @@ class EmailConfigurationForm extends Form
 
         $validator
             ->allowEmptyString('email_test_to')
-            ->email(
-                'email_test_to',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The test email should be a valid email address.')
-            );
+            ->add('email_test_to', 'email', new EmailValidationRule([
+                'message' => __('The test email should be a valid email address.'),
+            ]));
 
         return $validator;
     }
@@ -120,11 +118,9 @@ class EmailConfigurationForm extends Form
     {
         $this->validationDefault($validator);
 
-        $validator->email(
-            'sender_email',
-            Configure::read('passbolt.email.validate.mx'),
-            __('The sender email should be a valid email address.')
-        );
+        $validator->add('sender_email', 'email', new EmailValidationRule([
+            'message' => __('The sender email should be a valid email address.'),
+        ]));
 
         return $validator;
     }

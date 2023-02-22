@@ -17,11 +17,10 @@ declare(strict_types=1);
 namespace App\Service\OpenPGP;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Validation\EmailValidationRule;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenTime;
-use Cake\Validation\Validation;
 
 /**
  * Public Key Validation Service
@@ -372,7 +371,7 @@ class PublicKeyValidationService
         }
         preg_match('/<(\S+@\S+)>$/', $value, $matches);
         if (isset($matches[1])) {
-            return Validation::email($matches[1], Configure::read('passbolt.email.validate.mx'));
+            return EmailValidationRule::check($matches[1]);
         }
 
         return false;
@@ -406,7 +405,7 @@ class PublicKeyValidationService
      */
     public static function isEmailInUid(?string $email, ?string $uid): bool
     {
-        if (!empty($email) && Validation::email($email, Configure::read('passbolt.email.validate.mx'))) {
+        if (!empty($email) && EmailValidationRule::check($email)) {
             $uidEmail = self::getEmailFromUid($uid);
             if ($uidEmail !== false) {
                 return $email == $uidEmail;
