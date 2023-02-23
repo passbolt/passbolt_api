@@ -155,9 +155,3 @@ use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupGetController;
         </div>
     </div>
 </div>
-
-<style>
-    form {
-        height: auto !important;
-    }
-</style>

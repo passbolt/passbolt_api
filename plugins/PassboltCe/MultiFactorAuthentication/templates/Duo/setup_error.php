@@ -26,15 +26,14 @@ use Cake\Routing\Router;
         <div class="col7 main-column">
             <h3><?= $title; ?></h3>
             <div class="feedback-card">
-                <?= $this->element('errorMark'); ?>
-                <div style="padding:2rem; flex-grow:1">
+                <?= $this->element('failedMark'); ?>
+                <div class="additional-information">
                     <p><?= __('Something went wrong.'); ?><br/><?= __('Please try again later or contact your administrator.'); ?></p>
-                    <p style="margin-top:2rem; margin-bottom:1rem; font-weight:bold; font-size:1.5rem"><?= __('Logs.'); ?></p>
+
+                    <h4 class="logs-header"><?= __('Logs'); ?></h4>
                     <textarea><?= $this->Flash->render('duo_auth_error') ?></textarea>
                     <?= $this->Form->create($setupForm, $formContext); ?>
-                        <div class="actions-wrapper" style="margin:0; margin-top:2rem">
                             <button type="submit" class="button primary"><?= __('Retry'); ?></button>
-                        </div>
                     <?= $this->Form->end(); ?>
                 </div>
             </div>
