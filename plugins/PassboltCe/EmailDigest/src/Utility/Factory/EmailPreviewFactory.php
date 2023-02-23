@@ -19,7 +19,6 @@ namespace Passbolt\EmailDigest\Utility\Factory;
 
 use Cake\Mailer\Mailer;
 use Cake\ORM\Entity;
-use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 use Passbolt\EmailDigest\Utility\Mailer\EmailPreview;
 
@@ -110,12 +109,10 @@ class EmailPreviewFactory
      */
     private function configureEmailView(Mailer $email, string $template, ?string $layout = null, ?string $theme = null)
     {
-        if ($template === EmailDigest::DEFAULT_TEMPLATE) {
-            $layout = EmailDigest::DEFAULT_LAYOUT;
-        }
-
         $email->viewBuilder()
             ->setVar('title', 'Email digest preview')
+            ->setVar('hideHeader', true)
+            ->setVar('hideFooter', true)
             ->setLayout($layout)
             ->setTheme($theme)
             ->setTemplate($template);
