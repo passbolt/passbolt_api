@@ -21,7 +21,6 @@ use Cake\TestSuite\TestCase;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use Passbolt\EmailDigest\Utility\Digest\SingleDigest;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
-use Passbolt\EmailDigest\Utility\Mailer\EmailPreview;
 
 class SingleEmailDigestTest extends TestCase
 {
@@ -73,8 +72,8 @@ class SingleEmailDigestTest extends TestCase
         }
 
         $this->emailPreviewFactoryMock->expects($this->exactly(3))
-            ->method('renderEmailPreviewFromEmailEntity')
-            ->willReturn(new EmailPreview('headers', 'content'));
+            ->method('renderFromEmailEntity')
+            ->willReturn('content');
 
         $expectedEmailDigestsCount = count($emailEntities);
 

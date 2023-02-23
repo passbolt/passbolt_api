@@ -57,8 +57,7 @@ abstract class AbstractDigest implements DigestInterface
     {
         $emailDigestContent = [];
         foreach ($digest->getEmailsData() as $emailData) {
-            $emailPreview = $factory->renderEmailPreviewFromEmailEntity($emailData);
-            $emailDigestContent[] = $emailPreview->getContent();
+            $emailDigestContent[] = $factory->renderFromEmailEntity($emailData);
         }
 
         return implode('', $emailDigestContent);

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\EmailDigest\Utility\Factory;
 
 use Cake\Mailer\Mailer;
+use Cake\Mailer\Renderer;
 use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 use Passbolt\EmailDigest\Utility\Mailer\EmailPreview;
@@ -54,22 +55,23 @@ class EmailPreviewFactory
     }
 
     /**
-     * Create a snapshot of the email as it would be rendered from an email.
+     * Render email with given email entity.
      *
-     * @param \Cake\ORM\Entity $emailData Email data to get a snapshot of
-     * @param string|null $layout Layout file name to set.
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview
+     * @param \Cake\ORM\Entity $email Email entity.
+     * @return string
      */
-    public function renderEmailPreviewFromEmailEntity(Entity $emailData, ?string $layout = null)
+    public function renderFromEmailEntity(Entity $email): string
     {
-        $configName = $emailData->get('config');
-        $theme = empty($emailData->get('theme')) ? '' : (string)$emailData->get('theme');
+        $viewVars = empty($email->template_vars) ? [] : $email->template_vars;
 
-        $email = $this->mapEmailEntityToMailerEmail(new Mailer($configName), $emailData);
+        $renderer = new Renderer();
+        $renderer
+            ->viewBuilder()
+            ->setTemplate($email->get('template'))
+            ->setVars($viewVars)
+            ->setLayout('Passbolt/EmailDigest.digest');
 
-        $this->configureEmailView($email, $emailData->get('template'), $layout, $theme);
-
-        return $this->renderEmailContent($email);
+        return $renderer->render('', ['html'])['html'];
     }
 
     /**
@@ -136,35 +138,6 @@ class EmailPreviewFactory
             ->setEmailFormat($emailDigest->getEmailFormat())
             ->setMessageId(false)
             ->setViewVars($emailDigest->getViewVars())
-            ->setReturnPath($email->getFrom());
-
-        return $email;
-    }
-
-    /**
-     * Map an instance of Emailqueue email to an instance of Email, so it can be send.
-     *
-     * @param \Cake\Mailer\Mailer $email An instance of Email
-     * @param \Cake\ORM\Entity $emailData An instance of Emailqueue email
-     * @return \Cake\Mailer\Mailer
-     * @see \EmailQueue\Model\Table\EmailQueueTable
-     */
-    private function mapEmailEntityToMailerEmail(Mailer $email, Entity $emailData)
-    {
-        $headers = empty($emailData->headers) ? [] : (array)$emailData->headers;
-        $viewVars = empty($emailData->template_vars) ? [] : $emailData->template_vars;
-
-        if (!empty($emailData->from_email) && !empty($emailData->from_name)) {
-            $email->setFrom($emailData->from_email, $emailData->from_name);
-        }
-
-        $email
-            ->setTo($emailData->get('email'))
-            ->setSubject($emailData->get('subject'))
-            ->setEmailFormat($emailData->get('format'))
-            ->addHeaders($headers)
-            ->setViewVars($viewVars)
-            ->setMessageId(false)
             ->setReturnPath($email->getFrom());
 
         return $email;
