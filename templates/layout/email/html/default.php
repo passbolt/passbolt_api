@@ -22,19 +22,6 @@ use Cake\Routing\Router;
  *
  *  Modify the demo, inline it, then this one!
  */
-
-/**
- * This layout is also used by EmailDigest, since header & footer is already set by email digest email template setting
- * it again duplicates it. Thus, this condition to conditionally render header & footer.
- */
-$shouldShowHeader = true;
-$shouldShowFooter = true;
-if (isset($hideHeader) && $hideHeader) {
-    $shouldShowHeader = false;
-}
-if (isset($hideFooter) && $hideFooter) {
-    $shouldShowFooter = false;
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -145,7 +132,6 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 </head>
 <body spellcheck="false" style="margin: 0;padding: 0;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #F5F5F5;height: 100% !important;width: 100% !important;">
 <center>
-    <?php if ($shouldShowHeader): ?>
     <!-- HEADER // -->
     <table border="0" cellpadding="0" cellspacing="0" height="37" width="100%" id="headerTable" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;margin: 0;padding: 0;background-color: #F5F5F5;width: 100% !important;height: 37px !important;">
         <tr>
@@ -198,7 +184,6 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
         </tr>
     </table>
     <!-- // HEADER -->
-    <?php endif; ?>
 
     <!-- BODY // -->
     <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;margin: 0;padding: 0;background-color: #F5F5F5;height: 100% !important;width: 100% !important;">
@@ -220,7 +205,6 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
     </table>
     <!-- // BODY -->
 
-    <?php if ($shouldShowFooter): ?>
     <!-- FOOTER // -->
     <table border="0" cellpadding="0" cellspacing="0" height="30" width="100%" id="footerTable" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;margin: 0;padding: 0;background-color: #F5F5F5;width: 100% !important;height: 30px !important;">
         <tr>
@@ -290,7 +274,6 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
         </tr>
     </table>
     <!-- // FOOTER -->
-    <?php endif; ?>
 </center>
 </body>
 </html>

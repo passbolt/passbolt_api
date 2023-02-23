@@ -134,4 +134,29 @@ trait EmailTestTrait
     {
         $this->assertTextContains($contents, $this->getMailAt($at)->getOriginalSubject(), $message);
     }
+
+    /**
+     * Assert given string is repeated particular times.
+     * Useful when you want to assert that particular HTML tag(i.e. <head>, <body>) is repeated "$count" times.
+     *
+     * @param int $count Checks this number of times string is repeated
+     * @param string $string String/text to check.
+     * @param int $at Email index (optional), by default 0. Omitted if `$content` is present.
+     * @param string|null $content Content/text to check instead of email index's body.
+     * @return void
+     */
+    public function assertMailBodyStringCount(int $count, string $string, int $at = 0, ?string $content = null): void
+    {
+        if (!is_string($content)) {
+            $body = $this->getMailAt()->getBodyHtml();
+        } else {
+            $body = $content;
+        }
+
+        // Include "<", ">", "/", etc. characters to consider as string, otherwise it won't be considered.
+        $words = str_word_count($body, 1, '<>/-');
+        $words = array_count_values($words);
+
+        $this->assertEquals($count, $words[$string]);
+    }
 }

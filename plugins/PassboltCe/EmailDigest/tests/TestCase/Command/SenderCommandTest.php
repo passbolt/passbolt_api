@@ -77,6 +77,9 @@ class SenderCommandTest extends TestCase
         $this->assertMailSentFromAt(0, $sender);
         $this->assertMailSentToAt(0, [$email->get('email') => $email->get('email')]);
         $this->assertMailContainsAt(0, 'Sending email to: ' . $email->get('email'));
+        // Assert <head> tag is not duplicated/present only once in the email HTML
+        $this->assertMailBodyStringCount(1, '<head>');
+        $this->assertMailBodyStringCount(1, '</head>');
     }
 
     /**
@@ -108,5 +111,8 @@ class SenderCommandTest extends TestCase
         $this->assertMailContainsAt(2, $this->getDummyEnglishEmailSentence());
         $this->assertMailContainsAt(3, $this->getDummyFrenchEmailSentence());
         $this->assertSame(I18n::getDefaultLocale(), I18n::getLocale());
+        // Assert <head> tag is not duplicated/present only once in the email HTML
+        $this->assertMailBodyStringCount(1, '<head>');
+        $this->assertMailBodyStringCount(1, '</head>');
     }
 }
