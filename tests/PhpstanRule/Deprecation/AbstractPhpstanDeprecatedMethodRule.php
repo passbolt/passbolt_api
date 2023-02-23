@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.11.0
  */
 
-namespace App\Test\Rule\Deprecation;
+namespace App\Test\PhpstanRule\Deprecation;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
@@ -25,7 +25,7 @@ use PHPStan\Rules\RuleErrorBuilder;
 /**
  * Raise error if a method in a given class should not be used
  */
-abstract class AbstractPHPStanDeprecatedMethodRule implements Rule
+abstract class AbstractPhpstanDeprecatedMethodRule implements Rule
 {
     /**
      * The name of the class with deprecated methods

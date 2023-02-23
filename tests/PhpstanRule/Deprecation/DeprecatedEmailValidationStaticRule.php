@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.11.0
  */
 
-namespace App\Test\Rule\Deprecation;
+namespace App\Test\PhpstanRule\Deprecation;
 
 use Cake\Validation\Validation;
 use PhpParser\Node\Expr\StaticCall;
@@ -23,7 +23,7 @@ use PhpParser\Node\Expr\StaticCall;
 /**
  * Raise error if `Cake\Validation\Validation::email()` is used.
  */
-class DeprecatedEmailValidationStaticRule extends AbstractPHPStanDeprecatedMethodRule
+class DeprecatedEmailValidationStaticRule extends AbstractPhpstanDeprecatedMethodRule
 {
     /**
      * @inheritDoc
