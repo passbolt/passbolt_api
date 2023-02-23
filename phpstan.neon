@@ -13,4 +13,4 @@ parameters:
         - **/tests/**
 
 rules:
-    - App\Test\Rule\Deprecation\DeprecatedEmailValidationStaticRule
+    - App\Test\PHPStanRule\Deprecation\DeprecatedEmailValidationStaticRule

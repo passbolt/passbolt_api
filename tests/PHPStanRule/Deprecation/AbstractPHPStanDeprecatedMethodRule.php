@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.11.0
  */
 
-namespace App\Test\Rule\Deprecation;
+namespace App\Test\PHPStanRule\Deprecation;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
