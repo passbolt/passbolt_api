@@ -74,7 +74,7 @@ class MfaVerifyControllerTest extends MfaIntegrationTestCase
         $this->get('/mfa/verify/duo?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertResponseContains('Multi factor authentication verification'); // window title
-        $this->assertResponseContains('Duo Multi Factor Authentication'); // page title
+        $this->assertResponseContains('Multi Factor Authentication Required'); // page title
         $this->assertResponseContains('Sign-in with Duo'); // submit button
     }
 

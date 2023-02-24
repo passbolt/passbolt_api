@@ -17,13 +17,17 @@
         'id' => 'duo_form',
     ];
     ?>
+
 <div class="login-form ">
-    <h1>
-        <?= __('Duo Multi Factor Authentication'); ?>
+    <img src="<?= Router::url('/img/third_party/duo.svg', true); ?>" class="centered-login-provider-icon" />
+    <h1 class="centered-text login-title">
+        <?= __('Multi Factor Authentication Required'); ?>
     </h1>
+    <p class="centered-text">
+        <?= __('An additional authentication is required using Duo. You will be redirected to Duo for verification.'); ?>
+    </p>
     <?= $this->Flash->render() ?>
     <?= $this->Form->create($verifyForm, $formContext); ?>
-        <button type="submit" class="button primary big full-width" style="margin-top:3.2rem;" role="button"><?= __('Sign-in with Duo'); ?></button>
         <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_DUO]); ?>
     <?= $this->Form->end(); ?>
 </div>
