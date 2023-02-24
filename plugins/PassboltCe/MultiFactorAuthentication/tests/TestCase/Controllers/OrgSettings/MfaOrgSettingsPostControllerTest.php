@@ -17,7 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\OrgSettings;
 
 use App\Model\Entity\Role;
+use App\Test\Factory\UserFactory;
+use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
@@ -94,7 +97,7 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsPostControllerSuccess_TotpConfigureBeforeNoConfigAfter()
     {
         $config['providers'] = [MfaSettings::PROVIDER_TOTP => true];
-        $this->mockMfaOrgSettings($config, 'configure');
+        $this->mockMfaOrgSettings($config);
         $this->authenticateAs('admin');
         $this->postJson('/mfa/settings.json?api-version=v2', ['providers' => []]);
         $this->assertResponseSuccess();
@@ -124,8 +127,13 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsPutControllerSuccess_TotpDbConfigureAllAfter()
     {
         $config['providers'] = [MfaSettings::PROVIDER_TOTP => true];
-        $this->mockMfaOrgSettings($config, 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
+        $user = UserFactory::make()->admin()->persist();
+        $this->mockMfaOrgSettings($config, 'database', $this->makeUac($user));
         $this->authenticateAs('admin');
+        $this->mockService(Client::class, function () use ($user) {
+            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+        });
+
         $this->putJson('/mfa/settings.json?api-version=v2', $this->getDefaultMfaOrgSettings());
         $this->assertResponseSuccess();
     }
@@ -140,16 +148,17 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $config['providers'] = [MfaSettings::PROVIDER_TOTP => true];
         $this->mockMfaOrgSettings($config, 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
         $this->authenticateAs('admin');
+
         $this->putJson('/mfa/settings.json?api-version=v2', [
             'providers' => ['duo', 'nope', 'yubikey'],
             'duo' => ['wrong' => 'config'],
             'yubikey' => ['clientId' => 'aaa', 'secretKey' => '123'],
         ]);
+
         $result = json_decode($this->_getBodyAsString(), true);
-        $this->assertTrue(isset($result['body']['duo']['salt']['notEmpty']));
-        $this->assertTrue(isset($result['body']['duo']['secretKey']['notEmpty']));
-        $this->assertTrue(isset($result['body']['duo']['hostName']['notEmpty']));
-        $this->assertTrue(isset($result['body']['duo']['integrationKey']['notEmpty']));
+        $this->assertTrue(isset($result['body']['duo']['clientSecret']['notEmpty']));
+        $this->assertTrue(isset($result['body']['duo']['apiHostName']['notEmpty']));
+        $this->assertTrue(isset($result['body']['duo']['clientId']['notEmpty']));
         $this->assertTrue(isset($result['body']['yubikey']['secretKey']['isValidSecretKey']));
         $this->assertTrue(isset($result['body']['yubikey']['clientId']['isValidClientId']));
         $this->assertTrue(isset($result['body']['nope']));

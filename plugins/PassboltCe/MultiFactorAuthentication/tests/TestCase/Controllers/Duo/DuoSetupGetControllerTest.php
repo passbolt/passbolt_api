@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Duo;
 
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\OrganizationSettingFactory;
+use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupGetController;
 use Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoOrganizationOnlyScenario;
@@ -97,7 +98,6 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
         $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
         $this->get('/mfa/setup/duo');
         $this->assertResponseOk();
-        $this->assertResponseContains('<iframe');
     }
 
     public function testMfaSetupGetDuo_Valid_Form()
@@ -107,6 +107,10 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
         $this->mockValidMfaFormInterface(DuoSetupForm::class, $this->makeUac($user));
         $this->get('/mfa/setup/duo?api-version=v2');
         $this->assertResponseSuccess();
+        $this->assertResponseContains('/mfa/setup/duo/prompt?redirect=' . DuoSetupGetController::DUO_SETUP_REDIRECT_PATH);
+        $this->assertResponseContains('How does it work?');
+        $this->assertResponseContains('sidebar-help');
+        $this->assertResponseContains('Learn more');
         $this->assertSame(0, AuthenticationTokenFactory::count());
     }
 

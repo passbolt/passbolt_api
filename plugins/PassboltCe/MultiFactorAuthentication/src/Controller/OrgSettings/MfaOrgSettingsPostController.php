@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller\OrgSettings;
 
 use Cake\Http\Exception\BadRequestException;
+use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Controller\MfaController;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsSetService;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettingsDuoBackwardCompatible;
 
 class MfaOrgSettingsPostController extends MfaController
 {
@@ -28,9 +30,10 @@ class MfaOrgSettingsPostController extends MfaController
      * @throws \App\Error\Exception\CustomValidationException if the user provided data do not validate
      * @throws \Cake\Http\Exception\ForbiddenException if the user is not an admin
      * @throws \Cake\Http\Exception\BadRequestException if the request is not made using Ajax/Json
+     * @param \Duo\DuoUniversal\Client $duoSdkClient Duo SDK Client
      * @return void
      */
-    public function post()
+    public function post(?Client $duoSdkClient = null): void
     {
         $this->User->assertIsAdmin();
 
@@ -38,9 +41,13 @@ class MfaOrgSettingsPostController extends MfaController
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
         }
 
+        /** TODO: Remove this line and its class once the frontend has been updated to use the new format/names */
+        $data = MfaOrgSettingsDuoBackwardCompatible::remapSetDuoSettings((array)$this->getRequest()->getData());
+
         $config = (new MfaOrgSettingsSetService())->setOrgSettings(
-            (array)$this->getRequest()->getData(),
-            $this->User->getAccessControl()
+            $data,
+            $this->User->getAccessControl(),
+            $duoSdkClient
         );
         $this->success(__('The multi factor authentication settings for the organization were updated.'), $config);
     }

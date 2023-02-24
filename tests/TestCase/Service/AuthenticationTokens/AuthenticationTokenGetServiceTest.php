@@ -50,7 +50,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function testAuthenticationTokenGetService_Success(): void
+    public function testAuthenticationTokenGetService_getActiveNotExpiredOrFail_Success(): void
     {
         $t0 = $this->tokenFactory->active()->persist();
         $t1 = (new AuthenticationTokenGetService())
@@ -62,7 +62,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
         $this->assertEquals($t0->user_id, $t1->user_id);
     }
 
-    public function testAuthenticationTokenGetService_Error_InvalidID(): void
+    public function testAuthenticationTokenGetService_getActiveNotExpiredOrFail_Error_InvalidID(): void
     {
         $t0 = $this->tokenFactory->active()->persist();
         $this->expectException(BadRequestException::class);
@@ -70,7 +70,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
             ->getActiveNotExpiredOrFail('nope', $t0->user_id, $t0->type);
     }
 
-    public function testAuthenticationTokenGetService_Error_NotFoundID(): void
+    public function testAuthenticationTokenGetService_getActiveNotExpiredOrFail_Error_NotFoundID(): void
     {
         $t0 = $this->tokenFactory->active()->persist();
         $this->expectException(NotFoundException::class);
@@ -78,7 +78,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
             ->getActiveNotExpiredOrFail(UuidFactory::uuid(), $t0->user_id, $t0->type);
     }
 
-    public function testAuthenticationTokenGetService_Error_DifferentType(): void
+    public function testAuthenticationTokenGetService_getActiveNotExpiredOrFail_Error_DifferentType(): void
     {
         $t0 = $this->tokenFactory->inactive()->persist();
         $this->expectException(NotFoundException::class);
@@ -86,7 +86,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
             ->getActiveNotExpiredOrFail($t0->token, $t0->user_id, AuthenticationToken::TYPE_MOBILE_TRANSFER);
     }
 
-    public function testAuthenticationTokenGetService_Error_NotActive(): void
+    public function testAuthenticationTokenGetService_getActiveNotExpiredOrFail_Error_NotActive(): void
     {
         $t0 = $this->tokenFactory->inactive()->persist();
         $this->expectException(CustomValidationException::class);
@@ -94,7 +94,7 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
             ->getActiveNotExpiredOrFail($t0->token, $t0->user_id, $t0->type);
     }
 
-    public function testAuthenticationTokenGetService_Error_Expired(): void
+    public function testAuthenticationTokenGetService_getActiveNotExpiredOrFail_Error_Expired(): void
     {
         $t0 = $this->tokenFactory->active()->expired()->persist();
         $this->expectException(CustomValidationException::class);
@@ -102,10 +102,71 @@ class AuthenticationTokenGetServiceTest extends AppTestCase
             ->getActiveNotExpiredOrFail($t0->token, $t0->user_id, $t0->type);
     }
 
-    public function testAuthenticationTokenGetService_Success_ActiveExpired(): void
+    public function testAuthenticationTokenGetService_getActiveOrFail_Success_ActiveExpired(): void
     {
         $t0 = $this->tokenFactory->active()->expired()->persist();
         $token = (new AuthenticationTokenGetService())->getActiveOrFail($t0->token, $t0->user_id, $t0->type);
         $this->assertTrue(AuthenticationTokenFactory::get($token->id)->isActive());
+    }
+
+    public function testAuthenticationTokenGetService_get_Success_ActiveNotExpired(): void
+    {
+        $t0 = $this->tokenFactory->active()->persist();
+        $token = (new AuthenticationTokenGetService())->get($t0->token, $t0->user_id, $t0->type);
+        $this->assertNotEmpty($token);
+        $this->assertEquals($t0->id, $token->id);
+        $this->assertEquals($t0->token, $token->token);
+        $this->assertEquals($t0->type, $token->type);
+        $this->assertEquals($t0->user_id, $token->user_id);
+    }
+
+    public function testAuthenticationTokenGetService_get_Success_ActiveExpired(): void
+    {
+        $t0 = $this->tokenFactory->active()->expired()->persist();
+        $token = (new AuthenticationTokenGetService())->get($t0->token, $t0->user_id, $t0->type);
+        $this->assertNotEmpty($token);
+        $this->assertEquals($t0->id, $token->id);
+        $this->assertEquals($t0->token, $token->token);
+        $this->assertEquals($t0->type, $token->type);
+        $this->assertEquals($t0->user_id, $token->user_id);
+    }
+
+    public function testAuthenticationTokenGetService_get_Success_InactiveNotExpired(): void
+    {
+        $t0 = $this->tokenFactory->inactive()->persist();
+        $token = (new AuthenticationTokenGetService())->get($t0->token, $t0->user_id, $t0->type);
+        $this->assertNotEmpty($token);
+        $this->assertEquals($t0->id, $token->id);
+        $this->assertEquals($t0->token, $token->token);
+        $this->assertEquals($t0->type, $token->type);
+        $this->assertEquals($t0->user_id, $token->user_id);
+    }
+
+    public function testAuthenticationTokenGetService_get_Success_InactiveExpired(): void
+    {
+        $t0 = $this->tokenFactory->inactive()->expired()->persist();
+        $token = (new AuthenticationTokenGetService())->get($t0->token, $t0->user_id, $t0->type);
+        $this->assertNotEmpty($token);
+        $this->assertEquals($t0->id, $token->id);
+        $this->assertEquals($t0->token, $token->token);
+        $this->assertEquals($t0->type, $token->type);
+        $this->assertEquals($t0->user_id, $token->user_id);
+    }
+
+    public function testAuthenticationTokenGetService_get_Success_NotFound(): void
+    {
+        $t0 = $this->tokenFactory->inactive()->expired()->persist();
+        $token = (new AuthenticationTokenGetService())->get(UuidFactory::uuid(), $t0->user_id, $t0->type);
+        $this->assertEmpty($token);
+        $token = (new AuthenticationTokenGetService())->get($t0->token, UuidFactory::uuid(), $t0->type);
+        $this->assertEmpty($token);
+        $token = (new AuthenticationTokenGetService())->get($t0->token, $t0->user_id, 'not-valid-type');
+        $this->assertEmpty($token);
+    }
+
+    public function testAuthenticationTokenGetService_get_Error_Invalidtoken(): void
+    {
+        $this->expectException(BadRequestException::class);
+        (new AuthenticationTokenGetService())->get('not-uuid', UuidFactory::uuid(), UuidFactory::uuid());
     }
 }

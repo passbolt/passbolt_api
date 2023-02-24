@@ -22,6 +22,7 @@ use App\Utility\AuthToken\AuthTokenExpiry;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
+use Cake\Utility\Hash;
 
 /**
  * AuthenticationToken Entity
@@ -42,6 +43,8 @@ class AuthenticationToken extends Entity
     public const TYPE_RECOVER = 'recover';
     public const TYPE_REGISTER = 'register';
     public const TYPE_MFA = 'mfa';
+    public const TYPE_MFA_SETUP = 'mfa_setup';
+    public const TYPE_MFA_VERIFY = 'mfa_verify';
     public const TYPE_LOGIN = 'login';
     public const TYPE_MOBILE_TRANSFER = 'mobile_transfer';
     public const TYPE_REFRESH_TOKEN = 'refresh_token';
@@ -131,6 +134,19 @@ class AuthenticationToken extends Entity
     public function getJsonDecodedData(): array
     {
         return json_decode($this->data ?? '', true) ?? [];
+    }
+
+    /**
+     * Json decode the token data value for a given key.
+     *
+     * @param string $key JSON data ket to get the expected value
+     * @return string|null
+     */
+    public function getDataValue(string $key): ?string
+    {
+        $data = $this->getJsonDecodedData();
+
+        return Hash::get($data, $key);
     }
 
     /**

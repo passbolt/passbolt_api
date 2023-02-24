@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
-use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -32,21 +31,21 @@ class DuoVerifyGetController extends MfaVerifyController
      * @throws \Cake\Http\Exception\InternalErrorException if there is no MFA settings for the user
      * @throws \Cake\Http\Exception\BadRequestException if valid Verification token is already present in cookie
      * @throws \Cake\Http\Exception\BadRequestException if there is no MFA settings for this provider
-     * @return void
+     * @return \Cake\Http\Response|void
      */
     public function get(
         SessionIdentificationServiceInterface $sessionIdentificationService,
         MfaFormInterface $verifyForm
     ) {
-        if ($this->request->is('json')) {
-            throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
-        }
+        $this->_assertRequestNotJson();
         $this->_handleVerifiedNotRequired($sessionIdentificationService);
-        $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
+        $redirect = $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
+        if ($redirect) {
+            return $redirect;
+        }
 
         /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm $verifyForm */
-        $this->set('sigRequest', $verifyForm->getSigRequest());
-        $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
+        $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoOrgSettings()->getDuoApiHostname());
         $this->set('verifyForm', $verifyForm);
         $this->set('providers', $this->mfaSettings->getEnabledProviders());
         $this->set('theme', $this->User->theme());

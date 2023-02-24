@@ -381,6 +381,6 @@ $routes->scope('/setup', function ($routes) {
  */
 $routes->scope('/app', function ($routes) {
     $routes->connect('/administration/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
-    $routes->connect('/settings/mfa', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
+    $routes->connect('/settings/mfa/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
     $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiExtApp']);
 });

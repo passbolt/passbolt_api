@@ -18,10 +18,19 @@ return [
                     'secretKey' => env('PASSBOLT_PLUGINS_MFA_YUBIKEY_SECRETKEY', null),
                 ],
                 'duo' => [
-                    'salt' => env('PASSBOLT_PLUGINS_MFA_DUO_SALT', null),
-                    'integrationKey' => env('PASSBOLT_PLUGINS_MFA_DUO_INTEGRATIONKEY', null),
-                    'secretKey' => env('PASSBOLT_PLUGINS_MFA_DUO_SECRETKEY', null),
-                    'hostName' => env('PASSBOLT_PLUGINS_MFA_DUO_HOST', null),
+                    // @deprecated since v3.10 with Duo v4 support: PASSBOLT_PLUGINS_MFA_DUO_INTEGRATIONKEY, PASSBOLT_PLUGINS_MFA_DUO_SECRETKEY, PASSBOLT_PLUGINS_MFA_DUO_HOST
+                    'clientId' => env(
+                        'PASSBOLT_PLUGINS_MFA_DUO_CLIENT_ID',
+                        env('PASSBOLT_PLUGINS_MFA_DUO_INTEGRATIONKEY', null)
+                    ),
+                    'clientSecret' => env(
+                        'PASSBOLT_PLUGINS_MFA_DUO_CLIENT_SECRET',
+                        env('PASSBOLT_PLUGINS_MFA_DUO_SECRETKEY', null)
+                    ),
+                    'apiHostName' => env(
+                        'PASSBOLT_PLUGINS_MFA_DUO_API_HOSTNAME',
+                        env('PASSBOLT_PLUGINS_MFA_DUO_HOST', null)
+                    ),
                 ],
             ],
         ],

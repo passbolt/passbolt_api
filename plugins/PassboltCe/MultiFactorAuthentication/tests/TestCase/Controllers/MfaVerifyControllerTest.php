@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers;
 
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Multi\MfaTotpDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpUserOnlyScenario;
 
@@ -65,6 +66,18 @@ class MfaVerifyControllerTest extends MfaIntegrationTestCase
         $this->assertResponseError('No valid multi-factor authentication settings found for this provider.');
     }
 
+    public function testMfaVerifyControllerTest_Success()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
+
+        $this->get('/mfa/verify/duo?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('Multi factor authentication verification'); // window title
+        $this->assertResponseContains('Multi Factor Authentication Required'); // page title
+        $this->assertResponseContains('Sign-in with Duo'); // submit button
+    }
+
     public function testMfaVerifyControllerTest_testMultipleProviers()
     {
         $redirect = '/app/users';
@@ -73,7 +86,7 @@ class MfaVerifyControllerTest extends MfaIntegrationTestCase
 
         $this->get('/mfa/verify/duo?api-version=v2&redirect=' . $redirect);
         $this->assertResponseSuccess();
-        $this->assertResponseContains('mfa/verify/duo?redirect=' . $redirect);
+        $this->assertResponseContains('mfa/verify/duo/prompt?redirect=' . $redirect);
         $this->assertResponseContains('Or try with another provider');
         $this->assertResponseContains('mfa/verify/totp?redirect=' . $redirect);
     }
