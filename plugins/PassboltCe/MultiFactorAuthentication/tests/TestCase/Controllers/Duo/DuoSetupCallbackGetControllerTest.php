@@ -20,6 +20,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
+use Cake\Routing\Router;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupGetController;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
@@ -230,6 +231,7 @@ class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
 
         $this->get('/mfa/setup/duo/callback?state=' . $duoState . '&duo_code=' . UuidFactory::uuid());
         $this->assertResponseCode(302);
+        $this->assertRedirectEquals(Router::url('/app/settings/mfa/duo', true));
 
         $this->assertCookieSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
@@ -256,6 +258,7 @@ class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
 
         $this->get('/mfa/setup/duo/callback?state=' . $duoState . '&duo_code=' . UuidFactory::uuid());
         $this->assertResponseCode(302);
+        $this->assertRedirectEquals(Router::url('/app/settings/mfa/duo', true));
 
         $this->assertCookieSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);

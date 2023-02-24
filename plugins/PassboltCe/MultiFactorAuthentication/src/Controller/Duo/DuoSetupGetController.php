@@ -26,7 +26,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class DuoSetupGetController extends MfaSetupController
 {
     public const PROVIDER = MfaSettings::PROVIDER_DUO;
-    public const DUO_SETUP_REDIRECT_PATH = '/app/settings/mfa';
+    public const DUO_SETUP_REDIRECT_PATH = '/app/settings/mfa/duo';
 
     /**
      * Duo Get Qr Code and provisioning urls
