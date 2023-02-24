@@ -103,7 +103,7 @@ class Plugin extends BasePlugin
         $container
             ->add(RememberAMonthSettingInterface::class)
             ->setConcrete(DefaultRememberAMonthSettingService::class);
-        
+
         $container->add(Client::class)->setConcrete(null);
     }
 }
