@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-02-08 11:44+0000\n"
-"PO-Revision-Date: 2023-02-08 12:29\n"
+"POT-Creation-Date: 2023-02-27 10:56+0000\n"
+"PO-Revision-Date: 2023-02-27 12:11\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -176,7 +176,7 @@ msgid "Access restricted to administrators."
 msgstr "Acceso restringido a administradores."
 
 msgid "Access restricted to unauthenticated users."
-msgstr ""
+msgstr "Acceso restringido a usuarios no autenticados."
 
 msgid "The user should not be logged in."
 msgstr "El usuario no debe estar conectado."
@@ -961,6 +961,12 @@ msgstr "La fecha de creación debe establecerse en el pasado."
 msgid "The key should not already be expired."
 msgstr "La clave no debe estar ya caducada."
 
+msgid "The email should be a valid email address."
+msgstr "El correo electrónico debe ser una dirección de correo electrónico válida."
+
+msgid "The regular expression should be a valid string."
+msgstr ""
+
 msgid "The fingerprint does not match the one of the armored key."
 msgstr "La huella digital no coincide con la de la clave blindada."
 
@@ -1699,6 +1705,9 @@ msgstr "Se requiere un estado."
 msgid "Could not validate action log data."
 msgstr "No se pudo validar los datos de registro de acción."
 
+msgid "The date {0} should be after the date {1}."
+msgstr ""
+
 msgid "The identifier should be not be empty."
 msgstr "El identificador no puede estar vacío."
 
@@ -1882,11 +1891,29 @@ msgstr "El token de autenticación no está activo."
 msgid "The authentication token is expired."
 msgstr "El token de autenticación ha caducado."
 
-msgid "This functionality is not available using AJAX/JSON."
-msgstr "Esta funcionalidad no está disponible usando AJAX/JSON."
+msgid "Unable to authenticate to Duo."
+msgstr ""
+
+msgid "Unable to validate the Duo callback data."
+msgstr ""
+
+msgid "A Duo state cookie is required."
+msgstr ""
+
+msgid "The Duo state cookie value should be a string."
+msgstr ""
+
+msgid "The Duo state cookie should be a valid UUID."
+msgstr ""
+
+msgid "This entrypoint is not available anymore."
+msgstr ""
 
 msgid "This authentication provider is not enabled for your organization."
 msgstr "Este proveedor de autenticación no está habilitado para su organización."
+
+msgid "This functionality is not available using AJAX/JSON."
+msgstr "Esta funcionalidad no está disponible usando AJAX/JSON."
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Este proveedor de autenticación ya está configurado. Desactívalo primero"
@@ -1927,14 +1954,29 @@ msgstr "Se eliminaron los ajustes de autenticación de múltiples factores para 
 msgid "Please setup the Yubikey settings."
 msgstr "Por favor, configure los ajustes de Yubikey."
 
-msgid "A signature is required."
-msgstr "Se requiere una firma."
+msgid "A state is required."
+msgstr ""
 
-msgid "The signature should not be empty."
-msgstr "La firma no debe estar vacía."
+msgid "The state should be a valid BMP-UTF8 string."
+msgstr ""
 
-msgid "This is not a valid signature response."
-msgstr "Esta no es una respuesta de firma válida."
+msgid "The state should not be empty."
+msgstr ""
+
+msgid "A duo code is required."
+msgstr ""
+
+msgid "The duo code state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The duo code should not be empty."
+msgstr ""
+
+msgid "The error description should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The error description state should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "Something went wrong when validating the one-time password."
 msgstr "Algo salió mal al validar la contraseña de un solo uso."
@@ -1960,6 +2002,12 @@ msgstr "El OTP debe tener al menos {0} caracteres."
 msgid "This yubikey is not associated with this user."
 msgstr "Esta yubikey no está asociada con este usuario."
 
+msgid "No Duo error provided"
+msgstr ""
+
+msgid "No Duo error description provided"
+msgstr ""
+
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "Tu configuración de autenticación de múltiples factores ha sido restablecida."
 
@@ -1968,6 +2016,63 @@ msgstr "Se restablecieron los ajustes de autenticación de múltiples factores."
 
 msgid "Your multi-factor authentication settings were reset by an administrator."
 msgstr "Tu configuración de autenticación de múltiples factores fue restablecida por un administrador."
+
+msgid "The token should reference an active Duo callback authentication token."
+msgstr ""
+
+msgid "An authentication token state is required."
+msgstr ""
+
+msgid "The Duo state should match the authentication token state."
+msgstr ""
+
+msgid "Could not enable Duo MFA provider."
+msgstr ""
+
+msgid "Unable to verify Duo authentication."
+msgstr ""
+
+msgid "Could not validate the Duo settings."
+msgstr ""
+
+msgid "Could not login using Duo MFA provider."
+msgstr ""
+
+msgid "Unable to connect to Duo services."
+msgstr ""
+
+msgid "Unable to verify Duo code against Duo service."
+msgstr ""
+
+msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
+msgstr ""
+
+msgid "The duo authentication subscriber does not match the operator username."
+msgstr ""
+
+msgid "No configuration set for Duo client ID."
+msgstr ""
+
+msgid "No configuration set for Duo API hostname."
+msgstr ""
+
+msgid "No configuration set for Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo API hostname."
+msgstr ""
+
+msgid "This is not a valid Duo client ID."
+msgstr ""
+
+msgid "Cannot verify Duo settings."
+msgstr ""
+
+msgid "Could not validate Duo configuration"
+msgstr "No se pudo validar la configuración de Dúo"
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "El token MFA proporcionado no existe o no está activo."
@@ -1996,33 +2101,6 @@ msgstr "Proveedor MFA desconocido: {0}."
 msgid "Could not validate multi-factor authentication provider configuration."
 msgstr "No se pudo validar la configuración del proveedor de autenticación de múltiples factores."
 
-msgid "No configuration set for Duo integration key."
-msgstr "No hay configuración definida para la clave de integración Duo."
-
-msgid "No configuration set for Duo host name."
-msgstr "No se ha establecido ninguna configuración para el nombre de host Duo."
-
-msgid "No configuration set for Duo secret key."
-msgstr "No se ha establecido ninguna configuración para la clave secreta de Duo."
-
-msgid "No configuration set for Duo salt."
-msgstr "No hay configuración definida para Duo Salt."
-
-msgid "Duo salt should be between 40 and 128 characters in length."
-msgstr "Duo Salt debe tener entre 40 y 128 caracteres."
-
-msgid "This is not a valid Duo secret key."
-msgstr "Esta no es una clave secreta de Duo válida."
-
-msgid "This is not a valid Duo host name."
-msgstr "Este no es un nombre de host Duo válido."
-
-msgid "This is not a valid Duo integration key."
-msgstr "Esta no es una clave de integración válida de Duo."
-
-msgid "Could not validate Duo configuration"
-msgstr "No se pudo validar la configuración de Dúo"
-
 msgid "No configuration set for Yubikey OTP secret key."
 msgstr "No hay configuración establecida para la clave secreta Yubikey OTP."
 
@@ -2038,8 +2116,56 @@ msgstr "La clave secreta Yubikey OTP no es válida."
 msgid "Could not validate Yubikey configuration."
 msgstr "No se pudo validar la configuración de la Yubikey."
 
-msgid "Duo multi-factor authentication"
-msgstr "Autenticación Duo de múltiples factores"
+msgid "Duo Multi Factor Authentication"
+msgstr ""
+
+msgid "Something went wrong."
+msgstr "Algo salió mal."
+
+msgid "Please try again later or contact your administrator."
+msgstr "Por favor, inténtelo de nuevo más tarde o póngase en contacto con su administrador."
+
+msgid "Logs"
+msgstr "Registros"
+
+msgid "Retry"
+msgstr "Volver a intentar"
+
+msgid "Getting started with Duo"
+msgstr ""
+
+msgid "How does it work?"
+msgstr "¿Cómo funciona?"
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr "Inicie sesión en passbolt como lo hace normalmente."
+
+msgid "Use you 2FA device to authenticate."
+msgstr ""
+
+msgid "Follow the procedure to login."
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Get started"
+msgstr ""
+
+msgid "Requirements"
+msgstr "Requisitos"
+
+msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
+msgstr ""
+
+msgid "For the list of supported devices, see:"
+msgstr ""
+
+msgid "Duo authentication methods"
+msgstr ""
+
+msgid "Learn more"
+msgstr "Más información"
 
 msgid "Duo multi-factor authentication is enabled!"
 msgstr "¡La autenticación Duo de múltiples factores está habilitada!"
@@ -2049,6 +2175,15 @@ msgstr "Al iniciar sesión se le pedirá que realice la autenticación de Duo."
 
 msgid "Since"
 msgstr "Desde"
+
+msgid "Multi factor authentication verification"
+msgstr "Verificación de autenticación de múltiples factores"
+
+msgid "Multi Factor Authentication Required"
+msgstr ""
+
+msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
+msgstr ""
 
 msgid "Multi factor authentication"
 msgstr "Autenticación de múltiples factores"
@@ -2086,9 +2221,6 @@ msgstr "Escanear este código de barras"
 msgid "Enter the six digit number as presented on your phone or tablet."
 msgstr "Introduzca el número de seis dígitos tal y como aparece en su teléfono o tableta."
 
-msgid "Requirements"
-msgstr "Requisitos"
-
 msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
 msgstr "Para continuar, debe instalar una aplicación que admita contraseñas de un solo uso basadas en el tiempo (TOTP) en su teléfono o tableta, como:"
 
@@ -2098,35 +2230,17 @@ msgstr "o"
 msgid "Getting started with Time based One Time Password (TOTP)"
 msgstr "Primeros pasos con la contraseña de un solo uso basada en el tiempo (TOTP)"
 
-msgid "How does it work?"
-msgstr "¿Cómo funciona?"
-
-msgid "diagram showing how it works"
-msgstr "diagrama que muestra cómo funciona"
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr "Inicie sesión en passbolt como lo hace normalmente."
-
 msgid "When using a new browser, you need an additional code from your phone."
 msgstr "Cuando utilice un nuevo navegador, necesitará un código adicional de su teléfono."
 
 msgid "Once you enter this code, you can log in."
 msgstr "Una vez ingresado este código, podrás iniciar sesión."
 
-msgid "cancel"
-msgstr "cancelar"
-
-msgid "get started!"
-msgstr "¡empezar!"
-
 msgid "Time based One Time Password (TOTP) is enabled!"
 msgstr "¡La contraseña de un solo uso basada en el tiempo (TOTP) está habilitada!"
 
 msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
 msgstr "Al iniciar sesión desde un nuevo dispositivo tendrás que introducir un código de verificación único generado por una aplicación en tu móvil."
-
-msgid "Multi factor authentication verification"
-msgstr "Verificación de autenticación de múltiples factores"
 
 msgid "Remember this device for a month."
 msgstr "Recordar este dispositivo durante un mes."
@@ -2145,6 +2259,9 @@ msgstr "Al iniciar sesión desde un nuevo dispositivo necesitarás un código ú
 
 msgid "verify"
 msgstr "verificar"
+
+msgid "Sign-in with Duo"
+msgstr ""
 
 msgid "Or try with another provider"
 msgstr "O pruebe con otro proveedor"
@@ -2228,79 +2345,76 @@ msgid "No"
 msgstr "No"
 
 msgid "The self registration setting id should be a valid UUID."
-msgstr ""
+msgstr "El identificador del ajuste del auto-registro debe ser un UUID válido."
 
 msgid "An email is required."
 msgstr "Se requiere un correo electrónico."
-
-msgid "The email should be a valid email address."
-msgstr "El correo electrónico debe ser una dirección de correo electrónico válida."
 
 msgid "The provider should not be empty."
 msgstr "El proveedor no debe estar vacío."
 
 msgid "The provider should be part of the supported list: {0}."
-msgstr ""
+msgstr "El proveedor debe formar parte de la lista de proveedores compatibles: {0}."
 
 msgid "The data should not be empty."
 msgstr "Los datos no deben estar vacíos."
 
 msgid "The list of allowed domains should not be empty."
-msgstr ""
+msgstr "La lista de dominios permitidos no debe estar vacía."
 
 msgid "The list of allowed domains should be an array of strings."
-msgstr ""
+msgstr "La lista de dominios permitidos debe ser una matriz de cadenas de texto."
 
 msgid "The domain #{0} should be a valid domain."
-msgstr ""
+msgstr "El dominio #{0} debe ser un dominio válido."
 
 msgid "An email notification setting should be a boolean."
 msgstr "La \"configuración de notificación por correo electrónico\" debe ser un valor booleano."
 
 msgid "Allowed domains: {0}"
-msgstr ""
+msgstr "Dominios permitidos: {0}"
 
 msgid "{0} edited the self registration settings."
-msgstr ""
+msgstr "{0} editó los ajustes del auto-registro."
 
 msgid "You edited the self registration settings."
-msgstr ""
+msgstr "Ha editado los ajustes del auto-registro."
 
 msgid "{0} just created an account on passbolt!"
-msgstr ""
+msgstr "¡{0} acaba de crear una cuenta en Passbolt!"
 
 msgid "The email is already registered."
-msgstr ""
+msgstr "El correo electrónico ya está registrado."
 
 msgid "The self registration plugin is not enabled."
-msgstr ""
+msgstr "El plugin del auto-registro no está habilitado."
 
 msgid "The self registration data could not be validated."
-msgstr ""
+msgstr "Los datos del auto-registro no se han podido validar."
 
 msgid "The self registration is disabled."
-msgstr ""
+msgstr "El auto-registro está desactivado."
 
 msgid "The domain is not supported for self-registration."
-msgstr ""
+msgstr "El dominio no es compatible con el auto-registro."
 
 msgid "Email domain safe list"
-msgstr ""
+msgstr "Lista segura de dominios de correo"
 
 msgid "Could not parse the self registration settings found in database."
-msgstr ""
+msgstr "No se han podido analizar los ajustes del auto-registro encontrados en la base de datos."
 
 msgid "Could not validate the self registration settings found in database."
-msgstr ""
+msgstr "No se han podido validar los ajustes del auto-registro encontrados en la base de datos."
 
 msgid "Could not validate the self registration settings."
-msgstr ""
+msgstr "No se han podido validar los ajustes del auto-registro."
 
 msgid "{0} updated the self registration settings"
-msgstr ""
+msgstr "{0} actualizó los ajustes del auto-registro"
 
 msgid "Status: {0}"
-msgstr ""
+msgstr "Estado: {0}"
 
 msgid "A sender name is required."
 msgstr "Se requiere un nombre de remitente."
@@ -2366,7 +2480,7 @@ msgid "SMTP settings endpoints disabled."
 msgstr "Endpoints de configuración SMTP desactivados."
 
 msgid "The client should be a valid IP or a valid domain."
-msgstr ""
+msgstr "El cliente debe ser una IP válida o un dominio válido."
 
 msgid "Could not validate the smtp settings."
 msgstr "No se ha podido validar la configuración SMTP."
@@ -2614,9 +2728,6 @@ msgstr "nombre de la base de datos"
 msgid "Database name"
 msgstr "Nombre de la base de datos"
 
-msgid "Cancel"
-msgstr "Cancelar"
-
 msgid "Enter your SMTP server settings."
 msgstr "Introduzca la configuración de su servidor SMTP."
 
@@ -2651,10 +2762,10 @@ msgid "Port"
 msgstr "Puerto"
 
 msgid "client"
-msgstr ""
+msgstr "cliente"
 
 msgid "Client"
-msgstr ""
+msgstr "Cliente"
 
 msgid "Passbolt is not configured."
 msgstr "Passbolt no está configurado."
@@ -2909,10 +3020,10 @@ msgid "Please check with them first to confirm."
 msgstr "Por favor, compruebe primero con ellos para confirmar."
 
 msgid "Welcome to {0}!"
-msgstr ""
+msgstr "¡Bienvenido a {0}!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr ""
+msgstr "{0} usó la función de auto-registro para crear una cuenta en Passbolt."
 
 msgid "You have initiated an account recovery!"
 msgstr "¡Has iniciado una recuperación de cuenta!"

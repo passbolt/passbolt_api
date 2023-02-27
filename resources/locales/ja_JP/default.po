@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-02-08 11:44+0000\n"
-"PO-Revision-Date: 2023-02-08 12:30\n"
+"POT-Creation-Date: 2023-02-27 10:56+0000\n"
+"PO-Revision-Date: 2023-02-27 12:11\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -961,6 +961,12 @@ msgstr "作成日は過去に設定する必要があります。"
 msgid "The key should not already be expired."
 msgstr "キーの有効期限はまだ切れていないはずです。"
 
+msgid "The email should be a valid email address."
+msgstr "メールアドレスは有効なメールアドレスにしてください。"
+
+msgid "The regular expression should be a valid string."
+msgstr ""
+
 msgid "The fingerprint does not match the one of the armored key."
 msgstr ""
 
@@ -1699,6 +1705,9 @@ msgstr "ステータスが必要です。"
 msgid "Could not validate action log data."
 msgstr "アクションログデータを検証できませんでした。"
 
+msgid "The date {0} should be after the date {1}."
+msgstr ""
+
 msgid "The identifier should be not be empty."
 msgstr "識別子は空にしないでください。"
 
@@ -1882,11 +1891,29 @@ msgstr "認証トークンがアクティブではありません。"
 msgid "The authentication token is expired."
 msgstr "認証トークンが期限切れです。"
 
-msgid "This functionality is not available using AJAX/JSON."
-msgstr "この機能は、AJAX/JSONでは使用できません。"
+msgid "Unable to authenticate to Duo."
+msgstr ""
+
+msgid "Unable to validate the Duo callback data."
+msgstr ""
+
+msgid "A Duo state cookie is required."
+msgstr ""
+
+msgid "The Duo state cookie value should be a string."
+msgstr ""
+
+msgid "The Duo state cookie should be a valid UUID."
+msgstr ""
+
+msgid "This entrypoint is not available anymore."
+msgstr ""
 
 msgid "This authentication provider is not enabled for your organization."
 msgstr "この認証プロバイダーはあなたの組織では有効になっていません。"
+
+msgid "This functionality is not available using AJAX/JSON."
+msgstr "この機能は、AJAX/JSONでは使用できません。"
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "この認証プロバイダーはすでに設定されています。 まず無効にしてください。"
@@ -1927,14 +1954,29 @@ msgstr "ユーザーの多要素認証設定を削除しました。"
 msgid "Please setup the Yubikey settings."
 msgstr "YubiKey設定を設定してください。"
 
-msgid "A signature is required."
-msgstr "署名が必要です。"
+msgid "A state is required."
+msgstr ""
 
-msgid "The signature should not be empty."
-msgstr "署名は空にできません。"
+msgid "The state should be a valid BMP-UTF8 string."
+msgstr ""
 
-msgid "This is not a valid signature response."
-msgstr "これは有効な署名応答ではありません。"
+msgid "The state should not be empty."
+msgstr ""
+
+msgid "A duo code is required."
+msgstr ""
+
+msgid "The duo code state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The duo code should not be empty."
+msgstr ""
+
+msgid "The error description should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The error description state should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "Something went wrong when validating the one-time password."
 msgstr "ワンタイムパスワードの検証中に問題が発生しました。"
@@ -1960,6 +2002,12 @@ msgstr "OTPは少なくとも{0} 文字である必要があります。"
 msgid "This yubikey is not associated with this user."
 msgstr "このyubikeyはこのユーザーに関連付けられていません。"
 
+msgid "No Duo error provided"
+msgstr ""
+
+msgid "No Duo error description provided"
+msgstr ""
+
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "あなたの多要素認証の設定はあなたによってリセットされました。"
 
@@ -1968,6 +2016,63 @@ msgstr "多要素認証の設定がリセットされました。"
 
 msgid "Your multi-factor authentication settings were reset by an administrator."
 msgstr "あなたの多要素認証設定は管理者によってリセットされました。"
+
+msgid "The token should reference an active Duo callback authentication token."
+msgstr ""
+
+msgid "An authentication token state is required."
+msgstr ""
+
+msgid "The Duo state should match the authentication token state."
+msgstr ""
+
+msgid "Could not enable Duo MFA provider."
+msgstr ""
+
+msgid "Unable to verify Duo authentication."
+msgstr ""
+
+msgid "Could not validate the Duo settings."
+msgstr ""
+
+msgid "Could not login using Duo MFA provider."
+msgstr ""
+
+msgid "Unable to connect to Duo services."
+msgstr ""
+
+msgid "Unable to verify Duo code against Duo service."
+msgstr ""
+
+msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
+msgstr ""
+
+msgid "The duo authentication subscriber does not match the operator username."
+msgstr ""
+
+msgid "No configuration set for Duo client ID."
+msgstr ""
+
+msgid "No configuration set for Duo API hostname."
+msgstr ""
+
+msgid "No configuration set for Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo API hostname."
+msgstr ""
+
+msgid "This is not a valid Duo client ID."
+msgstr ""
+
+msgid "Cannot verify Duo settings."
+msgstr ""
+
+msgid "Could not validate Duo configuration"
+msgstr "Duoの設定を検証できませんでした"
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "指定されたMFAトークンが存在しないか、非アクティブです。"
@@ -1996,33 +2101,6 @@ msgstr "MFAプロバイダーが不明です: {0}。"
 msgid "Could not validate multi-factor authentication provider configuration."
 msgstr "多要素認証プロバイダーの設定を検証できませんでした。"
 
-msgid "No configuration set for Duo integration key."
-msgstr "Duo統合キーに設定が設定されていません。"
-
-msgid "No configuration set for Duo host name."
-msgstr "Duoホスト名に設定されている設定はありません。"
-
-msgid "No configuration set for Duo secret key."
-msgstr "Duo秘密鍵に設定されている設定がありません。"
-
-msgid "No configuration set for Duo salt."
-msgstr "Duoソルトの設定がありません。"
-
-msgid "Duo salt should be between 40 and 128 characters in length."
-msgstr "Duoソルトの長さは40文字以上128文字以下でなければなりません。"
-
-msgid "This is not a valid Duo secret key."
-msgstr "これは有効なDuo秘密鍵ではありません。"
-
-msgid "This is not a valid Duo host name."
-msgstr "これは有効なDuoホスト名ではありません。"
-
-msgid "This is not a valid Duo integration key."
-msgstr "これは有効なDuo統合キーではありません。"
-
-msgid "Could not validate Duo configuration"
-msgstr "Duoの設定を検証できませんでした"
-
 msgid "No configuration set for Yubikey OTP secret key."
 msgstr "Yubikey OTP秘密鍵の設定は設定されていません。"
 
@@ -2038,8 +2116,56 @@ msgstr "YubiKey OTP秘密鍵が有効ではありません。"
 msgid "Could not validate Yubikey configuration."
 msgstr "Yubikey設定を検証できませんでした。"
 
-msgid "Duo multi-factor authentication"
-msgstr "Duo多要素認証"
+msgid "Duo Multi Factor Authentication"
+msgstr ""
+
+msgid "Something went wrong."
+msgstr "何か問題が発生しました！"
+
+msgid "Please try again later or contact your administrator."
+msgstr "後でもう一度試すか、管理者に問い合わせてください。"
+
+msgid "Logs"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Getting started with Duo"
+msgstr ""
+
+msgid "How does it work?"
+msgstr "仕組みは？"
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr "普段と同じようにパスボルトにサインインします。"
+
+msgid "Use you 2FA device to authenticate."
+msgstr ""
+
+msgid "Follow the procedure to login."
+msgstr ""
+
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Get started"
+msgstr ""
+
+msgid "Requirements"
+msgstr "要件"
+
+msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
+msgstr ""
+
+msgid "For the list of supported devices, see:"
+msgstr ""
+
+msgid "Duo authentication methods"
+msgstr ""
+
+msgid "Learn more"
+msgstr "詳細情報"
 
 msgid "Duo multi-factor authentication is enabled!"
 msgstr "Duo多要素認証が有効になっています！"
@@ -2049,6 +2175,15 @@ msgstr "ログイン時に、Duo認証の実行を求められます。"
 
 msgid "Since"
 msgstr "以下以降："
+
+msgid "Multi factor authentication verification"
+msgstr "多要素認証の検証"
+
+msgid "Multi Factor Authentication Required"
+msgstr ""
+
+msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
+msgstr ""
 
 msgid "Multi factor authentication"
 msgstr "多要素認証"
@@ -2086,9 +2221,6 @@ msgstr "このバーコードをスキャン"
 msgid "Enter the six digit number as presented on your phone or tablet."
 msgstr "携帯電話またはタブレットに表示されている6桁の数字を入力します。"
 
-msgid "Requirements"
-msgstr "要件"
-
 msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
 msgstr "続行するには、次のようなスマートフォンやタブレットで、時間ベースのワンタイムパスワード(TOTP) をサポートするアプリケーションをインストールする必要があります:"
 
@@ -2098,35 +2230,17 @@ msgstr "または"
 msgid "Getting started with Time based One Time Password (TOTP)"
 msgstr "時間ベースのワンタイムパスワード (TOTP) の使用開始"
 
-msgid "How does it work?"
-msgstr "仕組みは？"
-
-msgid "diagram showing how it works"
-msgstr "仕組みの説明図"
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr "普段と同じようにパスボルトにサインインします。"
-
 msgid "When using a new browser, you need an additional code from your phone."
 msgstr "新しいブラウザを使用する場合、携帯電話からの追加コードが必要です。"
 
 msgid "Once you enter this code, you can log in."
 msgstr "このコードを入力すると、ログインできます。"
 
-msgid "cancel"
-msgstr "キャンセル"
-
-msgid "get started!"
-msgstr "始めましょう！"
-
 msgid "Time based One Time Password (TOTP) is enabled!"
 msgstr "時間ベースのワンタイムパスワード (TOTP) が有効になっています！"
 
 msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
 msgstr "新しい端末からログインする際には、モバイル上のアプリで生成された一意の認証コードを入力する必要があります。"
-
-msgid "Multi factor authentication verification"
-msgstr "多要素認証の検証"
 
 msgid "Remember this device for a month."
 msgstr "この端末を1か月間記憶しておきます。"
@@ -2145,6 +2259,9 @@ msgstr "新しい端末からログインする際には、yubikeyで生成さ�
 
 msgid "verify"
 msgstr "検証"
+
+msgid "Sign-in with Duo"
+msgstr ""
 
 msgid "Or try with another provider"
 msgstr "または別のプロバイダを試してみてください"
@@ -2232,9 +2349,6 @@ msgstr ""
 
 msgid "An email is required."
 msgstr "メールアドレスが必要です。"
-
-msgid "The email should be a valid email address."
-msgstr "メールアドレスは有効なメールアドレスにしてください。"
 
 msgid "The provider should not be empty."
 msgstr ""
@@ -2613,9 +2727,6 @@ msgstr "データベース名"
 
 msgid "Database name"
 msgstr "データベース名"
-
-msgid "Cancel"
-msgstr "キャンセル"
 
 msgid "Enter your SMTP server settings."
 msgstr "SMTPサーバーの設定を入力します。"
