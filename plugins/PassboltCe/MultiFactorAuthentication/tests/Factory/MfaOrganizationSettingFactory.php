@@ -85,31 +85,24 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
 
     /**
      * @param bool $isActive
-     * @param string|null $hostName
-     * @param string|null $salt
-     * @param string|null $integrationKey
-     * @param string|null $secretKey
+     * @param string|null $apiHostName
+     * @param string|null $clientId
+     * @param string|null $clientSecret
      * @return MfaOrganizationSettingFactory
      */
     public function duo(
         bool $isActive = true,
-        ?string $hostName = null,
-        ?string $salt = null,
-        ?string $integrationKey = null,
-        ?string $secretKey = null
+        ?string $apiHostName = null,
+        ?string $clientId = null,
+        ?string $clientSecret = null
     ) {
         $value = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => $isActive]];
-        $value[MfaSettings::PROVIDER_DUO] = $this->getDuoDefaultSettings($hostName, $salt, $integrationKey, $secretKey);
+        $value[MfaSettings::PROVIDER_DUO] = $this->getDuoDefaultSettings($apiHostName, $clientId, $clientSecret);
 
         return $this->value($value);
     }
 
     /**
-     * @param bool $isActive
-     * @param string|null $hostName
-     * @param string|null $salt
-     * @param string|null $integrationKey
-     * @param string|null $secretKey
      * @return MfaOrganizationSettingFactory
      */
     public function duoWithTotp()
@@ -121,23 +114,20 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
     }
 
     /**
-     * @param string|null $hostName
-     * @param string|null $salt
-     * @param string|null $integrationKey
-     * @param string|null $secretKey
+     * @param string|null $apiHostName
+     * @param string|null $clientId
+     * @param string|null $clientSecret
      * @return array
      */
     protected function getDuoDefaultSettings(
-        ?string $hostName = null,
-        ?string $salt = null,
-        ?string $integrationKey = null,
-        ?string $secretKey = null
+        ?string $apiHostName = null,
+        ?string $clientId = null,
+        ?string $clientSecret = null
     ) {
         return [
-            MfaOrgSettings::DUO_SALT => $salt ?? 'qwertyuiopasdfghjklzxcvbnm12345678901234567890',
-            MfaOrgSettings::DUO_INTEGRATION_KEY => $integrationKey ?? 'DICPIC33F13IWF1FR52J',
-            MfaOrgSettings::DUO_SECRET_KEY => $secretKey ?? '7TkYNgK8AGAuv3KW12qhsJLeIc1mJjHDHC1siNYX',
-            MfaOrgSettings::DUO_HOSTNAME => $hostName ?? 'api-42e9f2fe.duosecurity.com',
+            MfaOrgSettings::DUO_CLIENT_ID => $clientId ?? 'DICPIC33F13IWF1FR52J',
+            MfaOrgSettings::DUO_CLIENT_SECRET => $clientSecret ?? '7TkYNgK8AGAuv3KW12qhsJLeIc1mJjHDHC1siNYX',
+            MfaOrgSettings::DUO_API_HOSTNAME => $apiHostName ?? 'api-45e9f2ca.duosecurity.com',
         ];
     }
 }

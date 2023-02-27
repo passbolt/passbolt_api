@@ -17,12 +17,14 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Service;
 
 use App\Error\Exception\FormValidationException;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 
 class SmtpSettingsGetService
 {
+    use FeaturePluginAwareTrait;
     use SmtpSettingsServiceTrait;
 
     public const SMTP_SETTINGS_SOURCE_FILE = 'file';
@@ -84,6 +86,9 @@ class SmtpSettingsGetService
      */
     protected function readConfigInDb(): ?array
     {
+        if (!$this->isFeaturePluginEnabled('SmtpSettings')) {
+            return null;
+        }
         $config = (new SmtpSettingsGetSettingsInDbService())->getSettings();
         if (!is_null($config)) {
             $config['source'] = self::SMTP_SETTINGS_SOURCE_DB;

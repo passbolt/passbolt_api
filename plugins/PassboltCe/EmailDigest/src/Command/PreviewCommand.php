@@ -27,6 +27,11 @@ use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 class PreviewCommand extends PassboltCommand
 {
     /**
+     * @var string
+     */
+    public const EMAIL_SEPARATOR = '------------------------';
+
+    /**
      * @inheritDoc
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
@@ -61,7 +66,7 @@ class PreviewCommand extends PassboltCommand
             if ($args->getOption('body') === true) {
                 $io->out($preview->getContent());
             }
-            $io->out('------------------------');
+            $io->out(self::EMAIL_SEPARATOR);
         }
 
         return self::CODE_SUCCESS;

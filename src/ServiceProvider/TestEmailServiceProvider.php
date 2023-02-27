@@ -22,10 +22,11 @@ use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
-class CommandServiceProvider extends ServiceProvider
+class TestEmailServiceProvider extends ServiceProvider
 {
     protected $provides = [
         SendTestEmailCommand::class,
+        SmtpSettingsSendTestEmailService::class,
     ];
 
     /**

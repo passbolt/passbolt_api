@@ -22,19 +22,20 @@ use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use Duo\DuoUniversal\Client;
+use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 
 class MfaOrgSettings
 {
-    use MfaOrgSettingsDuoTrait;
     use MfaOrgSettingsYubikeyTrait;
 
     /**
      * Duo constants
      */
-    public const DUO_SECRET_KEY = 'secretKey';
-    public const DUO_HOSTNAME = 'hostName';
-    public const DUO_INTEGRATION_KEY = 'integrationKey';
-    public const DUO_SALT = 'salt';
+    public const DUO_HEALTH_CHECK = 'healthCheck';
+    public const DUO_CLIENT_ID = 'clientId';
+    public const DUO_CLIENT_SECRET = 'clientSecret';
+    public const DUO_API_HOSTNAME = 'apiHostName';
 
     /**
      * Yubikey constants
@@ -72,12 +73,12 @@ class MfaOrgSettings
      * Format Providers
      *
      * We accept both format ['providers' => ['totp' => true ]] and ['providers' => ['totp']]
-     * This function format the former to the later to ensure consistant format
+     * This function format the former to the latter to ensure consistent format
      *
      * @param array $providers see above
      * @return array
      */
-    private function formatProviders(array $providers)
+    private function formatProviders(array $providers): array
     {
         $result = $providers;
         if (count(array_filter(array_keys($providers), 'is_string')) > 0) {
@@ -95,9 +96,9 @@ class MfaOrgSettings
     /**
      * Get Organization MFA Settings
      *
-     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings
+     * @return self
      */
-    public static function get()
+    public static function get(): MfaOrgSettings
     {
         $defaultSettings = ['providers' => []];
         $configureSettings = Configure::read('passbolt.plugins.multiFactorAuthentication');
@@ -154,11 +155,31 @@ class MfaOrgSettings
     }
 
     /**
+     * Return the settings
+     *
+     * @return array|null
+     */
+    public function getSettings(): ?array
+    {
+        return $this->settings;
+    }
+
+    /**
+     * Return the settings
+     *
+     * @return \Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService
+     */
+    public function getDuoOrgSettings(): MfaOrgSettingsDuoService
+    {
+        return new MfaOrgSettingsDuoService($this->settings);
+    }
+
+    /**
      * Return a list of provider
      *
      * @return array with provider as key and al
      */
-    public function getProvidersStatus()
+    public function getProvidersStatus(): array
     {
         $results = [];
         $providers = MfaSettings::getProviders();
@@ -175,7 +196,7 @@ class MfaOrgSettings
      * @param string $provider name of the provider
      * @return bool
      */
-    public function isProviderEnabled(string $provider)
+    public function isProviderEnabled(string $provider): bool
     {
         if (!isset($this->settings) || !isset($this->settings['providers'])) {
             return false;
@@ -198,10 +219,10 @@ class MfaOrgSettings
                 break;
             case MfaSettings::PROVIDER_DUO:
                 try {
-                    $this->getDuoIntegrationKey();
-                    $this->getDuoSecretKey();
-                    $this->getDuoHostname();
-                    $this->getDuoSalt();
+                    $duoOrgSettings = $this->getDuoOrgSettings();
+                    $duoOrgSettings->getDuoClientId();
+                    $duoOrgSettings->getDuoClientSecret();
+                    $duoOrgSettings->getDuoApiHostname();
                     $result = true;
                 } catch (RecordNotFoundException $exception) {
                 }
@@ -216,18 +237,18 @@ class MfaOrgSettings
      *
      * @return array
      */
-    public function getConfig()
+    public function getConfig(): array
     {
+        $duoOrgSettings = $this->getDuoOrgSettings();
         $providers = $this->getEnabledProviders();
         $results = ['providers' => $providers];
         foreach ($providers as $provider) {
             switch ($provider) {
                 case MfaSettings::PROVIDER_DUO:
                     $results[MfaSettings::PROVIDER_DUO] = [
-                        self::DUO_SALT => $this->getDuoSalt(),
-                        self::DUO_SECRET_KEY => $this->getDuoSecretKey(),
-                        self::DUO_HOSTNAME => $this->getDuoHostname(),
-                        self::DUO_INTEGRATION_KEY => $this->getDuoIntegrationKey(),
+                        self::DUO_CLIENT_SECRET => $duoOrgSettings->getDuoClientSecret(),
+                        self::DUO_API_HOSTNAME => $duoOrgSettings->getDuoApiHostname(),
+                        self::DUO_CLIENT_ID => $duoOrgSettings->getDuoClientId(),
                     ];
                     break;
                 case MfaSettings::PROVIDER_YUBIKEY:
@@ -246,10 +267,12 @@ class MfaOrgSettings
      * Validate
      *
      * @param array $data user provided data
+     * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
+     * @param array $options Options used to save & validate organisation settings
      * @throws \App\Error\Exception\CustomValidationException if the data does not validate
      * @return bool if data validates
      */
-    public function validate(array $data)
+    public function validate(array $data, ?Client $client = null, array $options = []): bool
     {
         if (empty($data)) {
             $msg = __('The multi-factor authentication settings data should not be empty.');
@@ -270,8 +293,9 @@ class MfaOrgSettings
                     }
                     break;
                 case MfaSettings::PROVIDER_DUO:
+                    $skipHealthcheck = $options['skipDuoHealtcheck'] ?? false;
                     try {
-                        $this->validateDuoSettings($data);
+                        (new MfaOrgSettingsDuoService($data))->validateDuoSettings($client, $skipHealthcheck === false);
                     } catch (CustomValidationException $exception) {
                         $errors = $exception->getErrors();
                     }
@@ -302,14 +326,16 @@ class MfaOrgSettings
      * @throws \Cake\Http\Exception\InternalErrorException
      * @param array $data user provided input
      * @param \App\Utility\UserAccessControl $uac user access control
+     * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
+     * @param array $options Options used to save & validate organisation settings
      * @return void
      */
-    public function save(array $data, UserAccessControl $uac)
+    public function save(array $data, UserAccessControl $uac, ?Client $client = null, array $options = []): void
     {
         if (isset($data[MfaSettings::PROVIDERS])) {
             $data[MfaSettings::PROVIDERS] = $this->formatProviders($data[MfaSettings::PROVIDERS]);
         }
-        $this->validate($data);
+        $this->validate($data, $client, $options);
         $this->settings = $data;
         $json = json_encode($data);
         $this->OrganizationSettings->createOrUpdateSetting(MfaSettings::MFA, $json, $uac);

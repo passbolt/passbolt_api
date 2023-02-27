@@ -77,17 +77,37 @@ $routes->plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functi
     $routes->connect('/setup/duo', ['prefix' => 'Duo', 'controller' => 'DuoSetupGet', 'action' => 'get'])
         ->setMethods(['GET']);
 
+    /** @deprecated Now using /setup/duo/prompt endpoint instead, redirecting to Duo instead of displaying a iFrame */
     $routes->connect('/setup/duo', ['prefix' => 'Duo', 'controller' => 'DuoSetupPost', 'action' => 'post'])
         ->setMethods(['POST']);
 
     $routes->connect('/setup/duo', ['prefix' => 'Duo', 'controller' => 'DuoSetupDelete', 'action' => 'delete'])
         ->setMethods(['DELETE']);
 
+    $routes->connect('/setup/duo/prompt', ['prefix' => 'Duo', 'controller' => 'DuoSetupPromptPost', 'action' => 'post'])
+        ->setMethods(['POST']);
+
+    $routes->connect('/setup/duo/callback', [
+            'prefix' => 'Duo', 'controller' => 'DuoSetupCallbackGet', 'action' => 'get',
+        ])
+        ->setMethods(['GET']);
+
+    /** @deprecated Now using /verify/duo/prompt endpoint instead, redirecting to Duo instead of displaying a iFrame */
     $routes->connect('/verify/duo', ['prefix' => 'Duo', 'controller' => 'DuoVerifyGet', 'action' => 'get'])
         ->setMethods(['GET']);
 
     $routes->connect('/verify/duo', ['prefix' => 'Duo', 'controller' => 'DuoVerifyPost', 'action' => 'post'])
         ->setMethods(['POST']);
+
+    $routes->connect('/verify/duo/prompt', [
+            'prefix' => 'Duo', 'controller' => 'DuoVerifyPromptPost', 'action' => 'post',
+        ])
+        ->setMethods(['POST']);
+
+    $routes->connect('/verify/duo/callback', [
+            'prefix' => 'Duo', 'controller' => 'DuoVerifyCallbackGet', 'action' => 'get',
+        ])
+        ->setMethods(['GET']);
 
     $routes->connect('/verify/error', ['controller' => 'MfaVerifyAjaxError', 'action' => 'get'])
         ->setMethods(['GET', 'POST', 'PUT', 'DELETE']);

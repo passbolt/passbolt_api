@@ -32,6 +32,7 @@ abstract class MfaVerifyController extends MfaController
 {
     /**
      * @return void
+     * @throws \Exception if loadComponent failed
      */
     public function initialize(): void
     {

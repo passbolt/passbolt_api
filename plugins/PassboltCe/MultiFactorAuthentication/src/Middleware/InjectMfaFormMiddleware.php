@@ -21,6 +21,7 @@ use App\Middleware\UacAwareMiddlewareTrait;
 use App\Utility\UserAccessControl;
 use Cake\Core\ContainerInterface;
 use Cake\Http\ServerRequest;
+use Passbolt\MultiFactorAuthentication\Form\Duo\DuoCallbackForm;
 use Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm;
 use Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
@@ -99,8 +100,13 @@ class InjectMfaFormMiddleware implements MiddlewareInterface
                 $concrete = YubikeyVerifyForm::class;
                 break;
             case 'setup/duo/start':
+            case 'setup/duo/prompt':
             case 'setup/duo':
                 $concrete = DuoSetupForm::class;
+                break;
+            case 'setup/duo/callback':
+            case 'verify/duo/callback':
+                $concrete = DuoCallbackForm::class;
                 break;
             case 'verify/duo':
                 $concrete = DuoVerifyForm::class;

@@ -40,6 +40,7 @@ class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
     {
         parent::setUp();
         MfaSettings::clear();
+        /** @psalm-suppress InternalMethod */
         $this->service = new MfaOrgSettingsMigrationToDbService();
         $this->loadPlugins(['Passbolt/MultiFactorAuthentication' => []]);
     }
@@ -126,7 +127,6 @@ class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
     public function testMfaOrgSettingsMigrationToDbService_With_Complete_Settings()
     {
         UserFactory::make()->admin()->persist();
-
         $settings = $this->getDefaultMfaOrgSettings();
         $this->mockMfaOrgSettings($settings);
 
@@ -137,10 +137,27 @@ class MfaOrgSettingsMigrationToDbServiceTest extends TestCase
         $this->assertEquals($settings, $settingsInDB);
     }
 
+    public function testMfaOrgSettingsMigrationToDbService_WithOtherProvidersAndNoTotpInDB_And_WithTotpEnv_Must_Enable_Totp()
+    {
+        putenv('PASSBOLT_PLUGINS_MFA_PROVIDERS_TOTP=true');
+
+        UserFactory::make()->admin()->persist();
+        $settings = $this->getDefaultMfaOrgSettings();
+        unset($settings[MfaSettings::PROVIDERS][MfaSettings::PROVIDER_TOTP]);
+        $this->mockMfaOrgSettings($settings);
+
+        $this->service->migrate();
+
+        $settingsInDB = $this->getMfaOrganizationSettingValue();
+        $settings['providers'] = ['duo', 'yubikey', 'totp'];
+        $this->assertEquals($settings, $settingsInDB);
+
+        putenv('PASSBOLT_PLUGINS_MFA_PROVIDERS_TOTP');
+    }
+
     public function testMfaOrgSettingsMigrationToDbService_With_Invalid_Settings()
     {
         UserFactory::make()->admin()->persist();
-
         $settings = $this->getDefaultMfaOrgSettings();
         $settings['yubikey']['clientId'] = 'invalid ';
         $this->mockMfaOrgSettings($settings);

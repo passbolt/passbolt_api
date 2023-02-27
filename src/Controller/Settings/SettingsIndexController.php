@@ -19,6 +19,7 @@ namespace App\Controller\Settings;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -101,6 +102,13 @@ class SettingsIndexController extends AppController
                 'edition' => Configure::read('passbolt.edition'),
             ],
         ];
+        if (is_string(Configure::read(EmailValidationRule::REGEX_CHECK_KEY))) {
+            $baseSettings = Hash::insert(
+                $baseSettings,
+                'passbolt.email.validate.regex',
+                Configure::read(EmailValidationRule::REGEX_CHECK_KEY)
+            );
+        }
         if ($role !== Role::GUEST) {
             // Build settings array.
             $settings = [

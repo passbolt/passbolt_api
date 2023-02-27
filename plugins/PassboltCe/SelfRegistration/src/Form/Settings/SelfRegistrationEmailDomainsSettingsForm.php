@@ -16,8 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\SelfRegistration\Form\Settings;
 
-use Cake\Core\Configure;
-use Cake\Validation\Validation;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Validation\Validator;
 
 class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSettingsForm
@@ -64,7 +63,7 @@ class SelfRegistrationEmailDomainsSettingsForm extends SelfRegistrationBaseSetti
             return __('The list of allowed domains should be an array of strings.');
         }
         foreach ($domains as $k => $domain) {
-            if (!Validation::email("noreply@$domain", Configure::read('passbolt.email.validate.mx'))) {
+            if (!EmailValidationRule::check("noreply@$domain")) {
                 return __('The domain #{0} should be a valid domain.', $k);
             }
         }

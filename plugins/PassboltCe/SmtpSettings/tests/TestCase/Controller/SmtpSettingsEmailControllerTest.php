@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\TestSuite\EmailTrait;
+use App\Test\Lib\Utility\EmailTestTrait;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
@@ -26,7 +26,7 @@ use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
 {
-    use EmailTrait;
+    use EmailTestTrait;
     use SmtpSettingsIntegrationTestTrait;
     use SmtpSettingsTestTrait;
 
@@ -44,11 +44,13 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
 
         $this->postJson('/smtp/email.json', $data);
         $this->assertSuccess();
-        $this->assertMailSentFrom('johndoe@passbolt.test');
-        $this->assertMailSentTo($recipient);
         $this->assertMailCount(1);
-        $this->assertMailContains('Congratulations!');
-        $this->assertMailContains(
+        $this->assertMailSentFromAt(0, ['johndoe@passbolt.test' => 'John Doe']);
+        $this->assertMailSentToAt(0, [$recipient => $recipient]);
+        $this->assertMailCount(1);
+        $this->assertMailContainsAt(0, 'Congratulations!');
+        $this->assertMailContainsAt(
+            0,
             'If you receive this email, it means that your passbolt smtp configuration is working fine.'
         );
         $debug = $trace;

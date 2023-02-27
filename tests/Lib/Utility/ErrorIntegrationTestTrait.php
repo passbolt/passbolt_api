@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Utility;
 
+use Cake\TestSuite\Constraint\Response\CookieSet;
+
 trait ErrorIntegrationTestTrait
 {
     /**
@@ -125,5 +127,35 @@ trait ErrorIntegrationTestTrait
         }
         $mfaCookie = $cookies->get($cookie);
         $this->assertTrue($mfaCookie->isExpired(), $msg);
+    }
+
+    /**
+     * Read a cookie in the response, assert that the cookie exists.
+     *
+     * @param string $cookie Cookie name
+     * @param string $msg Error message
+     * @return void
+     */
+    public function assertCookieSet(string $cookie, string $msg = 'Cookie not found.')
+    {
+        $this->assertThat($cookie, new CookieSet($this->_response), $msg);
+    }
+
+    /**
+     * Read a cookie in the response, assert that the cookie is found and has not expired.
+     *
+     * @param string $cookie Cookie name
+     * @param string $msg Error message
+     * @return void
+     */
+    public function assertCookieNotExpired(string $cookie, string $msg = 'Cookie not found.')
+    {
+        /** @var \Cake\Http\Cookie\CookieCollection $cookies */
+        $cookies = $this->_response->getCookieCollection();
+        if (!$cookies->has($cookie)) {
+            $this->fail($msg);
+        }
+        $responseCookie = $cookies->get($cookie);
+        $this->assertFalse($responseCookie->isExpired(), $msg);
     }
 }

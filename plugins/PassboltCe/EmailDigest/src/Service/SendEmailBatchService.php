@@ -153,10 +153,6 @@ class SendEmailBatchService
      */
     private function mapEmailDigestToMailerEmail(Mailer $email, EmailDigestInterface $emailDigest)
     {
-        $emailData = $emailDigest->getEmailsData()[0];
-        if (!empty($emailData->from_email) && !empty($emailData->from_name)) {
-            $email->setFrom($emailData->from_email, $emailData->from_name);
-        }
         $email
             ->setTo($emailDigest->getEmailRecipient())
             ->setSubject($emailDigest->getSubject())

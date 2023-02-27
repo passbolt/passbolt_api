@@ -31,6 +31,8 @@ require __DIR__ . '/paths.php';
  */
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
+use App\Mailer\Transport\DebugTransport;
+use App\Mailer\Transport\SmtpTransport;
 use Cake\Cache\Cache;
 use Cake\Database\Type\JsonType;
 use Cake\Database\TypeFactory;
@@ -162,10 +164,8 @@ unset($fullBaseUrl);
 
 Cache::setConfig(Configure::consume('Cache'));
 ConnectionManager::setConfig(Configure::consume('Datasources'));
-$isSmtpSettingsEnabled = Configure::read('passbolt.plugins.smtpSettings.enabled', true);
-if ($isSmtpSettingsEnabled) {
-    Configure::write('EmailTransport.default.className', \Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport::class);
-}
+Configure::write('EmailTransport.default.className', SmtpTransport::class);
+Configure::write('EmailTransport.Debug.className', DebugTransport::class);
 TransportFactory::setConfig(Configure::consume('EmailTransport'));
 Mailer::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));

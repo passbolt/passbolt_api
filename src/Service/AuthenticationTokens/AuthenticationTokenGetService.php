@@ -19,7 +19,6 @@ namespace App\Service\AuthenticationTokens;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -83,6 +82,8 @@ class AuthenticationTokenGetService
     }
 
     /**
+     * Get active token or fail.
+     *
      * @param string $token authentication token
      * @param string $userId user ID
      * @param string $type token type
@@ -97,15 +98,9 @@ class AuthenticationTokenGetService
             throw new BadRequestException(__('The token should be a valid UUID.'));
         }
 
-        try {
-            $where = [
-                'token' => $token,
-                'type' => $type,
-                'user_id' => $userId,
-            ];
-            /** @var \App\Model\Entity\AuthenticationToken $tokenEntity */
-            $tokenEntity = $this->AuthenticationTokens->find()->where($where)->firstOrFail();
-        } catch (RecordNotFoundException $exception) {
+        $tokenEntity = $this->get($token, $userId, $type);
+
+        if (!$tokenEntity) {
             throw new NotFoundException(__('The authentication token could not be found.'));
         }
 
@@ -117,6 +112,33 @@ class AuthenticationTokenGetService
             ];
             throw new CustomValidationException(__('The authentication token is not valid.'), $error);
         }
+
+        return $tokenEntity;
+    }
+
+    /**
+     * Get an authentication token given it's token, user identifier and type
+     *
+     * @param string $token authentication token
+     * @param string $userId user ID
+     * @param string $type token type
+     * @return \App\Model\Entity\AuthenticationToken|null
+     * @throws \Cake\Http\Exception\BadRequestException if token id is not a valid uuid
+     */
+    public function get(string $token, string $userId, string $type)
+    {
+        if (!Validation::uuid($token)) {
+            throw new BadRequestException(__('The token should be a valid UUID.'));
+        }
+
+        $where = [
+            'token' => $token,
+            'type' => $type,
+            'user_id' => $userId,
+        ];
+
+        /** @var \App\Model\Entity\AuthenticationToken|null $tokenEntity */
+        $tokenEntity = $this->AuthenticationTokens->find()->where($where)->first();
 
         return $tokenEntity;
     }

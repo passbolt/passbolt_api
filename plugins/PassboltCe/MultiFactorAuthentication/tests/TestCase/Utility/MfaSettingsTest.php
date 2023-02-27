@@ -57,10 +57,9 @@ class MfaSettingsTest extends MfaIntegrationTestCase
             'secretKey' => 'i2/j3jIQBO/axOl3ah4mlgXlXUY=',
         ],
         MfaSettings::PROVIDER_DUO => [
-            'salt' => '__CHANGE_ME__THIS_MUST_BE_AT_LEAST_FOURTY_CHARACTERS_____',
-            'integrationKey' => 'UICPIC93F14RWR5F55SJ',
-            'secretKey' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
-            'hostName' => 'api-45e9f2ca.duosecurity.com',
+            'clientId' => 'UICPIC93F14RWR5F55SJ',
+            'clientSecret' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
+            'apiHostName' => 'api-45e9f2ca.duosecurity.com',
         ],
     ];
 
@@ -208,8 +207,8 @@ class MfaSettingsTest extends MfaIntegrationTestCase
                 'secretKey' => '8aG/Auv3KW1eqhs/JLfIc1mJnHD=',
             ],
             MfaSettings::PROVIDER_DUO => [
-                'salt' => 'Passbolt\MultiFactorAuthentication\Test\TestCase\Utility\MfaSettingsTest',
-                // others are missing
+                // For organization settings, ensure that providers don't work with missing configs
+                // For account settings, ensure that providers work with missing configs
             ],
         ];
         $this->mockMfaOrgSettings($orgSettings, 'configure');

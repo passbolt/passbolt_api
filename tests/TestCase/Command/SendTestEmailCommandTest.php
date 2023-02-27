@@ -16,17 +16,18 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
+use App\Mailer\Transport\DebugTransport;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\EmailTrait;
-use Cake\TestSuite\TestEmailTransport;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 
 class SendTestEmailCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
-    use EmailTrait;
+    use EmailTestTrait;
+    use SmtpSettingsIntegrationTestTrait;
 
     /**
      * setUp method
@@ -38,7 +39,7 @@ class SendTestEmailCommandTest extends AppTestCase
         parent::setUp();
         $this->useCommandRunner();
         $config = [
-            'className' => TestEmailTransport::class,
+            'className' => DebugTransport::class,
             'host' => 'unreachable_host.dev',
             'port' => 123,
             'timeout' => 30,
@@ -49,11 +50,6 @@ class SendTestEmailCommandTest extends AppTestCase
         ];
         TransportFactory::drop('default');
         TransportFactory::setConfig('default', $config);
-    }
-
-    public function tearDown(): void
-    {
-        TransportFactory::drop(SmtpSettingsSendTestEmailService::TRANSPORT_CONFIG_NAME_DEBUG_EMAIL);
     }
 
     /**
@@ -83,11 +79,15 @@ class SendTestEmailCommandTest extends AppTestCase
      */
     public function testSendTestEmailCommandWithRecipient()
     {
+        $trace = [['cmd' => 'bar']];
+        $this->mockSmtpSettingsSendTestEmailServiceSuccessful($trace);
         $recipient = 'test@passbolt.test';
         $this->exec('passbolt send_test_email -r ' . $recipient);
         $this->assertExitSuccess();
-        $this->assertMailSentTo($recipient);
-        $this->assertMailSubjectContains('Passbolt test email');
+        $this->assertOutputContains('<info>Trace</info>');
+        $this->assertOutputContains('<info> *****</info>');
+        $this->assertMailSentToAt(0, [$recipient => $recipient]);
+        $this->assertMailSubjectContainsAt(0, 'Passbolt test email');
         $this->assertMailCount(1);
     }
 
@@ -116,6 +116,5 @@ class SendTestEmailCommandTest extends AppTestCase
 
         $this->assertExitError();
         $this->assertOutputContains('Your email transport configuration is not set to use "Smtp"');
-        $this->assertMailCount(0);
     }
 }

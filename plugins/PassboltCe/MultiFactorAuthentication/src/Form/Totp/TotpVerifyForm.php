@@ -91,6 +91,10 @@ class TotpVerifyForm extends MfaForm
      */
     public function isValidOtp(string $value)
     {
+        if ($this->settings->getAccountSettings() === null) {
+            return false;
+        }
+
         return Factory::loadFromProvisioningUri($this->settings->getAccountSettings()->getOtpProvisioningUri())
             ->verify($value);
     }

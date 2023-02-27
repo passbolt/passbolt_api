@@ -61,7 +61,7 @@ final class MfaOrgSettingsMigrationToDbService
 
         // Add TOTP if it was not deactivated by env, and if not already in the list of providers
         if (!$this->isTotpDeactivatedWithEnvVariable() && !in_array(MfaSettings::PROVIDER_TOTP, $providers)) {
-            $providers += [MfaSettings::PROVIDER_TOTP];
+            $providers[] = MfaSettings::PROVIDER_TOTP;
         }
 
         // Map the provider in the proper format
@@ -80,9 +80,13 @@ final class MfaOrgSettingsMigrationToDbService
      * @param array $mfaOrgSettings Settings to store
      * @return void
      */
-    protected function storeMfaSettingsInDb(UserAccessControl $uac, array $mfaOrgSettings): void
-    {
-        (new MfaOrgSettingsSetService())->setOrgSettings($mfaOrgSettings, $uac);
+    protected function storeMfaSettingsInDb(
+        UserAccessControl $uac,
+        array $mfaOrgSettings
+    ): void {
+        (new MfaOrgSettingsSetService())->setOrgSettings($mfaOrgSettings, $uac, null, [
+            'skipDuoHealtcheck' => true,
+        ]);
     }
 
     /**

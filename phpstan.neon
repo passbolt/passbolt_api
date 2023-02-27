@@ -11,3 +11,6 @@ parameters:
     excludes_analyse:
         - **/templates/**
         - **/tests/**
+
+rules:
+    - App\Test\PhpstanRule\Deprecation\DeprecatedEmailValidationStaticRule
