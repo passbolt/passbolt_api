@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.11.0
  */
 
-namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\MfaDuoClient;
+namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\Duo;
 
 use App\Model\Entity\AuthenticationToken;
 use Cake\Http\Exception\InternalErrorException;
