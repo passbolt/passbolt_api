@@ -39,17 +39,15 @@ class EmailQueueFactory extends CakephpBaseFactory
 
         $this->setDefaultData(function (Generator $faker) {
             $email = $faker->email();
-            $from_email = $faker->email();
+            $title = $faker->sentence();
 
             return [
                 'email' => $email,
-                'subject' => $faker->sentence(),
-                'from_name' => $faker->name(),
-                'from_email' => $from_email,
+                'subject' => $faker->word(),
                 'config' => 'default',
                 'template' => 'test_email',
                 'layout' => 'default',
-                'template_vars' => json_encode(compact('email', 'from_email')),
+                'template_vars' => json_encode(compact('email', 'title')),
                 'theme' => '',
                 'format' => 'html',
                 'sent' => 0,

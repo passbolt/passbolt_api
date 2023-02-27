@@ -221,13 +221,9 @@ return [
      *  Smtp   - Send using SMTP
      *  Debug  - Do not send the email, just return the result
      *
-     * You can add custom transports (or override existing transports) by adding the
-     * appropriate file to src/Mailer/Transport. Transports should be named
-     * 'YourTransport.php', where 'Your' is the name of the transport.
      */
     'EmailTransport' => [
         'default' => [
-            'className' => env('EMAIL_TRANSPORT_DEFAULT_CLASS_NAME', 'Smtp'),
             /*
              * The keys host, port, timeout, username, password, client and tls
              * are used in SMTP transports

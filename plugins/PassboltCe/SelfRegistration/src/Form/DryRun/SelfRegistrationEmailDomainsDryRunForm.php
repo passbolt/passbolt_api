@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\SelfRegistration\Form\DryRun;
 
-use Cake\Core\Configure;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Form\Form;
 use Cake\Validation\Validator;
 
@@ -32,11 +32,7 @@ class SelfRegistrationEmailDomainsDryRunForm extends Form
     {
         $validator
             ->requirePresence('email', __('An email is required.'))
-            ->email(
-                'email',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The email should be a valid email address.')
-            );
+            ->add('email', 'email', new EmailValidationRule());
 
         return $validator;
     }

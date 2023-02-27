@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\HealthcheckCommand;
+use App\Model\Validation\EmailValidationRule;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Core\Configure;
@@ -90,8 +91,14 @@ class HealthcheckCommandTest extends AppTestCase
     public function testHealthcheckCommand_Environment()
     {
         $this->exec('passbolt healthcheck -d test --environment');
+
         $this->assertExitSuccess();
-        $this->assertOutputContains('No error found. Nice one sparky!');
+
+        $expectedOutput = 'No error found. Nice one sparky!';
+        if (version_compare(PHP_VERSION, '7.4', '<')) {
+            $expectedOutput = 'error(s) found. Hang in there!';
+        }
+        $this->assertOutputContains($expectedOutput);
     }
 
     public function testHealthcheckCommand_Application_Happy_Path()
@@ -102,7 +109,7 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('App.fullBaseUrl', 'https://passbolt.local');
         Configure::write('passbolt.selenium.active', false);
         Configure::write('passbolt.meta.robots', 'noindex');
-        Configure::write('passbolt.email.validate.mx', true);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, true);
         Configure::write('passbolt.js.build', 'production');
         Configure::write('passbolt.email.send', '');
 
@@ -132,7 +139,7 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('passbolt.meta.robots', '');
         Configure::write('passbolt.registration.public', true);
         $this->setSelfRegistrationSettingsData();
-        Configure::write('passbolt.email.validate.mx', false);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, false);
         Configure::write('passbolt.js.build', 'test');
         Configure::write('passbolt.email.send', 'false');
 

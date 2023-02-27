@@ -79,8 +79,7 @@ class SanitizeUrlComponent extends Component
      */
     protected function _extractFirstParameter(string $queryKey): string
     {
-        $request = $this->getController()->getRequest();
-        $queryValue = $request->getQuery($queryKey);
+        $queryValue = $this->getController()->getRequest()->getQuery($queryKey);
         if (is_array($queryValue)) {
             $queryValue = $queryValue[0] ?? '';
         }

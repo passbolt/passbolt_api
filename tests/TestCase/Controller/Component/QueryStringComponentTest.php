@@ -170,6 +170,7 @@ class QueryStringComponentTest extends TestCase
         $expected = [
             'filter' => [
                 'has-users' => ['user1', 'user2'],
+                'is-success' => '1',
             ],
             'contain' => [
                 'users' => 1,
@@ -178,6 +179,7 @@ class QueryStringComponentTest extends TestCase
         $query = [
             'filter' => [
                 'has-users' => 'user1,user2',
+                'is-success' => '1',
             ],
             'contain' => [
                 'users' => 1,

@@ -137,7 +137,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
             'subject' => "Your account recovery, {$user->profile->first_name}!",
             'template' => 'AN/user_recover',
         ]);
-        $avatarTitle = $user['profile']['first_name'] . ' ' . $user['profile']['last_name'];
+        $avatarTitle = htmlentities($user['profile']['first_name'] . ' ' . $user['profile']['last_name']);
         $this->assertEmailInBatchContains($avatarTitle);
     }
 

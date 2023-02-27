@@ -34,10 +34,14 @@ class MfaVerifiedCookie
      * @param \Cake\Http\ServerRequest $request server request
      * @param string $token token
      * @param \DateTimeInterface|null $expirationDate Expiration date for the token
-     * @return \Cake\Http\Cookie\Cookie|static
+     * @return \Cake\Http\Cookie\Cookie
      */
-    public static function get(ServerRequest $request, string $token, ?DateTimeInterface $expirationDate = null)
-    {
+    public static function get(
+        ServerRequest $request,
+        string $token,
+        ?DateTimeInterface $expirationDate = null
+    ): Cookie {
+        /** @var \Cake\Http\Cookie\Cookie $mfaCookie */
         $mfaCookie = (new Cookie(self::MFA_COOKIE_ALIAS))
             ->withValue($token)
             ->withPath('/')

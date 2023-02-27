@@ -16,16 +16,15 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use App\Mailer\Transport\DebugTransport;
+use App\Mailer\Transport\SmtpTransport;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Cake\Core\Configure;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
-use Cake\TestSuite\TestEmailTransport;
 use Cake\Utility\Hash;
-use Cake\Validation\Validation;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 
@@ -76,13 +75,12 @@ class SendTestEmailCommand extends PassboltCommand
         $recipient = $args->getOption('recipient');
 
         /** Validate recipient email. */
-        if (! Validation::email($recipient, Configure::read('passbolt.email.validate.mx'))) {
+        if (!EmailValidationRule::check($recipient)) {
             $this->error(__('The recipient should be a valid email address.', $recipient), $io);
             $this->abort();
         }
 
         $this->checkSmtpIsSet($io);
-
         try {
             $transportConfig = (new SmtpSettingsGetService())->getSettings();
         } catch (\Throwable $e) {
@@ -256,7 +254,7 @@ class SendTestEmailCommand extends PassboltCommand
     {
         $transportConfig = TransportFactory::getConfig('default');
         $className = Hash::get($transportConfig, 'className');
-        if ($className != 'Smtp' && $className != SmtpTransport::class && $className !== TestEmailTransport::class) {
+        if ($className != 'Smtp' && $className != SmtpTransport::class && $className !== DebugTransport::class) {
             $msg = __('Your email transport configuration is not set to use "Smtp". ({0} is set instead)', $className);
             $this->error($msg, $io);
             $this->error(__('This email debug task is only for SMTP configurations.'), $io);

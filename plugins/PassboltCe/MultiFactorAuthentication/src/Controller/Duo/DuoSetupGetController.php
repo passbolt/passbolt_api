@@ -25,6 +25,9 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupGetController extends MfaSetupController
 {
+    public const PROVIDER = MfaSettings::PROVIDER_DUO;
+    public const DUO_SETUP_REDIRECT_PATH = '/app/settings/mfa/duo';
+
     /**
      * Duo Get Qr Code and provisioning urls
      *
@@ -33,15 +36,21 @@ class DuoSetupGetController extends MfaSetupController
      */
     public function get(MfaFormInterface $setupForm)
     {
-        if ($this->request->is('json')) {
-            throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
+        $this->_assertRequestNotJson();
+        $this->_orgAllowProviderOrFail(self::PROVIDER);
+
+        $error = $this->_consumeError();
+        if (!empty($error)) {
+            $this->_handleError($error);
+
+            return;
         }
-        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_DUO);
+
         try {
-            $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_DUO);
+            $this->_notAlreadySetupOrFail(self::PROVIDER);
             $this->_handleGetNewSettings($setupForm);
         } catch (BadRequestException $exception) {
-            $this->_handleGetExistingSettings(MfaSettings::PROVIDER_DUO);
+            $this->_handleGetExistingSettings(self::PROVIDER);
         }
     }
 
@@ -53,10 +62,10 @@ class DuoSetupGetController extends MfaSetupController
      */
     protected function _handleGetNewSettings(MfaFormInterface $setupForm)
     {
-        /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm $setupForm */
+        /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoCallbackForm $setupForm */
         try {
-            $this->set('sigRequest', $setupForm->getSigRequest());
-            $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
+            $duoOrgSettings = $this->mfaSettings->getOrganizationSettings()->getDuoOrgSettings();
+            $this->set('hostName', $duoOrgSettings->getDuoApiHostname());
         } catch (RecordNotFoundException $exception) {
             throw new InternalErrorException('MFA Duo organization settings are not complete.', 500, $exception);
         }
@@ -64,7 +73,43 @@ class DuoSetupGetController extends MfaSetupController
         $this->set('theme', $this->User->theme());
         $this->viewBuilder()
             ->setLayout('mfa_setup')
-            ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_DUO))
+            ->setTemplatePath(ucfirst(self::PROVIDER))
             ->setTemplate('setupForm');
+    }
+
+    /**
+     * Handle get request when a Duo error is present, by displaying an error form.
+     *
+     * @param string $errorMsg Error message to display
+     * @return void
+     */
+    protected function _handleError(string $errorMsg): void
+    {
+        $this->getRequest()->getFlash()->set($errorMsg, [
+            'element' => 'raw',
+            'key' => 'duo_auth_error',
+            'clear' => true,
+        ]);
+        $this->set('redirect', self::DUO_SETUP_REDIRECT_PATH);
+        $this->set('theme', $this->User->theme());
+        $this->viewBuilder()
+            ->setLayout('mfa_setup')
+            ->setTemplatePath(ucfirst(self::PROVIDER))
+            ->setTemplate('setupError');
+    }
+
+    /**
+     * Get the Duo error if present.
+     *
+     * @return string
+     */
+    protected function _consumeError(): string
+    {
+        $errorMsg = $this->getRequest()->getFlash()->consume('flash');
+        if ($errorMsg !== null && isset($errorMsg[0]['message'])) {
+            return $errorMsg[0]['message'];
+        }
+
+        return '';
     }
 }

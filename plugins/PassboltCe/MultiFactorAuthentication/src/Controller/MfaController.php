@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Service\ClearMfaCookieInResponseService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -69,5 +70,29 @@ abstract class MfaController extends AppController
     protected function _invalidateMfaCookie(): void
     {
         (new ClearMfaCookieInResponseService($this))->clearMfaCookie();
+    }
+
+    /**
+     * Read in the config and in the request whether SSL is required.
+     * Set to true in the configs by default.
+     *
+     * @return bool
+     */
+    protected function _isSslRequired(): bool
+    {
+        return Configure::read('passbolt.security.cookies.secure') || $this->getRequest()->is('ssl');
+    }
+
+    /**
+     * Assert the request is not of json type.
+     *
+     * @return void
+     * @throw BadRequestException if the request is of json type.
+     */
+    protected function _assertRequestNotJson(): void
+    {
+        if ($this->getRequest()->is('json')) {
+            throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
+        }
     }
 }

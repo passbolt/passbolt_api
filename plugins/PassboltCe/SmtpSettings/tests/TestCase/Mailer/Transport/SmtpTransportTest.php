@@ -18,33 +18,51 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Mailer\Transport;
 
 use App\Error\Exception\FormValidationException;
+use App\Mailer\Transport\DebugTransport;
+use App\Mailer\Transport\SmtpTransport;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Mailer\Message;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**
- * @covers \Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport
+ * @covers \App\Mailer\Transport\SmtpTransport
  */
 class SmtpTransportTest extends TestCase
 {
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->loadPlugins(['Passbolt/SmtpSettings' => []]);
+        EventManager::instance()->setEventList(new EventList());
+    }
+
     public function testSmtpTransport_With_Valid_DB_Settings()
     {
+        $senderEmail = 'phpunit@passbolt.com';
+        $senderName = 'phpunit';
         $configInDb = $this->getSmtpSettingsData();
+        $configInDb['sender_email'] = $senderEmail;
+        $configInDb['sender_name'] = $senderName;
+        $sender = [$senderEmail => $senderName];
         $this->encryptAndPersistSmtpSettings($configInDb);
 
-        $configInFile = ['sender_name' => 'Ada Lovelace'];
-        $transport = new SmtpTransport($configInFile);
-        $configInTransport = $transport->getConfig();
+        $transport = new DebugTransport();
+        $message = new Message();
+        $transport->send($message->setTo('john@passbolt.com'));
 
-        // The config in DB should be returned
-        $this->assertSettingsHaveTheRightKeyValues($configInDb, $configInTransport);
+        $this->assertInstanceOf(SmtpTransport::class, $transport);
+        $message = $transport->getLastMessage();
+        $this->assertSame($sender, $message->getFrom());
+        $this->assertEventFired(SmtpTransport::SMTP_TRANSPORT_BEFORE_SEND_EVENT);
     }
 
     public function testSmtpTransport_Without_DB_Settings_Should_Return_File_Settings()
@@ -66,7 +84,9 @@ class SmtpTransportTest extends TestCase
 
         $this->expectException(InternalErrorException::class);
         $this->expectExceptionMessage('The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database. To fix this problem, you need to configure the SMTP server again. Decryption failed.');
-        new SmtpTransport();
+        $transport = new DebugTransport();
+        $message = new Message();
+        $transport->send($message->setTo('john@passbolt.com'));
     }
 
     public function testSmtpTransport_No_Valid_Data_Should_Throw_Error()
@@ -77,7 +97,9 @@ class SmtpTransportTest extends TestCase
         $this->expectException(FormValidationException::class);
         $this->expectExceptionMessage('Could not validate the smtp settings found in database.');
 
-        new SmtpTransport();
+        $transport = new DebugTransport();
+        $message = new Message();
+        $transport->send($message->setTo('john@passbolt.com'));
     }
 
     private function assertSettingsHaveTheRightKeyValues(array $configExpected, array $configInTransport)
