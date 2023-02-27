@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.10.0
  */
 
-namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\MfaDuoClient;
+namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\Duo;
 
 use App\Utility\UuidFactory;
 use Cake\Http\ServerRequest;
