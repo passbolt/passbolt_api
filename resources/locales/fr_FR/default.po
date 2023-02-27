@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-02-08 11:44+0000\n"
-"PO-Revision-Date: 2023-02-08 12:29\n"
+"POT-Creation-Date: 2023-02-27 10:56+0000\n"
+"PO-Revision-Date: 2023-02-27 12:11\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -961,6 +961,12 @@ msgstr "La date de création doit être définie dans le passé."
 msgid "The key should not already be expired."
 msgstr "La clé ne doit pas déjà être expirée."
 
+msgid "The email should be a valid email address."
+msgstr "L'email doit être une adresse email valide."
+
+msgid "The regular expression should be a valid string."
+msgstr ""
+
 msgid "The fingerprint does not match the one of the armored key."
 msgstr "L'empreinte ne correspond à aucune des clés sécurisées."
 
@@ -1699,6 +1705,9 @@ msgstr "Un statut est requis."
 msgid "Could not validate action log data."
 msgstr "Impossible de valider les données du journal d'action."
 
+msgid "The date {0} should be after the date {1}."
+msgstr ""
+
 msgid "The identifier should be not be empty."
 msgstr "L'identifiant ne doit pas être vide."
 
@@ -1882,11 +1891,29 @@ msgstr "Le jeton d'authentification n'est pas actif."
 msgid "The authentication token is expired."
 msgstr "Le jeton d'authentification a expiré."
 
-msgid "This functionality is not available using AJAX/JSON."
-msgstr "Cette fonctionnalité n'est pas disponible en utilisant AJAX/JSON."
+msgid "Unable to authenticate to Duo."
+msgstr ""
+
+msgid "Unable to validate the Duo callback data."
+msgstr ""
+
+msgid "A Duo state cookie is required."
+msgstr ""
+
+msgid "The Duo state cookie value should be a string."
+msgstr ""
+
+msgid "The Duo state cookie should be a valid UUID."
+msgstr ""
+
+msgid "This entrypoint is not available anymore."
+msgstr ""
 
 msgid "This authentication provider is not enabled for your organization."
 msgstr "Ce fournisseur d'authentification n'est pas activé pour votre organisation."
+
+msgid "This functionality is not available using AJAX/JSON."
+msgstr "Cette fonctionnalité n'est pas disponible en utilisant AJAX/JSON."
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Ce fournisseur d'authentification est déjà configuré. Désactivez-le d'abord"
@@ -1927,14 +1954,29 @@ msgstr "Les paramètres d'authentification multi-facteurs pour l'utilisateur ont
 msgid "Please setup the Yubikey settings."
 msgstr "Veuillez configurer les paramètres pour Yubikey."
 
-msgid "A signature is required."
-msgstr "Une signature est requise."
+msgid "A state is required."
+msgstr ""
 
-msgid "The signature should not be empty."
-msgstr "La signature ne doit pas être vide."
+msgid "The state should be a valid BMP-UTF8 string."
+msgstr ""
 
-msgid "This is not a valid signature response."
-msgstr "Ce n'est pas une réponse de signature valide."
+msgid "The state should not be empty."
+msgstr ""
+
+msgid "A duo code is required."
+msgstr ""
+
+msgid "The duo code state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The duo code should not be empty."
+msgstr ""
+
+msgid "The error description should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The error description state should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "Something went wrong when validating the one-time password."
 msgstr "Quelque chose s'est mal passé lors de la validation du mot de passe à usage unique."
@@ -1960,6 +2002,12 @@ msgstr "L'OTP doit comporter au moins {0} caractères."
 msgid "This yubikey is not associated with this user."
 msgstr "Cette yubikey n'est pas associée à cet utilisateur."
 
+msgid "No Duo error provided"
+msgstr ""
+
+msgid "No Duo error description provided"
+msgstr ""
+
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "Vos paramètres d’authentification multi-facteurs ont été réinitialisés par vous."
 
@@ -1968,6 +2016,63 @@ msgstr "Les paramètres d'authentification multi-facteurs ont été réinitialis
 
 msgid "Your multi-factor authentication settings were reset by an administrator."
 msgstr "Vos paramètres d'authentification multi-facteurs ont été réinitialisés par un administrateur."
+
+msgid "The token should reference an active Duo callback authentication token."
+msgstr ""
+
+msgid "An authentication token state is required."
+msgstr ""
+
+msgid "The Duo state should match the authentication token state."
+msgstr ""
+
+msgid "Could not enable Duo MFA provider."
+msgstr ""
+
+msgid "Unable to verify Duo authentication."
+msgstr ""
+
+msgid "Could not validate the Duo settings."
+msgstr ""
+
+msgid "Could not login using Duo MFA provider."
+msgstr ""
+
+msgid "Unable to connect to Duo services."
+msgstr ""
+
+msgid "Unable to verify Duo code against Duo service."
+msgstr ""
+
+msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
+msgstr ""
+
+msgid "The duo authentication subscriber does not match the operator username."
+msgstr ""
+
+msgid "No configuration set for Duo client ID."
+msgstr ""
+
+msgid "No configuration set for Duo API hostname."
+msgstr ""
+
+msgid "No configuration set for Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo API hostname."
+msgstr ""
+
+msgid "This is not a valid Duo client ID."
+msgstr ""
+
+msgid "Cannot verify Duo settings."
+msgstr ""
+
+msgid "Could not validate Duo configuration"
+msgstr "Impossible de valider la configuration Duo"
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "Le jeton MFA fourni n'existe pas ou est inactif."
@@ -1996,33 +2101,6 @@ msgstr "Fournisseur MFA inconnu: {0}."
 msgid "Could not validate multi-factor authentication provider configuration."
 msgstr "Impossible de valider la configuration du fournisseur d'authentification multi-facteurs."
 
-msgid "No configuration set for Duo integration key."
-msgstr "Aucune configuration définie pour la clé d'intégration Duo."
-
-msgid "No configuration set for Duo host name."
-msgstr "Aucune configuration définie pour le nom d'hôte Duo."
-
-msgid "No configuration set for Duo secret key."
-msgstr "Aucune configuration définie pour la clé secrète Duo."
-
-msgid "No configuration set for Duo salt."
-msgstr "Aucune configuration définie pour le sel Duo."
-
-msgid "Duo salt should be between 40 and 128 characters in length."
-msgstr "Le sel Duo doit être de 40 à 128 caractères."
-
-msgid "This is not a valid Duo secret key."
-msgstr "Ce n'est pas une clé secrète Duo valide."
-
-msgid "This is not a valid Duo host name."
-msgstr "Ce n'est pas un nom d'hôte Duo valide."
-
-msgid "This is not a valid Duo integration key."
-msgstr "Ce n'est pas une clé d'intégration Duo valide."
-
-msgid "Could not validate Duo configuration"
-msgstr "Impossible de valider la configuration Duo"
-
 msgid "No configuration set for Yubikey OTP secret key."
 msgstr "Aucune configuration définie pour la clé secrète Yubikey OTP."
 
@@ -2038,8 +2116,56 @@ msgstr "La clé secrète Yubikey OTP n'est pas valide."
 msgid "Could not validate Yubikey configuration."
 msgstr "Impossible de valider la configuration Yubikey."
 
-msgid "Duo multi-factor authentication"
-msgstr "Authentification multi-facteurs Duo"
+msgid "Duo Multi Factor Authentication"
+msgstr ""
+
+msgid "Something went wrong."
+msgstr "Une erreur s'est produite."
+
+msgid "Please try again later or contact your administrator."
+msgstr "Veuillez réessayer plus tard ou contacter votre administrateur."
+
+msgid "Logs"
+msgstr "Les logs"
+
+msgid "Retry"
+msgstr "Réessayer"
+
+msgid "Getting started with Duo"
+msgstr ""
+
+msgid "How does it work?"
+msgstr "Comment ça marche ?"
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr "Vous vous connectez à passbolt comme vous le faites habituellement."
+
+msgid "Use you 2FA device to authenticate."
+msgstr ""
+
+msgid "Follow the procedure to login."
+msgstr ""
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Get started"
+msgstr "Démarrer"
+
+msgid "Requirements"
+msgstr "Exigences"
+
+msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
+msgstr ""
+
+msgid "For the list of supported devices, see:"
+msgstr ""
+
+msgid "Duo authentication methods"
+msgstr ""
+
+msgid "Learn more"
+msgstr "En savoir plus"
 
 msgid "Duo multi-factor authentication is enabled!"
 msgstr "L'authentification multi-facteurs Duo est activée!"
@@ -2049,6 +2175,15 @@ msgstr "Lorsque vous vous connecterez, vous serez invité à effectuer l'authent
 
 msgid "Since"
 msgstr "Depuis"
+
+msgid "Multi factor authentication verification"
+msgstr "Vérification de l'authentification multi-facteurs"
+
+msgid "Multi Factor Authentication Required"
+msgstr ""
+
+msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
+msgstr ""
 
 msgid "Multi factor authentication"
 msgstr "Authentification multi-facteurs"
@@ -2086,9 +2221,6 @@ msgstr "Scanner ce code-barre"
 msgid "Enter the six digit number as presented on your phone or tablet."
 msgstr "Entrez le numéro de six chiffres tel que présenté sur votre téléphone ou tablette."
 
-msgid "Requirements"
-msgstr "Exigences"
-
 msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
 msgstr "Pour continuer, vous devez installer une application qui prend en charge les mots de passe uniques basés sur le temps (TOTP) sur votre téléphone ou votre tablette tels que:"
 
@@ -2098,35 +2230,17 @@ msgstr "ou"
 msgid "Getting started with Time based One Time Password (TOTP)"
 msgstr "Démarrer avec le mot de passe à usage unique basé sur le temps (TOTP)"
 
-msgid "How does it work?"
-msgstr "Comment ça marche ?"
-
-msgid "diagram showing how it works"
-msgstr "diagramme montrant comment ça marche"
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr "Vous vous connectez à passbolt comme vous le faites habituellement."
-
 msgid "When using a new browser, you need an additional code from your phone."
 msgstr "Lorsque vous utilisez un nouveau navigateur, vous avez besoin d'un code supplémentaire provenant de votre téléphone."
 
 msgid "Once you enter this code, you can log in."
 msgstr "Une fois que vous avez entré ce code, vous pouvez vous connecter."
 
-msgid "cancel"
-msgstr "annuler"
-
-msgid "get started!"
-msgstr "démarrer!"
-
 msgid "Time based One Time Password (TOTP) is enabled!"
 msgstr "Le mot de passe à usage unique basé sur le temps (TOTP) est activé !"
 
 msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
 msgstr "Lorsque vous vous connectez à partir d'un nouvel appareil, vous devrez entrer un code de vérification unique généré par une application sur votre mobile."
-
-msgid "Multi factor authentication verification"
-msgstr "Vérification de l'authentification multi-facteurs"
 
 msgid "Remember this device for a month."
 msgstr "Se souvenir de cet appareil pendant un mois."
@@ -2145,6 +2259,9 @@ msgstr "Lorsque vous vous connectez à partir d'un nouvel appareil, vous aurez b
 
 msgid "verify"
 msgstr "vérifier"
+
+msgid "Sign-in with Duo"
+msgstr ""
 
 msgid "Or try with another provider"
 msgstr "Ou essayez avec un autre fournisseur"
@@ -2232,9 +2349,6 @@ msgstr ""
 
 msgid "An email is required."
 msgstr "Un e-mail est requis."
-
-msgid "The email should be a valid email address."
-msgstr "L'email doit être une adresse email valide."
 
 msgid "The provider should not be empty."
 msgstr ""
@@ -2613,9 +2727,6 @@ msgstr "nom de la base de données"
 
 msgid "Database name"
 msgstr "Nom de la base de données"
-
-msgid "Cancel"
-msgstr "Annuler"
 
 msgid "Enter your SMTP server settings."
 msgstr "Saisissez les paramètres de votre serveur SMTP."

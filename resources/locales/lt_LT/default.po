@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-02-08 11:44+0000\n"
-"PO-Revision-Date: 2023-02-08 12:30\n"
+"POT-Creation-Date: 2023-02-27 10:56+0000\n"
+"PO-Revision-Date: 2023-02-27 12:11\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -961,6 +961,12 @@ msgstr "Sukūrimo data turėtų būti nustatyta praeityje."
 msgid "The key should not already be expired."
 msgstr "Rakto galiojimo laikas neturi būti pasibaigęs."
 
+msgid "The email should be a valid email address."
+msgstr "El. paštas turi būti galiojantis el. pašto adresas."
+
+msgid "The regular expression should be a valid string."
+msgstr ""
+
 msgid "The fingerprint does not match the one of the armored key."
 msgstr "Pirštų atspaudas nesutampa su šarvuoto rakto atspaudu."
 
@@ -1699,6 +1705,9 @@ msgstr "Būtinas statusas."
 msgid "Could not validate action log data."
 msgstr "Nepavyko patvirtinti veiksmų žurnalo duomenų."
 
+msgid "The date {0} should be after the date {1}."
+msgstr ""
+
 msgid "The identifier should be not be empty."
 msgstr "Identifikatoriaus laukas neturi būti tuščias."
 
@@ -1882,11 +1891,29 @@ msgstr "Autentifikavimo prieigos raktas neaktyvus."
 msgid "The authentication token is expired."
 msgstr "Baigėsi autentifikavimo prieigos raktas."
 
-msgid "This functionality is not available using AJAX/JSON."
-msgstr "Ši funkcija negalima naudojant AJAX / JSON."
+msgid "Unable to authenticate to Duo."
+msgstr ""
+
+msgid "Unable to validate the Duo callback data."
+msgstr ""
+
+msgid "A Duo state cookie is required."
+msgstr ""
+
+msgid "The Duo state cookie value should be a string."
+msgstr ""
+
+msgid "The Duo state cookie should be a valid UUID."
+msgstr ""
+
+msgid "This entrypoint is not available anymore."
+msgstr ""
 
 msgid "This authentication provider is not enabled for your organization."
 msgstr "Šis autentifikavimo teikėjas jūsų organizacijoje neįgalintas."
+
+msgid "This functionality is not available using AJAX/JSON."
+msgstr "Ši funkcija negalima naudojant AJAX / JSON."
 
 msgid "This authentication provider is already setup. Disable it first"
 msgstr "Šis autentifikavimo teikėjas jau nustatytas. Pirmiausia išjunkite"
@@ -1927,14 +1954,29 @@ msgstr "Kelių veiksnių autentifikavimo nustatymai vartotojui buvo ištrinti."
 msgid "Please setup the Yubikey settings."
 msgstr "Nustatykite „Yubikey“ nustatymus."
 
-msgid "A signature is required."
-msgstr "Reikalingas parašas."
+msgid "A state is required."
+msgstr ""
 
-msgid "The signature should not be empty."
-msgstr "Parašas neturi būti tuščias."
+msgid "The state should be a valid BMP-UTF8 string."
+msgstr ""
 
-msgid "This is not a valid signature response."
-msgstr "Tai netinkamas parašo atsakymas."
+msgid "The state should not be empty."
+msgstr ""
+
+msgid "A duo code is required."
+msgstr ""
+
+msgid "The duo code state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The duo code should not be empty."
+msgstr ""
+
+msgid "The error description should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The error description state should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "Something went wrong when validating the one-time password."
 msgstr "Kažkas nepavyko tikrinant vienkartinį slaptažodį."
@@ -1960,6 +2002,12 @@ msgstr "Vienkartinis slaptažodis turi būti bent {0} simbolių ilgio."
 msgid "This yubikey is not associated with this user."
 msgstr "Šis yubikey nesusietas su šiuo vartotoju."
 
+msgid "No Duo error provided"
+msgstr ""
+
+msgid "No Duo error description provided"
+msgstr ""
+
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "Jūs iš naujo nustatėte kelių veiksnių autentifikavimo nustatymus."
 
@@ -1968,6 +2016,63 @@ msgstr "Kelių veiksnių autentifikavimo nustatymai buvo nustatyti iš naujo."
 
 msgid "Your multi-factor authentication settings were reset by an administrator."
 msgstr "Administratorius iš naujo nustatė kelių veiksnių autentifikavimo nustatymus."
+
+msgid "The token should reference an active Duo callback authentication token."
+msgstr ""
+
+msgid "An authentication token state is required."
+msgstr ""
+
+msgid "The Duo state should match the authentication token state."
+msgstr ""
+
+msgid "Could not enable Duo MFA provider."
+msgstr ""
+
+msgid "Unable to verify Duo authentication."
+msgstr ""
+
+msgid "Could not validate the Duo settings."
+msgstr ""
+
+msgid "Could not login using Duo MFA provider."
+msgstr ""
+
+msgid "Unable to connect to Duo services."
+msgstr ""
+
+msgid "Unable to verify Duo code against Duo service."
+msgstr ""
+
+msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
+msgstr ""
+
+msgid "The duo authentication subscriber does not match the operator username."
+msgstr ""
+
+msgid "No configuration set for Duo client ID."
+msgstr ""
+
+msgid "No configuration set for Duo API hostname."
+msgstr ""
+
+msgid "No configuration set for Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo API hostname."
+msgstr ""
+
+msgid "This is not a valid Duo client ID."
+msgstr ""
+
+msgid "Cannot verify Duo settings."
+msgstr ""
+
+msgid "Could not validate Duo configuration"
+msgstr "Nepavyko patvirtinti „Duo“ konfigūracijos"
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "Pateiktas MFA prieigos raktas neegzistuoja arba yra neaktyvus."
@@ -1996,33 +2101,6 @@ msgstr "Nežinomas kelių veiksnių autentifikavimoteikėjas: {0}."
 msgid "Could not validate multi-factor authentication provider configuration."
 msgstr "Nepavyko patvirtinti kelių veiksnių autentifikavimo teikėjo konfigūracijos."
 
-msgid "No configuration set for Duo integration key."
-msgstr "Nenustatyta „Duo“ integravimo rakto konfigūracija."
-
-msgid "No configuration set for Duo host name."
-msgstr "Nenustatyta konfigūracija „Duo“ pagrindinio kompiuterio pavadinimui."
-
-msgid "No configuration set for Duo secret key."
-msgstr "Nenustatyta „Duo“ slaptojo rakto konfigūracija."
-
-msgid "No configuration set for Duo salt."
-msgstr "\"Duo salt\" konfigūracija nenustatyta.  "
-
-msgid "Duo salt should be between 40 and 128 characters in length."
-msgstr "\"Duo salt\" turi būti nuo 40 iki 128 simbolių ilgio."
-
-msgid "This is not a valid Duo secret key."
-msgstr "Tai nėra galiojantis „Duo“ slaptasis raktas."
-
-msgid "This is not a valid Duo host name."
-msgstr "Tai netinkamas „Duo“ pagrindinio kompiuterio pavadinimas."
-
-msgid "This is not a valid Duo integration key."
-msgstr "Tai nėra galiojantis „Duo“ integravimo raktas."
-
-msgid "Could not validate Duo configuration"
-msgstr "Nepavyko patvirtinti „Duo“ konfigūracijos"
-
 msgid "No configuration set for Yubikey OTP secret key."
 msgstr "Nenustatyta Yubikey OTP slaptojo rakto konfigūracija."
 
@@ -2038,8 +2116,56 @@ msgstr "Yubikey OTP slaptasis raktas negalioja."
 msgid "Could not validate Yubikey configuration."
 msgstr "Nepavyko patvirtinti Yubikey konfigūracijos."
 
-msgid "Duo multi-factor authentication"
-msgstr "„Duo“ kelių veiksnių autentifikavimas"
+msgid "Duo Multi Factor Authentication"
+msgstr ""
+
+msgid "Something went wrong."
+msgstr "Kažkas nepavyko."
+
+msgid "Please try again later or contact your administrator."
+msgstr ""
+
+msgid "Logs"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Getting started with Duo"
+msgstr ""
+
+msgid "How does it work?"
+msgstr "Kaip tai veikia?"
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr "Prisijungiate prie „Passbolt“ kaip įprastai."
+
+msgid "Use you 2FA device to authenticate."
+msgstr ""
+
+msgid "Follow the procedure to login."
+msgstr ""
+
+msgid "Cancel"
+msgstr "Atšaukti"
+
+msgid "Get started"
+msgstr "Pradėti"
+
+msgid "Requirements"
+msgstr "Reikalavimai"
+
+msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
+msgstr ""
+
+msgid "For the list of supported devices, see:"
+msgstr ""
+
+msgid "Duo authentication methods"
+msgstr ""
+
+msgid "Learn more"
+msgstr ""
 
 msgid "Duo multi-factor authentication is enabled!"
 msgstr "„Duo“ kelių veiksnių autentifikavimas įjungtas!"
@@ -2049,6 +2175,15 @@ msgstr "Prisijungdami būsite paprašyti atlikti Duo autentifikavimą."
 
 msgid "Since"
 msgstr "Nuo"
+
+msgid "Multi factor authentication verification"
+msgstr "Kelių veiksnių autentifikavimo patvirtinimas"
+
+msgid "Multi Factor Authentication Required"
+msgstr ""
+
+msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
+msgstr ""
 
 msgid "Multi factor authentication"
 msgstr "Kelių faktorių autentifikavimas"
@@ -2086,9 +2221,6 @@ msgstr "Nuskaitykite šį brūkšninį kodą"
 msgid "Enter the six digit number as presented on your phone or tablet."
 msgstr "Įveskite šešių skaitmenų skaičių, pateiktą telefone arba planšetiniame kompiuteryje."
 
-msgid "Requirements"
-msgstr "Reikalavimai"
-
 msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
 msgstr "Norėdami tęsti, telefone ar planšetiniame kompiuteryje turite įdiegti programą, kuri palaiko vienkartinius slaptažodžius, pvz.:"
 
@@ -2098,35 +2230,17 @@ msgstr "arba"
 msgid "Getting started with Time based One Time Password (TOTP)"
 msgstr "Darbo su laiku pagrįsto vienkartinio slaptažodžio pradžia"
 
-msgid "How does it work?"
-msgstr "Kaip tai veikia?"
-
-msgid "diagram showing how it works"
-msgstr "diagrama, rodanti, kaip tai veikia"
-
-msgid "You sign in to passbolt just like you normally do."
-msgstr "Prisijungiate prie „Passbolt“ kaip įprastai."
-
 msgid "When using a new browser, you need an additional code from your phone."
 msgstr "Kai naudojate naują naršyklę, jums reikia papildomo kodo iš telefono."
 
 msgid "Once you enter this code, you can log in."
 msgstr "Įvedę šį kodą galite prisijungti."
 
-msgid "cancel"
-msgstr "atšaukti"
-
-msgid "get started!"
-msgstr "pradėti!"
-
 msgid "Time based One Time Password (TOTP) is enabled!"
 msgstr "Laiku pagrįstas vienkartinis slaptažodis įjungtas!"
 
 msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
 msgstr "Prisijungdami iš naujo įrenginio turėsite įvesti unikalų patvirtinimo kodą, kurį sugeneravo programėlė mobiliajame telefone."
-
-msgid "Multi factor authentication verification"
-msgstr "Kelių veiksnių autentifikavimo patvirtinimas"
 
 msgid "Remember this device for a month."
 msgstr "Prisiminkite šį įrenginį mėnesį."
@@ -2145,6 +2259,9 @@ msgstr "Prisijungiant iš naujo įrenginio jums reikės unikalaus kodo, sugeneru
 
 msgid "verify"
 msgstr "patikrinti"
+
+msgid "Sign-in with Duo"
+msgstr ""
 
 msgid "Or try with another provider"
 msgstr "Arba pabandykite su kitu teikėju"
@@ -2232,9 +2349,6 @@ msgstr ""
 
 msgid "An email is required."
 msgstr "Reikalingas el. paštas."
-
-msgid "The email should be a valid email address."
-msgstr "El. paštas turi būti galiojantis el. pašto adresas."
 
 msgid "The provider should not be empty."
 msgstr ""
@@ -2613,9 +2727,6 @@ msgstr "duomenų bazės pavadinimas"
 
 msgid "Database name"
 msgstr "Duomenų bazės pavadinimas"
-
-msgid "Cancel"
-msgstr "Atšaukti"
 
 msgid "Enter your SMTP server settings."
 msgstr "Įveskite SMTP serverio nustatymus."
