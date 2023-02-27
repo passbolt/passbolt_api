@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use App\Model\Entity\Role;
+use App\Model\Validation\EmailValidationRule;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\Healthchecks\DatabaseHealthchecks;
@@ -92,7 +93,7 @@ class Healthchecks
         $checks['application']['sslFullBaseUrl'] = ($https !== false);
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
         $checks['application']['registrationClosed'] = (new SelfRegistrationHealthcheckService())->getHealthcheck();
-        $checks['application']['hostAvailabilityCheckEnabled'] = Configure::read('passbolt.email.validate.mx');
+        $checks['application']['hostAvailabilityCheckEnabled'] = Configure::read(EmailValidationRule::MX_CHECK_KEY);
         $checks['application']['jsProd'] = (Configure::read('passbolt.js.build') === 'production');
         $sendEmailJson = json_encode(Configure::read('passbolt.email.send'));
         $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', $sendEmailJson) === 1);
@@ -224,7 +225,7 @@ class Healthchecks
      */
     public static function environment(?array $checks = []): array
     {
-        $checks['environment']['phpVersion'] = version_compare(PHP_VERSION, '7.0', '>=');
+        $checks['environment']['phpVersion'] = version_compare(PHP_VERSION, '7.4', '>=');
         $checks['environment']['pcre'] = Validation::alphaNumeric('passbolt');
         $checks['environment']['mbstring'] = extension_loaded('mbstring');
         $checks['environment']['gnupg'] = extension_loaded('gnupg');

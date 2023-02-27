@@ -75,17 +75,19 @@ class HealthchecksTest extends AppIntegrationTestCase
     public function testHealthcheckEnvironment()
     {
         $check = Healthchecks::environment();
-        $expectedCheck = [ 'environment' => [
-            'phpVersion' => true,
-            'pcre' => true,
-            'mbstring' => true,
-            'gnupg' => true,
-            'intl' => true,
-            'image' => true,
-            'tmpWritable' => true,
-            'logWritable' => true,
-            //'allow_url_fopen' => true,
-        ]];
+        $expectedCheck = [
+            'environment' => [
+                'phpVersion' => (bool)version_compare(PHP_VERSION, '7.4', '>='),
+                'pcre' => true,
+                'mbstring' => true,
+                'gnupg' => true,
+                'intl' => true,
+                'image' => true,
+                'tmpWritable' => true,
+                'logWritable' => true,
+                //'allow_url_fopen' => true,
+            ],
+        ];
         $this->assertSame($expectedCheck, $check);
     }
 

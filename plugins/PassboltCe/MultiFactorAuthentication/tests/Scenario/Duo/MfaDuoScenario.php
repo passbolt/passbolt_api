@@ -38,8 +38,8 @@ class MfaDuoScenario implements FixtureScenarioInterface
         $user = $args[0] ?? null;
         /** @var bool $isSupported */
         $isSupported = $args[1] ?? true;
-        /** @var string|null $hostName */
-        $hostName = $args[2] ?? null;
+        /** @var string|null $apiHostName */
+        $apiHostName = $args[2] ?? null;
         /** @var null $verified */
         $verified = $args[3] ?? null;
 
@@ -48,7 +48,7 @@ class MfaDuoScenario implements FixtureScenarioInterface
         }
 
         /** $@var \App\Utility\UserAccessControl $user */
-        [$orgSetting] = $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class, $isSupported, $hostName);
+        [$orgSetting] = $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class, $isSupported, $apiHostName);
         $accountSetting = MfaAccountSettingFactory::make()
             ->setField('user_id', $user->get('id'))
             ->duo($verified)

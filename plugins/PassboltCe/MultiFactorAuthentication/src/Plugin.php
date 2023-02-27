@@ -23,6 +23,7 @@ use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\MiddlewareQueue;
 use Cake\ORM\TableRegistry;
+use Duo\DuoUniversal\Client;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\MultiFactorAuthentication\Authenticator\MfaJwtArmoredChallengeService;
 use Passbolt\MultiFactorAuthentication\Event\AddIsMfaEnabledColumnToUsersGrid;
@@ -102,5 +103,7 @@ class Plugin extends BasePlugin
         $container
             ->add(RememberAMonthSettingInterface::class)
             ->setConcrete(DefaultRememberAMonthSettingService::class);
+
+        $container->add(Client::class)->setConcrete(null);
     }
 }

@@ -32,10 +32,9 @@ use App\Notification\EmailDigest\DigestRegister\GroupDigests;
 use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Service\Avatars\AvatarsConfigurationService;
-use App\ServiceProvider\CommandServiceProvider;
 use App\ServiceProvider\SetupServiceProvider;
+use App\ServiceProvider\TestEmailServiceProvider;
 use App\ServiceProvider\UserServiceProvider;
-use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
@@ -59,7 +58,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
 {
-    use FeaturePluginAwareTrait;
+    /**
+     * @var \App\BaseSolutionBootstrapper|null
+     */
+    private $solutionBootstrapper;
 
     /**
      * Setup the PSR-7 middleware passbolt application will use.
@@ -147,8 +149,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         parent::bootstrap();
 
         $this->addCorePlugins()
-            ->addVendorPlugins()
-            ->addPassboltPlugins();
+            ->addVendorPlugins();
+
+        // Load feature plugins
+        $this->getSolutionBootstrapper()->addFeaturePlugins($this);
 
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
@@ -156,6 +160,31 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         $this->initEmails();
         (new AvatarsConfigurationService())->loadConfiguration();
+    }
+
+    /**
+     * This enables to inject a different main plugin name as the default one
+     * defined in config/default.php
+     *
+     * @param \App\BaseSolutionBootstrapper $solutionBootstrapper Class loading all the plugins
+     * @return void
+     */
+    public function setSolutionBootstrapper(BaseSolutionBootstrapper $solutionBootstrapper): void
+    {
+        $this->solutionBootstrapper = $solutionBootstrapper;
+    }
+
+    /**
+     * @return \App\BaseSolutionBootstrapper
+     */
+    public function getSolutionBootstrapper(): BaseSolutionBootstrapper
+    {
+        if (is_null($this->solutionBootstrapper)) {
+            $className = Configure::readOrFail('passbolt.featurePluginAdder');
+            $this->solutionBootstrapper = new $className();
+        }
+
+        return $this->solutionBootstrapper;
     }
 
     /**
@@ -231,54 +260,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
-     * Add passbolt plugins
-     *
-     * @return $this
-     */
-    protected function addPassboltPlugins()
-    {
-        if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
-            $this->addPlugin('PassboltSeleniumApi', ['bootstrap' => true, 'routes' => true]);
-            $this->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
-        }
-
-        // Add Common plugins.
-        $this->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/InFormIntegration', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/Locale', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/ResourceTypes', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
-        $this->addFeaturePluginIfEnabled($this, 'Mobile');
-        $this->addFeaturePluginIfEnabled($this, 'JwtAuthentication');
-        $this->addFeaturePluginIfEnabled($this, 'SelfRegistration');
-        $this->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
-        $this->addFeaturePluginIfEnabled($this, 'SmtpSettings');
-
-        $this->addFeaturePluginIfEnabled(
-            $this,
-            'MultiFactorAuthentication',
-            ['bootstrap' => true, 'routes' => true],
-            true
-        );
-
-        if (!WebInstallerMiddleware::isConfigured()) {
-            $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
-        } else {
-            $logEnabled = Configure::read('passbolt.plugins.log.enabled');
-            if (!isset($logEnabled) || $logEnabled) {
-                $this->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Add plugins relevant in CLI mode
      * - Bake
      * - Migrations
@@ -307,7 +288,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $container->add(AuthenticationServiceInterface::class, SessionAuthenticationService::class);
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
         $container->add(SelfRegistrationDryRunServiceInterface::class, SelfRegistrationDefaultDryRunService::class);
-        $container->addServiceProvider(new CommandServiceProvider());
+        $container->addServiceProvider(new TestEmailServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());
     }

@@ -21,10 +21,12 @@ use App\Model\Entity\Permission;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\TestCase\Controller\Share\ShareControllerTest;
 use App\Utility\UuidFactory;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ShareNotificationTest extends ShareControllerTest
 {
     use EmailQueueTrait;
+    use EmailNotificationSettingsTestTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles',
@@ -32,8 +34,27 @@ class ShareNotificationTest extends ShareControllerTest
         'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->loadNotificationSettings();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->unloadNotificationSettings();
+    }
+
     public function testShareNotificationSuccess()
     {
+        $this->setEmailNotificationSettings([
+            'show.description' => true,
+            'show.username' => true,
+            'show.uri' => true,
+            'show.secret' => true,
+        ]);
+
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
         // Users

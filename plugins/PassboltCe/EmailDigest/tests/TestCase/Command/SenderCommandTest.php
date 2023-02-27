@@ -17,10 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\EmailDigest\Test\TestCase\Command;
 
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Chronos\Chronos;
 use Cake\I18n\I18n;
+use Cake\Mailer\Mailer;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
@@ -34,7 +35,7 @@ class SenderCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
     use DummyTranslationTestTrait;
-    use EmailTrait;
+    use EmailTestTrait;
     use TruncateDirtyTables;
 
     /**
@@ -63,20 +64,22 @@ class SenderCommandTest extends TestCase
     }
 
     /**
-     * Basic Sender test.
+     * Basic Sender test with SMTP configs from file.
      */
     public function testSenderCommandSender()
     {
-        /** @var \Cake\Datasource\EntityInterface $email */
+        $sender = Mailer::getConfig('default')['from'];
         $email = EmailQueueFactory::make()->persist();
 
         $this->exec('passbolt email_digest send');
 
         $this->assertExitSuccess();
-        $this->assertMailSentFrom($email->get('from_email'));
-        $this->assertMailSentTo($email->get('email'));
-        $this->assertMailContains('Sending email from: ' . $email->get('from_email'));
-        $this->assertMailContains('Sending email to: ' . $email->get('email'));
+        $this->assertMailSentFromAt(0, $sender);
+        $this->assertMailSentToAt(0, [$email->get('email') => $email->get('email')]);
+        $this->assertMailContainsAt(0, 'Sending email to: ' . $email->get('email'));
+        // Assert <head> tag is not duplicated/present only once in the email HTML
+        $this->assertMailBodyStringCount(1, '<head>');
+        $this->assertMailBodyStringCount(1, '</head>');
     }
 
     /**
@@ -108,5 +111,8 @@ class SenderCommandTest extends TestCase
         $this->assertMailContainsAt(2, $this->getDummyEnglishEmailSentence());
         $this->assertMailContainsAt(3, $this->getDummyFrenchEmailSentence());
         $this->assertSame(I18n::getDefaultLocale(), I18n::getLocale());
+        // Assert <head> tag is not duplicated/present only once in the email HTML
+        $this->assertMailBodyStringCount(1, '<head>');
+        $this->assertMailBodyStringCount(1, '</head>');
     }
 }

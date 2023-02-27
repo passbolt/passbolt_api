@@ -39,6 +39,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\AuthenticationToken[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken firstOrFail()
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \App\Model\Entity\AuthenticationToken newEmptyEntity()
  * @method \App\Model\Entity\AuthenticationToken saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -54,6 +55,8 @@ class AuthenticationTokensTable extends Table
         AuthenticationToken::TYPE_RECOVER,
         AuthenticationToken::TYPE_LOGIN,
         AuthenticationToken::TYPE_MFA,
+        AuthenticationToken::TYPE_MFA_SETUP,
+        AuthenticationToken::TYPE_MFA_VERIFY,
         AuthenticationToken::TYPE_MOBILE_TRANSFER,
         AuthenticationToken::TYPE_REFRESH_TOKEN,
         AuthenticationToken::TYPE_VERIFY_TOKEN,

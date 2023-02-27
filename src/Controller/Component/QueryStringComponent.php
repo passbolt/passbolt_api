@@ -188,7 +188,7 @@ class QueryStringComponent extends Component
 
     /**
      * Extract filters items
-     * - Transform to array when key ends with 's' like 'has-users'
+     * - Transform to array when key ends with 's' like 'has-users' and is not a boolean like 'is-'
      * - Transform to array when multiple comma separated values are present
      *
      * @param array $query original query string items
@@ -202,8 +202,13 @@ class QueryStringComponent extends Component
             }
             if (is_array($items)) {
                 foreach ($items as $subKey => $subItems) {
-                    if (is_string($subKey) && substr($subKey, -1) === 's' && is_string($query[$key][$subKey])) {
-                        $query[$key][$subKey] = explode(',', $query[$key][$subKey]);
+                    if (
+                        is_string($subKey) &&
+                        substr($subKey, -1) === 's' &&
+                        is_string($subItems) &&
+                        substr($subKey, 0, 3) !== 'is-'
+                    ) {
+                        $query[$key][$subKey] = explode(',', $subItems);
                     }
                 }
             } elseif (is_string($items)) {
@@ -268,10 +273,13 @@ class QueryStringComponent extends Component
      * - has-parent: an array of folder uuids
      * - is-shared-with-group: a group uuid
      * - modified-after: timestamp
+     * - created-before: timestamp
+     * - created-after: timestamp
      * - is-active: bool
      * - is-favorite: bool
      * - is-owned-by-me: bool
      * - is-shared-with-me: bool
+     * - is-success: bool
      * @param callable[] $filterValidators Filter validators callable
      * @return bool true if valid
      * @throws \Cake\Core\Exception\CakeException if one of the filters is not supported / not in the list
@@ -286,6 +294,8 @@ class QueryStringComponent extends Component
                         self::validateFilterSearch($values);
                         break;
                     case 'from':
+                    case 'created-before':
+                    case 'created-after':
                         self::validateFilterDateTime($values, $filterName);
                         break;
                     case 'has-access':
@@ -313,6 +323,7 @@ class QueryStringComponent extends Component
                     case 'is-favorite':
                     case 'is-owned-by-me':
                     case 'is-shared-with-me':
+                    case 'is-success':
                     case 'is-deleted':
                         self::validateFilterBoolean($values, $filterName);
                         break;

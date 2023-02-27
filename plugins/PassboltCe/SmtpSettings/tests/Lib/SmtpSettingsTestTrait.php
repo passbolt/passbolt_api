@@ -38,6 +38,17 @@ trait SmtpSettingsTestTrait
      */
     protected $dummyPassboltFile = TMP . 'tests' . DS . 'passbolt.php';
 
+    /**
+     * @return \Cake\Mailer\Message[]
+     */
+    protected function getSentMessages(): array
+    {
+        /** @var \App\Mailer\Transport\DebugTransport $transport */
+        $transport = TransportFactory::get('default');
+
+        return $transport->getMessages();
+    }
+
     private function getSmtpSettingsData(?string $field = null, $value = null): array
     {
         $validData = [
@@ -68,6 +79,13 @@ trait SmtpSettingsTestTrait
         $setting = SmtpSettingFactory::make()->value($encryptedSettings)->persist();
 
         return $setting;
+    }
+
+    protected function assertTransportConfigMatches(array $expectedConfig): void
+    {
+        foreach ($expectedConfig as $k => $v) {
+            $this->assertSame($v, TransportFactory::get('default')->getConfig($k));
+        }
     }
 
     private function setTransportConfig(?string $field = null, $value = null): void

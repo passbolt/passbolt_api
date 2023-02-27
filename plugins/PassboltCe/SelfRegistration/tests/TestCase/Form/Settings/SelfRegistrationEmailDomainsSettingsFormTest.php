@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\SelfRegistration\Test\TestCase\Form\Settings;
 
+use App\Model\Validation\EmailValidationRule;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Passbolt\SelfRegistration\Form\Settings\SelfRegistrationBaseSettingsForm;
@@ -39,12 +40,12 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
     {
         parent::tearDown();
         unset($this->form);
-        Configure::write('passbolt.email.validate.mx', false);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, false);
     }
 
     public function testSelfRegistrationEmailDomainsSettingsForm_With_Valid_Provider_And_Data_Valid_Should_Succeed()
     {
-        Configure::write('passbolt.email.validate.mx', true);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, true);
         $this->assertTrue($this->form->execute([
             'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
             'data' => ['allowed_domains' => [
@@ -56,7 +57,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
 
     public function testSelfRegistrationEmailDomainsSettingsForm_Sanitize_Data()
     {
-        Configure::write('passbolt.email.validate.mx', true);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, true);
         $this->assertTrue($this->form->execute([
             'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
             'foo' => 'bar',
@@ -104,7 +105,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
 
     public function testSelfRegistrationEmailDomainsSettingsForm_With_Invalid_Provider_And_Data_Valid_Should_Fail()
     {
-        Configure::write('passbolt.email.validate.mx', true);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, true);
         $domain = 'passbolt-' . rand(999, 9999) . '.com';
         $this->assertFalse($this->form->execute([
             'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,
@@ -122,7 +123,7 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
 
     public function testSelfRegistrationEmailDomainsSettingsForm_With_Invalid_Provider_And_Data_Valid_And_MX_Check_Off_Should_Not_Fail()
     {
-        Configure::write('passbolt.email.validate.mx', false);
+        Configure::write(EmailValidationRule::MX_CHECK_KEY, false);
         $domain = 'passbolt-' . rand(999, 9999) . '.com';
         $this->assertTrue($this->form->execute([
             'provider' => SelfRegistrationBaseSettingsForm::SELF_REGISTRATION_EMAIL_DOMAINS,

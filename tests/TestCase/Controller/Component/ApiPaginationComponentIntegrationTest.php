@@ -64,15 +64,15 @@ class ApiPaginationComponentIntegrationTest extends AppIntegrationTestCase
      */
     public function testDefaultPaginationSettings()
     {
-        $numberOfResources = 39;
+        $numberOfResources = 19;
         $limit = 10;
-        $page = 4;
+        $page = 2;
         $expectedCurrent = 9;
         $direction = 'asc';
         $sortedField = 'Resources.modified';
 
         $user = UserFactory::make()->user()->persist();
-        ResourceFactory::make($numberOfResources)
+        ResourceFactory::make($this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'))
             ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();
@@ -85,9 +85,7 @@ class ApiPaginationComponentIntegrationTest extends AppIntegrationTestCase
         ];
 
         // If the option sorted is defined and set to empty, no sorting will apply
-        if ($sortedField) {
-            $paginationParameter[] = 'sort=' . $sortedField;
-        }
+        $paginationParameter[] = 'sort=' . $sortedField;
 
         $paginationParameter = implode('&', $paginationParameter);
 

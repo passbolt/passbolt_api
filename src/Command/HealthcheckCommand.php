@@ -212,7 +212,7 @@ class HealthcheckCommand extends PassboltCommand
         $this->assert(
             $checks['environment']['phpVersion'],
             __('PHP version {0}.', PHP_VERSION),
-            __('PHP version is too low, passbolt need PHP 7.0 or higher.')
+            __('PHP version is too low, passbolt need PHP 7.4 or higher.')
         );
         $this->assert(
             $checks['environment']['pcre'],

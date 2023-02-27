@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Settings;
 
+use App\Model\Validation\EmailValidationRule;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 
@@ -59,5 +60,16 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
 
         // Assert AN plugin is visible
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->accountRecoveryRequestHelp->enabled));
+        $this->assertFalse(isset($this->_responseJsonBody->passbolt->email));
+    }
+
+    public function testSettingsIndexController_SuccessAsAN_With_Email_Regex_Defined()
+    {
+        $regex = 'Foo';
+        Configure::write(EmailValidationRule::REGEX_CHECK_KEY, $regex);
+        $this->getJson('/settings.json?api-version=2');
+        $this->assertSuccess();
+
+        $this->assertSame($regex, $this->_responseJsonBody->passbolt->email->validate->regex);
     }
 }

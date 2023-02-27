@@ -3,30 +3,31 @@
  * @var \App\View\AppView $this
  * @var string $hostName
  * @var mixed $providers
- * @var string $sigRequest
  * @var mixed $verifyForm
  */
     use Cake\Routing\Router;
     use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-    $title = __('Duo multi-factor authentication');
+    $title = __('Multi factor authentication verification');
     $this->assign('title', $title);
     $this->assign('pageClass', 'login');
-    $this->Html->css('Duo-Frame.css', ['block' => 'css', 'fullBase' => true]);
     $formContext = [
-        'url' => Router::url('/mfa/verify/duo?redirect=' . $redirect, true),
+        'url' => Router::url('/mfa/verify/duo/prompt?redirect=' . $redirect, true),
+        'target' => '_top',
         'id' => 'duo_form',
     ];
     ?>
+
 <div class="login-form ">
-    <h1>
-        <?= $title; ?>
+    <img src="<?= Router::url('/img/third_party/duo.svg', true); ?>" class="centered-login-provider-icon" />
+    <h1 class="centered-text login-title">
+        <?= __('Multi Factor Authentication Required'); ?>
     </h1>
-    <script type="text/javascript" src="<?= Router::url('js/app/Duo-Web-v2.js', true); ?>"></script>
-    <iframe id="duo_iframe"
-            data-host="<?= $hostName; ?>"
-            data-sig-request="<?= $sigRequest; ?>"
-    ></iframe>
-    <?= $this->Form->create($verifyForm, $formContext); ?><?= $this->Form->end(); ?>
-    <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_DUO]); ?>
+    <p class="centered-text">
+        <?= __('An additional authentication is required using Duo. You will be redirected to Duo for verification.'); ?>
+    </p>
+    <?= $this->Flash->render() ?>
+    <?= $this->Form->create($verifyForm, $formContext); ?>
+        <?= $this->element('formActions', ['providers' => $providers, 'redirect' => $redirect, 'currentProvider' => MfaSettings::PROVIDER_DUO]); ?>
+    <?= $this->Form->end(); ?>
 </div>
