@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Test\Factory\ProfileFactory;
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
@@ -136,19 +135,5 @@ class UsersIndexControllerOrderTest extends AppIntegrationTestCase
         $this->assertBadRequestError('Invalid order. "RAND" is not a valid order.');
         $this->getJson('/users.json?order[]=');
         $this->assertBadRequestError('Invalid order. "" is not a valid field.');
-    }
-
-    public function testUsersIndexFilterByHasAccessSuccess()
-    {
-        $user = UserFactory::make(2)->user()->persist()[0];
-        $resourceFactory = ResourceFactory::make();
-        $resource = $resourceFactory->withCreatorAndPermission($user)->persist();
-        $resourceFactory->persist();
-
-        $this->logInAs($user);
-        $this->getJson('/users.json?api-version=v2&filter[has-access]=' . $resource->id);
-        $this->assertResponseOk();
-        $this->assertCount(1, $this->_responseJsonBody);
-        $this->assertSame($user->id, $this->_responseJsonBody[0]->id);
     }
 }
