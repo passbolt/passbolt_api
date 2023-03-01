@@ -21,6 +21,7 @@ use App\Test\Factory\ProfileFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PaginationTestTrait;
+use Cake\Utility\Hash;
 
 class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
 {
@@ -90,7 +91,11 @@ class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
             ->withLogIn(3)
             ->persist();
 
-        ProfileFactory::make($this->getArrayOfDistinctRandomStrings($numberOfUsers - 1, 'first_name'))
+        $data = Hash::merge(
+            $this->getArrayOfDistinctRandomStrings($numberOfUsers - 1, 'first_name'),
+            $this->getArrayOfDistinctRandomPastDates($numberOfUsers - 1, 'created')
+        );
+        ProfileFactory::make($data)
             ->with('Users', UserFactory::make()->user()->without('Profiles')->withLogIn(3))
             ->persist();
 
