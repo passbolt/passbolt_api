@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Service\Duo;
 
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\Utility\Hash;
@@ -31,6 +32,8 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
  */
 class MfaDuoVerifyDuoCodeService
 {
+    public const PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER = 'passbolt.security.mfa.duoVerifySubscriber';
+
     /**
      * @var \Duo\DuoUniversal\Client
      */
@@ -133,7 +136,8 @@ class MfaDuoVerifyDuoCodeService
      */
     private function assertDuoAuthenticationSubscriber(string $duoSubscriber, string $operatorUsername): void
     {
-        if ($duoSubscriber !== $operatorUsername) {
+        $verifySubscriber = Configure::read(self::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER);
+        if ($verifySubscriber === true && mb_strtolower($duoSubscriber) !== mb_strtolower($operatorUsername)) {
             $msg = __('The duo authentication subscriber does not match the operator username.');
             throw new UnauthorizedException($msg);
         }

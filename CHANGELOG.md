@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.11.1] - 2023-03-03
+### Fixed
+- PB-23283 As an administrator I can disable username validation in Duo Callback endpoints
+
 ## [3.11.0] - 2023-03-01
 ### Added
 - PB-22741 As an administrator I should see an error in the healthcheck if I use php 7.3 or less
