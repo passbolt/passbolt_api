@@ -21,6 +21,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\TestSuite\TestCase;
@@ -33,6 +34,12 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
 {
     use TruncateDirtyTables;
     use MfaOrgSettingsTestTrait;
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        Configure::write(MfaDuoVerifyDuoCodeService::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER, false);
+    }
 
     public function testMfaDuoVerifyDuoCodeService_Success()
     {
@@ -129,13 +136,46 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
         $this->assertTextContains('The duo authentication origin endpoint does not match the organization setting duo hostname.', $th->getMessage());
     }
 
-    public function testMfaDuoVerifyDuoCodeService_Error_CallbackWrongUsername()
+    public function testMfaDuoVerifyDuoCodeService_Success_CallbackWrongUsername_Without_Config()
     {
         $settings = $this->getDefaultMfaOrgSettings();
         $this->mockMfaOrgSettings($settings);
         $user = UserFactory::make()->persist();
         $uac = new UserAccessControl(Role::USER, $user->id, $user->username);
         $duoCode = 'not-so-random-duo-code';
+
+        $duoSdkClientMock = DuoSdkClientMock::createWithWrongExchangeAuthorizationCodeFor2FAResultSub($this);
+        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock->getClient());
+        $verified = $service->verify($uac, $duoCode);
+
+        $this->assertTrue($verified);
+    }
+
+    public function testMfaDuoVerifyDuoCodeService_Success_CallbackUsernameWithCaseDifference_With_Verify_Config_Enabled()
+    {
+        $settings = $this->getDefaultMfaOrgSettings();
+        $this->mockMfaOrgSettings($settings);
+        $user = UserFactory::make()->persist();
+        $uac = new UserAccessControl(Role::USER, $user->id, $user->username);
+        $duoCode = 'not-so-random-duo-code';
+
+        Configure::write(MfaDuoVerifyDuoCodeService::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER, true);
+
+        $duoSdkClientMock = DuoSdkClientMock::createWithExchangeAuthorizationCodeFor2FAResultSub($this, mb_strtoupper($user->username));
+        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock->getClient());
+        $verified = $service->verify($uac, $duoCode);
+        $this->assertTrue($verified);
+    }
+
+    public function testMfaDuoVerifyDuoCodeService_Error_CallbackWrongUsername_With_Verify_Config_Enabled()
+    {
+        $settings = $this->getDefaultMfaOrgSettings();
+        $this->mockMfaOrgSettings($settings);
+        $user = UserFactory::make()->persist();
+        $uac = new UserAccessControl(Role::USER, $user->id, $user->username);
+        $duoCode = 'not-so-random-duo-code';
+
+        Configure::write(MfaDuoVerifyDuoCodeService::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER, true);
 
         $duoSdkClientMock = DuoSdkClientMock::createWithWrongExchangeAuthorizationCodeFor2FAResultSub($this);
         $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock->getClient());
