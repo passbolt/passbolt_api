@@ -279,6 +279,9 @@ return [
                 // If your instance is behind multiple proxies, redefine the list of IP addresses of proxies in your control in passbolt.php
                 'trustedProxies' => [],
             ],
+            'mfa' => [
+                'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN)
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.

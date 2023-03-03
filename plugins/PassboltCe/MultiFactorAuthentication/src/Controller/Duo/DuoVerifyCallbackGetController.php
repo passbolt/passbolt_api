@@ -20,6 +20,7 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\FormValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
+use App\Utility\ExceptionLogger;
 use App\Utility\UserAccessControl;
 use Cake\Http\Cookie\Cookie;
 use Cake\Http\Exception\BadRequestException;
@@ -69,7 +70,9 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
         $cookieToken = $this->consumeAndAssertCookieToken();
 
         try {
+            // Assert that the callback from Duo is valid and doesn't contain any error
             $mfaDuoCallbackDto = $this->getAndAssertMfaDuoCallbackData();
+            // Consume the authentication token and verify its integrity
             $authenticationToken = (new MfaDuoLoginService($duoSdkClient))->login(
                 $uac,
                 $mfaDuoCallbackDto,
@@ -77,11 +80,15 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
             );
             $this->addMfaVerifiedCookieToResponse($uac, $sessionIdentificationService);
         } catch (BadRequestException | FormValidationException $e) {
+            // Log the exception and all its backtrace of exception
+            ExceptionLogger::error($e);
+            // Retrieve the authentication token in case it was not consumed
             if (!isset($authenticationToken)) {
                 $authenticationToken = (new AuthenticationTokenGetService())
                     ->get($cookieToken, $uac->getId(), AuthenticationToken::TYPE_MFA_VERIFY);
             }
             if (isset($authenticationToken)) {
+                // If a redirect parameter was given (redirect is not passed for mobile), follow the redirection
                 $redirect = $authenticationToken->getDataValue('redirect');
                 if (!empty($redirect)) {
                     $this->Flash->error($e->getMessage());
@@ -89,7 +96,7 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
                     return $this->redirect($redirect);
                 }
             }
-
+            // If there was no redirection, re-throw the exception (needed for mobile)
             throw $e;
         }
 
