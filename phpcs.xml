@@ -2,4 +2,10 @@
 <ruleset name="App">
     <config name="installed_paths" value="../../passbolt/cakephp-codesniffer"/>
     <rule ref="CakePHP"/>
+
+    <rule ref="Generic.Formatting.SpaceAfterNot">
+        <properties>
+            <property name="spacing" value="0" />
+        </properties>
+    </rule>
 </ruleset>
