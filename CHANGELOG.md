@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.11.1] - 2023-03-03
+### Fixed
+- PB-23283 As an administrator I can disable username validation in Duo Callback endpoints
+
 ## [3.11.0] - 2023-03-01
 ### Added
 - PB-22741 As an administrator I should see an error in the healthcheck if I use php 7.3 or less
@@ -334,7 +338,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Drop support for PHP < v7.3, application require PHP v7.3 by default
 - Drop support for Composer < v2, application requires Composer v2 by default
 
-## Added
+### Added
 - Add dark theme to the community edition
 - Add new system check utilities in ./bin, for example ./bin/status-report
 - Add web installer automatically populates mysql credentials (VM / Debian Package)
@@ -931,7 +935,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1784: GITHUB-29 PHP7 compatibility issue in migration console tasks
 - PASSBOLT-1790: Fixed update context sent by anonymous usage statistics
 
-## [1.3.0] - 2016-25-11
+## [1.3.0] - 2016-11-25
 ### Fixed
 - PASSBOLT-1721: SSL detection not working in healthcheck
 - PASSBOLT-1708: Accept JSON data content type for HTTP PUT during setup
