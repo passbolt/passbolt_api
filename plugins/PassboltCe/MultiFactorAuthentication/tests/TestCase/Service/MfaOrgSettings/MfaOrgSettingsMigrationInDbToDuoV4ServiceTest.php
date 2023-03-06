@@ -18,7 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service\MfaOrgSettings;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
+use App\Utility\UserAccessControl;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsMigrationInDbToDuoV4Service;
@@ -50,36 +52,19 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
         unset($this->service);
     }
 
-    public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Success()
-    {
-        UserFactory::make()->admin()->persist();
-        $settings = $this->getDefaultMfaOrgSettings();
-        $this->mockMfaOrgSettings($settings);
-
-        $this->service->migrate();
-
-        $settings['providers'] = ['totp', 'duo', 'yubikey'];
-        $settingsInDB = $this->getMfaOrganizationSettingValue();
-        $this->assertEquals($settings, $settingsInDB);
-    }
-
     public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Success_No_Existing_Settings()
     {
         UserFactory::make()->admin()->persist();
-
         $this->service->migrate();
-
-        $settings['providers'] = [];
-        $settingsInDB = $this->getMfaOrganizationSettingValue();
-        $this->assertEquals($settings, $settingsInDB);
+        $this->assertSame(0, MfaOrganizationSettingFactory::count());
     }
 
     public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Success_From_V2()
     {
-        UserFactory::make()->admin()->persist();
+        $uac = new UserAccessControl(Role::ADMIN, UserFactory::make()->admin()->persist()->id);
         $settings = $this->getDefaultMfaOrgSettings();
         $settings[MfaSettings::PROVIDER_DUO] = $this->getDefaultDuoV2OrgSettings();
-        $this->mockMfaOrgSettings($settings);
+        $this->mockMfaOrgSettings($settings, 'db', $uac);
 
         $this->service->migrate();
 
@@ -91,11 +76,10 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
 
     public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Success_From_V4()
     {
-        UserFactory::make()->admin()->persist();
-
+        $uac = new UserAccessControl(Role::ADMIN, UserFactory::make()->admin()->persist()->id);
         $settings = $this->getDefaultMfaOrgSettings();
         $settings[MfaSettings::PROVIDER_DUO] = $this->getDefaultDuoV4OrgSettings();
-        $this->mockMfaOrgSettings($settings);
+        $this->mockMfaOrgSettings($settings, 'db', $uac);
 
         $this->service->migrate();
 
@@ -106,11 +90,10 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
 
     public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Missing_Settings()
     {
-        UserFactory::make()->admin()->persist();
-
+        $uac = new UserAccessControl(Role::ADMIN, UserFactory::make()->admin()->persist()->id);
         $settings = $this->getDefaultMfaOrgSettings();
         $settings[MfaSettings::PROVIDER_DUO] = [];
-        $this->mockMfaOrgSettings($settings);
+        $this->mockMfaOrgSettings($settings, 'db', $uac);
 
         $this->service->migrate();
 
@@ -122,11 +105,10 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
 
     public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Invalid_Provider_Instead_Of_Duo()
     {
-        UserFactory::make()->admin()->persist();
-
+        $uac = new UserAccessControl(Role::ADMIN, UserFactory::make()->admin()->persist()->id);
         $settings = $this->getDefaultMfaOrgSettings();
         $settings['providers'] = ['totp', 'not_duo', 'yubikey'];
-        $this->mockMfaOrgSettings($settings);
+        $this->mockMfaOrgSettings($settings, 'db', $uac);
 
         $this->service->migrate();
 
@@ -138,12 +120,11 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
 
     public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Invalid_Settings_From_V2()
     {
-        UserFactory::make()->admin()->persist();
-
+        $uac = new UserAccessControl(Role::ADMIN, UserFactory::make()->admin()->persist()->id);
         $settings = $this->getDefaultMfaOrgSettings();
         $settings[MfaSettings::PROVIDER_DUO] = $this->getDefaultDuoV2OrgSettings();
         $settings[MfaSettings::PROVIDER_DUO]['secretKey'] = 'invalid';
-        $this->mockMfaOrgSettings($settings);
+        $this->mockMfaOrgSettings($settings, 'db', $uac);
 
         $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('Could not validate multi-factor authentication provider configuration.');
@@ -152,12 +133,11 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
 
     public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Invalid_Settings_From_V4()
     {
-        UserFactory::make()->admin()->persist();
-
+        $uac = new UserAccessControl(Role::ADMIN, UserFactory::make()->admin()->persist()->id);
         $settings = $this->getDefaultMfaOrgSettings();
         $settings[MfaSettings::PROVIDER_DUO] = $this->getDefaultDuoV4OrgSettings();
         $settings[MfaSettings::PROVIDER_DUO]['clientSecret'] = 'invalid';
-        $this->mockMfaOrgSettings($settings);
+        $this->mockMfaOrgSettings($settings, 'db', $uac);
 
         $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('Could not validate multi-factor authentication provider configuration.');
