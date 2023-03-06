@@ -17,53 +17,39 @@ declare(strict_types=1);
 
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Users;
 
-use App\Model\Entity\Role;
-use App\Test\Fixture\Alt0\GroupsUsersFixture;
-use App\Test\Fixture\Base\GpgkeysFixture;
-use App\Test\Fixture\Base\ProfilesFixture;
-use App\Test\Fixture\Base\RolesFixture;
-use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\Model\GroupsUsersModelTrait;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\UserAccessControlTrait;
-use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
-use Cake\ORM\TableRegistry;
-use Passbolt\AccountSettings\Test\Fixture\AccountSettingsFixture;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
-use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpUserOnlyScenario;
 
 class UsersIndexControllerTest extends MfaIntegrationTestCase
 {
-    use GroupsUsersModelTrait;
     use MfaOrgSettingsTestTrait;
     use UserAccessControlTrait;
-
-    public $fixtures = [
-        AccountSettingsFixture::class,
-        UsersFixture::class,
-        ProfilesFixture::class,
-        GpgkeysFixture::class,
-        RolesFixture::class,
-        GroupsUsersFixture::class,
-    ];
 
     /**
      * @return void
      */
-    public function testMfaUsersIndex_ThatColumnIsMfaEnabledIsDisabledIfMfaIsDisabledForOrg()
+    public function testMfaUsersIndex_AssertThatColumnIsMfaEnabledIsNotDisplayedByDefault()
     {
-        $config = [
-            MfaSettings::PROVIDERS => [
-                MfaSettings::PROVIDER_DUO => false,
-                MfaSettings::PROVIDER_TOTP => false,
-                MfaSettings::PROVIDER_YUBIKEY => false,
-            ],
-        ];
+        RoleFactory::make()->guest()->persist();
+        $this->logInAsAdmin();
+        $this->getJson('/users.json');
+        $this->assertSuccess();
+        $this->assertObjectNotHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]);
+    }
 
-        $this->mockMfaOrgSettings($config, 'configure');
-        $this->authenticateAs('ada');
+    /**
+     * @return void
+     */
+    public function testMfaUsersIndex_AssertThatColumnIsMfaEnabledIsDisabledIfMfaIsDisabledForOrg()
+    {
+        RoleFactory::make()->guest()->persist();
+        $admin = $this->logInAsAdmin();
+        $this->loadFixtureScenario(MfaTotpUserOnlyScenario::class, $admin);
         $this->getJson('/users.json?contain[is_mfa_enabled]=1');
         $this->assertSuccess();
         $this->assertObjectHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]);
@@ -73,13 +59,21 @@ class UsersIndexControllerTest extends MfaIntegrationTestCase
     /**
      * @return void
      */
-    public function testMfaUsersIndex_UsersIndexResultsContainIsMfaEnabledPropertyWhenContainParameterHaveIsMfaEnabled()
+    public function testMfaUsersIndex_ThatColumnIsMfaEnabledIsEnabledIfMfaIsEnabledForOrg()
     {
-        $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'configure');
-        $this->authenticateAs('ada');
+        RoleFactory::make()->guest()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAsAdmin();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user);
         $this->getJson('/users.json?contain[is_mfa_enabled]=1');
         $this->assertSuccess();
-        $this->assertObjectHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]);
+        foreach ($this->_responseJsonBody as $userInResponse) {
+            if ($userInResponse->id === $user->id) {
+                $this->assertTrue($userInResponse->is_mfa_enabled);
+            } else {
+                $this->assertFalse($userInResponse->is_mfa_enabled);
+            }
+        }
     }
 
     /**
@@ -87,83 +81,47 @@ class UsersIndexControllerTest extends MfaIntegrationTestCase
      */
     public function testMfaUsersIndex_ThatUsersIndexResultsAreFilteredWhenFilterParameterHaveIsMfaEnabled()
     {
-        $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'configure');
-        $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
+        RoleFactory::make()->guest()->persist();
+        $admin = $this->logInAsAdmin();
+        $userWithMfa = UserFactory::make()->user()->persist();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $userWithMfa);
 
-        $userId = UuidFactory::uuid('user.id.ada');
-        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $accountSettings */
-        $accountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
-        $accountSettings->createOrUpdateSetting($userId, MfaSettings::MFA, json_encode([
-            MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
-            MfaSettings::PROVIDER_TOTP => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
-                MfaAccountSettings::OTP_PROVISIONING_URI => 'http://provisioning.uri',
-            ],
-        ]));
-
-        $this->authenticateAs('admin');
-        $this->clearRegistry();
         $this->getJson('/users.json?filter[is-mfa-enabled]=1&contain[is_mfa_enabled]=1');
         $this->assertSuccess();
-        foreach ($this->_responseJsonBody as $user) {
-            $this->assertTrue($user->is_mfa_enabled, 'All users in the results should have MFA enabled.');
-        }
+        $responseJsonBody = (array)$this->_responseJsonBody;
+        $this->assertSame(1, count($responseJsonBody));
+        $userInResponse = array_pop($responseJsonBody);
+        $this->assertTrue($userInResponse->is_mfa_enabled);
+        $this->assertSame($userWithMfa->get('id'), $userInResponse->id);
 
         $this->getJson('/users.json?filter[is-mfa-enabled]=0&contain[is_mfa_enabled]=1');
         $this->assertSuccess();
-        foreach ($this->_responseJsonBody as $user) {
-            $this->assertFalse($user->is_mfa_enabled, 'All users in the results should have MFA disabled.');
-        }
+        $responseJsonBody = (array)$this->_responseJsonBody;
+        $this->assertSame(1, count($responseJsonBody));
+        $userInResponse = array_pop($responseJsonBody);
+        $this->assertFalse($userInResponse->is_mfa_enabled);
+        $this->assertSame($admin->get('id'), $userInResponse->id);
     }
 
     /**
      * @return void
      */
-    public function testMfaUsersIndex_UsersIndexResultsAreNotFilteredWhenFilterParameterDoesNotHaveIsMfaEnabled()
+    public function testMfaUsersIndex_Is_Mfa_Enabled_Filter_Without_Contain_Should_Throw_Bad_Request()
     {
-        $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'configure');
-        $this->mockMfaOrgSettings($this->getMfaProvidersConfig(), 'database', $this->mockUserAccessControl('admin', Role::ADMIN));
+        RoleFactory::make()->guest()->persist();
+        $this->logInAsAdmin();
+        $this->getJson('/users.json?filter[is-mfa-enabled]=1');
+        $this->assertBadRequestError('The property is_mfa_enabled should be contained in order to filter by is-mfa-enabled.');
+    }
 
-        $userId = UuidFactory::uuid('user.id.ada');
-        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $accountSettings */
-        $accountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
-        $accountSettings->createOrUpdateSetting($userId, MfaSettings::MFA, json_encode([
-            MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
-            MfaSettings::PROVIDER_TOTP => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
-                MfaAccountSettings::OTP_PROVISIONING_URI => 'http://provisioning.uri',
-            ],
-        ]));
-
-        $this->authenticateAs('admin');
-        $this->clearRegistry();
+    /**
+     * @return void
+     */
+    public function testMfaUsersIndex_Is_Mfa_Enabled_Request_From_Users_Should_Throw_A_BadRequest_Exception()
+    {
+        RoleFactory::make()->guest()->persist();
+        $this->logInAsUser();
         $this->getJson('/users.json?contain[is_mfa_enabled]=1');
-        $this->assertSuccess();
-        foreach ($this->_responseJsonBody as $user) {
-            $this->assertSame($user->id === $userId, $user->is_mfa_enabled);
-        }
-    }
-
-    /**
-     * Clear the registry because the registry load models and their behaviors available at the moment
-     * and they will be reused when running the test, and Behaviors registered in the application won't be run.
-     *
-     * @return void
-     */
-    private function clearRegistry()
-    {
-        TableRegistry::getTableLocator()->clear();
-    }
-
-    /**
-     * @return array
-     */
-    private function getMfaProvidersConfig()
-    {
-        return [
-            MfaSettings::PROVIDERS => [
-                MfaSettings::PROVIDER_TOTP => true,
-            ],
-        ];
+        $this->assertBadRequestError('The property is_mfa_enabled is visible by administrators only.');
     }
 }

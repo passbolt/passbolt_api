@@ -18,19 +18,22 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
-use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Service\Query\IsMfaEnabledQueryService;
 
 /**
  * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class UsersIndexController extends AppController
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * @inheritDoc
      */
@@ -71,7 +74,7 @@ class UsersIndexController extends AppController
             ])
             ->allowFilters(['search', 'has-groups', 'has-access', 'is-admin']);
 
-        if ($this->User->role() === Role::ADMIN) {
+        if ($this->User->isAdmin()) {
             $findIndexOptions->allowFilter('is-active');
         }
 
@@ -88,6 +91,15 @@ class UsersIndexController extends AppController
         /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
         $users = $Users->findIndex($this->User->role(), $computedFindIndexOptions);
+
+        if ($this->isFeaturePluginEnabled('MultiFactorAuthentication')) {
+            (new IsMfaEnabledQueryService())->decorateAndFilterForIndex(
+                $users,
+                $this->User->getAccessControl(),
+                $computedFindIndexOptions
+            );
+        }
+
         $this->paginate($users);
         $this->success(__('The operation was successful.'), $users);
     }

@@ -20,7 +20,6 @@ namespace Passbolt\MultiFactorAuthentication\Service;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use Exception;
-use Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 
 class GetMfaAccountSettingsService
@@ -30,10 +29,10 @@ class GetMfaAccountSettingsService
      * @return \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
      * @throws \Exception
      */
-    public function getSettingsForUser(User $user)
+    public function getSettingsForUser(User $user): MfaAccountSettings
     {
         /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting $mfaSettings */
-        $mfaSettings = $user->get(MfaEntityMapper::MFA_SETTINGS_PROPERTY) ?? null;
+        $mfaSettings = $user->get(Query\IsMfaEnabledQueryService::MFA_SETTINGS_PROPERTY) ?? null;
         if (empty($mfaSettings)) {
             throw new Exception('Unable to retrieve MFA settings for user');
         }
