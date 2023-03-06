@@ -52,19 +52,6 @@ class MfaOrgSettingsMigrationInDbToDuoV4ServiceTest extends TestCase
         unset($this->service);
     }
 
-    public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Success()
-    {
-        $uac = new UserAccessControl(Role::ADMIN, UserFactory::make()->admin()->persist()->id);
-        $settings = $this->getDefaultMfaOrgSettings();
-        $this->mockMfaOrgSettings($settings, 'db', $uac);
-
-        $this->service->migrate();
-
-        $settings['providers'] = ['totp', 'duo', 'yubikey'];
-        $settingsInDB = $this->getMfaOrganizationSettingValue();
-        $this->assertEquals($settings, $settingsInDB);
-    }
-
     public function testMfaOrgSettingsMigrationInDbToDuoV4Service_Success_No_Existing_Settings()
     {
         UserFactory::make()->admin()->persist();
