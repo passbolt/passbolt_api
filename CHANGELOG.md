@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.12.0] - 2023-03-22
+### Improved
+- PB-23311 As a user I cannot know if other users have multi-factor authentication enabled
+
 ## [3.11.1] - 2023-03-03
 ### Fixed
 - PB-23283 As an administrator I can disable username validation in Duo Callback endpoints

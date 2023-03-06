@@ -20,8 +20,7 @@ use App\Controller\Component\QueryStringComponent;
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Controller\Users\UsersIndexController;
 use Cake\Event\EventListenerInterface;
-use Passbolt\MultiFactorAuthentication\Model\EntityMapper\User\MfaEntityMapper;
-use Passbolt\MultiFactorAuthentication\Model\Query\IsMfaEnabledQueryDecorator;
+use Passbolt\MultiFactorAuthentication\Service\Query\IsMfaEnabledQueryService;
 
 class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
 {
@@ -37,22 +36,24 @@ class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
 
     /**
      * On User Index Controller, add options.
+     * MFA options are visible to admins only
      *
      * @param \App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal $event Before Marschal Event
      * @return void
      */
     public function addIsMfaEnabledColumnToUsersGrid(ControllerFindIndexOptionsBeforeMarshal $event): void
     {
-        if (!$event->getController() instanceof UsersIndexController) {
+        $controller = $event->getController();
+        if (!$controller instanceof UsersIndexController) {
             return;
         }
 
         $options = $event->getOptions();
 
-        $options->allowFilter(IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME);
-        $options->allowContain(MfaEntityMapper::IS_MFA_ENABLED_PROPERTY);
-        $options->addFilterValidator(IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME, function ($value) {
-            $filterName = IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME;
+        $options->allowFilter(IsMfaEnabledQueryService::IS_MFA_ENABLED_FILTER_NAME);
+        $options->allowContain(IsMfaEnabledQueryService::IS_MFA_ENABLED_PROPERTY);
+        $options->addFilterValidator(IsMfaEnabledQueryService::IS_MFA_ENABLED_FILTER_NAME, function ($value) {
+            $filterName = IsMfaEnabledQueryService::IS_MFA_ENABLED_FILTER_NAME;
 
             return QueryStringComponent::validateFilterBoolean($value, $filterName);
         });
