@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Migrations\AbstractMigration;
 
-class V380DropActionLogsDuplicateIndexes extends AbstractMigration
+class V3120DropActionLogsDuplicateIndexes extends AbstractMigration
 {
     /**
      * Change Method.
