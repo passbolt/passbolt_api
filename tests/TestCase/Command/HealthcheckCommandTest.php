@@ -122,7 +122,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('Selenium API endpoints are disabled.');
         $this->assertOutputContains('Search engine robots are told not to index content.');
         $this->assertOutputContains('The Self Registration plugin is enabled.');
-        $this->assertOutputContains('Registration is closed, only administrators can add users.');
+        $this->assertOutputContains('<info>[INFO]</info> Registration is closed, only administrators can add users.');
         $this->assertOutputContains('Host availability will be checked.');
         $this->assertOutputContains('Serving the compiled version of the javascript app.');
         $this->assertOutputContains('All email notifications will be sent.');
@@ -151,7 +151,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('App.fullBaseUrl is not set to HTTPS.');
         $this->assertOutputContains('Selenium API endpoints are active.');
         $this->assertOutputContains('Search engine robots are not told not to index content.');
-        $this->assertOutputContains('The self registration provider is: Email domain safe list.');
+        $this->assertOutputContains('<info>[INFO]</info> The self registration provider is: Email domain safe list.');
         $this->assertOutputContains('You may remove the "passbolt.registration.public" setting.');
         $this->assertOutputContains('Host availability checking is disabled.');
         $this->assertOutputContains('Using non-compiled Javascript.');
