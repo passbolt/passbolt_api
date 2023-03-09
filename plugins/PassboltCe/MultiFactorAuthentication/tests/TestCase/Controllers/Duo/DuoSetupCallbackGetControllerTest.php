@@ -128,7 +128,7 @@ class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
         $duoState = UuidFactory::uuid();
-        $redirect = '/app';
+        $redirect = DuoSetupGetController::DUO_SETUP_REDIRECT_PATH;
         $userId = $user->get('id');
         $error = 'DuoCallbackError';
         $errorDesc = 'DuoCallbackErrorDescription';
@@ -150,6 +150,37 @@ class DuoSetupCallbackGetControllerTest extends MfaIntegrationTestCase
         $this->assertRedirect($redirect);
         $flashElement = $this->getSession()->read('Flash')['flash'][0];
         $this->assertEquals($flashElement['message'], "Unable to authenticate to Duo. {$error}: {$errorDesc}");
+
+        $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
+    }
+
+    public function testDuoSetupCallbackGetController_Error_With_Wrong_Redirect()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
+        $duoState = UuidFactory::uuid();
+        $redirect = '/app';
+        $userId = $user->get('id');
+        $error = 'DuoCallbackError';
+        $errorDesc = 'DuoCallbackErrorDescription';
+        $this->mockService(Client::class, function () use ($user) {
+            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+        });
+
+        $authToken = AuthenticationTokenFactory::make()->active()->data([
+            'provider' => 'duo',
+            'state' => $duoState,
+            'redirect' => $redirect,
+            'user_agent' => 'PassboltUA',
+        ])->userId($userId)->type(AuthenticationToken::TYPE_MFA_SETUP)->persist();
+        $token = $authToken->token;
+
+        $this->cookie(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE, $token);
+
+        $this->get("/mfa/setup/duo/callback?error={$error}&error_description={$errorDesc}");
+        $this->assertResponseCode(400);
+        $this->assertResponseContains("Unable to authenticate to Duo. {$error}: {$errorDesc}");
 
         $this->assertCookieNotSet(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         $this->assertCookieNotSet(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
