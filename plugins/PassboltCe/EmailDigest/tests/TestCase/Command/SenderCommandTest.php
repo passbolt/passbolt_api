@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Test\TestCase\Command;
 
+use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Chronos\Chronos;
@@ -25,6 +26,7 @@ use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
+use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
@@ -37,6 +39,7 @@ class SenderCommandTest extends TestCase
     use DummyTranslationTestTrait;
     use EmailTestTrait;
     use TruncateDirtyTables;
+    use EmailDigestMockTestTrait;
 
     /**
      * setUp method
@@ -47,6 +50,7 @@ class SenderCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+        $this->loadRoutes();
         $this->setDummyFrenchTranslator();
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
         EmailNotificationSettings::flushCache();
@@ -114,5 +118,20 @@ class SenderCommandTest extends TestCase
         // Assert <head> tag is not duplicated/present only once in the email HTML
         $this->assertMailBodyStringCount(1, '<head>');
         $this->assertMailBodyStringCount(1, '</head>');
+    }
+
+    public function testSenderCommand_NoRowsAreLockedWhenThresholdIsExceeded()
+    {
+        (new AvatarsConfigurationService())->loadConfiguration();
+        $this->persistEmailQueueEntities(['email' => 'john@test.test', 'template' => 'LU/resource_share']);
+
+        $this->exec('passbolt email_digest send');
+
+        $this->assertExitSuccess();
+        $this->assertMailCount(2);
+        $this->assertMailSentToAt(0, ['john@test.test' => 'john@test.test']);
+        // Make sure email queue entries are not locked
+        $count = EmailQueueFactory::find()->where(['locked' => true])->count();
+        $this->assertEquals(0, $count);
     }
 }

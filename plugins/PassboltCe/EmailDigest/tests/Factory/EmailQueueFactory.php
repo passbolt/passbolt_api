@@ -52,6 +52,7 @@ class EmailQueueFactory extends CakephpBaseFactory
                 'format' => 'html',
                 'sent' => 0,
                 'locked' => 0,
+                'send_tries' => 0,
                 'send_at' => Chronos::now()->subMinute(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),

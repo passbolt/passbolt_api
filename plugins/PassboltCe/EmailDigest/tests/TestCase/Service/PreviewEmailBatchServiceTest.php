@@ -19,15 +19,15 @@ namespace Passbolt\EmailDigest\Test\TestCase\Service;
 
 use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use Cake\Chronos\Chronos;
-use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
-class PreviewEmailBatchServiceTest extends TestCase
+class PreviewEmailBatchServiceTest extends AppTestCase
 {
     use DummyTranslationTestTrait;
     use EmailDigestMockTestTrait;
@@ -41,6 +41,8 @@ class PreviewEmailBatchServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->loadRoutes();
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
         $this->setDummyFrenchTranslator();
         $this->previewEmailBatchService = new PreviewEmailBatchService();
@@ -49,8 +51,9 @@ class PreviewEmailBatchServiceTest extends TestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         unset($this->previewEmailBatchService);
+
+        parent::tearDown();
     }
 
     public function testPreviewNextEmailBatch(): void
@@ -58,7 +61,9 @@ class PreviewEmailBatchServiceTest extends TestCase
         $numberOfEmails = 3;
         $limit = $numberOfEmails - 1;
         EmailQueueFactory::make($numberOfEmails)->persist();
+
         $result = $this->previewEmailBatchService->previewNextEmailsBatch($limit);
+
         $this->assertSame($limit, count($result));
         foreach ($result as $email) {
             $this->assertNotEmpty($email->getHeaders());
