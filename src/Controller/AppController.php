@@ -22,7 +22,6 @@ use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
 
@@ -142,7 +141,7 @@ class AppController extends Controller
         // render a legacy JSON view by default
         if ($this->request->is('json')) {
             if ($this->getApiVersion() === 'v1') {
-                throw new InternalErrorException('API v1 support is deprecated in this version.');
+                throw new BadRequestException('API v1 support is deprecated in this version.');
             }
         } elseif (!Configure::read('debug')) {
             // Render a page not found if there is not template for the endpoint

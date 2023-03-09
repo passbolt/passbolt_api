@@ -17,8 +17,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Events;
 
+use App\Controller\AppController;
 use App\Model\Table\Dto\FindIndexOptions;
-use Cake\Controller\Controller;
 use Cake\Event\Event;
 
 class ControllerFindIndexOptionsBeforeMarshal extends Event
@@ -26,7 +26,7 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     public const EVENT_NAME = 'Controller.findIndexOptions.beforeMarshal';
 
     /**
-     * @var \Cake\Controller\Controller
+     * @var \App\Controller\AppController
      */
     private $controller;
 
@@ -37,10 +37,10 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
 
     /**
      * @param string $name Name
-     * @param \Cake\Controller\Controller $subject Subject must be an instance of Table
+     * @param \App\Controller\AppController $subject Subject must be an instance of Table
      * @param array $data Data
      */
-    final public function __construct($name, Controller $subject, $data = null)
+    final public function __construct($name, AppController $subject, $data = null)
     {
         $this->setController($subject);
         $this->setOptions($data['options']);
@@ -50,10 +50,10 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
 
     /**
      * @param \App\Model\Table\Dto\FindIndexOptions $options Options
-     * @param \Cake\Controller\Controller $controller Table
+     * @param \App\Controller\AppController $controller Table
      * @return \App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal
      */
-    public static function create(FindIndexOptions $options, Controller $controller)
+    public static function create(FindIndexOptions $options, AppController $controller)
     {
         return new static(static::EVENT_NAME, $controller, [
             'options' => $options,
@@ -61,10 +61,10 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     }
 
     /**
-     * @param \Cake\Controller\Controller $controller Instance of Controller
+     * @param \App\Controller\AppController $controller Instance of Controller
      * @return $this
      */
-    private function setController(Controller $controller)
+    private function setController(AppController $controller)
     {
         $this->controller = $controller;
 
@@ -83,11 +83,11 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     }
 
     /**
-     * Return an instance of Table
+     * Return an AppController
      *
-     * @return \Cake\Controller\Controller
+     * @return \App\Controller\AppController
      */
-    public function getController()
+    public function getController(): AppController
     {
         return $this->controller;
     }

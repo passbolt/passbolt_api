@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -41,7 +42,7 @@ class DuoSetupGetController extends MfaSetupController
 
         $error = $this->_consumeError();
         if (!empty($error)) {
-            $this->_handleError($error);
+            $this->_handleError($setupForm, $error);
 
             return;
         }
@@ -55,6 +56,16 @@ class DuoSetupGetController extends MfaSetupController
     }
 
     /**
+     * Get the full Duo setup redirect URL.
+     *
+     * @return string
+     */
+    public static function getFormUrl(): string
+    {
+        return Router::url('/mfa/setup/duo/prompt?redirect=' . self::DUO_SETUP_REDIRECT_PATH, true);
+    }
+
+    /**
      * Handle get request when new settings are needed
      *
      * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
@@ -64,12 +75,12 @@ class DuoSetupGetController extends MfaSetupController
     {
         /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoCallbackForm $setupForm */
         try {
-            $duoOrgSettings = $this->mfaSettings->getOrganizationSettings()->getDuoOrgSettings();
-            $this->set('hostName', $duoOrgSettings->getDuoApiHostname());
+            $this->mfaSettings->getOrganizationSettings()->getDuoOrgSettings();
         } catch (RecordNotFoundException $exception) {
             throw new InternalErrorException('MFA Duo organization settings are not complete.', 500, $exception);
         }
         $this->set('setupForm', $setupForm);
+        $this->set('formUrl', self::getFormUrl());
         $this->set('theme', $this->User->theme());
         $this->viewBuilder()
             ->setLayout('mfa_setup')
@@ -80,17 +91,19 @@ class DuoSetupGetController extends MfaSetupController
     /**
      * Handle get request when a Duo error is present, by displaying an error form.
      *
+     * @param \Passbolt\MultiFactorAuthentication\Form\MfaFormInterface $setupForm MFA Form
      * @param string $errorMsg Error message to display
      * @return void
      */
-    protected function _handleError(string $errorMsg): void
+    protected function _handleError(MfaFormInterface $setupForm, string $errorMsg): void
     {
         $this->getRequest()->getFlash()->set($errorMsg, [
             'element' => 'raw',
             'key' => 'duo_auth_error',
             'clear' => true,
         ]);
-        $this->set('redirect', self::DUO_SETUP_REDIRECT_PATH);
+        $this->set('setupForm', $setupForm);
+        $this->set('formUrl', self::getFormUrl());
         $this->set('theme', $this->User->theme());
         $this->viewBuilder()
             ->setLayout('mfa_setup')

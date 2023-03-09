@@ -23,7 +23,6 @@ use App\Notification\Email\Redactor\Resource\ResourceUpdateEmailRedactor;
 use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
 use Cake\Core\Configure;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Utility\Digest\Digest;
 use Passbolt\EmailDigest\Utility\Digest\DigestRegisterTrait;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
@@ -69,8 +68,19 @@ class ResourceDigests implements EventListenerInterface
                 ResourceDeleteEmailRedactor::TEMPLATE,
             ],
             'user',
-            function (Entity $emailData, int $emailCount) {
-                $digest = (new EmailDigest())
+            /**
+             * @param \Cake\ORM\Entity[] $emailQueueEntities
+             */
+            function (array $emailQueueEntities, int $emailCount) {
+                $emailData = $emailQueueEntities[0];
+
+                $emailDigest = new EmailDigest();
+
+                foreach ($emailQueueEntities as $emailQueueEntity) {
+                    $emailDigest->addEmailData($emailQueueEntity);
+                }
+
+                $emailDigest
                     ->setSubject(__('Multiple passwords have been changed in passbolt'))
                     ->setTemplate(static::RESOURCE_CHANGES_TEMPLATE)
                     ->setEmailRecipient($emailData->get('email'))
@@ -78,7 +88,7 @@ class ResourceDigests implements EventListenerInterface
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
 
-                return $digest;
+                return $emailDigest;
             }
         );
     }
@@ -98,8 +108,19 @@ class ResourceDigests implements EventListenerInterface
                 ShareEmailRedactor::TEMPLATE,
             ],
             'owner',
-            function (Entity $emailData, int $emailCount) {
-                $digest = (new EmailDigest())
+            /**
+             * @param \Cake\ORM\Entity[] $emailQueueEntities
+             */
+            function (array $emailQueueEntities, int $emailCount) {
+                $emailData = $emailQueueEntities[0];
+
+                $emailDigest = new EmailDigest();
+
+                foreach ($emailQueueEntities as $emailQueueEntity) {
+                    $emailDigest->addEmailData($emailQueueEntity);
+                }
+
+                $emailDigest
                     ->setSubject(__('Multiple passwords have been shared with you in passbolt'))
                     ->setTemplate(static::RESOURCE_SHARE_MULTIPLE_TEMPLATE)
                     ->setEmailRecipient($emailData->get('email'))
@@ -107,7 +128,7 @@ class ResourceDigests implements EventListenerInterface
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
 
-                return $digest;
+                return $emailDigest;
             }
         );
     }

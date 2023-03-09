@@ -37,7 +37,7 @@ class MfaAccountSettingFactory extends AccountSettingFactory
 
         $property = AccountSetting::UUID_NAMESPACE . MfaSettings::MFA;
         $this->patchData([
-            'property' => $property,
+            'property' => MfaSettings::MFA,
             'property_id' => UuidFactory::uuid($property),
             'value' => json_encode([MfaSettings::PROVIDERS => []]),
         ]);

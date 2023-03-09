@@ -2,16 +2,15 @@
 /**
  * @var \App\View\AppView $this
  * @var mixed $setupForm
+ * @var string $formUrl
  */
 use Cake\Routing\Router;
-use Passbolt\MultiFactorAuthentication\Controller\Duo\DuoSetupGetController;
 
     $title = __('Getting started with Duo');
     $this->assign('title', $title);
     $this->assign('pageClass', 'iframe mfa');
-    $redirect = DuoSetupGetController::DUO_SETUP_REDIRECT_PATH;
     $formContext = [
-        'url' => Router::url('/mfa/setup/duo/prompt?redirect=' . $redirect, true),
+        'url' => $formUrl,
         'target' => '_top',
         'id' => 'duo_form',
     ];
