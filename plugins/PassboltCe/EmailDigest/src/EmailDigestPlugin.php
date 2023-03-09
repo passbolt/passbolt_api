@@ -23,7 +23,7 @@ use Cake\Core\PluginApplicationInterface;
 use Passbolt\EmailDigest\Command\PreviewCommand;
 use Passbolt\EmailDigest\Command\SenderCommand;
 
-class Plugin extends BasePlugin
+class EmailDigestPlugin extends BasePlugin
 {
     /**
      * @inheritDoc

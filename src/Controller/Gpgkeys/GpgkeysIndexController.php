@@ -32,6 +32,8 @@ class GpgkeysIndexController extends AppController
         $this->loadComponent('ApiPagination', [
             'model' => 'Gpgkeys',
         ]);
+        /** @phpstan-ignore-next-line */
+        $this->Gpgkeys = $this->fetchTable('Gpgkeys');
     }
 
     public $paginate = [
@@ -47,7 +49,6 @@ class GpgkeysIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Gpgkeys');
         $whitelist = ['filter' => ['modified-after', 'is-deleted']];
         $options = $this->QueryString->get($whitelist);
         $gpgkeys = $this->Gpgkeys->find('index', $options);

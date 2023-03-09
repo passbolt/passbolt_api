@@ -19,7 +19,7 @@ namespace App\Test\TestCase\Model\Table\Avatars;
 
 use App\Model\Table\AvatarsTable;
 use App\Test\Factory\UserFactory;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
@@ -28,13 +28,13 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
  */
 class AddContainAvatarTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use TruncateDirtyTables;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('Users');
+        $this->Users = $this->fetchTable('Users');
     }
 
     public function testAvatarsTableAddContainAvatar_Should_Not_Retrieve_Avatar_Data()

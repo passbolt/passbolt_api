@@ -36,7 +36,7 @@ use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonth
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class Plugin extends BasePlugin
+class MultiFactorAuthenticationPlugin extends BasePlugin
 {
     use FeaturePluginAwareTrait;
 

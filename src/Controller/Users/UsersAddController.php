@@ -30,7 +30,8 @@ class UsersAddController extends UsersRegisterController
      */
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
 
         return AppController::beforeFilter($event);
     }

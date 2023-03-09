@@ -20,21 +20,26 @@ namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 
 /**
  * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesSelectController
- * @property \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings
  */
 class ThemesSelectControllerTest extends AppIntegrationTestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
+     */
+    protected $AccountSettings;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('AccountSettings');
+        /** @phpstan-ignore-next-line */
+        $this->AccountSettings = $this->fetchTable('Passbolt/AccountSettings.AccountSettings');
     }
 
     public function testThemesSelectSuccess()

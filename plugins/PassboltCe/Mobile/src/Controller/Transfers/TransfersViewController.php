@@ -31,6 +31,16 @@ use Cake\Validation\Validation;
 class TransfersViewController extends AppController
 {
     /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Transfers = $this->fetchTable('Passbolt/Mobile.Transfers');
+    }
+
+    /**
      * View a transfer status
      *
      * @param string $id transfer uuid
@@ -43,8 +53,6 @@ class TransfersViewController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The transfer id is not valid.'));
         }
-
-        $this->loadModel('Passbolt/Mobile.Transfers');
 
         // Contain options
         $whitelist = ['contain' => ['user', 'user.profile']];

@@ -14,25 +14,10 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.8.0
  */
-namespace Passbolt\Log;
+namespace Passbolt\RememberMe;
 
 use Cake\Core\BasePlugin;
-use Cake\Core\PluginApplicationInterface;
-use Passbolt\Log\Events\ActionLogsAfterCreateListener;
-use Passbolt\Log\Events\ActionLogsBeforeRenderListener;
-use Passbolt\Log\Events\ActionLogsModelListener;
 
-class Plugin extends BasePlugin
+class RememberMePlugin extends BasePlugin
 {
-    /**
-     * @inheritDoc
-     */
-    public function bootstrap(PluginApplicationInterface $app): void
-    {
-        parent::bootstrap($app);
-        $app->getEventManager()
-            ->on(new ActionLogsAfterCreateListener())
-            ->on(new ActionLogsBeforeRenderListener())
-            ->on(new ActionLogsModelListener());
-    }
 }

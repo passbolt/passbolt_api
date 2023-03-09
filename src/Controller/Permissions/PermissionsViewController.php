@@ -29,6 +29,18 @@ use Cake\Validation\Validation;
 class PermissionsViewController extends AppController
 {
     /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Permissions = $this->fetchTable('Permissions');
+    }
+
+    /**
      * View permissions defined for an aco instance.
      * Only support the entity Resource for now.
      *
@@ -49,9 +61,6 @@ class PermissionsViewController extends AppController
         // Retrieve and sanity the query options.
         $whitelist = ['contain' => ['group', 'user', 'user.profile']];
         $options = $this->QueryString->get($whitelist);
-
-        $this->loadModel('Permissions');
-        $this->loadModel('Resources');
 
         // Check that the user has access to the resource.
         $resource = $this->Resources->findView($this->User->id(), $acoForeignKey)->first();

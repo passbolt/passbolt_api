@@ -27,13 +27,13 @@ use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 class ResourcesShareService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
@@ -70,8 +70,10 @@ class ResourcesShareService
      */
     public function __construct()
     {
-        $this->loadModel('GroupsUsers');
-        $this->loadModel('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->GroupsUsers = $this->fetchTable('GroupsUsers');
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
         $this->permissionsGetUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();

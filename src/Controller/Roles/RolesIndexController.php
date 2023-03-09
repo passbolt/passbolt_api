@@ -30,7 +30,8 @@ class RolesIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Roles');
+        /** @phpstan-ignore-next-line */
+        $this->Roles = $this->fetchTable('Roles');
         $roles = $this->Roles->find('all');
         $this->success(__('The operation was successful.'), $roles);
     }

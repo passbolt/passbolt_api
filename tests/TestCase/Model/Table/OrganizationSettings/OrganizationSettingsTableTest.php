@@ -69,8 +69,8 @@ class OrganizationSettingsTableTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::exists('OrganizationSettings') ? [] : ['className' => OrganizationSettingsTable::class];
-        $this->OrganizationSettings = TableRegistry::get('OrganizationSettings', $config);
+        $config = TableRegistry::getTableLocator()->exists('OrganizationSettings') ? [] : ['className' => OrganizationSettingsTable::class];
+        $this->OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings', $config);
     }
 
     /**

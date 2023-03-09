@@ -36,6 +36,8 @@ class ResourcesIndexController extends AppController
         $this->loadComponent('ApiPagination', [
             'model' => 'Resources',
         ]);
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
     }
 
     public $paginate = [
@@ -57,8 +59,6 @@ class ResourcesIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Resources');
-
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => [

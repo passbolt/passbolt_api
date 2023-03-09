@@ -27,6 +27,16 @@ use Cake\Utility\Hash;
 class GroupsAddController extends AppController
 {
     /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Groups = $this->fetchTable('Groups');
+    }
+
+    /**
      * Group Add action
      *
      * @throws \Cake\Http\Exception\InternalErrorException If an unexpected error occurred when saving the group
@@ -42,8 +52,6 @@ class GroupsAddController extends AppController
         }
 
         $data = $this->_formatRequestData();
-
-        $this->loadModel('Groups');
         $group = $this->Groups->create($data, $this->User->getAccessControl());
 
         $msg = __('The group has been added successfully.');

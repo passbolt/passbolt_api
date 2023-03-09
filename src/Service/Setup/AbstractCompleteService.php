@@ -22,27 +22,40 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Gpgkey;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
- * @property \App\Model\Table\GpgkeysTable $Gpgkeys
- * @property \App\Model\Table\UsersTable $Users
+ * AbstractCompleteService class
  */
 abstract class AbstractCompleteService
 {
     use EventDispatcherTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @var \Cake\Http\ServerRequest
      */
     protected $request;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
+
+    /**
+     * @var \App\Model\Table\GpgkeysTable
+     */
+    protected $Gpgkeys;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     /**
      * AbstractCompleteService constructor
@@ -52,9 +65,12 @@ abstract class AbstractCompleteService
     public function __construct(?ServerRequest $request = null)
     {
         $this->request = $request ?? new ServerRequest();
-        $this->loadModel('AuthenticationTokens');
-        $this->loadModel('Gpgkeys');
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
+        /** @phpstan-ignore-next-line */
+        $this->Gpgkeys = $this->fetchTable('Gpgkeys');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**

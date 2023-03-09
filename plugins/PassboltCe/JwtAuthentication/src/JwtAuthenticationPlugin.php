@@ -35,7 +35,7 @@ use Passbolt\JwtAuthentication\Middleware\JwtDestroySessionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtRouteFilterMiddleware;
 use Passbolt\JwtAuthentication\Notification\Email\Redactor\JwtAuthenticationEmailRedactorPool;
 
-class Plugin extends BasePlugin
+class JwtAuthenticationPlugin extends BasePlugin
 {
     /**
      * @inheritDoc

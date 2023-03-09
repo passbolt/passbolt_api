@@ -36,9 +36,9 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
@@ -61,7 +61,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use IntegrationTestTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use PermissionsModelTrait;
     use ResourcesModelTrait;
 
@@ -84,6 +84,11 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     private $service;
 
     /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
      * setUp method
      *
      * @return void
@@ -96,7 +101,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
 
         $this->service = new FoldersDeleteService();
-        $this->loadModel('Resources');
+        $this->Resources = $this->fetchTable('Resources');
     }
 
     public function tearDown(): void

@@ -40,6 +40,18 @@ class ResourcesDeleteController extends AppController
     public const DELETE_SUCCESS_EVENT_NAME = 'ResourcesDeleteController.delete.success';
 
     /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+    }
+
+    /**
      * Resource Delete action
      *
      * @param string $id The identifier of the resource to delete.
@@ -57,9 +69,6 @@ class ResourcesDeleteController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
-
-        $this->loadModel('Resources');
-        $this->loadModel('Users');
 
         // Retrieve the resource to delete.
         try {

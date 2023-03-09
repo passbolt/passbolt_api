@@ -19,7 +19,7 @@ namespace App\Test\TestCase\Command;
 use App\Command\CleanupCommand;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Migrations\TestSuite\Migrator;
 

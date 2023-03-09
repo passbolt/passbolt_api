@@ -45,7 +45,8 @@ class ReportsViewController extends AppController
     {
         parent::initialize();
         $this->reportViewService = new ReportViewService();
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**

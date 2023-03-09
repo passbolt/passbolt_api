@@ -19,8 +19,8 @@ namespace App\Test\TestCase\Command;
 use App\Mailer\Transport\DebugTransport;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\EmailTestTrait;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Mailer\TransportFactory;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 
 class SendTestEmailCommandTest extends AppTestCase

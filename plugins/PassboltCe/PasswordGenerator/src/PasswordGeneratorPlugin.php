@@ -20,7 +20,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
 
-class Plugin extends BasePlugin
+class PasswordGeneratorPlugin extends BasePlugin
 {
     public const DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY = 'passbolt.plugins.passwordGenerator.defaultPasswordGenerator';
     public const PASSWORD_GENERATOR_ENABLED_CONFIG_KEY = 'passbolt.plugins.passwordGenerator.enabled';
